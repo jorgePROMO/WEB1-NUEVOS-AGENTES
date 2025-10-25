@@ -28,57 +28,106 @@ const AboutSection = () => {
 
             <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
               <p>
-                Soy Jorge Calcerrada, entrenador personal y creador de un sistema integrado de entrenamiento, nutrición y mentalidad.
+                Durante años creí que para transformar un cuerpo hacía falta sacrificio, fuerza de voluntad y toneladas de motivación. Hoy sé que no es así.
               </p>
 
-              <p className="text-2xl font-bold text-blue-500 my-8">
+              <p className="text-xl font-bold text-gray-900">
+                La verdadera transformación no empieza en el gimnasio ni en la cocina, empieza en la cabeza.
+              </p>
+
+              <p>
+                Y no va de hacerlo perfecto, va de hacerlo bien y con constancia.
+              </p>
+
+              <p className="text-xl font-bold text-blue-500 mt-6">
+                Soy Jorge Calcerrada, entrenador personal.
+              </p>
+
+              <p>
+                He pasado por todas las etapas: el chaval que entrenaba sin rumbo, el profesional obsesionado con la perfección, y el mentor que entendió que el verdadero cambio sucede cuando aprendes a construir hábitos reales —no cuando sigues un plan imposible durante tres semanas.
+              </p>
+
+              <p>
+                Llevo más de una década ayudando a personas a recuperar el control de su cuerpo, su energía y su mentalidad. No enseño dietas. No vendo entrenamientos genéricos.
+              </p>
+
+              <p className="text-2xl font-bold text-orange-500 my-8">
                 Construyo sistemas que transforman personas.
               </p>
 
-              <p>
-                Durante años he trabajado con personas que lo habían intentado todo: dietas restrictivas, rutinas imposibles, promesas vacías. Y fracasaban una y otra vez. No porque no tuvieran fuerza de voluntad, sino porque seguían planes que no encajaban con su realidad.
-              </p>
-
-              <p>
-                Entendí algo fundamental: la transformación real no empieza en el gimnasio ni en la cocina.
-              </p>
-
-              <p className="text-2xl font-bold text-orange-400 my-8">
-                No busques un nuevo plan, busca una nueva forma de pensar.
-              </p>
-
-              <p>
-                Mi método combina entrenamiento inteligente, nutrición estratégica y una mentalidad orientada al proceso. No prometo resultados mágicos en 30 días. Construyo hábitos reales, sostenibles y adaptados a tu vida.
-              </p>
-
-              <p>
-                Porque esto no va de motivación. Va de claridad, estructura y constancia.
-              </p>
-            </div>
-
-            {/* Key Points */}
-            <div className="grid sm:grid-cols-3 gap-6 mt-12">
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-500 mb-4">
-                  <Dumbbell className="h-8 w-8" />
+              <div className="bg-gradient-to-r from-blue-50 to-orange-50 rounded-2xl p-8 my-8">
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Mi trabajo combina tres pilares:</h3>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold">1</span>
+                    <div>
+                      <p className="font-semibold text-gray-900">Entrenamiento inteligente:</p>
+                      <p className="text-gray-700">basado en ciencia, orientado a resultados reales y sostenibles, no en modas ni trucos rápidos.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold">2</span>
+                    <div>
+                      <p className="font-semibold text-gray-900">Nutrición estratégica:</p>
+                      <p className="text-gray-700">porque comer no es un castigo, es una herramienta. Cada plan tiene un propósito y una lógica detrás.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold">3</span>
+                    <div>
+                      <p className="font-semibold text-gray-900">Mentalidad de proceso:</p>
+                      <p className="text-gray-700">sin esto, lo demás no sirve. Si no entiendes el por qué de lo que haces, tarde o temprano abandonarás.</p>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-semibold text-gray-900">Entrenamiento</h3>
-                <p className="text-sm text-gray-600 mt-2">Adaptado a tu nivel</p>
               </div>
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-orange-100 text-orange-500 mb-4">
-                  <Target className="h-8 w-8" />
-                </div>
-                <h3 className="font-semibold text-gray-900">Nutrición</h3>
-                <p className="text-sm text-gray-600 mt-2">Estratégica y flexible</p>
+
+              <p>
+                He diseñado programas tanto para personas que buscan un cambio físico real (donde trabajo mano a mano con cada cliente) como para quienes necesitan una guía profesional validada por mí y mi equipo (con seguimiento, estructura y claridad total).
+              </p>
+
+              <p className="font-semibold text-gray-900">
+                Ambos parten de una misma base: la constancia supera al talento, y el compromiso gana siempre al entusiasmo pasajero.
+              </p>
+
+              <div className="bg-gray-900 text-white rounded-2xl p-8 my-8">
+                <p className="text-sm font-semibold text-orange-400 mb-2">Mi lema lo resume todo:</p>
+                <p className="text-xl italic leading-relaxed">
+                  "Cada comida, cada entrenamiento, cada decisión cuenta.
+                  <br />
+                  Esto no va de perfección, va de constancia.
+                  <br />
+                  No va de sacrificio, va de compromiso contigo mismo."
+                </p>
               </div>
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-500 mb-4">
-                  <Brain className="h-8 w-8" />
-                </div>
-                <h3 className="font-semibold text-gray-900">Mentalidad</h3>
-                <p className="text-sm text-gray-600 mt-2">Orientada al proceso</p>
-              </div>
+
+              <p>
+                No pretendo ser el típico entrenador que promete resultados en 21 días.
+              </p>
+
+              <p className="font-semibold text-gray-900">
+                Mi objetivo es que aprendas a hacerlo bien de una vez por todas, con un método que entiendas, que disfrutes y que puedas mantener.
+              </p>
+
+              <p>
+                Trabajo con profesionales que quieren recuperar su forma física sin perder el foco en su vida, y con personas que están cansadas de empezar siempre desde cero.
+              </p>
+
+              <p className="text-xl font-bold text-blue-500">
+                Porque lo que te falta no es disciplina. Es estrategia, claridad y acompañamiento real.
+              </p>
+
+              <p className="text-gray-900 font-semibold mt-8">
+                Si has llegado hasta aquí, es por una razón.
+              </p>
+
+              <p className="text-2xl font-bold text-orange-500">
+                No busques un nuevo plan: busca una nueva forma de pensar.
+              </p>
+
+              <p className="text-gray-900 font-semibold">
+                Y si estás listo para hacerlo bien esta vez, te acompaño en el proceso.
+              </p>
             </div>
           </div>
         </div>
