@@ -76,13 +76,26 @@ const Header = () => {
             </button>
           </nav>
 
-          {/* CTA Button */}
-          <Button
-            className="bg-gradient-to-r from-blue-400 to-orange-400 hover:from-blue-500 hover:to-orange-500 text-white px-6 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hidden lg:block"
-            onClick={() => window.open('https://forms.gle/TcZKhsrEVUoxJJLx9', '_blank')}
-          >
-            Empieza ahora
-          </Button>
+          {/* Auth Buttons */}
+          <div className="hidden lg:flex items-center gap-3">
+            <Button
+              variant="outline"
+              className={`border-2 transition-all duration-300 ${
+                isScrolled 
+                  ? 'border-blue-500 text-blue-500 hover:bg-blue-50' 
+                  : 'border-white text-white hover:bg-white/20'
+              }`}
+              onClick={() => window.location.href = '/login'}
+            >
+              Iniciar sesión
+            </Button>
+            <Button
+              className="bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 text-white px-6 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+              onClick={() => window.location.href = '/login'}
+            >
+              Administrador
+            </Button>
+          </div>
         </div>
       </div>
     </header>
