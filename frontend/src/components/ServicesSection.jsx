@@ -112,7 +112,7 @@ const ServicesSection = () => {
               </ul>
               <Button
                 className="w-full bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                onClick={() => window.open('https://forms.gle/TcZKhsrEVUoxJJLx9', '_blank')}
+                onClick={() => window.open('https://calendar.app.google/m7bECfMJ52dp1UgK7', '_blank')}
               >
                 Solicitar videollamada con Jorge
               </Button>
