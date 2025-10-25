@@ -58,8 +58,8 @@ const TestimonialsSection = () => {
         <div className="mt-16 max-w-4xl mx-auto">
           <div className="relative rounded-3xl overflow-hidden shadow-2xl">
             <img
-              src="https://images.pexels.com/photos/13636369/pexels-photo-13636369.jpeg"
-              alt="Achievement and Success"
+              src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/tw2x0ku0_WhatsApp%20Image%202025-10-25%20at%2021.18.51.jpeg"
+              alt="Jorge Calcerrada Training"
               className="w-full h-96 object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
