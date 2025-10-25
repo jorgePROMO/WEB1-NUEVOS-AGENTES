@@ -5,13 +5,14 @@ import { ArrowRight } from 'lucide-react';
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-orange-50">
-      {/* Background Abstract Image */}
-      <div className="absolute inset-0 opacity-10">
+      {/* Background Image */}
+      <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1633158834806-766387547d2c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwxfHxtaW5kc2V0JTIwdHJhbnNmb3JtYXRpb258ZW58MHx8fHwxNzYxNDE2MjYwfDA&ixlib=rb-4.1.0&q=85"
-          alt="Transformation"
-          className="w-full h-full object-cover"
+          src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/tw2x0ku0_WhatsApp%20Image%202025-10-25%20at%2021.18.51.jpeg"
+          alt="Jorge Calcerrada Training"
+          className="w-full h-full object-cover opacity-20"
         />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/90 via-white/90 to-orange-50/90"></div>
       </div>
 
       {/* Content */}
