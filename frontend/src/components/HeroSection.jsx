@@ -40,7 +40,7 @@ const HeroSection = () => {
             className="bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white px-12 py-6 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             onClick={() => window.open('https://forms.gle/TcZKhsrEVUoxJJLx9', '_blank')}
           >
-            Hazlo bien esta vez
+            OBTÉN TU DIAGNÓSTICO GRATUITO
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
