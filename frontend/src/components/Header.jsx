@@ -20,21 +20,13 @@ const Header = () => {
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-lg'
-          : 'bg-transparent'
-      }`}
-    >
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center">
             <a href="#" className="text-2xl font-bold">
-              <span className={`transition-colors duration-300 ${
-                isScrolled ? 'text-gray-900' : 'text-white'
-              }`}>
+              <span className="text-gray-900 transition-colors duration-300">
                 Jorge Calcerrada
               </span>
             </a>
@@ -44,33 +36,25 @@ const Header = () => {
           <nav className="hidden md:flex items-center gap-8">
             <button
               onClick={() => scrollToSection('about')}
-              className={`font-medium transition-colors duration-300 hover:text-blue-500 ${
-                isScrolled ? 'text-gray-700' : 'text-white'
-              }`}
+              className="text-gray-700 font-medium transition-colors duration-300 hover:text-blue-500"
             >
               Sobre mí
             </button>
             <button
               onClick={() => scrollToSection('method')}
-              className={`font-medium transition-colors duration-300 hover:text-blue-500 ${
-                isScrolled ? 'text-gray-700' : 'text-white'
-              }`}
+              className="text-gray-700 font-medium transition-colors duration-300 hover:text-blue-500"
             >
               Método
             </button>
             <button
               onClick={() => scrollToSection('services')}
-              className={`font-medium transition-colors duration-300 hover:text-blue-500 ${
-                isScrolled ? 'text-gray-700' : 'text-white'
-              }`}
+              className="text-gray-700 font-medium transition-colors duration-300 hover:text-blue-500"
             >
               Servicios
             </button>
             <button
               onClick={() => scrollToSection('testimonials')}
-              className={`font-medium transition-colors duration-300 hover:text-blue-500 ${
-                isScrolled ? 'text-gray-700' : 'text-white'
-              }`}
+              className="text-gray-700 font-medium transition-colors duration-300 hover:text-blue-500"
             >
               Testimonios
             </button>
@@ -80,11 +64,7 @@ const Header = () => {
           <div className="hidden lg:flex items-center gap-3">
             <Button
               variant="outline"
-              className={`border-2 transition-all duration-300 ${
-                isScrolled 
-                  ? 'border-blue-500 text-blue-500 hover:bg-blue-50' 
-                  : 'border-white text-white hover:bg-white/20'
-              }`}
+              className="border-2 border-blue-500 text-blue-500 hover:bg-blue-50 transition-all duration-300"
               onClick={() => window.location.href = '/login'}
             >
               Iniciar sesión
