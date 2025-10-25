@@ -32,7 +32,7 @@ const FinalCTA = () => {
           className="bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white px-16 py-7 text-xl font-bold rounded-full shadow-2xl hover:shadow-orange-500/50 transform hover:scale-105 transition-all duration-300"
           onClick={() => window.open('https://forms.gle/TcZKhsrEVUoxJJLx9', '_blank')}
         >
-          QUIERO HACERLO BIEN ESTA VEZ
+          OBTÉN TU DIAGNÓSTICO GRATUITO
           <ArrowRight className="ml-3 h-6 w-6" />
         </Button>
 
