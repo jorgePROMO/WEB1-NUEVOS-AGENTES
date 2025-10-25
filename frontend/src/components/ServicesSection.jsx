@@ -59,9 +59,9 @@ const ServicesSection = () => {
               </ul>
               <Button
                 className="w-full bg-blue-500 hover:bg-blue-600 text-white py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                onClick={() => window.open('https://forms.gle/TcZKhsrEVUoxJJLx9', '_blank')}
+                onClick={() => window.location.href = '/register'}
               >
-                Quiero hacerlo bien esta vez
+                QUIERO ESTE PLAN
               </Button>
             </CardContent>
           </Card>
