@@ -47,8 +47,8 @@ const MethodSection = () => {
         <div className="mb-16">
           <div className="relative rounded-3xl overflow-hidden shadow-2xl max-w-4xl mx-auto">
             <img
-              src="https://images.unsplash.com/photo-1704969724398-ec70386c9b1b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHw0fHxtaW5kc2V0JTIwdHJhbnNmb3JtYXRpb258ZW58MHx8fHwxNzYxNDE2MjYwfDA&ixlib=rb-4.1.0&q=85"
-              alt="Method Mindset"
+              src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/l5u2zcvr_WhatsApp%20Image%202025-10-25%20at%2021.14.13.jpeg"
+              alt="Jorge Calcerrada - Método de Entrenamiento"
               className="w-full h-80 object-cover"
             />
           </div>
