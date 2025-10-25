@@ -10,8 +10,8 @@ const AboutSection = () => {
           <div className="relative">
             <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1758930908722-6f8f561d7473?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwyfHxtaW5kc2V0JTIwdHJhbnNmb3JtYXRpb258ZW58MHx8fHwxNzYxNDE2MjYwfDA&ixlib=rb-4.1.0&q=85"
-                alt="Growth and Transformation"
+                src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/xzer6hch_WhatsApp%20Image%202025-10-25%20at%2021.18.29.jpeg"
+                alt="Jorge Calcerrada - Entrenador Personal"
                 className="w-full h-full object-cover"
               />
             </div>
