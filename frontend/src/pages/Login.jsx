@@ -7,6 +7,8 @@ import { Label } from '../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 import { AlertCircle, Loader2 } from 'lucide-react';
 
+const FRONTEND_URL = window.location.origin;
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
