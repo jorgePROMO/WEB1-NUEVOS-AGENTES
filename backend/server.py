@@ -708,7 +708,8 @@ async def mark_session_complete(session_id: str, request: Request):
 
 
 @api_router.delete("/sessions/{session_id}")
-async def delete_session(session_id: str, admin: dict = Depends(require_admin)):
+async def delete_session(session_id: str, request: Request):
+    admin = await require_admin(request)
     result = await db.sessions.delete_one({"_id": session_id})
     
     if result.deleted_count == 0:
