@@ -184,6 +184,39 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleArchiveClient = async (clientId) => {
+    const reason = prompt('Razón del archivado (opcional):');
+    try {
+      await axios.post(`${API}/admin/archive-client/${clientId}`, null, {
+        params: { reason },
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      alert('Cliente archivado correctamente');
+      loadClients();
+      setSelectedClient(null);
+    } catch (error) {
+      console.error('Error archiving client:', error);
+      alert('Error al archivar cliente');
+    }
+  };
+
+  const handleUnarchiveClient = async (clientId) => {
+    try {
+      await axios.post(`${API}/admin/unarchive-client/${clientId}`, {}, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      alert('Cliente desarchivado correctamente');
+      loadClients();
+    } catch (error) {
+      console.error('Error unarchiving client:', error);
+      alert('Error al desarchivar cliente');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
