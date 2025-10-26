@@ -85,30 +85,57 @@ const AdminDashboard = () => {
   };
 
   const filteredClients = clients.filter(client =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.username.toLowerCase().includes(searchTerm.toLowerCase())
+    client.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    client.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    client.username?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const activeClients = clients.filter(c => c.subscription.paymentStatus === 'verified').length;
-  const pendingClients = clients.filter(c => c.subscription.paymentStatus === 'pending').length;
-
-  const handleSendForm = () => {
+  const handleSendForm = async () => {
     if (!selectedClient || !formData.title || !formData.url) {
       alert('Por favor completa todos los campos');
       return;
     }
-    alert(`Formulario "${formData.title}" enviado a ${selectedClient.name}`);
-    setFormData({ title: '', url: '' });
+    try {
+      await axios.post(`${API}/forms/send`, {
+        user_id: selectedClient.id,
+        title: formData.title,
+        url: formData.url
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      alert(`Formulario "${formData.title}" enviado a ${selectedClient.name}`);
+      setFormData({ title: '', url: '' });
+    } catch (error) {
+      console.error('Error sending form:', error);
+      alert('Error al enviar formulario');
+    }
   };
 
-  const handleSendAlert = () => {
+  const handleSendAlert = async () => {
     if (!selectedClient || !alertData.title || !alertData.message) {
       alert('Por favor completa todos los campos');
       return;
     }
-    alert(`Alerta enviada a ${selectedClient.name}`);
-    setAlertData({ title: '', message: '', link: '' });
+    try {
+      await axios.post(`${API}/alerts/send`, {
+        user_id: selectedClient.id,
+        title: alertData.title,
+        message: alertData.message,
+        type: 'general',
+        link: alertData.link
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      alert(`Alerta enviada a ${selectedClient.name}`);
+      setAlertData({ title: '', message: '', link: '' });
+    } catch (error) {
+      console.error('Error sending alert:', error);
+      alert('Error al enviar alerta');
+    }
   };
 
   const handleUploadPDF = () => {
@@ -120,9 +147,31 @@ const AdminDashboard = () => {
     setPdfData({ title: '', type: 'training' });
   };
 
-  const handleVerifyPayment = (clientId) => {
-    alert('Pago verificado - El cliente recibirá notificación');
+  const handleVerifyPayment = async (clientId) => {
+    try {
+      await axios.post(`${API}/admin/verify-payment/${clientId}`, {}, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      alert('Pago verificado - El cliente recibirá notificación');
+      loadClients(); // Reload clients to update status
+    } catch (error) {
+      console.error('Error verifying payment:', error);
+      alert('Error al verificar pago');
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Cargando...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
