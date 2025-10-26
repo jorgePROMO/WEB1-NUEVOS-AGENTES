@@ -515,9 +515,9 @@ const AdminDashboard = () => {
                       {/* Sent Alerts */}
                       <div>
                         <h4 className="font-semibold mb-3">Alertas enviadas</h4>
-                        {selectedClient.alerts.length > 0 ? (
+                        {selectedClientDetails?.alerts?.length > 0 ? (
                           <div className="space-y-2">
-                            {selectedClient.alerts.map((alert) => (
+                            {selectedClientDetails.alerts.map((alert) => (
                               <div key={alert.id} className="p-3 bg-gray-50 rounded-lg">
                                 <p className="font-medium">{alert.title}</p>
                                 <p className="text-sm text-gray-600 mt-1">{alert.message}</p>
