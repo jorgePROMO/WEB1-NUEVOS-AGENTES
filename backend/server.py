@@ -430,7 +430,8 @@ async def unarchive_client(user_id: str, request: Request):
 
 
 @api_router.delete("/admin/delete-client/{user_id}")
-async def delete_client(user_id: str, admin: dict = Depends(require_admin)):
+async def delete_client(user_id: str, request: Request):
+    admin = await require_admin(request)
     # Delete all user data
     await db.forms.delete_many({"user_id": user_id})
     await db.alerts.delete_many({"user_id": user_id})
