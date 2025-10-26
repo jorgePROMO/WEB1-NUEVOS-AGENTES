@@ -375,10 +375,7 @@ const UserDashboard = () => {
                               size="sm" 
                               className="w-full mt-3" 
                               variant="outline"
-                              onClick={() => {
-                                const token = localStorage.getItem('token');
-                                window.open(`${BACKEND_URL}/api/pdfs/${pdf.id}/download?token=${token}`, '_blank');
-                              }}
+                              onClick={() => handleDownloadPDF(pdf.id, pdf.title)}
                             >
                               <Download className="mr-2 h-4 w-4" />
                               Descargar PDF
