@@ -10,6 +10,7 @@ from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 import shutil
 import httpx
+import socketio
 
 from models import (
     UserCreate, UserResponse, UserInDB, Subscription,
@@ -36,6 +37,15 @@ app = FastAPI()
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
+
+# Socket.IO setup for real-time chat
+sio = socketio.AsyncServer(
+    async_mode='asgi',
+    cors_allowed_origins='*',
+    logger=True,
+    engineio_logger=True
+)
+socket_app = socketio.ASGIApp(sio, app)
 
 # Configure logging
 logging.basicConfig(
