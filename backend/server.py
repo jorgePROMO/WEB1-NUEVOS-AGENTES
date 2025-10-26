@@ -603,7 +603,8 @@ async def get_unread_count(request: Request):
 # ==================== MESSAGE/CHAT ENDPOINTS ====================
 
 @api_router.get("/messages/{user_id}")
-async def get_messages(user_id: str, current_user: dict = Depends(get_current_user)):
+async def get_messages(user_id: str, request: Request):
+    current_user = await get_current_user(request)
     # Admin can view any user's messages, users can only view their own
     if current_user["role"] != "admin" and current_user["_id"] != user_id:
         raise HTTPException(status_code=403, detail="Access denied")
