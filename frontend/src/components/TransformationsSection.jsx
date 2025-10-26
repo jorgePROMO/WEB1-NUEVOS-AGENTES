@@ -28,6 +28,26 @@ const TransformationsSection = () => {
       id: 5,
       image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/o56c6ttu_598884A3-F22A-408E-A7F5-4F4C7DA5335D%20%281%29.jpg',
       alt: 'Transformación cliente 5'
+    },
+    {
+      id: 6,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/w2zzop6v_BA331569-0E2D-4931-9D33-BB55EF0E8C42%20%281%29.JPG',
+      alt: 'Transformación cliente 6'
+    },
+    {
+      id: 7,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/mdka6jdo_CA74D0C8-26FA-4DD5-8DA7-576AA966860C.jpg',
+      alt: 'Transformación cliente 7'
+    },
+    {
+      id: 8,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/mws7xh2i_CA946621-526C-418C-9CC6-70BCB536A868.JPG',
+      alt: 'Transformación cliente 8'
+    },
+    {
+      id: 9,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/u16uj9zf_cc82f864-6490-4122-8f5d-847caca41f64.JPG',
+      alt: 'Transformación cliente 9'
     }
   ];
 
