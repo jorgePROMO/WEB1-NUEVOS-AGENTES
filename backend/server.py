@@ -410,8 +410,8 @@ async def archive_client(user_id: str, request: Request, reason: Optional[str] =
         {"$set": {
             "subscription.archived": True,
             "subscription.archived_reason": reason,
-            "subscription.archived_date": datetime.utcnow(),
-            "updated_at": datetime.utcnow()
+            "subscription.archived_date": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc)
         }}
     )
     
