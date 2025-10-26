@@ -8,6 +8,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Badge } from '../components/ui/badge';
+import axios from 'axios';
 import { 
   Users, 
   LogOut,
@@ -22,16 +23,20 @@ import {
   CheckCircle,
   XCircle
 } from 'lucide-react';
-import { mockUsers } from '../mock';
 import ChatBox from '../components/ChatBox';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+
 const AdminDashboard = () => {
-  const { user, logout, isAdmin } = useAuth();
+  const { user, logout, isAdmin, token } = useAuth();
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
+  const [stats, setStats] = useState({ total: 0, active: 0, pending: 0 });
   const [selectedClient, setSelectedClient] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showChat, setShowChat] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Form states
   const [formData, setFormData] = useState({
@@ -55,8 +60,24 @@ const AdminDashboard = () => {
       navigate('/dashboard');
       return;
     }
-    setClients(mockUsers);
+    loadClients();
   }, [isAdmin, navigate]);
+
+  const loadClients = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/clients`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setClients(response.data.clients || []);
+      setStats(response.data.stats || { total: 0, active: 0, pending: 0 });
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading clients:', error);
+      setLoading(false);
+    }
+  };
 
   const handleLogout = () => {
     logout();
