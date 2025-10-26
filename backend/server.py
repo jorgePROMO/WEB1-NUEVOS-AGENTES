@@ -480,7 +480,8 @@ async def send_form(form_data: FormCreate, request: Request):
 
 
 @api_router.patch("/forms/{form_id}/complete")
-async def complete_form(form_id: str, user: dict = Depends(get_current_user)):
+async def complete_form(form_id: str, request: Request):
+    user = await get_current_user(request)
     result = await db.forms.update_one(
         {"_id": form_id, "user_id": user["_id"]},
         {"$set": {
