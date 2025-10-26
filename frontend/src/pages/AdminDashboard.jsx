@@ -386,13 +386,13 @@ const AdminDashboard = () => {
                       {/* Sent Forms */}
                       <div>
                         <h4 className="font-semibold mb-3">Formularios enviados</h4>
-                        {selectedClient.forms.length > 0 ? (
+                        {selectedClientDetails?.forms?.length > 0 ? (
                           <div className="space-y-2">
-                            {selectedClient.forms.map((form) => (
+                            {selectedClientDetails.forms.map((form) => (
                               <div key={form.id} className="p-3 bg-gray-50 rounded-lg flex items-center justify-between">
                                 <div>
                                   <p className="font-medium">{form.title}</p>
-                                  <p className="text-sm text-gray-600">Enviado: {new Date(form.sentDate).toLocaleDateString('es-ES')}</p>
+                                  <p className="text-sm text-gray-600">Enviado: {new Date(form.sent_date).toLocaleDateString('es-ES')}</p>
                                 </div>
                                 <Badge className={form.completed ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}>
                                   {form.completed ? 'Completado' : 'Pendiente'}
