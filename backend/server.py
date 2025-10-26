@@ -460,7 +460,8 @@ async def delete_client(user_id: str, request: Request):
 # ==================== FORM ENDPOINTS ====================
 
 @api_router.post("/forms/send")
-async def send_form(form_data: FormCreate, admin: dict = Depends(require_admin)):
+async def send_form(form_data: FormCreate, request: Request):
+    admin = await require_admin(request)
     form_dict = {
         "_id": str(datetime.utcnow().timestamp()).replace(".", ""),
         "user_id": form_data.user_id,
