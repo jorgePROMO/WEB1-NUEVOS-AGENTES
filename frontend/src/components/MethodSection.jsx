@@ -43,40 +43,43 @@ const MethodSection = () => {
           </p>
         </div>
 
-        {/* Method Image */}
-        <div className="mb-16">
-          <div className="relative rounded-3xl overflow-hidden shadow-2xl max-w-4xl mx-auto">
-            <img
-              src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/l5u2zcvr_WhatsApp%20Image%202025-10-25%20at%2021.14.13.jpeg"
-              alt="Jorge Calcerrada - Método de Entrenamiento"
-              className="w-full h-80 object-cover object-center"
-            />
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-2 gap-12 mb-16 items-start">
+          {/* Image Side - Vertical */}
+          <div className="relative">
+            <div className="rounded-3xl overflow-hidden shadow-2xl sticky top-8">
+              <img
+                src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/l5u2zcvr_WhatsApp%20Image%202025-10-25%20at%2021.14.13.jpeg"
+                alt="Jorge Calcerrada - Método de Entrenamiento"
+                className="w-full h-auto object-cover"
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Steps */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            const bgColor = step.color === 'blue' ? 'bg-blue-100' : 'bg-orange-100';
-            const textColor = step.color === 'blue' ? 'text-blue-500' : 'text-orange-500';
-            
-            return (
-              <Card key={index} className="border-none shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardContent className="p-8">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${bgColor} ${textColor} mb-6`}>
-                    <Icon className="h-8 w-8" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {step.description}
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
+          {/* Steps Side */}
+          <div className="space-y-8">
+            {steps.map((step, index) => {
+              const Icon = step.icon;
+              const bgColor = step.color === 'blue' ? 'bg-blue-100' : 'bg-orange-100';
+              const textColor = step.color === 'blue' ? 'text-blue-500' : 'text-orange-500';
+              
+              return (
+                <Card key={index} className="border-none shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <CardContent className="p-8">
+                    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${bgColor} ${textColor} mb-6`}>
+                      <Icon className="h-8 w-8" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">
+                      {step.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      {step.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
 
         {/* Bottom Message */}
