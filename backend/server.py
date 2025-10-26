@@ -266,6 +266,42 @@ async def verify_payment(user_id: str, admin: dict = Depends(require_admin)):
     return {"success": True, "message": "Payment verified successfully"}
 
 
+@api_router.post("/admin/archive-client/{user_id}")
+async def archive_client(user_id: str, reason: Optional[str] = None, admin: dict = Depends(require_admin)):
+    result = await db.users.update_one(
+        {"_id": user_id},
+        {"$set": {
+            "subscription.archived": True,
+            "subscription.archived_reason": reason,
+            "subscription.archived_date": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        }}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"success": True, "message": "Client archived successfully"}
+
+
+@api_router.post("/admin/unarchive-client/{user_id}")
+async def unarchive_client(user_id: str, admin: dict = Depends(require_admin)):
+    result = await db.users.update_one(
+        {"_id": user_id},
+        {"$set": {
+            "subscription.archived": False,
+            "subscription.archived_reason": None,
+            "subscription.archived_date": None,
+            "updated_at": datetime.utcnow()
+        }}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"success": True, "message": "Client unarchived successfully"}
+
+
 # ==================== FORM ENDPOINTS ====================
 
 @api_router.post("/forms/send")
