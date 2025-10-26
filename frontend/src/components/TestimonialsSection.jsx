@@ -60,7 +60,7 @@ const TestimonialsSection = () => {
             <img
               src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/tw2x0ku0_WhatsApp%20Image%202025-10-25%20at%2021.18.51.jpeg"
               alt="Jorge Calcerrada Training"
-              className="w-full h-96 object-cover"
+              className="w-full h-96 object-cover object-top"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
               <div className="p-8">
