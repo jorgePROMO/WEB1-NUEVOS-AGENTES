@@ -304,9 +304,19 @@ const AdminDashboard = () => {
           {/* Client List */}
           <Card className="lg:col-span-1">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                Lista de clientes
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Lista de clientes
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowArchived(!showArchived)}
+                  className={showArchived ? "bg-orange-50 border-orange-300 text-orange-600" : ""}
+                >
+                  {showArchived ? "Ver activos" : "Ver archivados"}
+                </Button>
               </CardTitle>
               <div className="relative mt-4">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
