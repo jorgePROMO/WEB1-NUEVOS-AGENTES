@@ -304,6 +304,12 @@ const UserDashboard = () => {
             )}
           </TabsContent>
 
+
+          {/* Calendar Tab */}
+          <TabsContent value="calendar">
+            {user && <UserCalendar userId={user.id} />}
+          </TabsContent>
+
           {/* Documents Tab */}
           <TabsContent value="documents" className="space-y-6">
             {isPending ? (
