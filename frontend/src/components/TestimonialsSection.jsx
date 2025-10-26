@@ -55,14 +55,16 @@ const TestimonialsSection = () => {
         </div>
 
         {/* Visual Image */}
-        <div className="mt-16 max-w-4xl mx-auto">
+        <div className="mt-16 max-w-2xl mx-auto">
           <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-            <img
-              src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/tw2x0ku0_WhatsApp%20Image%202025-10-25%20at%2021.18.51.jpeg"
-              alt="Jorge Calcerrada Training"
-              className="w-full h-96 object-cover object-top"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+            <div className="aspect-[3/4]">
+              <img
+                src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/tw2x0ku0_WhatsApp%20Image%202025-10-25%20at%2021.18.51.jpeg"
+                alt="Jorge Calcerrada Training"
+                className="w-full h-full object-cover object-center"
+              />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
               <div className="p-8">
                 <p className="text-white text-2xl font-bold">
                   La transformación real se basa en claridad, no en motivación.
