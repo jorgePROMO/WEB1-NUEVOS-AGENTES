@@ -49,7 +49,7 @@ const MethodSection = () => {
             <img
               src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/l5u2zcvr_WhatsApp%20Image%202025-10-25%20at%2021.14.13.jpeg"
               alt="Jorge Calcerrada - Método de Entrenamiento"
-              className="w-full h-80 object-cover"
+              className="w-full h-80 object-cover object-center"
             />
           </div>
         </div>
