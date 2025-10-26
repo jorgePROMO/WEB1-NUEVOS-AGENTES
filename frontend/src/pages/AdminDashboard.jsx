@@ -461,6 +461,14 @@ const AdminDashboard = () => {
                           Verificar pago
                         </Button>
                       )}
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDeleteClient(selectedClient.id, selectedClient.name)}
+                        className="border-red-300 text-red-600 hover:bg-red-50"
+                      >
+                        Eliminar
+                      </Button>
                     </div>
                   </CardTitle>
                 </CardHeader>
