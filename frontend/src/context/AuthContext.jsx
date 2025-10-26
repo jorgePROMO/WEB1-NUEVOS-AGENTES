@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { mockLogin, mockRegister, mockAdmin, mockUsers } from '../mock';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const AuthContext = createContext();
 
@@ -30,27 +33,39 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await mockLogin(email, password);
-      setUser(response.user);
-      setToken(response.token);
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      const response = await axios.post(`${API}/auth/login`, null, {
+        params: { email, password }
+      });
+      setUser(response.data.user);
+      setToken(response.data.token);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
       return { success: true };
     } catch (error) {
-      return { success: false, error: error.message };
+      return { 
+        success: false, 
+        error: error.response?.data?.detail || 'Error al iniciar sesión' 
+      };
     }
   };
 
   const register = async (username, email, password) => {
     try {
-      const response = await mockRegister(username, email, password);
-      setUser(response.user);
-      setToken(response.token);
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      const response = await axios.post(`${API}/auth/register`, {
+        username,
+        email,
+        password
+      });
+      setUser(response.data.user);
+      setToken(response.data.token);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
       return { success: true };
     } catch (error) {
-      return { success: false, error: error.message };
+      return { 
+        success: false, 
+        error: error.response?.data?.detail || 'Error al registrarse' 
+      };
     }
   };
 
