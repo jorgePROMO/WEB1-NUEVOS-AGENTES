@@ -374,7 +374,8 @@ async def get_client_details(user_id: str, request: Request):
 
 
 @api_router.post("/admin/verify-payment/{user_id}")
-async def verify_payment(user_id: str, admin: dict = Depends(require_admin)):
+async def verify_payment(user_id: str, request: Request):
+    admin = await require_admin(request)
     result = await db.users.update_one(
         {"_id": user_id},
         {"$set": {
