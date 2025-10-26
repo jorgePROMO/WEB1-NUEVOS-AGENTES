@@ -23,6 +23,7 @@ from auth import (
     get_password_hash, verify_password, create_access_token,
     get_current_user_id, get_current_user_id_flexible
 )
+from email_utils import send_session_created_email, send_session_rescheduled_email
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
