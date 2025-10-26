@@ -2,42 +2,64 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Send, User } from 'lucide-react';
-import { mockMessages } from '../mock';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const ChatBox = ({ userId, isAdmin = false }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    // Load messages for this user
-    const userMessages = mockMessages.filter(m => m.userId === userId);
-    setMessages(userMessages);
+    loadMessages();
   }, [userId]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
+  const loadMessages = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API}/messages/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setMessages(response.data.messages || []);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading messages:', error);
+      setLoading(false);
+    }
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!newMessage.trim()) return;
 
-    const message = {
-      id: Date.now().toString(),
-      userId: userId,
-      senderId: isAdmin ? 'admin1' : userId,
-      senderName: isAdmin ? 'Jorge Calcerrada' : 'Tú',
-      message: newMessage,
-      timestamp: new Date().toISOString(),
-      isAdmin: isAdmin
-    };
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${API}/messages/send`, {
+        user_id: userId,
+        message: newMessage
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
 
-    setMessages([...messages, message]);
-    setNewMessage('');
+      setMessages([...messages, response.data]);
+      setNewMessage('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -46,6 +68,10 @@ const ChatBox = ({ userId, isAdmin = false }) => {
       handleSend();
     }
   };
+
+  if (loading) {
+    return <div className="flex items-center justify-center p-8">Cargando chat...</div>;
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -61,29 +87,29 @@ const ChatBox = ({ userId, isAdmin = false }) => {
             <div
               key={msg.id}
               className={`flex items-start gap-3 ${
-                msg.isAdmin !== isAdmin ? 'flex-row' : 'flex-row-reverse'
+                msg.is_admin !== isAdmin ? 'flex-row' : 'flex-row-reverse'
               }`}
             >
               <div
                 className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                  msg.isAdmin ? 'bg-blue-500' : 'bg-gray-300'
+                  msg.is_admin ? 'bg-blue-500' : 'bg-gray-300'
                 }`}
               >
                 <User className="h-5 w-5 text-white" />
               </div>
               <div
                 className={`flex-1 max-w-xs lg:max-w-md ${
-                  msg.isAdmin !== isAdmin ? '' : 'flex flex-col items-end'
+                  msg.is_admin !== isAdmin ? '' : 'flex flex-col items-end'
                 }`}
               >
                 <div
                   className={`rounded-2xl px-4 py-2 ${
-                    msg.isAdmin !== isAdmin
+                    msg.is_admin !== isAdmin
                       ? 'bg-gray-100 text-gray-900'
                       : 'bg-blue-500 text-white'
                   }`}
                 >
-                  <p className="text-xs font-semibold mb-1 opacity-75">{msg.senderName}</p>
+                  <p className="text-xs font-semibold mb-1 opacity-75">{msg.sender_name}</p>
                   <p className="text-sm">{msg.message}</p>
                 </div>
                 <p className="text-xs text-gray-500 mt-1 px-2">
