@@ -69,11 +69,36 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      // Call backend logout to clear session
+      await axios.post(`${API}/auth/logout`, {}, { withCredentials: true });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
     setUser(null);
     setToken(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+  };
+
+  const googleAuth = async (sessionId) => {
+    try {
+      const response = await axios.post(`${API}/auth/google`, null, {
+        params: { session_id: sessionId },
+        withCredentials: true
+      });
+      setUser(response.data.user);
+      setToken(response.data.session_token);
+      localStorage.setItem('token', response.data.session_token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      return { success: true, user: response.data.user };
+    } catch (error) {
+      return { 
+        success: false, 
+        error: error.response?.data?.detail || 'Error al autenticar con Google' 
+      };
+    }
   };
 
   const isAdmin = () => {
@@ -87,6 +112,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    googleAuth,
     isAdmin
   };
 
