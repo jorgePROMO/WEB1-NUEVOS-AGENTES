@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
@@ -34,6 +34,54 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   return children;
 };
 
+// Component to handle Google OAuth callback
+const OAuthHandler = () => {
+  const { googleAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleOAuth = async () => {
+      // Check if there's a session_id in the URL hash
+      const hash = window.location.hash;
+      if (hash.includes('session_id=')) {
+        const sessionId = hash.split('session_id=')[1].split('&')[0];
+        
+        if (sessionId) {
+          // Show loading state
+          const result = await googleAuth(sessionId);
+          
+          // Clean the hash from URL
+          window.history.replaceState(null, '', window.location.pathname);
+          
+          if (result.success) {
+            // Redirect based on role
+            if (result.user.role === 'admin') {
+              navigate('/admin', { replace: true });
+            } else {
+              navigate('/dashboard', { replace: true });
+            }
+          } else {
+            // Redirect to login with error
+            navigate('/login', { replace: true });
+          }
+        }
+      }
+    };
+
+    handleOAuth();
+  }, [googleAuth, navigate, location]);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+        <p className="mt-4 text-gray-600">Autenticando con Google...</p>
+      </div>
+    </div>
+  );
+};
+
 function AppRoutes() {
   return (
     <Routes>
@@ -44,6 +92,7 @@ function AppRoutes() {
         path="/dashboard"
         element={
           <ProtectedRoute>
+            <OAuthHandler />
             <UserDashboard />
           </ProtectedRoute>
         }
