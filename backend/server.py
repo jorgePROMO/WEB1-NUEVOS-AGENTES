@@ -707,6 +707,38 @@ async def mark_session_complete(session_id: str, request: Request):
     return {"success": True}
 
 
+
+@api_router.patch("/sessions/{session_id}/reschedule")
+async def reschedule_session(session_id: str, session_update: SessionUpdate, request: Request):
+    """
+    Allow users to reschedule their sessions or admins to reschedule any session
+    """
+    current_user = await get_current_user(request)
+    
+    # Get the session
+    session = await db.sessions.find_one({"_id": session_id})
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    # Check permissions: users can only reschedule their own, admins can reschedule any
+    if current_user["role"] != "admin" and session["user_id"] != current_user["_id"]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Update the session date
+    result = await db.sessions.update_one(
+        {"_id": session_id},
+        {"$set": {
+            "date": session_update.date,
+            "updated_at": datetime.now(timezone.utc)
+        }}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    return {"success": True, "message": "Session rescheduled successfully"}
+
+
 @api_router.delete("/sessions/{session_id}")
 async def delete_session(session_id: str, request: Request):
     admin = await require_admin(request)
