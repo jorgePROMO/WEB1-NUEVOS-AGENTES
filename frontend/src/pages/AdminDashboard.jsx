@@ -307,7 +307,7 @@ const AdminDashboard = () => {
                         <MessageSquare className="h-4 w-4 mr-2" />
                         Chat
                       </Button>
-                      {selectedClient.subscription.paymentStatus === 'pending' && (
+                      {selectedClient.subscription?.payment_status === 'pending' && (
                         <Button
                           size="sm"
                           onClick={() => handleVerifyPayment(selectedClient.id)}
