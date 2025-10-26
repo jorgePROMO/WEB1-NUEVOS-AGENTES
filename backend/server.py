@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, UploadFile, File, Form
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, UploadFile, File, Form, Request, Response
 from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -6,20 +6,21 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 import shutil
+import httpx
 
 from models import (
     UserCreate, UserResponse, UserInDB, Subscription,
     FormCreate, FormInDB, PDFCreate, PDFInDB,
     AlertCreate, AlertInDB, MessageCreate, MessageInDB,
-    SessionCreate, SessionInDB,
+    SessionCreate, SessionInDB, SessionUpdate, UserSession,
     Token
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
-    get_current_user_id
+    get_current_user_id, get_current_user_id_flexible
 )
 
 ROOT_DIR = Path(__file__).parent
