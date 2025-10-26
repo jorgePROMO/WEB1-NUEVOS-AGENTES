@@ -638,14 +638,14 @@ async def send_message(message_data: MessageCreate, request: Request):
         user_id = current_user["_id"]  # User sends to own conversation
     
     message_dict = {
-        "_id": str(datetime.utcnow().timestamp()).replace(".", ""),
+        "_id": str(datetime.now(timezone.utc).timestamp()).replace(".", ""),
         "user_id": user_id,
         "sender_id": current_user["_id"],
         "sender_name": current_user["name"],
         "message": message_data.message,
         "is_admin": current_user["role"] == "admin",
-        "timestamp": datetime.utcnow(),
-        "created_at": datetime.utcnow()
+        "timestamp": datetime.now(timezone.utc),
+        "created_at": datetime.now(timezone.utc)
     }
     
     await db.messages.insert_one(message_dict)
