@@ -343,10 +343,10 @@ async def complete_form(form_id: str, user: dict = Depends(get_current_user)):
 
 @api_router.post("/pdfs/upload")
 async def upload_pdf(
-    user_id: str,
-    title: str,
-    type: str,
     file: UploadFile = File(...),
+    user_id: str = Form(...),
+    title: str = Form(...),
+    type: str = Form(...),
     admin: dict = Depends(require_admin)
 ):
     # Create uploads directory
