@@ -392,7 +392,7 @@ async def verify_payment(user_id: str, request: Request):
         {"$set": {
             "subscription.payment_status": "verified",
             "subscription.status": "active",
-            "updated_at": datetime.utcnow()
+            "updated_at": datetime.now(timezone.utc)
         }}
     )
     
