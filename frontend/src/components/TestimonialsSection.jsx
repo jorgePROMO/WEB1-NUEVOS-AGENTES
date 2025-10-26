@@ -50,6 +50,26 @@ const TestimonialsSection = () => {
       id: 10,
       image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/cnkq1g56_IMG_2549.jpg',
       text: 'No buscaba solo bajar de peso, buscaba recuperar mi confianza y mi energía. Jorge me ayudó a conseguir ambas cosas. Ahora me siento mejor que hace 10 años, y es sostenible.'
+    },
+    {
+      id: 11,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/r66skss8_IMG_2587.jpg',
+      text: 'Pensaba que mi edad era una excusa válida para estar fuera de forma. Jorge me demostró que la edad es solo un número cuando tienes el sistema correcto. Ahora estoy en la mejor forma de mi vida.'
+    },
+    {
+      id: 12,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/lcyi7hoi_IMG_3292.jpg',
+      text: 'Lo mejor de trabajar con Jorge es que nunca te juzga por dónde empiezas, solo te guía hacia dónde quieres llegar. Su método me ha dado no solo un cuerpo mejor, sino una vida mejor.'
+    },
+    {
+      id: 13,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/guojbrec_IMG_3501.jpg',
+      text: 'Dejé de buscar resultados rápidos y empecé a construir hábitos reales. Gracias a Jorge, ahora tengo un estilo de vida que puedo mantener para siempre. No hay vuelta atrás, solo progreso.'
+    },
+    {
+      id: 14,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/aoibghm8_IMG_4253.jpg',
+      text: 'Jorge me enseñó algo que ningún otro entrenador me había explicado: que la transformación empieza en la mentalidad, no en el gimnasio. Ahora entreno con propósito, como con intención y vivo con claridad.'
     }
   ];
 
