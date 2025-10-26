@@ -258,6 +258,26 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteClient = async (clientId, clientName) => {
+    if (!window.confirm(`¿Estás seguro de que quieres ELIMINAR PERMANENTEMENTE a ${clientName}?\n\nEsto borrará:\n- Todos sus datos\n- Formularios\n- PDFs\n- Alertas\n- Mensajes\n- Sesiones\n\nEsta acción NO se puede deshacer.`)) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${API}/admin/delete-client/${clientId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      alert('Cliente eliminado correctamente');
+      setSelectedClient(null);
+      loadClients();
+    } catch (error) {
+      console.error('Error deleting client:', error);
+      alert('Error al eliminar cliente');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
