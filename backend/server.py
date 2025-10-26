@@ -278,7 +278,8 @@ async def logout(request: Request, response: Response):
 # ==================== USER ENDPOINTS ====================
 
 @api_router.get("/users/dashboard")
-async def get_user_dashboard(user: dict = Depends(get_current_user)):
+async def get_user_dashboard(request: Request):
+    user = await get_current_user(request)
     user_id = user["_id"]
     
     # Get forms
