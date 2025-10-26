@@ -594,7 +594,8 @@ async def mark_alert_read(alert_id: str, request: Request):
 
 
 @api_router.get("/alerts/unread")
-async def get_unread_count(user: dict = Depends(get_current_user)):
+async def get_unread_count(request: Request):
+    user = await get_current_user(request)
     count = await db.alerts.count_documents({"user_id": user["_id"], "read": False})
     return {"count": count}
 
