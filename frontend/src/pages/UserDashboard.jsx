@@ -242,29 +242,32 @@ const UserDashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {userData.pdfs.length > 0 && (
+                    {pdfs.length > 0 && (
                       <div className="flex items-start gap-3 pb-3 border-b">
                         <Download className="h-5 w-5 text-blue-500 mt-0.5" />
                         <div>
                           <p className="font-medium">Nuevo documento recibido</p>
-                          <p className="text-sm text-gray-600">{userData.pdfs[userData.pdfs.length - 1].title}</p>
+                          <p className="text-sm text-gray-600">{pdfs[pdfs.length - 1].title}</p>
                           <p className="text-xs text-gray-500 mt-1">
-                            {new Date(userData.pdfs[userData.pdfs.length - 1].uploadDate).toLocaleDateString('es-ES')}
+                            {new Date(pdfs[pdfs.length - 1].upload_date).toLocaleDateString('es-ES')}
                           </p>
                         </div>
                       </div>
                     )}
-                    {userData.forms.length > 0 && (
+                    {forms.length > 0 && (
                       <div className="flex items-start gap-3">
                         <FileText className="h-5 w-5 text-green-500 mt-0.5" />
                         <div>
-                          <p className="font-medium">Formulario completado</p>
-                          <p className="text-sm text-gray-600">{userData.forms[0].title}</p>
+                          <p className="font-medium">Formulario {forms[0].completed ? 'completado' : 'recibido'}</p>
+                          <p className="text-sm text-gray-600">{forms[0].title}</p>
                           <p className="text-xs text-gray-500 mt-1">
-                            {new Date(userData.forms[0].sentDate).toLocaleDateString('es-ES')}
+                            {new Date(forms[0].sent_date).toLocaleDateString('es-ES')}
                           </p>
                         </div>
                       </div>
+                    )}
+                    {pdfs.length === 0 && forms.length === 0 && (
+                      <p className="text-gray-500 text-center py-4">No hay actividad reciente</p>
                     )}
                   </div>
                 </CardContent>
