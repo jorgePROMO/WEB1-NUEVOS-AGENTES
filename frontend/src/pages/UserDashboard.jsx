@@ -347,7 +347,15 @@ const UserDashboard = () => {
                                 {pdf.type === 'training' ? 'Entrenamiento' : 'Nutrición'}
                               </Badge>
                             </div>
-                            <Button size="sm" className="w-full mt-3" variant="outline">
+                            <Button 
+                              size="sm" 
+                              className="w-full mt-3" 
+                              variant="outline"
+                              onClick={() => {
+                                const token = localStorage.getItem('token');
+                                window.open(`${BACKEND_URL}/api/pdfs/${pdf.id}/download?token=${token}`, '_blank');
+                              }}
+                            >
                               <Download className="mr-2 h-4 w-4" />
                               Descargar PDF
                             </Button>
