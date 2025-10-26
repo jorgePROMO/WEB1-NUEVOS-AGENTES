@@ -559,7 +559,8 @@ async def download_pdf(pdf_id: str, request: Request):
 # ==================== ALERT ENDPOINTS ====================
 
 @api_router.post("/alerts/send")
-async def send_alert(alert_data: AlertCreate, admin: dict = Depends(require_admin)):
+async def send_alert(alert_data: AlertCreate, request: Request):
+    admin = await require_admin(request)
     alert_dict = {
         "_id": str(datetime.utcnow().timestamp()).replace(".", ""),
         "user_id": alert_data.user_id,
