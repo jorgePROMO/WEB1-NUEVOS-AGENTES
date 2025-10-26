@@ -164,13 +164,50 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleUploadPDF = () => {
+  const handleUploadPDF = async () => {
     if (!selectedClient || !pdfData.title) {
       alert('Por favor completa todos los campos');
       return;
     }
-    alert(`PDF "${pdfData.title}" subido para ${selectedClient.name}`);
-    setPdfData({ title: '', type: 'training' });
+
+    const fileInput = document.getElementById('pdf-file');
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+      alert('Por favor selecciona un archivo PDF');
+      return;
+    }
+
+    const file = fileInput.files[0];
+    
+    // Verify it's a PDF
+    if (!file.name.toLowerCase().endsWith('.pdf')) {
+      alert('Por favor selecciona un archivo PDF válido');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('user_id', selectedClient.id);
+      formData.append('title', pdfData.title);
+      formData.append('type', pdfData.type);
+
+      await axios.post(`${API}/pdfs/upload`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      alert(`PDF "${pdfData.title}" subido correctamente para ${selectedClient.name}`);
+      setPdfData({ title: '', type: 'training' });
+      fileInput.value = ''; // Clear file input
+      
+      // Reload client details to show new PDF
+      loadClientDetails(selectedClient.id);
+    } catch (error) {
+      console.error('Error uploading PDF:', error);
+      alert('Error al subir el PDF: ' + (error.response?.data?.detail || error.message));
+    }
   };
 
   const handleVerifyPayment = async (clientId) => {
