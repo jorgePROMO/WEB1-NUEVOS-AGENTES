@@ -44,9 +44,11 @@ const OAuthHandler = ({ children }) => {
     const handleOAuth = async () => {
       // Check if there's a session_id in the URL hash
       const hash = window.location.hash;
+      console.log('OAuthHandler: Current hash:', hash);
       if (hash.includes('session_id=')) {
         setIsProcessing(true);
         const sessionId = hash.split('session_id=')[1].split('&')[0];
+        console.log('OAuthHandler: Extracted session_id:', sessionId);
         
         if (sessionId) {
           const result = await googleAuth(sessionId);
@@ -55,6 +57,7 @@ const OAuthHandler = ({ children }) => {
           window.history.replaceState(null, '', window.location.pathname);
           
           if (result.success) {
+            console.log('OAuthHandler: Success, redirecting to', result.user.role === 'admin' ? '/admin' : '/dashboard');
             // Redirect based on role
             if (result.user.role === 'admin') {
               navigate('/admin', { replace: true });
@@ -62,6 +65,7 @@ const OAuthHandler = ({ children }) => {
               navigate('/dashboard', { replace: true });
             }
           } else {
+            console.error('OAuthHandler: Failed', result.error);
             // Redirect to login with error
             navigate('/login', { replace: true, state: { error: 'Error en autenticación con Google' } });
           }
