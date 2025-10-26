@@ -344,7 +344,8 @@ async def get_all_clients(request: Request):
 
 
 @api_router.get("/admin/clients/{user_id}")
-async def get_client_details(user_id: str, admin: dict = Depends(require_admin)):
+async def get_client_details(user_id: str, request: Request):
+    admin = await require_admin(request)
     user = await db.users.find_one({"_id": user_id})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
