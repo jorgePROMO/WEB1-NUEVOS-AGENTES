@@ -683,7 +683,8 @@ async def get_user_sessions(user_id: str, request: Request):
 
 
 @api_router.get("/sessions/admin/all")
-async def get_all_sessions(admin: dict = Depends(require_admin)):
+async def get_all_sessions(request: Request):
+    admin = await require_admin(request)
     sessions = await db.sessions.find().sort("date", 1).to_list(1000)
     
     for session in sessions:
