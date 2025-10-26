@@ -14,6 +14,7 @@ from models import (
     UserCreate, UserResponse, UserInDB, Subscription,
     FormCreate, FormInDB, PDFCreate, PDFInDB,
     AlertCreate, AlertInDB, MessageCreate, MessageInDB,
+    SessionCreate, SessionInDB,
     Token
 )
 from auth import (
