@@ -81,8 +81,14 @@ async def get_current_user_id_flexible(request: Request):
     if session_token:
         # Validate session token from database
         session = await db.user_sessions.find_one({"session_token": session_token})
-        if session and session["expires_at"] > datetime.now(timezone.utc):
-            return session["user_id"]
+        if session:
+            # Convert expires_at to timezone-aware if it isn't already
+            expires_at = session["expires_at"]
+            if expires_at.tzinfo is None:
+                expires_at = expires_at.replace(tzinfo=timezone.utc)
+            
+            if expires_at > datetime.now(timezone.utc):
+                return session["user_id"]
     
     # Fallback to JWT token from Authorization header
     auth_header = request.headers.get("Authorization")
