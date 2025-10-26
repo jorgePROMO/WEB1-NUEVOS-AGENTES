@@ -320,7 +320,8 @@ async def get_user_dashboard(request: Request):
 # ==================== ADMIN ENDPOINTS ====================
 
 @api_router.get("/admin/clients")
-async def get_all_clients(admin: dict = Depends(require_admin)):
+async def get_all_clients(request: Request):
+    admin = await require_admin(request)
     users = await db.users.find({"role": "user"}).to_list(1000)
     
     for user in users:
