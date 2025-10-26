@@ -357,7 +357,21 @@ const AdminDashboard = () => {
           </Card>
         </div>
 
-        {/* Main Content */}
+        {/* Main Content with Tabs */}
+        <Tabs defaultValue="clients" className="space-y-6">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
+            <TabsTrigger value="clients">
+              <Users className="h-4 w-4 mr-2" />
+              Gestión de Clientes
+            </TabsTrigger>
+            <TabsTrigger value="calendar">
+              <Calendar className="h-4 w-4 mr-2" />
+              Calendario General
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Clients Management Tab */}
+          <TabsContent value="clients">
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Client List */}
           <Card className="lg:col-span-1">
