@@ -660,7 +660,7 @@ async def send_message(message_data: MessageCreate, request: Request):
 async def create_session(session_data: SessionCreate, request: Request):
     admin = await require_admin(request)
     session_dict = {
-        "_id": str(datetime.utcnow().timestamp()).replace(".", ""),
+        "_id": str(datetime.now(timezone.utc).timestamp()).replace(".", ""),
         "user_id": session_data.user_id,
         "title": session_data.title,
         "description": session_data.description,
@@ -669,7 +669,7 @@ async def create_session(session_data: SessionCreate, request: Request):
         "type": session_data.type,
         "created_by": admin["_id"],
         "completed": False,
-        "created_at": datetime.utcnow()
+        "created_at": datetime.now(timezone.utc)
     }
     
     await db.sessions.insert_one(session_dict)
