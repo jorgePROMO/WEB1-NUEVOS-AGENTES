@@ -409,12 +409,118 @@ const AdminDashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <Tabs defaultValue="forms" className="space-y-4">
-                    <TabsList className="grid w-full grid-cols-4">
+                    <TabsList className="grid w-full grid-cols-5">
+                      <TabsTrigger value="data">Datos</TabsTrigger>
                       <TabsTrigger value="forms">Formularios</TabsTrigger>
                       <TabsTrigger value="pdfs">PDFs</TabsTrigger>
                       <TabsTrigger value="alerts">Alertas</TabsTrigger>
                       <TabsTrigger value="calendar">Calendario</TabsTrigger>
                     </TabsList>
+
+                    {/* Data Tab - NEW */}
+                    <TabsContent value="data" className="space-y-4">
+                      <Card className="bg-gradient-to-br from-blue-50 to-white">
+                        <CardHeader>
+                          <CardTitle>Información del Cliente</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <div className="grid md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="text-sm font-semibold text-gray-700">ID</label>
+                              <p className="text-gray-900 bg-white p-2 rounded border">{selectedClient.id}</p>
+                            </div>
+                            <div>
+                              <label className="text-sm font-semibold text-gray-700">Nombre de usuario</label>
+                              <p className="text-gray-900 bg-white p-2 rounded border">{selectedClient.username}</p>
+                            </div>
+                            <div>
+                              <label className="text-sm font-semibold text-gray-700">Nombre completo</label>
+                              <p className="text-gray-900 bg-white p-2 rounded border">{selectedClient.name}</p>
+                            </div>
+                            <div>
+                              <label className="text-sm font-semibold text-gray-700">Email</label>
+                              <p className="text-gray-900 bg-white p-2 rounded border">{selectedClient.email}</p>
+                            </div>
+                            <div>
+                              <label className="text-sm font-semibold text-gray-700">Rol</label>
+                              <Badge className="bg-blue-100 text-blue-700">{selectedClient.role}</Badge>
+                            </div>
+                            <div>
+                              <label className="text-sm font-semibold text-gray-700">Fecha de registro</label>
+                              <p className="text-gray-900 bg-white p-2 rounded border">
+                                {new Date(selectedClient.created_at).toLocaleString('es-ES')}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="border-t pt-4 mt-4">
+                            <h4 className="font-semibold text-lg mb-3">Suscripción</h4>
+                            <div className="grid md:grid-cols-2 gap-4">
+                              <div>
+                                <label className="text-sm font-semibold text-gray-700">Plan</label>
+                                <p className="text-gray-900 bg-white p-2 rounded border">{selectedClient.subscription?.plan === 'team' ? 'Equipo' : 'Directo'}</p>
+                              </div>
+                              <div>
+                                <label className="text-sm font-semibold text-gray-700">Estado</label>
+                                <Badge className={
+                                  selectedClient.subscription?.payment_status === 'verified'
+                                    ? 'bg-green-100 text-green-700'
+                                    : 'bg-orange-100 text-orange-700'
+                                }>
+                                  {selectedClient.subscription?.payment_status === 'verified' ? 'Verificado' : 'Pendiente'}
+                                </Badge>
+                              </div>
+                              <div>
+                                <label className="text-sm font-semibold text-gray-700">Fecha de inicio</label>
+                                <p className="text-gray-900 bg-white p-2 rounded border">
+                                  {new Date(selectedClient.subscription?.start_date).toLocaleDateString('es-ES')}
+                                </p>
+                              </div>
+                              <div>
+                                <label className="text-sm font-semibold text-gray-700">Archivado</label>
+                                <Badge className={
+                                  selectedClient.subscription?.archived
+                                    ? 'bg-orange-100 text-orange-700'
+                                    : 'bg-green-100 text-green-700'
+                                }>
+                                  {selectedClient.subscription?.archived ? 'Sí' : 'No'}
+                                </Badge>
+                              </div>
+                              {selectedClient.subscription?.archived && selectedClient.subscription?.archived_reason && (
+                                <div className="md:col-span-2">
+                                  <label className="text-sm font-semibold text-gray-700">Razón de archivado</label>
+                                  <p className="text-gray-900 bg-white p-2 rounded border">{selectedClient.subscription.archived_reason}</p>
+                                </div>
+                              )}
+                              {selectedClient.subscription?.stripe_customer_id && (
+                                <div className="md:col-span-2">
+                                  <label className="text-sm font-semibold text-gray-700">Stripe Customer ID</label>
+                                  <p className="text-gray-900 bg-white p-2 rounded border font-mono text-sm">{selectedClient.subscription.stripe_customer_id}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="border-t pt-4 mt-4">
+                            <h4 className="font-semibold text-lg mb-3">Estadísticas</h4>
+                            <div className="grid md:grid-cols-3 gap-4">
+                              <div className="text-center p-4 bg-blue-50 rounded-lg">
+                                <p className="text-2xl font-bold text-blue-600">{selectedClientDetails?.forms?.length || 0}</p>
+                                <p className="text-sm text-gray-600">Formularios</p>
+                              </div>
+                              <div className="text-center p-4 bg-orange-50 rounded-lg">
+                                <p className="text-2xl font-bold text-orange-600">{selectedClientDetails?.pdfs?.length || 0}</p>
+                                <p className="text-sm text-gray-600">Documentos</p>
+                              </div>
+                              <div className="text-center p-4 bg-purple-50 rounded-lg">
+                                <p className="text-2xl font-bold text-purple-600">{selectedClientDetails?.alerts?.length || 0}</p>
+                                <p className="text-sm text-gray-600">Alertas</p>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
 
                     {/* Forms Tab */}
                     <TabsContent value="forms" className="space-y-4">
