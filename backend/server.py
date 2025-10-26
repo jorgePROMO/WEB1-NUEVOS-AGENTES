@@ -500,12 +500,13 @@ async def complete_form(form_id: str, request: Request):
 
 @api_router.post("/pdfs/upload")
 async def upload_pdf(
+    request: Request,
     file: UploadFile = File(...),
     user_id: str = Form(...),
     title: str = Form(...),
-    type: str = Form(...),
-    admin: dict = Depends(require_admin)
+    type: str = Form(...)
 ):
+    admin = await require_admin(request)
     # Create uploads directory
     upload_dir = Path("/app/backend/uploads")
     upload_dir.mkdir(exist_ok=True)
