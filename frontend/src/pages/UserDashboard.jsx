@@ -298,13 +298,13 @@ const UserDashboard = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {userData.forms.length > 0 ? (
+                    {forms.length > 0 ? (
                       <div className="space-y-3">
-                        {userData.forms.map((form) => (
+                        {forms.map((form) => (
                           <div key={form.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                             <div>
                               <p className="font-medium">{form.title}</p>
-                              <p className="text-sm text-gray-600">Enviado: {new Date(form.sentDate).toLocaleDateString('es-ES')}</p>
+                              <p className="text-sm text-gray-600">Enviado: {new Date(form.sent_date).toLocaleDateString('es-ES')}</p>
                             </div>
                             <Button
                               size="sm"
