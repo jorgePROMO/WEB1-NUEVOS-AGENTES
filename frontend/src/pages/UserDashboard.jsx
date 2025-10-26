@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Badge } from '../components/ui/badge';
+import axios from 'axios';
 import { 
   CreditCard, 
   FileText, 
@@ -18,22 +19,45 @@ import {
   AlertCircle,
   ExternalLink
 } from 'lucide-react';
-import { mockUsers, mockMessages } from '../mock';
 import ChatBox from '../components/ChatBox';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+
 const UserDashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, token } = useAuth();
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
+  const [forms, setForms] = useState([]);
+  const [pdfs, setPdfs] = useState([]);
+  const [alerts, setAlerts] = useState([]);
   const [unreadAlerts, setUnreadAlerts] = useState(0);
   const [showChat, setShowChat] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load user data from mock
-    const currentUser = mockUsers.find(u => u.id === user.id) || mockUsers[0];
-    setUserData(currentUser);
-    setUnreadAlerts(currentUser.alerts?.filter(a => !a.read).length || 0);
-  }, [user]);
+    loadDashboardData();
+  }, []);
+
+  const loadDashboardData = async () => {
+    try {
+      const response = await axios.get(`${API}/users/dashboard`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      setUserData(response.data.user);
+      setForms(response.data.forms || []);
+      setPdfs(response.data.pdfs || []);
+      setAlerts(response.data.alerts || []);
+      setUnreadAlerts(response.data.unread_alerts || 0);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading dashboard:', error);
+      setLoading(false);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -44,11 +68,22 @@ const UserDashboard = () => {
     window.open('https://buy.stripe.com/fZu6oGamGbw1444gr1cs80d', '_blank');
   };
 
-  if (!userData) {
-    return <div className="min-h-screen flex items-center justify-center">Cargando...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Cargando...</p>
+        </div>
+      </div>
+    );
   }
 
-  const isPending = userData.subscription.paymentStatus === 'pending';
+  if (!userData) {
+    return <div className="min-h-screen flex items-center justify-center">Error al cargar datos</div>;
+  }
+
+  const isPending = userData.subscription?.payment_status === 'pending';
 
   return (
     <div className="min-h-screen bg-gray-50">
