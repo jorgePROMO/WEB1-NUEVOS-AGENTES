@@ -178,17 +178,53 @@ backend:
           comment: "✅ POST /api/admin/verify-payment/{user_id} - Payment verification working correctly. Successfully updated user payment status to 'verified' and subscription status to 'active'."
 
 frontend:
-  - task: "Frontend Testing"
+  - task: "User Registration Flow"
     implemented: true
     working: "NA"
-    file: "N/A"
+    file: "/app/frontend/src/pages/Register.jsx"
     stuck_count: 0
-    priority: "low"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "testing"
-          comment: "Frontend testing not performed as per system limitations - testing agent focuses only on backend API testing."
+          comment: "Starting comprehensive frontend testing - User registration flow with specific test credentials: test_usuario_2025 / test2025@example.com / Test123!"
+
+  - task: "User Login Flow"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Login.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "testing"
+          comment: "Testing user login flow and admin login with credentials: ecjtrainer@gmail.com / jorge3007"
+
+  - task: "User Dashboard Display"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/UserDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "testing"
+          comment: "Testing user dashboard display, correct username display (not María López), and payment status verification"
+
+  - task: "Admin Dashboard and Client Management"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "testing"
+          comment: "Testing admin dashboard access and verification that registered user appears in client list"
 
 metadata:
   created_by: "testing_agent"
