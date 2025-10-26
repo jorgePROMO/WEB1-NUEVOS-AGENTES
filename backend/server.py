@@ -668,7 +668,8 @@ async def create_session(session_data: SessionCreate, request: Request):
 
 
 @api_router.get("/sessions/user/{user_id}")
-async def get_user_sessions(user_id: str, current_user: dict = Depends(get_current_user)):
+async def get_user_sessions(user_id: str, request: Request):
+    current_user = await get_current_user(request)
     # Users can only see their own sessions, admins can see any
     if current_user["role"] != "admin" and current_user["_id"] != user_id:
         raise HTTPException(status_code=403, detail="Access denied")
