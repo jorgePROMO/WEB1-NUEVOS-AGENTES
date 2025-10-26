@@ -808,6 +808,13 @@ const AdminDashboard = () => {
             )}
           </Card>
         </div>
+          </TabsContent>
+
+          {/* Calendar Tab */}
+          <TabsContent value="calendar">
+            <AdminCalendar />
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Chat Modal */}
