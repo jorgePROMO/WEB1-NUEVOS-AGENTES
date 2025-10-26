@@ -533,13 +533,13 @@ async def upload_pdf(
     
     # Save to database
     pdf_dict = {
-        "_id": str(datetime.utcnow().timestamp()).replace(".", ""),
+        "_id": str(datetime.now(timezone.utc).timestamp()).replace(".", ""),
         "user_id": user_id,
         "title": title,
         "type": type,
         "file_path": str(file_path),
-        "upload_date": datetime.utcnow(),
-        "created_at": datetime.utcnow()
+        "upload_date": datetime.now(timezone.utc),
+        "created_at": datetime.now(timezone.utc)
     }
     
     await db.pdfs.insert_one(pdf_dict)
