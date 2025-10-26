@@ -21,11 +21,14 @@ class PyObjectId(ObjectId):
 
 
 class Subscription(BaseModel):
-    status: str = "pending"  # pending, active, cancelled
+    status: str = "pending"  # pending, active, cancelled, archived
     plan: str = "team"  # team, direct
     start_date: datetime = Field(default_factory=datetime.utcnow)
     payment_status: str = "pending"  # pending, verified
     stripe_customer_id: Optional[str] = None
+    archived: bool = False
+    archived_reason: Optional[str] = None
+    archived_date: Optional[datetime] = None
 
 
 class UserBase(BaseModel):
