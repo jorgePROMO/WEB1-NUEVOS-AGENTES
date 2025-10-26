@@ -505,6 +505,76 @@ async def send_message(message_data: MessageCreate, current_user: dict = Depends
     return message_dict
 
 
+# ==================== SESSION/CALENDAR ENDPOINTS ====================
+
+@api_router.post("/sessions/create")
+async def create_session(session_data: SessionCreate, admin: dict = Depends(require_admin)):
+    session_dict = {
+        "_id": str(datetime.utcnow().timestamp()).replace(".", ""),
+        "user_id": session_data.user_id,
+        "title": session_data.title,
+        "description": session_data.description,
+        "date": session_data.date,
+        "duration": session_data.duration,
+        "type": session_data.type,
+        "created_by": admin["_id"],
+        "completed": False,
+        "created_at": datetime.utcnow()
+    }
+    
+    await db.sessions.insert_one(session_dict)
+    session_dict["id"] = session_dict["_id"]
+    
+    return session_dict
+
+
+@api_router.get("/sessions/user/{user_id}")
+async def get_user_sessions(user_id: str, current_user: dict = Depends(get_current_user)):
+    # Users can only see their own sessions, admins can see any
+    if current_user["role"] != "admin" and current_user["_id"] != user_id:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    sessions = await db.sessions.find({"user_id": user_id}).sort("date", 1).to_list(1000)
+    
+    for session in sessions:
+        session["id"] = str(session["_id"])
+    
+    return {"sessions": sessions}
+
+
+@api_router.get("/sessions/admin/all")
+async def get_all_sessions(admin: dict = Depends(require_admin)):
+    sessions = await db.sessions.find().sort("date", 1).to_list(1000)
+    
+    for session in sessions:
+        session["id"] = str(session["_id"])
+    
+    return {"sessions": sessions}
+
+
+@api_router.patch("/sessions/{session_id}/complete")
+async def mark_session_complete(session_id: str, admin: dict = Depends(require_admin)):
+    result = await db.sessions.update_one(
+        {"_id": session_id},
+        {"$set": {"completed": True}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    return {"success": True}
+
+
+@api_router.delete("/sessions/{session_id}")
+async def delete_session(session_id: str, admin: dict = Depends(require_admin)):
+    result = await db.sessions.delete_one({"_id": session_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    return {"success": True}
+
+
 # ==================== ROOT ENDPOINT ====================
 
 @api_router.get("/")
