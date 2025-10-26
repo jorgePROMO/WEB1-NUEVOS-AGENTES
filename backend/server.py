@@ -95,7 +95,7 @@ async def register(user_data: UserCreate):
     
     # Create user
     user_dict = {
-        "_id": str(datetime.utcnow().timestamp()).replace(".", ""),
+        "_id": str(datetime.now(timezone.utc).timestamp()).replace(".", ""),
         "username": user_data.username,
         "email": user_data.email,
         "password": get_password_hash(user_data.password),
@@ -104,13 +104,13 @@ async def register(user_data: UserCreate):
         "subscription": {
             "status": "pending",
             "plan": "team",
-            "start_date": datetime.utcnow(),
+            "start_date": datetime.now(timezone.utc),
             "payment_status": "pending",
             "stripe_customer_id": None
         },
         "next_review": None,
-        "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow()
+        "created_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc)
     }
     
     await db.users.insert_one(user_dict)
