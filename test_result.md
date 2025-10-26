@@ -246,11 +246,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "User Registration Flow"
-    - "User Login Flow"
-    - "User Dashboard Display"
     - "Admin Dashboard and Client Management"
-  stuck_tasks: []
+  stuck_tasks:
+    - "Admin Dashboard and Client Management"
   test_all: false
   test_priority: "high_first"
 
