@@ -411,7 +411,8 @@ async def archive_client(user_id: str, request: Request, reason: Optional[str] =
 
 
 @api_router.post("/admin/unarchive-client/{user_id}")
-async def unarchive_client(user_id: str, admin: dict = Depends(require_admin)):
+async def unarchive_client(user_id: str, request: Request):
+    admin = await require_admin(request)
     result = await db.users.update_one(
         {"_id": user_id},
         {"$set": {
