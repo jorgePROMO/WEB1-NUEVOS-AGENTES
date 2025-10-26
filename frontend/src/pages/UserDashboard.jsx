@@ -186,12 +186,12 @@ const UserDashboard = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Inicio:</span>
-                    <span className="font-semibold">{new Date(userData.subscription.startDate).toLocaleDateString('es-ES')}</span>
+                    <span className="font-semibold">{new Date(userData.subscription.start_date).toLocaleDateString('es-ES')}</span>
                   </div>
-                  {userData.nextReview && (
+                  {userData.next_review && (
                     <div className="flex justify-between">
                       <span className="text-gray-600">Próxima revisión:</span>
-                      <span className="font-semibold">{new Date(userData.nextReview).toLocaleDateString('es-ES')}</span>
+                      <span className="font-semibold">{new Date(userData.next_review).toLocaleDateString('es-ES')}</span>
                     </div>
                   )}
                 </CardContent>
