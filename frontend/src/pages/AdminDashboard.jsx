@@ -106,11 +106,15 @@ const AdminDashboard = () => {
     navigate('/');
   };
 
-  const filteredClients = clients.filter(client =>
-    client.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.username?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredClients = clients.filter(client => {
+    const matchesSearch = client.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.username?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const isArchived = client.subscription?.archived === true;
+    
+    return matchesSearch && (showArchived ? isArchived : !isArchived);
+  });
 
   const handleSendForm = async () => {
     if (!selectedClient || !formData.title || !formData.url) {
