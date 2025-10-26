@@ -275,12 +275,12 @@ const AdminDashboard = () => {
                       <p className="font-semibold text-gray-900">{client.name}</p>
                       <Badge
                         className={
-                          client.subscription.paymentStatus === 'verified'
+                          client.subscription?.payment_status === 'verified'
                             ? 'bg-green-100 text-green-700'
                             : 'bg-orange-100 text-orange-700'
                         }
                       >
-                        {client.subscription.paymentStatus === 'verified' ? 'Activo' : 'Pendiente'}
+                        {client.subscription?.payment_status === 'verified' ? 'Activo' : 'Pendiente'}
                       </Badge>
                     </div>
                     <p className="text-sm text-gray-600">@{client.username}</p>
