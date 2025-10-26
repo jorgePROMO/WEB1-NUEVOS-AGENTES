@@ -694,7 +694,8 @@ async def get_all_sessions(request: Request):
 
 
 @api_router.patch("/sessions/{session_id}/complete")
-async def mark_session_complete(session_id: str, admin: dict = Depends(require_admin)):
+async def mark_session_complete(session_id: str, request: Request):
+    admin = await require_admin(request)
     result = await db.sessions.update_one(
         {"_id": session_id},
         {"$set": {"completed": True}}
