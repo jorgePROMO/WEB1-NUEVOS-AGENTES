@@ -7,11 +7,6 @@ const TestimonialsSection = () => {
 
   const testimonials = [
     {
-      id: 1,
-      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/h4avh64l_1F77C5D3-14BD-4AE7-B175-B5E0833B9ACB.JPG',
-      text: 'Al principio pensaba que necesitaba más motivación. Pero Jorge me enseñó que lo que me faltaba era un sistema claro. Ahora entreno sin excusas y los resultados hablan por sí solos.'
-    },
-    {
       id: 2,
       image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/ho9gdudv_2ED9F02D-4760-49A8-93E0-8473E33B83E8.JPG',
       text: 'Llevaba años probando dietas y entrenamientos que nunca duraban. Con Jorge entendí que no se trata de ser perfecto, sino de ser constante. Esto ha cambiado mi vida completamente.'
@@ -30,6 +25,31 @@ const TestimonialsSection = () => {
       id: 5,
       image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/vrh0y8xz_F037CF61-996D-4497-BE22-570B3DAB30FA.JPG',
       text: 'Pensé que entrenar era sufrir. Con Jorge descubrí que entrenar es construir. Me ayudó a entender mi cuerpo, mi nutrición y sobre todo, mi mente. Este es el mejor cambio que he hecho.'
+    },
+    {
+      id: 6,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/yiv7iloy_IMG_0944.HEIC',
+      text: 'Después de intentar con tres entrenadores diferentes, Jorge fue el único que realmente entendió lo que necesitaba. No solo me puso en forma, me enseñó a pensar diferente sobre el ejercicio y la comida.'
+    },
+    {
+      id: 7,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/ip3gcpbz_IMG_2039.HEIC',
+      text: 'Tengo una agenda imposible y siempre creí que no tenía tiempo para entrenar. Jorge me demostró que el problema no era el tiempo, era la falta de un plan realista. Ahora todo encaja perfectamente.'
+    },
+    {
+      id: 8,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/ck8e015x_IMG_2154.HEIC',
+      text: 'Lo que más valoro es la honestidad. Jorge nunca me prometió milagros, me prometió un método que funciona si lo aplicas. Y funciona. Los resultados son la mejor prueba de que esto es diferente.'
+    },
+    {
+      id: 9,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/i1mxkh0n_IMG_2318.HEIC',
+      text: 'Había probado de todo: dietas extremas, rutinas imposibles, suplementos caros. Nada funcionaba a largo plazo. Jorge me enseñó que la clave no está en hacer más, sino en hacer lo correcto de forma constante.'
+    },
+    {
+      id: 10,
+      image: 'https://customer-assets.emergentagent.com/job_landing-details/artifacts/3gyf8j1i_IMG_2549.HEIC',
+      text: 'No buscaba solo bajar de peso, buscaba recuperar mi confianza y mi energía. Jorge me ayudó a conseguir ambas cosas. Ahora me siento mejor que hace 10 años, y es sostenible.'
     }
   ];
 
