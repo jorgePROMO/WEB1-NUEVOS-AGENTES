@@ -497,7 +497,7 @@ async def complete_form(form_id: str, request: Request):
         {"_id": form_id, "user_id": user["_id"]},
         {"$set": {
             "completed": True,
-            "completed_date": datetime.utcnow()
+            "completed_date": datetime.now(timezone.utc)
         }}
     )
     
