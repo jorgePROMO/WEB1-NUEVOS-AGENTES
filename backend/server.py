@@ -392,7 +392,8 @@ async def verify_payment(user_id: str, request: Request):
 
 
 @api_router.post("/admin/archive-client/{user_id}")
-async def archive_client(user_id: str, reason: Optional[str] = None, admin: dict = Depends(require_admin)):
+async def archive_client(user_id: str, request: Request, reason: Optional[str] = None):
+    admin = await require_admin(request)
     result = await db.users.update_one(
         {"_id": user_id},
         {"$set": {
