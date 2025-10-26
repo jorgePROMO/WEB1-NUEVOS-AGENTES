@@ -430,7 +430,7 @@ async def unarchive_client(user_id: str, request: Request):
             "subscription.archived": False,
             "subscription.archived_reason": None,
             "subscription.archived_date": None,
-            "updated_at": datetime.utcnow()
+            "updated_at": datetime.now(timezone.utc)
         }}
     )
     
