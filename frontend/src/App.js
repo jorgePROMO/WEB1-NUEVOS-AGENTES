@@ -35,20 +35,20 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
 };
 
 // Component to handle Google OAuth callback
-const OAuthHandler = () => {
+const OAuthHandler = ({ children }) => {
   const { googleAuth } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     const handleOAuth = async () => {
       // Check if there's a session_id in the URL hash
       const hash = window.location.hash;
       if (hash.includes('session_id=')) {
+        setIsProcessing(true);
         const sessionId = hash.split('session_id=')[1].split('&')[0];
         
         if (sessionId) {
-          // Show loading state
           const result = await googleAuth(sessionId);
           
           // Clean the hash from URL
@@ -63,23 +63,28 @@ const OAuthHandler = () => {
             }
           } else {
             // Redirect to login with error
-            navigate('/login', { replace: true });
+            navigate('/login', { replace: true, state: { error: 'Error en autenticación con Google' } });
           }
         }
+        setIsProcessing(false);
       }
     };
 
     handleOAuth();
-  }, [googleAuth, navigate, location]);
+  }, [googleAuth, navigate]);
 
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-        <p className="mt-4 text-gray-600">Autenticando con Google...</p>
+  if (isProcessing) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Autenticando con Google...</p>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return children;
 };
 
 function AppRoutes() {
@@ -91,18 +96,21 @@ function AppRoutes() {
       <Route
         path="/dashboard"
         element={
-          <ProtectedRoute>
-            <OAuthHandler />
-            <UserDashboard />
-          </ProtectedRoute>
+          <OAuthHandler>
+            <ProtectedRoute>
+              <UserDashboard />
+            </ProtectedRoute>
+          </OAuthHandler>
         }
       />
       <Route
         path="/admin"
         element={
-          <ProtectedRoute adminOnly={true}>
-            <AdminDashboard />
-          </ProtectedRoute>
+          <OAuthHandler>
+            <ProtectedRoute adminOnly={true}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          </OAuthHandler>
         }
       />
       <Route path="*" element={<Navigate to="/" replace />} />
