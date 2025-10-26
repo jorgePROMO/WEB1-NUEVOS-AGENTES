@@ -7,6 +7,8 @@ import { Label } from '../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 import { AlertCircle, Loader2, CheckCircle } from 'lucide-react';
 
+const FRONTEND_URL = window.location.origin;
+
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -42,6 +44,12 @@ const Register = () => {
     }
     
     setLoading(false);
+  };
+
+  const handleGoogleRegister = () => {
+    // Redirect to Emergent Auth with dashboard as redirect URL
+    const redirectUrl = `${FRONTEND_URL}/dashboard`;
+    window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
   };
 
   return (
