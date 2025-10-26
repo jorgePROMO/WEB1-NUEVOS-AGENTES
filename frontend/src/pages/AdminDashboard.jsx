@@ -449,9 +449,9 @@ const AdminDashboard = () => {
                       {/* Uploaded PDFs */}
                       <div>
                         <h4 className="font-semibold mb-3">Documentos subidos</h4>
-                        {selectedClient.pdfs.length > 0 ? (
+                        {selectedClientDetails?.pdfs?.length > 0 ? (
                           <div className="grid md:grid-cols-2 gap-3">
-                            {selectedClient.pdfs.map((pdf) => (
+                            {selectedClientDetails.pdfs.map((pdf) => (
                               <div key={pdf.id} className="p-3 bg-gray-50 rounded-lg">
                                 <div className="flex items-start justify-between mb-2">
                                   <p className="font-medium text-sm">{pdf.title}</p>
@@ -459,7 +459,7 @@ const AdminDashboard = () => {
                                     {pdf.type === 'training' ? 'Entrenamiento' : 'Nutrición'}
                                   </Badge>
                                 </div>
-                                <p className="text-xs text-gray-600">Subido: {new Date(pdf.uploadDate).toLocaleDateString('es-ES')}</p>
+                                <p className="text-xs text-gray-600">Subido: {new Date(pdf.upload_date).toLocaleDateString('es-ES')}</p>
                               </div>
                             ))}
                           </div>
