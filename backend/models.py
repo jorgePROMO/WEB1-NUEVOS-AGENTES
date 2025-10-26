@@ -1,0 +1,158 @@
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional, List
+from datetime import datetime
+from bson import ObjectId
+
+
+class PyObjectId(ObjectId):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        if not ObjectId.is_valid(v):
+            raise ValueError("Invalid objectid")
+        return ObjectId(v)
+
+    @classmethod
+    def __modify_schema__(cls, field_schema):
+        field_schema.update(type="string")
+
+
+class Subscription(BaseModel):
+    status: str = "pending"  # pending, active, cancelled
+    plan: str = "team"  # team, direct
+    start_date: datetime = Field(default_factory=datetime.utcnow)
+    payment_status: str = "pending"  # pending, verified
+    stripe_customer_id: Optional[str] = None
+
+
+class UserBase(BaseModel):
+    username: str
+    email: EmailStr
+    name: str
+    role: str = "user"  # user, admin
+
+
+class UserCreate(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+
+
+class UserInDB(UserBase):
+    id: str = Field(alias="_id")
+    password: str
+    subscription: Subscription
+    next_review: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+
+class UserResponse(UserBase):
+    id: str
+    subscription: Subscription
+    next_review: Optional[datetime] = None
+
+
+class FormBase(BaseModel):
+    title: str
+    url: str
+
+
+class FormCreate(FormBase):
+    user_id: str
+
+
+class FormInDB(FormBase):
+    id: str = Field(alias="_id")
+    user_id: str
+    completed: bool = False
+    sent_date: datetime = Field(default_factory=datetime.utcnow)
+    completed_date: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+
+class PDFBase(BaseModel):
+    title: str
+    type: str  # training, nutrition
+
+
+class PDFCreate(PDFBase):
+    user_id: str
+    file_path: str
+
+
+class PDFInDB(PDFBase):
+    id: str = Field(alias="_id")
+    user_id: str
+    file_path: str
+    upload_date: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+
+class AlertBase(BaseModel):
+    title: str
+    message: str
+    type: str = "general"  # form, general, reminder
+    link: Optional[str] = None
+
+
+class AlertCreate(AlertBase):
+    user_id: str
+
+
+class AlertInDB(AlertBase):
+    id: str = Field(alias="_id")
+    user_id: str
+    read: bool = False
+    date: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+
+class MessageBase(BaseModel):
+    message: str
+
+
+class MessageCreate(MessageBase):
+    user_id: str  # Client user ID
+
+
+class MessageInDB(MessageBase):
+    id: str = Field(alias="_id")
+    user_id: str  # Client user ID
+    sender_id: str  # Who sent the message
+    sender_name: str
+    is_admin: bool
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
+class TokenData(BaseModel):
+    user_id: Optional[str] = None
