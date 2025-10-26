@@ -537,7 +537,7 @@ const AdminDashboard = () => {
                         <Calendar className="h-12 w-12 text-green-500 mx-auto mb-4" />
                         <h3 className="font-semibold text-lg mb-2">Calendario de seguimiento</h3>
                         <p className="text-gray-600 mb-4">
-                          Próxima revisión programada: {selectedClient.nextReview ? new Date(selectedClient.nextReview).toLocaleDateString('es-ES') : 'No programada'}
+                          Próxima revisión programada: {selectedClient?.next_review ? new Date(selectedClient.next_review).toLocaleDateString('es-ES') : 'No programada'}
                         </p>
                         <Button variant="outline">
                           <Calendar className="h-4 w-4 mr-2" />
