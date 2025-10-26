@@ -34,6 +34,7 @@ const AdminDashboard = () => {
   const [clients, setClients] = useState([]);
   const [stats, setStats] = useState({ total: 0, active: 0, pending: 0 });
   const [selectedClient, setSelectedClient] = useState(null);
+  const [selectedClientDetails, setSelectedClientDetails] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showChat, setShowChat] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -63,6 +64,12 @@ const AdminDashboard = () => {
     loadClients();
   }, [isAdmin, navigate]);
 
+  useEffect(() => {
+    if (selectedClient) {
+      loadClientDetails(selectedClient.id);
+    }
+  }, [selectedClient]);
+
   const loadClients = async () => {
     try {
       const response = await axios.get(`${API}/admin/clients`, {
@@ -76,6 +83,20 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error('Error loading clients:', error);
       setLoading(false);
+    }
+  };
+
+  const loadClientDetails = async (userId) => {
+    try {
+      const response = await axios.get(`${API}/admin/clients/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setSelectedClientDetails(response.data);
+    } catch (error) {
+      console.error('Error loading client details:', error);
+      setSelectedClientDetails({ user: selectedClient, forms: [], pdfs: [], alerts: [] });
     }
   };
 
