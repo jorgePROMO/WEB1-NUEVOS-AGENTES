@@ -573,15 +573,15 @@ async def download_pdf(pdf_id: str, request: Request):
 async def send_alert(alert_data: AlertCreate, request: Request):
     admin = await require_admin(request)
     alert_dict = {
-        "_id": str(datetime.utcnow().timestamp()).replace(".", ""),
+        "_id": str(datetime.now(timezone.utc).timestamp()).replace(".", ""),
         "user_id": alert_data.user_id,
         "title": alert_data.title,
         "message": alert_data.message,
         "type": alert_data.type,
         "link": alert_data.link,
         "read": False,
-        "date": datetime.utcnow(),
-        "created_at": datetime.utcnow()
+        "date": datetime.now(timezone.utc),
+        "created_at": datetime.now(timezone.utc)
     }
     
     await db.alerts.insert_one(alert_dict)
