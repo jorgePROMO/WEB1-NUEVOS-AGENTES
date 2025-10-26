@@ -474,14 +474,14 @@ async def delete_client(user_id: str, request: Request):
 async def send_form(form_data: FormCreate, request: Request):
     admin = await require_admin(request)
     form_dict = {
-        "_id": str(datetime.utcnow().timestamp()).replace(".", ""),
+        "_id": str(datetime.now(timezone.utc).timestamp()).replace(".", ""),
         "user_id": form_data.user_id,
         "title": form_data.title,
         "url": form_data.url,
         "completed": False,
-        "sent_date": datetime.utcnow(),
+        "sent_date": datetime.now(timezone.utc),
         "completed_date": None,
-        "created_at": datetime.utcnow()
+        "created_at": datetime.now(timezone.utc)
     }
     
     await db.forms.insert_one(form_dict)
