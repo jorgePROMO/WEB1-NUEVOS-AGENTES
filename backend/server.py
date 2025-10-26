@@ -47,7 +47,8 @@ logger = logging.getLogger(__name__)
 
 # ==================== HELPER FUNCTIONS ====================
 
-async def get_current_user(user_id: str = Depends(get_current_user_id)):
+async def get_current_user(request: Request):
+    user_id = await get_current_user_id_flexible(request)
     user = await db.users.find_one({"_id": user_id})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -55,7 +56,8 @@ async def get_current_user(user_id: str = Depends(get_current_user_id)):
     return user
 
 
-async def require_admin(user: dict = Depends(get_current_user)):
+async def require_admin(request: Request):
+    user = await get_current_user(request)
     if user.get("role") != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
