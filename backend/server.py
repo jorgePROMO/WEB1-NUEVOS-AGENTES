@@ -538,7 +538,8 @@ async def upload_pdf(
 
 
 @api_router.get("/pdfs/{pdf_id}/download")
-async def download_pdf(pdf_id: str, user: dict = Depends(get_current_user)):
+async def download_pdf(pdf_id: str, request: Request):
+    user = await get_current_user(request)
     pdf = await db.pdfs.find_one({"_id": pdf_id})
     
     if not pdf:
