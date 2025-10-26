@@ -332,15 +332,15 @@ const UserDashboard = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {userData.pdfs.length > 0 ? (
+                    {pdfs.length > 0 ? (
                       <div className="grid md:grid-cols-2 gap-4">
-                        {userData.pdfs.map((pdf) => (
+                        {pdfs.map((pdf) => (
                           <div key={pdf.id} className="p-4 bg-gradient-to-br from-blue-50 to-orange-50 rounded-lg border">
                             <div className="flex items-start justify-between mb-2">
                               <div className="flex-1">
                                 <p className="font-semibold text-gray-900">{pdf.title}</p>
                                 <p className="text-sm text-gray-600 mt-1">
-                                  Subido: {new Date(pdf.uploadDate).toLocaleDateString('es-ES')}
+                                  Subido: {new Date(pdf.upload_date).toLocaleDateString('es-ES')}
                                 </p>
                               </div>
                               <Badge className={pdf.type === 'training' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}>
