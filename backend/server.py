@@ -580,7 +580,8 @@ async def send_alert(alert_data: AlertCreate, request: Request):
 
 
 @api_router.patch("/alerts/{alert_id}/read")
-async def mark_alert_read(alert_id: str, user: dict = Depends(get_current_user)):
+async def mark_alert_read(alert_id: str, request: Request):
+    user = await get_current_user(request)
     result = await db.alerts.update_one(
         {"_id": alert_id, "user_id": user["_id"]},
         {"$set": {"read": True}}
