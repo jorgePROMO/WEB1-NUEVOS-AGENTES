@@ -59,6 +59,30 @@ const UserDashboard = () => {
     }
   };
 
+  const handleDownloadPDF = async (pdfId, pdfTitle) => {
+    try {
+      const response = await axios.get(`${API}/pdfs/${pdfId}/download`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        responseType: 'blob'
+      });
+      
+      // Create blob link to download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${pdfTitle}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      alert('Error al descargar el PDF');
+    }
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/');
