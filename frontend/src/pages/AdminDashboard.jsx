@@ -38,6 +38,7 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showChat, setShowChat] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showArchived, setShowArchived] = useState(false);
 
   // Form states
   const [formData, setFormData] = useState({
