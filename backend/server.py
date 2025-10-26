@@ -302,6 +302,31 @@ async def unarchive_client(user_id: str, admin: dict = Depends(require_admin)):
     return {"success": True, "message": "Client unarchived successfully"}
 
 
+@api_router.delete("/admin/delete-client/{user_id}")
+async def delete_client(user_id: str, admin: dict = Depends(require_admin)):
+    # Delete all user data
+    await db.forms.delete_many({"user_id": user_id})
+    await db.alerts.delete_many({"user_id": user_id})
+    await db.messages.delete_many({"user_id": user_id})
+    
+    # Delete PDFs from filesystem and database
+    pdfs = await db.pdfs.find({"user_id": user_id}).to_list(100)
+    for pdf in pdfs:
+        file_path = Path(pdf["file_path"])
+        if file_path.exists():
+            file_path.unlink()
+    
+    await db.pdfs.delete_many({"user_id": user_id})
+    
+    # Delete user
+    result = await db.users.delete_one({"_id": user_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"success": True, "message": "Client and all data deleted successfully"}
+
+
 # ==================== FORM ENDPOINTS ====================
 
 @api_router.post("/forms/send")
