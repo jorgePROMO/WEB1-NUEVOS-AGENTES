@@ -373,9 +373,9 @@ const UserDashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {userData.alerts.length > 0 ? (
+                {alerts.length > 0 ? (
                   <div className="space-y-3">
-                    {userData.alerts.map((alert) => (
+                    {alerts.map((alert) => (
                       <div
                         key={alert.id}
                         className={`p-4 rounded-lg border ${
