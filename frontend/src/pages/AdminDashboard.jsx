@@ -208,7 +208,7 @@ const AdminDashboard = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Total Clientes</p>
-                  <p className="text-3xl font-bold text-gray-900">{clients.length}</p>
+                  <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
                 </div>
                 <Users className="h-12 w-12 text-blue-500" />
               </div>
@@ -220,7 +220,7 @@ const AdminDashboard = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Clientes Activos</p>
-                  <p className="text-3xl font-bold text-green-600">{activeClients}</p>
+                  <p className="text-3xl font-bold text-green-600">{stats.active}</p>
                 </div>
                 <CheckCircle className="h-12 w-12 text-green-500" />
               </div>
@@ -232,7 +232,7 @@ const AdminDashboard = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Pagos Pendientes</p>
-                  <p className="text-3xl font-bold text-orange-600">{pendingClients}</p>
+                  <p className="text-3xl font-bold text-orange-600">{stats.pending}</p>
                 </div>
                 <XCircle className="h-12 w-12 text-orange-500" />
               </div>
