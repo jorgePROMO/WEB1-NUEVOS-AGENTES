@@ -646,7 +646,8 @@ async def send_message(message_data: MessageCreate, request: Request):
 # ==================== SESSION/CALENDAR ENDPOINTS ====================
 
 @api_router.post("/sessions/create")
-async def create_session(session_data: SessionCreate, admin: dict = Depends(require_admin)):
+async def create_session(session_data: SessionCreate, request: Request):
+    admin = await require_admin(request)
     session_dict = {
         "_id": str(datetime.utcnow().timestamp()).replace(".", ""),
         "user_id": session_data.user_id,
