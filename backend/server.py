@@ -760,6 +760,152 @@ async def delete_session(session_id: str, request: Request):
     return {"success": True}
 
 
+
+
+# ==================== SOCKET.IO EVENTS ====================
+
+# Store connected users: {user_id: sid}
+connected_users = {}
+
+@sio.event
+async def connect(sid, environ):
+    """Handle client connection"""
+    logger.info(f"Client connected: {sid}")
+    await sio.emit('connected', {'status': 'connected'}, room=sid)
+
+
+@sio.event
+async def disconnect(sid):
+    """Handle client disconnection"""
+    # Remove user from connected users
+    user_id_to_remove = None
+    for user_id, socket_id in connected_users.items():
+        if socket_id == sid:
+            user_id_to_remove = user_id
+            break
+    
+    if user_id_to_remove:
+        del connected_users[user_id_to_remove]
+    
+    logger.info(f"Client disconnected: {sid}")
+
+
+@sio.event
+async def authenticate(sid, data):
+    """Authenticate user via session_token or JWT"""
+    try:
+        token = data.get('token')
+        if not token:
+            await sio.emit('auth_error', {'message': 'No token provided'}, room=sid)
+            return
+        
+        # Try to get user from session_token first
+        session = await db.user_sessions.find_one({"session_token": token})
+        if session and session["expires_at"] > datetime.now(timezone.utc):
+            user_id = session["user_id"]
+        else:
+            # Fallback to JWT
+            try:
+                from auth import decode_token
+                user_id = decode_token(token)
+            except:
+                await sio.emit('auth_error', {'message': 'Invalid token'}, room=sid)
+                return
+        
+        # Store the connection
+        connected_users[user_id] = sid
+        
+        # Get user data
+        user = await db.users.find_one({"_id": user_id})
+        if user:
+            await sio.emit('authenticated', {
+                'user_id': user_id,
+                'name': user.get('name'),
+                'role': user.get('role')
+            }, room=sid)
+            logger.info(f"User {user_id} authenticated on socket {sid}")
+    except Exception as e:
+        logger.error(f"Authentication error: {e}")
+        await sio.emit('auth_error', {'message': str(e)}, room=sid)
+
+
+@sio.event
+async def send_message(sid, data):
+    """Handle incoming chat messages"""
+    try:
+        # Find which user this socket belongs to
+        sender_id = None
+        for user_id, socket_id in connected_users.items():
+            if socket_id == sid:
+                sender_id = user_id
+                break
+        
+        if not sender_id:
+            await sio.emit('error', {'message': 'Not authenticated'}, room=sid)
+            return
+        
+        # Get sender info
+        sender = await db.users.find_one({"_id": sender_id})
+        if not sender:
+            await sio.emit('error', {'message': 'User not found'}, room=sid)
+            return
+        
+        # Determine recipient (for admin-client chat)
+        recipient_id = data.get('user_id') if sender['role'] == 'admin' else sender_id
+        message_text = data.get('message')
+        
+        if not message_text:
+            await sio.emit('error', {'message': 'Message is required'}, room=sid)
+            return
+        
+        # Save message to database
+        message_dict = {
+            "_id": str(datetime.now(timezone.utc).timestamp()).replace(".", ""),
+            "user_id": recipient_id,
+            "sender_id": sender_id,
+            "sender_name": sender.get('name'),
+            "message": message_text,
+            "is_admin": sender['role'] == 'admin',
+            "timestamp": datetime.now(timezone.utc),
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        await db.messages.insert_one(message_dict)
+        message_dict["id"] = message_dict["_id"]
+        
+        # Send to sender
+        await sio.emit('new_message', message_dict, room=sid)
+        
+        # Send to recipient if they're online
+        if sender['role'] == 'admin':
+            # Admin sending to user
+            if recipient_id in connected_users:
+                await sio.emit('new_message', message_dict, room=connected_users[recipient_id])
+        else:
+            # User sending to admin - find admin's socket
+            admins = await db.users.find({"role": "admin"}).to_list(10)
+            for admin in admins:
+                if admin["_id"] in connected_users:
+                    await sio.emit('new_message', message_dict, room=connected_users[admin["_id"]])
+        
+        logger.info(f"Message from {sender_id} to {recipient_id}: {message_text}")
+    
+    except Exception as e:
+        logger.error(f"Error sending message: {e}")
+        await sio.emit('error', {'message': str(e)}, room=sid)
+
+
+@sio.event
+async def join_chat(sid, data):
+    """Join a specific chat room (for admin viewing client chats)"""
+    try:
+        user_id = data.get('user_id')
+        if user_id:
+            await sio.enter_room(sid, f"chat_{user_id}")
+            logger.info(f"Socket {sid} joined chat_{user_id}")
+    except Exception as e:
+        logger.error(f"Error joining chat: {e}")
+
 # ==================== ROOT ENDPOINT ====================
 
 @api_router.get("/")
