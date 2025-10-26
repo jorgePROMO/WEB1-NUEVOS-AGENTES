@@ -436,6 +436,8 @@ async def delete_client(user_id: str, request: Request):
     await db.forms.delete_many({"user_id": user_id})
     await db.alerts.delete_many({"user_id": user_id})
     await db.messages.delete_many({"user_id": user_id})
+    await db.sessions.delete_many({"user_id": user_id})
+    await db.user_sessions.delete_many({"user_id": user_id})
     
     # Delete PDFs from filesystem and database
     pdfs = await db.pdfs.find({"user_id": user_id}).to_list(100)
