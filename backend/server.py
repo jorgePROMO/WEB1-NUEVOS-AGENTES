@@ -618,7 +618,8 @@ async def get_messages(user_id: str, request: Request):
 
 
 @api_router.post("/messages/send")
-async def send_message(message_data: MessageCreate, current_user: dict = Depends(get_current_user)):
+async def send_message(message_data: MessageCreate, request: Request):
+    current_user = await get_current_user(request)
     # Determine user_id based on role
     if current_user["role"] == "admin":
         user_id = message_data.user_id  # Admin specifies which client
