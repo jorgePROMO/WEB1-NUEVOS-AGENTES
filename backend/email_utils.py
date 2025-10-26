@@ -64,6 +64,10 @@ def send_session_created_email(user_email: str, user_name: str, session_date: da
     
     formatted_date = session_date.strftime("%d de %B de %Y a las %H:%M")
     
+    # Get frontend URL from environment
+    frontend_url = os.environ.get('FRONTEND_URL', 'https://coach-connect-47.preview.emergentagent.com')
+    dashboard_url = f"{frontend_url}/dashboard"
+    
     html_body = f"""
     <!DOCTYPE html>
     <html>
@@ -73,26 +77,40 @@ def send_session_created_email(user_email: str, user_name: str, session_date: da
             .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
             .header {{ background-color: #3B82F6; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }}
             .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
-            .button {{ display: inline-block; padding: 12px 24px; background-color: #3B82F6; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }}
+            .session-info {{ background-color: white; padding: 20px; border-left: 4px solid #3B82F6; margin: 20px 0; }}
+            .button {{ display: inline-block; padding: 14px 28px; background-color: #3B82F6; color: white !important; text-decoration: none; border-radius: 5px; margin-top: 20px; font-weight: bold; }}
+            .button:hover {{ background-color: #2563EB; }}
             .footer {{ text-align: center; margin-top: 20px; font-size: 12px; color: #666; }}
         </style>
     </head>
     <body>
         <div class="container">
             <div class="header">
-                <h1>Nueva Sesión Programada</h1>
+                <h1>✓ Nueva Sesión Programada</h1>
             </div>
             <div class="content">
                 <p>Hola {user_name},</p>
                 <p>Se ha programado una nueva sesión para ti:</p>
-                <p><strong>Título:</strong> {session_title}</p>
-                <p><strong>Fecha y Hora:</strong> {formatted_date}</p>
-                <p>Si necesitas reagendar esta sesión, puedes hacerlo desde tu panel de usuario.</p>
+                
+                <div class="session-info">
+                    <p style="margin: 5px 0;"><strong>📋 Título:</strong> {session_title}</p>
+                    <p style="margin: 5px 0;"><strong>📅 Fecha y Hora:</strong> {formatted_date}</p>
+                </div>
+                
+                <p>Para ver todos los detalles de tu sesión y confirmarla, haz clic en el siguiente botón:</p>
+                
+                <div style="text-align: center;">
+                    <a href="{dashboard_url}" class="button">Ver Mi Calendario y Confirmar</a>
+                </div>
+                
+                <p style="margin-top: 20px;">También puedes reagendar la sesión si el horario no te viene bien.</p>
+                
                 <p>¡Nos vemos pronto!</p>
-                <p>Saludos,<br>Jorge Calcerrada</p>
+                <p>Saludos,<br><strong>Jorge Calcerrada</strong></p>
             </div>
             <div class="footer">
                 <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+                <p>Si tienes alguna duda, accede a tu panel de usuario.</p>
             </div>
         </div>
     </body>
@@ -107,7 +125,19 @@ def send_session_created_email(user_email: str, user_name: str, session_date: da
     Título: {session_title}
     Fecha y Hora: {formatted_date}
     
-    Si necesitas reagendar esta sesión, puedes hacerlo desde tu panel de usuario.
+    Para ver los detalles y confirmar tu sesión, accede a tu panel:
+    {dashboard_url}
+    
+    También puedes reagendar la sesión si el horario no te viene bien.
+    
+    ¡Nos vemos pronto!
+    
+    Saludos,
+    Jorge Calcerrada
+    
+    ---
+    Este es un correo automático, por favor no respondas a este mensaje.
+    """
     
     ¡Nos vemos pronto!
     
