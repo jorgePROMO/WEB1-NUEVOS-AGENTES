@@ -152,6 +152,30 @@ class MessageInDB(MessageBase):
         json_encoders = {ObjectId: str}
 
 
+class SessionBase(BaseModel):
+    title: str
+    description: Optional[str] = None
+    date: datetime
+    duration: int = 60  # minutes
+    type: str = "review"  # review, training, consultation
+
+
+class SessionCreate(SessionBase):
+    user_id: str
+
+
+class SessionInDB(SessionBase):
+    id: str = Field(alias="_id")
+    user_id: str
+    created_by: str  # admin ID
+    completed: bool = False
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
