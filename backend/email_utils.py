@@ -224,31 +224,3 @@ def send_session_rescheduled_email(user_email: str, user_name: str, new_date: da
     """
     
     return send_email(user_email, subject, html_body, text_body)
-                <p>¡Nos vemos pronto!</p>
-                <p>Saludos,<br>Jorge Calcerrada</p>
-            </div>
-            <div class="footer">
-                <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
-    
-    text_body = f"""
-    Hola {user_name},
-    
-    Tu sesión ha sido reagendada para:
-    
-    Título: {session_title}
-    Nueva Fecha y Hora: {formatted_date}
-    
-    Si tienes alguna duda o necesitas hacer cambios adicionales, no dudes en contactarnos.
-    
-    ¡Nos vemos pronto!
-    
-    Saludos,
-    Jorge Calcerrada
-    """
-    
-    return send_email(user_email, subject, html_body, text_body)
