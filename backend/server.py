@@ -802,10 +802,30 @@ async def reschedule_session(session_id: str, session_update: SessionUpdate, req
 @api_router.delete("/sessions/{session_id}")
 async def delete_session(session_id: str, request: Request):
     admin = await require_admin(request)
+    
+    # Get session details before deleting (for email notification)
+    session = await db.sessions.find_one({"_id": session_id})
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    # Delete the session
     result = await db.sessions.delete_one({"_id": session_id})
     
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Session not found")
+    
+    # Send email notification to admin
+    try:
+        user = await db.users.find_one({"_id": session["user_id"]})
+        if user and user.get("email"):
+            send_admin_session_cancelled_email(
+                client_name=user.get("name", user.get("username", "")),
+                client_email=user["email"],
+                session_date=session["date"],
+                session_title=session.get("title", "Sesión")
+            )
+    except Exception as e:
+        logger.error(f"Failed to send session cancelled email: {e}")
     
     return {"success": True}
 
