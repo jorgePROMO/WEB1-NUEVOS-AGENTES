@@ -154,6 +154,10 @@ def send_session_rescheduled_email(user_email: str, user_name: str, new_date: da
     
     formatted_date = new_date.strftime("%d de %B de %Y a las %H:%M")
     
+    # Get frontend URL from environment
+    frontend_url = os.environ.get('FRONTEND_URL', 'https://coach-connect-47.preview.emergentagent.com')
+    dashboard_url = f"{frontend_url}/dashboard"
+    
     html_body = f"""
     <!DOCTYPE html>
     <html>
@@ -163,21 +167,69 @@ def send_session_rescheduled_email(user_email: str, user_name: str, new_date: da
             .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
             .header {{ background-color: #F59E0B; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }}
             .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
-            .button {{ display: inline-block; padding: 12px 24px; background-color: #F59E0B; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }}
+            .session-info {{ background-color: white; padding: 20px; border-left: 4px solid #F59E0B; margin: 20px 0; }}
+            .button {{ display: inline-block; padding: 14px 28px; background-color: #F59E0B; color: white !important; text-decoration: none; border-radius: 5px; margin-top: 20px; font-weight: bold; }}
+            .button:hover {{ background-color: #D97706; }}
             .footer {{ text-align: center; margin-top: 20px; font-size: 12px; color: #666; }}
         </style>
     </head>
     <body>
         <div class="container">
             <div class="header">
-                <h1>Sesión Reagendada</h1>
+                <h1>🔄 Sesión Reagendada</h1>
             </div>
             <div class="content">
                 <p>Hola {user_name},</p>
-                <p>Tu sesión ha sido reagendada para:</p>
-                <p><strong>Título:</strong> {session_title}</p>
-                <p><strong>Nueva Fecha y Hora:</strong> {formatted_date}</p>
-                <p>Si tienes alguna duda o necesitas hacer cambios adicionales, no dudes en contactarnos.</p>
+                <p>Tu sesión ha sido reagendada exitosamente:</p>
+                
+                <div class="session-info">
+                    <p style="margin: 5px 0;"><strong>📋 Título:</strong> {session_title}</p>
+                    <p style="margin: 5px 0;"><strong>📅 Nueva Fecha y Hora:</strong> {formatted_date}</p>
+                </div>
+                
+                <p>Para ver todos los detalles de tu sesión actualizada, haz clic en el siguiente botón:</p>
+                
+                <div style="text-align: center;">
+                    <a href="{dashboard_url}" class="button">Ver Mi Calendario</a>
+                </div>
+                
+                <p style="margin-top: 20px;">Si tienes alguna duda o necesitas hacer cambios adicionales, puedes acceder a tu panel de usuario.</p>
+                
+                <p>¡Nos vemos pronto!</p>
+                <p>Saludos,<br><strong>Jorge Calcerrada</strong></p>
+            </div>
+            <div class="footer">
+                <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+                <p>Si tienes alguna duda, accede a tu panel de usuario.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    text_body = f"""
+    Hola {user_name},
+    
+    Tu sesión ha sido reagendada exitosamente:
+    
+    Título: {session_title}
+    Nueva Fecha y Hora: {formatted_date}
+    
+    Para ver los detalles actualizados de tu sesión, accede a tu panel:
+    {dashboard_url}
+    
+    Si tienes alguna duda o necesitas hacer cambios adicionales, no dudes en contactarnos.
+    
+    ¡Nos vemos pronto!
+    
+    Saludos,
+    Jorge Calcerrada
+    
+    ---
+    Este es un correo automático, por favor no respondas a este mensaje.
+    """
+    
+    return send_email(user_email, subject, html_body, text_body)
                 <p>¡Nos vemos pronto!</p>
                 <p>Saludos,<br>Jorge Calcerrada</p>
             </div>
