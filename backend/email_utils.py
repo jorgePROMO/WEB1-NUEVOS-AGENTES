@@ -224,3 +224,204 @@ def send_session_rescheduled_email(user_email: str, user_name: str, new_date: da
     """
     
     return send_email(user_email, subject, html_body, text_body)
+
+
+
+# ==================== ADMIN NOTIFICATION EMAILS ====================
+
+def send_admin_session_created_email(client_name: str, client_email: str, session_date: datetime, session_title: str):
+    """Send email notification to admin when a new session is created"""
+    admin_email = os.environ.get('SMTP_USER', 'ecjtrainer@gmail.com')
+    subject = f"Nueva Sesión Creada - {client_name}"
+    
+    formatted_date = session_date.strftime("%d de %B de %Y a las %H:%M")
+    
+    html_body = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+            .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+            .header {{ background-color: #10B981; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }}
+            .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
+            .session-info {{ background-color: white; padding: 20px; border-left: 4px solid #10B981; margin: 20px 0; }}
+            .footer {{ text-align: center; margin-top: 20px; font-size: 12px; color: #666; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>✓ Nueva Sesión Creada</h1>
+            </div>
+            <div class="content">
+                <p>Hola Jorge,</p>
+                <p>Se ha creado una nueva sesión con los siguientes detalles:</p>
+                
+                <div class="session-info">
+                    <p style="margin: 5px 0;"><strong>👤 Cliente:</strong> {client_name}</p>
+                    <p style="margin: 5px 0;"><strong>📧 Email:</strong> {client_email}</p>
+                    <p style="margin: 5px 0;"><strong>📋 Título:</strong> {session_title}</p>
+                    <p style="margin: 5px 0;"><strong>📅 Fecha y Hora:</strong> {formatted_date}</p>
+                </div>
+                
+                <p>El cliente ha sido notificado por email.</p>
+            </div>
+            <div class="footer">
+                <p>Este es un correo automático de notificación.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    text_body = f"""
+    Nueva Sesión Creada
+    
+    Cliente: {client_name}
+    Email: {client_email}
+    Título: {session_title}
+    Fecha y Hora: {formatted_date}
+    
+    El cliente ha sido notificado por email.
+    
+    ---
+    Este es un correo automático de notificación.
+    """
+    
+    return send_email(admin_email, subject, html_body, text_body)
+
+
+def send_admin_session_rescheduled_email(client_name: str, client_email: str, old_date: datetime, new_date: datetime, session_title: str):
+    """Send email notification to admin when a session is rescheduled"""
+    admin_email = os.environ.get('SMTP_USER', 'ecjtrainer@gmail.com')
+    subject = f"Sesión Reagendada - {client_name}"
+    
+    formatted_old_date = old_date.strftime("%d de %B de %Y a las %H:%M")
+    formatted_new_date = new_date.strftime("%d de %B de %Y a las %H:%M")
+    
+    html_body = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+            .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+            .header {{ background-color: #F59E0B; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }}
+            .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
+            .session-info {{ background-color: white; padding: 20px; border-left: 4px solid #F59E0B; margin: 20px 0; }}
+            .date-change {{ background-color: #FEF3C7; padding: 15px; border-radius: 5px; margin: 15px 0; }}
+            .footer {{ text-align: center; margin-top: 20px; font-size: 12px; color: #666; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🔄 Sesión Reagendada</h1>
+            </div>
+            <div class="content">
+                <p>Hola Jorge,</p>
+                <p>Una sesión ha sido reagendada:</p>
+                
+                <div class="session-info">
+                    <p style="margin: 5px 0;"><strong>👤 Cliente:</strong> {client_name}</p>
+                    <p style="margin: 5px 0;"><strong>📧 Email:</strong> {client_email}</p>
+                    <p style="margin: 5px 0;"><strong>📋 Título:</strong> {session_title}</p>
+                </div>
+                
+                <div class="date-change">
+                    <p style="margin: 5px 0;"><strong>📅 Fecha Anterior:</strong> <span style="text-decoration: line-through;">{formatted_old_date}</span></p>
+                    <p style="margin: 5px 0;"><strong>📅 Nueva Fecha:</strong> <strong>{formatted_new_date}</strong></p>
+                </div>
+                
+                <p>El cliente ha sido notificado por email del cambio.</p>
+            </div>
+            <div class="footer">
+                <p>Este es un correo automático de notificación.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    text_body = f"""
+    Sesión Reagendada
+    
+    Cliente: {client_name}
+    Email: {client_email}
+    Título: {session_title}
+    
+    Fecha Anterior: {formatted_old_date}
+    Nueva Fecha: {formatted_new_date}
+    
+    El cliente ha sido notificado por email del cambio.
+    
+    ---
+    Este es un correo automático de notificación.
+    """
+    
+    return send_email(admin_email, subject, html_body, text_body)
+
+
+def send_admin_session_cancelled_email(client_name: str, client_email: str, session_date: datetime, session_title: str):
+    """Send email notification to admin when a session is cancelled"""
+    admin_email = os.environ.get('SMTP_USER', 'ecjtrainer@gmail.com')
+    subject = f"Sesión Cancelada - {client_name}"
+    
+    formatted_date = session_date.strftime("%d de %B de %Y a las %H:%M")
+    
+    html_body = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+            .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+            .header {{ background-color: #EF4444; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }}
+            .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
+            .session-info {{ background-color: white; padding: 20px; border-left: 4px solid #EF4444; margin: 20px 0; }}
+            .footer {{ text-align: center; margin-top: 20px; font-size: 12px; color: #666; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>✗ Sesión Cancelada</h1>
+            </div>
+            <div class="content">
+                <p>Hola Jorge,</p>
+                <p>Se ha cancelado una sesión:</p>
+                
+                <div class="session-info">
+                    <p style="margin: 5px 0;"><strong>👤 Cliente:</strong> {client_name}</p>
+                    <p style="margin: 5px 0;"><strong>📧 Email:</strong> {client_email}</p>
+                    <p style="margin: 5px 0;"><strong>📋 Título:</strong> {session_title}</p>
+                    <p style="margin: 5px 0;"><strong>📅 Fecha que fue cancelada:</strong> {formatted_date}</p>
+                </div>
+                
+                <p>La sesión ha sido eliminada del calendario.</p>
+            </div>
+            <div class="footer">
+                <p>Este es un correo automático de notificación.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    text_body = f"""
+    Sesión Cancelada
+    
+    Cliente: {client_name}
+    Email: {client_email}
+    Título: {session_title}
+    Fecha que fue cancelada: {formatted_date}
+    
+    La sesión ha sido eliminada del calendario.
+    
+    ---
+    Este es un correo automático de notificación.
+    """
+    
+    return send_email(admin_email, subject, html_body, text_body)
+
