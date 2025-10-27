@@ -139,12 +139,6 @@ def send_session_created_email(user_email: str, user_name: str, session_date: da
     Este es un correo automático, por favor no respondas a este mensaje.
     """
     
-    ¡Nos vemos pronto!
-    
-    Saludos,
-    Jorge Calcerrada
-    """
-    
     return send_email(user_email, subject, html_body, text_body)
 
 
