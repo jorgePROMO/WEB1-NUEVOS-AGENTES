@@ -778,11 +778,20 @@ async def reschedule_session(session_id: str, session_update: SessionUpdate, req
     try:
         user = await db.users.find_one({"_id": session["user_id"]})
         if user and user.get("email"):
+            # Email al cliente
             send_session_rescheduled_email(
                 user_email=user["email"],
                 user_name=user.get("name", user.get("username", "")),
                 new_date=session_update.date,
                 session_title=session.get("title", "Tu sesión")
+            )
+            # Email al admin
+            send_admin_session_rescheduled_email(
+                client_name=user.get("name", user.get("username", "")),
+                client_email=user["email"],
+                old_date=session["date"],
+                new_date=session_update.date,
+                session_title=session.get("title", "Sesión")
             )
     except Exception as e:
         logger.error(f"Failed to send session rescheduled email: {e}")
