@@ -814,15 +814,25 @@ const AdminDashboard = () => {
                                   </Badge>
                                 </div>
                                 <p className="text-xs text-gray-600 mb-2">Recibido: {new Date(pdf.upload_date).toLocaleDateString('es-ES')}</p>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="w-full mt-2"
-                                  onClick={() => handleDownloadPDF(pdf.id)}
-                                >
-                                  <Download className="h-4 w-4 mr-2" />
-                                  Descargar
-                                </Button>
+                                <div className="flex gap-2">
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="flex-1"
+                                    onClick={() => handleDownloadPDF(pdf.id)}
+                                  >
+                                    <Download className="h-4 w-4 mr-2" />
+                                    Descargar
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="border-red-200 text-red-600 hover:bg-red-50"
+                                    onClick={() => handleDeletePDF(pdf.id)}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
                               </div>
                             ))}
                           </div>
