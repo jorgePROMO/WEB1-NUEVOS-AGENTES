@@ -244,11 +244,14 @@ frontend:
     file: "/app/backend/server.py, /app/backend/email_utils.py, /app/backend/models.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Implementing diagnostic questionnaire with email submission to admin (ecjtrainer@gmail.com). Created backend endpoint /api/questionnaire/submit, added QuestionnaireSubmit model, and implemented send_questionnaire_to_admin email function. Frontend component DiagnosisQuestionnaire.jsx already exists with beautiful styling."
+        - working: true
+          agent: "testing"
+          comment: "✅ POST /api/questionnaire/submit - Diagnostic questionnaire endpoint working perfectly. Successfully submitted complete questionnaire with all required fields (nombre, edad, email, whatsapp, objetivo, etc.). Response: {'success': True, 'message': 'Cuestionario enviado correctamente'}. Backend logs confirm email sent successfully to ecjtrainer@gmail.com. SMTP configuration working correctly. Tested with exact data from review request."
 
 metadata:
   created_by: "testing_agent"
