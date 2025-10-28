@@ -251,6 +251,40 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDownloadPDF = async (pdfId) => {
+    try {
+      const response = await axios.get(`${API}/pdfs/${pdfId}/download`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        responseType: 'blob'
+      });
+
+      // Create blob link to download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Get filename from response headers or use default
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = 'document.pdf';
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
+        }
+      }
+      
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      alert('Error al descargar documento: ' + (error.response?.data?.detail || 'Error desconocido'));
+    }
+  };
+
   const handleDeletePDF = async (pdfId) => {
     if (!window.confirm('¿Estás seguro de eliminar este documento? Esta acción no se puede deshacer.')) {
       return;
