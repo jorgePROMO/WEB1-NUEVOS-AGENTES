@@ -796,6 +796,36 @@ async def user_upload_document(
     return {"success": True, "message": "Document uploaded successfully", "document": pdf_dict}
 
 
+
+
+@api_router.delete("/pdfs/{pdf_id}")
+async def delete_pdf(pdf_id: str, request: Request):
+    """Delete a PDF - Users can delete their own uploads, Admin can delete any"""
+    user = await get_current_user(request)
+    
+    # Get PDF details
+    pdf = await db.pdfs.find_one({"_id": pdf_id})
+    if not pdf:
+        raise HTTPException(status_code=404, detail="Document not found")
+    
+    # Check permissions: users can delete their own uploaded docs, admin can delete any
+    if user["role"] != "admin" and pdf["uploaded_by"] != "user":
+        raise HTTPException(status_code=403, detail="You can only delete documents you uploaded")
+    
+    if user["role"] != "admin" and pdf["user_id"] != user["_id"]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Delete file from filesystem
+    file_path = Path(pdf["file_path"])
+    if file_path.exists():
+        file_path.unlink()
+    
+    # Delete from database
+    await db.pdfs.delete_one({"_id": pdf_id})
+    
+    return {"success": True, "message": "Document deleted successfully"}
+
+
 @api_router.get("/pdfs/{pdf_id}/download")
 async def download_pdf(pdf_id: str, request: Request):
     user = await get_current_user(request)
