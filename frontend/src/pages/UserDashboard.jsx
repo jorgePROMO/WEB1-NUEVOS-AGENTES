@@ -481,34 +481,47 @@ const UserDashboard = () => {
 
           {/* Profile Tab */}
           <TabsContent value="profile">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
-                  Mi perfil
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Nombre de usuario</label>
-                    <p className="mt-1 text-gray-900">{userData.username}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Email</label>
-                    <p className="mt-1 text-gray-900">{userData.email}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Plan</label>
-                    <p className="mt-1 text-gray-900">Trabaja con mi equipo</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Miembro desde</label>
-                    <p className="mt-1 text-gray-900">{new Date(userData.subscription.startDate).toLocaleDateString('es-ES')}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Edit Profile */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <User className="h-5 w-5" />
+                    Editar Mi Perfil
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <EditProfileForm 
+                    user={userData} 
+                    onUpdate={(updatedUser) => {
+                      setUserData({ ...userData, ...updatedUser });
+                    }}
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Upload Documents */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Upload className="h-5 w-5" />
+                    Subir Documentos
+                  </CardTitle>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Comparte documentos médicos, análisis, fotos de progreso, etc.
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <UploadDocumentForm 
+                    userId={userData.id}
+                    onUploadSuccess={() => {
+                      fetchUserData();
+                      alert('Documento subido exitosamente. El admin lo verá en su panel.');
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
