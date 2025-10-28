@@ -18,7 +18,9 @@ from models import (
     FormCreate, FormInDB, PDFCreate, PDFInDB,
     AlertCreate, AlertInDB, MessageCreate, MessageInDB,
     SessionCreate, SessionInDB, SessionUpdate, UserSession,
-    Token, QuestionnaireSubmit
+    Token, QuestionnaireSubmit,
+    ProspectStageCreate, ProspectStageInDB, ProspectResponse,
+    ProspectNoteCreate, ProspectNoteInDB, ProspectStageUpdate
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
