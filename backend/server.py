@@ -1104,6 +1104,33 @@ async def delete_session(session_id: str, request: Request):
 
 
 
+# ==================== QUESTIONNAIRE ENDPOINT ====================
+
+@api_router.post("/questionnaire/submit")
+async def submit_questionnaire(questionnaire: QuestionnaireSubmit):
+    """Submit diagnostic questionnaire and send to admin email"""
+    try:
+        # Convert to dict for email function
+        questionnaire_data = questionnaire.dict()
+        
+        # Send email to admin
+        email_sent = send_questionnaire_to_admin(questionnaire_data)
+        
+        if email_sent:
+            logger.info(f"Questionnaire submitted successfully from {questionnaire.email}")
+            return {"success": True, "message": "Cuestionario enviado correctamente"}
+        else:
+            logger.warning(f"Questionnaire received but email not sent (SMTP not configured)")
+            return {"success": True, "message": "Cuestionario recibido (email pendiente de configuración)"}
+    
+    except Exception as e:
+        logger.error(f"Error submitting questionnaire: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error al enviar el cuestionario"
+        )
+
+
 
 # ==================== SOCKET.IO EVENTS ====================
 
