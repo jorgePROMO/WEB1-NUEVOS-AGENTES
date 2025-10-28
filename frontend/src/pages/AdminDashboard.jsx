@@ -448,6 +448,17 @@ const AdminDashboard = () => {
                       <Button
                         size="sm"
                         variant="outline"
+                        onClick={() => {
+                          setUserToEdit(selectedClient);
+                          setShowEditModal(true);
+                        }}
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
+                        Editar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
                         onClick={() => setShowChat(true)}
                       >
                         <MessageSquare className="h-4 w-4 mr-2" />
