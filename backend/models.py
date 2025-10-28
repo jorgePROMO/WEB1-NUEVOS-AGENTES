@@ -251,4 +251,74 @@ class QuestionnaireSubmit(BaseModel):
     dispuesto_invertir: str
     tipo_acompanamiento: str
     presupuesto: str
+
+
+# ==================== CRM PROSPECTOS MODELS ====================
+
+class ProspectStageCreate(BaseModel):
+    name: str
+    color: str = "#3B82F6"  # Default blue color
+    order: int = 0
+
+class ProspectStageInDB(ProspectStageCreate):
+    id: str = Field(alias="_id")
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+class ProspectResponse(BaseModel):
+    id: str = Field(alias="_id")
+    # Datos Personales
+    nombre: str
+    edad: str
+    email: EmailStr
+    whatsapp: str
+    
+    # Contexto Actual
+    objetivo: str
+    intentos_previos: str
+    dificultades: List[str] = []
+    dificultades_otro: Optional[str] = None
+    tiempo_semanal: str
+    entrena: str
+    
+    # Nutrición
+    alimentacion: str
+    salud_info: str
+    
+    # Motivación
+    por_que_ahora: str
+    dispuesto_invertir: str
+    tipo_acompanamiento: str
+    presupuesto: str
+    comentarios_adicionales: Optional[str] = None
+    
+    # CRM fields
+    stage_id: Optional[str] = None
+    stage_name: Optional[str] = "Nuevo"
+    submitted_at: datetime
+    converted_to_client: bool = False
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+class ProspectNoteCreate(BaseModel):
+    prospect_id: str
+    note: str
+
+class ProspectNoteInDB(ProspectNoteCreate):
+    id: str = Field(alias="_id")
+    created_by: str  # admin user id
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+class ProspectStageUpdate(BaseModel):
+    stage_id: str
+
     comentarios_adicionales: Optional[str] = None
