@@ -275,6 +275,73 @@ async def google_auth(session_id: str, response: Response):
             "_id": user_id,
             "username": user_name or user_email.split("@")[0],
             "email": user_email,
+            "name": user_name or user_email.split("@")[0],
+            "password": "",  # No password for OAuth users
+            "role": "user",
+            "picture": user_picture,
+            "subscription": {
+                "status": "pending",
+                "plan": "team",
+                "start_date": datetime.now(timezone.utc),
+                "payment_status": "pending",
+                "stripe_customer_id": None
+            },
+            "next_review": None,
+            "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc)
+        }
+        await db.users.insert_one(user_data)
+    
+    # Store session in database
+    session_doc = {
+        "_id": str(datetime.now(timezone.utc).timestamp()).replace(".", ""),
+        "user_id": user_id,
+        "session_token": session_token,
+        "expires_at": datetime.now(timezone.utc) + timedelta(days=7),
+        "created_at": datetime.now(timezone.utc)
+    }
+    await db.user_sessions.insert_one(session_doc)
+    
+    # Set httpOnly cookie
+    response.set_cookie(
+        key="session_token",
+        value=session_token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=7 * 24 * 60 * 60,  # 7 days
+        path="/"
+    )
+    
+    # Return user data
+    user_response = {
+        "id": user_id,
+        "username": user_data.get("username"),
+        "email": user_data.get("email"),
+        "name": user_data.get("name"),
+        "role": user_data.get("role"),
+        "subscription": user_data.get("subscription"),
+        "picture": user_data.get("picture")
+    }
+    
+    return {"user": user_response, "session_token": session_token}
+
+
+@api_router.post("/auth/logout")
+async def logout(request: Request, response: Response):
+    """
+    Logout user by removing session from database and clearing cookie
+    """
+    session_token = request.cookies.get("session_token")
+    
+    if session_token:
+        # Delete session from database
+        await db.user_sessions.delete_one({"session_token": session_token})
+    
+    # Clear cookie
+    response.delete_cookie(key="session_token", path="/")
+    
+    return {"success": True, "message": "Logged out successfully"}
 
 
 
