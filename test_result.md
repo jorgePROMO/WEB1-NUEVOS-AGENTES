@@ -238,6 +238,18 @@ frontend:
           agent: "testing"
           comment: "❌ CRITICAL ISSUE: Admin dashboard uses mock data instead of real backend data. Registered user test2025@example.com does NOT appear in admin client list. AdminDashboard.jsx line 58: setClients(mockUsers) should call /api/admin/clients API endpoint. Backend API exists but frontend not integrated."
 
+  - task: "Diagnostic Questionnaire Feature"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py, /app/backend/email_utils.py, /app/backend/models.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implementing diagnostic questionnaire with email submission to admin (ecjtrainer@gmail.com). Created backend endpoint /api/questionnaire/submit, added QuestionnaireSubmit model, and implemented send_questionnaire_to_admin email function. Frontend component DiagnosisQuestionnaire.jsx already exists with beautiful styling."
+
 metadata:
   created_by: "testing_agent"
   version: "1.0"
