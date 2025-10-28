@@ -28,7 +28,7 @@ export const EditUserModal = ({ user, open, onClose, onSuccess }) => {
     setError('');
 
     try {
-      await axios.patch(`${API}/admin/users/${user.id}`, formData, {
+      const response = await axios.patch(`${API}/admin/users/${user.id}`, formData, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
@@ -36,8 +36,10 @@ export const EditUserModal = ({ user, open, onClose, onSuccess }) => {
       if (onSuccess) {
         onSuccess();
       }
+      alert('Usuario actualizado correctamente');
       onClose();
     } catch (error) {
+      console.error('Error updating user:', error);
       setError(error.response?.data?.detail || 'Error al actualizar el usuario');
     } finally {
       setLoading(false);
