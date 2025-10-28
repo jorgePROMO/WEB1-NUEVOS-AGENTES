@@ -278,7 +278,8 @@ class BackendTester:
             self.test_3_user_dashboard,
             self.test_4_admin_list_clients,
             self.test_5_admin_send_form,
-            self.test_6_admin_verify_payment
+            self.test_6_admin_verify_payment,
+            self.test_7_diagnostic_questionnaire
         ]
         
         for test in tests:
