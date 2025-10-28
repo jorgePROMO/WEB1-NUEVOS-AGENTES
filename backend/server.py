@@ -1147,6 +1147,221 @@ async def submit_questionnaire(questionnaire: QuestionnaireSubmit):
 
 
 
+# ==================== CRM PROSPECTOS ENDPOINTS ====================
+
+@api_router.get("/admin/prospects")
+async def get_prospects(request: Request, stage: Optional[str] = None):
+    """Get all prospects from questionnaire responses"""
+    await require_admin(request)
+    
+    try:
+        # Build query
+        query = {"converted_to_client": False}
+        if stage:
+            query["stage_name"] = stage
+        
+        # Get all prospects
+        prospects = await db.questionnaire_responses.find(query).sort("submitted_at", -1).to_list(length=None)
+        
+        # Convert to response format
+        prospects_list = []
+        for p in prospects:
+            p["id"] = p["_id"]
+            prospects_list.append(p)
+        
+        return {"prospects": prospects_list, "total": len(prospects_list)}
+    
+    except Exception as e:
+        logger.error(f"Error fetching prospects: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener prospectos")
+
+
+@api_router.get("/admin/prospects/{prospect_id}")
+async def get_prospect_detail(prospect_id: str, request: Request):
+    """Get detailed information about a prospect"""
+    await require_admin(request)
+    
+    try:
+        prospect = await db.questionnaire_responses.find_one({"_id": prospect_id})
+        if not prospect:
+            raise HTTPException(status_code=404, detail="Prospecto no encontrado")
+        
+        # Get notes for this prospect
+        notes = await db.prospect_notes.find({"prospect_id": prospect_id}).sort("created_at", -1).to_list(length=None)
+        for note in notes:
+            note["id"] = note["_id"]
+        
+        prospect["id"] = prospect["_id"]
+        prospect["notes"] = notes
+        
+        return prospect
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching prospect detail: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener detalle del prospecto")
+
+
+@api_router.patch("/admin/prospects/{prospect_id}/stage")
+async def update_prospect_stage(prospect_id: str, stage_update: ProspectStageUpdate, request: Request):
+    """Update prospect stage"""
+    await require_admin(request)
+    
+    try:
+        # Get stage name
+        stage = await db.prospect_stages.find_one({"_id": stage_update.stage_id})
+        stage_name = stage["name"] if stage else "Sin etapa"
+        
+        # Update prospect
+        result = await db.questionnaire_responses.update_one(
+            {"_id": prospect_id},
+            {"$set": {
+                "stage_id": stage_update.stage_id,
+                "stage_name": stage_name,
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Prospecto no encontrado")
+        
+        return {"success": True, "message": "Etapa actualizada"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating prospect stage: {e}")
+        raise HTTPException(status_code=500, detail="Error al actualizar etapa")
+
+
+@api_router.post("/admin/prospects/{prospect_id}/notes")
+async def add_prospect_note(prospect_id: str, note_data: ProspectNoteCreate, request: Request):
+    """Add a note to a prospect"""
+    admin = await require_admin(request)
+    
+    try:
+        note_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+        note_doc = {
+            "_id": note_id,
+            "prospect_id": prospect_id,
+            "note": note_data.note,
+            "created_by": admin["_id"],
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        await db.prospect_notes.insert_one(note_doc)
+        note_doc["id"] = note_doc["_id"]
+        
+        return note_doc
+    
+    except Exception as e:
+        logger.error(f"Error adding prospect note: {e}")
+        raise HTTPException(status_code=500, detail="Error al agregar nota")
+
+
+@api_router.get("/admin/prospect-stages")
+async def get_prospect_stages(request: Request):
+    """Get all prospect stages"""
+    await require_admin(request)
+    
+    try:
+        stages = await db.prospect_stages.find().sort("order", 1).to_list(length=None)
+        for stage in stages:
+            stage["id"] = stage["_id"]
+        
+        return {"stages": stages}
+    
+    except Exception as e:
+        logger.error(f"Error fetching stages: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener etapas")
+
+
+@api_router.post("/admin/prospect-stages")
+async def create_prospect_stage(stage_data: ProspectStageCreate, request: Request):
+    """Create a new prospect stage"""
+    await require_admin(request)
+    
+    try:
+        stage_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+        stage_doc = {
+            "_id": stage_id,
+            "name": stage_data.name,
+            "color": stage_data.color,
+            "order": stage_data.order,
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        await db.prospect_stages.insert_one(stage_doc)
+        stage_doc["id"] = stage_doc["_id"]
+        
+        return stage_doc
+    
+    except Exception as e:
+        logger.error(f"Error creating stage: {e}")
+        raise HTTPException(status_code=500, detail="Error al crear etapa")
+
+
+@api_router.patch("/admin/prospect-stages/{stage_id}")
+async def update_prospect_stage_config(stage_id: str, stage_data: ProspectStageCreate, request: Request):
+    """Update a prospect stage"""
+    await require_admin(request)
+    
+    try:
+        result = await db.prospect_stages.update_one(
+            {"_id": stage_id},
+            {"$set": {
+                "name": stage_data.name,
+                "color": stage_data.color,
+                "order": stage_data.order
+            }}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Etapa no encontrada")
+        
+        # Update all prospects with this stage
+        await db.questionnaire_responses.update_many(
+            {"stage_id": stage_id},
+            {"$set": {"stage_name": stage_data.name}}
+        )
+        
+        return {"success": True, "message": "Etapa actualizada"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating stage: {e}")
+        raise HTTPException(status_code=500, detail="Error al actualizar etapa")
+
+
+@api_router.delete("/admin/prospect-stages/{stage_id}")
+async def delete_prospect_stage(stage_id: str, request: Request):
+    """Delete a prospect stage"""
+    await require_admin(request)
+    
+    try:
+        # Check if any prospects are using this stage
+        count = await db.questionnaire_responses.count_documents({"stage_id": stage_id})
+        if count > 0:
+            raise HTTPException(
+                status_code=400,
+                detail=f"No se puede eliminar. {count} prospectos están usando esta etapa"
+            )
+        
+        result = await db.prospect_stages.delete_one({"_id": stage_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Etapa no encontrada")
+        
+        return {"success": True, "message": "Etapa eliminada"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting stage: {e}")
+        raise HTTPException(status_code=500, detail="Error al eliminar etapa")
+
+
 # ==================== SOCKET.IO EVENTS ====================
 
 # Store connected users: {user_id: sid}
