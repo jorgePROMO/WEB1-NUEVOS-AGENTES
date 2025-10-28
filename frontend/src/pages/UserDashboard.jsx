@@ -18,7 +18,8 @@ import {
   CheckCircle,
   AlertCircle,
   ExternalLink,
-  Upload
+  Upload,
+  Trash2
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { UserCalendar } from '../components/Calendar';
