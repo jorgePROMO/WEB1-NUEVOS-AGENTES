@@ -177,6 +177,57 @@ async def get_me(request: Request):
     }
 
 
+
+
+@api_router.patch("/users/me")
+async def update_my_profile(user_update: UserUpdate, request: Request):
+    """Update current user's profile"""
+    user = await get_current_user(request)
+    user_id = user["_id"]
+    
+    update_data = {}
+    
+    if user_update.name:
+        update_data["name"] = user_update.name
+    
+    if user_update.email:
+        # Check if email is already taken by another user
+        existing_user = await db.users.find_one({"email": user_update.email, "_id": {"$ne": user_id}})
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        update_data["email"] = user_update.email
+    
+    if user_update.password:
+        update_data["password"] = get_password_hash(user_update.password)
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No data to update")
+    
+    update_data["updated_at"] = datetime.now(timezone.utc)
+    
+    result = await db.users.update_one(
+        {"_id": user_id},
+        {"$set": update_data}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Get updated user
+    updated_user = await db.users.find_one({"_id": user_id})
+    
+    return {
+        "success": True,
+        "message": "Profile updated successfully",
+        "user": {
+            "id": updated_user["_id"],
+            "name": updated_user["name"],
+            "email": updated_user["email"],
+            "role": updated_user["role"]
+        }
+    }
+
+
 @api_router.post("/auth/google")
 async def google_auth(session_id: str, response: Response):
     """
