@@ -533,9 +533,9 @@ const UserDashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {pdfs && pdfs.length > 0 ? (
+                {pdfs && pdfs.filter(pdf => pdf.uploaded_by === 'user').length > 0 ? (
                   <div className="grid md:grid-cols-3 gap-3">
-                    {pdfs.map((pdf) => (
+                    {pdfs.filter(pdf => pdf.uploaded_by === 'user').map((pdf) => (
                       <div key={pdf.id} className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                         <div className="flex items-start justify-between mb-2">
                           <p className="font-medium text-sm">{pdf.title}</p>
