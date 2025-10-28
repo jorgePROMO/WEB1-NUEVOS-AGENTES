@@ -261,7 +261,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Diagnostic Questionnaire Feature"
     - "Admin Dashboard and Client Management"
   stuck_tasks:
     - "Admin Dashboard and Client Management"
