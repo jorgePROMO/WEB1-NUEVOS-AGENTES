@@ -724,6 +724,7 @@ async def upload_pdf(
         "title": title,
         "type": type,
         "file_path": str(file_path),
+        "uploaded_by": "admin",  # Mark as uploaded by admin
         "upload_date": datetime.now(timezone.utc),
         "created_at": datetime.now(timezone.utc)
     }
