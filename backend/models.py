@@ -123,6 +123,7 @@ class PDFInDB(PDFBase):
     id: str = Field(alias="_id")
     user_id: str
     file_path: str
+    uploaded_by: str  # 'admin' or 'user'
     upload_date: datetime = Field(default_factory=datetime.utcnow)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
