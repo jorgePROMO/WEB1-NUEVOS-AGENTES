@@ -687,9 +687,16 @@ def send_questionnaire_to_admin(questionnaire_data: dict):
     {questionnaire_data.get('tipo_acompanamiento', 'No especificado')}
     
     Presupuesto Mensual: {questionnaire_data.get('presupuesto', 'No especificado')}
+    """
     
-    {'Comentarios Adicionales:\n' + questionnaire_data.get('comentarios_adicionales', '') if questionnaire_data.get('comentarios_adicionales') else ''}
+    # Add optional comments if provided
+    if questionnaire_data.get('comentarios_adicionales'):
+        text_body += f"""
+    Comentarios Adicionales:
+    {questionnaire_data.get('comentarios_adicionales')}
+    """
     
+    text_body += f"""
     =====================================
     Este diagnóstico fue completado el {datetime.now().strftime('%d de %B de %Y a las %H:%M')}
     Sistema de Diagnóstico Inicial - Jorge Calcerrada
