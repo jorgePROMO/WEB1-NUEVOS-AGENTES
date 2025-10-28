@@ -426,7 +426,11 @@ const AdminDashboard = () => {
 
         {/* Main Content with Tabs */}
         <Tabs defaultValue="clients" className="space-y-6">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
+          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3">
+            <TabsTrigger value="prospects">
+              <Target className="h-4 w-4 mr-2" />
+              Prospectos
+            </TabsTrigger>
             <TabsTrigger value="clients">
               <Users className="h-4 w-4 mr-2" />
               Gestión de Clientes
@@ -436,6 +440,11 @@ const AdminDashboard = () => {
               Calendario General
             </TabsTrigger>
           </TabsList>
+
+          {/* Prospects CRM Tab */}
+          <TabsContent value="prospects">
+            <ProspectsCRM token={token} />
+          </TabsContent>
 
           {/* Clients Management Tab */}
           <TabsContent value="clients">
