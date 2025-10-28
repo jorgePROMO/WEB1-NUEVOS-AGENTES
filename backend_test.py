@@ -219,6 +219,52 @@ class BackendTester:
         
         return False
     
+    def test_7_diagnostic_questionnaire(self):
+        """Test 7: Diagnostic Questionnaire Submission"""
+        url = f"{BACKEND_URL}/questionnaire/submit"
+        
+        # Test data as specified in the review request
+        payload = {
+            "nombre": "Test User",
+            "edad": "30",
+            "email": "test@example.com",
+            "whatsapp": "+34 600 000 000",
+            "objetivo": "Perder peso y ganar músculo",
+            "intentos_previos": "He probado varias dietas pero no he tenido éxito",
+            "dificultades": ["La dieta", "La constancia"],
+            "dificultades_otro": "",
+            "tiempo_semanal": "3 a 5h",
+            "entrena": "Sí, en gimnasio",
+            "alimentacion": "Como 3 veces al día, principalmente comida casera",
+            "salud_info": "Sin problemas de salud",
+            "por_que_ahora": "Quiero mejorar mi salud y verme mejor",
+            "dispuesto_invertir": "Sí, si el servicio encaja conmigo",
+            "tipo_acompanamiento": "Quiero un seguimiento intensivo, correcciones, soporte 1 a 1",
+            "presupuesto": "100-200€/mes",
+            "comentarios_adicionales": "Me gustaría empezar lo antes posible"
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") == True:
+                    message = data.get("message", "")
+                    self.log_result("Diagnostic Questionnaire", True, 
+                                  f"Questionnaire submitted successfully. Response: {message}")
+                    return True
+                else:
+                    self.log_result("Diagnostic Questionnaire", False, 
+                                  "Response success not True", data)
+            else:
+                self.log_result("Diagnostic Questionnaire", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Diagnostic Questionnaire", False, f"Exception: {str(e)}")
+        
+        return False
+    
     def run_all_tests(self):
         """Run all tests in sequence"""
         print(f"🚀 Starting Backend API Tests")
