@@ -597,6 +597,16 @@ const AdminDashboard = () => {
                             </div>
                           </div>
 
+                          
+                          <div className="border-t pt-4 mt-4">
+                            <h4 className="font-semibold text-lg mb-3">Acciones de Seguridad</h4>
+                            <SendPasswordResetButton 
+                              userId={selectedClient.id} 
+                              userName={selectedClient.name} 
+                            />
+                          </div>
+
+
                           <div className="border-t pt-4 mt-4">
                             <h4 className="font-semibold text-lg mb-3">Estadísticas</h4>
                             <div className="grid md:grid-cols-3 gap-4">
