@@ -244,7 +244,12 @@ const AdminDashboard = () => {
       });
       alert('Cliente archivado correctamente');
       loadClients();
-
+      setSelectedClient(null);
+    } catch (error) {
+      console.error('Error archiving client:', error);
+      alert('Error al archivar cliente');
+    }
+  };
 
   const handleDeletePDF = async (pdfId) => {
     if (!window.confirm('¿Estás seguro de eliminar este documento? Esta acción no se puede deshacer.')) {
@@ -263,17 +268,10 @@ const AdminDashboard = () => {
       
       // Refresh client details
       if (selectedClient) {
-        handleClientSelect(selectedClient.id);
+        loadClientDetails(selectedClient.id);
       }
     } catch (error) {
       alert('Error al eliminar documento: ' + (error.response?.data?.detail || 'Error desconocido'));
-    }
-  };
-
-      setSelectedClient(null);
-    } catch (error) {
-      console.error('Error archiving client:', error);
-      alert('Error al archivar cliente');
     }
   };
 
