@@ -25,11 +25,13 @@ import {
   Edit,
   Mail,
   Download,
-  Trash2
+  Trash2,
+  Target
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { AdminCalendar } from '../components/Calendar';
 import { EditUserModal, SendPasswordResetButton } from '../components/AdminComponents';
+import ProspectsCRM from '../components/ProspectsCRM';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
