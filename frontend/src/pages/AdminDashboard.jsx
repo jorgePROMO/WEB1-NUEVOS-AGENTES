@@ -948,9 +948,9 @@ const AdminDashboard = () => {
             setUserToEdit(null);
           }}
           onSuccess={() => {
-            fetchClients();
+            loadClients();
             if (selectedClient && userToEdit.id === selectedClient.id) {
-              handleClientSelect(userToEdit.id);
+              loadClientDetails(userToEdit.id);
             }
           }}
         />
