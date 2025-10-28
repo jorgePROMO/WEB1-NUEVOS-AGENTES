@@ -43,6 +43,8 @@ const AdminDashboard = () => {
   const [showChat, setShowChat] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showArchived, setShowArchived] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [userToEdit, setUserToEdit] = useState(null);
 
   // Form states
   const [formData, setFormData] = useState({
