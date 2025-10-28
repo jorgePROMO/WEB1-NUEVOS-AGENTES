@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { ArrowRight } from 'lucide-react';
+import QuestionnaireModal from './QuestionnaireModal';
 
 const HeroSection = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // URL del cuestionario - el usuario la proporcionará
+  const questionnaireUrl = ""; // AQUÍ PONES LA URL QUE TE DÉ EL USUARIO
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-orange-50">
       {/* Background Image */}
