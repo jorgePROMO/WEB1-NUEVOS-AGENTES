@@ -21,10 +21,13 @@ import {
   MessageSquare,
   Search,
   CheckCircle,
-  XCircle
+  XCircle,
+  Edit,
+  Mail
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { AdminCalendar } from '../components/Calendar';
+import { EditUserModal, SendPasswordResetButton } from '../components/AdminComponents';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
