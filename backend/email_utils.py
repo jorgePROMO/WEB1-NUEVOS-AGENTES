@@ -425,3 +425,86 @@ def send_admin_session_cancelled_email(client_name: str, client_email: str, sess
     
     return send_email(admin_email, subject, html_body, text_body)
 
+
+
+
+def send_password_reset_email(user_email: str, user_name: str, reset_token: str):
+    """Send password reset email to user"""
+    subject = "Recupera tu Contraseña - Jorge Calcerrada"
+    
+    # Get frontend URL from environment
+    frontend_url = os.environ.get('FRONTEND_URL', 'https://coach-connect-47.preview.emergentagent.com')
+    reset_url = f"{frontend_url}/reset-password?token={reset_token}"
+    
+    html_body = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+            .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+            .header {{ background-color: #3B82F6; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }}
+            .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
+            .button {{ display: inline-block; padding: 14px 28px; background-color: #3B82F6; color: white !important; text-decoration: none; border-radius: 5px; margin-top: 20px; font-weight: bold; }}
+            .button:hover {{ background-color: #2563EB; }}
+            .warning {{ background-color: #FEF3C7; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #F59E0B; }}
+            .footer {{ text-align: center; margin-top: 20px; font-size: 12px; color: #666; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🔐 Recuperación de Contraseña</h1>
+            </div>
+            <div class="content">
+                <p>Hola {user_name},</p>
+                <p>Hemos recibido una solicitud para restablecer tu contraseña.</p>
+                
+                <p>Para crear una nueva contraseña, haz clic en el siguiente botón:</p>
+                
+                <div style="text-align: center;">
+                    <a href="{reset_url}" class="button">Restablecer Contraseña</a>
+                </div>
+                
+                <div class="warning">
+                    <p style="margin: 5px 0;"><strong>⚠️ Importante:</strong></p>
+                    <p style="margin: 5px 0;">Este enlace expirará en <strong>1 hora</strong>.</p>
+                    <p style="margin: 5px 0;">Si no solicitaste este cambio, ignora este correo.</p>
+                </div>
+                
+                <p>Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
+                <p style="word-break: break-all; font-size: 12px; color: #666;">{reset_url}</p>
+                
+                <p>Saludos,<br><strong>Jorge Calcerrada</strong></p>
+            </div>
+            <div class="footer">
+                <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    text_body = f"""
+    Recuperación de Contraseña
+    
+    Hola {user_name},
+    
+    Hemos recibido una solicitud para restablecer tu contraseña.
+    
+    Para crear una nueva contraseña, accede al siguiente enlace:
+    {reset_url}
+    
+    ⚠️ Importante:
+    - Este enlace expirará en 1 hora.
+    - Si no solicitaste este cambio, ignora este correo.
+    
+    Saludos,
+    Jorge Calcerrada
+    
+    ---
+    Este es un correo automático, por favor no respondas a este mensaje.
+    """
+    
+    return send_email(user_email, subject, html_body, text_body)
+
