@@ -18,7 +18,7 @@ from models import (
     FormCreate, FormInDB, PDFCreate, PDFInDB,
     AlertCreate, AlertInDB, MessageCreate, MessageInDB,
     SessionCreate, SessionInDB, SessionUpdate, UserSession,
-    Token
+    Token, QuestionnaireSubmit
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
@@ -29,7 +29,8 @@ from email_utils import (
     send_session_rescheduled_email,
     send_admin_session_created_email,
     send_admin_session_rescheduled_email,
-    send_admin_session_cancelled_email
+    send_admin_session_cancelled_email,
+    send_questionnaire_to_admin
 )
 
 ROOT_DIR = Path(__file__).parent
