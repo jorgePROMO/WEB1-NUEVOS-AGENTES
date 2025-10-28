@@ -514,6 +514,9 @@ def send_questionnaire_to_admin(questionnaire_data: dict):
     admin_email = "ecjtrainer@gmail.com"
     subject = f"Nuevo Diagnóstico Inicial - {questionnaire_data.get('nombre', 'Sin nombre')}"
     
+    logger.info(f"Preparing to send questionnaire email to {admin_email}")
+    logger.info(f"Questionnaire from: {questionnaire_data.get('nombre')} <{questionnaire_data.get('email')}>")
+    
     # Format dificultades array
     dificultades_list = questionnaire_data.get('dificultades', [])
     dificultades_texto = ', '.join(dificultades_list) if dificultades_list else 'No especificado'
