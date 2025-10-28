@@ -1,8 +1,10 @@
 import React from 'react';
 import { Button } from './ui/button';
+import { Menu, X } from 'lucide-react';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +18,7 @@ const Header = () => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+      setIsMobileMenuOpen(false);
     }
   };
 
@@ -32,7 +35,7 @@ const Header = () => {
             </a>
           </div>
 
-          {/* Navigation */}
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <button
               onClick={() => scrollToSection('about')}
@@ -60,8 +63,8 @@ const Header = () => {
             </button>
           </nav>
 
-          {/* Auth Buttons */}
-          <div className="hidden lg:flex items-center gap-3">
+          {/* Desktop Auth Buttons */}
+          <div className="hidden md:flex items-center gap-3">
             <Button
               variant="outline"
               className="border-2 border-blue-500 text-blue-500 hover:bg-blue-50 transition-all duration-300"
@@ -76,7 +79,67 @@ const Header = () => {
               Administrador
             </Button>
           </div>
+
+          {/* Mobile menu button */}
+          <button
+            className="md:hidden p-2"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-6 w-6 text-gray-900" />
+            ) : (
+              <Menu className="h-6 w-6 text-gray-900" />
+            )}
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden py-4 border-t">
+            <nav className="flex flex-col gap-4">
+              <button
+                onClick={() => scrollToSection('about')}
+                className="text-gray-700 font-medium text-left hover:text-blue-500 py-2"
+              >
+                Sobre mí
+              </button>
+              <button
+                onClick={() => scrollToSection('method')}
+                className="text-gray-700 font-medium text-left hover:text-blue-500 py-2"
+              >
+                Método
+              </button>
+              <button
+                onClick={() => scrollToSection('services')}
+                className="text-gray-700 font-medium text-left hover:text-blue-500 py-2"
+              >
+                Servicios
+              </button>
+              <button
+                onClick={() => scrollToSection('testimonials')}
+                className="text-gray-700 font-medium text-left hover:text-blue-500 py-2"
+              >
+                Testimonios
+              </button>
+              
+              <div className="flex flex-col gap-3 mt-4 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  className="w-full border-2 border-blue-500 text-blue-500 hover:bg-blue-50"
+                  onClick={() => window.location.href = '/login'}
+                >
+                  Iniciar sesión
+                </Button>
+                <Button
+                  className="w-full bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 text-white"
+                  onClick={() => window.location.href = '/login'}
+                >
+                  Administrador
+                </Button>
+              </div>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );
