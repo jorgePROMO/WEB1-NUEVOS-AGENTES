@@ -1113,6 +1113,19 @@ async def submit_questionnaire(questionnaire: QuestionnaireSubmit):
         # Convert to dict for email function
         questionnaire_data = questionnaire.dict()
         
+        # Save to database for CRM
+        prospect_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+        prospect_doc = {
+            "_id": prospect_id,
+            **questionnaire_data,
+            "submitted_at": datetime.now(timezone.utc),
+            "stage_name": "Nuevo",
+            "stage_id": None,
+            "converted_to_client": False
+        }
+        await db.questionnaire_responses.insert_one(prospect_doc)
+        logger.info(f"Questionnaire saved to CRM with ID: {prospect_id}")
+        
         # Send email to admin
         email_sent = send_questionnaire_to_admin(questionnaire_data)
         
