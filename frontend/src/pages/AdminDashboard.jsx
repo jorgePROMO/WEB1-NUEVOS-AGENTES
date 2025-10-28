@@ -686,6 +686,7 @@ const AdminDashboard = () => {
 
                     {/* PDFs Tab */}
                     <TabsContent value="pdfs" className="space-y-4">
+                      {/* Upload Section */}
                       <div className="bg-orange-50 p-4 rounded-lg">
                         <h3 className="font-semibold mb-3 flex items-center gap-2">
                           <Upload className="h-5 w-5" />
@@ -724,13 +725,16 @@ const AdminDashboard = () => {
                         </div>
                       </div>
 
-                      {/* Uploaded PDFs */}
+                      {/* Documentos Enviados (por admin) */}
                       <div>
-                        <h4 className="font-semibold mb-3">Documentos subidos</h4>
-                        {selectedClientDetails?.pdfs?.length > 0 ? (
+                        <h4 className="font-semibold mb-3 flex items-center gap-2">
+                          <FileText className="h-5 w-5 text-blue-500" />
+                          Documentos Enviados (por ti)
+                        </h4>
+                        {selectedClientDetails?.pdfs?.filter(pdf => pdf.uploaded_by === 'admin').length > 0 ? (
                           <div className="grid md:grid-cols-2 gap-3">
-                            {selectedClientDetails.pdfs.map((pdf) => (
-                              <div key={pdf.id} className="p-3 bg-gray-50 rounded-lg">
+                            {selectedClientDetails.pdfs.filter(pdf => pdf.uploaded_by === 'admin').map((pdf) => (
+                              <div key={pdf.id} className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                 <div className="flex items-start justify-between mb-2">
                                   <p className="font-medium text-sm">{pdf.title}</p>
                                   <Badge className={pdf.type === 'training' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}>
@@ -742,7 +746,32 @@ const AdminDashboard = () => {
                             ))}
                           </div>
                         ) : (
-                          <p className="text-gray-500 text-center py-4">No hay documentos subidos</p>
+                          <p className="text-gray-500 text-center py-4 bg-gray-50 rounded-lg">No has enviado documentos aún</p>
+                        )}
+                      </div>
+
+                      {/* Documentos Recibidos (por usuario) */}
+                      <div>
+                        <h4 className="font-semibold mb-3 flex items-center gap-2">
+                          <FileText className="h-5 w-5 text-green-500" />
+                          Documentos Recibidos (del cliente)
+                        </h4>
+                        {selectedClientDetails?.pdfs?.filter(pdf => pdf.uploaded_by === 'user').length > 0 ? (
+                          <div className="grid md:grid-cols-2 gap-3">
+                            {selectedClientDetails.pdfs.filter(pdf => pdf.uploaded_by === 'user').map((pdf) => (
+                              <div key={pdf.id} className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                                <div className="flex items-start justify-between mb-2">
+                                  <p className="font-medium text-sm">{pdf.title}</p>
+                                  <Badge className="bg-green-100 text-green-700">
+                                    {pdf.type || 'General'}
+                                  </Badge>
+                                </div>
+                                <p className="text-xs text-gray-600">Recibido: {new Date(pdf.upload_date).toLocaleDateString('es-ES')}</p>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-gray-500 text-center py-4 bg-gray-50 rounded-lg">El cliente no ha enviado documentos aún</p>
                         )}
                       </div>
                     </TabsContent>
