@@ -572,6 +572,46 @@ const UserDashboard = () => {
                 )}
               </CardContent>
             </Card>
+
+            {/* Documents Received from Admin */}
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Download className="h-5 w-5 text-green-600" />
+                  Documentos Recibidos del Entrenador
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {pdfs && pdfs.filter(pdf => pdf.uploaded_by === 'admin').length > 0 ? (
+                  <div className="grid md:grid-cols-3 gap-3">
+                    {pdfs.filter(pdf => pdf.uploaded_by === 'admin').map((pdf) => (
+                      <div key={pdf.id} className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="flex items-start justify-between mb-2">
+                          <p className="font-medium text-sm">{pdf.title}</p>
+                          <Badge className={pdf.type === 'training' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}>
+                            {pdf.type === 'training' ? 'Entrenamiento' : 'Nutrición'}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-gray-600 mb-2">
+                          Recibido: {new Date(pdf.upload_date).toLocaleDateString('es-ES')}
+                        </p>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => handleDownloadPDF(pdf.id, pdf.title)}
+                        >
+                          <Download className="h-4 w-4 mr-2" />
+                          Descargar
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-center py-4">No has recibido documentos aún</p>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
