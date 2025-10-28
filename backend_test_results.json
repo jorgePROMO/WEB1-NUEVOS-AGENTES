@@ -2,43 +2,50 @@
   {
     "test": "Register New User",
     "success": true,
-    "message": "User registered successfully. ID: 1761496657044993",
-    "timestamp": "2025-10-26T16:37:37.311952",
+    "message": "User registered successfully. ID: 1761680578201551",
+    "timestamp": "2025-10-28T19:42:58.496280",
     "response_data": null
   },
   {
     "test": "Admin Login",
-    "success": true,
-    "message": "Admin logged in successfully. Role: admin",
-    "timestamp": "2025-10-26T16:37:37.574705",
-    "response_data": null
+    "success": false,
+    "message": "HTTP 401",
+    "timestamp": "2025-10-28T19:42:58.546562",
+    "response_data": "{\"detail\":\"Incorrect email or password\"}"
   },
   {
     "test": "User Dashboard",
     "success": true,
     "message": "Dashboard data retrieved. Forms: 0, PDFs: 0, Alerts: 0",
-    "timestamp": "2025-10-26T16:37:37.653106",
+    "timestamp": "2025-10-28T19:42:58.635300",
     "response_data": null
   },
   {
     "test": "Admin List Clients",
-    "success": true,
-    "message": "Clients retrieved. Total: 1, Active: 0, Pending: 1",
-    "timestamp": "2025-10-26T16:37:37.693620",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-10-28T19:42:58.635899",
     "response_data": null
   },
   {
     "test": "Admin Send Form",
-    "success": true,
-    "message": "Form sent successfully. ID: 1761496657725729",
-    "timestamp": "2025-10-26T16:37:37.737920",
+    "success": false,
+    "message": "No admin token or test user ID available",
+    "timestamp": "2025-10-28T19:42:58.635909",
     "response_data": null
   },
   {
     "test": "Admin Verify Payment",
+    "success": false,
+    "message": "No admin token or test user ID available",
+    "timestamp": "2025-10-28T19:42:58.635914",
+    "response_data": null
+  },
+  {
+    "test": "Diagnostic Questionnaire",
     "success": true,
-    "message": "Payment verified successfully: Payment verified successfully",
-    "timestamp": "2025-10-26T16:37:37.778407",
+    "message": "Questionnaire submitted successfully. Response: Cuestionario enviado correctamente",
+    "timestamp": "2025-10-28T19:42:59.395186",
     "response_data": null
   }
 ]
