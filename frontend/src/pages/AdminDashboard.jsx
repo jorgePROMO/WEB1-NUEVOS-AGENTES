@@ -24,7 +24,8 @@ import {
   XCircle,
   Edit,
   Mail,
-  Download
+  Download,
+  Trash2
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { AdminCalendar } from '../components/Calendar';
