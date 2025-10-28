@@ -171,7 +171,7 @@ export const UploadDocumentForm = ({ userId, onUploadSuccess }) => {
     formData.append('type', type);
 
     try {
-      await axios.post(`${API}/documents/upload`, formData, {
+      const response = await axios.post(`${API}/documents/upload`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
@@ -182,14 +182,16 @@ export const UploadDocumentForm = ({ userId, onUploadSuccess }) => {
       setFile(null);
       setTitle('');
       setType('general');
+      setError(''); // Clear any previous errors
       
       if (onUploadSuccess) {
         onUploadSuccess();
       }
 
-      alert('Documento subido correctamente');
+      alert('Documento subido correctamente. Tu entrenador lo verá en su panel.');
     } catch (error) {
-      setError(error.response?.data?.detail || 'Error al subir el documento');
+      console.error('Upload error:', error);
+      setError(error.response?.data?.detail || error.message || 'Error al subir el documento');
     } finally {
       setLoading(false);
     }
