@@ -1525,6 +1525,27 @@ app.add_middleware(
 )
 
 
+@app.on_event("startup")
+async def startup_db():
+    """Initialize default prospect stages if they don't exist"""
+    try:
+        # Check if stages exist
+        count = await db.prospect_stages.count_documents({})
+        if count == 0:
+            # Create default stages
+            default_stages = [
+                {"_id": "stage_nuevo", "name": "Nuevo", "color": "#3B82F6", "order": 1, "created_at": datetime.now(timezone.utc)},
+                {"_id": "stage_contactado", "name": "Contactado", "color": "#8B5CF6", "order": 2, "created_at": datetime.now(timezone.utc)},
+                {"_id": "stage_interesado", "name": "Interesado", "color": "#10B981", "order": 3, "created_at": datetime.now(timezone.utc)},
+                {"_id": "stage_no_interesado", "name": "No Interesado", "color": "#EF4444", "order": 4, "created_at": datetime.now(timezone.utc)},
+                {"_id": "stage_convertido", "name": "Convertido", "color": "#F59E0B", "order": 5, "created_at": datetime.now(timezone.utc)}
+            ]
+            await db.prospect_stages.insert_many(default_stages)
+            logger.info("Default prospect stages created")
+    except Exception as e:
+        logger.error(f"Error initializing prospect stages: {e}")
+
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
