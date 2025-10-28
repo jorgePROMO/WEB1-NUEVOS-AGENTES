@@ -735,6 +735,50 @@ async def upload_pdf(
     return pdf_dict
 
 
+
+
+@api_router.post("/documents/upload")
+async def user_upload_document(
+    request: Request,
+    file: UploadFile = File(...),
+    title: str = Form(...),
+    type: str = Form(...)
+):
+    """Users upload documents to admin"""
+    user = await get_current_user(request)
+    user_id = user["_id"]
+    
+    # Create uploads directory
+    upload_dir = Path("/app/backend/uploads")
+    upload_dir.mkdir(exist_ok=True)
+    
+    # Generate filename
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    filename = f"{user_id}_{timestamp}_{file.filename}"
+    file_path = upload_dir / filename
+    
+    # Save file
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    # Save to database
+    pdf_dict = {
+        "_id": str(datetime.now(timezone.utc).timestamp()).replace(".", ""),
+        "user_id": user_id,
+        "title": title,
+        "type": type,
+        "file_path": str(file_path),
+        "uploaded_by": "user",  # Mark as uploaded by user
+        "upload_date": datetime.now(timezone.utc),
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.pdfs.insert_one(pdf_dict)
+    pdf_dict["id"] = pdf_dict["_id"]
+    
+    return {"success": True, "message": "Document uploaded successfully", "document": pdf_dict}
+
+
 @api_router.get("/pdfs/{pdf_id}/download")
 async def download_pdf(pdf_id: str, request: Request):
     user = await get_current_user(request)
