@@ -522,6 +522,55 @@ const UserDashboard = () => {
                 </CardContent>
               </Card>
             </div>
+
+            {/* My Uploaded Documents */}
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Mis Documentos Subidos
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {pdfs && pdfs.length > 0 ? (
+                  <div className="grid md:grid-cols-3 gap-3">
+                    {pdfs.map((pdf) => (
+                      <div key={pdf.id} className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="flex items-start justify-between mb-2">
+                          <p className="font-medium text-sm">{pdf.title}</p>
+                        </div>
+                        <p className="text-xs text-gray-600 mb-2">
+                          Subido: {new Date(pdf.upload_date).toLocaleDateString('es-ES')}
+                        </p>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="w-full border-red-200 text-red-600 hover:bg-red-50"
+                          onClick={async () => {
+                            if (!window.confirm('¿Eliminar este documento?')) return;
+                            try {
+                              await axios.delete(`${BACKEND_URL}/api/pdfs/${pdf.id}`, {
+                                headers: { Authorization: `Bearer ${token}` },
+                                withCredentials: true
+                              });
+                              alert('Documento eliminado');
+                              loadDashboardData();
+                            } catch (error) {
+                              alert('Error al eliminar: ' + (error.response?.data?.detail || 'Error'));
+                            }
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Eliminar
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-center py-4">No has subido documentos aún</p>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
