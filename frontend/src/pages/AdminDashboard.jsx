@@ -843,6 +843,26 @@ const AdminDashboard = () => {
         </Tabs>
       </div>
 
+
+
+      {/* Edit User Modal */}
+      {showEditModal && userToEdit && (
+        <EditUserModal
+          user={userToEdit}
+          open={showEditModal}
+          onClose={() => {
+            setShowEditModal(false);
+            setUserToEdit(null);
+          }}
+          onSuccess={() => {
+            fetchClients();
+            if (selectedClient && userToEdit.id === selectedClient.id) {
+              handleClientSelect(userToEdit.id);
+            }
+          }}
+        />
+      )}
+
       {/* Chat Modal */}
       {showChat && selectedClient && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
