@@ -508,3 +508,192 @@ def send_password_reset_email(user_email: str, user_name: str, reset_token: str)
     
     return send_email(user_email, subject, html_body, text_body)
 
+
+def send_questionnaire_to_admin(questionnaire_data: dict):
+    """Send diagnostic questionnaire responses to admin"""
+    admin_email = "ecjtrainer@gmail.com"
+    subject = f"Nuevo Diagnóstico Inicial - {questionnaire_data.get('nombre', 'Sin nombre')}"
+    
+    # Format dificultades array
+    dificultades_list = questionnaire_data.get('dificultades', [])
+    dificultades_texto = ', '.join(dificultades_list) if dificultades_list else 'No especificado'
+    if 'Otro' in dificultades_list and questionnaire_data.get('dificultades_otro'):
+        dificultades_texto += f" (Otro: {questionnaire_data.get('dificultades_otro')})"
+    
+    html_body = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+            .container {{ max-width: 700px; margin: 0 auto; padding: 20px; }}
+            .header {{ background: linear-gradient(135deg, #3B82F6 0%, #F59E0B 100%); color: white; padding: 30px; text-align: center; border-radius: 5px 5px 0 0; }}
+            .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
+            .section {{ background-color: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; border-left: 4px solid #3B82F6; }}
+            .section-title {{ color: #3B82F6; font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid #E5E7EB; padding-bottom: 10px; }}
+            .field {{ margin-bottom: 12px; }}
+            .field-label {{ font-weight: 600; color: #374151; display: inline-block; min-width: 180px; }}
+            .field-value {{ color: #1F2937; }}
+            .footer {{ text-align: center; margin-top: 20px; font-size: 12px; color: #666; padding: 20px; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>📋 Nuevo Diagnóstico Inicial Completado</h1>
+                <p style="margin: 0; opacity: 0.9;">Un nuevo cliente ha completado el cuestionario</p>
+            </div>
+            <div class="content">
+                
+                <!-- Datos Personales -->
+                <div class="section">
+                    <div class="section-title">👤 Datos Personales</div>
+                    <div class="field">
+                        <span class="field-label">Nombre:</span>
+                        <span class="field-value">{questionnaire_data.get('nombre', 'No especificado')}</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-label">Edad:</span>
+                        <span class="field-value">{questionnaire_data.get('edad', 'No especificado')} años</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-label">Email:</span>
+                        <span class="field-value">{questionnaire_data.get('email', 'No especificado')}</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-label">WhatsApp:</span>
+                        <span class="field-value">{questionnaire_data.get('whatsapp', 'No especificado')}</span>
+                    </div>
+                </div>
+                
+                <!-- Contexto Actual -->
+                <div class="section">
+                    <div class="section-title">🎯 Contexto Actual</div>
+                    <div class="field">
+                        <span class="field-label">Objetivo Principal:</span>
+                        <div class="field-value" style="margin-top: 5px;">{questionnaire_data.get('objetivo', 'No especificado')}</div>
+                    </div>
+                    <div class="field">
+                        <span class="field-label">Intentos Previos:</span>
+                        <div class="field-value" style="margin-top: 5px;">{questionnaire_data.get('intentos_previos', 'No especificado')}</div>
+                    </div>
+                    <div class="field">
+                        <span class="field-label">Dificultades:</span>
+                        <span class="field-value">{dificultades_texto}</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-label">Tiempo Semanal Disponible:</span>
+                        <span class="field-value">{questionnaire_data.get('tiempo_semanal', 'No especificado')}</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-label">¿Entrena Actualmente?:</span>
+                        <span class="field-value">{questionnaire_data.get('entrena', 'No especificado')}</span>
+                    </div>
+                </div>
+                
+                <!-- Nutrición y Estilo de Vida -->
+                <div class="section">
+                    <div class="section-title">🥗 Nutrición y Estilo de Vida</div>
+                    <div class="field">
+                        <span class="field-label">Alimentación Actual:</span>
+                        <div class="field-value" style="margin-top: 5px;">{questionnaire_data.get('alimentacion', 'No especificado')}</div>
+                    </div>
+                    <div class="field">
+                        <span class="field-label">Información de Salud:</span>
+                        <div class="field-value" style="margin-top: 5px;">{questionnaire_data.get('salud_info', 'No especificado')}</div>
+                    </div>
+                </div>
+                
+                <!-- Motivación y Compromiso -->
+                <div class="section">
+                    <div class="section-title">💪 Motivación y Compromiso</div>
+                    <div class="field">
+                        <span class="field-label">¿Por qué ahora?:</span>
+                        <div class="field-value" style="margin-top: 5px;">{questionnaire_data.get('por_que_ahora', 'No especificado')}</div>
+                    </div>
+                    <div class="field">
+                        <span class="field-label">Disposición a Invertir:</span>
+                        <span class="field-value">{questionnaire_data.get('dispuesto_invertir', 'No especificado')}</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-label">Tipo de Acompañamiento:</span>
+                        <div class="field-value" style="margin-top: 5px;">{questionnaire_data.get('tipo_acompanamiento', 'No especificado')}</div>
+                    </div>
+                    <div class="field">
+                        <span class="field-label">Presupuesto Mensual:</span>
+                        <span class="field-value">{questionnaire_data.get('presupuesto', 'No especificado')}</span>
+                    </div>
+                    {f'''<div class="field">
+                        <span class="field-label">Comentarios Adicionales:</span>
+                        <div class="field-value" style="margin-top: 5px;">{questionnaire_data.get('comentarios_adicionales')}</div>
+                    </div>''' if questionnaire_data.get('comentarios_adicionales') else ''}
+                </div>
+                
+            </div>
+            <div class="footer">
+                <p><strong>Este diagnóstico fue completado el {datetime.now().strftime('%d de %B de %Y a las %H:%M')}</strong></p>
+                <p>Sistema de Diagnóstico Inicial - Jorge Calcerrada</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    # Plain text version
+    text_body = f"""
+    Nuevo Diagnóstico Inicial Completado
+    
+    =====================================
+    DATOS PERSONALES
+    =====================================
+    Nombre: {questionnaire_data.get('nombre', 'No especificado')}
+    Edad: {questionnaire_data.get('edad', 'No especificado')} años
+    Email: {questionnaire_data.get('email', 'No especificado')}
+    WhatsApp: {questionnaire_data.get('whatsapp', 'No especificado')}
+    
+    =====================================
+    CONTEXTO ACTUAL
+    =====================================
+    Objetivo Principal:
+    {questionnaire_data.get('objetivo', 'No especificado')}
+    
+    Intentos Previos:
+    {questionnaire_data.get('intentos_previos', 'No especificado')}
+    
+    Dificultades: {dificultades_texto}
+    
+    Tiempo Semanal Disponible: {questionnaire_data.get('tiempo_semanal', 'No especificado')}
+    
+    ¿Entrena Actualmente?: {questionnaire_data.get('entrena', 'No especificado')}
+    
+    =====================================
+    NUTRICIÓN Y ESTILO DE VIDA
+    =====================================
+    Alimentación Actual:
+    {questionnaire_data.get('alimentacion', 'No especificado')}
+    
+    Información de Salud:
+    {questionnaire_data.get('salud_info', 'No especificado')}
+    
+    =====================================
+    MOTIVACIÓN Y COMPROMISO
+    =====================================
+    ¿Por qué ahora?:
+    {questionnaire_data.get('por_que_ahora', 'No especificado')}
+    
+    Disposición a Invertir: {questionnaire_data.get('dispuesto_invertir', 'No especificado')}
+    
+    Tipo de Acompañamiento:
+    {questionnaire_data.get('tipo_acompanamiento', 'No especificado')}
+    
+    Presupuesto Mensual: {questionnaire_data.get('presupuesto', 'No especificado')}
+    
+    {'Comentarios Adicionales:\n' + questionnaire_data.get('comentarios_adicionales', '') if questionnaire_data.get('comentarios_adicionales') else ''}
+    
+    =====================================
+    Este diagnóstico fue completado el {datetime.now().strftime('%d de %B de %Y a las %H:%M')}
+    Sistema de Diagnóstico Inicial - Jorge Calcerrada
+    """
+    
+    return send_email(admin_email, subject, html_body, text_body)
+
