@@ -261,9 +261,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Admin Dashboard and Client Management"
+    - "Document Deletion Functionality"
   stuck_tasks:
-    - "Admin Dashboard and Client Management"
+    - "Document Deletion Functionality"
   test_all: false
   test_priority: "high_first"
 
