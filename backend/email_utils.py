@@ -705,5 +705,8 @@ def send_questionnaire_to_admin(questionnaire_data: dict):
     Sistema de Diagnóstico Inicial - Jorge Calcerrada
     """
     
-    return send_email(admin_email, subject, html_body, text_body)
+    logger.info(f"Sending email with subject: {subject}")
+    result = send_email(admin_email, subject, html_body, text_body)
+    logger.info(f"Email send result: {result}")
+    return result
 
