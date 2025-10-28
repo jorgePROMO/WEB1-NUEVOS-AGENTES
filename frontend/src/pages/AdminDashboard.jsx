@@ -741,7 +741,16 @@ const AdminDashboard = () => {
                                     {pdf.type === 'training' ? 'Entrenamiento' : 'Nutrición'}
                                   </Badge>
                                 </div>
-                                <p className="text-xs text-gray-600">Subido: {new Date(pdf.upload_date).toLocaleDateString('es-ES')}</p>
+                                <p className="text-xs text-gray-600 mb-2">Subido: {new Date(pdf.upload_date).toLocaleDateString('es-ES')}</p>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="w-full mt-2"
+                                  onClick={() => handleDownloadPDF(pdf.id)}
+                                >
+                                  <Download className="h-4 w-4 mr-2" />
+                                  Descargar
+                                </Button>
                               </div>
                             ))}
                           </div>
