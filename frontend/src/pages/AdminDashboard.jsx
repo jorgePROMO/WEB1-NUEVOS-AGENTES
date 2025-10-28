@@ -243,6 +243,32 @@ const AdminDashboard = () => {
       });
       alert('Cliente archivado correctamente');
       loadClients();
+
+
+  const handleDeletePDF = async (pdfId) => {
+    if (!window.confirm('¿Estás seguro de eliminar este documento? Esta acción no se puede deshacer.')) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${API}/pdfs/${pdfId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        withCredentials: true
+      });
+
+      alert('Documento eliminado correctamente');
+      
+      // Refresh client details
+      if (selectedClient) {
+        handleClientSelect(selectedClient.id);
+      }
+    } catch (error) {
+      alert('Error al eliminar documento: ' + (error.response?.data?.detail || 'Error desconocido'));
+    }
+  };
+
       setSelectedClient(null);
     } catch (error) {
       console.error('Error archiving client:', error);
