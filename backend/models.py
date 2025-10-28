@@ -44,6 +44,30 @@ class UserCreate(BaseModel):
     password: str
 
 
+
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+
+
+class AdminUserUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    subscription_status: Optional[str] = None
+    subscription_plan: Optional[str] = None
+    payment_status: Optional[str] = None
+
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+
+class PasswordReset(BaseModel):
+    token: str
+    new_password: str
+
+
 class UserInDB(UserBase):
     id: str = Field(alias="_id")
     password: str
