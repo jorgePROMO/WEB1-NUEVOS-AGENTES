@@ -275,6 +275,41 @@ async def google_auth(session_id: str, response: Response):
             "_id": user_id,
             "username": user_name or user_email.split("@")[0],
             "email": user_email,
+
+
+
+@api_router.post("/auth/reset-password")
+async def reset_password(reset_data: PasswordReset):
+    """Reset password using token"""
+    # Find reset token
+    reset_doc = await db.password_resets.find_one({"token": reset_data.token})
+    
+    if not reset_doc:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
+    
+    # Check if token is expired
+    if reset_doc["expires_at"].replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
+        await db.password_resets.delete_one({"token": reset_data.token})
+        raise HTTPException(status_code=400, detail="Token has expired")
+    
+    # Update user password
+    hashed_password = get_password_hash(reset_data.new_password)
+    result = await db.users.update_one(
+        {"_id": reset_doc["user_id"]},
+        {"$set": {
+            "password": hashed_password,
+            "updated_at": datetime.now(timezone.utc)
+        }}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Delete used token
+    await db.password_resets.delete_one({"token": reset_data.token})
+    
+    return {"success": True, "message": "Password reset successfully"}
+
             "name": user_name or user_email.split("@")[0],
             "password": "",  # No password for OAuth users
             "role": "user",
