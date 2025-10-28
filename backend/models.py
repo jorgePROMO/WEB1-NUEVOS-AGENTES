@@ -224,3 +224,31 @@ class UserSession(BaseModel):
 class SessionUpdate(BaseModel):
     date: datetime
     time: Optional[str] = None
+
+
+
+class QuestionnaireSubmit(BaseModel):
+    # Datos Personales
+    nombre: str
+    edad: str
+    email: EmailStr
+    whatsapp: str
+    
+    # Contexto Actual
+    objetivo: str
+    intentos_previos: str
+    dificultades: List[str] = []
+    dificultades_otro: Optional[str] = None
+    tiempo_semanal: str
+    entrena: str
+    
+    # Nutrición
+    alimentacion: str
+    salud_info: str
+    
+    # Motivación
+    por_que_ahora: str
+    dispuesto_invertir: str
+    tipo_acompanamiento: str
+    presupuesto: str
+    comentarios_adicionales: Optional[str] = None
