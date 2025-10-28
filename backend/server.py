@@ -528,6 +528,99 @@ async def delete_client(user_id: str, request: Request):
 
 # ==================== FORM ENDPOINTS ====================
 
+
+
+@api_router.patch("/admin/users/{user_id}")
+async def admin_update_user(user_id: str, user_update: AdminUserUpdate, request: Request):
+    """Admin updates a client's profile"""
+    admin = await require_admin(request)
+    
+    update_data = {}
+    
+    if user_update.name:
+        update_data["name"] = user_update.name
+    
+    if user_update.email:
+        # Check if email is already taken by another user
+        existing_user = await db.users.find_one({"email": user_update.email, "_id": {"$ne": user_id}})
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        update_data["email"] = user_update.email
+    
+    if user_update.subscription_status:
+        update_data["subscription.status"] = user_update.subscription_status
+    
+    if user_update.subscription_plan:
+        update_data["subscription.plan"] = user_update.subscription_plan
+    
+    if user_update.payment_status:
+        update_data["subscription.payment_status"] = user_update.payment_status
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No data to update")
+    
+    update_data["updated_at"] = datetime.now(timezone.utc)
+    
+    result = await db.users.update_one(
+        {"_id": user_id},
+        {"$set": update_data}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Get updated user
+    updated_user = await db.users.find_one({"_id": user_id})
+    
+    return {
+        "success": True,
+        "message": "User updated successfully",
+        "user": {
+            "id": updated_user["_id"],
+            "name": updated_user["name"],
+            "email": updated_user["email"],
+            "subscription": updated_user["subscription"]
+        }
+    }
+
+
+@api_router.post("/admin/users/{user_id}/send-password-reset")
+async def admin_send_password_reset(user_id: str, request: Request):
+    """Admin sends password reset email to a client"""
+    admin = await require_admin(request)
+    
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Generate reset token (valid for 1 hour)
+    reset_token = str(datetime.now(timezone.utc).timestamp()).replace(".", "") + user["_id"]
+    expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
+    
+    # Store reset token
+    await db.password_resets.update_one(
+        {"user_id": user_id},
+        {"$set": {
+            "token": reset_token,
+            "expires_at": expires_at,
+            "created_at": datetime.now(timezone.utc)
+        }},
+        upsert=True
+    )
+    
+    # Send email
+    try:
+        from email_utils import send_password_reset_email
+        send_password_reset_email(
+            user_email=user["email"],
+            user_name=user.get("name", user.get("username", "")),
+            reset_token=reset_token
+        )
+        return {"success": True, "message": "Password reset email sent"}
+    except Exception as e:
+        logger.error(f"Failed to send password reset email: {e}")
+        raise HTTPException(status_code=500, detail="Failed to send email")
+
 @api_router.post("/forms/send")
 async def send_form(form_data: FormCreate, request: Request):
     admin = await require_admin(request)
