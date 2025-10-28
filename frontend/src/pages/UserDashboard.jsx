@@ -515,7 +515,7 @@ const UserDashboard = () => {
                   <UploadDocumentForm 
                     userId={userData.id}
                     onUploadSuccess={() => {
-                      fetchUserData();
+                      loadDashboardData();
                       alert('Documento subido exitosamente. El admin lo verá en su panel.');
                     }}
                   />
