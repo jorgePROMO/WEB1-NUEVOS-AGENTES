@@ -267,6 +267,21 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
+  - task: "Document Deletion Functionality"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/pages/AdminDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "testing"
+          comment: "Testing document deletion functionality in Admin Dashboard as requested by user. User reports that clicking delete buttons doesn't work in the Documentos tab."
+        - working: false
+          agent: "testing"
+          comment: "❌ CRITICAL ISSUE FOUND: Document deletion has frontend implementation problems. BACKEND WORKS PERFECTLY: DELETE /api/pdfs/{pdf_id} endpoint tested successfully - deleted document and returned success message. FRONTEND ISSUES: 1) Fixed syntax errors in AdminDashboard.jsx (missing closing braces, undefined functions), 2) Added missing handleDownloadPDF function, 3) Admin dashboard loads correctly and shows documents, BUT delete buttons are not properly triggering the handleDeletePDF function. The UI elements exist but the click handlers may not be properly bound. User's report is accurate - delete buttons don't work despite backend being functional."
+
 agent_communication:
     - agent: "testing"
       message: "Comprehensive backend testing completed successfully. All 6 critical API endpoints tested and working correctly: 1) User registration, 2) Admin login, 3) User dashboard, 4) Admin client listing, 5) Form sending, 6) Payment verification. System is fully functional for the Jorge Calcerrada platform. Backend URL https://wellnesscoach-3.preview.emergentagent.com/api is responding correctly. Admin user jorge@jorgecalcerrada.com exists and has proper admin role. All data persistence verified through follow-up checks."
@@ -276,3 +291,5 @@ agent_communication:
       message: "Implemented Diagnostic Questionnaire Feature: Created backend endpoint POST /api/questionnaire/submit that receives questionnaire responses and sends them via email to admin (ecjtrainer@gmail.com). Added QuestionnaireSubmit model to models.py and send_questionnaire_to_admin function to email_utils.py. Frontend component DiagnosisQuestionnaire.jsx already exists with beautiful multi-step form. Backend is working and ready for testing. Needs testing to confirm email delivery."
     - agent: "testing"
       message: "DIAGNOSTIC QUESTIONNAIRE TESTING COMPLETED ✅: POST /api/questionnaire/submit endpoint working perfectly. Tested with complete questionnaire data including all required fields (nombre: Test User, edad: 30, email: test@example.com, whatsapp: +34 600 000 000, objetivo: Perder peso y ganar músculo, etc.). Response status 200 with success=True. Backend logs confirm email sent successfully to admin (ecjtrainer@gmail.com). SMTP configuration working correctly. Email functionality fully operational."
+    - agent: "testing"
+      message: "DOCUMENT DELETION TESTING COMPLETED: Found and fixed critical syntax errors in AdminDashboard.jsx that were preventing proper functionality. Backend DELETE /api/pdfs/{pdf_id} endpoint works perfectly (tested via API - successfully deleted document). Frontend issues identified: 1) Fixed missing closing braces and undefined function references, 2) Added missing handleDownloadPDF function, 3) Admin dashboard now loads and displays documents correctly, 4) However, delete button click handlers are not properly triggering the deletion function. User's report is accurate - delete buttons exist but don't work. Main agent needs to investigate event binding and ensure onClick handlers are properly connected to handleDeletePDF function."
