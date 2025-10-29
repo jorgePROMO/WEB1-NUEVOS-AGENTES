@@ -37,6 +37,8 @@ export const ProspectsCRM = ({ token }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStage, setFilterStage] = useState('');
   const [showStageManager, setShowStageManager] = useState(false);
+  const [showConvertModal, setShowConvertModal] = useState(false);
+  const [prospectToConvert, setProspectToConvert] = useState(null);
   const [newNote, setNewNote] = useState('');
   const [loading, setLoading] = useState(false);
 
