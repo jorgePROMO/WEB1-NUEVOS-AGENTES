@@ -57,11 +57,62 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
 
   const handleSubmit = async () => {
     setLoading(true);
+    
+    // Validación adicional antes de enviar
+    if (!formData.nombre || !formData.edad || !formData.email || !formData.whatsapp) {
+      alert('Por favor completa todos los campos obligatorios de datos personales');
+      setLoading(false);
+      return;
+    }
+    
+    if (!formData.objetivo || !formData.intentos_previos || !formData.tiempo_semanal || !formData.entrena) {
+      alert('Por favor completa todos los campos obligatorios de contexto actual');
+      setLoading(false);
+      return;
+    }
+    
+    if (!formData.alimentacion || !formData.salud_info) {
+      alert('Por favor completa todos los campos obligatorios de nutrición');
+      setLoading(false);
+      return;
+    }
+    
+    if (!formData.por_que_ahora || !formData.dispuesto_invertir || !formData.tipo_acompanamiento || !formData.presupuesto) {
+      alert('Por favor completa todos los campos obligatorios de motivación');
+      setLoading(false);
+      return;
+    }
+    
     try {
-      await axios.post(`${API}/questionnaire/submit`, formData);
+      console.log('Enviando cuestionario...', formData);
+      const response = await axios.post(`${API}/questionnaire/submit`, formData, {
+        timeout: 30000, // 30 segundos de timeout
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('Respuesta del servidor:', response.data);
       setSubmitted(true);
     } catch (error) {
-      alert('Error al enviar el cuestionario. Por favor, inténtalo de nuevo.');
+      console.error('Error completo:', error);
+      
+      let errorMessage = 'Error al enviar el cuestionario.';
+      
+      if (error.response) {
+        // El servidor respondió con un código de error
+        errorMessage = `Error del servidor: ${error.response.data?.detail || error.response.statusText}`;
+        console.error('Error response:', error.response.data);
+      } else if (error.request) {
+        // La petición se hizo pero no hubo respuesta
+        errorMessage = 'No se recibió respuesta del servidor. Verifica tu conexión a internet.';
+        console.error('Error request:', error.request);
+      } else {
+        // Error al configurar la petición
+        errorMessage = `Error: ${error.message}`;
+        console.error('Error message:', error.message);
+      }
+      
+      alert(errorMessage + '\n\nPor favor, inténtalo de nuevo o contacta con soporte.');
       setLoading(false);
     }
   };
