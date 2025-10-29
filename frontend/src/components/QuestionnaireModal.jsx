@@ -20,7 +20,8 @@ const QuestionnaireModal = ({ isOpen, onClose }) => {
 
   return (
     <div 
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-0 md:p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-0 md:p-4"
+      style={{ touchAction: 'none' }}
       onClick={(e) => {
         // Cerrar si hace clic en el fondo (solo en desktop)
         if (e.target === e.currentTarget && window.innerWidth > 768) {
@@ -28,7 +29,7 @@ const QuestionnaireModal = ({ isOpen, onClose }) => {
         }
       }}
     >
-      <div className="relative bg-white rounded-none md:rounded-2xl shadow-2xl w-full h-full md:h-[90vh] md:max-w-4xl flex flex-col overflow-hidden z-[10000]">
+      <div className="relative bg-white rounded-none md:rounded-2xl shadow-2xl w-full h-full md:h-[90vh] md:max-w-4xl flex flex-col overflow-hidden">
         {/* Header - Fixed */}
         <div className="flex-shrink-0 flex items-center justify-between p-4 border-b bg-gradient-to-r from-blue-500 to-orange-500">
           <h2 className="text-lg md:text-xl font-bold text-white">Diagnóstico Inicial Gratuito</h2>
@@ -36,13 +37,14 @@ const QuestionnaireModal = ({ isOpen, onClose }) => {
             onClick={onClose}
             className="p-2 rounded-full hover:bg-white/20 transition-colors"
             aria-label="Cerrar"
+            type="button"
           >
             <X className="h-5 w-5 md:h-6 md:w-6 text-white" />
           </button>
         </div>
 
         {/* Questionnaire Content - Scrollable */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
           <DiagnosisQuestionnaire onClose={onClose} />
         </div>
       </div>
