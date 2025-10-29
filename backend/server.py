@@ -1994,8 +1994,9 @@ async def update_external_client(client_id: str, update_data: ExternalClientUpda
             update_doc["start_date"] = start_date
             # Also update next_payment_date
             client = await db.external_clients.find_one({"_id": client_id})
-            plan_weeks = update_data.plan_weeks if update_data.plan_weeks is not None else client.get("plan_weeks", 12)
-            update_doc["next_payment_date"] = start_date + timedelta(weeks=plan_weeks)
+            if client:
+                plan_weeks = update_data.plan_weeks if update_data.plan_weeks is not None else client.get("plan_weeks", 12)
+                update_doc["next_payment_date"] = start_date + timedelta(weeks=plan_weeks)
         if update_data.weeks_completed is not None:
             update_doc["weeks_completed"] = update_data.weeks_completed
         
