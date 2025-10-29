@@ -155,13 +155,6 @@ const Login = () => {
               ← Volver al inicio
             </Link>
           </div>
-
-          {/* Demo credentials */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <p className="text-xs font-semibold text-gray-700 mb-2">Credenciales de prueba:</p>
-            <p className="text-xs text-gray-600">Admin: jorge@jorgecalcerrada.com / admin123</p>
-            <p className="text-xs text-gray-600">Usuario: maria@example.com / user123</p>
-          </div>
         </CardContent>
       </Card>
     </div>
