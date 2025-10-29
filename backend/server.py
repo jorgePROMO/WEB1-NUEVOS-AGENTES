@@ -1936,6 +1936,58 @@ async def update_external_client_status(client_id: str, status_data: dict, reque
         raise HTTPException(status_code=500, detail="Error al actualizar estado")
 
 
+@api_router.post("/admin/external-clients/{client_id}/move")
+async def move_external_client(client_id: str, request: Request, target_data: dict):
+    """Move an external client to team clients CRM"""
+    await require_admin(request)
+    
+    try:
+        target_crm = target_data.get("target_crm")
+        
+        # Get external client data
+        client = await db.external_clients.find_one({"_id": client_id})
+        if not client:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        if target_crm == 'team':
+            # Convert external client to team client (as converted prospect)
+            team_client_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+            team_client_doc = {
+                "_id": team_client_id,
+                "nombre": client.get("nombre"),
+                "email": client.get("email"),
+                "whatsapp": client.get("whatsapp"),
+                "objetivo": client.get("objetivo", ""),
+                "converted_to_client": True,
+                "conversion_type": "team",
+                "converted_at": datetime.now(timezone.utc),
+                "source": "external_client",
+                "original_external_client_id": client_id
+            }
+            
+            await db.questionnaire_responses.insert_one(team_client_doc)
+            
+            # Mark as moved
+            await db.external_clients.update_one(
+                {"_id": client_id},
+                {"$set": {"moved_to_team": True, "moved_at": datetime.now(timezone.utc)}}
+            )
+            
+            # Optionally delete from external clients
+            # await db.external_clients.delete_one({"_id": client_id})
+            
+            logger.info(f"External client {client_id} moved to team clients as {team_client_id}")
+            return {"success": True, "message": "Cliente movido a Clientes Equipo"}
+        
+        raise HTTPException(status_code=400, detail="Target CRM inválido")
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error moving external client: {e}")
+        raise HTTPException(status_code=500, detail="Error al mover cliente")
+
+
 # ==================== SOCKET.IO EVENTS ====================
 
 # Store connected users: {user_id: sid}
