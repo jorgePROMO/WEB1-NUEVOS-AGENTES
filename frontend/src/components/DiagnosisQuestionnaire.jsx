@@ -259,7 +259,7 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
 
         {/* STEP 2: Contexto Actual */}
         {currentStep === 2 && (
-          <div className="space-y-6 pb-24">
+          <div className="space-y-6">
             <div>
               <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-orange-500 bg-clip-text text-transparent mb-2">
                 Contexto Actual
