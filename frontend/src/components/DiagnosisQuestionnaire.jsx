@@ -539,6 +539,7 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
             </div>
           </div>
         )}
+        </div>
       </div>
 
       {/* Navigation Buttons - Fixed at bottom */}
