@@ -39,9 +39,11 @@ export const ExternalClientsCRM = ({ token }) => {
   const [selectedClient, setSelectedClient] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showMoveModal, setShowMoveModal] = useState(false);
   const [clientToMove, setClientToMove] = useState(null);
+  const [clientToEdit, setClientToEdit] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [newNote, setNewNote] = useState('');
