@@ -13,6 +13,7 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const scrollContainerRef = React.useRef(null);
   const [formData, setFormData] = useState({
     // Datos Personales
     nombre: '',
