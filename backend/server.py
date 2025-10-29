@@ -20,7 +20,8 @@ from models import (
     SessionCreate, SessionInDB, SessionUpdate, UserSession,
     Token, QuestionnaireSubmit,
     ProspectStageCreate, ProspectStageInDB, ProspectResponse,
-    ProspectNoteCreate, ProspectNoteInDB, ProspectStageUpdate
+    ProspectNoteCreate, ProspectNoteInDB, ProspectStageUpdate,
+    ExternalClientCreate, ExternalClientInDB
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
