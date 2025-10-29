@@ -427,24 +427,33 @@ const AdminDashboard = () => {
 
         {/* Main Content with Tabs */}
         <Tabs defaultValue="clients" className="space-y-6">
-          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3">
+          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-4">
             <TabsTrigger value="prospects">
               <Target className="h-4 w-4 mr-2" />
               Prospectos
             </TabsTrigger>
+            <TabsTrigger value="team-clients">
+              <Users className="h-4 w-4 mr-2" />
+              Clientes Equipo
+            </TabsTrigger>
             <TabsTrigger value="clients">
               <Users className="h-4 w-4 mr-2" />
-              Gestión de Clientes
+              Gestión Clientes
             </TabsTrigger>
             <TabsTrigger value="calendar">
               <Calendar className="h-4 w-4 mr-2" />
-              Calendario General
+              Calendario
             </TabsTrigger>
           </TabsList>
 
           {/* Prospects CRM Tab */}
           <TabsContent value="prospects">
             <ProspectsCRM token={token} />
+          </TabsContent>
+
+          {/* Team Clients CRM Tab */}
+          <TabsContent value="team-clients">
+            <TeamClientsCRM token={token} />
           </TabsContent>
 
           {/* Clients Management Tab */}
