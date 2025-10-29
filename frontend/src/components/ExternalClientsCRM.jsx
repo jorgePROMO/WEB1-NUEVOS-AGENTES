@@ -471,6 +471,15 @@ export const ExternalClientsCRM = ({ token }) => {
                           <Button
                             size="sm"
                             variant="outline"
+                            className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-300"
+                            onClick={() => openEditModal(client)}
+                            title="Editar"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
                             className="bg-red-50 hover:bg-red-100 text-red-700 border-red-300"
                             onClick={() => deleteClient(client.id)}
                             title="Eliminar"
