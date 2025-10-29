@@ -84,8 +84,16 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
     }
     
     try {
-      console.log('Enviando cuestionario...', formData);
-      const response = await axios.post(`${API}/questionnaire/submit`, formData, {
+      // Asegurar que dificultades siempre sea un array
+      const dataToSend = {
+        ...formData,
+        dificultades: Array.isArray(formData.dificultades) ? formData.dificultades : [],
+        dificultades_otro: formData.dificultades_otro || '',
+        comentarios_adicionales: formData.comentarios_adicionales || ''
+      };
+      
+      console.log('Enviando cuestionario...', dataToSend);
+      const response = await axios.post(`${API}/questionnaire/submit`, dataToSend, {
         timeout: 30000, // 30 segundos de timeout
         headers: {
           'Content-Type': 'application/json'
