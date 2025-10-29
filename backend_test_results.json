@@ -2,50 +2,145 @@
   {
     "test": "Register New User",
     "success": true,
-    "message": "User registered successfully. ID: 1761680578201551",
-    "timestamp": "2025-10-28T19:42:58.496280",
+    "message": "User registered successfully. ID: 1761748617255953",
+    "timestamp": "2025-10-29T14:36:57.486112",
     "response_data": null
   },
   {
     "test": "Admin Login",
     "success": false,
     "message": "HTTP 401",
-    "timestamp": "2025-10-28T19:42:58.546562",
+    "timestamp": "2025-10-29T14:36:57.527279",
     "response_data": "{\"detail\":\"Incorrect email or password\"}"
   },
   {
     "test": "User Dashboard",
     "success": true,
     "message": "Dashboard data retrieved. Forms: 0, PDFs: 0, Alerts: 0",
-    "timestamp": "2025-10-28T19:42:58.635300",
+    "timestamp": "2025-10-29T14:36:57.583919",
     "response_data": null
   },
   {
     "test": "Admin List Clients",
     "success": false,
     "message": "No admin token available",
-    "timestamp": "2025-10-28T19:42:58.635899",
+    "timestamp": "2025-10-29T14:36:57.584595",
     "response_data": null
   },
   {
     "test": "Admin Send Form",
     "success": false,
     "message": "No admin token or test user ID available",
-    "timestamp": "2025-10-28T19:42:58.635909",
+    "timestamp": "2025-10-29T14:36:57.584607",
     "response_data": null
   },
   {
     "test": "Admin Verify Payment",
     "success": false,
     "message": "No admin token or test user ID available",
-    "timestamp": "2025-10-28T19:42:58.635914",
+    "timestamp": "2025-10-29T14:36:57.584612",
     "response_data": null
   },
   {
     "test": "Diagnostic Questionnaire",
     "success": true,
     "message": "Questionnaire submitted successfully. Response: Cuestionario enviado correctamente",
-    "timestamp": "2025-10-28T19:42:59.395186",
+    "timestamp": "2025-10-29T14:36:59.049025",
     "response_data": null
+  },
+  {
+    "test": "Admin Login for CRM",
+    "success": true,
+    "message": "Admin logged in successfully with correct credentials. Role: admin",
+    "timestamp": "2025-10-29T14:36:59.310770",
+    "response_data": null
+  },
+  {
+    "test": "Create External Client",
+    "success": false,
+    "message": "Response missing client ID",
+    "timestamp": "2025-10-29T14:36:59.362169",
+    "response_data": {
+      "success": true,
+      "message": "Cliente creado",
+      "client_id": "1761748619351371"
+    }
+  },
+  {
+    "test": "Get External Clients List",
+    "success": true,
+    "message": "External clients list retrieved. Total: 2",
+    "timestamp": "2025-10-29T14:36:59.439646",
+    "response_data": null
+  },
+  {
+    "test": "Get External Client Detail",
+    "success": false,
+    "message": "HTTP 404",
+    "timestamp": "2025-10-29T14:36:59.477963",
+    "response_data": "{\"detail\":\"Cliente no encontrado\"}"
+  },
+  {
+    "test": "Update External Client Basic Info",
+    "success": false,
+    "message": "HTTP 404",
+    "timestamp": "2025-10-29T14:36:59.516808",
+    "response_data": "{\"detail\":\"Cliente no encontrado\"}"
+  },
+  {
+    "test": "Update External Client Plan Weeks",
+    "success": false,
+    "message": "HTTP 404",
+    "timestamp": "2025-10-29T14:36:59.569158",
+    "response_data": "{\"detail\":\"Cliente no encontrado\"}"
+  },
+  {
+    "test": "Update External Client Start Date",
+    "success": false,
+    "message": "HTTP 500",
+    "timestamp": "2025-10-29T14:36:59.608088",
+    "response_data": "{\"detail\":\"Error al actualizar cliente\"}"
+  },
+  {
+    "test": "Update External Client Weeks Completed",
+    "success": false,
+    "message": "HTTP 404",
+    "timestamp": "2025-10-29T14:36:59.649773",
+    "response_data": "{\"detail\":\"Cliente no encontrado\"}"
+  },
+  {
+    "test": "Update External Client Partial",
+    "success": false,
+    "message": "HTTP 404",
+    "timestamp": "2025-10-29T14:36:59.688128",
+    "response_data": "{\"detail\":\"Cliente no encontrado\"}"
+  },
+  {
+    "test": "Update External Client 404",
+    "success": true,
+    "message": "Correctly returned 404 for non-existent client",
+    "timestamp": "2025-10-29T14:36:59.731296",
+    "response_data": null
+  },
+  {
+    "test": "Verify Updates Applied",
+    "success": false,
+    "message": "HTTP 404",
+    "timestamp": "2025-10-29T14:36:59.774734",
+    "response_data": "{\"detail\":\"Cliente no encontrado\"}"
+  },
+  {
+    "test": "Update External Client Status",
+    "success": false,
+    "message": "HTTP 404",
+    "timestamp": "2025-10-29T14:36:59.816210",
+    "response_data": "{\"detail\":\"Cliente no encontrado\"}"
+  },
+  {
+    "test": "Delete External Client",
+    "success": false,
+    "message": "HTTP 404",
+    "timestamp": "2025-10-29T14:36:59.858227",
+    "response_data": "{\"detail\":\"Cliente no encontrado\"}"
   }
 ]
