@@ -321,8 +321,8 @@ class BackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if "id" in data:
-                    self.test_external_client_id = data["id"]
+                if "client_id" in data:
+                    self.test_external_client_id = data["client_id"]
                     self.log_result("Create External Client", True, 
                                   f"External client created successfully. ID: {self.test_external_client_id}")
                     return True
