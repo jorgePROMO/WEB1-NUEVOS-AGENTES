@@ -1461,6 +1461,187 @@ async def convert_prospect(prospect_id: str, request: Request, target_crm: dict)
         raise HTTPException(status_code=500, detail="Error al convertir prospecto")
 
 
+# ==================== TEAM CLIENTS CRM ENDPOINTS ====================
+
+@api_router.get("/admin/team-clients")
+async def get_team_clients(request: Request, status: Optional[str] = None):
+    """Get all team clients (users + converted prospects)"""
+    await require_admin(request)
+    
+    try:
+        # Get converted prospects marked as team clients
+        query = {"converted_to_client": True, "conversion_type": "team"}
+        if status:
+            # We'll need to add status tracking
+            pass
+        
+        converted_prospects = await db.questionnaire_responses.find(query).to_list(length=None)
+        
+        # Get regular registered users
+        users = await db.users.find({"role": "user"}).to_list(length=None)
+        
+        # Combine and format
+        clients_list = []
+        
+        # Add converted prospects
+        for prospect in converted_prospects:
+            clients_list.append({
+                "id": prospect["_id"],
+                "nombre": prospect.get("nombre"),
+                "email": prospect.get("email"),
+                "whatsapp": prospect.get("whatsapp"),
+                "created_at": prospect.get("converted_at"),
+                "status": "active",  # Default status
+                "source": "prospect",
+                "prospect_data": {
+                    "objetivo": prospect.get("objetivo"),
+                    "presupuesto": prospect.get("presupuesto"),
+                    "intentos_previos": prospect.get("intentos_previos")
+                }
+            })
+        
+        # Add registered users
+        for user in users:
+            clients_list.append({
+                "id": user["_id"],
+                "nombre": user.get("name"),
+                "username": user.get("username"),
+                "email": user.get("email"),
+                "whatsapp": user.get("whatsapp"),
+                "created_at": user.get("created_at"),
+                "status": "active",
+                "source": "registration"
+            })
+        
+        # Sort by created_at
+        clients_list.sort(key=lambda x: x.get("created_at") or datetime.min.replace(tzinfo=timezone.utc), reverse=True)
+        
+        return {"clients": clients_list, "total": len(clients_list)}
+    
+    except Exception as e:
+        logger.error(f"Error fetching team clients: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener clientes")
+
+
+@api_router.get("/admin/team-clients/{client_id}")
+async def get_team_client_detail(client_id: str, request: Request):
+    """Get detailed information about a team client"""
+    await require_admin(request)
+    
+    try:
+        # Try to find in converted prospects first
+        prospect = await db.questionnaire_responses.find_one({"_id": client_id, "converted_to_client": True})
+        
+        if prospect:
+            # Get notes for this client
+            notes = await db.team_client_notes.find({"client_id": client_id}).sort("created_at", -1).to_list(length=None)
+            for note in notes:
+                note["id"] = note["_id"]
+            
+            return {
+                "id": prospect["_id"],
+                "nombre": prospect.get("nombre"),
+                "email": prospect.get("email"),
+                "whatsapp": prospect.get("whatsapp"),
+                "created_at": prospect.get("converted_at"),
+                "status": "active",
+                "source": "prospect",
+                "prospect_data": {
+                    "objetivo": prospect.get("objetivo"),
+                    "presupuesto": prospect.get("presupuesto"),
+                    "intentos_previos": prospect.get("intentos_previos"),
+                    "alimentacion": prospect.get("alimentacion"),
+                    "por_que_ahora": prospect.get("por_que_ahora")
+                },
+                "notes": notes
+            }
+        
+        # Try to find in regular users
+        user = await db.users.find_one({"_id": client_id})
+        if user:
+            notes = await db.team_client_notes.find({"client_id": client_id}).sort("created_at", -1).to_list(length=None)
+            for note in notes:
+                note["id"] = note["_id"]
+            
+            return {
+                "id": user["_id"],
+                "nombre": user.get("name"),
+                "username": user.get("username"),
+                "email": user.get("email"),
+                "whatsapp": user.get("whatsapp"),
+                "created_at": user.get("created_at"),
+                "status": "active",
+                "source": "registration",
+                "notes": notes
+            }
+        
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching team client detail: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener detalle del cliente")
+
+
+@api_router.post("/admin/team-clients/{client_id}/notes")
+async def add_team_client_note(client_id: str, note_data: dict, request: Request):
+    """Add a note to a team client"""
+    admin = await require_admin(request)
+    
+    try:
+        note_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+        note_doc = {
+            "_id": note_id,
+            "client_id": client_id,
+            "note": note_data.get("note"),
+            "created_by": admin["_id"],
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        await db.team_client_notes.insert_one(note_doc)
+        note_doc["id"] = note_doc["_id"]
+        
+        return note_doc
+    
+    except Exception as e:
+        logger.error(f"Error adding team client note: {e}")
+        raise HTTPException(status_code=500, detail="Error al agregar nota")
+
+
+@api_router.patch("/admin/team-clients/{client_id}/status")
+async def update_team_client_status(client_id: str, status_data: dict, request: Request):
+    """Update team client status"""
+    await require_admin(request)
+    
+    try:
+        new_status = status_data.get("status")
+        
+        # Try to update in converted prospects
+        result = await db.questionnaire_responses.update_one(
+            {"_id": client_id, "converted_to_client": True},
+            {"$set": {"client_status": new_status, "updated_at": datetime.now(timezone.utc)}}
+        )
+        
+        if result.matched_count == 0:
+            # Try to update in users
+            result = await db.users.update_one(
+                {"_id": client_id},
+                {"$set": {"client_status": new_status, "updated_at": datetime.now(timezone.utc)}}
+            )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        return {"success": True, "message": "Estado actualizado"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating team client status: {e}")
+        raise HTTPException(status_code=500, detail="Error al actualizar estado")
+
+
 # ==================== SOCKET.IO EVENTS ====================
 
 # Store connected users: {user_id: sid}
