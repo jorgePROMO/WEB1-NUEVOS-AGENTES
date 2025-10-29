@@ -1643,6 +1643,227 @@ async def update_team_client_status(client_id: str, status_data: dict, request: 
         raise HTTPException(status_code=500, detail="Error al actualizar estado")
 
 
+# ==================== EXTERNAL CLIENTS CRM ENDPOINTS ====================
+
+@api_router.get("/admin/external-clients")
+async def get_external_clients(request: Request, status: Optional[str] = None):
+    """Get all external clients"""
+    await require_admin(request)
+    
+    try:
+        query = {}
+        if status:
+            query["status"] = status
+        
+        clients = await db.external_clients.find(query).sort("created_at", -1).to_list(length=None)
+        
+        clients_list = []
+        for client in clients:
+            client["id"] = client["_id"]
+            clients_list.append(client)
+        
+        return {"clients": clients_list, "total": len(clients_list)}
+    
+    except Exception as e:
+        logger.error(f"Error fetching external clients: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener clientes externos")
+
+
+@api_router.get("/admin/external-clients/{client_id}")
+async def get_external_client_detail(client_id: str, request: Request):
+    """Get detailed information about an external client"""
+    await require_admin(request)
+    
+    try:
+        client = await db.external_clients.find_one({"_id": client_id})
+        if not client:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        client["id"] = client["_id"]
+        return client
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching external client detail: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener detalle del cliente")
+
+
+@api_router.post("/admin/external-clients")
+async def create_external_client(client_data: ExternalClientCreate, request: Request):
+    """Create a new external client"""
+    await require_admin(request)
+    
+    try:
+        client_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+        
+        # Calculate next payment date based on start date and plan weeks
+        start_date = None
+        next_payment_date = None
+        if client_data.start_date:
+            start_date = datetime.fromisoformat(client_data.start_date).replace(tzinfo=timezone.utc)
+            # Next payment is after the plan weeks
+            next_payment_date = start_date + timedelta(weeks=client_data.plan_weeks)
+        
+        client_doc = {
+            "_id": client_id,
+            "nombre": client_data.nombre,
+            "email": client_data.email,
+            "whatsapp": client_data.whatsapp,
+            "objetivo": client_data.objetivo,
+            "plan_weeks": client_data.plan_weeks,
+            "start_date": start_date,
+            "next_payment_date": next_payment_date,
+            "weeks_completed": 0,
+            "status": "active",
+            "payment_history": [],
+            "notes": [],
+            "source": "manual",
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        # Add initial payment if provided
+        if client_data.amount_paid and float(client_data.amount_paid) > 0:
+            client_doc["payment_history"] = [{
+                "amount": float(client_data.amount_paid),
+                "date": start_date or datetime.now(timezone.utc),
+                "notes": "Pago inicial"
+            }]
+        
+        # Add initial note if provided
+        if client_data.notes:
+            client_doc["notes"] = [{
+                "id": str(datetime.now(timezone.utc).timestamp()).replace(".", ""),
+                "note": client_data.notes,
+                "created_at": datetime.now(timezone.utc)
+            }]
+        
+        await db.external_clients.insert_one(client_doc)
+        
+        logger.info(f"External client created: {client_id}")
+        return {"success": True, "message": "Cliente creado", "client_id": client_id}
+    
+    except Exception as e:
+        logger.error(f"Error creating external client: {e}")
+        raise HTTPException(status_code=500, detail="Error al crear cliente")
+
+
+@api_router.delete("/admin/external-clients/{client_id}")
+async def delete_external_client(client_id: str, request: Request):
+    """Delete an external client"""
+    await require_admin(request)
+    
+    try:
+        result = await db.external_clients.delete_one({"_id": client_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        logger.info(f"External client deleted: {client_id}")
+        return {"success": True, "message": "Cliente eliminado"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting external client: {e}")
+        raise HTTPException(status_code=500, detail="Error al eliminar cliente")
+
+
+@api_router.post("/admin/external-clients/{client_id}/payments")
+async def add_payment(client_id: str, payment_data: dict, request: Request):
+    """Add a payment to external client"""
+    await require_admin(request)
+    
+    try:
+        payment = {
+            "amount": float(payment_data.get("amount")),
+            "date": datetime.fromisoformat(payment_data.get("date")).replace(tzinfo=timezone.utc),
+            "notes": payment_data.get("notes", "")
+        }
+        
+        # Get client to calculate new next_payment_date
+        client = await db.external_clients.find_one({"_id": client_id})
+        if not client:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        # Update next payment date (add plan_weeks from payment date)
+        new_next_payment = payment["date"] + timedelta(weeks=client.get("plan_weeks", 12))
+        
+        # Add payment and update next payment date
+        result = await db.external_clients.update_one(
+            {"_id": client_id},
+            {
+                "$push": {"payment_history": payment},
+                "$set": {"next_payment_date": new_next_payment}
+            }
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        logger.info(f"Payment added to external client {client_id}")
+        return {"success": True, "message": "Pago registrado"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error adding payment: {e}")
+        raise HTTPException(status_code=500, detail="Error al registrar pago")
+
+
+@api_router.post("/admin/external-clients/{client_id}/notes")
+async def add_external_client_note(client_id: str, note_data: dict, request: Request):
+    """Add a note to an external client"""
+    await require_admin(request)
+    
+    try:
+        note = {
+            "id": str(datetime.now(timezone.utc).timestamp()).replace(".", ""),
+            "note": note_data.get("note"),
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        result = await db.external_clients.update_one(
+            {"_id": client_id},
+            {"$push": {"notes": note}}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        return note
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error adding note: {e}")
+        raise HTTPException(status_code=500, detail="Error al agregar nota")
+
+
+@api_router.patch("/admin/external-clients/{client_id}/status")
+async def update_external_client_status(client_id: str, status_data: dict, request: Request):
+    """Update external client status"""
+    await require_admin(request)
+    
+    try:
+        new_status = status_data.get("status")
+        
+        result = await db.external_clients.update_one(
+            {"_id": client_id},
+            {"$set": {"status": new_status, "updated_at": datetime.now(timezone.utc)}}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        return {"success": True, "message": "Estado actualizado"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating external client status: {e}")
+        raise HTTPException(status_code=500, detail="Error al actualizar estado")
+
+
 # ==================== SOCKET.IO EVENTS ====================
 
 # Store connected users: {user_id: sid}
