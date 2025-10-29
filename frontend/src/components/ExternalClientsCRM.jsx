@@ -65,6 +65,16 @@ export const ExternalClientsCRM = ({ token }) => {
     notes: ''
   });
 
+  const [editClient, setEditClient] = useState({
+    nombre: '',
+    email: '',
+    whatsapp: '',
+    objetivo: '',
+    plan_weeks: 12,
+    start_date: '',
+    weeks_completed: 0
+  });
+
   useEffect(() => {
     loadClients();
   }, []);
