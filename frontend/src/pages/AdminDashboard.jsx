@@ -470,7 +470,11 @@ const AdminDashboard = () => {
           <TabsContent value="clients">
             <TeamClientsCRM token={token} />
           </TabsContent>
-        <div className="grid lg:grid-cols-3 gap-6">
+
+          {/* Calendar Tab */}
+          <TabsContent value="calendar">
+            <AdminCalendar />
+          </TabsContent>
           {/* Client List */}
           <Card className="lg:col-span-1">
             <CardHeader>
