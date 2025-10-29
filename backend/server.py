@@ -1362,6 +1362,105 @@ async def delete_prospect_stage(stage_id: str, request: Request):
         raise HTTPException(status_code=500, detail="Error al eliminar etapa")
 
 
+@api_router.delete("/admin/prospects/{prospect_id}")
+async def delete_prospect(prospect_id: str, request: Request):
+    """Delete a prospect"""
+    await require_admin(request)
+    
+    try:
+        # Delete all notes associated with this prospect
+        await db.prospect_notes.delete_many({"prospect_id": prospect_id})
+        
+        # Delete the prospect
+        result = await db.questionnaire_responses.delete_one({"_id": prospect_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Prospecto no encontrado")
+        
+        logger.info(f"Prospect {prospect_id} deleted successfully")
+        return {"success": True, "message": "Prospecto eliminado"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting prospect: {e}")
+        raise HTTPException(status_code=500, detail="Error al eliminar prospecto")
+
+
+@api_router.post("/admin/prospects/{prospect_id}/convert")
+async def convert_prospect(prospect_id: str, request: Request, target_crm: dict):
+    """Convert a prospect to a client (team or external)"""
+    await require_admin(request)
+    
+    try:
+        # Get prospect data
+        prospect = await db.questionnaire_responses.find_one({"_id": prospect_id})
+        if not prospect:
+            raise HTTPException(status_code=404, detail="Prospecto no encontrado")
+        
+        target = target_crm.get('target_crm')
+        
+        if target == 'team':
+            # For team clients, we'll create a user account in the future
+            # For now, just mark as converted to team
+            await db.questionnaire_responses.update_one(
+                {"_id": prospect_id},
+                {"$set": {
+                    "converted_to_client": True,
+                    "conversion_type": "team",
+                    "converted_at": datetime.now(timezone.utc)
+                }}
+            )
+            logger.info(f"Prospect {prospect_id} converted to team client")
+            return {"success": True, "message": "Prospecto convertido a Cliente Equipo"}
+            
+        elif target == 'external':
+            # Create external client record
+            client_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+            client_doc = {
+                "_id": client_id,
+                "nombre": prospect.get("nombre"),
+                "email": prospect.get("email"),
+                "whatsapp": prospect.get("whatsapp"),
+                "edad": prospect.get("edad"),
+                "objetivo": prospect.get("objetivo"),
+                "source": "prospect",
+                "prospect_id": prospect_id,
+                "created_at": datetime.now(timezone.utc),
+                "status": "active",
+                # Default values
+                "plan_weeks": 12,
+                "start_date": None,
+                "next_payment_date": None,
+                "weeks_completed": 0,
+                "payment_history": [],
+                "notes": []
+            }
+            
+            await db.external_clients.insert_one(client_doc)
+            
+            # Mark prospect as converted
+            await db.questionnaire_responses.update_one(
+                {"_id": prospect_id},
+                {"$set": {
+                    "converted_to_client": True,
+                    "conversion_type": "external",
+                    "converted_at": datetime.now(timezone.utc)
+                }}
+            )
+            
+            logger.info(f"Prospect {prospect_id} converted to external client {client_id}")
+            return {"success": True, "message": "Prospecto convertido a Cliente Externo", "client_id": client_id}
+        
+        else:
+            raise HTTPException(status_code=400, detail="Tipo de CRM inválido")
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error converting prospect: {e}")
+        raise HTTPException(status_code=500, detail="Error al convertir prospecto")
+
+
 # ==================== SOCKET.IO EVENTS ====================
 
 # Store connected users: {user_id: sid}
