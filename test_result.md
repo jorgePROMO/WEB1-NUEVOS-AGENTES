@@ -271,15 +271,18 @@ test_plan:
 backend:
   - task: "External Clients Update Endpoint"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Added PATCH /api/admin/external-clients/{client_id} endpoint to update external client information (nombre, email, whatsapp, objetivo, plan_weeks, start_date, weeks_completed). Also added ExternalClientUpdate model in models.py. Backend needs testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ COMPREHENSIVE CRM EXTERNAL CLIENTS TESTING COMPLETED - ALL 13 TESTS PASSED: 1) Admin login with correct credentials (ecjtrainer@gmail.com/jorge3007) ✅, 2) POST /api/admin/external-clients (create) ✅, 3) GET /api/admin/external-clients (list) ✅, 4) GET /api/admin/external-clients/{client_id} (detail) ✅, 5) PATCH /api/admin/external-clients/{client_id} - Update basic info (nombre, email, whatsapp) ✅, 6) PATCH - Update plan_weeks (correctly recalculates next_payment_date) ✅, 7) PATCH - Update start_date (correctly recalculates next_payment_date) ✅, 8) PATCH - Update weeks_completed ✅, 9) PATCH - Partial updates (only some fields) ✅, 10) PATCH - 404 error for non-existent client ✅, 11) Verification that all updates were applied correctly ✅, 12) PATCH /api/admin/external-clients/{client_id}/status ✅, 13) DELETE /api/admin/external-clients/{client_id} ✅. Fixed minor backend bug in update function (NoneType error when client not found). All CRM External Clients endpoints working perfectly with proper authentication, validation, and data persistence."
 
 frontend:
   - task: "AdminDashboard Code Cleanup"
