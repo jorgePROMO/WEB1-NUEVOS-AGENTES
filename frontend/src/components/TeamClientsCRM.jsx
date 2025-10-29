@@ -102,6 +102,32 @@ export const TeamClientsCRM = ({ token }) => {
     }
   };
 
+  const openMoveModal = (client) => {
+    setClientToMove(client);
+    setShowMoveModal(true);
+  };
+
+  const moveClient = async (targetCRM) => {
+    if (!clientToMove) return;
+    
+    try {
+      await axios.post(`${API}/admin/team-clients/${clientToMove.id}/move`,
+        { target_crm: targetCRM },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      setShowMoveModal(false);
+      setClientToMove(null);
+      setShowDetail(false);
+      loadClients(filterStatus);
+      alert(`Cliente movido a ${targetCRM === 'external' ? 'Clientes Externos' : 'otro CRM'} exitosamente`);
+    } catch (error) {
+      alert('Error al mover cliente');
+    }
+  };
+
   const filteredClients = clients.filter(c => {
     const matchesSearch = c.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          c.email?.toLowerCase().includes(searchTerm.toLowerCase());
