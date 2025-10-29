@@ -468,6 +468,8 @@ const AdminDashboard = () => {
 
           {/* Clients Management Tab */}
           <TabsContent value="clients">
+            <TeamClientsCRM token={token} />
+          </TabsContent>
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Client List */}
           <Card className="lg:col-span-1">
