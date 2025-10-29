@@ -1,0 +1,93 @@
+[
+  {
+    "test": "Admin Login",
+    "success": true,
+    "message": "Admin logged in successfully. Role: admin",
+    "timestamp": "2025-10-29T14:38:23.377628",
+    "response_data": null
+  },
+  {
+    "test": "Create External Client",
+    "success": true,
+    "message": "External client created successfully. ID: 1761748703417179",
+    "timestamp": "2025-10-29T14:38:23.420953",
+    "response_data": null
+  },
+  {
+    "test": "GET External Clients List",
+    "success": true,
+    "message": "External clients list retrieved. Total: 3",
+    "timestamp": "2025-10-29T14:38:23.464415",
+    "response_data": null
+  },
+  {
+    "test": "GET External Client Detail",
+    "success": true,
+    "message": "External client detail retrieved. Name: Cliente Test CRM",
+    "timestamp": "2025-10-29T14:38:23.506977",
+    "response_data": null
+  },
+  {
+    "test": "PATCH Update Basic Info",
+    "success": true,
+    "message": "Basic info updated successfully: Cliente actualizado",
+    "timestamp": "2025-10-29T14:38:23.546294",
+    "response_data": null
+  },
+  {
+    "test": "PATCH Update Plan Weeks",
+    "success": true,
+    "message": "Plan weeks updated successfully: Cliente actualizado",
+    "timestamp": "2025-10-29T14:38:23.589697",
+    "response_data": null
+  },
+  {
+    "test": "PATCH Update Start Date",
+    "success": true,
+    "message": "Start date updated successfully: Cliente actualizado",
+    "timestamp": "2025-10-29T14:38:23.633815",
+    "response_data": null
+  },
+  {
+    "test": "PATCH Update Weeks Completed",
+    "success": true,
+    "message": "Weeks completed updated successfully: Cliente actualizado",
+    "timestamp": "2025-10-29T14:38:23.676429",
+    "response_data": null
+  },
+  {
+    "test": "PATCH Partial Update",
+    "success": true,
+    "message": "Partial update successful: Cliente actualizado",
+    "timestamp": "2025-10-29T14:38:23.716172",
+    "response_data": null
+  },
+  {
+    "test": "PATCH 404 Error Test",
+    "success": true,
+    "message": "Correctly returned 404 for non-existent client",
+    "timestamp": "2025-10-29T14:38:23.763556",
+    "response_data": null
+  },
+  {
+    "test": "Verify Updates Applied",
+    "success": true,
+    "message": "All updates were applied correctly",
+    "timestamp": "2025-10-29T14:38:23.801810",
+    "response_data": null
+  },
+  {
+    "test": "PATCH Update Status",
+    "success": true,
+    "message": "Status updated successfully: Estado actualizado",
+    "timestamp": "2025-10-29T14:38:23.842033",
+    "response_data": null
+  },
+  {
+    "test": "DELETE External Client",
+    "success": true,
+    "message": "Test client deleted successfully: Cliente eliminado",
+    "timestamp": "2025-10-29T14:38:23.882260",
+    "response_data": null
+  }
+]
