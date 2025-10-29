@@ -470,12 +470,8 @@ const AdminDashboard = () => {
           <TabsContent value="clients">
             <TeamClientsCRM token={token} />
           </TabsContent>
-
         </Tabs>
       </div>
-        </Tabs>
-      </div>
-
 
 
       {/* Edit User Modal */}
