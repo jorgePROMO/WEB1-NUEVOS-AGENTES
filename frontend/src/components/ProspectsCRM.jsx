@@ -20,7 +20,9 @@ import {
   DollarSign,
   Clock,
   FileText,
-  Save
+  Save,
+  UserPlus,
+  Users
 } from 'lucide-react';
 import axios from 'axios';
 
