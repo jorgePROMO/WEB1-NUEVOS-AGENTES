@@ -280,9 +280,11 @@ export const ProspectsCRM = ({ token }) => {
                       <select
                         value={prospect.stage_id || ''}
                         onChange={(e) => updateStage(prospect.id, e.target.value)}
-                        className="border rounded px-2 py-1 text-sm"
+                        className="border-2 rounded-md px-3 py-1 text-sm font-medium"
                         style={{
-                          borderColor: stages.find(s => s.id === prospect.stage_id)?.color || '#3B82F6'
+                          borderColor: stages.find(s => s.id === prospect.stage_id)?.color || '#3B82F6',
+                          backgroundColor: `${stages.find(s => s.id === prospect.stage_id)?.color}20` || '#EFF6FF',
+                          color: stages.find(s => s.id === prospect.stage_id)?.color || '#3B82F6'
                         }}
                       >
                         <option value="">Sin etapa</option>
