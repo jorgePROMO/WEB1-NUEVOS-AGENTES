@@ -40,6 +40,13 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
     presupuesto: '',
     comentarios_adicionales: ''
   });
+  
+  // Scroll to top when step changes
+  React.useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [currentStep]);
 
   const totalSteps = 4;
 
