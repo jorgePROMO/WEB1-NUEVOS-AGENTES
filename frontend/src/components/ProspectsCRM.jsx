@@ -121,6 +121,52 @@ export const ProspectsCRM = ({ token }) => {
     }
   };
 
+  const deleteProspect = async (prospectId) => {
+    if (!window.confirm('¿Estás seguro de eliminar este prospecto? Esta acción no se puede deshacer.')) {
+      return;
+    }
+    
+    try {
+      await axios.delete(`${API}/admin/prospects/${prospectId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      loadProspects(filterStage);
+      if (showDetail && selectedProspect?.id === prospectId) {
+        setShowDetail(false);
+        setSelectedProspect(null);
+      }
+      alert('Prospecto eliminado correctamente');
+    } catch (error) {
+      alert('Error al eliminar prospecto');
+    }
+  };
+
+  const openConvertModal = (prospect) => {
+    setProspectToConvert(prospect);
+    setShowConvertModal(true);
+  };
+
+  const convertProspect = async (targetCRM) => {
+    if (!prospectToConvert) return;
+    
+    try {
+      await axios.post(`${API}/admin/prospects/${prospectToConvert.id}/convert`,
+        { target_crm: targetCRM },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      setShowConvertModal(false);
+      setProspectToConvert(null);
+      loadProspects(filterStage);
+      alert(`Prospecto convertido a ${targetCRM === 'team' ? 'Cliente Equipo' : 'Cliente Externo'} exitosamente`);
+    } catch (error) {
+      alert('Error al convertir prospecto');
+    }
+  };
+
   const filteredProspects = prospects.filter(p => {
     const matchesSearch = p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          p.email.toLowerCase().includes(searchTerm.toLowerCase());
