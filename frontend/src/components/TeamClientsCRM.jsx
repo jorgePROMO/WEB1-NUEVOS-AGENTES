@@ -30,6 +30,8 @@ export const TeamClientsCRM = ({ token }) => {
   const [clients, setClients] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
+  const [showMoveModal, setShowMoveModal] = useState(false);
+  const [clientToMove, setClientToMove] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [newNote, setNewNote] = useState('');
