@@ -238,7 +238,7 @@ class QuestionnaireSubmit(BaseModel):
     objetivo: str
     intentos_previos: str
     dificultades: List[str] = []
-    dificultades_otro: Optional[str] = None
+    dificultades_otro: Optional[str] = ''
     tiempo_semanal: str
     entrena: str
     
@@ -251,6 +251,7 @@ class QuestionnaireSubmit(BaseModel):
     dispuesto_invertir: str
     tipo_acompanamiento: str
     presupuesto: str
+    comentarios_adicionales: Optional[str] = ''
 
 
 # ==================== CRM PROSPECTOS MODELS ====================
