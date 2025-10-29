@@ -292,14 +292,34 @@ export const ProspectsCRM = ({ token }) => {
                       </select>
                     </td>
                     <td className="p-3">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => loadProspectDetail(prospect.id)}
-                      >
-                        <Eye className="h-4 w-4 mr-1" />
-                        Ver
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => loadProspectDetail(prospect.id)}
+                          title="Ver detalle"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="bg-green-50 hover:bg-green-100 text-green-700 border-green-300"
+                          onClick={() => openConvertModal(prospect)}
+                          title="Convertir a cliente"
+                        >
+                          <UserPlus className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="bg-red-50 hover:bg-red-100 text-red-700 border-red-300"
+                          onClick={() => deleteProspect(prospect.id)}
+                          title="Eliminar"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}
