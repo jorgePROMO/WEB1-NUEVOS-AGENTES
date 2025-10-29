@@ -1470,16 +1470,16 @@ async def get_team_clients(request: Request, status: Optional[str] = None):
     await require_admin(request)
     
     try:
-        # Get converted prospects marked as team clients
-        query = {"converted_to_client": True, "conversion_type": "team"}
+        # Get converted prospects marked as team clients (exclude moved ones)
+        query = {"converted_to_client": True, "conversion_type": "team", "moved_to_external": {"$ne": True}}
         if status:
             # We'll need to add status tracking
             pass
         
         converted_prospects = await db.questionnaire_responses.find(query).to_list(length=None)
         
-        # Get regular registered users
-        users = await db.users.find({"role": "user"}).to_list(length=None)
+        # Get regular registered users (exclude moved ones)
+        users = await db.users.find({"role": "user", "moved_to_external": {"$ne": True}}).to_list(length=None)
         
         # Combine and format
         clients_list = []
