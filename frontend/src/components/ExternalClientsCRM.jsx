@@ -150,6 +150,40 @@ export const ExternalClientsCRM = ({ token }) => {
     }
   };
 
+  const openEditModal = (client) => {
+    setClientToEdit(client);
+    setEditClient({
+      nombre: client.nombre,
+      email: client.email,
+      whatsapp: client.whatsapp,
+      objetivo: client.objetivo || '',
+      plan_weeks: client.plan_weeks,
+      start_date: client.start_date ? new Date(client.start_date).toISOString().split('T')[0] : '',
+      weeks_completed: client.weeks_completed || 0
+    });
+    setShowEditModal(true);
+  };
+
+  const updateClient = async () => {
+    if (!clientToEdit) return;
+    
+    try {
+      await axios.patch(`${API}/admin/external-clients/${clientToEdit.id}`, editClient, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setShowEditModal(false);
+      setClientToEdit(null);
+      loadClients(filterStatus);
+      if (showDetail && selectedClient?.id === clientToEdit.id) {
+        loadClientDetail(clientToEdit.id);
+      }
+      alert('Cliente actualizado correctamente');
+    } catch (error) {
+      alert('Error al actualizar cliente');
+    }
+  };
+
   const addPayment = async () => {
     if (!selectedClient || !newPayment.amount) return;
     
