@@ -20,8 +20,8 @@ const QuestionnaireModal = ({ isOpen, onClose }) => {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-0 md:p-4"
-      style={{ touchAction: 'none' }}
+      className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm p-0 md:p-4"
+      style={{ touchAction: 'none', zIndex: 9999999 }}
       onClick={(e) => {
         // Cerrar si hace clic en el fondo (solo en desktop)
         if (e.target === e.currentTarget && window.innerWidth > 768) {
@@ -29,7 +29,7 @@ const QuestionnaireModal = ({ isOpen, onClose }) => {
         }
       }}
     >
-      <div className="relative bg-white rounded-none md:rounded-2xl shadow-2xl w-full h-full md:h-[90vh] md:max-w-4xl flex flex-col overflow-hidden">
+      <div className="relative bg-white rounded-none md:rounded-2xl shadow-2xl w-full h-full md:h-[90vh] md:max-w-4xl flex flex-col overflow-hidden" style={{ zIndex: 10000000 }}>
         {/* Header - Fixed */}
         <div className="flex-shrink-0 flex items-center justify-between p-4 border-b bg-gradient-to-r from-blue-500 to-orange-500">
           <h2 className="text-lg md:text-xl font-bold text-white">Diagnóstico Inicial Gratuito</h2>
