@@ -19,7 +19,9 @@ import {
   Clock,
   FileText,
   Save,
-  UserCheck
+  UserCheck,
+  ArrowRightLeft,
+  Target
 } from 'lucide-react';
 import axios from 'axios';
 
