@@ -21,7 +21,8 @@ import {
   Save,
   UserCheck,
   ArrowRightLeft,
-  Target
+  Target,
+  Trash2
 } from 'lucide-react';
 import axios from 'axios';
 
