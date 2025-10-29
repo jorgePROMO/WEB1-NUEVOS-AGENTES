@@ -131,6 +131,27 @@ export const TeamClientsCRM = ({ token }) => {
     }
   };
 
+  const deleteClient = async (clientId) => {
+    if (!window.confirm('¿Estás seguro de eliminar este cliente? Esta acción no se puede deshacer.')) {
+      return;
+    }
+    
+    try {
+      await axios.delete(`${API}/admin/team-clients/${clientId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      loadClients(filterStatus);
+      if (showDetail && selectedClient?.id === clientId) {
+        setShowDetail(false);
+        setSelectedClient(null);
+      }
+      alert('Cliente eliminado correctamente');
+    } catch (error) {
+      alert('Error al eliminar cliente');
+    }
+  };
+
   const filteredClients = clients.filter(c => {
     const matchesSearch = c.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          c.email?.toLowerCase().includes(searchTerm.toLowerCase());
