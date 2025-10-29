@@ -23,7 +23,9 @@ import {
   DollarSign,
   Save,
   AlertCircle,
-  TrendingUp
+  TrendingUp,
+  ArrowRightLeft,
+  Users
 } from 'lucide-react';
 import axios from 'axios';
 
