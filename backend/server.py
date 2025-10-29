@@ -1723,7 +1723,7 @@ async def get_external_clients(request: Request, status: Optional[str] = None):
     await require_admin(request)
     
     try:
-        query = {}
+        query = {"moved_to_team": {"$ne": True}}
         if status:
             query["status"] = status
         
