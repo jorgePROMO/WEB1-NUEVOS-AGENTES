@@ -367,7 +367,7 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
 
         {/* STEP 3: Nutrición y Estilo de Vida */}
         {currentStep === 3 && (
-          <div className="space-y-6 animate-fade-in pb-24">
+          <div className="space-y-6 pb-24">
             <div>
               <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-orange-500 bg-clip-text text-transparent mb-2">
                 Nutrición y Estilo de Vida
