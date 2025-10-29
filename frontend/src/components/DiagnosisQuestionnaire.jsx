@@ -543,15 +543,18 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
       </div>
 
       {/* Navigation Buttons - Fixed at bottom */}
-      <div className="border-t p-4 md:p-6 bg-gray-50 flex justify-between flex-shrink-0">
+      <div 
+        className="border-t p-4 md:p-6 bg-gray-50 flex justify-between flex-shrink-0 relative"
+        style={{ zIndex: 999999 }}
+      >
         <Button
           type="button"
           variant="outline"
           onClick={() => setCurrentStep(currentStep - 1)}
           disabled={currentStep === 1}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 h-12 px-6 text-base"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="h-5 w-5" />
           <span className="hidden sm:inline">Anterior</span>
         </Button>
 
@@ -560,29 +563,30 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
             type="button"
             onClick={() => setCurrentStep(currentStep + 1)}
             disabled={!canGoNext()}
-            className="bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 flex items-center gap-2"
+            className="bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 flex items-center gap-2 h-12 px-6 text-base font-semibold shadow-lg"
           >
             <span className="hidden sm:inline">Siguiente</span>
             <span className="sm:hidden">Siguiente</span>
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-5 w-5" />
           </Button>
         ) : (
           <Button
             type="button"
             onClick={handleSubmit}
             disabled={loading || !formData.por_que_ahora || !formData.dispuesto_invertir || !formData.tipo_acompanamiento || !formData.presupuesto}
-            className="bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 flex items-center gap-2"
+            className="bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 flex items-center gap-2 h-12 px-6 text-base font-semibold shadow-lg"
           >
             {loading ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-5 w-5 animate-spin" />
                 <span className="hidden sm:inline">Enviando...</span>
+                <span className="sm:hidden">Enviando...</span>
               </>
             ) : (
               <>
                 <span className="sm:hidden">Enviar</span>
                 <span className="hidden sm:inline">Enviar Diagnóstico</span>
-                <CheckCircle className="h-4 w-4" />
+                <CheckCircle className="h-5 w-5" />
               </>
             )}
           </Button>
