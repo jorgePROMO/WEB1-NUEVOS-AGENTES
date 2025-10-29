@@ -525,8 +525,8 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
         )}
       </div>
 
-      {/* Navigation Buttons */}
-      <div className="border-t p-6 bg-gray-50 flex justify-between">
+      {/* Navigation Buttons - Fixed at bottom */}
+      <div className="border-t p-4 md:p-6 bg-gray-50 flex justify-between flex-shrink-0">
         <Button
           type="button"
           variant="outline"
@@ -535,7 +535,7 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
           className="flex items-center gap-2"
         >
           <ChevronLeft className="h-4 w-4" />
-          Anterior
+          <span className="hidden sm:inline">Anterior</span>
         </Button>
 
         {currentStep < totalSteps ? (
@@ -545,7 +545,8 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
             disabled={!canGoNext()}
             className="bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 flex items-center gap-2"
           >
-            Siguiente
+            <span className="hidden sm:inline">Siguiente</span>
+            <span className="sm:hidden">Siguiente</span>
             <ChevronRight className="h-4 w-4" />
           </Button>
         ) : (
@@ -558,11 +559,12 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Enviando...
+                <span className="hidden sm:inline">Enviando...</span>
               </>
             ) : (
               <>
-                Enviar Diagnóstico
+                <span className="sm:hidden">Enviar</span>
+                <span className="hidden sm:inline">Enviar Diagnóstico</span>
                 <CheckCircle className="h-4 w-4" />
               </>
             )}
