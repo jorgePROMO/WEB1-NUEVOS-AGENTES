@@ -617,6 +617,118 @@ export const ExternalClientsCRM = ({ token }) => {
         </div>
       )}
 
+      {/* Edit Client Modal */}
+      {showEditModal && clientToEdit && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b p-4 flex items-center justify-between">
+              <h3 className="text-xl font-bold">Editar Cliente Externo</h3>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  setShowEditModal(false);
+                  setClientToEdit(null);
+                }}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label>Nombre *</Label>
+                  <Input
+                    value={editClient.nombre}
+                    onChange={(e) => setEditClient({...editClient, nombre: e.target.value})}
+                    placeholder="Nombre completo"
+                  />
+                </div>
+                <div>
+                  <Label>Email *</Label>
+                  <Input
+                    type="email"
+                    value={editClient.email}
+                    onChange={(e) => setEditClient({...editClient, email: e.target.value})}
+                    placeholder="email@ejemplo.com"
+                  />
+                </div>
+                <div>
+                  <Label>WhatsApp *</Label>
+                  <Input
+                    value={editClient.whatsapp}
+                    onChange={(e) => setEditClient({...editClient, whatsapp: e.target.value})}
+                    placeholder="+34 600 000 000"
+                  />
+                </div>
+                <div>
+                  <Label>Plan (semanas) *</Label>
+                  <select
+                    value={editClient.plan_weeks}
+                    onChange={(e) => setEditClient({...editClient, plan_weeks: parseInt(e.target.value)})}
+                    className="w-full border rounded-md px-3 py-2"
+                  >
+                    {WEEK_OPTIONS.map(weeks => (
+                      <option key={weeks} value={weeks}>{weeks} semanas</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <Label>Fecha de Inicio *</Label>
+                  <Input
+                    type="date"
+                    value={editClient.start_date}
+                    onChange={(e) => setEditClient({...editClient, start_date: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <Label>Semanas Completadas</Label>
+                  <Input
+                    type="number"
+                    value={editClient.weeks_completed}
+                    onChange={(e) => setEditClient({...editClient, weeks_completed: parseInt(e.target.value)})}
+                    placeholder="0"
+                    min="0"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label>Objetivo</Label>
+                <Textarea
+                  value={editClient.objetivo}
+                  onChange={(e) => setEditClient({...editClient, objetivo: e.target.value})}
+                  placeholder="Objetivo del cliente..."
+                  rows={3}
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <Button
+                  onClick={updateClient}
+                  disabled={!editClient.nombre || !editClient.email || !editClient.whatsapp || !editClient.start_date}
+                  className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Actualizar Cliente
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setClientToEdit(null);
+                  }}
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Client Detail Modal */}
       {showDetail && selectedClient && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
