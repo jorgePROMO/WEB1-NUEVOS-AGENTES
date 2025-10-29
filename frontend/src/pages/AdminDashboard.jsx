@@ -428,7 +428,7 @@ const AdminDashboard = () => {
 
         {/* Main Content with Tabs */}
         <Tabs defaultValue="clients" className="space-y-6">
-          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-4">
+          <TabsList className="grid w-full max-w-4xl mx-auto grid-cols-5">
             <TabsTrigger value="prospects">
               <Target className="h-4 w-4 mr-2" />
               Prospectos
@@ -436,6 +436,10 @@ const AdminDashboard = () => {
             <TabsTrigger value="team-clients">
               <Users className="h-4 w-4 mr-2" />
               Clientes Equipo
+            </TabsTrigger>
+            <TabsTrigger value="external-clients">
+              <Target className="h-4 w-4 mr-2" />
+              Clientes Externos
             </TabsTrigger>
             <TabsTrigger value="clients">
               <Users className="h-4 w-4 mr-2" />
@@ -455,6 +459,11 @@ const AdminDashboard = () => {
           {/* Team Clients CRM Tab */}
           <TabsContent value="team-clients">
             <TeamClientsCRM token={token} />
+          </TabsContent>
+
+          {/* External Clients CRM Tab */}
+          <TabsContent value="external-clients">
+            <ExternalClientsCRM token={token} />
           </TabsContent>
 
           {/* Clients Management Tab */}
