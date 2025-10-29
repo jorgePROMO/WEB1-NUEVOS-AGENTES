@@ -177,10 +177,10 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
       </div>
 
       {/* Form Content - Scrollable */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 md:px-6 py-6">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto overflow-x-hidden px-4 md:px-6 py-6">
         {/* STEP 1: Datos Personales */}
         {currentStep === 1 && (
-          <div className="space-y-6 animate-fade-in pb-24">
+          <div className="space-y-6 pb-24">
             <div>
               <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-orange-500 bg-clip-text text-transparent mb-2">
                 Datos Personales
