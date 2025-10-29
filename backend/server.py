@@ -1643,6 +1643,78 @@ async def update_team_client_status(client_id: str, status_data: dict, request: 
         raise HTTPException(status_code=500, detail="Error al actualizar estado")
 
 
+@api_router.post("/admin/team-clients/{client_id}/move")
+async def move_team_client(client_id: str, request: Request, target_data: dict):
+    """Move a team client to another CRM"""
+    await require_admin(request)
+    
+    try:
+        target_crm = target_data.get("target_crm")
+        
+        # Get client data
+        client = None
+        source_type = None
+        
+        # Try in converted prospects first
+        client = await db.questionnaire_responses.find_one({"_id": client_id, "converted_to_client": True})
+        if client:
+            source_type = "prospect"
+        else:
+            # Try in users
+            client = await db.users.find_one({"_id": client_id})
+            if client:
+                source_type = "user"
+        
+        if not client:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        if target_crm == 'external':
+            # Move to external clients
+            external_client_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+            external_client_doc = {
+                "_id": external_client_id,
+                "nombre": client.get("nombre") or client.get("name"),
+                "email": client.get("email"),
+                "whatsapp": client.get("whatsapp", ""),
+                "objetivo": client.get("objetivo", ""),
+                "plan_weeks": 12,  # Default
+                "start_date": datetime.now(timezone.utc),
+                "next_payment_date": datetime.now(timezone.utc) + timedelta(weeks=12),
+                "weeks_completed": 0,
+                "status": "active",
+                "payment_history": [],
+                "notes": [],
+                "source": "team_client",
+                "original_team_client_id": client_id,
+                "created_at": datetime.now(timezone.utc)
+            }
+            
+            await db.external_clients.insert_one(external_client_doc)
+            
+            # Mark as moved in original location
+            if source_type == "prospect":
+                await db.questionnaire_responses.update_one(
+                    {"_id": client_id},
+                    {"$set": {"moved_to_external": True, "moved_at": datetime.now(timezone.utc)}}
+                )
+            else:
+                await db.users.update_one(
+                    {"_id": client_id},
+                    {"$set": {"moved_to_external": True, "moved_at": datetime.now(timezone.utc)}}
+                )
+            
+            logger.info(f"Team client {client_id} moved to external clients as {external_client_id}")
+            return {"success": True, "message": "Cliente movido a Clientes Externos"}
+        
+        raise HTTPException(status_code=400, detail="Target CRM inválido")
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error moving team client: {e}")
+        raise HTTPException(status_code=500, detail="Error al mover cliente")
+
+
 # ==================== EXTERNAL CLIENTS CRM ENDPOINTS ====================
 
 @api_router.get("/admin/external-clients")
