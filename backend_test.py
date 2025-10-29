@@ -264,6 +264,435 @@ class BackendTester:
             self.log_result("Diagnostic Questionnaire", False, f"Exception: {str(e)}")
         
         return False
+
+    # ==================== CRM EXTERNAL CLIENTS TESTS ====================
+    
+    def test_8_admin_login_for_crm(self):
+        """Test 8: Admin login with correct credentials for CRM testing"""
+        url = f"{BACKEND_URL}/auth/login"
+        params = {
+            "email": "ecjtrainer@gmail.com",
+            "password": "jorge3007"
+        }
+        
+        try:
+            response = requests.post(url, params=params)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "user" in data and "token" in data and data["user"].get("role") == "admin":
+                    self.admin_token = data["token"]
+                    self.log_result("Admin Login for CRM", True, 
+                                  f"Admin logged in successfully with correct credentials. Role: {data['user']['role']}")
+                    return True
+                else:
+                    self.log_result("Admin Login for CRM", False, 
+                                  "Response missing user/token or not admin role", data)
+            else:
+                self.log_result("Admin Login for CRM", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Admin Login for CRM", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_9_create_external_client(self):
+        """Test 9: Create external client for testing"""
+        if not self.admin_token:
+            self.log_result("Create External Client", False, "No admin token available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/external-clients"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "nombre": "Cliente Test CRM",
+            "email": "cliente.test@example.com",
+            "whatsapp": "+34 666 777 888",
+            "objetivo": "Perder peso y tonificar",
+            "plan_weeks": 12,
+            "start_date": "2025-01-15T00:00:00Z",
+            "amount_paid": 150.0,
+            "notes": "Cliente de prueba para testing CRM"
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "id" in data:
+                    self.test_external_client_id = data["id"]
+                    self.log_result("Create External Client", True, 
+                                  f"External client created successfully. ID: {self.test_external_client_id}")
+                    return True
+                else:
+                    self.log_result("Create External Client", False, 
+                                  "Response missing client ID", data)
+            else:
+                self.log_result("Create External Client", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Create External Client", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_10_get_external_clients_list(self):
+        """Test 10: GET /api/admin/external-clients (list)"""
+        if not self.admin_token:
+            self.log_result("Get External Clients List", False, "No admin token available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/external-clients"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "clients" in data and "total" in data:
+                    self.log_result("Get External Clients List", True, 
+                                  f"External clients list retrieved. Total: {data['total']}")
+                    return True
+                else:
+                    self.log_result("Get External Clients List", False, 
+                                  "Response missing clients or total", data)
+            else:
+                self.log_result("Get External Clients List", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Get External Clients List", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_11_get_external_client_detail(self):
+        """Test 11: GET /api/admin/external-clients/{client_id} (detail)"""
+        if not self.admin_token or not hasattr(self, 'test_external_client_id'):
+            self.log_result("Get External Client Detail", False, "No admin token or client ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/external-clients/{self.test_external_client_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "id" in data and "nombre" in data:
+                    self.log_result("Get External Client Detail", True, 
+                                  f"External client detail retrieved. Name: {data.get('nombre')}")
+                    return True
+                else:
+                    self.log_result("Get External Client Detail", False, 
+                                  "Response missing required fields", data)
+            else:
+                self.log_result("Get External Client Detail", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Get External Client Detail", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_12_update_external_client_basic_info(self):
+        """Test 12: PATCH /api/admin/external-clients/{client_id} - Update basic info"""
+        if not self.admin_token or not hasattr(self, 'test_external_client_id'):
+            self.log_result("Update External Client Basic Info", False, "No admin token or client ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/external-clients/{self.test_external_client_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "nombre": "Cliente Test CRM Actualizado",
+            "email": "cliente.actualizado@example.com",
+            "whatsapp": "+34 999 888 777"
+        }
+        
+        try:
+            response = requests.patch(url, json=payload, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") == True:
+                    self.log_result("Update External Client Basic Info", True, 
+                                  f"Basic info updated successfully: {data.get('message')}")
+                    return True
+                else:
+                    self.log_result("Update External Client Basic Info", False, 
+                                  "Response success not True", data)
+            else:
+                self.log_result("Update External Client Basic Info", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Update External Client Basic Info", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_13_update_external_client_plan_weeks(self):
+        """Test 13: PATCH /api/admin/external-clients/{client_id} - Update plan_weeks (should recalculate next_payment_date)"""
+        if not self.admin_token or not hasattr(self, 'test_external_client_id'):
+            self.log_result("Update External Client Plan Weeks", False, "No admin token or client ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/external-clients/{self.test_external_client_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "plan_weeks": 16
+        }
+        
+        try:
+            response = requests.patch(url, json=payload, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") == True:
+                    self.log_result("Update External Client Plan Weeks", True, 
+                                  f"Plan weeks updated successfully: {data.get('message')}")
+                    return True
+                else:
+                    self.log_result("Update External Client Plan Weeks", False, 
+                                  "Response success not True", data)
+            else:
+                self.log_result("Update External Client Plan Weeks", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Update External Client Plan Weeks", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_14_update_external_client_start_date(self):
+        """Test 14: PATCH /api/admin/external-clients/{client_id} - Update start_date (should recalculate next_payment_date)"""
+        if not self.admin_token or not hasattr(self, 'test_external_client_id'):
+            self.log_result("Update External Client Start Date", False, "No admin token or client ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/external-clients/{self.test_external_client_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "start_date": "2025-02-01T00:00:00Z"
+        }
+        
+        try:
+            response = requests.patch(url, json=payload, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") == True:
+                    self.log_result("Update External Client Start Date", True, 
+                                  f"Start date updated successfully: {data.get('message')}")
+                    return True
+                else:
+                    self.log_result("Update External Client Start Date", False, 
+                                  "Response success not True", data)
+            else:
+                self.log_result("Update External Client Start Date", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Update External Client Start Date", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_15_update_external_client_weeks_completed(self):
+        """Test 15: PATCH /api/admin/external-clients/{client_id} - Update weeks_completed"""
+        if not self.admin_token or not hasattr(self, 'test_external_client_id'):
+            self.log_result("Update External Client Weeks Completed", False, "No admin token or client ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/external-clients/{self.test_external_client_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "weeks_completed": 8
+        }
+        
+        try:
+            response = requests.patch(url, json=payload, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") == True:
+                    self.log_result("Update External Client Weeks Completed", True, 
+                                  f"Weeks completed updated successfully: {data.get('message')}")
+                    return True
+                else:
+                    self.log_result("Update External Client Weeks Completed", False, 
+                                  "Response success not True", data)
+            else:
+                self.log_result("Update External Client Weeks Completed", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Update External Client Weeks Completed", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_16_update_external_client_partial(self):
+        """Test 16: PATCH /api/admin/external-clients/{client_id} - Partial update (only some fields)"""
+        if not self.admin_token or not hasattr(self, 'test_external_client_id'):
+            self.log_result("Update External Client Partial", False, "No admin token or client ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/external-clients/{self.test_external_client_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "objetivo": "Ganar masa muscular y definir"
+        }
+        
+        try:
+            response = requests.patch(url, json=payload, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") == True:
+                    self.log_result("Update External Client Partial", True, 
+                                  f"Partial update successful: {data.get('message')}")
+                    return True
+                else:
+                    self.log_result("Update External Client Partial", False, 
+                                  "Response success not True", data)
+            else:
+                self.log_result("Update External Client Partial", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Update External Client Partial", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_17_update_external_client_404(self):
+        """Test 17: PATCH /api/admin/external-clients/{client_id} - Test 404 for non-existent client"""
+        if not self.admin_token:
+            self.log_result("Update External Client 404", False, "No admin token available")
+            return False
+            
+        fake_client_id = "nonexistent_client_id_12345"
+        url = f"{BACKEND_URL}/admin/external-clients/{fake_client_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "nombre": "Should not work"
+        }
+        
+        try:
+            response = requests.patch(url, json=payload, headers=headers)
+            
+            if response.status_code == 404:
+                self.log_result("Update External Client 404", True, 
+                              "Correctly returned 404 for non-existent client")
+                return True
+            else:
+                self.log_result("Update External Client 404", False, 
+                              f"Expected 404, got HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Update External Client 404", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_18_verify_updates_applied(self):
+        """Test 18: Verify that all updates were applied correctly"""
+        if not self.admin_token or not hasattr(self, 'test_external_client_id'):
+            self.log_result("Verify Updates Applied", False, "No admin token or client ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/external-clients/{self.test_external_client_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check if updates were applied
+                expected_values = {
+                    "nombre": "Cliente Test CRM Actualizado",
+                    "email": "cliente.actualizado@example.com",
+                    "whatsapp": "+34 999 888 777",
+                    "plan_weeks": 16,
+                    "weeks_completed": 8,
+                    "objetivo": "Ganar masa muscular y definir"
+                }
+                
+                all_correct = True
+                errors = []
+                
+                for field, expected in expected_values.items():
+                    actual = data.get(field)
+                    if actual != expected:
+                        all_correct = False
+                        errors.append(f"{field}: expected '{expected}', got '{actual}'")
+                
+                if all_correct:
+                    self.log_result("Verify Updates Applied", True, 
+                                  "All updates were applied correctly")
+                    return True
+                else:
+                    self.log_result("Verify Updates Applied", False, 
+                                  f"Some updates not applied correctly: {'; '.join(errors)}")
+            else:
+                self.log_result("Verify Updates Applied", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Verify Updates Applied", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_19_update_external_client_status(self):
+        """Test 19: PATCH /api/admin/external-clients/{client_id}/status"""
+        if not self.admin_token or not hasattr(self, 'test_external_client_id'):
+            self.log_result("Update External Client Status", False, "No admin token or client ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/external-clients/{self.test_external_client_id}/status"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "status": "inactive"
+        }
+        
+        try:
+            response = requests.patch(url, json=payload, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") == True:
+                    self.log_result("Update External Client Status", True, 
+                                  f"Status updated successfully: {data.get('message')}")
+                    return True
+                else:
+                    self.log_result("Update External Client Status", False, 
+                                  "Response success not True", data)
+            else:
+                self.log_result("Update External Client Status", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Update External Client Status", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_20_delete_external_client(self):
+        """Test 20: DELETE /api/admin/external-clients/{client_id} - Clean up test data"""
+        if not self.admin_token or not hasattr(self, 'test_external_client_id'):
+            self.log_result("Delete External Client", False, "No admin token or client ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/external-clients/{self.test_external_client_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.delete(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") == True:
+                    self.log_result("Delete External Client", True, 
+                                  f"Test client deleted successfully: {data.get('message')}")
+                    return True
+                else:
+                    self.log_result("Delete External Client", False, 
+                                  "Response success not True", data)
+            else:
+                self.log_result("Delete External Client", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Delete External Client", False, f"Exception: {str(e)}")
+        
+        return False
     
     def run_all_tests(self):
         """Run all tests in sequence"""
