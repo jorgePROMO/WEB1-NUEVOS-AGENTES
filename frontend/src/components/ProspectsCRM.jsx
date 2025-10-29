@@ -469,6 +469,72 @@ export const ProspectsCRM = ({ token }) => {
           token={token}
         />
       )}
+
+      {/* Convert Prospect Modal */}
+      {showConvertModal && prospectToConvert && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-md">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold">Convertir Prospecto a Cliente</h3>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    setShowConvertModal(false);
+                    setProspectToConvert(null);
+                  }}
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-gray-600 mb-2">
+                  <strong>Prospecto:</strong> {prospectToConvert.nombre}
+                </p>
+                <p className="text-gray-600 mb-4">
+                  <strong>Email:</strong> {prospectToConvert.email}
+                </p>
+                <p className="text-sm text-gray-500 mb-4">
+                  Selecciona a qué CRM quieres mover este prospecto:
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <Button
+                  className="w-full h-20 flex flex-col items-center justify-center bg-blue-500 hover:bg-blue-600 text-white"
+                  onClick={() => convertProspect('team')}
+                >
+                  <Users className="h-8 w-8 mb-2" />
+                  <span className="font-semibold">Cliente Equipo</span>
+                  <span className="text-xs opacity-90">Trabaja con el equipo (web)</span>
+                </Button>
+
+                <Button
+                  className="w-full h-20 flex flex-col items-center justify-center bg-orange-500 hover:bg-orange-600 text-white"
+                  onClick={() => convertProspect('external')}
+                >
+                  <Target className="h-8 w-8 mb-2" />
+                  <span className="font-semibold">Cliente Externo</span>
+                  <span className="text-xs opacity-90">Trabajo directo (Harbiz)</span>
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    setShowConvertModal(false);
+                    setProspectToConvert(null);
+                  }}
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
