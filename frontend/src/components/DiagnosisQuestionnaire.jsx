@@ -42,7 +42,7 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
   });
   
   // Scroll to top when step changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = 0;
     }
