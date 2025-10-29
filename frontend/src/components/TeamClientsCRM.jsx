@@ -305,13 +305,24 @@ export const TeamClientsCRM = ({ token }) => {
           <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b p-4 flex items-center justify-between">
               <h3 className="text-xl font-bold">Detalle del Cliente</h3>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => setShowDetail(false)}
-              >
-                <X className="h-5 w-5" />
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => openMoveModal(selectedClient)}
+                  className="bg-orange-50 hover:bg-orange-100 text-orange-700 border-orange-300"
+                >
+                  <ArrowRightLeft className="h-4 w-4 mr-2" />
+                  Mover Cliente
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setShowDetail(false)}
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
             </div>
 
             <div className="p-6 space-y-6">
