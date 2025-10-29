@@ -18,6 +18,7 @@ class BackendTester:
         self.user_token = None
         self.admin_token = None
         self.test_user_id = None
+        self.test_external_client_id = None
         self.results = []
         
     def log_result(self, test_name, success, message, response_data=None):
