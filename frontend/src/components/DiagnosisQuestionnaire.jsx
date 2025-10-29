@@ -161,18 +161,18 @@ const DiagnosisQuestionnaire = ({ onClose }) => {
   return (
     <div className="h-full flex flex-col">
       {/* Progress Bar */}
-      <div className="bg-gray-100 h-2 mb-6">
+      <div className="bg-gray-100 h-2 flex-shrink-0">
         <div
           className="bg-gradient-to-r from-blue-500 to-orange-500 h-full transition-all duration-300"
           style={{ width: `${(currentStep / totalSteps) * 100}%` }}
         />
       </div>
 
-      {/* Form Content */}
-      <div className="flex-1 overflow-y-auto px-6 pb-6">
+      {/* Form Content - Scrollable */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 md:px-6 py-6">
         {/* STEP 1: Datos Personales */}
         {currentStep === 1 && (
-          <div className="space-y-6 animate-fade-in">
+          <div className="space-y-6 animate-fade-in pb-24">
             <div>
               <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-orange-500 bg-clip-text text-transparent mb-2">
                 Datos Personales
