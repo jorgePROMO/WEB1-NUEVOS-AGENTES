@@ -696,19 +696,35 @@ class BackendTester:
     
     def run_all_tests(self):
         """Run all tests in sequence"""
-        print(f"🚀 Starting Backend API Tests")
+        print(f"🚀 Starting Backend API Tests - CRM External Clients Focus")
         print(f"Backend URL: {BACKEND_URL}")
-        print("=" * 60)
+        print("=" * 80)
         
-        # Run tests in order
+        # Run CRM-focused tests in order
         tests = [
+            # Basic system tests
             self.test_1_register_new_user,
             self.test_2_admin_login,
             self.test_3_user_dashboard,
             self.test_4_admin_list_clients,
             self.test_5_admin_send_form,
             self.test_6_admin_verify_payment,
-            self.test_7_diagnostic_questionnaire
+            self.test_7_diagnostic_questionnaire,
+            
+            # CRM External Clients tests (main focus)
+            self.test_8_admin_login_for_crm,
+            self.test_9_create_external_client,
+            self.test_10_get_external_clients_list,
+            self.test_11_get_external_client_detail,
+            self.test_12_update_external_client_basic_info,
+            self.test_13_update_external_client_plan_weeks,
+            self.test_14_update_external_client_start_date,
+            self.test_15_update_external_client_weeks_completed,
+            self.test_16_update_external_client_partial,
+            self.test_17_update_external_client_404,
+            self.test_18_verify_updates_applied,
+            self.test_19_update_external_client_status,
+            self.test_20_delete_external_client
         ]
         
         for test in tests:
@@ -719,8 +735,15 @@ class BackendTester:
         passed = sum(1 for r in self.results if r["success"])
         total = len(self.results)
         
-        print("=" * 60)
+        print("=" * 80)
         print(f"📊 TEST SUMMARY: {passed}/{total} tests passed")
+        
+        # Separate CRM tests summary
+        crm_tests = [r for r in self.results if "External Client" in r["test"] or "CRM" in r["test"]]
+        crm_passed = sum(1 for r in crm_tests if r["success"])
+        crm_total = len(crm_tests)
+        
+        print(f"🎯 CRM EXTERNAL CLIENTS TESTS: {crm_passed}/{crm_total} passed")
         
         if passed == total:
             print("🎉 All tests PASSED!")
