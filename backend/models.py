@@ -335,6 +335,15 @@ class ExternalClientCreate(BaseModel):
     amount_paid: Optional[float] = 0
     notes: Optional[str] = None
 
+class ExternalClientUpdate(BaseModel):
+    nombre: Optional[str] = None
+    email: Optional[EmailStr] = None
+    whatsapp: Optional[str] = None
+    objetivo: Optional[str] = None
+    plan_weeks: Optional[int] = None
+    start_date: Optional[str] = None
+    weeks_completed: Optional[int] = None
+
 class ExternalClientInDB(BaseModel):
     id: str = Field(alias="_id")
     nombre: str
