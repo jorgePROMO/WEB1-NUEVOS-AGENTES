@@ -322,4 +322,36 @@ class ProspectNoteInDB(ProspectNoteCreate):
 class ProspectStageUpdate(BaseModel):
     stage_id: str
 
-    comentarios_adicionales: Optional[str] = None
+
+# ==================== EXTERNAL CLIENTS MODELS ====================
+
+class ExternalClientCreate(BaseModel):
+    nombre: str
+    email: EmailStr
+    whatsapp: str
+    objetivo: Optional[str] = None
+    plan_weeks: int = 12
+    start_date: Optional[str] = None
+    amount_paid: Optional[float] = 0
+    notes: Optional[str] = None
+
+class ExternalClientInDB(BaseModel):
+    id: str = Field(alias="_id")
+    nombre: str
+    email: EmailStr
+    whatsapp: str
+    objetivo: Optional[str] = None
+    plan_weeks: int
+    start_date: Optional[datetime] = None
+    next_payment_date: Optional[datetime] = None
+    weeks_completed: int = 0
+    status: str = "active"  # active, paused, completed
+    payment_history: List[dict] = []
+    notes: List[dict] = []
+    source: str = "manual"  # manual or prospect
+    prospect_id: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
