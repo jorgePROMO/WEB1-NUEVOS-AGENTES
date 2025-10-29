@@ -1643,6 +1643,35 @@ async def update_team_client_status(client_id: str, status_data: dict, request: 
         raise HTTPException(status_code=500, detail="Error al actualizar estado")
 
 
+@api_router.delete("/admin/team-clients/{client_id}")
+async def delete_team_client(client_id: str, request: Request):
+    """Delete a team client"""
+    await require_admin(request)
+    
+    try:
+        # Try to delete from converted prospects first
+        result = await db.questionnaire_responses.delete_one({"_id": client_id, "converted_to_client": True})
+        
+        if result.deleted_count == 0:
+            # Try to delete from users
+            result = await db.users.delete_one({"_id": client_id})
+        
+        # Delete associated notes
+        await db.team_client_notes.delete_many({"client_id": client_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        logger.info(f"Team client deleted: {client_id}")
+        return {"success": True, "message": "Cliente eliminado"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting team client: {e}")
+        raise HTTPException(status_code=500, detail="Error al eliminar cliente")
+
+
 @api_router.post("/admin/team-clients/{client_id}/move")
 async def move_team_client(client_id: str, request: Request, target_data: dict):
     """Move a team client to another CRM"""
