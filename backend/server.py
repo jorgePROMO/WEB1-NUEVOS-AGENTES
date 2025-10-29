@@ -1965,6 +1965,63 @@ async def update_external_client_status(client_id: str, status_data: dict, reque
         raise HTTPException(status_code=500, detail="Error al actualizar estado")
 
 
+@api_router.patch("/admin/external-clients/{client_id}")
+async def update_external_client(client_id: str, update_data: ExternalClientUpdate, request: Request):
+    """Update external client information"""
+    await require_admin(request)
+    
+    try:
+        # Build update document from provided fields only
+        update_doc = {}
+        
+        if update_data.nombre is not None:
+            update_doc["nombre"] = update_data.nombre
+        if update_data.email is not None:
+            update_doc["email"] = update_data.email
+        if update_data.whatsapp is not None:
+            update_doc["whatsapp"] = update_data.whatsapp
+        if update_data.objetivo is not None:
+            update_doc["objetivo"] = update_data.objetivo
+        if update_data.plan_weeks is not None:
+            update_doc["plan_weeks"] = update_data.plan_weeks
+            # Recalculate next_payment_date if plan weeks changed
+            client = await db.external_clients.find_one({"_id": client_id})
+            if client and client.get("start_date"):
+                start_date = client["start_date"]
+                update_doc["next_payment_date"] = start_date + timedelta(weeks=update_data.plan_weeks)
+        if update_data.start_date is not None:
+            start_date = datetime.fromisoformat(update_data.start_date).replace(tzinfo=timezone.utc)
+            update_doc["start_date"] = start_date
+            # Also update next_payment_date
+            client = await db.external_clients.find_one({"_id": client_id})
+            plan_weeks = update_data.plan_weeks if update_data.plan_weeks is not None else client.get("plan_weeks", 12)
+            update_doc["next_payment_date"] = start_date + timedelta(weeks=plan_weeks)
+        if update_data.weeks_completed is not None:
+            update_doc["weeks_completed"] = update_data.weeks_completed
+        
+        update_doc["updated_at"] = datetime.now(timezone.utc)
+        
+        if not update_doc:
+            raise HTTPException(status_code=400, detail="No hay campos para actualizar")
+        
+        result = await db.external_clients.update_one(
+            {"_id": client_id},
+            {"$set": update_doc}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        logger.info(f"External client updated: {client_id}")
+        return {"success": True, "message": "Cliente actualizado"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating external client: {e}")
+        raise HTTPException(status_code=500, detail="Error al actualizar cliente")
+
+
 @api_router.post("/admin/external-clients/{client_id}/move")
 async def move_external_client(client_id: str, request: Request, target_data: dict):
     """Move an external client to team clients CRM"""
