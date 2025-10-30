@@ -1217,6 +1217,77 @@ const AdminDashboard = () => {
         />
       )}
 
+      {/* Template Message Modal */}
+      {showTemplateModal && selectedTemplate && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-2xl">
+            <div className="p-6 border-b flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold">{selectedTemplate.name}</h3>
+                <p className="text-sm text-gray-600 mt-1">Mensaje auto-completado para {selectedClient?.name}</p>
+              </div>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowTemplateModal(false)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            
+            <div className="p-6 space-y-4">
+              {/* Message Preview */}
+              <div>
+                <label className="text-sm font-semibold text-gray-700 block mb-2">
+                  Mensaje personalizado:
+                </label>
+                <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4">
+                  <p className="whitespace-pre-wrap text-gray-900">{templateMessage}</p>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  ✨ Las variables se han reemplazado automáticamente con los datos del cliente
+                </p>
+              </div>
+
+              {/* Editable Message */}
+              <div>
+                <label className="text-sm font-semibold text-gray-700 block mb-2">
+                  Editar mensaje (opcional):
+                </label>
+                <textarea
+                  value={templateMessage}
+                  onChange={(e) => setTemplateMessage(e.target.value)}
+                  className="w-full border rounded-lg p-3 min-h-32"
+                  placeholder="Edita el mensaje si lo necesitas..."
+                />
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-3 pt-4">
+                <Button
+                  onClick={sendTemplateMessage}
+                  className="flex-1 bg-green-600 hover:bg-green-700"
+                >
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Abrir en WhatsApp
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    navigator.clipboard.writeText(templateMessage);
+                    alert('Mensaje copiado al portapapeles');
+                  }}
+                  className="flex-1"
+                >
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copiar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Chat Modal */}
       {showChat && selectedClient && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
