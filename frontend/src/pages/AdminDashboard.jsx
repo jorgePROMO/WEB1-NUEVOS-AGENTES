@@ -560,10 +560,14 @@ const AdminDashboard = () => {
 
         {(activeView === 'clients' || activeView === 'calendar') && (
           <Tabs value={activeView} onValueChange={setActiveView} className="space-y-6">
-            <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-2">
+            <TabsList className="grid w-full max-w-4xl mx-auto grid-cols-3">
               <TabsTrigger value="clients">
                 <Users className="h-4 w-4 mr-2" />
                 Gestión de Clientes Activos
+              </TabsTrigger>
+              <TabsTrigger value="templates">
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Templates
               </TabsTrigger>
               <TabsTrigger value="calendar">
                 <Calendar className="h-4 w-4 mr-2" />
