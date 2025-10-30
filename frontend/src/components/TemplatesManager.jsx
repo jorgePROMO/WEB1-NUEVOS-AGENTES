@@ -12,7 +12,9 @@ import {
   Plus,
   Copy,
   Trash2,
-  X
+  X,
+  Edit,
+  Tag
 } from 'lucide-react';
 import axios from 'axios';
 
