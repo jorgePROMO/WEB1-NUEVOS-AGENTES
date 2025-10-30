@@ -23,10 +23,12 @@ const API = `${BACKEND_URL}/api`;
 
 export const TemplatesManager = ({ token, onSelectTemplate }) => {
   const [templates, setTemplates] = useState([]);
+  const [allTags, setAllTags] = useState([]);
   const [selectedType, setSelectedType] = useState('all');
-  const [searchTags, setSearchTags] = useState('');
+  const [selectedTagFilter, setSelectedTagFilter] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showTagManager, setShowTagManager] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState(null);
   const [newTemplate, setNewTemplate] = useState({
     type: 'whatsapp',
@@ -37,6 +39,7 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
     tags: []
   });
   const [tagInput, setTagInput] = useState('');
+  const [newGlobalTag, setNewGlobalTag] = useState('');
 
   useEffect(() => {
     loadTemplates();
