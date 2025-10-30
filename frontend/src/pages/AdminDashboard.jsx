@@ -57,6 +57,8 @@ const AdminDashboard = () => {
   const [userToEdit, setUserToEdit] = useState(null);
   const [activeView, setActiveView] = useState('clients'); // clients, prospects, team-clients, external-clients, calendar
   const [templates, setTemplates] = useState([]);
+  const [allTags, setAllTags] = useState([]);
+  const [selectedTagFilter, setSelectedTagFilter] = useState('');
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [showTemplateSelector, setShowTemplateSelector] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
