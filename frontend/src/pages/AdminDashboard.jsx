@@ -1393,6 +1393,15 @@ const AdminDashboard = () => {
                       <h4 className="font-bold text-gray-900">{template.name}</h4>
                     </div>
                     <p className="text-sm text-gray-600 whitespace-pre-wrap">{template.content}</p>
+                    {template.tags && template.tags.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {template.tags.map(tag => (
+                          <Badge key={tag} className="text-xs bg-blue-100 text-blue-700">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                     {template.variables && template.variables.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-1">
                         {template.variables.map(v => (
