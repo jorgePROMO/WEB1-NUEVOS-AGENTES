@@ -553,6 +553,154 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
         </div>
       )}
 
+      {/* Edit Template Modal */}
+      {showEditModal && editingTemplate && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b p-4 flex items-center justify-between">
+              <h3 className="text-xl font-bold">Editar Template</h3>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  setShowEditModal(false);
+                  setEditingTemplate(null);
+                }}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div>
+                <Label>Tipo *</Label>
+                <select
+                  value={newTemplate.type}
+                  onChange={(e) => setNewTemplate({...newTemplate, type: e.target.value})}
+                  className="w-full border rounded-md px-3 py-2"
+                  disabled
+                >
+                  <option value="whatsapp">WhatsApp</option>
+                  <option value="alert">Alerta</option>
+                  <option value="email">Email</option>
+                </select>
+                <p className="text-xs text-gray-500 mt-1">El tipo no se puede cambiar después de crear el template</p>
+              </div>
+
+              <div>
+                <Label>Nombre del Template *</Label>
+                <Input
+                  value={newTemplate.name}
+                  onChange={(e) => setNewTemplate({...newTemplate, name: e.target.value})}
+                  placeholder="Ej: Bienvenida Nuevo Cliente"
+                />
+              </div>
+
+              {newTemplate.type !== 'whatsapp' && (
+                <div>
+                  <Label>Asunto</Label>
+                  <Input
+                    value={newTemplate.subject}
+                    onChange={(e) => setNewTemplate({...newTemplate, subject: e.target.value})}
+                    placeholder="Asunto del mensaje"
+                  />
+                </div>
+              )}
+
+              <div>
+                <Label>Contenido del Mensaje *</Label>
+                <Textarea
+                  value={newTemplate.content}
+                  onChange={(e) => setNewTemplate({...newTemplate, content: e.target.value})}
+                  placeholder="Escribe tu mensaje aquí. Usa {nombre}, {fecha}, {hora} para variables"
+                  rows={8}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Variables disponibles: {'{nombre}'}, {'{fecha}'}, {'{hora}'}
+                </p>
+              </div>
+
+              <div>
+                <Label>Categoría</Label>
+                <select
+                  value={newTemplate.category}
+                  onChange={(e) => setNewTemplate({...newTemplate, category: e.target.value})}
+                  className="w-full border rounded-md px-3 py-2"
+                >
+                  <option value="welcome">Bienvenida</option>
+                  <option value="reminder">Recordatorio</option>
+                  <option value="followup">Seguimiento</option>
+                  <option value="general">General</option>
+                </select>
+              </div>
+
+              <div>
+                <Label className="flex items-center gap-2">
+                  <Tag className="h-4 w-4" />
+                  Etiquetas
+                </Label>
+                <div className="flex gap-2 mt-2">
+                  <select
+                    value=""
+                    onChange={(e) => {
+                      const selectedTag = e.target.value;
+                      if (selectedTag && !newTemplate.tags.includes(selectedTag)) {
+                        setNewTemplate({
+                          ...newTemplate,
+                          tags: [...newTemplate.tags, selectedTag]
+                        });
+                      }
+                    }}
+                    className="flex-1 border rounded-md px-3 py-2"
+                  >
+                    <option value="">Selecciona una etiqueta...</option>
+                    {allTags
+                      .filter(tag => !newTemplate.tags.includes(tag))
+                      .map(tag => (
+                        <option key={tag} value={tag}>{tag}</option>
+                      ))}
+                  </select>
+                </div>
+                {newTemplate.tags && newTemplate.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {newTemplate.tags.map(tag => (
+                      <Badge key={tag} className="bg-blue-100 text-blue-700 flex items-center gap-1">
+                        {tag}
+                        <X 
+                          className="h-3 w-3 cursor-pointer hover:text-blue-900" 
+                          onClick={() => removeTag(tag)}
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <Button
+                  onClick={updateTemplate}
+                  disabled={!newTemplate.name || !newTemplate.content}
+                  className="flex-1 bg-green-600 hover:bg-green-700"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Actualizar Template
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setEditingTemplate(null);
+                  }}
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Tag Manager Modal */}
       {showTagManager && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
