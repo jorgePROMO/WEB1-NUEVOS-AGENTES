@@ -261,9 +261,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Template Tag Management System"
-    - "Tag Dropdown Integration"
-  stuck_tasks: []
+    - "AdminDashboard Client Selector Modal Access"
+  stuck_tasks: 
+    - "Template Tag Dropdown - AdminDashboard Client Selector"
   test_all: false
   test_priority: "high_first"
 
