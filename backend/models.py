@@ -403,6 +403,7 @@ class TemplateResponse(BaseModel):
     content: str
     variables: List[str]
     category: str
+    tags: List[str] = []
     created_at: datetime
 
 # Automated Reminders Configuration
