@@ -180,6 +180,39 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
     });
   };
 
+  const createGlobalTag = async () => {
+    if (!newGlobalTag.trim()) return;
+    
+    try {
+      await axios.post(`${API}/admin/templates/tags`, { tag: newGlobalTag.trim() }, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      
+      alert('✅ Tag creado correctamente');
+      setNewGlobalTag('');
+      loadAllTags();
+    } catch (error) {
+      alert('❌ ' + (error.response?.data?.detail || 'Error al crear tag'));
+    }
+  };
+
+  const deleteGlobalTag = async (tagName) => {
+    if (!window.confirm(`¿Eliminar el tag "${tagName}"?`)) return;
+    
+    try {
+      await axios.delete(`${API}/admin/templates/tags/${encodeURIComponent(tagName)}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      
+      alert('✅ Tag eliminado correctamente');
+      loadAllTags();
+    } catch (error) {
+      alert('❌ ' + (error.response?.data?.detail || 'Error al eliminar tag'));
+    }
+  };
+
   const copyToClipboard = (content) => {
     navigator.clipboard.writeText(content);
     alert('Copiado al portapapeles');
