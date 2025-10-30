@@ -2443,6 +2443,17 @@ async def get_clients_at_risk(request: Request):
 
 # Include the router in the main app
 app.include_router(api_router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.on_event("startup")
 async def startup_db():
     """Initialize default prospect stages and templates if they don't exist"""
     try:
