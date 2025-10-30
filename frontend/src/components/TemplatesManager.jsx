@@ -311,12 +311,9 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {templates
           .filter(template => {
-            // Filter by search tags
-            if (searchTags.trim()) {
-              const searchLower = searchTags.toLowerCase();
-              return template.tags && template.tags.some(tag => 
-                tag.toLowerCase().includes(searchLower)
-              );
+            // Filter by selected tag
+            if (selectedTagFilter) {
+              return template.tags && template.tags.includes(selectedTagFilter);
             }
             return true;
           })
