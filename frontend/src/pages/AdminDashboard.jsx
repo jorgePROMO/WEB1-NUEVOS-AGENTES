@@ -242,20 +242,21 @@ const AdminDashboard = () => {
     try {
       // Send message via internal chat
       const messagePayload = {
+        sender_id: token, // Admin token
         recipient_id: selectedClient.id,
-        message: templateMessage
+        content: templateMessage
       };
 
-      await axios.post(`${API}/messages`, messagePayload, {
+      await axios.post(`${API}/messages/send`, messagePayload, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
 
-      alert('Mensaje enviado al chat interno');
+      alert('✅ Mensaje enviado al chat interno');
       setShowTemplateModal(false);
     } catch (error) {
       console.error('Error sending chat message:', error);
-      alert('Error al enviar mensaje al chat');
+      alert('❌ Error al enviar mensaje: ' + (error.response?.data?.detail || error.message));
     }
   };
 
