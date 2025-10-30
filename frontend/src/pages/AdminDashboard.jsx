@@ -152,9 +152,12 @@ const AdminDashboard = () => {
     
     setSelectedTemplate(template);
     
+    // Get client name from available fields
+    const clientName = selectedClient.nombre || selectedClient.name || selectedClient.username || 'Cliente';
+    
     // Replace variables in template
     let message = template.content;
-    message = message.replace(/{nombre}/g, selectedClient.name || selectedClient.username);
+    message = message.replace(/{nombre}/g, clientName);
     message = message.replace(/{hora}/g, 'HH:MM'); // Placeholder
     message = message.replace(/{fecha}/g, new Date().toLocaleDateString('es-ES'));
     
