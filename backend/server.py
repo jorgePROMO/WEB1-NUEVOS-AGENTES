@@ -1547,7 +1547,8 @@ async def get_team_clients(request: Request, status: Optional[str] = None):
                 "whatsapp": user.get("whatsapp"),
                 "created_at": user.get("created_at"),
                 "status": "active",
-                "source": "registration"
+                "source": "registration",
+                "subscription": user.get("subscription", {})
             })
         
         # Sort by created_at
