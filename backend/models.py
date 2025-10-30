@@ -380,7 +380,7 @@ class MessageTemplate(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class TemplateCreate(BaseModel):
-    type: str
+    type: str = "whatsapp"  # Default type
     name: str
     subject: Optional[str] = None
     content: str
