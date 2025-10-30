@@ -726,6 +726,39 @@ const AdminDashboard = () => {
                             <MessageSquare className="h-4 w-4 mr-2" />
                             Chat
                           </Button>
+                          
+                          {/* Templates Dropdown */}
+                          <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="bg-purple-50 border-purple-300 text-purple-700 hover:bg-purple-100"
+                            >
+                              <FileText className="h-4 w-4 mr-2" />
+                              Templates
+                            </Button>
+                            
+                            {/* Dropdown Menu */}
+                            <div className="absolute top-full right-0 mt-2 w-64 bg-white border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 max-h-96 overflow-y-auto">
+                              <div className="p-2">
+                                <p className="text-xs text-gray-500 mb-2 px-2">Selecciona un template</p>
+                                {templates.filter(t => t.type === 'whatsapp').map(template => (
+                                  <button
+                                    key={template.id}
+                                    onClick={() => openTemplateModal(template)}
+                                    className="w-full text-left px-3 py-2 hover:bg-purple-50 rounded text-sm transition-colors"
+                                  >
+                                    <p className="font-medium text-gray-900">{template.name}</p>
+                                    <p className="text-xs text-gray-500 mt-1 truncate">{template.content.substring(0, 50)}...</p>
+                                  </button>
+                                ))}
+                                {templates.filter(t => t.type === 'whatsapp').length === 0 && (
+                                  <p className="text-xs text-gray-400 px-3 py-2">No hay templates de WhatsApp</p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          
                           {selectedClient.subscription?.archived ? (
                             <Button
                               size="sm"
