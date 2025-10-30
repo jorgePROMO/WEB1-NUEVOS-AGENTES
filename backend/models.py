@@ -376,6 +376,7 @@ class MessageTemplate(BaseModel):
     content: str
     variables: List[str] = []  # [nombre, fecha, hora, etc]
     category: str  # welcome, reminder, followup, general
+    tags: List[str] = []  # Etiquetas para búsqueda
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class TemplateCreate(BaseModel):
@@ -385,6 +386,14 @@ class TemplateCreate(BaseModel):
     content: str
     variables: List[str] = []
     category: str
+    tags: List[str] = []
+
+class TemplateUpdate(BaseModel):
+    name: Optional[str] = None
+    subject: Optional[str] = None
+    content: Optional[str] = None
+    category: Optional[str] = None
+    tags: Optional[List[str]] = None
 
 class TemplateResponse(BaseModel):
     id: str
