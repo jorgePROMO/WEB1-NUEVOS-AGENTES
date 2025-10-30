@@ -1036,6 +1036,7 @@ const AdminDashboard = () => {
             <AdminCalendar />
           </TabsContent>
         </Tabs>
+        )}
       </div>
 
 
