@@ -119,7 +119,6 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
       name: template.name,
       subject: template.subject || '',
       content: template.content,
-      category: template.category,
       tags: template.tags || []
     });
     setShowEditModal(true);
