@@ -290,6 +290,25 @@ export const TeamClientsCRM = ({ token }) => {
                       {client.created_at ? new Date(client.created_at).toLocaleDateString('es-ES') : '-'}
                     </td>
                     <td className="p-3">
+                      <Badge variant="outline" className="text-xs">
+                        {client.subscription?.plan === 'team' ? 'Equipo' : 
+                         client.subscription?.plan === 'individual' ? 'Individual' : 
+                         client.source === 'prospect' ? 'Prospecto' : 'N/A'}
+                      </Badge>
+                    </td>
+                    <td className="p-3">
+                      <Badge className={
+                        client.subscription?.payment_status === 'paid' ? 'bg-green-100 text-green-700' :
+                        client.subscription?.payment_status === 'pending' ? 'bg-orange-100 text-orange-700' :
+                        client.source === 'prospect' ? 'bg-gray-100 text-gray-600' :
+                        'bg-red-100 text-red-700'
+                      }>
+                        {client.subscription?.payment_status === 'paid' ? 'Pagado' :
+                         client.subscription?.payment_status === 'pending' ? 'Pendiente' :
+                         client.source === 'prospect' ? 'Prospecto' : 'N/A'}
+                      </Badge>
+                    </td>
+                    <td className="p-3">
                       <select
                         value={client.status || 'pending'}
                         onChange={(e) => updateStatus(client.id, e.target.value)}
