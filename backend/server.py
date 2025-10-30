@@ -1576,6 +1576,7 @@ async def get_team_client_detail(client_id: str, request: Request):
             
             return {
                 "id": user["_id"],
+                "name": user.get("name"),
                 "nombre": user.get("name"),
                 "username": user.get("username"),
                 "email": user.get("email"),
@@ -1583,6 +1584,7 @@ async def get_team_client_detail(client_id: str, request: Request):
                 "created_at": user.get("created_at"),
                 "status": "active",
                 "source": "registration",
+                "subscription": user.get("subscription", {}),
                 "notes": notes
             }
         
