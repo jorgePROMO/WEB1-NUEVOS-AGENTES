@@ -1339,7 +1339,10 @@ const AdminDashboard = () => {
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => setShowTemplateSelector(false)}
+                onClick={() => {
+                  setShowTemplateSelector(false);
+                  setSelectedTagFilter('');
+                }}
               >
                 <X className="h-5 w-5" />
               </Button>
