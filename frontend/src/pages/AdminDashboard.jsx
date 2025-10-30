@@ -1090,6 +1090,11 @@ const AdminDashboard = () => {
             </div>
           </TabsContent>
 
+          {/* Templates Tab */}
+          <TabsContent value="templates">
+            <TemplatesManager token={token} />
+          </TabsContent>
+
           {/* Calendar Tab */}
           <TabsContent value="calendar">
             <AdminCalendar />
