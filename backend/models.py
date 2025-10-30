@@ -385,7 +385,7 @@ class TemplateCreate(BaseModel):
     subject: Optional[str] = None
     content: str
     variables: List[str] = []
-    category: str
+    category: Optional[str] = "general"
     tags: List[str] = []
 
 class TemplateUpdate(BaseModel):
