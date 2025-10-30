@@ -583,7 +583,34 @@ async def unarchive_client(user_id: str, request: Request):
 @api_router.delete("/admin/delete-client/{user_id}")
 async def delete_client(user_id: str, request: Request):
     admin = await require_admin(request)
-    # Delete all user data
+    
+    # Get user info before deleting
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # SOFT DELETE: Mark user as deleted instead of removing
+    result = await db.users.update_one(
+        {"_id": user_id},
+        {"$set": {
+            "status": "deleted",
+            "deleted_at": datetime.now(timezone.utc),
+            "deleted_by": admin["_id"]
+        }}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Add to deleted_users collection for OAuth blocking
+    await db.deleted_users.insert_one({
+        "email": user["email"],
+        "user_id": user_id,
+        "deleted_at": datetime.now(timezone.utc),
+        "deleted_by": admin["_id"]
+    })
+    
+    # Delete all related data
     await db.forms.delete_many({"user_id": user_id})
     await db.alerts.delete_many({"user_id": user_id})
     await db.messages.delete_many({"user_id": user_id})
@@ -599,13 +626,9 @@ async def delete_client(user_id: str, request: Request):
     
     await db.pdfs.delete_many({"user_id": user_id})
     
-    # Delete user
-    result = await db.users.delete_one({"_id": user_id})
+    logger.info(f"User soft-deleted: {user['email']} by admin: {admin['email']}")
     
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    return {"success": True, "message": "Client and all data deleted successfully"}
+    return {"success": True, "message": "Client deleted successfully. They will not be able to login again."}
 
 
 # ==================== FORM ENDPOINTS ====================
