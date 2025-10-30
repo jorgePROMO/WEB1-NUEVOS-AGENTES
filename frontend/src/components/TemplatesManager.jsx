@@ -62,6 +62,33 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
     }
   };
 
+  const createTemplate = async () => {
+    if (!newTemplate.name || !newTemplate.content) {
+      alert('Por favor completa nombre y contenido');
+      return;
+    }
+
+    try {
+      await axios.post(`${API}/admin/templates`, newTemplate, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      
+      setShowCreateModal(false);
+      setNewTemplate({
+        type: 'whatsapp',
+        name: '',
+        subject: '',
+        content: '',
+        category: 'general'
+      });
+      loadTemplates();
+      alert('Template creado correctamente');
+    } catch (error) {
+      alert('Error al crear template');
+    }
+  };
+
   const copyToClipboard = (content) => {
     navigator.clipboard.writeText(content);
     alert('Copiado al portapapeles');
