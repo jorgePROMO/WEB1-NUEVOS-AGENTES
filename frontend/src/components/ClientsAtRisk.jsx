@@ -32,7 +32,8 @@ export const ClientsAtRisk = ({ token, onClientSelect }) => {
   const loadClientsAtRisk = async () => {
     try {
       const response = await axios.get(`${API}/admin/clients-at-risk`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
       });
       setClientsAtRisk(response.data.clients_at_risk || []);
       setStats({
