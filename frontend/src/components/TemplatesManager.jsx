@@ -288,12 +288,22 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <CardTitle className="text-lg">{template.name}</CardTitle>
-                  <Badge className={`mt-2 ${getTypeColor(template.type)}`}>
-                    <span className="flex items-center gap-1">
-                      {getTypeIcon(template.type)}
-                      {template.type}
-                    </span>
-                  </Badge>
+                  {/* Display tags instead of type */}
+                  {template.tags && template.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {template.tags.map(tag => (
+                        <Badge key={tag} className="text-xs bg-blue-500 text-white">
+                          <Tag className="h-3 w-3 mr-1" />
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                  {(!template.tags || template.tags.length === 0) && (
+                    <Badge variant="outline" className="mt-2 text-xs text-gray-500">
+                      Sin etiquetas
+                    </Badge>
+                  )}
                 </div>
               </div>
             </CardHeader>
