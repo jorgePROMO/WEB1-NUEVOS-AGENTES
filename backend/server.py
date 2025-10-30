@@ -2583,6 +2583,7 @@ async def startup_db():
                     "content": "¡Hola {nombre}! 🎉 Bienvenido al equipo 💪\n\nYa tienes acceso a tu panel personal. ¿Cuándo te viene bien tu primera sesión?\n\n¡Vamos a conseguir tus objetivos juntos!",
                     "variables": ["nombre"],
                     "category": "welcome",
+                    "tags": ["bienvenida", "nuevo", "onboarding"],
                     "created_at": datetime.now(timezone.utc)
                 },
                 {
@@ -2592,6 +2593,7 @@ async def startup_db():
                     "content": "Hola {nombre} 👋\n\nTe recuerdo nuestra sesión mañana a las {hora}. ¿Confirmas que nos vemos? 💪",
                     "variables": ["nombre", "hora"],
                     "category": "reminder",
+                    "tags": ["recordatorio", "sesión", "cita"],
                     "created_at": datetime.now(timezone.utc)
                 },
                 {
@@ -2601,6 +2603,7 @@ async def startup_db():
                     "content": "¡Hey {nombre}! 📸\n\nEs hora de ver tu progreso. ¿Me puedes enviar fotos actualizadas? (Frente, espalda, lateral)\n\n¡Seguro que hay grandes cambios!",
                     "variables": ["nombre"],
                     "category": "followup",
+                    "tags": ["progreso", "fotos", "seguimiento"],
                     "created_at": datetime.now(timezone.utc)
                 },
                 {
@@ -2610,6 +2613,7 @@ async def startup_db():
                     "content": "Hola {nombre} 💪\n\n¿Cómo ha ido la semana? ¿Alguna dificultad con la rutina o la nutrición?\n\nRecuerda que estoy aquí para ayudarte.",
                     "variables": ["nombre"],
                     "category": "followup",
+                    "tags": ["seguimiento", "semanal", "check-in"],
                     "created_at": datetime.now(timezone.utc)
                 },
                 {
@@ -2619,6 +2623,7 @@ async def startup_db():
                     "content": "¡{nombre}! 🔥\n\nRecuerda por qué empezaste. Cada día de entrenamiento es un paso más cerca de tu objetivo.\n\n¡Tú puedes! 💪",
                     "variables": ["nombre"],
                     "category": "general",
+                    "tags": ["motivación", "ánimo", "inspiración"],
                     "created_at": datetime.now(timezone.utc)
                 },
                 {
@@ -2628,6 +2633,7 @@ async def startup_db():
                     "content": "Hola {nombre} 👋\n\nTe recuerdo que tienes pendiente el formulario de seguimiento. Es importante para ajustar tu plan.\n\n¿Algún problema para completarlo?",
                     "variables": ["nombre"],
                     "category": "reminder",
+                    "tags": ["recordatorio", "formulario", "pendiente"],
                     "created_at": datetime.now(timezone.utc)
                 },
                 {
@@ -2637,6 +2643,7 @@ async def startup_db():
                     "content": "¡FELICIDADES {nombre}! 🎉🎊\n\n¡Has alcanzado tu objetivo! Esto es el resultado de tu esfuerzo y dedicación.\n\n¡Estoy muy orgulloso de ti! 💪✨",
                     "variables": ["nombre"],
                     "category": "general",
+                    "tags": ["felicitación", "logro", "éxito"],
                     "created_at": datetime.now(timezone.utc)
                 },
                 # Alert Templates
