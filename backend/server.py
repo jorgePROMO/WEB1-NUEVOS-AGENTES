@@ -2285,6 +2285,7 @@ async def create_template(template_data: TemplateCreate, request: Request):
             "content": template_data.content,
             "variables": template_data.variables,
             "category": template_data.category,
+            "tags": template_data.tags,
             "created_at": datetime.now(timezone.utc)
         }
         
