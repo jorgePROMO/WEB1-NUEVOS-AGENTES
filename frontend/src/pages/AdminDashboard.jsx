@@ -114,10 +114,11 @@ const AdminDashboard = () => {
 
   const loadClientDetails = async (userId) => {
     try {
-      const response = await axios.get(`${API}/admin/clients/${userId}`, {
+      const response = await axios.get(`${API}/admin/team-clients/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
-        }
+        },
+        withCredentials: true
       });
       setSelectedClientDetails(response.data);
     } catch (error) {
