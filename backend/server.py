@@ -2232,6 +2232,85 @@ async def root():
 # TEMPLATES & AUTOMATION ENDPOINTS
 # ============================================
 
+@api_router.get("/admin/templates/tags/all")
+async def get_all_tags(request: Request):
+    """Get all unique tags from all templates"""
+    await require_admin(request)
+    
+    try:
+        templates = await db.message_templates.find({}).to_list(length=None)
+        
+        # Collect all unique tags
+        all_tags = set()
+        for template in templates:
+            if template.get("tags"):
+                all_tags.update(template["tags"])
+        
+        return {"tags": sorted(list(all_tags))}
+    except Exception as e:
+        logger.error(f"Error getting all tags: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener tags")
+
+
+@api_router.post("/admin/templates/tags")
+async def create_global_tag(tag_data: dict, request: Request):
+    """Create a new global tag"""
+    await require_admin(request)
+    
+    try:
+        new_tag = tag_data.get("tag", "").strip()
+        if not new_tag:
+            raise HTTPException(status_code=400, detail="Tag vacío")
+        
+        # Check if tag already exists
+        existing = await db.global_tags.find_one({"_id": new_tag})
+        if existing:
+            raise HTTPException(status_code=400, detail="Tag ya existe")
+        
+        await db.global_tags.insert_one({
+            "_id": new_tag,
+            "created_at": datetime.now(timezone.utc)
+        })
+        
+        return {"success": True, "message": "Tag creado", "tag": new_tag}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating tag: {e}")
+        raise HTTPException(status_code=500, detail="Error al crear tag")
+
+
+@api_router.delete("/admin/templates/tags/{tag_name}")
+async def delete_global_tag(tag_name: str, request: Request):
+    """Delete a global tag (warns if in use)"""
+    await require_admin(request)
+    
+    try:
+        # Check if tag is being used in any template
+        templates_using_tag = await db.message_templates.count_documents({
+            "tags": tag_name
+        })
+        
+        if templates_using_tag > 0:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Este tag está siendo usado en {templates_using_tag} template(s). No se puede eliminar."
+            )
+        
+        # Delete the tag
+        result = await db.global_tags.delete_one({"_id": tag_name})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Tag no encontrado")
+        
+        return {"success": True, "message": "Tag eliminado"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting tag: {e}")
+        raise HTTPException(status_code=500, detail="Error al eliminar tag")
+
+
 @api_router.get("/admin/templates")
 async def get_templates(request: Request, type: Optional[str] = None, tags: Optional[str] = None):
     """Get all message templates with optional filtering by type and tags"""
