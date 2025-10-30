@@ -2441,6 +2441,57 @@ async def get_clients_at_risk(request: Request):
         raise HTTPException(status_code=500, detail="Error al obtener clientes en riesgo")
 
 
+@api_router.post("/admin/send-email-template")
+async def send_email_template(email_data: dict, request: Request):
+    """Send email using template"""
+    await require_admin(request)
+    
+    try:
+        from email_utils import send_email
+        
+        to_email = email_data.get("to_email")
+        subject = email_data.get("subject")
+        message = email_data.get("message")
+        
+        if not to_email or not subject or not message:
+            raise HTTPException(status_code=400, detail="Faltan datos requeridos")
+        
+        # Convert plain text to HTML
+        html_body = f"""
+        <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <div style="white-space: pre-wrap;">{message}</div>
+                    <br><br>
+                    <div style="border-top: 1px solid #ddd; padding-top: 20px; margin-top: 20px; color: #666; font-size: 12px;">
+                        <p>Jorge Calcerrada - Entrenador Personal</p>
+                        <p>Email: ecjtrainer@gmail.com</p>
+                    </div>
+                </div>
+            </body>
+        </html>
+        """
+        
+        # Send email
+        success = send_email(
+            to_email=to_email,
+            subject=subject,
+            html_body=html_body,
+            text_body=message
+        )
+        
+        if success:
+            return {"success": True, "message": "Email enviado correctamente"}
+        else:
+            raise HTTPException(status_code=500, detail="Error al enviar email")
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error sending email template: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al enviar email: {str(e)}")
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
