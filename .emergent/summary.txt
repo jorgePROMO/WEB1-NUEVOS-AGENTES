@@ -1,85 +1,49 @@
 <analysis>
-The AI engineer undertook significant development, transforming a static landing page into a comprehensive full-stack application. Key phases included implementing a full user/admin panel, robust authentication (email/password, Google OAuth), a dynamic calendar, and secure PDF management. Initial efforts focused on delivering a conversion-optimized landing page, then expanding to include various dashboards and a real-time chat. The engineer diligently addressed user feedback and bugs, such as critical datetime inconsistencies and UI discrepancies in profile editing and document management. The most substantial recent work involved integrating a diagnostic questionnaire, extracting questions from a PDF, building a responsive frontend component, and implementing backend email submission. Subsequent efforts focused on developing a robust CRM system for prospects and team/external clients, including client itinerancy between CRMs. The engineer systematically debugged mobile responsiveness, email delivery issues, and complex UI interactions, often utilizing specific debugging techniques like log analysis and targeted UI adjustments, with crucial assistance from a troubleshoot agent for complex rendering issues.
+The AI engineer undertook significant development, transforming a static landing page into a comprehensive full-stack application. Key phases included implementing a full user/admin panel, robust authentication, dynamic calendar, and secure PDF management. Initial efforts focused on delivering a conversion-optimized landing page, then expanding to include various dashboards and a real-time chat. The engineer diligently addressed user feedback and bugs, such as critical datetime inconsistencies and UI discrepancies. The most substantial recent work involved integrating a diagnostic questionnaire, building a responsive frontend component, and implementing backend email submission. Subsequent efforts focused on developing a robust CRM system for prospects and clients, including client itinerancy. The engineer systematically debugged mobile responsiveness, email delivery issues, and complex UI interactions, often utilizing specific debugging techniques like log analysis and targeted UI adjustments. The final phase focused on implementing templates, automatic reminders, risk indicators, and further enhancing template management with tags and dropdowns.
 </analysis>
 
 <product_requirements>
-The project's core objective was to build a full-stack application starting from a conversion-optimized, Spanish-localized landing page. This expanded to include user registration/login (email/password, Google OAuth), a user dashboard (calendar, PDFs, alerts, chat), and an admin dashboard (client management, PDF uploads, client data, archiving, session management, user statistics). Key features implemented were: complete user deletion, a calendar for admin scheduling and client rescheduling with email notifications, user and admin profile editing, admin-triggered password recovery, and bidirectional document management. The latest requirements focused on integrating an on-page diagnostic questionnaire (from PDF content) with email submission of responses to the admin. Subsequently, the user requested two distinct CRM systems: one for prospects (from questionnaire data) with configurable stages and notes, and another for clients, split into Team Clients (web-registered) and External Clients (manually added, detailed tracking for Harbiz users). This also included features for moving clients between CRMs, deletion, status changes, and ensuring web-registered clients appear in the appropriate CRM and client management tabs.
+The project's core objective was to build a full-stack application starting from a conversion-optimized, Spanish-localized landing page. This expanded to include user registration/login, user dashboard (calendar, PDFs, alerts, chat), and an admin dashboard (client management, PDF uploads, client data, archiving, session management, user statistics). Key features implemented were: user deletion, a calendar for admin scheduling and client rescheduling with email notifications, user/admin profile editing, admin-triggered password recovery, and bidirectional document management. Latest requirements included integrating an on-page diagnostic questionnaire with admin email submission. Subsequently, a CRM system was built for prospects (from questionnaire data) and clients, split into Team Clients (web-registered) and External Clients (manually added), with features for moving clients, deletion, and status changes. Further enhancements included restoring full client management in Gestión de Clientes, adding WhatsApp buttons, redesigning the Admin Dashboard for a cleaner active clients view with CRM navigation, and implementing communication templates, automatic reminders (excluding renewal), and client risk indicators. Most recently, the user requested direct email/WhatsApp/alert/chat sending from in-client templates, template creation/editing/tagging, improved client list data display, and dropdown-based tag selection with global tag management and usage alerts.
 </product_requirements>
 
 <key_technical_concepts>
 - Full-stack Development: React (frontend), FastAPI (backend), MongoDB (database).
 - UI/UX: Shadcn UI components.
-- Authentication: JWT, Google OAuth, session tokens, React Context.
+- Authentication: JWT, Google OAuth, React Context, .
 - API Communication: Axios, httpx.
-- File Management: PDF upload, download, delete.
+- Email Service: SMTP for notifications via .
+- Data Modeling: Pydantic for API request/response validation, MongoDB schemas (UUIDs for IDs).
 - Real-time: Socket.IO (for chat).
-- Email Service: SMTP for notifications.
-- Data Modeling: Pydantic for API request/response validation, MongoDB schemas.
 </key_technical_concepts>
 
 <code_architecture>
+The application uses a standard full-stack structure:
 
-
--   ****: Core backend API. Recent changes include:
-    -   New  endpoint to receive questionnaire data and trigger email.
-    -   New CRM endpoints:  (CRUD), , ,  (CRUD),  (CRUD),  (CRUD).
-    -   Endpoints for moving clients between  and .
-    -   Logic to exclude moved clients from respective CRM lists.
-    -   Startup event to create default prospect stages.
--   ****: Defines data structures. Recent changes include:
-    -    for form data.
-    -   , ,  for Prospect CRM.
-    -   ,  for Client CRMs.
-    -   Corrections for optional fields (, ).
--   ****: Handles email notifications.
-    -   Added  function for diagnostic responses.
-    -   Debugging and syntax corrections for f-strings.
--   ****: User login page.
-    -   Removed hardcoded test credentials.
--   ****: Admin control panel.
-    -   Integrated , ,  components as new tabs.
-    -   Replaced old Gestión de Clientes tab content with .
--   ****: User's primary interface.
-    -   Modified to distinguish between user-uploaded and admin-received documents.
--   ****: Modal wrapper.
-    -   Fixed mobile scrolling issues: ensures modal content scrolls, not background.
-    -   Increased  to prevent UI elements from being hidden by the Made with Emergent badge.
--   ****: Diagnostic questionnaire.
-    -   Implemented dynamic rendering of questions, client-side validation, and submission logic.
-    -   Extensive debugging for mobile responsiveness, scroll behavior, step transitions, and button visibility (z-index, sizing).
-    -   Ensured  and  were correctly imported and used.
--   ****: New component for Prospect CRM.
-    -   Implemented UI for displaying, filtering, and managing prospects.
-    -   Added Delete Prospect and Convert to Client buttons with a conversion modal.
-    -   Improved stage color visualization.
--   ****: New component for Team Clients CRM.
-    -   Implemented UI for managing web-registered clients.
-    -   Added Delete Client and Move Client buttons and associated modals.
--   ****: New component for External Clients CRM.
-    -   Implemented UI for managing manually added clients (Harbiz).
-    -   Added Move Client button and associated modal.
+-   ****: Core backend API. Recently added  for editing; CRUD endpoints for  and ;  for templated emails. Fixed endpoint order and alert/chat sending logic. Default templates are initialized on startup.
+-   ****: Defines Pydantic data models. Added , , , , and  models, including  for templates.
+-   ****: Handles email notifications. Updated with a generic template email sending function.
+-   ****: Central admin interface. Underwent a major redesign for improved navigation, active client display, and CRM navigation cards. Integrated new Templates and Clientes en Riesgo views. Added client-specific template sending options, enhanced client list display with full details, and fixed endpoint usage for Gestión de Clientes to correctly show  data.
+-   ****: User's primary interface. Modified to include functionality to mark alerts as read, updating the unread alert counter.
+-   ****: Manages external clients. Added functionality to edit client details and integrated a direct WhatsApp button.
+-   ****: Manages web-registered clients. Integrated a direct WhatsApp button.
+-   ****: *New component* for managing global communication templates. Provides UI for viewing, filtering, creating, editing, and deleting templates, including tag-based search with dropdowns and a modal for global tag management.
+-   ****: *New component* for displaying clients based on defined risk indicators.
+-   ****: *New file* created to document suggested improvements.
 </code_architecture>
 
 <pending_tasks>
-- Complete frontend implementation for real-time chat functionality, including Socket.IO client hook and ChatBox updates (from initial pending tasks).
-- Resolve remaining issues in CRM Equipo:
-    - Fix ability to change client status.
-    - Fix ability to edit clients moved from another CRM (in External Clients CRM).
+- Complete frontend implementation for real-time chat functionality, including Socket.IO client hook and ChatBox updates.
 - Implement the requested payment tracking for My Team clients, including status updates.
+- Complete the new tab for Automatizaciones for activating/deactivating existing automations.
+- Evaluate the possibility of a collapsible sidebar for navigation and configuration options.
+- Complete global tag management (add/remove with alert for in-use tags) in  and .
+- Finish implementing dropdown-based tag selection in  (client-specific template selector).
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI engineer was addressing several issues reported by the user concerning the newly implemented CRM system. The most recent focus was on the CRM Equipo (Team Clients CRM). The user reported:
-1.  **Inability to delete clients** from the CRM Equipo.
-2.  **Clients from CRM Equipo not appearing** in the Gestión de Clientes tab.
-3.  **Inability to change client status** in CRM Equipo.
-4.  **Inability to edit clients** moved from other CRMs (in CRM Externos).
-
-The engineer started by tackling issue 2.1 (deleting clients from CRM Equipo) by adding a delete button and associated logic to  and the corresponding backend delete endpoint in .
-
-Following this, the engineer began addressing issue 2.2 (clients appearing in Gestión de Clientes). The approach was to replace the old static content of the Gestión de Clientes tab in  with the dynamic  component. The engineer was in the process of thoroughly cleaning up duplicated and old code within  to ensure only the new, correct component was rendered for this tab, which is the current state of work.
+Immediately before this summary request, the AI engineer was focused on enhancing the template management system based on user feedback. The primary tasks involved implementing dropdown-based tag selection for template search in both the global Templates section () and the client-specific template selector within Gestión de Clientes (). Additionally, the engineer was working on global tag management, which includes functionalities to add new tags and remove existing ones, with a crucial requirement for an alert mechanism if a user attempts to remove a tag that is currently assigned to any template. The last recorded action was an edit to  to integrate the tag dropdown into the client's template selector.
 </current_work>
 
 <optional_next_step>
-Complete the cleanup of old code in  and then verify that clients from CRM Equipo appear in the Gestión de Clientes tab.
+Complete the integration of tag dropdowns and the global tag management modal in  and , including the tag-in-use alert.
 </optional_next_step>
