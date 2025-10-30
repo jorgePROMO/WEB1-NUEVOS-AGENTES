@@ -229,17 +229,39 @@ const UserDashboard = () => {
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Plan:</span>
-                    <span className="font-semibold">Trabaja con mi equipo</span>
+                    <span className="font-semibold">
+                      {userData.subscription?.plan === 'team' ? 'Trabaja con mi equipo' : 
+                       userData.subscription?.plan === 'individual' ? 'Individual' : 
+                       'Sin plan'}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Estado:</span>
-                    <Badge className={isPending ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}>
-                      {isPending ? 'Pago pendiente' : 'Activo'}
+                    <Badge className={
+                      userData.subscription?.status === 'active' ? 'bg-green-100 text-green-700' :
+                      userData.subscription?.status === 'paused' ? 'bg-yellow-100 text-yellow-700' :
+                      'bg-red-100 text-red-700'
+                    }>
+                      {userData.subscription?.status === 'active' ? 'Activo' :
+                       userData.subscription?.status === 'paused' ? 'Pausado' :
+                       'Inactivo'}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Pago:</span>
+                    <Badge className={
+                      userData.subscription?.payment_status === 'paid' ? 'bg-green-100 text-green-700' :
+                      userData.subscription?.payment_status === 'pending' ? 'bg-orange-100 text-orange-700' :
+                      'bg-red-100 text-red-700'
+                    }>
+                      {userData.subscription?.payment_status === 'paid' ? 'Pagado' :
+                       userData.subscription?.payment_status === 'pending' ? 'Pendiente' :
+                       'No pagado'}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Inicio:</span>
-                    <span className="font-semibold">{new Date(userData.subscription.start_date).toLocaleDateString('es-ES')}</span>
+                    <span className="font-semibold">{userData.subscription?.start_date ? new Date(userData.subscription.start_date).toLocaleDateString('es-ES') : 'N/A'}</span>
                   </div>
                   {userData.next_review && (
                     <div className="flex justify-between">
