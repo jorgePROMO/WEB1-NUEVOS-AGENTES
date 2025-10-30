@@ -200,15 +200,22 @@ const AdminDashboard = () => {
 
   const sendTemplateViaEmail = async () => {
     try {
-      // In a real implementation, you'd send this via backend
-      // For now, we'll open default email client
-      const subject = selectedTemplate?.subject || 'Mensaje de Jorge Calcerrada';
-      const mailtoLink = `mailto:${selectedClient.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(templateMessage)}`;
-      window.location.href = mailtoLink;
+      const emailPayload = {
+        to_email: selectedClient.email,
+        subject: selectedTemplate?.name || 'Mensaje de Jorge Calcerrada',
+        message: templateMessage
+      };
+
+      await axios.post(`${API}/admin/send-email-template`, emailPayload, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+
+      alert('✅ Email enviado correctamente a ' + selectedClient.email);
       setShowTemplateModal(false);
-      alert('Cliente de email abierto');
     } catch (error) {
-      alert('Error al abrir cliente de email');
+      console.error('Error sending email:', error);
+      alert('❌ Error al enviar email: ' + (error.response?.data?.detail || error.message));
     }
   };
 
