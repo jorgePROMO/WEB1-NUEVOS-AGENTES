@@ -250,13 +250,13 @@ const UserDashboard = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-600">Pago:</span>
                     <Badge className={
-                      userData.subscription?.payment_status === 'paid' ? 'bg-green-100 text-green-700' :
+                      userData.subscription?.payment_status === 'verified' ? 'bg-green-100 text-green-700' :
                       userData.subscription?.payment_status === 'pending' ? 'bg-orange-100 text-orange-700' :
                       'bg-red-100 text-red-700'
                     }>
-                      {userData.subscription?.payment_status === 'paid' ? 'Pagado' :
+                      {userData.subscription?.payment_status === 'verified' ? 'Verificado' :
                        userData.subscription?.payment_status === 'pending' ? 'Pendiente' :
-                       'No pagado'}
+                       'No verificado'}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
