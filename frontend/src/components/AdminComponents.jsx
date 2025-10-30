@@ -22,6 +22,19 @@ export const EditUserModal = ({ user, open, onClose, onSuccess }) => {
 
   const token = localStorage.getItem('token');
 
+  // Update form data when user changes
+  React.useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        email: user.email || '',
+        subscription_status: user.subscription?.status || 'pending',
+        subscription_plan: user.subscription?.plan || 'team',
+        payment_status: user.subscription?.payment_status || 'pending'
+      });
+    }
+  }, [user]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
