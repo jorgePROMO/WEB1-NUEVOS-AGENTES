@@ -82,6 +82,7 @@ const AdminDashboard = () => {
       return;
     }
     loadClients();
+    loadTemplates();
   }, [isAdmin, navigate]);
 
   useEffect(() => {
