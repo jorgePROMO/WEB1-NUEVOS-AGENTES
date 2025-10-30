@@ -1345,9 +1345,42 @@ const AdminDashboard = () => {
               </Button>
             </div>
             
+            {/* Tag Filter Dropdown */}
+            <div className="px-6 pt-4 pb-2 bg-gray-50 border-b">
+              <Label className="text-sm font-semibold mb-2 block">Filtrar por etiqueta</Label>
+              <select
+                value={selectedTagFilter}
+                onChange={(e) => setSelectedTagFilter(e.target.value)}
+                className="w-full border rounded-md px-3 py-2"
+              >
+                <option value="">Todas las etiquetas</option>
+                {allTags.map(tag => (
+                  <option key={tag} value={tag}>{tag}</option>
+                ))}
+              </select>
+            </div>
+            
             <div className="p-6 space-y-3">
-              {templates.filter(t => t.type === 'whatsapp').length > 0 ? (
-                templates.filter(t => t.type === 'whatsapp').map(template => (
+              {templates
+                .filter(t => t.type === 'whatsapp')
+                .filter(t => {
+                  // Filter by selected tag
+                  if (selectedTagFilter) {
+                    return t.tags && t.tags.includes(selectedTagFilter);
+                  }
+                  return true;
+                })
+                .length > 0 ? (
+                templates
+                  .filter(t => t.type === 'whatsapp')
+                  .filter(t => {
+                    // Filter by selected tag
+                    if (selectedTagFilter) {
+                      return t.tags && t.tags.includes(selectedTagFilter);
+                    }
+                    return true;
+                  })
+                  .map(template => (
                   <div
                     key={template.id}
                     onClick={() => {
