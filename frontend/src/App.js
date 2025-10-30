@@ -43,33 +43,50 @@ const OAuthHandler = ({ children }) => {
 
   useEffect(() => {
     const handleOAuth = async () => {
-      // Check if there's a session_id in the URL hash
+      // Check BOTH hash AND query parameters for session_id (mobile compatibility)
       const hash = window.location.hash;
-      console.log('OAuthHandler: Current hash:', hash);
+      const search = window.location.search;
+      
+      console.log('OAuthHandler: Hash:', hash);
+      console.log('OAuthHandler: Search:', search);
+      
+      let sessionId = null;
+      
+      // Try to extract from hash first
       if (hash.includes('session_id=')) {
+        sessionId = hash.split('session_id=')[1].split('&')[0];
+        console.log('OAuthHandler: Found session_id in HASH:', sessionId);
+      }
+      
+      // If not in hash, try query parameters (mobile fallback)
+      if (!sessionId && search.includes('session_id=')) {
+        const params = new URLSearchParams(search);
+        sessionId = params.get('session_id');
+        console.log('OAuthHandler: Found session_id in QUERY:', sessionId);
+      }
+      
+      if (sessionId) {
         setIsProcessing(true);
-        const sessionId = hash.split('session_id=')[1].split('&')[0];
-        console.log('OAuthHandler: Extracted session_id:', sessionId);
+        console.log('OAuthHandler: Processing session_id:', sessionId);
         
-        if (sessionId) {
-          const result = await googleAuth(sessionId);
-          
-          // Clean the hash from URL
-          window.history.replaceState(null, '', window.location.pathname);
-          
-          if (result.success) {
-            console.log('OAuthHandler: Success, redirecting to', result.user.role === 'admin' ? '/admin' : '/dashboard');
-            // Redirect based on role
-            if (result.user.role === 'admin') {
-              navigate('/admin', { replace: true });
-            } else {
-              navigate('/dashboard', { replace: true });
-            }
+        const result = await googleAuth(sessionId);
+        
+        // Clean both hash and query from URL
+        const cleanUrl = window.location.pathname;
+        window.history.replaceState(null, '', cleanUrl);
+        
+        if (result.success) {
+          console.log('OAuthHandler: Success, user:', result.user);
+          // Redirect based on role
+          if (result.user.role === 'admin') {
+            navigate('/admin', { replace: true });
           } else {
-            console.error('OAuthHandler: Failed', result.error);
-            // Redirect to login with error
-            navigate('/login', { replace: true, state: { error: 'Error en autenticación con Google' } });
+            navigate('/dashboard', { replace: true });
           }
+        } else {
+          console.error('OAuthHandler: Failed', result.error);
+          alert('Error en autenticación: ' + result.error);
+          navigate('/login', { replace: true });
         }
         setIsProcessing(false);
       }
