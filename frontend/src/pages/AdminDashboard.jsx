@@ -483,6 +483,42 @@ const AdminDashboard = () => {
         </div>
 
         {/* Conditional View Rendering */}
+        {activeView === 'at-risk' && (
+          <div>
+            <Button 
+              variant="outline" 
+              className="mb-4"
+              onClick={() => setActiveView('clients')}
+            >
+              ← Volver a Gestión de Clientes
+            </Button>
+            <ClientsAtRisk 
+              token={token} 
+              onClientSelect={(clientId) => {
+                // Find and select the client
+                const client = clients.find(c => c.id === clientId);
+                if (client) {
+                  setSelectedClient(client);
+                  setActiveView('clients');
+                }
+              }}
+            />
+          </div>
+        )}
+
+        {activeView === 'templates' && (
+          <div>
+            <Button 
+              variant="outline" 
+              className="mb-4"
+              onClick={() => setActiveView('clients')}
+            >
+              ← Volver a Gestión de Clientes
+            </Button>
+            <TemplatesManager token={token} />
+          </div>
+        )}
+
         {activeView === 'prospects' && (
           <div>
             <Button 
