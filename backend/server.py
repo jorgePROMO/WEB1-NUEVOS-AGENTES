@@ -2240,6 +2240,219 @@ app.add_middleware(
 )
 
 
+# ============================================
+# TEMPLATES & AUTOMATION ENDPOINTS
+# ============================================
+
+@api_router.get("/admin/templates")
+async def get_templates(request: Request, type: Optional[str] = None):
+    """Get all message templates"""
+    await require_admin(request)
+    
+    try:
+        query = {"type": type} if type else {}
+        templates = await db.message_templates.find(query).to_list(length=None)
+        
+        return {
+            "templates": [
+                {
+                    "id": str(t["_id"]),
+                    "type": t["type"],
+                    "name": t["name"],
+                    "subject": t.get("subject"),
+                    "content": t["content"],
+                    "variables": t.get("variables", []),
+                    "category": t["category"],
+                    "created_at": t["created_at"]
+                }
+                for t in templates
+            ]
+        }
+    except Exception as e:
+        logger.error(f"Error getting templates: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener templates")
+
+
+@api_router.post("/admin/templates")
+async def create_template(template_data: TemplateCreate, request: Request):
+    """Create a new message template"""
+    await require_admin(request)
+    
+    try:
+        template_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+        
+        template_doc = {
+            "_id": template_id,
+            "type": template_data.type,
+            "name": template_data.name,
+            "subject": template_data.subject,
+            "content": template_data.content,
+            "variables": template_data.variables,
+            "category": template_data.category,
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        await db.message_templates.insert_one(template_doc)
+        
+        return {"success": True, "message": "Template creado", "template_id": template_id}
+    except Exception as e:
+        logger.error(f"Error creating template: {e}")
+        raise HTTPException(status_code=500, detail="Error al crear template")
+
+
+@api_router.delete("/admin/templates/{template_id}")
+async def delete_template(template_id: str, request: Request):
+    """Delete a message template"""
+    await require_admin(request)
+    
+    try:
+        result = await db.message_templates.delete_one({"_id": template_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Template no encontrado")
+        
+        return {"success": True, "message": "Template eliminado"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting template: {e}")
+        raise HTTPException(status_code=500, detail="Error al eliminar template")
+
+
+@api_router.get("/admin/reminder-config")
+async def get_reminder_config(request: Request):
+    """Get reminder configuration"""
+    await require_admin(request)
+    
+    try:
+        config = await db.reminder_config.find_one({"_id": "default"})
+        if not config:
+            # Return default config
+            return {
+                "form_reminder_enabled": True,
+                "form_reminder_days": 3,
+                "session_reminder_enabled": True,
+                "session_reminder_hours": 24,
+                "inactive_alert_enabled": True,
+                "inactive_alert_days": 7
+            }
+        return config
+    except Exception as e:
+        logger.error(f"Error getting reminder config: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener configuración")
+
+
+@api_router.put("/admin/reminder-config")
+async def update_reminder_config(config: ReminderConfig, request: Request):
+    """Update reminder configuration"""
+    await require_admin(request)
+    
+    try:
+        await db.reminder_config.update_one(
+            {"_id": "default"},
+            {"$set": config.dict()},
+            upsert=True
+        )
+        return {"success": True, "message": "Configuración actualizada"}
+    except Exception as e:
+        logger.error(f"Error updating reminder config: {e}")
+        raise HTTPException(status_code=500, detail="Error al actualizar configuración")
+
+
+@api_router.get("/admin/clients-at-risk")
+async def get_clients_at_risk(request: Request):
+    """Get list of clients that need attention based on risk indicators"""
+    await require_admin(request)
+    
+    try:
+        # Get reminder config
+        config = await db.reminder_config.find_one({"_id": "default"})
+        inactive_days_threshold = config.get("inactive_alert_days", 7) if config else 7
+        form_days_threshold = config.get("form_reminder_days", 3) if config else 3
+        
+        # Get all active clients (not archived)
+        clients = await db.users.find({
+            "role": "user",
+            "subscription.archived": {"$ne": True}
+        }).to_list(length=None)
+        
+        at_risk_clients = []
+        now = datetime.now(timezone.utc)
+        
+        for client in clients:
+            risk_reasons = []
+            risk_level = "green"
+            days_inactive = None
+            pending_forms_days = None
+            last_activity = None
+            
+            # Check last session
+            last_session = await db.sessions.find_one(
+                {"user_id": client["_id"]},
+                sort=[("date", -1)]
+            )
+            
+            if last_session and last_session.get("date"):
+                days_since_session = (now - last_session["date"]).days
+                if days_since_session >= 14:
+                    risk_reasons.append(f"{days_since_session} días sin sesión")
+                    risk_level = "red"
+                    days_inactive = days_since_session
+                    last_activity = last_session["date"]
+                elif days_since_session >= inactive_days_threshold:
+                    risk_reasons.append(f"{days_since_session} días sin sesión")
+                    risk_level = "yellow" if risk_level == "green" else risk_level
+                    days_inactive = days_since_session
+                    last_activity = last_session["date"]
+            elif not last_session:
+                # New client with no sessions yet
+                days_since_registration = (now - client["created_at"]).days
+                if days_since_registration >= 7:
+                    risk_reasons.append("Sin sesiones registradas")
+                    risk_level = "yellow" if risk_level == "green" else risk_level
+            
+            # Check pending forms
+            pending_forms = await db.forms.find({
+                "user_id": client["_id"],
+                "completed": False
+            }).to_list(length=None)
+            
+            for form in pending_forms:
+                days_pending = (now - form["sent_date"]).days
+                if days_pending >= 7:
+                    risk_reasons.append(f"Formulario pendiente {days_pending} días")
+                    risk_level = "red"
+                    pending_forms_days = days_pending
+                elif days_pending >= form_days_threshold:
+                    risk_reasons.append(f"Formulario pendiente {days_pending} días")
+                    risk_level = "yellow" if risk_level == "green" else risk_level
+                    pending_forms_days = days_pending
+            
+            # Only include clients with yellow or red risk
+            if risk_level in ["yellow", "red"]:
+                at_risk_clients.append({
+                    "client_id": client["_id"],
+                    "client_name": client.get("name", client["username"]),
+                    "client_email": client["email"],
+                    "risk_level": risk_level,
+                    "risk_reasons": risk_reasons,
+                    "days_inactive": days_inactive,
+                    "pending_forms_days": pending_forms_days,
+                    "last_activity_date": last_activity
+                })
+        
+        # Sort by risk level (red first, then yellow)
+        at_risk_clients.sort(key=lambda x: (0 if x["risk_level"] == "red" else 1, x["client_name"]))
+        
+        return {
+            "clients_at_risk": at_risk_clients,
+            "total_red": len([c for c in at_risk_clients if c["risk_level"] == "red"]),
+            "total_yellow": len([c for c in at_risk_clients if c["risk_level"] == "yellow"])
+        }
+    except Exception as e:
+        logger.error(f"Error getting clients at risk: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener clientes en riesgo")
+
+
 @app.on_event("startup")
 async def startup_db():
     """Initialize default prospect stages if they don't exist"""
