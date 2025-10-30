@@ -144,6 +144,8 @@ const AdminDashboard = () => {
         withCredentials: true
       });
       setSelectedClientDetails(response.data);
+      // Update selectedClient with complete data from backend
+      setSelectedClient(response.data);
     } catch (error) {
       console.error('Error loading client details:', error);
       setSelectedClientDetails({ user: selectedClient, forms: [], pdfs: [], alerts: [] });
