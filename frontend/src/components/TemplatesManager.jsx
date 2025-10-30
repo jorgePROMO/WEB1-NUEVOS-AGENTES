@@ -85,13 +85,81 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
         name: '',
         subject: '',
         content: '',
-        category: 'general'
+        category: 'general',
+        tags: []
       });
+      setTagInput('');
       loadTemplates();
       alert('Template creado correctamente');
     } catch (error) {
       alert('Error al crear template');
     }
+  };
+
+  const openEditModal = (template) => {
+    setEditingTemplate(template);
+    setNewTemplate({
+      type: template.type,
+      name: template.name,
+      subject: template.subject || '',
+      content: template.content,
+      category: template.category,
+      tags: template.tags || []
+    });
+    setShowEditModal(true);
+  };
+
+  const updateTemplate = async () => {
+    if (!newTemplate.name || !newTemplate.content) {
+      alert('Por favor completa nombre y contenido');
+      return;
+    }
+
+    try {
+      await axios.patch(`${API}/admin/templates/${editingTemplate.id}`, {
+        name: newTemplate.name,
+        subject: newTemplate.subject,
+        content: newTemplate.content,
+        category: newTemplate.category,
+        tags: newTemplate.tags
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      
+      setShowEditModal(false);
+      setEditingTemplate(null);
+      setNewTemplate({
+        type: 'whatsapp',
+        name: '',
+        subject: '',
+        content: '',
+        category: 'general',
+        tags: []
+      });
+      setTagInput('');
+      loadTemplates();
+      alert('Template actualizado correctamente');
+    } catch (error) {
+      alert('Error al actualizar template');
+    }
+  };
+
+  const addTag = () => {
+    if (tagInput.trim() && !newTemplate.tags.includes(tagInput.trim())) {
+      setNewTemplate({
+        ...newTemplate,
+        tags: [...newTemplate.tags, tagInput.trim()]
+      });
+      setTagInput('');
+    }
+  };
+
+  const removeTag = (tagToRemove) => {
+    setNewTemplate({
+      ...newTemplate,
+      tags: newTemplate.tags.filter(t => t !== tagToRemove)
+    });
   };
 
   const copyToClipboard = (content) => {
