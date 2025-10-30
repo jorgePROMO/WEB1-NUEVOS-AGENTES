@@ -275,10 +275,28 @@ async def google_auth(session_id: str, response: Response):
     existing_user = await db.users.find_one({"email": user_email})
     
     if existing_user:
+        # Check if user was deleted/banned
+        if existing_user.get("status") == "deleted":
+            logger.warning(f"Deleted user tried to login: {user_email}")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Tu cuenta ha sido desactivada. Contacta al administrador."
+            )
+        
         user_id = existing_user["_id"]
         user_data = existing_user
         logger.info(f"Existing user found: {user_email}")
     else:
+        # Create new user ONLY if they never existed before
+        # Check if user was previously deleted
+        deleted_user = await db.deleted_users.find_one({"email": user_email})
+        if deleted_user:
+            logger.warning(f"Previously deleted user tried to register: {user_email}")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Tu cuenta fue desactivada. Contacta al administrador para reactivarla."
+            )
+        
         # Create new user
         user_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
         user_data = {
@@ -288,6 +306,7 @@ async def google_auth(session_id: str, response: Response):
             "name": user_name or user_email.split("@")[0],
             "password": "",  # No password for OAuth users
             "role": "user",
+            "status": "active",
             "picture": user_picture,
             "subscription": {
                 "status": "pending",
