@@ -249,35 +249,7 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2 flex-wrap items-center">
-        <Button
-          variant={selectedType === 'all' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setSelectedType('all')}
-        >
-          Todos
-        </Button>
-        <Button
-          variant={selectedType === 'whatsapp' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setSelectedType('whatsapp')}
-          className={selectedType === 'whatsapp' ? 'bg-green-600' : ''}
-        >
-          <MessageSquare className="h-4 w-4 mr-2" />
-          WhatsApp
-        </Button>
-        <Button
-          variant={selectedType === 'alert' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setSelectedType('alert')}
-          className={selectedType === 'alert' ? 'bg-purple-600' : ''}
-        >
-          <Bell className="h-4 w-4 mr-2" />
-          Alertas
-        </Button>
-        
-        <div className="flex-1"></div>
-        
+      <div className="flex gap-2 items-center justify-between">
         {/* Tag Filter Dropdown */}
         <div className="flex gap-2 items-center">
           <Tag className="h-4 w-4 text-gray-500" />
