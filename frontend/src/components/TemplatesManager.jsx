@@ -431,6 +431,38 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
                 </select>
               </div>
 
+              {/* Tags Section */}
+              <div>
+                <Label className="flex items-center gap-2">
+                  <Tag className="h-4 w-4" />
+                  Etiquetas
+                </Label>
+                <div className="flex gap-2 mt-2">
+                  <Input
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                    placeholder="Escribe una etiqueta..."
+                  />
+                  <Button type="button" onClick={addTag} size="sm">
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                {newTemplate.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {newTemplate.tags.map(tag => (
+                      <Badge key={tag} className="bg-blue-100 text-blue-700 flex items-center gap-1">
+                        {tag}
+                        <X 
+                          className="h-3 w-3 cursor-pointer hover:text-blue-900" 
+                          onClick={() => removeTag(tag)}
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <div className="flex gap-3 pt-4">
                 <Button
                   onClick={createTemplate}
