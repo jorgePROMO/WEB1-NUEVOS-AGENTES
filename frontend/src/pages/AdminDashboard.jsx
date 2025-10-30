@@ -430,7 +430,24 @@ const AdminDashboard = () => {
         </div>
 
         {/* CRM Navigation Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-4 gap-4 mb-8">
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-red-200 hover:border-red-400"
+            onClick={() => setActiveView('at-risk')}
+          >
+            <CardContent className="pt-6 text-center">
+              <div className="relative">
+                <Target className="h-12 w-12 text-red-500 mx-auto mb-3" />
+                {/* Add notification badge if there are at-risk clients */}
+                <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold">
+                  !
+                </div>
+              </div>
+              <h3 className="text-lg font-bold mb-2">⚠️ Clientes en Riesgo</h3>
+              <p className="text-sm text-gray-600">Requieren tu atención</p>
+            </CardContent>
+          </Card>
+
           <Card 
             className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-purple-200 hover:border-purple-400"
             onClick={() => setActiveView('prospects')}
