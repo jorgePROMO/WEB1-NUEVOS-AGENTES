@@ -959,21 +959,14 @@ async def create_session(session_data: SessionCreate, request: Request):
     await db.sessions.insert_one(session_dict)
     session_dict["id"] = session_dict["_id"]
     
-    # Send email notification to user
+    # Send email notification to user only (not admin)
     try:
         user = await db.users.find_one({"_id": session_data.user_id})
         if user and user.get("email"):
-            # Email al cliente
+            # Email al cliente solamente
             send_session_created_email(
                 user_email=user["email"],
                 user_name=user.get("name", user.get("username", "")),
-                session_date=session_data.date,
-                session_title=session_data.title
-            )
-            # Email al admin
-            send_admin_session_created_email(
-                client_name=user.get("name", user.get("username", "")),
-                client_email=user["email"],
                 session_date=session_data.date,
                 session_title=session_data.title
             )
