@@ -54,6 +54,10 @@ const AdminDashboard = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
   const [activeView, setActiveView] = useState('clients'); // clients, prospects, team-clients, external-clients, calendar
+  const [templates, setTemplates] = useState([]);
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [templateMessage, setTemplateMessage] = useState('');
 
   // Form states
   const [formData, setFormData] = useState({
