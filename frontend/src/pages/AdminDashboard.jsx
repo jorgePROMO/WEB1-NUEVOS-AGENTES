@@ -431,7 +431,7 @@ const AdminDashboard = () => {
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <Card 
             className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-purple-200 hover:border-purple-400"
-            onClick={() => window.location.hash = 'prospects'}
+            onClick={() => setActiveView('prospects')}
           >
             <CardContent className="pt-6 text-center">
               <Target className="h-12 w-12 text-purple-500 mx-auto mb-3" />
@@ -442,7 +442,7 @@ const AdminDashboard = () => {
 
           <Card 
             className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-blue-200 hover:border-blue-400"
-            onClick={() => window.location.hash = 'team-clients'}
+            onClick={() => setActiveView('team-clients')}
           >
             <CardContent className="pt-6 text-center">
               <Users className="h-12 w-12 text-blue-500 mx-auto mb-3" />
@@ -453,7 +453,7 @@ const AdminDashboard = () => {
 
           <Card 
             className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-orange-200 hover:border-orange-400"
-            onClick={() => window.location.hash = 'external-clients'}
+            onClick={() => setActiveView('external-clients')}
           >
             <CardContent className="pt-6 text-center">
               <Target className="h-12 w-12 text-orange-500 mx-auto mb-3" />
@@ -463,18 +463,58 @@ const AdminDashboard = () => {
           </Card>
         </div>
 
-        {/* Main Content with Tabs */}
-        <Tabs defaultValue="clients" className="space-y-6">
-          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-2">
-            <TabsTrigger value="clients">
-              <Users className="h-4 w-4 mr-2" />
-              Gestión de Clientes Activos
-            </TabsTrigger>
-            <TabsTrigger value="calendar">
-              <Calendar className="h-4 w-4 mr-2" />
-              Calendario
-            </TabsTrigger>
-          </TabsList>
+        {/* Conditional View Rendering */}
+        {activeView === 'prospects' && (
+          <div>
+            <Button 
+              variant="outline" 
+              className="mb-4"
+              onClick={() => setActiveView('clients')}
+            >
+              ← Volver a Gestión de Clientes
+            </Button>
+            <ProspectsCRM token={token} />
+          </div>
+        )}
+
+        {activeView === 'team-clients' && (
+          <div>
+            <Button 
+              variant="outline" 
+              className="mb-4"
+              onClick={() => setActiveView('clients')}
+            >
+              ← Volver a Gestión de Clientes
+            </Button>
+            <TeamClientsCRM token={token} />
+          </div>
+        )}
+
+        {activeView === 'external-clients' && (
+          <div>
+            <Button 
+              variant="outline" 
+              className="mb-4"
+              onClick={() => setActiveView('clients')}
+            >
+              ← Volver a Gestión de Clientes
+            </Button>
+            <ExternalClientsCRM token={token} />
+          </div>
+        )}
+
+        {(activeView === 'clients' || activeView === 'calendar') && (
+          <Tabs value={activeView} onValueChange={setActiveView} className="space-y-6">
+            <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-2">
+              <TabsTrigger value="clients">
+                <Users className="h-4 w-4 mr-2" />
+                Gestión de Clientes Activos
+              </TabsTrigger>
+              <TabsTrigger value="calendar">
+                <Calendar className="h-4 w-4 mr-2" />
+                Calendario
+              </TabsTrigger>
+            </TabsList>
 
           {/* Clients Management Tab - RESTORED FULL FUNCTIONALITY */}
           <TabsContent value="clients">
