@@ -26,7 +26,9 @@ import {
   Mail,
   Download,
   Trash2,
-  Target
+  Target,
+  Copy,
+  X
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { AdminCalendar } from '../components/Calendar';
