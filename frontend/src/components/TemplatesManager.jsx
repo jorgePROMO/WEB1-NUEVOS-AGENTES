@@ -53,7 +53,8 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
     
     try {
       await axios.delete(`${API}/admin/templates/${templateId}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
       });
       loadTemplates();
     } catch (error) {
