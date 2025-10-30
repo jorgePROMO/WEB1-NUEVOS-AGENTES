@@ -283,15 +283,27 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
         
         <div className="flex-1"></div>
         
-        {/* Tag Search */}
+        {/* Tag Filter Dropdown */}
         <div className="flex gap-2 items-center">
           <Tag className="h-4 w-4 text-gray-500" />
-          <Input
-            placeholder="Buscar por etiqueta..."
-            value={searchTags}
-            onChange={(e) => setSearchTags(e.target.value)}
-            className="w-64"
-          />
+          <select
+            value={selectedTagFilter}
+            onChange={(e) => setSelectedTagFilter(e.target.value)}
+            className="border rounded-md px-3 py-2 w-64"
+          >
+            <option value="">Todas las etiquetas</option>
+            {allTags.map(tag => (
+              <option key={tag} value={tag}>{tag}</option>
+            ))}
+          </select>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setShowTagManager(true)}
+            title="Gestionar etiquetas"
+          >
+            <Tag className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
