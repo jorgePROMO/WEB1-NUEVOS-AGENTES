@@ -263,7 +263,7 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
           <Card key={template.id} className="hover:shadow-lg transition-shadow">
             <CardHeader>
               <div className="flex items-start justify-between">
-                <div>
+                <div className="flex-1">
                   <CardTitle className="text-lg">{template.name}</CardTitle>
                   <Badge className={`mt-2 ${getTypeColor(template.type)}`}>
                     <span className="flex items-center gap-1">
@@ -300,7 +300,31 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
                     </div>
                   </div>
                 )}
+                {template.tags && template.tags.length > 0 && (
+                  <div>
+                    <Label className="text-xs text-gray-600 flex items-center gap-1">
+                      <Tag className="h-3 w-3" />
+                      Etiquetas
+                    </Label>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {template.tags.map(tag => (
+                        <Badge key={tag} className="text-xs bg-blue-100 text-blue-700">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <div className="flex gap-2 pt-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700"
+                    onClick={() => openEditModal(template)}
+                  >
+                    <Edit className="h-3 w-3 mr-1" />
+                    Editar
+                  </Button>
                   <Button
                     size="sm"
                     variant="outline"
