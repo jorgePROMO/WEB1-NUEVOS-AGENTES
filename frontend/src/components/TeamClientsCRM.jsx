@@ -275,6 +275,8 @@ export const TeamClientsCRM = ({ token }) => {
                   <th className="text-left p-3">Nombre</th>
                   <th className="text-left p-3">Email</th>
                   <th className="text-left p-3">Fecha Registro</th>
+                  <th className="text-left p-3">Plan</th>
+                  <th className="text-left p-3">Estado Pago</th>
                   <th className="text-left p-3">Estado</th>
                   <th className="text-left p-3">Acciones</th>
                 </tr>
