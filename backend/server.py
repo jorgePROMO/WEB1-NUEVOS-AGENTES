@@ -239,6 +239,8 @@ async def google_auth(session_id: str, response: Response):
     """
     Process Google OAuth session_id and create/login user
     """
+    logger.info(f"Google Auth called with session_id: {session_id}")
+    
     # Call Emergent Auth API to get session data
     async with httpx.AsyncClient() as client:
         try:
@@ -249,6 +251,7 @@ async def google_auth(session_id: str, response: Response):
             )
             auth_response.raise_for_status()
             session_data = auth_response.json()
+            logger.info(f"Session data retrieved for email: {session_data.get('email')}")
         except Exception as e:
             logger.error(f"Failed to get session data: {e}")
             raise HTTPException(
