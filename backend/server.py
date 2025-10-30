@@ -1074,12 +1074,24 @@ async def reschedule_session(session_id: str, session_update: SessionUpdate, req
 
 @api_router.delete("/sessions/{session_id}")
 async def delete_session(session_id: str, request: Request):
-    admin = await require_admin(request)
+    """
+    Delete a session. 
+    - Admins can delete any session (no email sent)
+    - Users can delete their own sessions (email sent to admin)
+    """
+    current_user = await get_current_user(request)
     
     # Get session details before deleting (for email notification)
     session = await db.sessions.find_one({"_id": session_id})
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
+    
+    # Check permissions
+    is_admin = current_user["role"] == "admin"
+    is_owner = session["user_id"] == current_user["_id"]
+    
+    if not is_admin and not is_owner:
+        raise HTTPException(status_code=403, detail="Access denied")
     
     # Delete the session
     result = await db.sessions.delete_one({"_id": session_id})
@@ -1087,18 +1099,19 @@ async def delete_session(session_id: str, request: Request):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Session not found")
     
-    # Send email notification to admin
-    try:
-        user = await db.users.find_one({"_id": session["user_id"]})
-        if user and user.get("email"):
-            send_admin_session_cancelled_email(
-                client_name=user.get("name", user.get("username", "")),
-                client_email=user["email"],
-                session_date=session["date"],
-                session_title=session.get("title", "Sesión")
-            )
-    except Exception as e:
-        logger.error(f"Failed to send session cancelled email: {e}")
+    # Send email notification only if CLIENT is deleting (not admin)
+    if not is_admin:
+        try:
+            user = await db.users.find_one({"_id": session["user_id"]})
+            if user and user.get("email"):
+                send_admin_session_cancelled_email(
+                    client_name=user.get("name", user.get("username", "")),
+                    client_email=user["email"],
+                    session_date=session["date"],
+                    session_title=session.get("title", "Sesión")
+                )
+        except Exception as e:
+            logger.error(f"Failed to send session cancelled email: {e}")
     
     return {"success": True}
 
