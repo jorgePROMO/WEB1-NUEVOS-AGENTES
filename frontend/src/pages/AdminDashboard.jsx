@@ -1389,6 +1389,7 @@ const AdminDashboard = () => {
                     onClick={() => {
                       openTemplateModal(template);
                       setShowTemplateSelector(false);
+                      setSelectedTagFilter('');
                     }}
                     className="p-4 border-2 border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-400 cursor-pointer transition-all"
                   >
