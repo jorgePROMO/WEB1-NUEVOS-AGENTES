@@ -2315,6 +2315,45 @@ async def delete_template(template_id: str, request: Request):
         raise HTTPException(status_code=500, detail="Error al eliminar template")
 
 
+@api_router.patch("/admin/templates/{template_id}")
+async def update_template(template_id: str, template_data: TemplateUpdate, request: Request):
+    """Update a message template"""
+    await require_admin(request)
+    
+    try:
+        # Build update document from provided fields
+        update_doc = {}
+        
+        if template_data.name is not None:
+            update_doc["name"] = template_data.name
+        if template_data.subject is not None:
+            update_doc["subject"] = template_data.subject
+        if template_data.content is not None:
+            update_doc["content"] = template_data.content
+        if template_data.category is not None:
+            update_doc["category"] = template_data.category
+        if template_data.tags is not None:
+            update_doc["tags"] = template_data.tags
+        
+        if not update_doc:
+            raise HTTPException(status_code=400, detail="No hay campos para actualizar")
+        
+        result = await db.message_templates.update_one(
+            {"_id": template_id},
+            {"$set": update_doc}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Template no encontrado")
+        
+        return {"success": True, "message": "Template actualizado"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating template: {e}")
+        raise HTTPException(status_code=500, detail="Error al actualizar template")
+
+
 @api_router.get("/admin/reminder-config")
 async def get_reminder_config(request: Request):
     """Get reminder configuration"""
