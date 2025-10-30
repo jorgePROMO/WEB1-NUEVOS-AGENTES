@@ -215,22 +215,26 @@ const AdminDashboard = () => {
   const sendTemplateAsAlert = async () => {
     try {
       const alertPayload = {
+        user_id: selectedClient.id,
         title: selectedTemplate?.name || 'Mensaje',
         message: templateMessage,
+        type: 'info',
         link: ''
       };
 
-      await axios.post(`${API}/admin/clients/${selectedClient.id}/alerts`, alertPayload, {
+      await axios.post(`${API}/alerts/send`, alertPayload, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
 
-      alert('Alerta enviada correctamente al cliente');
+      alert('✅ Alerta enviada correctamente al cliente');
       setShowTemplateModal(false);
-      loadClientDetails(selectedClient.id);
+      if (selectedClient) {
+        loadClientDetails(selectedClient.id);
+      }
     } catch (error) {
       console.error('Error sending alert:', error);
-      alert('Error al enviar alerta');
+      alert('❌ Error al enviar alerta: ' + (error.response?.data?.detail || error.message));
     }
   };
 
