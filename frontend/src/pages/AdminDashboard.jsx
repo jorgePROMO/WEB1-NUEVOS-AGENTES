@@ -179,6 +179,79 @@ const AdminDashboard = () => {
     setShowTemplateModal(false);
   };
 
+  const sendTemplateViaWhatsApp = () => {
+    if (selectedClient.whatsapp || selectedClient.email) {
+      const phone = (selectedClient.whatsapp || '').replace(/[^0-9]/g, '');
+      if (phone) {
+        const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(templateMessage)}`;
+        window.open(whatsappUrl, '_blank');
+        setShowTemplateModal(false);
+        alert('WhatsApp abierto con el mensaje');
+      } else {
+        alert('Este cliente no tiene número de WhatsApp configurado');
+      }
+    } else {
+      alert('Este cliente no tiene número de WhatsApp configurado');
+    }
+  };
+
+  const sendTemplateViaEmail = async () => {
+    try {
+      // In a real implementation, you'd send this via backend
+      // For now, we'll open default email client
+      const subject = selectedTemplate?.subject || 'Mensaje de Jorge Calcerrada';
+      const mailtoLink = `mailto:${selectedClient.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(templateMessage)}`;
+      window.location.href = mailtoLink;
+      setShowTemplateModal(false);
+      alert('Cliente de email abierto');
+    } catch (error) {
+      alert('Error al abrir cliente de email');
+    }
+  };
+
+  const sendTemplateAsAlert = async () => {
+    try {
+      const alertPayload = {
+        title: selectedTemplate?.name || 'Mensaje',
+        message: templateMessage,
+        link: ''
+      };
+
+      await axios.post(`${API}/admin/clients/${selectedClient.id}/alerts`, alertPayload, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+
+      alert('Alerta enviada correctamente al cliente');
+      setShowTemplateModal(false);
+      loadClientDetails(selectedClient.id);
+    } catch (error) {
+      console.error('Error sending alert:', error);
+      alert('Error al enviar alerta');
+    }
+  };
+
+  const sendTemplateToChat = async () => {
+    try {
+      // Send message via internal chat
+      const messagePayload = {
+        recipient_id: selectedClient.id,
+        message: templateMessage
+      };
+
+      await axios.post(`${API}/messages`, messagePayload, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+
+      alert('Mensaje enviado al chat interno');
+      setShowTemplateModal(false);
+    } catch (error) {
+      console.error('Error sending chat message:', error);
+      alert('Error al enviar mensaje al chat');
+    }
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/');
