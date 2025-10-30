@@ -35,7 +35,6 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
     name: '',
     subject: '',
     content: '',
-    category: 'general',
     tags: []
   });
   const [tagInput, setTagInput] = useState('');
