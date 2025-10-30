@@ -364,3 +364,55 @@ class ExternalClientInDB(BaseModel):
     class Config:
         populate_by_name = True
         json_encoders = {ObjectId: str}
+
+
+
+# Templates System
+class MessageTemplate(BaseModel):
+    id: Optional[str] = None
+    type: str  # whatsapp, alert, email
+    name: str
+    subject: Optional[str] = None  # for emails/alerts
+    content: str
+    variables: List[str] = []  # [nombre, fecha, hora, etc]
+    category: str  # welcome, reminder, followup, general
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class TemplateCreate(BaseModel):
+    type: str
+    name: str
+    subject: Optional[str] = None
+    content: str
+    variables: List[str] = []
+    category: str
+
+class TemplateResponse(BaseModel):
+    id: str
+    type: str
+    name: str
+    subject: Optional[str] = None
+    content: str
+    variables: List[str]
+    category: str
+    created_at: datetime
+
+# Automated Reminders Configuration
+class ReminderConfig(BaseModel):
+    form_reminder_enabled: bool = True
+    form_reminder_days: int = 3
+    session_reminder_enabled: bool = True
+    session_reminder_hours: int = 24
+    inactive_alert_enabled: bool = True
+    inactive_alert_days: int = 7
+
+# Client Risk Indicators
+class ClientRiskStatus(BaseModel):
+    client_id: str
+    client_name: str
+    client_email: str
+    risk_level: str  # red, yellow, green
+    risk_reasons: List[str] = []
+    days_inactive: Optional[int] = None
+    pending_forms_days: Optional[int] = None
+    last_session_date: Optional[datetime] = None
+    last_activity_date: Optional[datetime] = None
