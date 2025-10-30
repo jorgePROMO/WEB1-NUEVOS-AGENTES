@@ -1197,6 +1197,71 @@ const AdminDashboard = () => {
         />
       )}
 
+      {/* Template Selector Modal */}
+      {showTemplateSelector && selectedClient && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+            <div className="p-6 border-b flex items-center justify-between sticky top-0 bg-white">
+              <div>
+                <h3 className="text-xl font-bold">Selecciona un Template</h3>
+                <p className="text-sm text-gray-600 mt-1">Para {selectedClient.name}</p>
+              </div>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowTemplateSelector(false)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            
+            <div className="p-6 space-y-3">
+              {templates.filter(t => t.type === 'whatsapp').length > 0 ? (
+                templates.filter(t => t.type === 'whatsapp').map(template => (
+                  <div
+                    key={template.id}
+                    onClick={() => {
+                      openTemplateModal(template);
+                      setShowTemplateSelector(false);
+                    }}
+                    className="p-4 border-2 border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-400 cursor-pointer transition-all"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <h4 className="font-bold text-gray-900">{template.name}</h4>
+                      <Badge className="bg-green-100 text-green-700">WhatsApp</Badge>
+                    </div>
+                    <p className="text-sm text-gray-600 whitespace-pre-wrap">{template.content}</p>
+                    {template.variables && template.variables.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {template.variables.map(v => (
+                          <Badge key={v} variant="outline" className="text-xs">
+                            {`{${v}}`}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-12">
+                  <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500">No hay templates de WhatsApp disponibles</p>
+                  <Button
+                    className="mt-4"
+                    onClick={() => {
+                      setShowTemplateSelector(false);
+                      setActiveView('templates');
+                    }}
+                  >
+                    Crear Templates
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Template Message Modal */}
       {showTemplateModal && selectedTemplate && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
