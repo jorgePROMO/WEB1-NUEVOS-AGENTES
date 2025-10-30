@@ -489,22 +489,32 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
                 </select>
               </div>
 
-              {/* Tags Section */}
               <div>
                 <Label className="flex items-center gap-2">
                   <Tag className="h-4 w-4" />
                   Etiquetas
                 </Label>
                 <div className="flex gap-2 mt-2">
-                  <Input
+                  <select
                     value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                    placeholder="Escribe una etiqueta..."
-                  />
-                  <Button type="button" onClick={addTag} size="sm">
-                    <Plus className="h-4 w-4" />
-                  </Button>
+                    onChange={(e) => {
+                      const selectedTag = e.target.value;
+                      if (selectedTag && !newTemplate.tags.includes(selectedTag)) {
+                        setNewTemplate({
+                          ...newTemplate,
+                          tags: [...newTemplate.tags, selectedTag]
+                        });
+                      }
+                    }}
+                    className="flex-1 border rounded-md px-3 py-2"
+                  >
+                    <option value="">Selecciona una etiqueta...</option>
+                    {allTags
+                      .filter(tag => !newTemplate.tags.includes(tag))
+                      .map(tag => (
+                        <option key={tag} value={tag}>{tag}</option>
+                      ))}
+                  </select>
                 </div>
                 {newTemplate.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
