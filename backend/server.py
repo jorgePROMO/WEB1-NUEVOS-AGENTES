@@ -590,7 +590,7 @@ async def delete_client(user_id: str, request: Request):
 
 @api_router.patch("/admin/users/{user_id}")
 async def admin_update_user(user_id: str, user_update: AdminUserUpdate, request: Request):
-    """Admin updates a client's profile"""
+    """Admin updates a client's profile - works for both users and converted prospects"""
     admin = await require_admin(request)
     
     update_data = {}
@@ -619,27 +619,53 @@ async def admin_update_user(user_id: str, user_update: AdminUserUpdate, request:
     
     update_data["updated_at"] = datetime.now(timezone.utc)
     
+    # Try updating in users collection first
     result = await db.users.update_one(
         {"_id": user_id},
         {"$set": update_data}
     )
     
-    if result.modified_count == 0:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Get updated user
-    updated_user = await db.users.find_one({"_id": user_id})
-    
-    return {
-        "success": True,
-        "message": "User updated successfully",
-        "user": {
-            "id": updated_user["_id"],
-            "name": updated_user["name"],
-            "email": updated_user["email"],
-            "subscription": updated_user["subscription"]
+    if result.matched_count > 0:
+        # Get updated user
+        updated_user = await db.users.find_one({"_id": user_id})
+        
+        return {
+            "success": True,
+            "message": "User updated successfully",
+            "user": {
+                "id": updated_user["_id"],
+                "name": updated_user["name"],
+                "email": updated_user["email"],
+                "subscription": updated_user.get("subscription", {})
+            }
         }
-    }
+    
+    # If not found in users, try questionnaire_responses (converted prospects)
+    prospect_update = {}
+    if user_update.name:
+        prospect_update["nombre"] = user_update.name
+    if user_update.email:
+        prospect_update["email"] = user_update.email
+    prospect_update["updated_at"] = datetime.now(timezone.utc)
+    
+    result = await db.questionnaire_responses.update_one(
+        {"_id": user_id},
+        {"$set": prospect_update}
+    )
+    
+    if result.matched_count > 0:
+        prospect = await db.questionnaire_responses.find_one({"_id": user_id})
+        return {
+            "success": True,
+            "message": "Prospect updated successfully",
+            "user": {
+                "id": prospect["_id"],
+                "name": prospect.get("nombre"),
+                "email": prospect.get("email")
+            }
+        }
+    
+    raise HTTPException(status_code=404, detail="User not found")
 
 
 @api_router.post("/admin/users/{user_id}/send-password-reset")
