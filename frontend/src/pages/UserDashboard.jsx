@@ -63,6 +63,27 @@ const UserDashboard = () => {
     }
   };
 
+  const markAlertAsRead = async (alertId) => {
+    try {
+      await axios.patch(`${API}/alerts/${alertId}/read`, {}, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        withCredentials: true
+      });
+      
+      // Update local state
+      setAlerts(alerts.map(alert => 
+        alert.id === alertId ? { ...alert, read: true } : alert
+      ));
+      
+      // Update unread count
+      setUnreadAlerts(prev => Math.max(0, prev - 1));
+    } catch (error) {
+      console.error('Error marking alert as read:', error);
+    }
+  };
+
   const handleDownloadPDF = async (pdfId, pdfTitle) => {
     try {
       const response = await axios.get(`${API}/pdfs/${pdfId}/download`, {
