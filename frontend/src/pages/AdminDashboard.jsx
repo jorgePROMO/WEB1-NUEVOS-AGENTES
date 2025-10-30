@@ -249,9 +249,8 @@ const AdminDashboard = () => {
     try {
       // Send message via internal chat
       const messagePayload = {
-        sender_id: token, // Admin token
-        recipient_id: selectedClient.id,
-        content: templateMessage
+        user_id: selectedClient.id,
+        message: templateMessage
       };
 
       await axios.post(`${API}/messages/send`, messagePayload, {
