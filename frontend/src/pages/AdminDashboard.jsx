@@ -88,13 +88,23 @@ const AdminDashboard = () => {
 
   const loadClients = async () => {
     try {
-      const response = await axios.get(`${API}/admin/clients`, {
+      // Use team-clients endpoint to show web-registered clients
+      const response = await axios.get(`${API}/admin/team-clients`, {
         headers: {
           'Authorization': `Bearer ${token}`
-        }
+        },
+        withCredentials: true
       });
       setClients(response.data.clients || []);
-      setStats(response.data.stats || { total: 0, active: 0, pending: 0 });
+      // Calculate stats from team clients
+      const allClients = response.data.clients || [];
+      const activeClients = allClients.filter(c => c.status === 'active').length;
+      const pendingClients = allClients.filter(c => c.status === 'pending').length;
+      setStats({ 
+        total: allClients.length, 
+        active: activeClients, 
+        pending: pendingClients 
+      });
       setLoading(false);
     } catch (error) {
       console.error('Error loading clients:', error);
