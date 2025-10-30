@@ -320,6 +320,30 @@ frontend:
           agent: "main"
           comment: "Added complete edit functionality for External Clients: 1) Added edit modal with form fields, 2) Added openEditModal() and updateClient() functions, 3) Added Edit button in actions column. Allows editing nombre, email, whatsapp, objetivo, plan_weeks, start_date, and weeks_completed. Needs testing."
 
+  - task: "Template Tag Dropdown - TemplatesManager"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/TemplatesManager.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ Verified TemplatesManager already has complete tag dropdown implementation (lines 286-308). Tag filter dropdown displays all available tags, filters templates correctly. Global tag management modal (lines 556-614) allows creating and deleting tags with proper validation. Backend endpoint DELETE /admin/templates/tags/{tag_name} checks if tag is in use and returns error with count if it is. System is fully functional and ready for testing."
+  
+  - task: "Template Tag Dropdown - AdminDashboard Client Selector"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ Implemented tag dropdown filter in AdminDashboard Template Selector Modal. Added: 1) Tag filter section in modal header with dropdown selector, 2) Filter logic to show only templates with selected tag, 3) Display of tags on template cards, 4) Clear filter button when no templates match selected tag, 5) Automatic filter reset when closing modal or selecting a template. Ready for testing."
+
 agent_communication:
     - agent: "testing"
       message: "Comprehensive backend testing completed successfully. All 6 critical API endpoints tested and working correctly: 1) User registration, 2) Admin login, 3) User dashboard, 4) Admin client listing, 5) Form sending, 6) Payment verification. System is fully functional for the Jorge Calcerrada platform. Backend URL https://clientmanager-9.preview.emergentagent.com/api is responding correctly. Admin user jorge@jorgecalcerrada.com exists and has proper admin role. All data persistence verified through follow-up checks."
