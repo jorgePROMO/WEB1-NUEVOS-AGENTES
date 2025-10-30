@@ -1438,6 +1438,7 @@ const AdminDashboard = () => {
                         className="mt-4"
                         onClick={() => {
                           setShowTemplateSelector(false);
+                          setSelectedTagFilter('');
                           setActiveView('templates');
                         }}
                       >
