@@ -51,6 +51,7 @@ const AdminDashboard = () => {
   const [showArchived, setShowArchived] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
+  const [activeView, setActiveView] = useState('clients'); // clients, prospects, team-clients, external-clients, calendar
 
   // Form states
   const [formData, setFormData] = useState({
