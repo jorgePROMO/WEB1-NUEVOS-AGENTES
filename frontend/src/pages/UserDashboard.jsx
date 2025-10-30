@@ -195,24 +195,33 @@ const UserDashboard = () => {
         )}
 
         {/* Main Content */}
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 lg:w-auto">
-            <TabsTrigger value="overview">Resumen</TabsTrigger>
-            <TabsTrigger value="calendar">
-              <Calendar className="h-4 w-4 mr-2" />
-              Calendario
+        <Tabs defaultValue="overview" className="space-y-4 md:space-y-6">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-6 w-full gap-1 h-auto p-1">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm py-2">
+              Resumen
             </TabsTrigger>
-            <TabsTrigger value="documents">Documentos</TabsTrigger>
-            <TabsTrigger value="alerts" className="relative">
+            <TabsTrigger value="calendar" className="text-xs sm:text-sm py-2">
+              <Calendar className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Calendario</span>
+              <span className="sm:hidden">Cal</span>
+            </TabsTrigger>
+            <TabsTrigger value="documents" className="text-xs sm:text-sm py-2">
+              Docs
+            </TabsTrigger>
+            <TabsTrigger value="alerts" className="relative text-xs sm:text-sm py-2">
               Alertas
               {unreadAlerts > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center">
                   {unreadAlerts}
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="chat">Chat</TabsTrigger>
-            <TabsTrigger value="profile">Perfil</TabsTrigger>
+            <TabsTrigger value="chat" className="text-xs sm:text-sm py-2">
+              Chat
+            </TabsTrigger>
+            <TabsTrigger value="profile" className="text-xs sm:text-sm py-2">
+              Perfil
+            </TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
