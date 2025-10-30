@@ -154,6 +154,13 @@ async def login(email: str, password: str):
             detail="Incorrect email or password"
         )
     
+    # Check if user is deleted
+    if user.get("status") == "deleted":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Tu cuenta ha sido desactivada. Contacta al administrador."
+        )
+    
     # Create token
     access_token = create_access_token(data={"sub": user["_id"]})
     
