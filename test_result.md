@@ -261,9 +261,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "AdminDashboard Client Selector Modal Access"
-  stuck_tasks: 
-    - "Template Tag Dropdown - AdminDashboard Client Selector"
+    - "Calendar Email Notifications - Conditional Logic"
+    - "Session Management Updates"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
