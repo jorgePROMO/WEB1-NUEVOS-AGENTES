@@ -455,12 +455,28 @@ const UserDashboard = () => {
                             <p className="text-sm text-gray-600 mb-2">{alert.message}</p>
                             <p className="text-xs text-gray-500">{new Date(alert.date).toLocaleDateString('es-ES')}</p>
                           </div>
+                          {!alert.read && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => markAlertAsRead(alert.id)}
+                              className="ml-3"
+                            >
+                              <CheckCircle className="h-4 w-4 mr-1" />
+                              Marcar leída
+                            </Button>
+                          )}
                         </div>
                         {alert.link && (
                           <Button
                             size="sm"
                             className="mt-3"
-                            onClick={() => window.open(alert.link, '_blank')}
+                            onClick={() => {
+                              if (!alert.read) {
+                                markAlertAsRead(alert.id);
+                              }
+                              window.open(alert.link, '_blank');
+                            }}
                           >
                             Ir al cuestionario
                             <ExternalLink className="ml-2 h-4 w-4" />
