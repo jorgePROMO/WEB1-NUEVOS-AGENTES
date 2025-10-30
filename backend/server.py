@@ -1561,8 +1561,12 @@ async def get_team_clients(request: Request, status: Optional[str] = None):
         
         converted_prospects = await db.questionnaire_responses.find(query).to_list(length=None)
         
-        # Get regular registered users (exclude moved ones)
-        users = await db.users.find({"role": "user", "moved_to_external": {"$ne": True}}).to_list(length=None)
+        # Get regular registered users (exclude deleted and moved ones)
+        users = await db.users.find({
+            "role": "user", 
+            "moved_to_external": {"$ne": True},
+            "status": {"$ne": "deleted"}
+        }).to_list(length=None)
         
         # Combine and format
         clients_list = []
