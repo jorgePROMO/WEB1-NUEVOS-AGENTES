@@ -552,6 +552,66 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
           </div>
         </div>
       )}
+
+      {/* Tag Manager Modal */}
+      {showTagManager && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-2xl">
+            <div className="p-6 border-b flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-bold">Gestionar Etiquetas</h3>
+                <p className="text-sm text-gray-600 mt-1">Añadir o eliminar etiquetas globales</p>
+              </div>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowTagManager(false)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              {/* Create New Tag */}
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <Label className="font-semibold mb-2 block">Crear Nueva Etiqueta</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={newGlobalTag}
+                    onChange={(e) => setNewGlobalTag(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && createGlobalTag()}
+                    placeholder="Nombre de la etiqueta..."
+                  />
+                  <Button onClick={createGlobalTag}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Crear
+                  </Button>
+                </div>
+              </div>
+
+              {/* List of Tags */}
+              <div>
+                <Label className="font-semibold mb-3 block">Etiquetas Existentes ({allTags.length})</Label>
+                <div className="grid grid-cols-2 gap-2 max-h-96 overflow-y-auto">
+                  {allTags.map(tag => (
+                    <div key={tag} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
+                      <Badge className="bg-blue-100 text-blue-700">{tag}</Badge>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        onClick={() => deleteGlobalTag(tag)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
