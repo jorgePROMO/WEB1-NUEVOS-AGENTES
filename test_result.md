@@ -261,9 +261,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "CRM System - Team Clients delete/status"
-    - "CRM System - External Clients edit"
-    - "AdminDashboard cleanup"
+    - "Template Tag Management System"
+    - "Tag Dropdown Integration"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
