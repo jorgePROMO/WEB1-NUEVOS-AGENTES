@@ -58,6 +58,7 @@ const AdminDashboard = () => {
   const [activeView, setActiveView] = useState('clients'); // clients, prospects, team-clients, external-clients, calendar
   const [templates, setTemplates] = useState([]);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [templateMessage, setTemplateMessage] = useState('');
 
