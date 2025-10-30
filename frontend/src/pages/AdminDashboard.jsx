@@ -755,8 +755,12 @@ const AdminDashboard = () => {
                       >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex-1">
-                            <p className="font-semibold text-gray-900">{client.name || client.username}</p>
-                            <p className="text-xs text-gray-500">@{client.username}</p>
+                            <p className="font-semibold text-gray-900">
+                              {client.nombre || client.name || client.username || 'Sin nombre'}
+                            </p>
+                            {client.username && (
+                              <p className="text-xs text-gray-500">@{client.username}</p>
+                            )}
                           </div>
                           <Badge
                             className={
