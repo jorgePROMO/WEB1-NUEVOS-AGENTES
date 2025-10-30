@@ -277,6 +277,7 @@ async def google_auth(session_id: str, response: Response):
     if existing_user:
         user_id = existing_user["_id"]
         user_data = existing_user
+        logger.info(f"Existing user found: {user_email}")
     else:
         # Create new user
         user_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
@@ -300,6 +301,7 @@ async def google_auth(session_id: str, response: Response):
             "updated_at": datetime.now(timezone.utc)
         }
         await db.users.insert_one(user_data)
+        logger.info(f"New user created via OAuth: {user_email} with ID: {user_id}")
     
     # Store session in database
     session_doc = {
