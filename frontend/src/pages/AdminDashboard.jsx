@@ -754,19 +754,43 @@ const AdminDashboard = () => {
                         }`}
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <p className="font-semibold text-gray-900">{client.name}</p>
+                          <div className="flex-1">
+                            <p className="font-semibold text-gray-900">{client.name || client.username}</p>
+                            <p className="text-xs text-gray-500">@{client.username}</p>
+                          </div>
                           <Badge
                             className={
-                              client.subscription?.payment_status === 'verified'
+                              client.status === 'active'
                                 ? 'bg-green-100 text-green-700'
-                                : 'bg-orange-100 text-orange-700'
+                                : client.status === 'pending'
+                                ? 'bg-orange-100 text-orange-700'
+                                : 'bg-gray-100 text-gray-700'
                             }
                           >
-                            {client.subscription?.payment_status === 'verified' ? 'Activo' : 'Pendiente'}
+                            {client.status === 'active' ? 'Activo' : client.status === 'pending' ? 'Pendiente' : 'Inactivo'}
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-600">@{client.username}</p>
-                        <p className="text-xs text-gray-500 mt-1">{client.email}</p>
+                        
+                        {/* Contact Info */}
+                        <div className="space-y-1 mt-2">
+                          <div className="flex items-center gap-2 text-xs text-gray-600">
+                            <Mail className="h-3 w-3" />
+                            <span className="truncate">{client.email}</span>
+                          </div>
+                          {client.whatsapp && (
+                            <div className="flex items-center gap-2 text-xs text-gray-600">
+                              <MessageSquare className="h-3 w-3" />
+                              <span>{client.whatsapp}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Registration Date */}
+                        {client.created_at && (
+                          <p className="text-xs text-gray-400 mt-2">
+                            Desde: {new Date(client.created_at).toLocaleDateString('es-ES')}
+                          </p>
+                        )}
                       </div>
                     ))}
                   </div>
