@@ -135,7 +135,6 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
         name: newTemplate.name,
         subject: newTemplate.subject,
         content: newTemplate.content,
-        category: newTemplate.category,
         tags: newTemplate.tags
       }, {
         headers: { Authorization: `Bearer ${token}` },
