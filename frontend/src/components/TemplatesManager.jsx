@@ -43,7 +43,7 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
   useEffect(() => {
     loadTemplates();
     loadAllTags();
-  }, [selectedType]);
+  }, []);
 
   const loadAllTags = async () => {
     try {
@@ -59,8 +59,7 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
 
   const loadTemplates = async () => {
     try {
-      const params = selectedType !== 'all' ? `?type=${selectedType}` : '';
-      const response = await axios.get(`${API}/admin/templates${params}`, {
+      const response = await axios.get(`${API}/admin/templates`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
