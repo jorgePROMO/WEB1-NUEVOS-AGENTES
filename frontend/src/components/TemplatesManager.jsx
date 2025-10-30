@@ -509,21 +509,6 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
 
             <div className="p-6 space-y-4">
               <div>
-                <Label>Tipo *</Label>
-                <select
-                  value={newTemplate.type}
-                  onChange={(e) => setNewTemplate({...newTemplate, type: e.target.value})}
-                  className="w-full border rounded-md px-3 py-2"
-                  disabled
-                >
-                  <option value="whatsapp">WhatsApp</option>
-                  <option value="alert">Alerta</option>
-                  <option value="email">Email</option>
-                </select>
-                <p className="text-xs text-gray-500 mt-1">El tipo no se puede cambiar después de crear el template</p>
-              </div>
-
-              <div>
                 <Label>Nombre del Template *</Label>
                 <Input
                   value={newTemplate.name}
@@ -532,16 +517,14 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
                 />
               </div>
 
-              {newTemplate.type !== 'whatsapp' && (
-                <div>
-                  <Label>Asunto</Label>
-                  <Input
-                    value={newTemplate.subject}
-                    onChange={(e) => setNewTemplate({...newTemplate, subject: e.target.value})}
-                    placeholder="Asunto del mensaje"
-                  />
-                </div>
-              )}
+              <div>
+                <Label>Asunto (opcional)</Label>
+                <Input
+                  value={newTemplate.subject}
+                  onChange={(e) => setNewTemplate({...newTemplate, subject: e.target.value})}
+                  placeholder="Asunto del mensaje"
+                />
+              </div>
 
               <div>
                 <Label>Contenido del Mensaje *</Label>
