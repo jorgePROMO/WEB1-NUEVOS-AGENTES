@@ -34,6 +34,8 @@ import { EditUserModal, SendPasswordResetButton } from '../components/AdminCompo
 import ProspectsCRM from '../components/ProspectsCRM';
 import TeamClientsCRM from '../components/TeamClientsCRM';
 import ExternalClientsCRM from '../components/ExternalClientsCRM';
+import TemplatesManager from '../components/TemplatesManager';
+import ClientsAtRisk from '../components/ClientsAtRisk';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
