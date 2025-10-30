@@ -205,7 +205,7 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap items-center">
         <Button
           variant={selectedType === 'all' ? 'default' : 'outline'}
           size="sm"
@@ -231,6 +231,19 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
           <Bell className="h-4 w-4 mr-2" />
           Alertas
         </Button>
+        
+        <div className="flex-1"></div>
+        
+        {/* Tag Search */}
+        <div className="flex gap-2 items-center">
+          <Tag className="h-4 w-4 text-gray-500" />
+          <Input
+            placeholder="Buscar por etiqueta..."
+            value={searchTags}
+            onChange={(e) => setSearchTags(e.target.value)}
+            className="w-64"
+          />
+        </div>
       </div>
 
       {/* Templates Grid */}
