@@ -39,7 +39,8 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
     try {
       const params = selectedType !== 'all' ? `?type=${selectedType}` : '';
       const response = await axios.get(`${API}/admin/templates${params}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
       });
       setTemplates(response.data.templates || []);
     } catch (error) {
