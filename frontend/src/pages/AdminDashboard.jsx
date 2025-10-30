@@ -1416,16 +1416,31 @@ const AdminDashboard = () => {
               ) : (
                 <div className="text-center py-12">
                   <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500">No hay templates de WhatsApp disponibles</p>
-                  <Button
-                    className="mt-4"
-                    onClick={() => {
-                      setShowTemplateSelector(false);
-                      setActiveView('templates');
-                    }}
-                  >
-                    Crear Templates
-                  </Button>
+                  {selectedTagFilter ? (
+                    <>
+                      <p className="text-gray-500">No hay templates con la etiqueta "{selectedTagFilter}"</p>
+                      <Button
+                        className="mt-4"
+                        variant="outline"
+                        onClick={() => setSelectedTagFilter('')}
+                      >
+                        Limpiar filtro
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-gray-500">No hay templates de WhatsApp disponibles</p>
+                      <Button
+                        className="mt-4"
+                        onClick={() => {
+                          setShowTemplateSelector(false);
+                          setActiveView('templates');
+                        }}
+                      >
+                        Crear Templates
+                      </Button>
+                    </>
+                  )}
                 </div>
               )}
             </div>
