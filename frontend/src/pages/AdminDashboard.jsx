@@ -1337,7 +1337,6 @@ const AdminDashboard = () => {
                   >
                     <div className="flex items-start justify-between mb-2">
                       <h4 className="font-bold text-gray-900">{template.name}</h4>
-                      <Badge className="bg-green-100 text-green-700">WhatsApp</Badge>
                     </div>
                     <p className="text-sm text-gray-600 whitespace-pre-wrap">{template.content}</p>
                     {template.variables && template.variables.length > 0 && (
