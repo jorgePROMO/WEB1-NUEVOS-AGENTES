@@ -384,11 +384,25 @@ export const TeamClientsCRM = ({ token }) => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
-                  <Phone className="h-5 w-5 text-orange-600" />
-                  <div>
-                    <p className="text-sm text-gray-600">WhatsApp</p>
-                    <p className="font-medium">{selectedClient.whatsapp || 'No disponible'}</p>
+                <div className="p-3 bg-green-50 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Phone className="h-5 w-5 text-green-600" />
+                      <div>
+                        <p className="text-sm text-gray-600">WhatsApp</p>
+                        <p className="font-medium">{selectedClient.whatsapp || 'No disponible'}</p>
+                      </div>
+                    </div>
+                    {selectedClient.whatsapp && (
+                      <Button
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700"
+                        onClick={() => window.open(`https://wa.me/${selectedClient.whatsapp.replace(/[^0-9]/g, '')}`, '_blank')}
+                      >
+                        <Phone className="h-4 w-4 mr-2" />
+                        Abrir Chat
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
