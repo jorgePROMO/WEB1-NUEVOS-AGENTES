@@ -43,7 +43,20 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
 
   useEffect(() => {
     loadTemplates();
+    loadAllTags();
   }, [selectedType]);
+
+  const loadAllTags = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/templates/tags/all`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setAllTags(response.data.tags || []);
+    } catch (error) {
+      console.error('Error loading tags:', error);
+    }
+  };
 
   const loadTemplates = async () => {
     try {
