@@ -22,7 +22,7 @@ from models import (
     ProspectStageCreate, ProspectStageInDB, ProspectResponse,
     ProspectNoteCreate, ProspectNoteInDB, ProspectStageUpdate,
     ExternalClientCreate, ExternalClientUpdate, ExternalClientInDB,
-    MessageTemplate, TemplateCreate, TemplateResponse,
+    MessageTemplate, TemplateCreate, TemplateResponse, TemplateUpdate,
     ReminderConfig, ClientRiskStatus
 )
 from auth import (
