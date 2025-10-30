@@ -132,6 +132,50 @@ const AdminDashboard = () => {
     }
   };
 
+  const loadTemplates = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/templates`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setTemplates(response.data.templates || []);
+    } catch (error) {
+      console.error('Error loading templates:', error);
+    }
+  };
+
+  const openTemplateModal = (template) => {
+    if (!selectedClient) return;
+    
+    setSelectedTemplate(template);
+    
+    // Replace variables in template
+    let message = template.content;
+    message = message.replace(/{nombre}/g, selectedClient.name || selectedClient.username);
+    message = message.replace(/{hora}/g, 'HH:MM'); // Placeholder
+    message = message.replace(/{fecha}/g, new Date().toLocaleDateString('es-ES'));
+    
+    setTemplateMessage(message);
+    setShowTemplateModal(true);
+  };
+
+  const sendTemplateMessage = () => {
+    // Copy to clipboard
+    navigator.clipboard.writeText(templateMessage);
+    alert('Mensaje copiado al portapapeles. Ahora puedes pegarlo en WhatsApp.');
+    
+    // Open WhatsApp if client has phone number
+    if (selectedClient.whatsapp || selectedClient.email) {
+      const phone = (selectedClient.whatsapp || '').replace(/[^0-9]/g, '');
+      if (phone) {
+        const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(templateMessage)}`;
+        window.open(whatsappUrl, '_blank');
+      }
+    }
+    
+    setShowTemplateModal(false);
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/');
