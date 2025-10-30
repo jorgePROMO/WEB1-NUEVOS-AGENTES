@@ -473,20 +473,6 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
               </div>
 
               <div>
-                <Label>Categoría</Label>
-                <select
-                  value={newTemplate.category}
-                  onChange={(e) => setNewTemplate({...newTemplate, category: e.target.value})}
-                  className="w-full border rounded-md px-3 py-2"
-                >
-                  <option value="welcome">Bienvenida</option>
-                  <option value="reminder">Recordatorio</option>
-                  <option value="followup">Seguimiento</option>
-                  <option value="general">General</option>
-                </select>
-              </div>
-
-              <div>
                 <Label className="flex items-center gap-2">
                   <Tag className="h-4 w-4" />
                   Etiquetas
@@ -615,20 +601,6 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
                 <p className="text-xs text-gray-500 mt-1">
                   Variables disponibles: {'{nombre}'}, {'{fecha}'}, {'{hora}'}
                 </p>
-              </div>
-
-              <div>
-                <Label>Categoría</Label>
-                <select
-                  value={newTemplate.category}
-                  onChange={(e) => setNewTemplate({...newTemplate, category: e.target.value})}
-                  className="w-full border rounded-md px-3 py-2"
-                >
-                  <option value="welcome">Bienvenida</option>
-                  <option value="reminder">Recordatorio</option>
-                  <option value="followup">Seguimiento</option>
-                  <option value="general">General</option>
-                </select>
               </div>
 
               <div>
