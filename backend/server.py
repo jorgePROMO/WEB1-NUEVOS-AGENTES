@@ -2233,12 +2233,19 @@ async def root():
 # ============================================
 
 @api_router.get("/admin/templates")
-async def get_templates(request: Request, type: Optional[str] = None):
-    """Get all message templates"""
+async def get_templates(request: Request, type: Optional[str] = None, tags: Optional[str] = None):
+    """Get all message templates with optional filtering by type and tags"""
     await require_admin(request)
     
     try:
-        query = {"type": type} if type else {}
+        query = {}
+        if type:
+            query["type"] = type
+        if tags:
+            # Filter by tags (comma separated)
+            tag_list = [t.strip() for t in tags.split(',')]
+            query["tags"] = {"$in": tag_list}
+        
         templates = await db.message_templates.find(query).to_list(length=None)
         
         return {
@@ -2251,6 +2258,7 @@ async def get_templates(request: Request, type: Optional[str] = None):
                     "content": t["content"],
                     "variables": t.get("variables", []),
                     "category": t["category"],
+                    "tags": t.get("tags", []),
                     "created_at": t["created_at"]
                 }
                 for t in templates
