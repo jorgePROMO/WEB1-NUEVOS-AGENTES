@@ -2234,17 +2234,23 @@ async def root():
 
 @api_router.get("/admin/templates/tags/all")
 async def get_all_tags(request: Request):
-    """Get all unique tags from all templates"""
+    """Get all unique tags from templates AND global tags collection"""
     await require_admin(request)
     
     try:
+        # Get tags from templates
         templates = await db.message_templates.find({}).to_list(length=None)
-        
-        # Collect all unique tags
-        all_tags = set()
+        template_tags = set()
         for template in templates:
             if template.get("tags"):
-                all_tags.update(template["tags"])
+                template_tags.update(template["tags"])
+        
+        # Get tags from global_tags collection
+        global_tags_docs = await db.global_tags.find({}).to_list(length=None)
+        global_tags = set(tag["_id"] for tag in global_tags_docs)
+        
+        # Combine both sets
+        all_tags = template_tags.union(global_tags)
         
         return {"tags": sorted(list(all_tags))}
     except Exception as e:
