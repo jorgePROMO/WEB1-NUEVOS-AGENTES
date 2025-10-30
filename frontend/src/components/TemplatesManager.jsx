@@ -102,7 +102,6 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
         name: '',
         subject: '',
         content: '',
-        category: 'general',
         tags: []
       });
       setTagInput('');
@@ -151,7 +150,6 @@ export const TemplatesManager = ({ token, onSelectTemplate }) => {
         name: '',
         subject: '',
         content: '',
-        category: 'general',
         tags: []
       });
       setTagInput('');
