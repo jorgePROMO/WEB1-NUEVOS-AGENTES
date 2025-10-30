@@ -2455,7 +2455,7 @@ async def get_clients_at_risk(request: Request):
 
 @app.on_event("startup")
 async def startup_db():
-    """Initialize default prospect stages if they don't exist"""
+    """Initialize default prospect stages and templates if they don't exist"""
     try:
         # Check if stages exist
         count = await db.prospect_stages.count_documents({})
@@ -2470,8 +2470,123 @@ async def startup_db():
             ]
             await db.prospect_stages.insert_many(default_stages)
             logger.info("Default prospect stages created")
+        
+        # Check if templates exist
+        template_count = await db.message_templates.count_documents({})
+        if template_count == 0:
+            # Create default templates
+            default_templates = [
+                # WhatsApp Templates
+                {
+                    "_id": "template_wa_welcome",
+                    "type": "whatsapp",
+                    "name": "Bienvenida Nuevo Cliente",
+                    "content": "¡Hola {nombre}! 🎉 Bienvenido al equipo 💪\n\nYa tienes acceso a tu panel personal. ¿Cuándo te viene bien tu primera sesión?\n\n¡Vamos a conseguir tus objetivos juntos!",
+                    "variables": ["nombre"],
+                    "category": "welcome",
+                    "created_at": datetime.now(timezone.utc)
+                },
+                {
+                    "_id": "template_wa_session_reminder",
+                    "type": "whatsapp",
+                    "name": "Recordatorio de Sesión",
+                    "content": "Hola {nombre} 👋\n\nTe recuerdo nuestra sesión mañana a las {hora}. ¿Confirmas que nos vemos? 💪",
+                    "variables": ["nombre", "hora"],
+                    "category": "reminder",
+                    "created_at": datetime.now(timezone.utc)
+                },
+                {
+                    "_id": "template_wa_progress_photos",
+                    "type": "whatsapp",
+                    "name": "Solicitud Fotos de Progreso",
+                    "content": "¡Hey {nombre}! 📸\n\nEs hora de ver tu progreso. ¿Me puedes enviar fotos actualizadas? (Frente, espalda, lateral)\n\n¡Seguro que hay grandes cambios!",
+                    "variables": ["nombre"],
+                    "category": "followup",
+                    "created_at": datetime.now(timezone.utc)
+                },
+                {
+                    "_id": "template_wa_checkin",
+                    "type": "whatsapp",
+                    "name": "Check-in Semanal",
+                    "content": "Hola {nombre} 💪\n\n¿Cómo ha ido la semana? ¿Alguna dificultad con la rutina o la nutrición?\n\nRecuerda que estoy aquí para ayudarte.",
+                    "variables": ["nombre"],
+                    "category": "followup",
+                    "created_at": datetime.now(timezone.utc)
+                },
+                {
+                    "_id": "template_wa_motivation",
+                    "type": "whatsapp",
+                    "name": "Mensaje Motivacional",
+                    "content": "¡{nombre}! 🔥\n\nRecuerda por qué empezaste. Cada día de entrenamiento es un paso más cerca de tu objetivo.\n\n¡Tú puedes! 💪",
+                    "variables": ["nombre"],
+                    "category": "general",
+                    "created_at": datetime.now(timezone.utc)
+                },
+                {
+                    "_id": "template_wa_form_reminder",
+                    "type": "whatsapp",
+                    "name": "Recordatorio Formulario",
+                    "content": "Hola {nombre} 👋\n\nTe recuerdo que tienes pendiente el formulario de seguimiento. Es importante para ajustar tu plan.\n\n¿Algún problema para completarlo?",
+                    "variables": ["nombre"],
+                    "category": "reminder",
+                    "created_at": datetime.now(timezone.utc)
+                },
+                {
+                    "_id": "template_wa_congratulations",
+                    "type": "whatsapp",
+                    "name": "Felicitaciones por Logro",
+                    "content": "¡FELICIDADES {nombre}! 🎉🎊\n\n¡Has alcanzado tu objetivo! Esto es el resultado de tu esfuerzo y dedicación.\n\n¡Estoy muy orgulloso de ti! 💪✨",
+                    "variables": ["nombre"],
+                    "category": "general",
+                    "created_at": datetime.now(timezone.utc)
+                },
+                # Alert Templates
+                {
+                    "_id": "template_alert_new_routine",
+                    "type": "alert",
+                    "name": "Nueva Rutina Disponible",
+                    "subject": "Nueva rutina de entrenamiento 💪",
+                    "content": "Tu nueva rutina de entrenamiento ya está disponible. Revísala en la sección de Documentos.",
+                    "variables": [],
+                    "category": "general",
+                    "created_at": datetime.now(timezone.utc)
+                },
+                {
+                    "_id": "template_alert_nutrition_plan",
+                    "type": "alert",
+                    "name": "Plan Nutricional Actualizado",
+                    "subject": "Actualización de tu plan nutricional 🥗",
+                    "content": "He actualizado tu plan nutricional basándome en tu progreso. Revísalo en Documentos.",
+                    "variables": [],
+                    "category": "general",
+                    "created_at": datetime.now(timezone.utc)
+                },
+                {
+                    "_id": "template_alert_form_pending",
+                    "type": "alert",
+                    "name": "Formulario Pendiente",
+                    "subject": "Formulario de seguimiento pendiente 📋",
+                    "content": "Tienes un formulario de seguimiento pendiente. Por favor, complétalo para que pueda ajustar tu plan.",
+                    "variables": [],
+                    "category": "reminder",
+                    "created_at": datetime.now(timezone.utc)
+                },
+                {
+                    "_id": "template_alert_session_scheduled",
+                    "type": "alert",
+                    "name": "Sesión Programada",
+                    "subject": "Sesión programada para {fecha} 📅",
+                    "content": "Tu próxima sesión está programada para el {fecha} a las {hora}. ¡Nos vemos!",
+                    "variables": ["fecha", "hora"],
+                    "category": "reminder",
+                    "created_at": datetime.now(timezone.utc)
+                }
+            ]
+            await db.message_templates.insert_many(default_templates)
+            logger.info("Default message templates created")
+            
     except Exception as e:
-        logger.error(f"Error initializing prospect stages: {e}")
+        logger.error(f"Error initializing defaults: {e}")
 
 
 @app.on_event("shutdown")
