@@ -298,12 +298,12 @@ export const TeamClientsCRM = ({ token }) => {
                     </td>
                     <td className="p-3">
                       <Badge className={
-                        client.subscription?.payment_status === 'paid' ? 'bg-green-100 text-green-700' :
+                        client.subscription?.payment_status === 'verified' ? 'bg-green-100 text-green-700' :
                         client.subscription?.payment_status === 'pending' ? 'bg-orange-100 text-orange-700' :
                         client.source === 'prospect' ? 'bg-gray-100 text-gray-600' :
                         'bg-red-100 text-red-700'
                       }>
-                        {client.subscription?.payment_status === 'paid' ? 'Pagado' :
+                        {client.subscription?.payment_status === 'verified' ? 'Verificado' :
                          client.subscription?.payment_status === 'pending' ? 'Pendiente' :
                          client.source === 'prospect' ? 'Prospecto' : 'N/A'}
                       </Badge>
