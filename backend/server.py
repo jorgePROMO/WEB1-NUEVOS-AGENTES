@@ -21,7 +21,9 @@ from models import (
     Token, QuestionnaireSubmit,
     ProspectStageCreate, ProspectStageInDB, ProspectResponse,
     ProspectNoteCreate, ProspectNoteInDB, ProspectStageUpdate,
-    ExternalClientCreate, ExternalClientUpdate, ExternalClientInDB
+    ExternalClientCreate, ExternalClientUpdate, ExternalClientInDB,
+    MessageTemplate, TemplateCreate, TemplateResponse,
+    ReminderConfig, ClientRiskStatus
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
