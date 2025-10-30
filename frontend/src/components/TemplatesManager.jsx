@@ -24,7 +24,6 @@ const API = `${BACKEND_URL}/api`;
 export const TemplatesManager = ({ token, onSelectTemplate }) => {
   const [templates, setTemplates] = useState([]);
   const [allTags, setAllTags] = useState([]);
-  const [selectedType, setSelectedType] = useState('all');
   const [selectedTagFilter, setSelectedTagFilter] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
