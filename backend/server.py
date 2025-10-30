@@ -2655,6 +2655,7 @@ async def startup_db():
                     "content": "Tu nueva rutina de entrenamiento ya está disponible. Revísala en la sección de Documentos.",
                     "variables": [],
                     "category": "general",
+                    "tags": ["rutina", "entrenamiento", "nuevo"],
                     "created_at": datetime.now(timezone.utc)
                 },
                 {
@@ -2665,6 +2666,7 @@ async def startup_db():
                     "content": "He actualizado tu plan nutricional basándome en tu progreso. Revísalo en Documentos.",
                     "variables": [],
                     "category": "general",
+                    "tags": ["nutrición", "plan", "actualización"],
                     "created_at": datetime.now(timezone.utc)
                 },
                 {
@@ -2675,6 +2677,7 @@ async def startup_db():
                     "content": "Tienes un formulario de seguimiento pendiente. Por favor, complétalo para que pueda ajustar tu plan.",
                     "variables": [],
                     "category": "reminder",
+                    "tags": ["formulario", "recordatorio", "pendiente"],
                     "created_at": datetime.now(timezone.utc)
                 },
                 {
@@ -2685,6 +2688,7 @@ async def startup_db():
                     "content": "Tu próxima sesión está programada para el {fecha} a las {hora}. ¡Nos vemos!",
                     "variables": ["fecha", "hora"],
                     "category": "reminder",
+                    "tags": ["sesión", "cita", "programada"],
                     "created_at": datetime.now(timezone.utc)
                 }
             ]
