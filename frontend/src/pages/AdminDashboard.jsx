@@ -1308,24 +1308,49 @@ const AdminDashboard = () => {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3 pt-4">
+              <div className="grid grid-cols-2 gap-3 pt-4">
                 <Button
-                  onClick={sendTemplateMessage}
-                  className="flex-1 bg-green-600 hover:bg-green-700"
+                  onClick={() => sendTemplateViaWhatsApp()}
+                  className="bg-green-600 hover:bg-green-700"
                 >
                   <MessageSquare className="h-4 w-4 mr-2" />
-                  Abrir en WhatsApp
+                  WhatsApp
                 </Button>
+                <Button
+                  onClick={() => sendTemplateViaEmail()}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  <Mail className="h-4 w-4 mr-2" />
+                  Email
+                </Button>
+                <Button
+                  onClick={() => sendTemplateAsAlert()}
+                  className="bg-purple-600 hover:bg-purple-700"
+                >
+                  <Bell className="h-4 w-4 mr-2" />
+                  Alerta
+                </Button>
+                <Button
+                  onClick={() => sendTemplateToChat()}
+                  className="bg-orange-600 hover:bg-orange-700"
+                >
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Chat Interno
+                </Button>
+              </div>
+              
+              {/* Copy button as fallback */}
+              <div className="pt-2">
                 <Button
                   variant="outline"
                   onClick={() => {
                     navigator.clipboard.writeText(templateMessage);
                     alert('Mensaje copiado al portapapeles');
                   }}
-                  className="flex-1"
+                  className="w-full"
                 >
                   <Copy className="h-4 w-4 mr-2" />
-                  Copiar
+                  Copiar al Portapapeles
                 </Button>
               </div>
             </div>
