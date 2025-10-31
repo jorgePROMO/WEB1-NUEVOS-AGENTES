@@ -540,8 +540,27 @@ const AdminDashboard = () => {
           </div>
           <div className="flex items-center gap-4">
             <Button
-              onClick={() => {
-                window.open(`${API}/admin/download-documentation`, '_blank');
+              onClick={async () => {
+                try {
+                  const response = await axios.get(`${API}/admin/download-documentation`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    withCredentials: true,
+                    responseType: 'blob' // Important for file download
+                  });
+                  
+                  // Create a blob URL and trigger download
+                  const url = window.URL.createObjectURL(new Blob([response.data]));
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute('download', 'DOCUMENTACION_COMPLETA_ECJ_TRAINER.md');
+                  document.body.appendChild(link);
+                  link.click();
+                  link.remove();
+                  window.URL.revokeObjectURL(url);
+                } catch (error) {
+                  console.error('Error downloading documentation:', error);
+                  alert('Error al descargar la documentación. Por favor, intenta de nuevo.');
+                }
               }}
               className="bg-green-600 hover:bg-green-700 text-white border-0 flex items-center gap-2"
               title="Descargar documentación completa del sistema"
