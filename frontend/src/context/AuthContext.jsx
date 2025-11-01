@@ -82,28 +82,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
   };
 
-  const googleAuth = async (sessionId) => {
-    try {
-      console.log('GoogleAuth: Processing session_id:', sessionId);
-      const response = await axios.post(`${API}/auth/google`, null, {
-        params: { session_id: sessionId },
-        withCredentials: true
-      });
-      console.log('GoogleAuth: Success', response.data);
-      setUser(response.data.user);
-      setToken(response.data.session_token);
-      localStorage.setItem('token', response.data.session_token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      return { success: true, user: response.data.user };
-    } catch (error) {
-      console.error('GoogleAuth: Error', error.response?.data || error.message);
-      return { 
-        success: false, 
-        error: error.response?.data?.detail || 'Error al autenticar con Google' 
-      };
-    }
-  };
-
   const isAdmin = () => {
     return user?.role === 'admin';
   };
@@ -115,7 +93,6 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
-    googleAuth,
     isAdmin
   };
 
