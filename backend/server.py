@@ -2597,6 +2597,181 @@ async def send_email_template(email_data: dict, request: Request):
         raise HTTPException(status_code=500, detail=f"Error al enviar email: {str(e)}")
 
 
+# =====================================================
+# GOOGLE CALENDAR INTEGRATION
+# =====================================================
+
+from google_calendar_service import (
+    get_authorization_url,
+    exchange_code_for_tokens,
+    create_calendar_event,
+    list_upcoming_events,
+    delete_calendar_event,
+    update_calendar_event
+)
+from fastapi.responses import RedirectResponse
+
+@api_router.get("/auth/google/calendar/login")
+async def google_calendar_login(request: Request):
+    """Inicia proceso de autorización de Google Calendar"""
+    admin = await require_admin(request)
+    
+    auth_url = get_authorization_url()
+    return {"authorization_url": auth_url}
+
+
+@api_router.get("/auth/google/calendar/callback")
+async def google_calendar_callback(code: str):
+    """Callback de OAuth - intercambia código por tokens"""
+    try:
+        tokens = await exchange_code_for_tokens(code)
+        admin_email = "ecjtrainer@gmail.com"
+        
+        await db.calendar_config.update_one(
+            {"admin_email": admin_email},
+            {
+                "$set": {
+                    "google_tokens": tokens,
+                    "connected_at": datetime.now(timezone.utc)
+                }
+            },
+            upsert=True
+        )
+        
+        return RedirectResponse(
+            url=f"{os.getenv('FRONTEND_URL')}/admin?calendar_connected=true"
+        )
+        
+    except Exception as e:
+        logger.error(f"Error in calendar callback: {e}")
+        return RedirectResponse(
+            url=f"{os.getenv('FRONTEND_URL')}/admin?calendar_error=true"
+        )
+
+
+@api_router.get("/calendar/status")
+async def check_calendar_status(request: Request):
+    """Verifica si Google Calendar está conectado"""
+    admin = await require_admin(request)
+    
+    admin_email = "ecjtrainer@gmail.com"
+    config = await db.calendar_config.find_one({"admin_email": admin_email})
+    
+    if config and config.get("google_tokens"):
+        return {
+            "connected": True,
+            "connected_at": config.get("connected_at")
+        }
+    
+    return {"connected": False}
+
+
+@api_router.post("/calendar/events")
+async def create_event(request: Request, event_data: dict):
+    """Crea un evento en Google Calendar"""
+    admin = await require_admin(request)
+    
+    try:
+        admin_email = "ecjtrainer@gmail.com"
+        config = await db.calendar_config.find_one({"admin_email": admin_email})
+        
+        if not config or not config.get("google_tokens"):
+            raise HTTPException(
+                status_code=400,
+                detail="Google Calendar no está conectado"
+            )
+        
+        tokens = config["google_tokens"]
+        
+        # Obtener email del cliente
+        client_email = None
+        if event_data.get("client_id"):
+            client = await db.users.find_one({"id": event_data["client_id"]})
+            if client:
+                client_email = client.get("email")
+        
+        # Parsear fechas
+        start_dt = datetime.fromisoformat(event_data["start"].replace('Z', '+00:00'))
+        end_dt = datetime.fromisoformat(event_data["end"].replace('Z', '+00:00'))
+        
+        # Crear evento
+        result = await create_calendar_event(
+            tokens=tokens,
+            summary=event_data["title"],
+            start_datetime=start_dt,
+            end_datetime=end_dt,
+            attendee_email=client_email,
+            description=event_data.get("description")
+        )
+        
+        # Actualizar tokens si se refrescaron
+        if result.get("updated_tokens"):
+            await db.calendar_config.update_one(
+                {"admin_email": admin_email},
+                {"$set": {"google_tokens": result["updated_tokens"]}}
+            )
+        
+        return {
+            "success": True,
+            "event": result["event"],
+            "html_link": result["event"].get("htmlLink")
+        }
+        
+    except Exception as e:
+        logger.error(f"Error creating calendar event: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/calendar/events")
+async def get_upcoming_events(request: Request):
+    """Lista próximos eventos del calendario"""
+    admin = await require_admin(request)
+    
+    try:
+        admin_email = "ecjtrainer@gmail.com"
+        config = await db.calendar_config.find_one({"admin_email": admin_email})
+        
+        if not config or not config.get("google_tokens"):
+            return {"connected": False, "events": []}
+        
+        tokens = config["google_tokens"]
+        events = await list_upcoming_events(tokens, max_results=30)
+        
+        return {
+            "connected": True,
+            "events": events
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching events: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.delete("/calendar/events/{event_id}")
+async def delete_event(request: Request, event_id: str):
+    """Elimina un evento del calendario"""
+    admin = await require_admin(request)
+    
+    try:
+        admin_email = "ecjtrainer@gmail.com"
+        config = await db.calendar_config.find_one({"admin_email": admin_email})
+        
+        if not config or not config.get("google_tokens"):
+            raise HTTPException(status_code=400, detail="Calendar not connected")
+        
+        tokens = config["google_tokens"]
+        success = await delete_calendar_event(tokens, event_id)
+        
+        if success:
+            return {"success": True}
+        else:
+            raise HTTPException(status_code=500, detail="Failed to delete event")
+            
+    except Exception as e:
+        logger.error(f"Error deleting event: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
