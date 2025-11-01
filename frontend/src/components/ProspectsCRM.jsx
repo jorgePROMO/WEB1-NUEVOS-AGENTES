@@ -295,6 +295,16 @@ export const ProspectsCRM = ({ token }) => {
                     </td>
                     <td className="p-3">
                       <div className="flex gap-2">
+                        {/* WhatsApp Button */}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="bg-green-50 hover:bg-green-100 text-green-600 border-green-300"
+                          onClick={() => window.open(`https://wa.me/${prospect.whatsapp.replace(/[^0-9]/g, '')}`, '_blank')}
+                          title="Contactar por WhatsApp"
+                        >
+                          <Phone className="h-4 w-4" />
+                        </Button>
                         <Button
                           size="sm"
                           variant="outline"
@@ -306,7 +316,7 @@ export const ProspectsCRM = ({ token }) => {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="bg-green-50 hover:bg-green-100 text-green-700 border-green-300"
+                          className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-300"
                           onClick={() => openConvertModal(prospect)}
                           title="Convertir a cliente"
                         >
