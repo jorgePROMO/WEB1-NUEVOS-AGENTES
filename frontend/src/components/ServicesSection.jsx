@@ -5,20 +5,20 @@ import { Check, Users, User, Star } from 'lucide-react';
 
 const ServicesSection = () => {
   return (
-    <section id="services" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <section id="services" className="py-16 sm:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+        <div className="text-center mb-12 sm:mb-16 px-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
             Servicios disponibles
           </h2>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
             Elige la opción que mejor se adapte a tus necesidades. Ambas opciones incluyen estructura, apoyo y claridad.
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 sm:gap-8 px-2 sm:px-0 max-w-6xl mx-auto">
           {/* Team Service */}
           <Card className="border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-2xl">
             <CardHeader className="bg-gradient-to-br from-blue-50 to-blue-100 pb-8">
