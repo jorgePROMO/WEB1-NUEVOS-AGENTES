@@ -57,11 +57,11 @@ async def get_current_user_id(credentials: HTTPAuthorizationCredentials = Depend
     return user_id
 
 
-# For Google OAuth session authentication
+# For session and JWT authentication
 async def get_current_user_id_flexible(request: Request):
     """
     Check for authentication from either:
-    1. session_token cookie (Google OAuth)
+    1. session_token cookie
     2. Authorization header (JWT)
     """
     from motor.motor_asyncio import AsyncIOMotorClient
