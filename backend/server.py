@@ -486,7 +486,7 @@ async def delete_client(user_id: str, request: Request):
     if result.modified_count == 0:
         raise HTTPException(status_code=404, detail="User not found")
     
-    # Add to deleted_users collection for OAuth blocking
+    # Add to deleted_users collection to prevent re-registration
     await db.deleted_users.insert_one({
         "email": user["email"],
         "user_id": user_id,
