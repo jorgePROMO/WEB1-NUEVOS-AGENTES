@@ -1325,7 +1325,7 @@ const AdminDashboard = () => {
                 </h3>
                 <div className="bg-white rounded-lg shadow-lg overflow-hidden" style={{ height: '600px' }}>
                   <iframe
-                    src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Europe%2FMadrid&showPrint=0&src=ZWNqdHJhaW5lckBnbWFpbC5jb20&src=ZmI0NmRhZjUyODI3NzBhYjIxNzc5ZTI5MDAxNjkwYzI4MjAxYTcyNzJiODQ5Y2RiYmNhZThhNjI3OTA0NTFlZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%2333b679&color=%23ef6c00"
+                    src="https://calendar.google.com/calendar/embed?height=600&wkst=2&ctz=Europe%2FMadrid&showPrint=0&mode=WEEK&src=ZWNqdHJhaW5lckBnbWFpbC5jb20&src=ZmI0NmRhZjUyODI3NzBhYjIxNzc5ZTI5MDAxNjkwYzI4MjAxYTcyNzJiODQ5Y2RiYmNhZThhNjI3OTA0NTFlZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%2333b679&color=%23ef6c00"
                     style={{ border: 0, width: '100%', height: '100%' }}
                     frameBorder="0"
                     scrolling="no"
@@ -1333,7 +1333,7 @@ const AdminDashboard = () => {
                   ></iframe>
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  💡 Este es tu Google Calendar personal. Trabaja con el calendario del CRM mientras observas tus compromisos en Google.
+                  💡 Este es tu Google Calendar personal en vista semanal. Trabaja con el calendario del CRM mientras observas tus compromisos.
                 </p>
               </div>
             </div>
