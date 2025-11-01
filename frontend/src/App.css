@@ -4,6 +4,10 @@ html {
 }
 
 /* Safe Area Support para móviles */
+.mt-safe {
+    margin-top: max(env(safe-area-inset-top), 20px);
+}
+
 .h-safe-top {
     height: max(env(safe-area-inset-top), 12px);
 }
