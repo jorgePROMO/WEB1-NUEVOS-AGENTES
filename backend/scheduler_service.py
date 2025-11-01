@@ -78,7 +78,7 @@ async def process_pending_prospects():
                         
                         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666; font-size: 12px;">
                             <p>Jorge Calcerrada - Entrenamiento Personal<br>
-                            <a href="https://crmmgr.preview.emergentagent.com">crmmgr.preview.emergentagent.com</a></p>
+                            <a href="https://crm-fusion-2.preview.emergentagent.com">crmmgr.preview.emergentagent.com</a></p>
                         </div>
                     </div>
                 </body>

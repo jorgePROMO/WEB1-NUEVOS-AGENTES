@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://crmmgr.preview.emergentagent.com
+https://crm-fusion-2.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 

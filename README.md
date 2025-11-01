@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://crmmgr.preview.emergentagent.com
+**URL Actual:** https://crm-fusion-2.preview.emergentagent.com
 
 ---
 
