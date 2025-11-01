@@ -302,6 +302,11 @@ class ProspectResponse(BaseModel):
     submitted_at: datetime
     converted_to_client: bool = False
     
+    # GPT Report fields
+    report_generated: bool = False
+    report_sent_at: Optional[datetime] = None
+    report_content: Optional[str] = None
+    
     class Config:
         populate_by_name = True
         json_encoders = {ObjectId: str}
