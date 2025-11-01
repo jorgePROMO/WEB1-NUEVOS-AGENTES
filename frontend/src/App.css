@@ -3,6 +3,26 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Safe Area Support para móviles */
+.h-safe-top {
+    height: max(env(safe-area-inset-top), 12px);
+}
+
+.pt-safe {
+    padding-top: max(env(safe-area-inset-top), 12px);
+}
+
+.pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 12px);
+}
+
+/* Touch target size mínimo (accesibilidad móvil) */
+.touch-manipulation {
+    touch-action: manipulation;
+    min-height: 44px;
+    min-width: 44px;
+}
+
 /* Custom Animations */
 @keyframes fade-in-up {
     from {
