@@ -2597,23 +2597,6 @@ async def send_email_template(email_data: dict, request: Request):
         raise HTTPException(status_code=500, detail=f"Error al enviar email: {str(e)}")
 
 
-@api_router.get("/admin/download-documentation")
-async def download_documentation(request: Request):
-    """Download complete system documentation (Admin only)"""
-    admin = await require_admin(request)
-    
-    doc_path = Path("/app/DOCUMENTACION_COMPLETA.md")
-    
-    if not doc_path.exists():
-        raise HTTPException(status_code=404, detail="Documentación no encontrada")
-    
-    return FileResponse(
-        path=str(doc_path),
-        filename="DOCUMENTACION_COMPLETA_ECJ_TRAINER.md",
-        media_type="text/markdown"
-    )
-
-
 # Include the router in the main app
 app.include_router(api_router)
 
