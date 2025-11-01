@@ -8,6 +8,7 @@
 :root {
     --safe-area-inset-top: env(safe-area-inset-top, 0px);
     --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+    font-display: swap;
 }
 
 body {
@@ -21,6 +22,8 @@ body {
     /* Padding para safe areas en móviles */
     padding-top: var(--safe-area-inset-top);
     padding-bottom: var(--safe-area-inset-bottom);
+    /* Performance */
+    text-rendering: optimizeSpeed;
 }
 
 code {
