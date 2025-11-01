@@ -45,21 +45,17 @@ function AppRoutes() {
       <Route
         path="/dashboard"
         element={
-          <OAuthHandler>
-            <ProtectedRoute>
-              <UserDashboard />
-            </ProtectedRoute>
-          </OAuthHandler>
+          <ProtectedRoute>
+            <UserDashboard />
+          </ProtectedRoute>
         }
       />
       <Route
         path="/admin"
         element={
-          <OAuthHandler>
-            <ProtectedRoute adminOnly={true}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          </OAuthHandler>
+          <ProtectedRoute adminOnly={true}>
+            <AdminDashboard />
+          </ProtectedRoute>
         }
       />
       <Route path="*" element={<Navigate to="/" replace />} />
