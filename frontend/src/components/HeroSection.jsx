@@ -17,6 +17,8 @@ const HeroSection = () => {
           src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/tw2x0ku0_WhatsApp%20Image%202025-10-25%20at%2021.18.51.jpeg"
           alt="Jorge Calcerrada Training"
           className="w-full h-full object-cover opacity-20"
+          loading="eager"
+          fetchpriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50/90 via-white/90 to-orange-50/90"></div>
       </div>
