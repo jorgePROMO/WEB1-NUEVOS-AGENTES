@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Safe Area Insets para móviles con notch */
+:root {
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 body {
     margin: 0;
     font-family: 'Inter',
@@ -12,6 +18,9 @@ body {
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Padding para safe areas en móviles */
+    padding-top: var(--safe-area-inset-top);
+    padding-bottom: var(--safe-area-inset-bottom);
 }
 
 code {
