@@ -1317,19 +1317,47 @@ const AdminDashboard = () => {
                 <AdminCalendar />
               </div>
               
-              {/* Google Calendar - Gestión Completa */}
+              {/* Google Calendar - Acceso Directo */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <CalendarPlus className="h-5 w-5 text-green-600" />
-                  Google Calendar - Gestión Completa
+                  Google Calendar
                 </h3>
                 
-                {/* Integración completa con gestión */}
-                <GoogleCalendarManager />
+                {/* Botón de acceso directo */}
+                <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-6 border-2 border-green-200">
+                  <div className="text-center space-y-4">
+                    <CalendarPlus className="h-16 w-16 mx-auto text-green-600" />
+                    <h4 className="text-xl font-bold text-gray-900">Gestiona tu Google Calendar</h4>
+                    <p className="text-gray-600">
+                      Abre tu Google Calendar en una nueva pestaña para crear y gestionar tus revisiones con clientes.
+                    </p>
+                    <Button 
+                      onClick={() => window.open('https://calendar.google.com/calendar/u/0/r', '_blank')}
+                      className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
+                    >
+                      <ExternalLink className="h-5 w-5 mr-2" />
+                      Abrir Google Calendar
+                    </Button>
+                    <p className="text-xs text-gray-500 mt-4">
+                      💡 Se abrirá en una nueva pestaña. Crea tus eventos allí y podrás verlos actualizados aquí abajo.
+                    </p>
+                  </div>
+                </div>
                 
                 {/* Visualización del calendario debajo */}
                 <div className="mt-6">
-                  <h4 className="text-sm font-semibold mb-2 text-gray-700">Vista de tu calendario:</h4>
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-sm font-semibold text-gray-700">Vista de tu calendario:</h4>
+                    <Button 
+                      onClick={() => window.location.reload()}
+                      variant="outline"
+                      size="sm"
+                      className="text-xs"
+                    >
+                      🔄 Actualizar
+                    </Button>
+                  </div>
                   <div className="bg-white rounded-lg shadow-lg overflow-hidden" style={{ height: '500px' }}>
                     <iframe
                       src="https://calendar.google.com/calendar/embed?height=600&wkst=2&ctz=Europe%2FMadrid&showPrint=0&mode=WEEK&src=ZWNqdHJhaW5lckBnbWFpbC5jb20&src=ZmI0NmRhZjUyODI3NzBhYjIxNzc5ZTI5MDAxNjkwYzI4MjAxYTcyNzJiODQ5Y2RiYmNhZThhNjI3OTA0NTFlZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%2333b679&color=%23ef6c00"
