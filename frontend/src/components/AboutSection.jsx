@@ -26,7 +26,7 @@ const AboutSection = () => {
               Sobre <span className="text-blue-500">mí</span>
             </h2>
 
-            <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
+            <div className="space-y-6 text-gray-700 text-base sm:text-lg leading-relaxed">
               <p>
                 Durante años creí que para transformar un cuerpo hacía falta sacrificio, fuerza de voluntad y toneladas de motivación. Hoy sé que no es así.
               </p>
