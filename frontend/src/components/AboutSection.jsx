@@ -21,9 +21,9 @@ const AboutSection = () => {
           </div>
 
           {/* Content Side */}
-          <div>
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-8">
-              Sobre mí
+          <div className="px-4 sm:px-0">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 sm:mb-8">
+              Sobre <span className="text-blue-500">mí</span>
             </h2>
 
             <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
