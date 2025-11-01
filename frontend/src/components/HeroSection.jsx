@@ -22,10 +22,10 @@ const HeroSection = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-20 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-20 text-center">
         <div className="animate-fade-in-up">
           {/* Main Headline */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight mb-6">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight mb-6 px-2">
             Esto no va de perfección,
             <span className="block mt-2 bg-gradient-to-r from-blue-400 to-orange-400 bg-clip-text text-transparent">
               va de constancia.
@@ -33,7 +33,7 @@ const HeroSection = () => {
           </h1>
 
           {/* Sub-headline */}
-          <p className="text-xl sm:text-2xl text-gray-700 max-w-3xl mx-auto mb-8 leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-700 mb-8 max-w-2xl mx-auto leading-relaxed px-4">
             Cada comida, cada entrenamiento, cada decisión cuenta.
           </p>
 
