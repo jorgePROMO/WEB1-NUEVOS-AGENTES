@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.1.0-performance';
+const CACHE_VERSION = 'v1.2.0-gpt-reports';
 const CACHE_NAME = `ecj-trainer-${CACHE_VERSION}`;
 
 // Assets que se cachean (imágenes, fonts, etc)
