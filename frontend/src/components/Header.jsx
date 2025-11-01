@@ -24,10 +24,8 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300">
-      {/* Safe area padding for mobile notch/status bar */}
-      <div className="h-safe-top bg-white/95"></div>
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="flex items-center justify-between h-20 md:h-20 pt-safe">
+        <div className="flex items-center justify-between h-24 md:h-20 py-4 md:py-0">
           {/* Logo */}
           <div className="flex items-center">
             <a href="#" className="text-2xl font-bold">
@@ -82,16 +80,16 @@ const Header = () => {
             </Button>
           </div>
 
-          {/* Mobile menu button - con más padding */}
+          {/* Mobile menu button - más grande y con más padding */}
           <button
-            className="md:hidden p-3 touch-manipulation"
+            className="md:hidden p-4 touch-manipulation"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Abrir menú"
           >
             {isMobileMenuOpen ? (
-              <X className="h-7 w-7 text-gray-900" />
+              <X className="h-8 w-8 text-gray-900" />
             ) : (
-              <Menu className="h-7 w-7 text-gray-900" />
+              <Menu className="h-8 w-8 text-gray-900" />
             )}
           </button>
         </div>
