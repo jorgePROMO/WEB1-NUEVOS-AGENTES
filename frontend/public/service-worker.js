@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.3.2-calendar-linked';
+const CACHE_VERSION = 'v1.3.3-calendar-week-view';
 const CACHE_NAME = `ecj-trainer-${CACHE_VERSION}`;
 
 // Assets que se cachean (imágenes, fonts, etc)
