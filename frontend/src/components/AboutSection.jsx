@@ -13,6 +13,8 @@ const AboutSection = () => {
                 src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/xzer6hch_WhatsApp%20Image%202025-10-25%20at%2021.18.29.jpeg"
                 alt="Jorge Calcerrada - Entrenador Personal"
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             {/* Decorative Element */}
