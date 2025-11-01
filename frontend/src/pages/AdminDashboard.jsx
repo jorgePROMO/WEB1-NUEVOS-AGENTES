@@ -1307,12 +1307,36 @@ const AdminDashboard = () => {
 
           {/* Calendar Tab */}
           <TabsContent value="calendar">
-            <AdminCalendar />
-          </TabsContent>
-
-          {/* Google Calendar Integration Tab */}
-          <TabsContent value="google-calendar">
-            <GoogleCalendarManager />
+            <div className="grid lg:grid-cols-2 gap-6">
+              {/* Calendario de la Web (existente) */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-blue-600" />
+                  Calendario del CRM
+                </h3>
+                <AdminCalendar />
+              </div>
+              
+              {/* Google Calendar (visualización) */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <CalendarPlus className="h-5 w-5 text-green-600" />
+                  Mi Google Calendar
+                </h3>
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden" style={{ height: '600px' }}>
+                  <iframe
+                    src="https://calendar.google.com/calendar/embed?height=600&wkst=2&bgcolor=%23ffffff&ctz=Europe%2FMadrid&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=1&showCalendars=0"
+                    style={{ border: 0, width: '100%', height: '100%' }}
+                    frameBorder="0"
+                    scrolling="no"
+                    title="Google Calendar"
+                  ></iframe>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  💡 Este es tu Google Calendar. Trabaja con el calendario del CRM mientras observas tus compromisos en Google.
+                </p>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
         )}
