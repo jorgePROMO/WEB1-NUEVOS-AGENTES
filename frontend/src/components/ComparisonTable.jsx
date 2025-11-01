@@ -17,20 +17,57 @@ const ComparisonTable = () => {
   ];
 
   return (
-    <section id="comparison" className="py-24 bg-gradient-to-br from-gray-50 to-white">
-      <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12">
+    <section id="comparison" className="py-16 sm:py-24 bg-gradient-to-br from-gray-50 to-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 lg:px-12">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+        <div className="text-center mb-12 sm:mb-16 px-2">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
             Comparación de servicios
           </h2>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-700 max-w-3xl mx-auto px-4">
             Elige el camino que mejor se adapte a tus necesidades y objetivos.
           </p>
         </div>
 
-        {/* Comparison Table Card */}
-        <Card className="overflow-hidden shadow-2xl">
+        {/* Mobile View - Cards */}
+        <div className="md:hidden space-y-6 px-2">
+          {features.map((feature, index) => (
+            <Card key={index} className="p-4 shadow-lg">
+              <div className="font-semibold text-gray-900 mb-3 text-center border-b pb-2">
+                {feature.name}
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="text-xs font-semibold text-blue-500 mb-2">EQUIPO</div>
+                  {typeof feature.team === 'boolean' ? (
+                    feature.team ? (
+                      <Check className="h-6 w-6 text-blue-500 mx-auto" />
+                    ) : (
+                      <X className="h-6 w-6 text-gray-300 mx-auto" />
+                    )
+                  ) : (
+                    <span className="text-blue-600 font-semibold text-sm">{feature.team}</span>
+                  )}
+                </div>
+                <div className="text-center">
+                  <div className="text-xs font-semibold text-orange-500 mb-2">JORGE</div>
+                  {typeof feature.direct === 'boolean' ? (
+                    feature.direct ? (
+                      <Check className="h-6 w-6 text-orange-500 mx-auto" />
+                    ) : (
+                      <X className="h-6 w-6 text-gray-300 mx-auto" />
+                    )
+                  ) : (
+                    <span className="text-orange-600 font-semibold text-sm">{feature.direct}</span>
+                  )}
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {/* Desktop View - Table */}
+        <Card className="hidden md:block overflow-hidden shadow-2xl">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
@@ -87,8 +124,8 @@ const ComparisonTable = () => {
         </Card>
 
         {/* Bottom Note */}
-        <div className="mt-12 text-center">
-          <p className="text-gray-600 italic">
+        <div className="mt-8 sm:mt-12 text-center px-4">
+          <p className="text-sm sm:text-base text-gray-600 italic">
             Ambas opciones incluyen estructura, claridad y apoyo profesional. La diferencia está en el nivel de personalización y contacto directo.
           </p>
         </div>
