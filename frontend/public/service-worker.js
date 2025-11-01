@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ecj-trainer-v2';
+const CACHE_NAME = 'ecj-trainer-v3-cleaned';
 const urlsToCache = [
   '/',
   '/static/css/main.css',
