@@ -396,6 +396,34 @@ export const ProspectsCRM = ({ token }) => {
                 </div>
               </div>
 
+              {/* GPT Report Status */}
+              {selectedProspect.report_sent_at && (
+                <div className="bg-gradient-to-r from-blue-50 to-green-50 border-2 border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <FileText className="h-6 w-6 text-blue-600" />
+                    <h4 className="font-bold text-lg text-blue-900">Informe GPT Enviado</h4>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <span className="text-gray-600">Fecha de envío:</span>
+                      <span className="ml-2 font-semibold text-blue-700">
+                        {new Date(selectedProspect.report_sent_at).toLocaleDateString('es-ES', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Estado:</span>
+                      <Badge className="ml-2 bg-green-600">Diagnóstico OK</Badge>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Full Details */}
               <Card>
                 <CardHeader>
