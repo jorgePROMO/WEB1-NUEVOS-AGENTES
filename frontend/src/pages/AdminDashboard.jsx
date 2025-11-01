@@ -729,10 +729,11 @@ const AdminDashboard = () => {
 
         {(activeView === 'clients' || activeView === 'calendar') && (
           <Tabs value={activeView} onValueChange={setActiveView} className="space-y-6">
-            <TabsList className="grid w-full max-w-4xl mx-auto grid-cols-3">
+            <TabsList className="grid w-full max-w-5xl mx-auto grid-cols-4 gap-2">
               <TabsTrigger value="clients">
                 <Users className="h-4 w-4 mr-2" />
-                Gestión de Clientes Activos
+                <span className="hidden sm:inline">Gestión de Clientes</span>
+                <span className="sm:hidden">Clientes</span>
               </TabsTrigger>
               <TabsTrigger value="templates">
                 <MessageSquare className="h-4 w-4 mr-2" />
@@ -741,6 +742,11 @@ const AdminDashboard = () => {
               <TabsTrigger value="calendar">
                 <Calendar className="h-4 w-4 mr-2" />
                 Calendario
+              </TabsTrigger>
+              <TabsTrigger value="google-calendar">
+                <CalendarPlus className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Google Calendar</span>
+                <span className="sm:hidden">G Calendar</span>
               </TabsTrigger>
             </TabsList>
 
