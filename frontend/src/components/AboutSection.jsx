@@ -3,11 +3,11 @@ import { Target, Brain, Dumbbell } from 'lucide-react';
 
 const AboutSection = () => {
   return (
-    <section id="about" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+    <section id="about" className="py-16 sm:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Image Side */}
-          <div className="relative">
+          <div className="relative px-4 sm:px-0">
             <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl">
               <img
                 src="https://customer-assets.emergentagent.com/job_landing-details/artifacts/xzer6hch_WhatsApp%20Image%202025-10-25%20at%2021.18.29.jpeg"
