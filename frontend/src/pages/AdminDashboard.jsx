@@ -1314,6 +1314,11 @@ const AdminDashboard = () => {
           <TabsContent value="calendar">
             <AdminCalendar />
           </TabsContent>
+
+          {/* Google Calendar Integration Tab */}
+          <TabsContent value="google-calendar">
+            <GoogleCalendarManager />
+          </TabsContent>
         </Tabs>
         )}
       </div>
