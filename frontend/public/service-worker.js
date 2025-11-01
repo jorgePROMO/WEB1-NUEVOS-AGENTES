@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.3.0-google-calendar';
+const CACHE_VERSION = 'v1.3.1-calendar-simple';
 const CACHE_NAME = `ecj-trainer-${CACHE_VERSION}`;
 
 // Assets que se cachean (imágenes, fonts, etc)
