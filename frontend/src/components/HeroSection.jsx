@@ -10,7 +10,7 @@ const HeroSection = () => {
   const questionnaireUrl = ""; // AQUÍ PONES LA URL QUE TE DÉ EL USUARIO
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-orange-50">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-orange-50 pt-24 sm:pt-32 md:pt-20">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
