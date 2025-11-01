@@ -1309,7 +1309,7 @@ const AdminDashboard = () => {
           <TabsContent value="calendar">
             <div className="grid lg:grid-cols-2 gap-6">
               {/* Calendario de la Web (existente) */}
-              <div>
+              <div className="space-y-4">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <Calendar className="h-5 w-5 text-blue-600" />
                   Calendario del CRM
@@ -1317,24 +1317,29 @@ const AdminDashboard = () => {
                 <AdminCalendar />
               </div>
               
-              {/* Google Calendar (visualización) */}
-              <div>
+              {/* Google Calendar - Gestión Completa */}
+              <div className="space-y-4">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <CalendarPlus className="h-5 w-5 text-green-600" />
-                  Mi Google Calendar
+                  Google Calendar - Gestión Completa
                 </h3>
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden" style={{ height: '600px' }}>
-                  <iframe
-                    src="https://calendar.google.com/calendar/embed?height=600&wkst=2&ctz=Europe%2FMadrid&showPrint=0&mode=WEEK&src=ZWNqdHJhaW5lckBnbWFpbC5jb20&src=ZmI0NmRhZjUyODI3NzBhYjIxNzc5ZTI5MDAxNjkwYzI4MjAxYTcyNzJiODQ5Y2RiYmNhZThhNjI3OTA0NTFlZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%2333b679&color=%23ef6c00"
-                    style={{ border: 0, width: '100%', height: '100%' }}
-                    frameBorder="0"
-                    scrolling="no"
-                    title="Google Calendar"
-                  ></iframe>
+                
+                {/* Integración completa con gestión */}
+                <GoogleCalendarManager />
+                
+                {/* Visualización del calendario debajo */}
+                <div className="mt-6">
+                  <h4 className="text-sm font-semibold mb-2 text-gray-700">Vista de tu calendario:</h4>
+                  <div className="bg-white rounded-lg shadow-lg overflow-hidden" style={{ height: '500px' }}>
+                    <iframe
+                      src="https://calendar.google.com/calendar/embed?height=600&wkst=2&ctz=Europe%2FMadrid&showPrint=0&mode=WEEK&src=ZWNqdHJhaW5lckBnbWFpbC5jb20&src=ZmI0NmRhZjUyODI3NzBhYjIxNzc5ZTI5MDAxNjkwYzI4MjAxYTcyNzJiODQ5Y2RiYmNhZThhNjI3OTA0NTFlZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%2333b679&color=%23ef6c00"
+                      style={{ border: 0, width: '100%', height: '100%' }}
+                      frameBorder="0"
+                      scrolling="no"
+                      title="Google Calendar"
+                    ></iframe>
+                  </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  💡 Este es tu Google Calendar personal en vista semanal. Trabaja con el calendario del CRM mientras observas tus compromisos.
-                </p>
               </div>
             </div>
           </TabsContent>
