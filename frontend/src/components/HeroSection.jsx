@@ -37,7 +37,7 @@ const HeroSection = () => {
             Cada comida, cada entrenamiento, cada decisión cuenta.
           </p>
 
-          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-12">
+          <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto mb-12 px-6 sm:px-8">
             Método profesional de entrenamiento, nutrición y mentalidad creado por <span className="font-semibold text-blue-500">Jorge Calcerrada</span>.
           </p>
 
