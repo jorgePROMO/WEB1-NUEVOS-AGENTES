@@ -1403,27 +1403,6 @@ async def update_prospect_report(prospect_id: str, report_data: dict, request: R
         logger.error(f"Error updating report: {e}")
         raise HTTPException(status_code=500, detail=f"Error al actualizar informe: {str(e)}")
 
-            {
-                "$set": {
-                    "report_sent_at": datetime.now(timezone.utc),
-                    "report_sent_via": "whatsapp"
-                }
-            }
-        )
-        
-        logger.info(f"WhatsApp link generated for prospect {prospect_id}")
-        return {
-            "success": True,
-            "whatsapp_link": whatsapp_link,
-            "phone": whatsapp
-        }
-    
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error generating WhatsApp link: {e}")
-        raise HTTPException(status_code=500, detail=f"Error al generar enlace de WhatsApp: {str(e)}")
-
 
 def markdown_to_html(markdown_text: str) -> str:
     """Convert markdown to HTML with styling for email"""
