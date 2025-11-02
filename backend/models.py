@@ -42,12 +42,14 @@ class UserCreate(BaseModel):
     username: str
     email: EmailStr
     password: str
+    phone: str
 
 
 
 class UserUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[EmailStr] = None
+    phone: Optional[str] = None
     password: Optional[str] = None
 
 
