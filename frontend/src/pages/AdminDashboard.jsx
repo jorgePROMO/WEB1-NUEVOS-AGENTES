@@ -291,7 +291,9 @@ const AdminDashboard = () => {
     
     const isArchived = client.subscription?.archived === true;
     
-    return matchesSearch && (showArchived ? isArchived : !isArchived);
+    // Show all matching clients when showArchived is false (including those without archived field)
+    // Show only archived clients when showArchived is true
+    return matchesSearch && (showArchived ? isArchived : !isArchived || client.subscription?.archived === undefined);
   });
 
   const handleSendForm = async () => {
