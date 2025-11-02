@@ -23,7 +23,8 @@ from models import (
     ProspectNoteCreate, ProspectNoteInDB, ProspectStageUpdate,
     ExternalClientCreate, ExternalClientUpdate, ExternalClientInDB,
     MessageTemplate, TemplateCreate, TemplateResponse, TemplateUpdate,
-    ReminderConfig, ClientRiskStatus
+    ReminderConfig, ClientRiskStatus,
+    NutritionQuestionnaireSubmit, NutritionPlanResponse
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
