@@ -211,6 +211,9 @@ async def update_my_profile(user_update: UserUpdate, request: Request):
             raise HTTPException(status_code=400, detail="Email already registered")
         update_data["email"] = user_update.email
     
+    if user_update.phone:
+        update_data["phone"] = user_update.phone
+    
     if user_update.password:
         update_data["password"] = get_password_hash(user_update.password)
     
