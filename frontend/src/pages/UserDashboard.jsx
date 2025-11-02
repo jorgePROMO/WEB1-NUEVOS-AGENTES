@@ -40,6 +40,7 @@ const UserDashboard = () => {
   const [unreadAlerts, setUnreadAlerts] = useState(0);
   const [showChat, setShowChat] = useState(false);
   const [showNutritionQuestionnaire, setShowNutritionQuestionnaire] = useState(false);
+  const [documentFilter, setDocumentFilter] = useState('all'); // all, nutrition, training
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
