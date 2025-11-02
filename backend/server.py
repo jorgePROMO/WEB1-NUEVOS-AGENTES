@@ -2923,6 +2923,296 @@ async def send_email_template(email_data: dict, request: Request):
 # GOOGLE CALENDAR INTEGRATION
 # =====================================================
 
+
+
+# ==================== NUTRITION ENDPOINTS ====================
+
+@api_router.post("/nutrition/questionnaire/submit")
+async def submit_nutrition_questionnaire(questionnaire: NutritionQuestionnaireSubmit, request: Request):
+    """Usuario completa cuestionario de nutrición y se genera plan automáticamente"""
+    user = await get_current_user(request)
+    user_id = user["_id"]
+    
+    # Verificar que el usuario tiene plan team y pago verificado
+    if user.get("subscription", {}).get("plan") != "team":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Solo usuarios con plan Team pueden acceder al cuestionario de nutrición"
+        )
+    
+    if user.get("subscription", {}).get("payment_status") != "verified":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Debes verificar el pago antes de acceder al cuestionario de nutrición"
+        )
+    
+    try:
+        # Convertir el cuestionario a dict
+        questionnaire_data = questionnaire.dict()
+        
+        # Generar plan usando los 2 agentes
+        from nutrition_service import generate_nutrition_plan
+        result = await generate_nutrition_plan(questionnaire_data)
+        
+        if not result["success"]:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Error generando plan de nutrición: {result.get('error')}"
+            )
+        
+        # Guardar en el usuario
+        nutrition_data = {
+            "questionnaire_data": questionnaire_data,
+            "plan_inicial": result["plan_inicial"],
+            "plan_verificado": result["plan_verificado"],
+            "generated_at": datetime.now(timezone.utc),
+            "edited": False,
+            "pdf_generated": False
+        }
+        
+        await db.users.update_one(
+            {"_id": user_id},
+            {
+                "$set": {
+                    "nutrition_plan": nutrition_data,
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        logger.info(f"Plan de nutrición generado para usuario {user_id}")
+        
+        return {
+            "success": True,
+            "message": "Plan de nutrición generado correctamente",
+            "plan": result["plan_verificado"]
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error en cuestionario de nutrición: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error procesando cuestionario: {str(e)}"
+        )
+
+
+@api_router.get("/admin/users/{user_id}/nutrition")
+async def get_user_nutrition_plan(user_id: str, request: Request):
+    """Admin obtiene el plan de nutrición de un usuario"""
+    await require_admin(request)
+    
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    nutrition_plan = user.get("nutrition_plan")
+    if not nutrition_plan:
+        raise HTTPException(status_code=404, detail="Usuario no tiene plan de nutrición")
+    
+    return {
+        "success": True,
+        "nutrition_plan": nutrition_plan
+    }
+
+
+@api_router.patch("/admin/users/{user_id}/nutrition")
+async def update_user_nutrition_plan(user_id: str, updated_plan: dict, request: Request):
+    """Admin edita el plan de nutrición de un usuario"""
+    await require_admin(request)
+    
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    if not user.get("nutrition_plan"):
+        raise HTTPException(status_code=404, detail="Usuario no tiene plan de nutrición")
+    
+    try:
+        # Actualizar el plan verificado con la versión editada
+        await db.users.update_one(
+            {"_id": user_id},
+            {
+                "$set": {
+                    "nutrition_plan.plan_verificado": updated_plan.get("plan_content"),
+                    "nutrition_plan.edited": True,
+                    "nutrition_plan.edited_at": datetime.now(timezone.utc),
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        logger.info(f"Plan de nutrición editado para usuario {user_id}")
+        
+        return {
+            "success": True,
+            "message": "Plan de nutrición actualizado correctamente"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error actualizando plan de nutrición: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error actualizando plan: {str(e)}"
+        )
+
+
+@api_router.post("/admin/users/{user_id}/nutrition-pdf")
+async def generate_nutrition_pdf(user_id: str, request: Request):
+    """Admin genera PDF del plan de nutrición y lo sube a documentos del usuario"""
+    await require_admin(request)
+    
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    nutrition_plan = user.get("nutrition_plan")
+    if not nutrition_plan:
+        raise HTTPException(status_code=404, detail="Usuario no tiene plan de nutrición")
+    
+    try:
+        # Generar PDF usando markdown2pdf o similar
+        import markdown
+        from weasyprint import HTML
+        import tempfile
+        
+        # Contenido del plan verificado
+        plan_content = nutrition_plan.get("plan_verificado", "")
+        
+        # Convertir markdown a HTML
+        html_content = markdown.markdown(plan_content)
+        
+        # Template HTML con estilos
+        full_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body {{
+                    font-family: 'Arial', sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    max-width: 800px;
+                    margin: 0 auto;
+                    padding: 40px 20px;
+                }}
+                h1, h2, h3 {{
+                    color: #2563eb;
+                }}
+                h1 {{
+                    border-bottom: 3px solid #2563eb;
+                    padding-bottom: 10px;
+                }}
+                table {{
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 20px 0;
+                }}
+                th, td {{
+                    border: 1px solid #ddd;
+                    padding: 12px;
+                    text-align: left;
+                }}
+                th {{
+                    background-color: #2563eb;
+                    color: white;
+                }}
+                .header {{
+                    text-align: center;
+                    margin-bottom: 40px;
+                }}
+                .footer {{
+                    margin-top: 60px;
+                    text-align: center;
+                    color: #666;
+                    font-size: 14px;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>Plan de Nutrición Personalizado</h1>
+                <p><strong>{user.get('name', user.get('username'))}</strong></p>
+                <p>Generado: {datetime.now(timezone.utc).strftime('%d/%m/%Y')}</p>
+            </div>
+            {html_content}
+            <div class="footer">
+                <p><strong>Jorge Calcerrada</strong><br>
+                Entrenador Personal y Coach de Transformación<br>
+                📧 ecjtrainer@gmail.com</p>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Crear PDF temporal
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
+            HTML(string=full_html).write_pdf(tmp_file.name)
+            pdf_path = tmp_file.name
+        
+        # Leer contenido del PDF
+        with open(pdf_path, 'rb') as f:
+            pdf_content = f.read()
+        
+        # Guardar PDF en uploads
+        upload_dir = Path("/app/backend/uploads")
+        upload_dir.mkdir(exist_ok=True)
+        
+        pdf_filename = f"nutrition_plan_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        pdf_full_path = upload_dir / pdf_filename
+        
+        with open(pdf_full_path, 'wb') as f:
+            f.write(pdf_content)
+        
+        # Limpiar archivo temporal
+        os.unlink(pdf_path)
+        
+        # Crear registro en base de datos
+        pdf_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+        pdf_doc = {
+            "_id": pdf_id,
+            "user_id": user_id,
+            "title": f"Plan de Nutrición - {datetime.now().strftime('%d/%m/%Y')}",
+            "type": "nutrition",  # IMPORTANTE: categoría nutrición
+            "file_path": str(pdf_full_path),
+            "sent_date": datetime.now(timezone.utc),
+            "created_at": datetime.now(timezone.utc)
+        }
+        
+        await db.pdfs.insert_one(pdf_doc)
+        
+        # Actualizar usuario marcando PDF generado
+        await db.users.update_one(
+            {"_id": user_id},
+            {
+                "$set": {
+                    "nutrition_plan.pdf_generated": True,
+                    "nutrition_plan.pdf_id": pdf_id,
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        logger.info(f"PDF de nutrición generado para usuario {user_id}")
+        
+        return {
+            "success": True,
+            "message": "PDF generado y subido a documentos del usuario",
+            "pdf_id": pdf_id,
+            "filename": pdf_filename
+        }
+        
+    except Exception as e:
+        logger.error(f"Error generando PDF de nutrición: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error generando PDF: {str(e)}"
+        )
+
+
+
 from google_calendar_service import (
     get_authorization_url,
     exchange_code_for_tokens,
