@@ -478,11 +478,36 @@ const UserDashboard = () => {
                       <Download className="h-5 w-5" />
                       Planes y documentos
                     </CardTitle>
+                    <div className="flex gap-2 mt-4">
+                      <Button
+                        size="sm"
+                        variant={documentFilter === 'all' ? 'default' : 'outline'}
+                        onClick={() => setDocumentFilter('all')}
+                      >
+                        Todos
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant={documentFilter === 'nutrition' ? 'default' : 'outline'}
+                        onClick={() => setDocumentFilter('nutrition')}
+                        className={documentFilter === 'nutrition' ? 'bg-green-600' : ''}
+                      >
+                        🥗 Nutrición
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant={documentFilter === 'training' ? 'default' : 'outline'}
+                        onClick={() => setDocumentFilter('training')}
+                        className={documentFilter === 'training' ? 'bg-blue-600' : ''}
+                      >
+                        💪 Entrenamiento
+                      </Button>
+                    </div>
                   </CardHeader>
                   <CardContent>
-                    {pdfs.length > 0 ? (
+                    {pdfs.filter(pdf => documentFilter === 'all' || pdf.type === documentFilter).length > 0 ? (
                       <div className="grid md:grid-cols-2 gap-4">
-                        {pdfs.map((pdf) => (
+                        {pdfs.filter(pdf => documentFilter === 'all' || pdf.type === documentFilter).map((pdf) => (
                           <div key={pdf.id} className="p-4 bg-gradient-to-br from-blue-50 to-orange-50 rounded-lg border">
                             <div className="flex items-start justify-between mb-2">
                               <div className="flex-1">
