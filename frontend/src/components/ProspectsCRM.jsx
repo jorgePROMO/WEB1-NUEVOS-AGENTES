@@ -761,7 +761,7 @@ const StageManager = ({ stages, onClose, onUpdate, token }) => {
           {/* Existing Stages */}
           <div className="space-y-3">
             <h4 className="font-semibold">Etapas Actuales</h4>
-            {stages.map(stage => (
+            {(stages || []).map(stage => (
               <Card key={stage.id}>
                 <CardContent className="pt-4">
                   {editingStage?.id === stage.id ? (
