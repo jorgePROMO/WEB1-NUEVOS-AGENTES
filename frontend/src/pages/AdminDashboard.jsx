@@ -162,7 +162,14 @@ const AdminDashboard = () => {
   const loadTemplates = async () => {
     try {
       const response = await axios.get(`${API}/admin/templates`, {
-
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setTemplates(response.data.templates || []);
+    } catch (error) {
+      console.error('Error loading templates:', error);
+    }
+  };
 
   // Load nutrition plan
   const loadNutritionPlan = async (userId) => {
