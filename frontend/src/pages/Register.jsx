@@ -12,6 +12,7 @@ const FRONTEND_URL = window.location.origin;
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -36,8 +37,13 @@ const Register = () => {
       return;
     }
 
+    if (!phone || phone.trim() === '') {
+      setError('El teléfono es obligatorio');
+      return;
+    }
+
     setLoading(true);
-    const result = await register(username, email, password);
+    const result = await register(username, email, password, phone);
     
     if (result.success) {
       navigate('/dashboard');
