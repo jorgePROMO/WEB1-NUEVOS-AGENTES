@@ -334,7 +334,7 @@ export const ProspectsCRM = ({ token }) => {
                         }}
                       >
                         <option value="">Sin etapa</option>
-                        {stages.map(stage => (
+                        {(stages || []).map(stage => (
                           <option key={stage.id} value={stage.id}>{stage.name}</option>
                         ))}
                       </select>
