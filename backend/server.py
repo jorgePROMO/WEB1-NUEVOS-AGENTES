@@ -240,6 +240,7 @@ async def update_my_profile(user_update: UserUpdate, request: Request):
             "id": updated_user["_id"],
             "name": updated_user["name"],
             "email": updated_user["email"],
+            "phone": updated_user.get("phone"),
             "role": updated_user["role"]
         }
     }
