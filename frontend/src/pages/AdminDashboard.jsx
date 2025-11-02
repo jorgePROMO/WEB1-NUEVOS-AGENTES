@@ -116,6 +116,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (selectedClient) {
       loadClientDetails(selectedClient.id);
+      loadNutritionPlan(selectedClient.id);
     }
   }, [selectedClient]);
 
