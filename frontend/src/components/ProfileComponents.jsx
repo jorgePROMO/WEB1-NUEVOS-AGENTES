@@ -106,6 +106,17 @@ export const EditProfileForm = ({ user, onUpdate }) => {
         />
       </div>
 
+      <div>
+        <Label htmlFor="phone">Teléfono</Label>
+        <Input
+          id="phone"
+          type="tel"
+          placeholder="+34 612 345 678"
+          value={formData.phone}
+          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+        />
+      </div>
+
       <div className="border-t pt-4 mt-4">
         <h4 className="font-semibold mb-3">Cambiar Contraseña (opcional)</h4>
         <div className="space-y-3">
