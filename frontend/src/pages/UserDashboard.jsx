@@ -19,11 +19,13 @@ import {
   AlertCircle,
   ExternalLink,
   Upload,
-  Trash2
+  Trash2,
+  UtensilsCrossed
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { UserCalendar } from '../components/Calendar';
 import { EditProfileForm, UploadDocumentForm } from '../components/ProfileComponents';
+import NutritionQuestionnaire from '../components/NutritionQuestionnaire';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
