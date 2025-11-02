@@ -289,11 +289,13 @@ const AdminDashboard = () => {
       client.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       client.username?.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const isArchived = client.subscription?.archived === true;
-    
-    // Show all matching clients when showArchived is false (including those without archived field)
-    // Show only archived clients when showArchived is true
-    return matchesSearch && (showArchived ? isArchived : !isArchived || client.subscription?.archived === undefined);
+    // Show archived clients only when showArchived is true
+    // Show non-archived clients (including those without archived field) when showArchived is false
+    if (showArchived) {
+      return matchesSearch && client.subscription?.archived === true;
+    } else {
+      return matchesSearch && client.subscription?.archived !== true;
+    }
   });
 
   const handleSendForm = async () => {
