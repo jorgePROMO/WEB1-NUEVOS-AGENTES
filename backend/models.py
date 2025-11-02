@@ -306,6 +306,8 @@ class ProspectResponse(BaseModel):
     report_generated: bool = False
     report_sent_at: Optional[datetime] = None
     report_content: Optional[str] = None
+    report_sent_via: Optional[str] = None  # 'email' or 'whatsapp'
+    report_generated_at: Optional[datetime] = None
     
     class Config:
         populate_by_name = True
