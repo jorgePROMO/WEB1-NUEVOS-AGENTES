@@ -253,6 +253,43 @@ frontend:
           agent: "testing"
           comment: "✅ POST /api/questionnaire/submit - Diagnostic questionnaire endpoint working perfectly. Successfully submitted complete questionnaire with all required fields (nombre, edad, email, whatsapp, objetivo, etc.). Response: {'success': True, 'message': 'Cuestionario enviado correctamente'}. Backend logs confirm email sent successfully to ecjtrainer@gmail.com. SMTP configuration working correctly. Tested with exact data from review request."
 
+
+  - task: "GPT Report Generation - Immediate on Submit"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py, /app/backend/gpt_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Modified /api/questionnaire/submit endpoint to generate GPT report immediately using gpt_service.py. Report is saved to prospect document with fields: report_generated, report_content, report_generated_at. Removed 2-hour delay scheduler completely."
+
+  - task: "Send Report via Email Endpoint"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Created POST /api/admin/prospects/{prospect_id}/send-report-email endpoint. Converts markdown report to HTML with professional styling and sends via SMTP. Updates prospect with report_sent_at and report_sent_via='email'."
+
+  - task: "WhatsApp Link Generation Endpoint"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Created GET /api/admin/prospects/{prospect_id}/whatsapp-link endpoint. Generates WhatsApp Web link with pre-filled report text. Converts markdown to WhatsApp format. Updates prospect with report_sent_at and report_sent_via='whatsapp'."
+
 metadata:
   created_by: "testing_agent"
   version: "1.0"
