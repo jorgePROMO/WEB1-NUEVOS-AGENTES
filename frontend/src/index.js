@@ -17,10 +17,13 @@ if ('serviceWorker' in navigator) {
       .then((registration) => {
         console.log('✅ PWA: Service Worker registrado');
         
-        // Chequear actualizaciones cada 60 segundos
+        // FORZAR actualización inmediata al cargar
+        registration.update();
+        
+        // Chequear actualizaciones cada 30 segundos (más frecuente)
         setInterval(() => {
           registration.update();
-        }, 60000);
+        }, 30000);
         
         // Detectar nueva versión disponible
         registration.addEventListener('updatefound', () => {
@@ -32,13 +35,14 @@ if ('serviceWorker' in navigator) {
               // Nueva versión instalada, activar inmediatamente
               newWorker.postMessage({ type: 'SKIP_WAITING' });
               
-              // Opcional: Mostrar notificación al usuario
+              // Mostrar alert visual al usuario
               console.log('✨ Nueva versión lista');
+              alert('🎉 ¡Actualización disponible! La app se recargará automáticamente.');
               
-              // Recargar página después de 2 segundos para aplicar cambios
+              // Recargar página después de 1 segundo
               setTimeout(() => {
                 window.location.reload();
-              }, 2000);
+              }, 1000);
             }
           });
         });
