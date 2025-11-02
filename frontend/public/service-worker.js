@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v1.4.0-calendar-full-integration';
+const CACHE_VERSION = 'v2.0.0-nutrition-system';
 const CACHE_NAME = `ecj-trainer-${CACHE_VERSION}`;
 
 // Assets que se cachean (imágenes, fonts, etc)
