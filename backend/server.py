@@ -1342,6 +1342,47 @@ async def get_whatsapp_link(prospect_id: str, request: Request):
         # Update prospect (mark as sent via WhatsApp)
         await db.questionnaire_responses.update_one(
             {"_id": prospect_id},
+
+
+@api_router.patch("/admin/prospects/{prospect_id}/update-report")
+async def update_prospect_report(prospect_id: str, report_data: dict, request: Request):
+    """Update the GPT report content for a prospect"""
+    await require_admin(request)
+    
+    try:
+        # Get prospect
+        prospect = await db.questionnaire_responses.find_one({"_id": prospect_id})
+        if not prospect:
+            raise HTTPException(status_code=404, detail="Prospecto no encontrado")
+        
+        # Get new report content
+        new_report_content = report_data.get("report_content")
+        if not new_report_content or not new_report_content.strip():
+            raise HTTPException(status_code=400, detail="El contenido del informe no puede estar vacío")
+        
+        # Update report
+        result = await db.questionnaire_responses.update_one(
+            {"_id": prospect_id},
+            {
+                "$set": {
+                    "report_content": new_report_content,
+                    "report_updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Prospecto no encontrado")
+        
+        logger.info(f"Report updated for prospect {prospect_id}")
+        return {"success": True, "message": "Informe actualizado correctamente"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating report: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al actualizar informe: {str(e)}")
+
             {
                 "$set": {
                     "report_sent_at": datetime.now(timezone.utc),
