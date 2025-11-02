@@ -298,8 +298,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Calendar Email Notifications - Conditional Logic"
-    - "Session Management Updates"
+    - "GPT Report Generation - Immediate on Submit"
+    - "Send Report via Email Endpoint"
+    - "WhatsApp Link Generation Endpoint"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
