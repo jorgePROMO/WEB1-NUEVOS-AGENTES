@@ -158,6 +158,70 @@ const AdminDashboard = () => {
   const loadTemplates = async () => {
     try {
       const response = await axios.get(`${API}/admin/templates`, {
+
+
+  // Load nutrition plan
+  const loadNutritionPlan = async (userId) => {
+    try {
+      const response = await axios.get(`${API}/admin/users/${userId}/nutrition`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setNutritionPlan(response.data.nutrition_plan);
+      setNutritionContent(response.data.nutrition_plan.plan_verificado);
+    } catch (error) {
+      if (error.response?.status !== 404) {
+        console.error('Error loading nutrition plan:', error);
+      }
+      setNutritionPlan(null);
+    }
+  };
+
+  // Save nutrition plan changes
+  const saveNutritionChanges = async () => {
+    try {
+      await axios.patch(
+        `${API}/admin/users/${selectedClient.id}/nutrition`,
+        { plan_content: nutritionContent },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      alert('✅ Plan de nutrición actualizado');
+      setEditingNutrition(false);
+      loadNutritionPlan(selectedClient.id);
+    } catch (error) {
+      alert(`Error: ${error.response?.data?.detail || error.message}`);
+    }
+  };
+
+  // Generate PDF and upload to user documents
+  const generateNutritionPDF = async () => {
+    if (!window.confirm('¿Generar PDF y subirlo a los documentos del usuario?')) {
+      return;
+    }
+
+    setGeneratingPDF(true);
+    try {
+      const response = await axios.post(
+        `${API}/admin/users/${selectedClient.id}/nutrition-pdf`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      alert('✅ PDF generado y subido a documentos del usuario');
+      loadNutritionPlan(selectedClient.id);
+      loadClientDetails(selectedClient.id);
+    } catch (error) {
+      alert(`Error: ${error.response?.data?.detail || error.message}`);
+    } finally {
+      setGeneratingPDF(false);
+    }
+  };
+
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
