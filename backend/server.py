@@ -1343,18 +1343,20 @@ async def get_whatsapp_link(prospect_id: str, request: Request):
         # Generate WhatsApp Web link
         whatsapp_link = f"https://wa.me/{whatsapp}?text={encoded_message}"
         
-        # Update prospect (mark as sent via WhatsApp)
+        # Update prospect (mark as sent via WhatsApp AND change stage to "INFORME ENVIADO")
         await db.questionnaire_responses.update_one(
             {"_id": prospect_id},
             {
                 "$set": {
                     "report_sent_at": datetime.now(timezone.utc),
-                    "report_sent_via": "whatsapp"
+                    "report_sent_via": "whatsapp",
+                    "stage_id": "stage_002",
+                    "stage_name": "INFORME ENVIADO"
                 }
             }
         )
         
-        logger.info(f"WhatsApp link generated for prospect {prospect_id}")
+        logger.info(f"WhatsApp link generated for prospect {prospect_id} - Stage changed to 'INFORME ENVIADO'")
         return {
             "success": True,
             "whatsapp_link": whatsapp_link,
