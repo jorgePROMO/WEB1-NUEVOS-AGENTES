@@ -694,6 +694,284 @@ class BackendTester:
             self.log_result("Delete External Client", False, f"Exception: {str(e)}")
         
         return False
+
+    # ==================== GPT REPORT GENERATION TESTS ====================
+    
+    def test_21_admin_login_for_gpt_tests(self):
+        """Test 21: Admin login with correct credentials for GPT report testing"""
+        url = f"{BACKEND_URL}/auth/login"
+        params = {
+            "email": "admin@jorgecalcerrada.com",
+            "password": "Admin123!"
+        }
+        
+        try:
+            response = requests.post(url, params=params)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "user" in data and "token" in data and data["user"].get("role") == "admin":
+                    self.admin_token = data["token"]
+                    self.log_result("Admin Login for GPT Tests", True, 
+                                  f"Admin logged in successfully. Role: {data['user']['role']}")
+                    return True
+                else:
+                    self.log_result("Admin Login for GPT Tests", False, 
+                                  "Response missing user/token or not admin role", data)
+            else:
+                self.log_result("Admin Login for GPT Tests", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Admin Login for GPT Tests", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_22_submit_questionnaire_with_gpt_report(self):
+        """Test 22: Submit questionnaire and verify GPT report is generated immediately"""
+        url = f"{BACKEND_URL}/questionnaire/submit"
+        
+        # Test data as specified in the review request
+        payload = {
+            "nombre": "Carlos Prueba",
+            "edad": "35",
+            "email": "carlos.prueba@test.com",
+            "whatsapp": "+34612345678",
+            "objetivo": "Perder 10kg y ganar músculo",
+            "intentos_previos": "He probado varias dietas pero siempre vuelvo a los malos hábitos",
+            "dificultades": ["Falta de tiempo", "Desmotivación"],
+            "dificultades_otro": None,
+            "tiempo_semanal": "3-4 días/semana",
+            "entrena": "Sí, 2 veces por semana",
+            "alimentacion": "Como de todo pero muy desordenado",
+            "salud_info": "Ningún problema",
+            "por_que_ahora": "Quiero sentirme mejor y tener más energía",
+            "dispuesto_invertir": "Sí, es prioritario",
+            "tipo_acompanamiento": "Acompañamiento cercano",
+            "presupuesto": "Hasta 200€/mes",
+            "comentarios_adicionales": "Necesito motivación constante"
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") == True:
+                    message = data.get("message", "")
+                    self.log_result("Submit Questionnaire with GPT Report", True, 
+                                  f"Questionnaire submitted successfully. Response: {message}")
+                    
+                    # Store prospect email for later tests
+                    self.test_prospect_email = payload["email"]
+                    return True
+                else:
+                    self.log_result("Submit Questionnaire with GPT Report", False, 
+                                  "Response success not True", data)
+            else:
+                self.log_result("Submit Questionnaire with GPT Report", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Submit Questionnaire with GPT Report", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_23_get_prospect_detail_verify_report(self):
+        """Test 23: Get prospect detail and verify report was generated"""
+        if not self.admin_token:
+            self.log_result("Get Prospect Detail - Verify Report", False, "No admin token available")
+            return False
+            
+        # First, get all prospects to find our test prospect
+        url = f"{BACKEND_URL}/admin/prospects"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                prospects = data.get("prospects", [])
+                
+                # Find our test prospect by email
+                test_prospect = None
+                for prospect in prospects:
+                    if prospect.get("email") == getattr(self, 'test_prospect_email', 'carlos.prueba@test.com'):
+                        test_prospect = prospect
+                        break
+                
+                if not test_prospect:
+                    self.log_result("Get Prospect Detail - Verify Report", False, 
+                                  "Test prospect not found in prospects list")
+                    return False
+                
+                # Store prospect ID for later tests
+                self.test_prospect_id = test_prospect["id"]
+                
+                # Get detailed prospect information
+                detail_url = f"{BACKEND_URL}/admin/prospects/{self.test_prospect_id}"
+                detail_response = requests.get(detail_url, headers=headers)
+                
+                if detail_response.status_code == 200:
+                    detail_data = detail_response.json()
+                    
+                    # Verify report fields
+                    report_generated = detail_data.get("report_generated", False)
+                    report_content = detail_data.get("report_content")
+                    report_generated_at = detail_data.get("report_generated_at")
+                    
+                    if report_generated and report_content and report_generated_at:
+                        self.log_result("Get Prospect Detail - Verify Report", True, 
+                                      f"GPT report verified: generated={report_generated}, content_length={len(report_content) if report_content else 0}, generated_at={report_generated_at}")
+                        return True
+                    else:
+                        self.log_result("Get Prospect Detail - Verify Report", False, 
+                                      f"Report not properly generated: generated={report_generated}, has_content={bool(report_content)}, has_timestamp={bool(report_generated_at)}")
+                else:
+                    self.log_result("Get Prospect Detail - Verify Report", False, 
+                                  f"Failed to get prospect detail: HTTP {detail_response.status_code}")
+            else:
+                self.log_result("Get Prospect Detail - Verify Report", False, 
+                              f"Failed to get prospects list: HTTP {response.status_code}")
+        except Exception as e:
+            self.log_result("Get Prospect Detail - Verify Report", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_24_send_report_via_email(self):
+        """Test 24: Send GPT report via email"""
+        if not self.admin_token or not hasattr(self, 'test_prospect_id'):
+            self.log_result("Send Report via Email", False, "No admin token or prospect ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/prospects/{self.test_prospect_id}/send-report-email"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.post(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") == True:
+                    message = data.get("message", "")
+                    self.log_result("Send Report via Email", True, 
+                                  f"Report sent via email successfully: {message}")
+                    return True
+                else:
+                    self.log_result("Send Report via Email", False, 
+                                  "Response success not True", data)
+            else:
+                self.log_result("Send Report via Email", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Send Report via Email", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_25_verify_email_sent_status(self):
+        """Test 25: Verify prospect was updated with email sent status"""
+        if not self.admin_token or not hasattr(self, 'test_prospect_id'):
+            self.log_result("Verify Email Sent Status", False, "No admin token or prospect ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/prospects/{self.test_prospect_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                report_sent_at = data.get("report_sent_at")
+                report_sent_via = data.get("report_sent_via")
+                
+                if report_sent_at and report_sent_via == "email":
+                    self.log_result("Verify Email Sent Status", True, 
+                                  f"Email status verified: sent_at={report_sent_at}, sent_via={report_sent_via}")
+                    return True
+                else:
+                    self.log_result("Verify Email Sent Status", False, 
+                                  f"Email status not updated: sent_at={report_sent_at}, sent_via={report_sent_via}")
+            else:
+                self.log_result("Verify Email Sent Status", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Verify Email Sent Status", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_26_generate_whatsapp_link(self):
+        """Test 26: Generate WhatsApp link with pre-filled report"""
+        if not self.admin_token or not hasattr(self, 'test_prospect_id'):
+            self.log_result("Generate WhatsApp Link", False, "No admin token or prospect ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/prospects/{self.test_prospect_id}/whatsapp-link"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                success = data.get("success")
+                whatsapp_link = data.get("whatsapp_link")
+                phone = data.get("phone")
+                
+                if success and whatsapp_link and phone:
+                    # Verify link format
+                    expected_format = f"https://wa.me/{phone}?text="
+                    if whatsapp_link.startswith(expected_format):
+                        self.log_result("Generate WhatsApp Link", True, 
+                                      f"WhatsApp link generated successfully: phone={phone}, link_length={len(whatsapp_link)}")
+                        return True
+                    else:
+                        self.log_result("Generate WhatsApp Link", False, 
+                                      f"WhatsApp link format incorrect: {whatsapp_link[:100]}...")
+                else:
+                    self.log_result("Generate WhatsApp Link", False, 
+                                  f"Response missing required fields: success={success}, has_link={bool(whatsapp_link)}, phone={phone}")
+            else:
+                self.log_result("Generate WhatsApp Link", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Generate WhatsApp Link", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_27_verify_whatsapp_sent_status(self):
+        """Test 27: Verify prospect was updated with WhatsApp sent status"""
+        if not self.admin_token or not hasattr(self, 'test_prospect_id'):
+            self.log_result("Verify WhatsApp Sent Status", False, "No admin token or prospect ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/prospects/{self.test_prospect_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                report_sent_at = data.get("report_sent_at")
+                report_sent_via = data.get("report_sent_via")
+                
+                if report_sent_at and report_sent_via == "whatsapp":
+                    self.log_result("Verify WhatsApp Sent Status", True, 
+                                  f"WhatsApp status verified: sent_at={report_sent_at}, sent_via={report_sent_via}")
+                    return True
+                else:
+                    self.log_result("Verify WhatsApp Sent Status", False, 
+                                  f"WhatsApp status not updated: sent_at={report_sent_at}, sent_via={report_sent_via}")
+            else:
+                self.log_result("Verify WhatsApp Sent Status", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Verify WhatsApp Sent Status", False, f"Exception: {str(e)}")
+        
+        return False
     
     def run_all_tests(self):
         """Run all tests in sequence"""
