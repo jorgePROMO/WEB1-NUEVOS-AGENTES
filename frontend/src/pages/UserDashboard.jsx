@@ -752,6 +752,34 @@ const UserDashboard = () => {
       )}
 
       {/* Chat Modal */}
+      {/* Nutrition Questionnaire Modal */}
+      {showNutritionQuestionnaire && (
+        <div className="fixed inset-0 bg-black/50 z-50 overflow-y-auto">
+          <div className="min-h-screen p-4">
+            <div className="bg-white rounded-lg max-w-5xl mx-auto my-8">
+              <div className="p-4 border-b flex items-center justify-between sticky top-0 bg-white z-10">
+                <h3 className="text-xl font-bold">Cuestionario de Nutrición</h3>
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  onClick={() => setShowNutritionQuestionnaire(false)}
+                >
+                  Cerrar
+                </Button>
+              </div>
+              <NutritionQuestionnaire 
+                user={userData}
+                onComplete={(result) => {
+                  setShowNutritionQuestionnaire(false);
+                  // Reload user data to show updated nutrition status
+                  fetchUserData();
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {showChat && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
           <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-2xl max-h-[80vh] flex flex-col shadow-2xl">
