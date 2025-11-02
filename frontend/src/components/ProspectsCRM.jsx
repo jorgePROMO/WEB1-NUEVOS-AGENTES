@@ -484,6 +484,34 @@ export const ProspectsCRM = ({ token }) => {
                     </div>
                   )}
 
+                  {/* Report Content Viewer/Editor */}
+                  {selectedProspect.report_generated && selectedProspect.report_content && (
+                    <div className="space-y-2">
+                      <Label className="font-semibold text-blue-900">Contenido del Informe (Editable)</Label>
+                      <Textarea
+                        value={selectedProspect.report_content}
+                        onChange={(e) => {
+                          setSelectedProspect({
+                            ...selectedProspect,
+                            report_content: e.target.value
+                          });
+                        }}
+                        rows={12}
+                        className="font-mono text-sm border-2 border-blue-300"
+                        placeholder="Contenido del informe..."
+                      />
+                      <Button
+                        onClick={() => saveReportChanges(selectedProspect.id, selectedProspect.report_content)}
+                        disabled={loading}
+                        variant="outline"
+                        className="w-full border-blue-500 text-blue-600 hover:bg-blue-50"
+                      >
+                        <Save className="h-4 w-4 mr-2" />
+                        Guardar Cambios del Informe
+                      </Button>
+                    </div>
+                  )}
+
                   {/* Send Buttons */}
                   {selectedProspect.report_generated && selectedProspect.report_content && (
                     <div className="flex gap-3 pt-2">
