@@ -1253,6 +1253,251 @@ async def add_prospect_note(prospect_id: str, note_data: ProspectNoteCreate, req
         raise HTTPException(status_code=500, detail="Error al agregar nota")
 
 
+@api_router.post("/admin/prospects/{prospect_id}/send-report-email")
+async def send_prospect_report_email(prospect_id: str, request: Request):
+    """Send GPT report to prospect via email (HTML formatted)"""
+    await require_admin(request)
+    
+    try:
+        # Get prospect
+        prospect = await db.questionnaire_responses.find_one({"_id": prospect_id})
+        if not prospect:
+            raise HTTPException(status_code=404, detail="Prospecto no encontrado")
+        
+        # Check if report exists
+        if not prospect.get("report_content"):
+            raise HTTPException(status_code=400, detail="No hay informe generado para este prospecto")
+        
+        # Convert markdown to HTML
+        report_markdown = prospect["report_content"]
+        report_html = markdown_to_html(report_markdown)
+        
+        # Send email
+        from email_utils import send_email
+        subject = f"Tu Análisis Personalizado - {prospect['nombre']}"
+        
+        email_sent = send_email(
+            to_email=prospect["email"],
+            subject=subject,
+            html_body=report_html,
+            text_body=report_markdown  # Fallback to markdown as plain text
+        )
+        
+        if email_sent:
+            # Update prospect
+            await db.questionnaire_responses.update_one(
+                {"_id": prospect_id},
+                {
+                    "$set": {
+                        "report_sent_at": datetime.now(timezone.utc),
+                        "report_sent_via": "email"
+                    }
+                }
+            )
+            logger.info(f"Report sent via email to {prospect['email']}")
+            return {"success": True, "message": "Informe enviado por email correctamente"}
+        else:
+            raise HTTPException(status_code=500, detail="Error al enviar el email")
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error sending report email: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al enviar informe: {str(e)}")
+
+
+@api_router.get("/admin/prospects/{prospect_id}/whatsapp-link")
+async def get_whatsapp_link(prospect_id: str, request: Request):
+    """Generate WhatsApp Web link with pre-filled report"""
+    await require_admin(request)
+    
+    try:
+        # Get prospect
+        prospect = await db.questionnaire_responses.find_one({"_id": prospect_id})
+        if not prospect:
+            raise HTTPException(status_code=404, detail="Prospecto no encontrado")
+        
+        # Check if report exists
+        if not prospect.get("report_content"):
+            raise HTTPException(status_code=400, detail="No hay informe generado para este prospecto")
+        
+        # Get WhatsApp number (remove + and spaces)
+        whatsapp = prospect.get("whatsapp", "").replace("+", "").replace(" ", "").replace("-", "")
+        if not whatsapp:
+            raise HTTPException(status_code=400, detail="Este prospecto no tiene WhatsApp registrado")
+        
+        # Format report for WhatsApp (plain text, clean markdown)
+        report_text = prospect["report_content"]
+        # Remove markdown formatting for WhatsApp
+        report_text = report_text.replace("**", "*")  # WhatsApp uses single asterisk for bold
+        report_text = report_text.replace("# ", "")  # Remove markdown headers
+        
+        # URL encode the message
+        from urllib.parse import quote
+        encoded_message = quote(report_text)
+        
+        # Generate WhatsApp Web link
+        whatsapp_link = f"https://wa.me/{whatsapp}?text={encoded_message}"
+        
+        # Update prospect (mark as sent via WhatsApp)
+        await db.questionnaire_responses.update_one(
+            {"_id": prospect_id},
+            {
+                "$set": {
+                    "report_sent_at": datetime.now(timezone.utc),
+                    "report_sent_via": "whatsapp"
+                }
+            }
+        )
+        
+        logger.info(f"WhatsApp link generated for prospect {prospect_id}")
+        return {
+            "success": True,
+            "whatsapp_link": whatsapp_link,
+            "phone": whatsapp
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating WhatsApp link: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al generar enlace de WhatsApp: {str(e)}")
+
+
+def markdown_to_html(markdown_text: str) -> str:
+    """Convert markdown to HTML with styling for email"""
+    
+    # Basic HTML template with styling
+    html_template = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {{
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 650px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f9f9f9;
+            }}
+            .container {{
+                background-color: white;
+                padding: 40px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }}
+            h1 {{
+                color: #2563eb;
+                font-size: 28px;
+                margin-bottom: 20px;
+                border-bottom: 3px solid #2563eb;
+                padding-bottom: 10px;
+            }}
+            h2 {{
+                color: #1e40af;
+                font-size: 22px;
+                margin-top: 30px;
+                margin-bottom: 15px;
+            }}
+            h3 {{
+                color: #3b82f6;
+                font-size: 18px;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }}
+            p {{
+                margin-bottom: 15px;
+                font-size: 16px;
+            }}
+            strong {{
+                color: #1e40af;
+            }}
+            ul, ol {{
+                margin: 15px 0;
+                padding-left: 30px;
+            }}
+            li {{
+                margin-bottom: 8px;
+            }}
+            .highlight {{
+                background-color: #eff6ff;
+                padding: 15px;
+                border-left: 4px solid #2563eb;
+                margin: 20px 0;
+                border-radius: 5px;
+            }}
+            .footer {{
+                margin-top: 40px;
+                padding-top: 20px;
+                border-top: 2px solid #e5e7eb;
+                color: #6b7280;
+                font-size: 14px;
+                text-align: center;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            {content}
+            <div class="footer">
+                <p><strong>Jorge Calcerrada</strong><br>
+                Entrenador Personal y Coach de Transformación<br>
+                📧 ecjtrainer@gmail.com</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    # Convert markdown to HTML (basic conversion)
+    html_content = markdown_text
+    
+    # Headers
+    html_content = html_content.replace("# ", "<h1>").replace("\n\n", "</h1>\n\n")
+    html_content = html_content.replace("## ", "<h2>").replace("\n\n", "</h2>\n\n")
+    html_content = html_content.replace("### ", "<h3>").replace("\n\n", "</h3>\n\n")
+    
+    # Bold text
+    import re
+    html_content = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', html_content)
+    
+    # Lists (simple implementation)
+    lines = html_content.split("\n")
+    in_list = False
+    processed_lines = []
+    
+    for line in lines:
+        if line.strip().startswith("- "):
+            if not in_list:
+                processed_lines.append("<ul>")
+                in_list = True
+            processed_lines.append(f"<li>{line.strip()[2:]}</li>")
+        else:
+            if in_list:
+                processed_lines.append("</ul>")
+                in_list = False
+            if line.strip():
+                processed_lines.append(f"<p>{line}</p>")
+            else:
+                processed_lines.append("<br>")
+    
+    if in_list:
+        processed_lines.append("</ul>")
+    
+    html_content = "\n".join(processed_lines)
+    
+    # Insert into template
+    final_html = html_template.format(content=html_content)
+    
+    return final_html
+
+
+
+
 @api_router.get("/admin/prospect-stages")
 async def get_prospect_stages(request: Request):
     """Get all prospect stages"""
