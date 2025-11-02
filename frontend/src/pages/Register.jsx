@@ -101,6 +101,18 @@ const Register = () => {
                 required
               />
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Teléfono</Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="+34 612 345 678"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+              />
+            </div>
             
             <div className="space-y-2">
               <Label htmlFor="password">Contraseña</Label>
