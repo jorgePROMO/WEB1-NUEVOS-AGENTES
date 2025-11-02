@@ -1342,6 +1342,26 @@ async def get_whatsapp_link(prospect_id: str, request: Request):
         # Update prospect (mark as sent via WhatsApp)
         await db.questionnaire_responses.update_one(
             {"_id": prospect_id},
+            {
+                "$set": {
+                    "report_sent_at": datetime.now(timezone.utc),
+                    "report_sent_via": "whatsapp"
+                }
+            }
+        )
+        
+        logger.info(f"WhatsApp link generated for prospect {prospect_id}")
+        return {
+            "success": True,
+            "whatsapp_link": whatsapp_link,
+            "phone": whatsapp
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating WhatsApp link: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al generar enlace de WhatsApp: {str(e)}")
 
 
 @api_router.patch("/admin/prospects/{prospect_id}/update-report")
