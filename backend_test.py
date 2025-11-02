@@ -975,11 +975,11 @@ class BackendTester:
     
     def run_all_tests(self):
         """Run all tests in sequence"""
-        print(f"🚀 Starting Backend API Tests - CRM External Clients Focus")
+        print(f"🚀 Starting Backend API Tests - GPT Report Generation Focus")
         print(f"Backend URL: {BACKEND_URL}")
         print("=" * 80)
         
-        # Run CRM-focused tests in order
+        # Run tests in order - focusing on GPT report generation
         tests = [
             # Basic system tests
             self.test_1_register_new_user,
@@ -990,7 +990,7 @@ class BackendTester:
             self.test_6_admin_verify_payment,
             self.test_7_diagnostic_questionnaire,
             
-            # CRM External Clients tests (main focus)
+            # CRM External Clients tests
             self.test_8_admin_login_for_crm,
             self.test_9_create_external_client,
             self.test_10_get_external_clients_list,
@@ -1003,7 +1003,16 @@ class BackendTester:
             self.test_17_update_external_client_404,
             self.test_18_verify_updates_applied,
             self.test_19_update_external_client_status,
-            self.test_20_delete_external_client
+            self.test_20_delete_external_client,
+            
+            # GPT Report Generation tests (main focus)
+            self.test_21_admin_login_for_gpt_tests,
+            self.test_22_submit_questionnaire_with_gpt_report,
+            self.test_23_get_prospect_detail_verify_report,
+            self.test_24_send_report_via_email,
+            self.test_25_verify_email_sent_status,
+            self.test_26_generate_whatsapp_link,
+            self.test_27_verify_whatsapp_sent_status
         ]
         
         for test in tests:
