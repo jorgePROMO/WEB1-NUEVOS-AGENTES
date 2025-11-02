@@ -112,6 +112,7 @@ async def register(user_data: UserCreate):
         "username": user_data.username,
         "email": user_data.email,
         "password": get_password_hash(user_data.password),
+        "phone": user_data.phone,
         "name": user_data.username,
         "role": "user",
         "subscription": {
