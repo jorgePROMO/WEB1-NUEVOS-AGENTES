@@ -140,7 +140,7 @@ const AdminDashboard = () => {
 
   const loadClientDetails = async (userId) => {
     try {
-      const response = await axios.get(`${API}/admin/team-clients/${userId}`, {
+      const response = await axios.get(`${API}/admin/clients/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         },
@@ -148,7 +148,7 @@ const AdminDashboard = () => {
       });
       setSelectedClientDetails(response.data);
       // Update selectedClient with complete data from backend
-      setSelectedClient(response.data);
+      setSelectedClient(response.data.user);
     } catch (error) {
       console.error('Error loading client details:', error);
       setSelectedClientDetails({ user: selectedClient, forms: [], pdfs: [], alerts: [] });
