@@ -233,15 +233,6 @@ const AdminDashboard = () => {
     }
   };
 
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true
-      });
-      setTemplates(response.data.templates || []);
-    } catch (error) {
-      console.error('Error loading templates:', error);
-    }
-  };
-
   const openTemplateModal = (template) => {
     if (!selectedClient) return;
     
