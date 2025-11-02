@@ -2,6 +2,7 @@
   "short_name": "ECJ Trainer",
   "name": "Jorge Calcerrada - Entrenador Personal",
   "description": "Transformación física basada en constancia. Entrenamiento, nutrición y mentalidad.",
+  "version": "2.0.0",
   "icons": [
     {
       "src": "/icon-192.png",
