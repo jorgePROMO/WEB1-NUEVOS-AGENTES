@@ -67,9 +67,10 @@ export const ProspectsCRM = ({ token }) => {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
-      setStages(response.data.stages);
+      setStages(response.data.stages || []);
     } catch (error) {
       console.error('Error loading stages:', error);
+      setStages([]); // Set empty array on error
     }
   };
 
