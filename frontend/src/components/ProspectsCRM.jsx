@@ -121,6 +121,51 @@ export const ProspectsCRM = ({ token }) => {
     }
   };
 
+
+  const sendReportEmail = async (prospectId) => {
+    if (!window.confirm('¿Enviar el informe por correo electrónico al prospecto?')) {
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      await axios.post(`${API}/admin/prospects/${prospectId}/send-report-email`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      alert('✅ Informe enviado por email correctamente');
+      loadProspectDetail(prospectId);
+    } catch (error) {
+      alert(`Error al enviar el informe: ${error.response?.data?.detail || error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendReportWhatsApp = async (prospectId) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API}/admin/prospects/${prospectId}/whatsapp-link`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      
+      // Open WhatsApp Web in a new tab
+      window.open(response.data.whatsapp_link, '_blank');
+      
+      alert('✅ WhatsApp abierto. Revisa el mensaje y dale enviar.');
+      loadProspectDetail(prospectId);
+    } catch (error) {
+      alert(`Error: ${error.response?.data?.detail || error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   const deleteProspect = async (prospectId) => {
     if (!window.confirm('¿Estás seguro de eliminar este prospecto? Esta acción no se puede deshacer.')) {
       return;
