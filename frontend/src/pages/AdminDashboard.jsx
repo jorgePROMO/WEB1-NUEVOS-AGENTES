@@ -1348,6 +1348,144 @@ const AdminDashboard = () => {
                         <TabsContent value="sessions">
                           <div className="bg-green-50 p-6 rounded-lg text-center">
                             <Calendar className="h-12 w-12 text-green-500 mx-auto mb-4" />
+
+
+                        {/* Nutrition Tab */}
+                        <TabsContent value="nutrition">
+                          {nutritionPlan ? (
+                            <div className="space-y-6">
+                              {/* Status Header */}
+                              <Card className="border-2 border-green-200 bg-green-50">
+                                <CardHeader>
+                                  <CardTitle className="flex items-center gap-2 text-green-800">
+                                    <CheckCircle className="h-6 w-6 text-green-600" />
+                                    Plan de Nutrición Generado
+                                  </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-2">
+                                  <div className="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                      <span className="text-gray-600">Generado:</span>
+                                      <span className="ml-2 font-semibold">
+                                        {new Date(nutritionPlan.generated_at).toLocaleDateString('es-ES')}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-600">Editado:</span>
+                                      <span className="ml-2 font-semibold">
+                                        {nutritionPlan.edited ? '✅ Sí' : '❌ No'}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-600">PDF Generado:</span>
+                                      <span className="ml-2 font-semibold">
+                                        {nutritionPlan.pdf_generated ? '✅ Sí' : '❌ No'}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </CardContent>
+                              </Card>
+
+                              {/* Editor/Viewer */}
+                              <Card>
+                                <CardHeader className="flex flex-row items-center justify-between">
+                                  <CardTitle>Plan Verificado</CardTitle>
+                                  <div className="flex gap-2">
+                                    {!editingNutrition ? (
+                                      <Button
+                                        onClick={() => setEditingNutrition(true)}
+                                        variant="outline"
+                                      >
+                                        <Edit className="h-4 w-4 mr-2" />
+                                        Editar
+                                      </Button>
+                                    ) : (
+                                      <>
+                                        <Button
+                                          onClick={() => {
+                                            setEditingNutrition(false);
+                                            setNutritionContent(nutritionPlan.plan_verificado);
+                                          }}
+                                          variant="outline"
+                                        >
+                                          Cancelar
+                                        </Button>
+                                        <Button
+                                          onClick={saveNutritionChanges}
+                                          className="bg-blue-600"
+                                        >
+                                          <Save className="h-4 w-4 mr-2" />
+                                          Guardar
+                                        </Button>
+                                      </>
+                                    )}
+                                  </div>
+                                </CardHeader>
+                                <CardContent>
+                                  {editingNutrition ? (
+                                    <Textarea
+                                      value={nutritionContent}
+                                      onChange={(e) => setNutritionContent(e.target.value)}
+                                      rows={25}
+                                      className="font-mono text-sm"
+                                    />
+                                  ) : (
+                                    <div className="prose max-w-none bg-gray-50 p-6 rounded-lg">
+                                      <pre className="whitespace-pre-wrap font-sans">
+                                        {nutritionContent}
+                                      </pre>
+                                    </div>
+                                  )}
+                                </CardContent>
+                              </Card>
+
+                              {/* Generate PDF Button */}
+                              <Card className="border-2 border-orange-200 bg-orange-50">
+                                <CardHeader>
+                                  <CardTitle className="text-orange-800">
+                                    Generar PDF y Subir
+                                  </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                  <p className="text-gray-700 mb-4">
+                                    {nutritionPlan.pdf_generated 
+                                      ? '✅ El PDF ya fue generado. Puedes generar uno nuevo si has hecho cambios.'
+                                      : 'Genera el PDF del plan de nutrición y súbelo automáticamente a los documentos del usuario.'
+                                    }
+                                  </p>
+                                  <Button
+                                    onClick={generateNutritionPDF}
+                                    disabled={generatingPDF}
+                                    className="w-full bg-orange-600 hover:bg-orange-700"
+                                  >
+                                    {generatingPDF ? (
+                                      <>
+                                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                        Generando PDF...
+                                      </>
+                                    ) : (
+                                      <>
+                                        <FileText className="h-4 w-4 mr-2" />
+                                        Generar PDF y Subir a Documentos
+                                      </>
+                                    )}
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            </div>
+                          ) : (
+                            <div className="bg-gray-50 p-8 rounded-lg text-center">
+                              <UtensilsCrossed className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                              <h3 className="font-semibold text-lg mb-2 text-gray-700">
+                                Sin Plan de Nutrición
+                              </h3>
+                              <p className="text-gray-500">
+                                Este usuario aún no ha completado el cuestionario de nutrición.
+                              </p>
+                            </div>
+                          )}
+                        </TabsContent>
+
                             <h3 className="font-semibold text-lg mb-2">Sesiones de entrenamiento</h3>
                             <p className="text-gray-600 mb-4">
                               Gestiona las sesiones y el calendario del cliente
