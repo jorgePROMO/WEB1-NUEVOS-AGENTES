@@ -989,6 +989,7 @@ const AdminDashboard = () => {
                           <TabsTrigger value="data">Datos</TabsTrigger>
                           <TabsTrigger value="forms">Formularios</TabsTrigger>
                           <TabsTrigger value="pdfs">PDFs</TabsTrigger>
+                          <TabsTrigger value="nutrition">🥗 Nutrición</TabsTrigger>
                           <TabsTrigger value="alerts">Alertas</TabsTrigger>
                           <TabsTrigger value="sessions">Sesiones</TabsTrigger>
                         </TabsList>
