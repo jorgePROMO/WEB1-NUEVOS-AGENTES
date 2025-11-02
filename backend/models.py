@@ -329,6 +329,131 @@ class ProspectNoteInDB(ProspectNoteCreate):
         populate_by_name = True
         json_encoders = {ObjectId: str}
 
+
+# ==================== NUTRITION MODELS ====================
+
+class NutritionQuestionnaireSubmit(BaseModel):
+    # Datos básicos
+    nombre_completo: str
+    email: EmailStr
+    fecha_nacimiento: str
+    sexo: str
+    profesion: str
+    direccion: Optional[str] = None
+    telefono: str
+    
+    # Medidas corporales
+    peso: str
+    altura_cm: str
+    grasa_porcentaje: Optional[str] = None
+    cintura_cm: Optional[str] = None
+    cadera_cm: Optional[str] = None
+    biceps_relajado_cm: Optional[str] = None
+    biceps_flexionado_cm: Optional[str] = None
+    muslo_cm: Optional[str] = None
+    
+    # Salud y medicación
+    medicamentos: Optional[str] = None
+    enfermedad_cronica: Optional[str] = None
+    fuma_cantidad: Optional[str] = None
+    bebe_cantidad: Optional[str] = None
+    retencion_liquidos: Optional[str] = None
+    problemas_corazon: Optional[str] = None
+    hipertension: Optional[str] = None
+    diabetes: Optional[str] = None
+    colesterol: Optional[str] = None
+    sobrepeso: Optional[str] = None
+    epilepsia: Optional[str] = None
+    alergias_intolerancias: Optional[str] = None
+    problema_ejercicio: Optional[str] = None
+    operaciones: Optional[str] = None
+    embarazo: Optional[str] = None
+    problemas_respiratorios: Optional[str] = None
+    problemas_musculares: Optional[str] = None
+    varo_valgo: Optional[str] = None
+    hernias_protusiones: Optional[str] = None
+    artrosis: Optional[str] = None
+    menopausia: Optional[str] = None
+    osteoporosis: Optional[str] = None
+    
+    # Trabajo y estrés
+    estres_profesion: str
+    movimiento_trabajo: str
+    dia_trabajo: Optional[str] = None
+    descansa_trabajo: str
+    horas_trabajo: str
+    actividad_fisica_diaria: str
+    trabajo_fisicamente: str
+    horas_ocio_semana: Optional[str] = None
+    
+    # Experiencia deportiva
+    practicado_deporte: str
+    experiencia_negativa: Optional[str] = None
+    constante_deporte: str
+    tiempo_dedicaba: Optional[str] = None
+    nivel_deporte: Optional[str] = None
+    entrenado_gimnasio: str
+    entrenador_personal: str
+    resistencia_cardiorespiratoria: str
+    fuerza: str
+    flexibilidad: str
+    agilidad_coordinacion: str
+    
+    # Disponibilidad y preferencias
+    dias_semana_entrenar: str
+    tiempo_sesion: str
+    entrena_manana_tarde: str
+    gimnasio: str
+    material_casa: Optional[str] = None
+    actividades_realizar: Optional[str] = None
+    tipo_persona: str
+    cuesta_coger_peso: str
+    motivos_entrenar: list
+    
+    # Horarios
+    hora_levanta: str
+    hora_desayuno: str
+    hora_almuerzo: Optional[str] = None
+    hora_comida: str
+    hora_merienda: Optional[str] = None
+    hora_cena: str
+    hora_acuesta: str
+    horas_duerme: str
+    
+    # Hábitos alimentarios
+    comidas_dia: str
+    comidas_fuertes_ligeras: Optional[str] = None
+    alimento_no_soporta: Optional[str] = None
+    comida_favorita: Optional[str] = None
+    comida_basura_frecuencia: Optional[str] = None
+    dietas_anteriores: Optional[str] = None
+    sustancias_alteran: Optional[str] = None
+    suplementacion: Optional[str] = None
+    come_fuera_casa: str
+    azucar_dulces_bolleria: str
+    anade_sal: str
+    bebidas_gas: str
+    
+    # Objetivos
+    objetivo_fisico: str
+    experiencia_ejercicio_constante: str
+    impedido_constancia: Optional[str] = None
+    motiva_ejercicio: Optional[str] = None
+    nivel_energia_dia: str
+    comentarios_adicionales: Optional[str] = None
+
+
+class NutritionPlanResponse(BaseModel):
+    user_id: str
+    questionnaire_data: dict
+    plan_inicial: str
+    plan_verificado: str
+    generated_at: datetime
+    edited: bool = False
+    pdf_generated: bool = False
+    pdf_url: Optional[str] = None
+
+
 class ProspectStageUpdate(BaseModel):
     stage_id: str
 
