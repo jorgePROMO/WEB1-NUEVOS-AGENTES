@@ -533,7 +533,11 @@ const UserDashboard = () => {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-500 text-center py-8">No hay documentos disponibles aún</p>
+                      <p className="text-gray-500 text-center py-8">
+                        {documentFilter === 'all' 
+                          ? 'No hay documentos disponibles aún' 
+                          : `No hay documentos de ${documentFilter === 'nutrition' ? 'nutrición' : 'entrenamiento'} disponibles`}
+                      </p>
                     )}
                   </CardContent>
                 </Card>
