@@ -1026,6 +1026,13 @@ class BackendTester:
         print("=" * 80)
         print(f"📊 TEST SUMMARY: {passed}/{total} tests passed")
         
+        # Separate GPT tests summary
+        gpt_tests = [r for r in self.results if "GPT" in r["test"] or "Report" in r["test"] or "WhatsApp" in r["test"] or "Email" in r["test"]]
+        gpt_passed = sum(1 for r in gpt_tests if r["success"])
+        gpt_total = len(gpt_tests)
+        
+        print(f"🤖 GPT REPORT GENERATION TESTS: {gpt_passed}/{gpt_total} passed")
+        
         # Separate CRM tests summary
         crm_tests = [r for r in self.results if "External Client" in r["test"] or "CRM" in r["test"]]
         crm_passed = sum(1 for r in crm_tests if r["success"])
