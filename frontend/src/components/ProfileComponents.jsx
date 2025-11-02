@@ -14,6 +14,7 @@ export const EditProfileForm = ({ user, onUpdate }) => {
   const [formData, setFormData] = useState({
     name: user.name || '',
     email: user.email || '',
+    phone: user.phone || '',
     password: '',
     confirmPassword: ''
   });
@@ -38,7 +39,8 @@ export const EditProfileForm = ({ user, onUpdate }) => {
     try {
       const updateData = {
         name: formData.name,
-        email: formData.email
+        email: formData.email,
+        phone: formData.phone
       };
 
       if (formData.password) {
