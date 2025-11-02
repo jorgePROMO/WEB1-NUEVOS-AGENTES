@@ -261,7 +261,7 @@ export const ProspectsCRM = ({ token }) => {
                 className="w-full border rounded-md px-10 py-2"
               >
                 <option value="">Todas las etapas</option>
-                {stages.map(stage => (
+                {(stages || []).map(stage => (
                   <option key={stage.id} value={stage.name}>{stage.name}</option>
                 ))}
               </select>
