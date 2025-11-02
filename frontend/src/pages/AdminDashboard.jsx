@@ -67,6 +67,13 @@ const AdminDashboard = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [templateMessage, setTemplateMessage] = useState('');
 
+  // Nutrition states
+  const [nutritionPlan, setNutritionPlan] = useState(null);
+  const [editingNutrition, setEditingNutrition] = useState(false);
+  const [nutritionContent, setNutritionContent] = useState('');
+  const [generatingPDF, setGeneratingPDF] = useState(false);
+
+
   // Form states
   const [formData, setFormData] = useState({
     title: '',
