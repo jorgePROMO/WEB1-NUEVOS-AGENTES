@@ -35,6 +35,7 @@ class UserBase(BaseModel):
     username: str
     email: EmailStr
     name: str
+    phone: Optional[str] = None
     role: str = "user"  # user, admin
 
 
