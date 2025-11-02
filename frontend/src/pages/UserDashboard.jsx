@@ -39,6 +39,7 @@ const UserDashboard = () => {
   const [alerts, setAlerts] = useState([]);
   const [unreadAlerts, setUnreadAlerts] = useState(0);
   const [showChat, setShowChat] = useState(false);
+  const [showNutritionQuestionnaire, setShowNutritionQuestionnaire] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
