@@ -441,33 +441,79 @@ export const ProspectsCRM = ({ token }) => {
                 </div>
               </div>
 
-              {/* GPT Report Status */}
-              {selectedProspect.report_sent_at && (
-                <div className="bg-gradient-to-r from-blue-50 to-green-50 border-2 border-blue-200 rounded-lg p-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <FileText className="h-6 w-6 text-blue-600" />
-                    <h4 className="font-bold text-lg text-blue-900">Informe GPT Enviado</h4>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-3 text-sm">
-                    <div>
-                      <span className="text-gray-600">Fecha de envío:</span>
-                      <span className="ml-2 font-semibold text-blue-700">
-                        {new Date(selectedProspect.report_sent_at).toLocaleDateString('es-ES', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </span>
+              {/* GPT Report Section */}
+              <Card className="border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-purple-50">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-blue-600" />
+                    Informe Personalizado GPT
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Report Status */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {selectedProspect.report_generated ? (
+                        <>
+                          <Badge className="bg-green-600">✅ Informe Generado</Badge>
+                          {selectedProspect.report_sent_at && (
+                            <Badge className="bg-blue-600">
+                              Enviado vía {selectedProspect.report_sent_via === 'email' ? '📧 Email' : '💬 WhatsApp'}
+                            </Badge>
+                          )}
+                        </>
+                      ) : (
+                        <Badge className="bg-gray-400">⏳ Generando...</Badge>
+                      )}
                     </div>
-                    <div>
-                      <span className="text-gray-600">Estado:</span>
-                      <Badge className="ml-2 bg-green-600">Diagnóstico OK</Badge>
-                    </div>
                   </div>
-                </div>
-              )}
+
+                  {/* Sent Date */}
+                  {selectedProspect.report_sent_at && (
+                    <div className="text-sm text-gray-600">
+                      <span className="font-semibold">Último envío:</span>{' '}
+                      {new Date(selectedProspect.report_sent_at).toLocaleDateString('es-ES', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </div>
+                  )}
+
+                  {/* Send Buttons */}
+                  {selectedProspect.report_generated && selectedProspect.report_content && (
+                    <div className="flex gap-3 pt-2">
+                      <Button
+                        onClick={() => sendReportEmail(selectedProspect.id)}
+                        disabled={loading}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700"
+                      >
+                        <Mail className="h-4 w-4 mr-2" />
+                        Enviar por Email
+                      </Button>
+                      {selectedProspect.whatsapp && (
+                        <Button
+                          onClick={() => sendReportWhatsApp(selectedProspect.id)}
+                          disabled={loading}
+                          className="flex-1 bg-green-600 hover:bg-green-700"
+                        >
+                          <Phone className="h-4 w-4 mr-2" />
+                          Enviar por WhatsApp
+                        </Button>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Info Note */}
+                  {selectedProspect.report_generated && (
+                    <p className="text-xs text-gray-500 italic">
+                      💡 El informe se generó automáticamente al completar el cuestionario
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
 
               {/* Full Details */}
               <Card>
