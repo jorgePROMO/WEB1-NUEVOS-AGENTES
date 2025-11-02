@@ -213,7 +213,7 @@ export const ProspectsCRM = ({ token }) => {
     }
   };
 
-  const filteredProspects = prospects.filter(p => {
+  const filteredProspects = (prospects || []).filter(p => {
     const matchesSearch = p.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          p.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStage = !filterStage || p.stage_name === filterStage;
