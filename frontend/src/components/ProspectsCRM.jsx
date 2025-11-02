@@ -54,9 +54,10 @@ export const ProspectsCRM = ({ token }) => {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
-      setProspects(response.data.prospects);
+      setProspects(response.data.prospects || []);
     } catch (error) {
       console.error('Error loading prospects:', error);
+      setProspects([]); // Set empty array on error
     }
   };
 
