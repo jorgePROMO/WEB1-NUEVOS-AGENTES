@@ -1,142 +1,191 @@
 [
   {
     "test": "Register New User",
-    "success": false,
-    "message": "HTTP 400",
-    "timestamp": "2025-10-29T14:37:27.701164",
-    "response_data": "{\"detail\":\"Email or username already registered\"}"
+    "success": true,
+    "message": "User registered successfully. ID: 1762067459116148",
+    "timestamp": "2025-11-02T07:10:59.363069",
+    "response_data": null
   },
   {
     "test": "Admin Login",
     "success": false,
     "message": "HTTP 401",
-    "timestamp": "2025-10-29T14:37:27.742995",
+    "timestamp": "2025-11-02T07:10:59.405590",
     "response_data": "{\"detail\":\"Incorrect email or password\"}"
   },
   {
     "test": "User Dashboard",
-    "success": false,
-    "message": "No user token available",
-    "timestamp": "2025-10-29T14:37:27.743668",
+    "success": true,
+    "message": "Dashboard data retrieved. Forms: 0, PDFs: 0, Alerts: 0",
+    "timestamp": "2025-11-02T07:10:59.450656",
     "response_data": null
   },
   {
     "test": "Admin List Clients",
     "success": false,
     "message": "No admin token available",
-    "timestamp": "2025-10-29T14:37:27.743681",
+    "timestamp": "2025-11-02T07:10:59.451139",
     "response_data": null
   },
   {
     "test": "Admin Send Form",
     "success": false,
     "message": "No admin token or test user ID available",
-    "timestamp": "2025-10-29T14:37:27.743687",
+    "timestamp": "2025-11-02T07:10:59.451150",
     "response_data": null
   },
   {
     "test": "Admin Verify Payment",
     "success": false,
     "message": "No admin token or test user ID available",
-    "timestamp": "2025-10-29T14:37:27.743692",
+    "timestamp": "2025-11-02T07:10:59.451156",
     "response_data": null
   },
   {
     "test": "Diagnostic Questionnaire",
     "success": true,
     "message": "Questionnaire submitted successfully. Response: Cuestionario enviado correctamente",
-    "timestamp": "2025-10-29T14:37:28.444829",
+    "timestamp": "2025-11-02T07:11:11.883887",
     "response_data": null
   },
   {
     "test": "Admin Login for CRM",
     "success": true,
     "message": "Admin logged in successfully with correct credentials. Role: admin",
-    "timestamp": "2025-10-29T14:37:28.731339",
+    "timestamp": "2025-11-02T07:11:12.167258",
     "response_data": null
   },
   {
     "test": "Create External Client",
     "success": true,
-    "message": "External client created successfully. ID: 1761748648771914",
-    "timestamp": "2025-10-29T14:37:28.776525",
+    "message": "External client created successfully. ID: 1762067472206234",
+    "timestamp": "2025-11-02T07:11:12.252671",
     "response_data": null
   },
   {
     "test": "Get External Clients List",
     "success": true,
-    "message": "External clients list retrieved. Total: 3",
-    "timestamp": "2025-10-29T14:37:28.818395",
+    "message": "External clients list retrieved. Total: 1",
+    "timestamp": "2025-11-02T07:11:12.290475",
     "response_data": null
   },
   {
     "test": "Get External Client Detail",
     "success": true,
     "message": "External client detail retrieved. Name: Cliente Test CRM",
-    "timestamp": "2025-10-29T14:37:28.858543",
+    "timestamp": "2025-11-02T07:11:12.328604",
     "response_data": null
   },
   {
     "test": "Update External Client Basic Info",
     "success": true,
     "message": "Basic info updated successfully: Cliente actualizado",
-    "timestamp": "2025-10-29T14:37:28.899056",
+    "timestamp": "2025-11-02T07:11:12.369529",
     "response_data": null
   },
   {
     "test": "Update External Client Plan Weeks",
     "success": true,
     "message": "Plan weeks updated successfully: Cliente actualizado",
-    "timestamp": "2025-10-29T14:37:28.980727",
+    "timestamp": "2025-11-02T07:11:12.408647",
     "response_data": null
   },
   {
     "test": "Update External Client Start Date",
     "success": true,
     "message": "Start date updated successfully: Cliente actualizado",
-    "timestamp": "2025-10-29T14:37:29.023269",
+    "timestamp": "2025-11-02T07:11:12.445659",
     "response_data": null
   },
   {
     "test": "Update External Client Weeks Completed",
     "success": true,
     "message": "Weeks completed updated successfully: Cliente actualizado",
-    "timestamp": "2025-10-29T14:37:29.061224",
+    "timestamp": "2025-11-02T07:11:12.482952",
     "response_data": null
   },
   {
     "test": "Update External Client Partial",
     "success": true,
     "message": "Partial update successful: Cliente actualizado",
-    "timestamp": "2025-10-29T14:37:29.100462",
+    "timestamp": "2025-11-02T07:11:12.520629",
     "response_data": null
   },
   {
     "test": "Update External Client 404",
     "success": true,
     "message": "Correctly returned 404 for non-existent client",
-    "timestamp": "2025-10-29T14:37:29.141622",
+    "timestamp": "2025-11-02T07:11:12.557455",
     "response_data": null
   },
   {
     "test": "Verify Updates Applied",
     "success": true,
     "message": "All updates were applied correctly",
-    "timestamp": "2025-10-29T14:37:29.181682",
+    "timestamp": "2025-11-02T07:11:12.598354",
     "response_data": null
   },
   {
     "test": "Update External Client Status",
     "success": true,
     "message": "Status updated successfully: Estado actualizado",
-    "timestamp": "2025-10-29T14:37:29.223993",
+    "timestamp": "2025-11-02T07:11:12.638679",
     "response_data": null
   },
   {
     "test": "Delete External Client",
     "success": true,
     "message": "Test client deleted successfully: Cliente eliminado",
-    "timestamp": "2025-10-29T14:37:29.301084",
+    "timestamp": "2025-11-02T07:11:12.681966",
+    "response_data": null
+  },
+  {
+    "test": "Admin Login for GPT Tests",
+    "success": true,
+    "message": "Admin logged in successfully. Role: admin",
+    "timestamp": "2025-11-02T07:11:12.939525",
+    "response_data": null
+  },
+  {
+    "test": "Submit Questionnaire with GPT Report",
+    "success": true,
+    "message": "Questionnaire submitted successfully. Response: Cuestionario enviado correctamente",
+    "timestamp": "2025-11-02T07:11:23.898998",
+    "response_data": null
+  },
+  {
+    "test": "Get Prospect Detail - Verify Report",
+    "success": true,
+    "message": "GPT report verified: generated=True, content_length=3282, generated_at=2025-11-02T07:11:22.891000",
+    "timestamp": "2025-11-02T07:11:23.993514",
+    "response_data": null
+  },
+  {
+    "test": "Send Report via Email",
+    "success": true,
+    "message": "Report sent via email successfully: Informe enviado por email correctamente",
+    "timestamp": "2025-11-02T07:11:24.837177",
+    "response_data": null
+  },
+  {
+    "test": "Verify Email Sent Status",
+    "success": true,
+    "message": "Email status verified: sent_at=2025-11-02T07:11:24.833000, sent_via=email",
+    "timestamp": "2025-11-02T07:11:24.875268",
+    "response_data": null
+  },
+  {
+    "test": "Generate WhatsApp Link",
+    "success": true,
+    "message": "WhatsApp link generated successfully: phone=34612345678, link_length=4833",
+    "timestamp": "2025-11-02T07:11:24.914894",
+    "response_data": null
+  },
+  {
+    "test": "Verify WhatsApp Sent Status",
+    "success": true,
+    "message": "WhatsApp status verified: sent_at=2025-11-02T07:11:24.911000, sent_via=whatsapp",
+    "timestamp": "2025-11-02T07:11:24.954372",
     "response_data": null
   }
 ]
