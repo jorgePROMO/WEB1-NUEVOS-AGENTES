@@ -1078,7 +1078,7 @@ async def delete_session(session_id: str, request: Request):
 
 @api_router.post("/questionnaire/submit")
 async def submit_questionnaire(questionnaire: QuestionnaireSubmit):
-    """Submit diagnostic questionnaire and send to admin email"""
+    """Submit diagnostic questionnaire and generate GPT report immediately"""
     try:
         # Convert to dict for email function
         questionnaire_data = questionnaire.dict()
@@ -1091,10 +1091,35 @@ async def submit_questionnaire(questionnaire: QuestionnaireSubmit):
             "submitted_at": datetime.now(timezone.utc),
             "stage_name": "Nuevo",
             "stage_id": None,
-            "converted_to_client": False
+            "converted_to_client": False,
+            "report_generated": False,
+            "report_sent_at": None,
+            "report_content": None,
+            "report_sent_via": None  # 'email' or 'whatsapp'
         }
         await db.questionnaire_responses.insert_one(prospect_doc)
         logger.info(f"Questionnaire saved to CRM with ID: {prospect_id}")
+        
+        # Generate GPT report immediately
+        try:
+            from gpt_service import generate_prospect_report
+            report = await generate_prospect_report(questionnaire_data)
+            
+            # Update prospect with generated report
+            await db.questionnaire_responses.update_one(
+                {"_id": prospect_id},
+                {
+                    "$set": {
+                        "report_generated": True,
+                        "report_content": report,
+                        "report_generated_at": datetime.now(timezone.utc)
+                    }
+                }
+            )
+            logger.info(f"GPT report generated for prospect {prospect_id}")
+        except Exception as e:
+            logger.error(f"Error generating GPT report: {e}")
+            # Continue even if report generation fails
         
         # Send email to admin
         email_sent = send_questionnaire_to_admin(questionnaire_data)
