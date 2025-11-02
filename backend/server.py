@@ -1286,17 +1286,19 @@ async def send_prospect_report_email(prospect_id: str, request: Request):
         )
         
         if email_sent:
-            # Update prospect
+            # Update prospect with sent status AND change stage to "INFORME ENVIADO"
             await db.questionnaire_responses.update_one(
                 {"_id": prospect_id},
                 {
                     "$set": {
                         "report_sent_at": datetime.now(timezone.utc),
-                        "report_sent_via": "email"
+                        "report_sent_via": "email",
+                        "stage_id": "stage_002",
+                        "stage_name": "INFORME ENVIADO"
                     }
                 }
             )
-            logger.info(f"Report sent via email to {prospect['email']}")
+            logger.info(f"Report sent via email to {prospect['email']} - Stage changed to 'INFORME ENVIADO'")
             return {"success": True, "message": "Informe enviado por email correctamente"}
         else:
             raise HTTPException(status_code=500, detail="Error al enviar el email")
