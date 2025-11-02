@@ -286,6 +286,58 @@ const UserDashboard = () => {
                 </CardContent>
               </Card>
 
+
+              {/* Nutrition Questionnaire Button - Only for team plan + verified payment */}
+              {userData.subscription?.plan === 'team' && 
+               userData.subscription?.payment_status === 'verified' && 
+               !userData.nutrition_plan && (
+                <Card className="md:col-span-2 border-4 border-green-500 bg-gradient-to-r from-green-50 to-emerald-50">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-2xl text-green-800">
+                      <UtensilsCrossed className="h-8 w-8 text-green-600" />
+                      ¡Completa tu Cuestionario de Nutrición!
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700 mb-6">
+                      Genera tu plan de nutrición personalizado. Nuestros agentes calcularán tus macros ideales 
+                      y crearán un menú semanal adaptado específicamente a ti.
+                    </p>
+                    <Button
+                      onClick={() => setShowNutritionQuestionnaire(true)}
+                      className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-lg py-6"
+                    >
+                      <UtensilsCrossed className="mr-3 h-6 w-6" />
+                      Empezar Cuestionario de Nutrición
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Show nutrition status if plan exists */}
+              {userData.subscription?.plan === 'team' && 
+               userData.subscription?.payment_status === 'verified' && 
+               userData.nutrition_plan && (
+                <Card className="md:col-span-2 border-2 border-green-200 bg-green-50">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-green-800">
+                      <CheckCircle className="h-6 w-6 text-green-600" />
+                      Plan de Nutrición Generado
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700">
+                      ✅ Tu plan de nutrición ha sido generado y está siendo revisado por tu entrenador. 
+                      {userData.nutrition_plan.pdf_generated && (
+                        <span className="block mt-2 text-green-700 font-semibold">
+                          📄 Tu plan está disponible en la pestaña "Documentos"
+                        </span>
+                      )}
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+
               {/* Quick Actions */}
               <Card>
                 <CardHeader>
