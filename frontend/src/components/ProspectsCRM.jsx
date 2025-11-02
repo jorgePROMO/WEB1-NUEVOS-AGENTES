@@ -160,6 +160,32 @@ export const ProspectsCRM = ({ token }) => {
       
       alert('✅ WhatsApp abierto. Revisa el mensaje y dale enviar.');
       loadProspectDetail(prospectId);
+
+
+  const saveReportChanges = async (prospectId, reportContent) => {
+    if (!reportContent || !reportContent.trim()) {
+      alert('El contenido del informe no puede estar vacío');
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      await axios.patch(`${API}/admin/prospects/${prospectId}/update-report`,
+        { report_content: reportContent },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      alert('✅ Informe actualizado correctamente');
+      loadProspectDetail(prospectId);
+    } catch (error) {
+      alert(`Error al actualizar el informe: ${error.response?.data?.detail || error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
     } catch (error) {
       alert(`Error: ${error.response?.data?.detail || error.message}`);
     } finally {
