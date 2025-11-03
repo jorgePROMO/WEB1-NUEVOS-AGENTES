@@ -71,7 +71,8 @@ const AdminDashboard = () => {
   const [templateMessage, setTemplateMessage] = useState('');
 
   // Nutrition states
-  const [nutritionPlan, setNutritionPlan] = useState(null);
+  const [nutritionPlans, setNutritionPlans] = useState([]); // Array de planes
+  const [selectedPlan, setSelectedPlan] = useState(null); // Plan seleccionado actualmente
   const [editingNutrition, setEditingNutrition] = useState(false);
   const [nutritionContent, setNutritionContent] = useState('');
   const [generatingPDF, setGeneratingPDF] = useState(false);
