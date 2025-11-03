@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, EmailStr
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime, timezone
 from bson import ObjectId
 
 
