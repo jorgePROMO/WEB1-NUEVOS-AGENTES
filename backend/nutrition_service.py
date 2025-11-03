@@ -3,14 +3,29 @@ Sistema de Nutrición con 2 Agentes GPT-5
 Usa los prompts EXACTOS proporcionados por el usuario
 """
 import os
+import sys
 import json
+from pathlib import Path
 from emergentintegrations.llm.chat import LlmChat, UserMessage
-from dotenv import load_dotenv
 
-load_dotenv()
+# Cargar variables de entorno manualmente
+env_path = Path(__file__).parent / '.env'
+if env_path.exists():
+    with open(env_path) as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                key, value = line.split('=', 1)
+                os.environ[key] = value.strip('"').strip("'")
 
 # Obtener key de Emergent
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')
+
+if not EMERGENT_LLM_KEY:
+    print("❌ ERROR: EMERGENT_LLM_KEY no encontrada")
+    sys.exit(1)
+else:
+    print(f"✅ Key cargada: {EMERGENT_LLM_KEY[:20]}...")
 
 # PROMPT AGENTE 1 - EXACTO como lo proporcionó el usuario
 AGENTE_1_PROMPT = """NUTRI AGENTE 1
