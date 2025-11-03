@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://crm-fusion-2.preview.emergentagent.com
+**URL Actual:** https://nutrition-manager.preview.emergentagent.com
 
 ---
 
