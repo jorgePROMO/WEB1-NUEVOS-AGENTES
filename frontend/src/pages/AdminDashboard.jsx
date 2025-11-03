@@ -245,6 +245,11 @@ const AdminDashboard = () => {
 
   // Send nutrition plan by email
   const sendNutritionByEmail = async (userId) => {
+    if (!selectedPlan) {
+      alert('No hay plan seleccionado');
+      return;
+    }
+    
     if (!window.confirm('¿Enviar el plan de nutrición por email al cliente?')) {
       return;
     }
@@ -252,7 +257,7 @@ const AdminDashboard = () => {
     setSendingNutrition('email');
     try {
       const response = await axios.post(
-        `${API}/admin/users/${userId}/nutrition/send-email`,
+        `${API}/admin/users/${userId}/nutrition/send-email?plan_id=${selectedPlan.id}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -260,6 +265,8 @@ const AdminDashboard = () => {
         }
       );
       alert('✅ Plan de nutrición enviado por email correctamente');
+      // Recargar el plan para actualizar los estados
+      await loadNutritionPlan(userId);
     } catch (error) {
       alert(`Error al enviar email: ${error.response?.data?.detail || error.message}`);
     } finally {
@@ -269,10 +276,15 @@ const AdminDashboard = () => {
 
   // Send nutrition plan by WhatsApp
   const sendNutritionByWhatsApp = async (userId) => {
+    if (!selectedPlan) {
+      alert('No hay plan seleccionado');
+      return;
+    }
+    
     setSendingNutrition('whatsapp');
     try {
       const response = await axios.get(
-        `${API}/admin/users/${userId}/nutrition/whatsapp-link`,
+        `${API}/admin/users/${userId}/nutrition/whatsapp-link?plan_id=${selectedPlan.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
@@ -282,6 +294,8 @@ const AdminDashboard = () => {
       if (response.data.whatsapp_link) {
         window.open(response.data.whatsapp_link, '_blank');
         alert('✅ Link de WhatsApp generado. Se abrirá en una nueva ventana.');
+        // Recargar el plan para actualizar los estados
+        await loadNutritionPlan(userId);
       }
     } catch (error) {
       alert(`Error al generar link de WhatsApp: ${error.response?.data?.detail || error.message}`);
