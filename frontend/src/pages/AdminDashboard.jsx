@@ -1414,7 +1414,7 @@ const AdminDashboard = () => {
 
                         {/* Nutrition Tab */}
                         <TabsContent value="nutrition">
-                          {nutritionPlan ? (
+                          {selectedPlan ? (
                             <div className="space-y-6">
                               {/* Status Header */}
                               <Card className="border-2 border-green-200 bg-green-50">
@@ -1429,19 +1429,19 @@ const AdminDashboard = () => {
                                     <div>
                                       <span className="text-gray-600">Generado:</span>
                                       <span className="ml-2 font-semibold">
-                                        {new Date(nutritionPlan.generated_at).toLocaleDateString('es-ES')}
+                                        {new Date(selectedPlan.generated_at).toLocaleDateString('es-ES')}
                                       </span>
                                     </div>
                                     <div>
                                       <span className="text-gray-600">Editado:</span>
                                       <span className="ml-2 font-semibold">
-                                        {nutritionPlan.edited ? '✅ Sí' : '❌ No'}
+                                        {selectedPlan.edited ? '✅ Sí' : '❌ No'}
                                       </span>
                                     </div>
                                     <div>
                                       <span className="text-gray-600">PDF Generado:</span>
                                       <span className="ml-2 font-semibold">
-                                        {nutritionPlan.pdf_generated ? '✅ Sí' : '❌ No'}
+                                        {selectedPlan.pdf_generated ? '✅ Sí' : '❌ No'}
                                       </span>
                                     </div>
                                   </div>
@@ -1466,7 +1466,7 @@ const AdminDashboard = () => {
                                         <Button
                                           onClick={() => {
                                             setEditingNutrition(false);
-                                            setNutritionContent(nutritionPlan.plan_verificado);
+                                            setNutritionContent(selectedPlan.plan_verificado);
                                           }}
                                           variant="outline"
                                         >
@@ -1510,7 +1510,7 @@ const AdminDashboard = () => {
                                 </CardHeader>
                                 <CardContent>
                                   <p className="text-gray-700 mb-4">
-                                    {nutritionPlan.pdf_generated 
+                                    {selectedPlan.pdf_generated 
                                       ? '✅ El PDF ya fue generado. Puedes generar uno nuevo si has hecho cambios.'
                                       : 'Genera el PDF del plan de nutrición y súbelo automáticamente a los documentos del usuario.'
                                     }
