@@ -439,13 +439,14 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
                   🎉 ¡Cuestionario Completado!
                 </h3>
                 <p className="text-gray-700 mb-4">
-                  Has completado todas las secciones. Al enviar este cuestionario:
+                  Gracias por completar el cuestionario. Al enviarlo:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-gray-700">
-                  <li>Se generará tu plan de nutrición personalizado automáticamente</li>
-                  <li>Los agentes calcularán tus macros óptimos</li>
-                  <li>Recibirás un menú semanal completo adaptado a ti</li>
-                  <li>Tu entrenador revisará el plan antes de enviártelo</li>
+                  <li>Tu información será revisada detalladamente por nuestro equipo de nutrición</li>
+                  <li>Analizaremos tus respuestas para crear un plan 100% personalizado</li>
+                  <li>Calcularemos tus macros óptimos y diseñaremos un menú semanal adaptado a tu estilo de vida</li>
+                  <li>Jorge revisará personalmente tu plan antes de enviártelo</li>
+                  <li>Recibirás tu plan de nutrición completo una vez esté listo y verificado</li>
                 </ul>
               </div>
 
@@ -457,12 +458,12 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Generando tu plan...
+                    Enviando al equipo de nutrición...
                   </>
                 ) : (
                   <>
                     <CheckCircle className="mr-2 h-5 w-5" />
-                    Enviar Cuestionario y Generar Plan
+                    Enviar Cuestionario al Equipo
                   </>
                 )}
               </Button>
