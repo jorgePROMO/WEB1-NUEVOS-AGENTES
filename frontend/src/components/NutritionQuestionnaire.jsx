@@ -185,10 +185,10 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
         { name: 'movimiento_trabajo', label: '¿Te mueves mucho en el trabajo?', type: 'select', options: ['Poco', 'Medio', 'Mucho'], required: true },
         { name: 'dia_trabajo', label: 'Describe un día típico de trabajo', type: 'textarea' },
         { name: 'descansa_trabajo', label: '¿Descansas bien durante el trabajo?', type: 'select', options: ['Sí', 'No'], required: true },
-        { name: 'horas_trabajo', label: '¿Cuántas horas trabajas al día?', type: 'number', required: true },
+        { name: 'horas_trabajo', label: '¿Cuántas horas trabajas al día? (ej: 8 o 8-9)', type: 'text', required: true },
         { name: 'actividad_fisica_diaria', label: 'Actividad física en el día', type: 'select', options: ['Sedentario', 'Ligeramente activo', 'Moderadamente activo', 'Muy activo'], required: true },
         { name: 'trabajo_fisicamente', label: '¿Trabajas físicamente?', type: 'select', options: ['No', 'Sí, ligero', 'Sí, moderado', 'Sí, intenso'], required: true },
-        { name: 'horas_ocio_semana', label: 'Horas de ocio a la semana', type: 'number' }
+        { name: 'horas_ocio_semana', label: 'Horas de ocio a la semana (ej: 10 o 10-15)', type: 'text' }
       ]
     },
     {
