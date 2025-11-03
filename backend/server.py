@@ -1755,55 +1755,28 @@ async def convert_prospect(prospect_id: str, request: Request, target_crm: dict)
 
 @api_router.get("/admin/team-clients")
 async def get_team_clients(request: Request, status: Optional[str] = None):
-    """Get all team clients (users + converted prospects)"""
+    """Get all team clients (ONLY registered users, NO prospects)"""
     await require_admin(request)
     
     try:
-        # Get converted prospects marked as team clients (exclude moved ones)
-        query = {"converted_to_client": True, "conversion_type": "team", "moved_to_external": {"$ne": True}}
-        if status:
-            # We'll need to add status tracking
-            pass
-        
-        converted_prospects = await db.questionnaire_responses.find(query).to_list(length=None)
-        
-        # Get regular registered users (exclude deleted and moved ones)
+        # Solo obtener usuarios registrados (role=user) que tengan plan team
         users = await db.users.find({
-            "role": "user", 
-            "moved_to_external": {"$ne": True},
-            "status": {"$ne": "deleted"}
+            "role": "user",
+            "subscription.plan": "team"
         }).to_list(length=None)
         
-        # Combine and format
+        # Formatear lista
         clients_list = []
         
-        # Add converted prospects
-        for prospect in converted_prospects:
-            clients_list.append({
-                "id": prospect["_id"],
-                "nombre": prospect.get("nombre"),
-                "email": prospect.get("email"),
-                "whatsapp": prospect.get("whatsapp"),
-                "created_at": prospect.get("converted_at"),
-                "status": "active",  # Default status
-                "source": "prospect",
-                "prospect_data": {
-                    "objetivo": prospect.get("objetivo"),
-                    "presupuesto": prospect.get("presupuesto"),
-                    "intentos_previos": prospect.get("intentos_previos")
-                }
-            })
-        
-        # Add registered users
         for user in users:
             clients_list.append({
                 "id": user["_id"],
                 "nombre": user.get("name"),
                 "username": user.get("username"),
                 "email": user.get("email"),
-                "whatsapp": user.get("whatsapp"),
+                "phone": user.get("phone"),
                 "created_at": user.get("created_at"),
-                "status": "active",
+                "status": user.get("subscription", {}).get("payment_status", "pending"),
                 "source": "registration",
                 "subscription": user.get("subscription", {})
             })
