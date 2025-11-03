@@ -3185,6 +3185,181 @@ async def generate_nutrition_pdf(user_id: str, request: Request):
         )
 
 
+@api_router.post("/admin/users/{user_id}/nutrition/send-email")
+async def send_nutrition_email(user_id: str, request: Request):
+    """Admin envía plan de nutrición por email al cliente"""
+    await require_admin(request)
+    
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    nutrition_plan = user.get("nutrition_plan")
+    if not nutrition_plan:
+        raise HTTPException(status_code=404, detail="Usuario no tiene plan de nutrición")
+    
+    try:
+        from email_utils import send_email
+        import markdown
+        
+        # Contenido del plan
+        plan_content = nutrition_plan.get("plan_verificado", "")
+        
+        # Convertir markdown a HTML
+        html_content = markdown.markdown(plan_content, extensions=['nl2br', 'tables'])
+        
+        # Template HTML para email
+        email_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body {{
+                    font-family: 'Arial', sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    max-width: 800px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    background-color: #f9f9f9;
+                }}
+                .container {{
+                    background-color: white;
+                    padding: 30px;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }}
+                h1 {{
+                    color: #10b981;
+                    border-bottom: 3px solid #10b981;
+                    padding-bottom: 10px;
+                }}
+                h2 {{
+                    color: #059669;
+                    margin-top: 25px;
+                }}
+                h3 {{
+                    color: #047857;
+                }}
+                pre {{
+                    background-color: #f3f4f6;
+                    padding: 15px;
+                    border-radius: 5px;
+                    white-space: pre-wrap;
+                    font-family: 'Arial', sans-serif;
+                }}
+                .footer {{
+                    margin-top: 40px;
+                    padding-top: 20px;
+                    border-top: 2px solid #e5e7eb;
+                    text-align: center;
+                    color: #6b7280;
+                    font-size: 14px;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🥗 Tu Plan de Nutrición Personalizado</h1>
+                <p>Hola {user.get('name', 'Cliente')},</p>
+                <p>Te enviamos tu plan de nutrición personalizado elaborado especialmente para ti.</p>
+                <hr>
+                <div>{html_content}</div>
+                <div class="footer">
+                    <p><strong>Jorge Calcerrada - Entrenador Personal</strong></p>
+                    <p>Si tienes alguna duda, no dudes en contactarme.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Enviar email
+        send_email(
+            to_email=user.get('email'),
+            subject="🥗 Tu Plan de Nutrición Personalizado",
+            html_content=email_html
+        )
+        
+        logger.info(f"Plan de nutrición enviado por email a {user.get('email')}")
+        
+        return {
+            "success": True,
+            "message": "Plan de nutrición enviado por email correctamente"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error enviando plan por email: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error enviando email: {str(e)}"
+        )
+
+
+@api_router.get("/admin/users/{user_id}/nutrition/whatsapp-link")
+async def get_nutrition_whatsapp_link(user_id: str, request: Request):
+    """Admin obtiene link de WhatsApp con el plan de nutrición"""
+    await require_admin(request)
+    
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    nutrition_plan = user.get("nutrition_plan")
+    if not nutrition_plan:
+        raise HTTPException(status_code=404, detail="Usuario no tiene plan de nutrición")
+    
+    # Obtener teléfono del usuario
+    phone = user.get('phone', '')
+    if not phone:
+        raise HTTPException(
+            status_code=400,
+            detail="El usuario no tiene número de teléfono registrado"
+        )
+    
+    try:
+        import urllib.parse
+        
+        # Contenido del plan (limitado para WhatsApp)
+        plan_content = nutrition_plan.get("plan_verificado", "")
+        
+        # Crear mensaje para WhatsApp (con límite de caracteres)
+        message = f"""🥗 *Tu Plan de Nutrición Personalizado*
+
+Hola {user.get('name', 'Cliente')}!
+
+Te envío tu plan de nutrición personalizado:
+
+{plan_content[:3000]}...
+
+_Si necesitas el plan completo, revísalo en tu panel de usuario o te lo envío por email._
+
+*Jorge Calcerrada - Entrenador Personal*"""
+        
+        # Limpiar número de teléfono (solo dígitos)
+        clean_phone = ''.join(filter(str.isdigit, phone))
+        
+        # Generar link de WhatsApp
+        encoded_message = urllib.parse.quote(message)
+        whatsapp_link = f"https://wa.me/{clean_phone}?text={encoded_message}"
+        
+        logger.info(f"Link de WhatsApp generado para usuario {user_id}")
+        
+        return {
+            "success": True,
+            "whatsapp_link": whatsapp_link,
+            "phone": phone
+        }
+        
+    except Exception as e:
+        logger.error(f"Error generando link de WhatsApp: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error generando link: {str(e)}"
+        )
+
+
 
 from google_calendar_service import (
     get_authorization_url,
