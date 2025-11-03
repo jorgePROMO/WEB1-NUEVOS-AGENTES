@@ -45,14 +45,10 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Para API calls: SIEMPRE red primero (datos frescos)
+  // Para API calls: SIEMPRE red primero - NO cachear, NO interceptar errores
   if (url.pathname.startsWith('/api/')) {
-    event.respondWith(
-      fetch(request)
-        .catch(() => new Response(JSON.stringify({ error: 'Sin conexión' }), {
-          headers: { 'Content-Type': 'application/json' }
-        }))
-    );
+    // Pasar el request directamente SIN interceptar errores
+    // Esto permite que el frontend maneje los errores correctamente
     return;
   }
 
