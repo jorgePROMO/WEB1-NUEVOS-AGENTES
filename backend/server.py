@@ -107,6 +107,10 @@ async def register(user_data: UserCreate):
             detail="Email or username already registered"
         )
     
+    # Generar token de verificación único
+    import secrets
+    verification_token = secrets.token_urlsafe(32)
+    
     # Create user
     user_dict = {
         "_id": str(datetime.now(timezone.utc).timestamp()).replace(".", ""),
@@ -125,12 +129,70 @@ async def register(user_data: UserCreate):
         },
         "next_review": None,
         "created_at": datetime.now(timezone.utc),
-        "updated_at": datetime.now(timezone.utc)
+        "updated_at": datetime.now(timezone.utc),
+        "email_verified": False,  # Nuevo
+        "verification_token": verification_token,  # Nuevo
+        "verification_sent_at": datetime.now(timezone.utc)  # Nuevo
     }
     
     await db.users.insert_one(user_dict)
     
-    # Create token
+    # Enviar email de verificación
+    try:
+        from email_utils import send_email
+        verification_link = f"https://nutrition-manager.preview.emergentagent.com/verify-email?token={verification_token}"
+        
+        email_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body {{ font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }}
+                .container {{ background-color: white; padding: 30px; border-radius: 10px; max-width: 600px; margin: 0 auto; }}
+                .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px 10px 0 0; text-align: center; }}
+                .content {{ padding: 30px; }}
+                .button {{ display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }}
+                .footer {{ text-align: center; color: #666; font-size: 12px; margin-top: 20px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>✅ Verifica tu Email</h1>
+                </div>
+                <div class="content">
+                    <p>Hola <strong>{user_data.username}</strong>,</p>
+                    <p>¡Gracias por registrarte en CRM Fusion!</p>
+                    <p>Para completar tu registro y activar tu cuenta, por favor verifica tu email haciendo click en el botón de abajo:</p>
+                    <div style="text-align: center;">
+                        <a href="{verification_link}" class="button">✅ Verificar mi Email</a>
+                    </div>
+                    <p style="color: #666; font-size: 14px;">Si no puedes hacer click en el botón, copia y pega este enlace en tu navegador:</p>
+                    <p style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; word-break: break-all; font-size: 12px;">{verification_link}</p>
+                    <p style="color: #999; font-size: 12px; margin-top: 30px;">Este enlace expirará en 24 horas.</p>
+                </div>
+                <div class="footer">
+                    <p>Jorge Calcerrada - Entrenador Personal</p>
+                    <p>Si no te has registrado, puedes ignorar este email.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        send_email(
+            to_email=user_data.email,
+            subject="✅ Verifica tu email - CRM Fusion",
+            html_body=email_html
+        )
+        
+        logger.info(f"Email de verificación enviado a {user_data.email}")
+    except Exception as e:
+        logger.error(f"Error enviando email de verificación: {e}")
+        # NO fallar el registro si el email falla
+    
+    # Create token (pero el usuario NO podrá usar la app hasta verificar)
     access_token = create_access_token(data={"sub": user_dict["_id"]})
     
     # Return user without password
@@ -140,10 +202,15 @@ async def register(user_data: UserCreate):
         "email": user_dict["email"],
         "name": user_dict["name"],
         "role": user_dict["role"],
-        "subscription": user_dict["subscription"]
+        "subscription": user_dict["subscription"],
+        "email_verified": False  # Indicar que falta verificar
     }
     
-    return {"user": user_response, "token": access_token}
+    return {
+        "user": user_response, 
+        "token": access_token,
+        "message": "Registro exitoso. Por favor verifica tu email para activar tu cuenta."
+    }
 
 
 @api_router.post("/auth/login", response_model=dict)
