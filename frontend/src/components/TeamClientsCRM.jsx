@@ -72,6 +72,27 @@ export const TeamClientsCRM = ({ token }) => {
     }
   };
 
+  const loadNutritionPlan = async (clientId) => {
+    setLoadingNutrition(true);
+    try {
+      const response = await axios.get(`${API}/admin/users/${clientId}/nutrition`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setNutritionPlan(response.data.nutrition_plan);
+      setShowNutritionModal(true);
+    } catch (error) {
+      if (error.response?.status === 404) {
+        alert('Este cliente aún no tiene un plan de nutrición generado.');
+      } else {
+        alert('Error al cargar el plan de nutrición.');
+      }
+      console.error('Error loading nutrition plan:', error);
+    } finally {
+      setLoadingNutrition(false);
+    }
+  };
+
   const addNote = async () => {
     if (!newNote.trim() || !selectedClient) return;
     
