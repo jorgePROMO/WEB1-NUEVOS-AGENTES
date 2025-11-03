@@ -1416,6 +1416,41 @@ const AdminDashboard = () => {
                         <TabsContent value="nutrition">
                           {selectedPlan ? (
                             <div className="space-y-6">
+                              {/* Plan History Selector */}
+                              {nutritionPlans.length > 1 && (
+                                <Card className="border-2 border-blue-200 bg-blue-50">
+                                  <CardHeader>
+                                    <CardTitle className="text-blue-800">📅 Historial de Planes</CardTitle>
+                                  </CardHeader>
+                                  <CardContent>
+                                    <div className="flex flex-wrap gap-2">
+                                      {nutritionPlans.map((plan) => {
+                                        const monthNames = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                                                           "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                                        const isSelected = selectedPlan?.id === plan.id;
+                                        return (
+                                          <Button
+                                            key={plan.id}
+                                            variant={isSelected ? "default" : "outline"}
+                                            className={isSelected ? "bg-blue-600" : ""}
+                                            onClick={() => {
+                                              setSelectedPlan(plan);
+                                              setNutritionContent(plan.plan_verificado);
+                                              setEditingNutrition(false);
+                                            }}
+                                          >
+                                            {monthNames[plan.month]} {plan.year}
+                                            {plan.pdf_id && " 📄"}
+                                            {plan.sent_email && " ✉️"}
+                                            {plan.sent_whatsapp && " 💬"}
+                                          </Button>
+                                        );
+                                      })}
+                                    </div>
+                                  </CardContent>
+                                </Card>
+                              )}
+                              
                               {/* Status Header */}
                               <Card className="border-2 border-green-200 bg-green-50">
                                 <CardHeader>
