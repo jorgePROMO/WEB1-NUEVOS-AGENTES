@@ -319,6 +319,119 @@ async def verify_email(token: str):
         )
 
 
+@api_router.post("/auth/resend-verification")
+async def resend_verification_email(email: str):
+    """Reenviar email de verificación"""
+    try:
+        # Buscar usuario por email
+        user = await db.users.find_one({"email": email})
+        
+        if not user:
+            # No revelar si el email existe o no por seguridad
+            return {
+                "success": True,
+                "message": "Si el email existe en nuestro sistema, recibirás un nuevo email de verificación."
+            }
+        
+        # Si ya está verificado, informar
+        if user.get("email_verified"):
+            raise HTTPException(
+                status_code=400,
+                detail="Este email ya ha sido verificado"
+            )
+        
+        # Generar nuevo token
+        import secrets
+        verification_token = secrets.token_urlsafe(32)
+        verification_expires_at = datetime.now(timezone.utc) + timedelta(hours=24)
+        
+        # Actualizar token en la base de datos
+        await db.users.update_one(
+            {"_id": user["_id"]},
+            {
+                "$set": {
+                    "verification_token": verification_token,
+                    "verification_token_expires_at": verification_expires_at,
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        # Enviar nuevo email
+        try:
+            from email_utils import send_email
+            verification_link = f"https://nutriplan-hub-4.preview.emergentagent.com/verify-email?token={verification_token}"
+            
+            email_html = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                    body {{ font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }}
+                    .container {{ background-color: white; padding: 30px; border-radius: 10px; max-width: 600px; margin: 0 auto; }}
+                    .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px 10px 0 0; text-align: center; }}
+                    .content {{ padding: 30px; }}
+                    .button {{ display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }}
+                    .footer {{ text-align: center; color: #666; font-size: 12px; margin-top: 20px; }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>✅ Verifica tu Email</h1>
+                    </div>
+                    <div class="content">
+                        <p>Hola <strong>{user.get('name', user.get('username'))}</strong>,</p>
+                        <p>Has solicitado un nuevo email de verificación.</p>
+                        <p>Para completar tu registro y activar tu cuenta, por favor verifica tu email haciendo click en el botón de abajo:</p>
+                        <div style="text-align: center;">
+                            <a href="{verification_link}" class="button">✅ Verificar mi Email</a>
+                        </div>
+                        <p style="color: #666; font-size: 14px;">Si no puedes hacer click en el botón, copia y pega este enlace en tu navegador:</p>
+                        <p style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; word-break: break-all; font-size: 12px;">{verification_link}</p>
+                        <p style="color: #999; font-size: 12px; margin-top: 30px;">Este enlace expirará en 24 horas.</p>
+                    </div>
+                    <div class="footer">
+                        <p>Jorge Calcerrada - Entrenador Personal</p>
+                        <p>Si no solicitaste esto, puedes ignorar este email.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+            
+            send_email(
+                to_email=email,
+                subject="✅ Verifica tu email - CRM Fusion",
+                html_body=email_html
+            )
+            
+            logger.info(f"Email de verificación reenviado a {email}")
+        except Exception as e:
+            logger.error(f"Error reenviando email de verificación: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail="Error al enviar email de verificación"
+            )
+        
+        return {
+            "success": True,
+            "message": "Email de verificación enviado. Por favor revisa tu bandeja de entrada."
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error en resend verification: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Error al reenviar email de verificación"
+        )
+
+
+
+
 @api_router.get("/auth/me")
 async def get_me(request: Request):
     user = await get_current_user(request)
