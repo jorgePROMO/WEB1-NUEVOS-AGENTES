@@ -72,12 +72,6 @@ const Header = () => {
             >
               Iniciar sesión
             </Button>
-            <Button
-              className="bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 text-white px-6 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-              onClick={() => window.location.href = '/login'}
-            >
-              Administrador
-            </Button>
           </div>
 
           {/* Mobile menu button - más grande y con más padding */}
