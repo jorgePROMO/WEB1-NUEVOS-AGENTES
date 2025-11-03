@@ -3440,7 +3440,6 @@ _Si necesitas el plan completo, revísalo en tu panel de usuario o te lo envío 
             "phone": phone,
             "plan_id": plan["_id"]
         }
-        }
         
     except Exception as e:
         logger.error(f"Error generando link de WhatsApp: {e}")
