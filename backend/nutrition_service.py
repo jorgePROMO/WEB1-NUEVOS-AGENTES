@@ -134,23 +134,15 @@ async def generate_nutrition_plan(client_data: dict) -> dict:
         print("🤖 Ejecutando AGENTE 1 (Nutricionista)...")
         agent_1_prompt = AGENTE_1_PROMPT.format(client_data=client_data_json)
         
-        response_1 = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Eres un experto nutricionista. Sigue las instrucciones al pie de la letra."
-                },
-                {
-                    "role": "user",
-                    "content": agent_1_prompt
-                }
-            ],
-            temperature=0.7,
-            max_tokens=4000
-        )
+        # Inicializar chat para Agente 1
+        chat_agent_1 = LlmChat(
+            api_key=EMERGENT_LLM_KEY,
+            session_id=f"nutrition_agent1_{client_data.get('email', 'unknown')}",
+            system_message="Eres un experto nutricionista. Sigue las instrucciones al pie de la letra."
+        ).with_model("openai", "gpt-4o")
         
-        menu_from_agent_1 = response_1.choices[0].message.content
+        user_message_1 = UserMessage(text=agent_1_prompt)
+        menu_from_agent_1 = await chat_agent_1.send_message(user_message_1)
         print("✅ AGENTE 1 completado")
         
         # AGENTE 2: Verificar y corregir
@@ -160,23 +152,15 @@ async def generate_nutrition_plan(client_data: dict) -> dict:
             menu_from_agent_1=menu_from_agent_1
         )
         
-        response_2 = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Eres un verificador nutricional experto. Sigue las instrucciones al pie de la letra."
-                },
-                {
-                    "role": "user",
-                    "content": agent_2_prompt
-                }
-            ],
-            temperature=0.3,  # Más bajo para verificación precisa
-            max_tokens=4000
-        )
+        # Inicializar chat para Agente 2
+        chat_agent_2 = LlmChat(
+            api_key=EMERGENT_LLM_KEY,
+            session_id=f"nutrition_agent2_{client_data.get('email', 'unknown')}",
+            system_message="Eres un verificador nutricional experto. Sigue las instrucciones al pie de la letra."
+        ).with_model("openai", "gpt-4o")
         
-        final_plan = response_2.choices[0].message.content
+        user_message_2 = UserMessage(text=agent_2_prompt)
+        final_plan = await chat_agent_2.send_message(user_message_2)
         print("✅ AGENTE 2 completado - Plan VERIFICADO")
         
         return {
