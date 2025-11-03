@@ -19,6 +19,7 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -46,7 +47,8 @@ const Register = () => {
     const result = await register(username, email, password, phone);
     
     if (result.success) {
-      navigate('/dashboard');
+      // Show success message instead of redirecting
+      setRegistrationSuccess(true);
     } else {
       setError(result.error);
     }
