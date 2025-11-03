@@ -584,6 +584,45 @@ export const TeamClientsCRM = ({ token }) => {
           </div>
         </div>
       )}
+
+      {/* Nutrition Plan Modal */}
+      {showNutritionModal && nutritionPlan && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-5xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-gradient-to-r from-green-500 to-emerald-600 text-white p-4 flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-bold">🥗 Plan de Nutrición</h3>
+                <p className="text-sm opacity-90">
+                  Generado el {new Date(nutritionPlan.generated_at).toLocaleDateString('es-ES')}
+                </p>
+              </div>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="text-white hover:bg-white/20"
+                onClick={() => {
+                  setShowNutritionModal(false);
+                  setNutritionPlan(null);
+                }}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            <div className="p-6">
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="prose max-w-none">
+                    <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
+                      {nutritionPlan.plan_verificado}
+                    </pre>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
