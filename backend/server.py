@@ -3219,24 +3219,15 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
                 }
             }
         )
-        await db.users.update_one(
-            {"_id": user_id},
-            {
-                "$set": {
-                    "nutrition_plan.pdf_generated": True,
-                    "nutrition_plan.pdf_id": pdf_id,
-                    "updated_at": datetime.now(timezone.utc)
-                }
-            }
-        )
         
-        logger.info(f"PDF de nutrición generado para usuario {user_id}")
+        logger.info(f"PDF de nutrición generado para usuario {user_id} - Plan {plan['_id']}")
         
         return {
             "success": True,
             "message": "PDF generado y subido a documentos del usuario",
             "pdf_id": pdf_id,
-            "filename": pdf_filename
+            "filename": pdf_filename,
+            "plan_id": plan["_id"]
         }
         
     except Exception as e:
