@@ -1395,10 +1395,6 @@ const AdminDashboard = () => {
 
                         {/* Sessions Tab */}
                         <TabsContent value="sessions">
-                          <div className="bg-green-50 p-6 rounded-lg text-center">
-                            <Calendar className="h-12 w-12 text-green-500 mx-auto mb-4" />
-
-
                         {/* Nutrition Tab */}
                         <TabsContent value="nutrition">
                           {nutritionPlan ? (
