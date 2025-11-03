@@ -1634,6 +1634,7 @@ const AdminDashboard = () => {
                                   </Card>
                                 );
                               })}
+                            </div>
                           ) : (
                             <div className="bg-gray-50 p-8 rounded-lg text-center">
                               <UtensilsCrossed className="h-16 w-16 text-gray-300 mx-auto mb-4" />
