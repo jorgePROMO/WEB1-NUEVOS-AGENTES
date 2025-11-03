@@ -4,13 +4,13 @@ Usa los prompts EXACTOS proporcionados por el usuario
 """
 import os
 import json
-from emergentintegrations import OpenAI
+from emergentintegrations.llm.chat import LlmChat, UserMessage
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Obtener key de Emergent
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')
-
-# Inicializar cliente OpenAI con Emergent LLM Key
-client = OpenAI(api_key=EMERGENT_LLM_KEY)
 
 # PROMPT AGENTE 1 - EXACTO como lo proporcionó el usuario
 AGENTE_1_PROMPT = """NUTRI AGENTE 1
