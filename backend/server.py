@@ -3239,7 +3239,7 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
 
 
 @api_router.post("/admin/users/{user_id}/nutrition/send-email")
-async def send_nutrition_email(user_id: str, request: Request):
+async def send_nutrition_email(user_id: str, plan_id: str = None, request: Request = None):
     """Admin envía plan de nutrición por email al cliente"""
     await require_admin(request)
     
@@ -3247,8 +3247,16 @@ async def send_nutrition_email(user_id: str, request: Request):
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
-    nutrition_plan = user.get("nutrition_plan")
-    if not nutrition_plan:
+    # Si no se especifica plan_id, obtener el más reciente
+    if not plan_id:
+        plan = await db.nutrition_plans.find_one(
+            {"user_id": user_id},
+            sort=[("generated_at", -1)]
+        )
+    else:
+        plan = await db.nutrition_plans.find_one({"_id": plan_id, "user_id": user_id})
+    
+    if not plan:
         raise HTTPException(status_code=404, detail="Usuario no tiene plan de nutrición")
     
     try:
@@ -3256,7 +3264,9 @@ async def send_nutrition_email(user_id: str, request: Request):
         import markdown
         
         # Contenido del plan
-        plan_content = nutrition_plan.get("plan_verificado", "")
+        plan_content = plan.get("plan_verificado", "")
+        month = plan.get("month")
+        year = plan.get("year")
         
         # Convertir markdown a HTML
         html_content = markdown.markdown(plan_content, extensions=['nl2br', 'tables'])
