@@ -219,6 +219,11 @@ const AdminDashboard = () => {
 
   // Generate PDF and upload to user documents
   const generateNutritionPDF = async () => {
+    if (!selectedPlan) {
+      alert('No hay plan seleccionado');
+      return;
+    }
+    
     if (!window.confirm('¿Generar PDF y subirlo a los documentos del usuario?')) {
       return;
     }
@@ -226,7 +231,7 @@ const AdminDashboard = () => {
     setGeneratingPDF(true);
     try {
       const response = await axios.post(
-        `${API}/admin/users/${selectedClient.id}/nutrition-pdf`,
+        `${API}/admin/users/${selectedClient.id}/nutrition-pdf?plan_id=${selectedPlan.id}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
