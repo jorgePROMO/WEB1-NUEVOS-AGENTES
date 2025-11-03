@@ -3345,11 +3345,18 @@ async def send_nutrition_email(user_id: str, plan_id: str = None, request: Reque
             html_body=email_html
         )
         
-        logger.info(f"Plan de nutrición enviado por email a {user.get('email')}")
+        # Marcar como enviado por email
+        await db.nutrition_plans.update_one(
+            {"_id": plan["_id"]},
+            {"$set": {"sent_email": True}}
+        )
+        
+        logger.info(f"Plan de nutrición enviado por email a {user.get('email')} - Plan {plan['_id']}")
         
         return {
             "success": True,
-            "message": "Plan de nutrición enviado por email correctamente"
+            "message": "Plan de nutrición enviado por email correctamente",
+            "plan_id": plan["_id"]
         }
         
     except Exception as e:
@@ -3361,7 +3368,7 @@ async def send_nutrition_email(user_id: str, plan_id: str = None, request: Reque
 
 
 @api_router.get("/admin/users/{user_id}/nutrition/whatsapp-link")
-async def get_nutrition_whatsapp_link(user_id: str, request: Request):
+async def get_nutrition_whatsapp_link(user_id: str, plan_id: str = None, request: Request = None):
     """Admin obtiene link de WhatsApp con el plan de nutrición"""
     await require_admin(request)
     
