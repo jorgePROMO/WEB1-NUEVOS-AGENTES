@@ -3279,7 +3279,7 @@ async def send_nutrition_email(user_id: str, request: Request):
         send_email(
             to_email=user.get('email'),
             subject="🥗 Tu Plan de Nutrición Personalizado",
-            html_content=email_html
+            html_body=email_html
         )
         
         logger.info(f"Plan de nutrición enviado por email a {user.get('email')}")
