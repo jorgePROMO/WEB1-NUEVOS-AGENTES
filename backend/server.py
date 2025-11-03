@@ -3184,7 +3184,7 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
         upload_dir = Path("/app/backend/uploads")
         upload_dir.mkdir(exist_ok=True)
         
-        pdf_filename = f"nutrition_plan_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        pdf_filename = f"nutrition_plan_{user_id}_{month}_{year}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
         pdf_full_path = upload_dir / pdf_filename
         
         with open(pdf_full_path, 'wb') as f:
@@ -3195,10 +3195,12 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
         
         # Crear registro en base de datos
         pdf_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+        month_names = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
         pdf_doc = {
             "_id": pdf_id,
             "user_id": user_id,
-            "title": f"Plan de Nutrición - {datetime.now().strftime('%d/%m/%Y')}",
+            "title": f"Plan de Nutrición - {month_names[month]} {year}",
             "type": "nutrition",  # IMPORTANTE: categoría nutrición
             "file_path": str(pdf_full_path),
             "sent_date": datetime.now(timezone.utc),
@@ -3207,7 +3209,16 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
         
         await db.pdfs.insert_one(pdf_doc)
         
-        # Actualizar usuario marcando PDF generado
+        # Actualizar el plan en la colección marcando PDF generado
+        await db.nutrition_plans.update_one(
+            {"_id": plan["_id"]},
+            {
+                "$set": {
+                    "pdf_id": pdf_id,
+                    "pdf_filename": pdf_filename
+                }
+            }
+        )
         await db.users.update_one(
             {"_id": user_id},
             {
