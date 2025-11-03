@@ -1476,7 +1476,19 @@ const AdminDashboard = () => {
                                     <div>
                                       <span className="text-gray-600">PDF Generado:</span>
                                       <span className="ml-2 font-semibold">
-                                        {selectedPlan.pdf_generated ? '✅ Sí' : '❌ No'}
+                                        {selectedPlan.pdf_id ? '✅ Sí' : '❌ No'}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-600">Enviado Email:</span>
+                                      <span className="ml-2 font-semibold">
+                                        {selectedPlan.sent_email ? '✅ Sí' : '❌ No'}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      <span className="text-gray-600">Enviado WhatsApp:</span>
+                                      <span className="ml-2 font-semibold">
+                                        {selectedPlan.sent_whatsapp ? '✅ Sí' : '❌ No'}
                                       </span>
                                     </div>
                                   </div>
