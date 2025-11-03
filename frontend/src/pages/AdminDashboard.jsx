@@ -1512,6 +1512,7 @@ const AdminDashboard = () => {
                                         </div>
                                       </div>
                                     </CardHeader>
+                                    </button>
 
                                     {/* Plan Content - Solo visible cuando está expandido */}
                                     {isExpanded && (
