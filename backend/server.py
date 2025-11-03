@@ -3400,10 +3400,15 @@ async def get_nutrition_whatsapp_link(user_id: str, plan_id: str = None, request
         import urllib.parse
         
         # Contenido del plan (limitado para WhatsApp)
-        plan_content = nutrition_plan.get("plan_verificado", "")
+        plan_content = plan.get("plan_verificado", "")
+        month = plan.get("month")
+        year = plan.get("year")
+        
+        month_names = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
         
         # Crear mensaje para WhatsApp (con límite de caracteres)
-        message = f"""🥗 *Tu Plan de Nutrición Personalizado*
+        message = f"""🥗 *Tu Plan de Nutrición Personalizado - {month_names[month]} {year}*
 
 Hola {user.get('name', 'Cliente')}!
 
@@ -3422,12 +3427,20 @@ _Si necesitas el plan completo, revísalo en tu panel de usuario o te lo envío 
         encoded_message = urllib.parse.quote(message)
         whatsapp_link = f"https://wa.me/{clean_phone}?text={encoded_message}"
         
-        logger.info(f"Link de WhatsApp generado para usuario {user_id}")
+        # Marcar como enviado por WhatsApp
+        await db.nutrition_plans.update_one(
+            {"_id": plan["_id"]},
+            {"$set": {"sent_whatsapp": True}}
+        )
+        
+        logger.info(f"Link de WhatsApp generado para usuario {user_id} - Plan {plan['_id']}")
         
         return {
             "success": True,
             "whatsapp_link": whatsapp_link,
-            "phone": phone
+            "phone": phone,
+            "plan_id": plan["_id"]
+        }
         }
         
     except Exception as e:
