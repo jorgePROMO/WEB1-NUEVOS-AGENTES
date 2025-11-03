@@ -1473,6 +1473,56 @@ const AdminDashboard = () => {
                                   </Button>
                                 </CardContent>
                               </Card>
+
+                              {/* Send Plan Card */}
+                              <Card className="border-2 border-blue-200 bg-blue-50">
+                                <CardHeader>
+                                  <CardTitle className="text-blue-800">
+                                    📤 Enviar Plan al Cliente
+                                  </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                  <p className="text-gray-700 mb-4">
+                                    Envía el plan de nutrición directamente al cliente por Email o WhatsApp.
+                                  </p>
+                                  <div className="grid grid-cols-2 gap-4">
+                                    <Button
+                                      onClick={() => sendNutritionByEmail(selectedClient.id)}
+                                      disabled={sendingNutrition}
+                                      className="w-full bg-blue-600 hover:bg-blue-700"
+                                    >
+                                      {sendingNutrition === 'email' ? (
+                                        <>
+                                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                          Enviando...
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Mail className="h-4 w-4 mr-2" />
+                                          Enviar por Email
+                                        </>
+                                      )}
+                                    </Button>
+                                    <Button
+                                      onClick={() => sendNutritionByWhatsApp(selectedClient.id)}
+                                      disabled={sendingNutrition}
+                                      className="w-full bg-green-600 hover:bg-green-700"
+                                    >
+                                      {sendingNutrition === 'whatsapp' ? (
+                                        <>
+                                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                          Abriendo...
+                                        </>
+                                      ) : (
+                                        <>
+                                          <MessageSquare className="h-4 w-4 mr-2" />
+                                          Enviar por WhatsApp
+                                        </>
+                                      )}
+                                    </Button>
+                                  </div>
+                                </CardContent>
+                              </Card>
                             </div>
                           ) : (
                             <div className="bg-gray-50 p-8 rounded-lg text-center">
