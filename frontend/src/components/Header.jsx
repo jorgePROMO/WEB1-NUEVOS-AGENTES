@@ -125,12 +125,6 @@ const Header = () => {
                 >
                   Iniciar sesión
                 </Button>
-                <Button
-                  className="w-full bg-gradient-to-r from-blue-500 to-orange-500 hover:from-blue-600 hover:to-orange-600 text-white"
-                  onClick={() => window.location.href = '/login'}
-                >
-                  Administrador
-                </Button>
               </div>
             </nav>
           </div>
