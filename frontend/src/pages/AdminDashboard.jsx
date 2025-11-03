@@ -182,11 +182,8 @@ const AdminDashboard = () => {
         withCredentials: true
       });
       setNutritionPlans(response.data.plans || []);
-      // Seleccionar el plan más reciente por defecto
-      if (response.data.plans && response.data.plans.length > 0) {
-        setSelectedPlan(response.data.plans[0]);
-        setNutritionContent(response.data.plans[0].plan_verificado);
-      }
+      // NO seleccionar ninguno por defecto - todos colapsados
+      setSelectedPlan(null);
     } catch (error) {
       if (error.response?.status !== 404) {
         console.error('Error loading nutrition plan:', error);
