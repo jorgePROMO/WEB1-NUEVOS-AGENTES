@@ -201,7 +201,7 @@ const AdminDashboard = () => {
     
     try {
       await axios.patch(
-        `${API}/admin/users/${selectedClient.id}/nutrition`,
+        `${API}/admin/users/${selectedClient.id}/nutrition/${selectedPlan.id}`,
         { plan_content: nutritionContent },
         {
           headers: { Authorization: `Bearer ${token}` },
