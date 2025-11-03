@@ -18,14 +18,14 @@ if env_path.exists():
                 key, value = line.split('=', 1)
                 os.environ[key] = value.strip('"').strip("'")
 
-# Obtener key de Emergent
-EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')
+# Obtener key de OpenAI (prioritario sobre Emergent)
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 
-if not EMERGENT_LLM_KEY:
-    print("❌ ERROR: EMERGENT_LLM_KEY no encontrada")
+if not OPENAI_API_KEY:
+    print("❌ ERROR: OPENAI_API_KEY no encontrada")
     sys.exit(1)
 else:
-    print(f"✅ Key cargada: {EMERGENT_LLM_KEY[:20]}...")
+    print(f"✅ OpenAI Key cargada: {OPENAI_API_KEY[:20]}...")
 
 # PROMPT AGENTE 1 - EXACTO como lo proporcionó el usuario
 AGENTE_1_PROMPT = """NUTRI AGENTE 1
