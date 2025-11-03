@@ -1590,17 +1590,6 @@ const AdminDashboard = () => {
                           )}
                         </TabsContent>
 
-                        {/* Alerts Tab - placeholder */}
-                        <TabsContent value="alerts">
-                          <div className="bg-gray-50 p-8 rounded-lg text-center">
-                            <Bell className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                            <h3 className="font-semibold text-lg mb-2">Sistema de Alertas</h3>
-                            <p className="text-gray-600">
-                              Aquí se mostrarán las alertas del cliente.
-                            </p>
-                          </div>
-                        </TabsContent>
-
                         {/* Sessions Tab - placeholder */}
                         <TabsContent value="sessions">
                           <div className="bg-gray-50 p-8 rounded-lg text-center">
