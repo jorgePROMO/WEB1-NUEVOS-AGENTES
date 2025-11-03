@@ -282,18 +282,35 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
 
   const validateSection = (sectionIndex) => {
     const section = sections[sectionIndex];
-    if (section.isReview) return true;
+    if (section.isReview) return { valid: true, missing: [] };
     
     const requiredFields = section.fields.filter(f => f.required);
-    return requiredFields.every(field => formData[field.name]?.toString().trim() !== '');
+    const missingFields = [];
+    
+    for (const field of requiredFields) {
+      const value = formData[field.name];
+      if (!value || value.toString().trim() === '') {
+        missingFields.push(field.label);
+      }
+    }
+    
+    return {
+      valid: missingFields.length === 0,
+      missing: missingFields
+    };
   };
 
   const handleNext = () => {
-    if (validateSection(currentSection)) {
+    const validation = validateSection(currentSection);
+    
+    if (validation.valid) {
       setCurrentSection(prev => Math.min(prev + 1, sections.length - 1));
       setError('');
     } else {
-      setError('Por favor completa todos los campos obligatorios');
+      const missingList = validation.missing.join(', ');
+      setError(`⚠️ Campos obligatorios faltantes: ${missingList}`);
+      // Scroll to top to show error
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
