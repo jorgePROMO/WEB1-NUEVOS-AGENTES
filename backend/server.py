@@ -268,6 +268,19 @@ async def verify_email(token: str):
                 "already_verified": True
             }
         
+        # Verificar expiración del token (24 horas)
+        token_expires = user.get("verification_token_expires_at")
+        if token_expires:
+            # Asegurar que tiene timezone
+            if token_expires.tzinfo is None:
+                token_expires = token_expires.replace(tzinfo=timezone.utc)
+            
+            if token_expires < datetime.now(timezone.utc):
+                raise HTTPException(
+                    status_code=400,
+                    detail="El token de verificación ha expirado. Por favor solicita un nuevo email de verificación."
+                )
+        
         # Actualizar usuario como verificado
         await db.users.update_one(
             {"_id": user["_id"]},
@@ -275,6 +288,7 @@ async def verify_email(token: str):
                 "$set": {
                     "email_verified": True,
                     "verification_token": None,  # Limpiar token
+                    "verification_token_expires_at": None,
                     "updated_at": datetime.now(timezone.utc)
                 }
             }
