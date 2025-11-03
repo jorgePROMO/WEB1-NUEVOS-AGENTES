@@ -2933,32 +2933,41 @@ async def submit_nutrition_questionnaire(questionnaire: NutritionQuestionnaireSu
                 detail=f"Error generando plan de nutrición: {result.get('error')}"
             )
         
-        # Guardar en el usuario
-        nutrition_data = {
+        # Obtener mes y año actual
+        now = datetime.now(timezone.utc)
+        current_month = now.month
+        current_year = now.year
+        
+        # Generar ID único para este plan
+        plan_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
+        
+        # Guardar en colección nutrition_plans
+        nutrition_plan_doc = {
+            "_id": plan_id,
+            "user_id": user_id,
+            "month": current_month,
+            "year": current_year,
             "questionnaire_data": questionnaire_data,
             "plan_inicial": result["plan_inicial"],
             "plan_verificado": result["plan_verificado"],
-            "generated_at": datetime.now(timezone.utc),
+            "generated_at": now,
             "edited": False,
-            "pdf_generated": False
+            "pdf_id": None,
+            "pdf_filename": None,
+            "sent_email": False,
+            "sent_whatsapp": False
         }
         
-        await db.users.update_one(
-            {"_id": user_id},
-            {
-                "$set": {
-                    "nutrition_plan": nutrition_data,
-                    "updated_at": datetime.now(timezone.utc)
-                }
-            }
-        )
+        # Insertar en la colección
+        await db.nutrition_plans.insert_one(nutrition_plan_doc)
         
-        logger.info(f"Plan de nutrición generado para usuario {user_id}")
+        logger.info(f"Plan de nutrición generado para usuario {user_id} - {current_month}/{current_year}")
         
         return {
             "success": True,
             "message": "Plan de nutrición generado correctamente",
-            "plan": result["plan_verificado"]
+            "plan": result["plan_verificado"],
+            "plan_id": plan_id
         }
         
     except HTTPException:
