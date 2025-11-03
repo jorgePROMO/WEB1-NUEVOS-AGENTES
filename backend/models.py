@@ -78,6 +78,9 @@ class UserInDB(UserBase):
     next_review: Optional[datetime] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+    email_verified: bool = False  # Nuevo campo
+    verification_token: Optional[str] = None  # Nuevo campo
+    verification_sent_at: Optional[datetime] = None  # Nuevo campo
 
     class Config:
         populate_by_name = True
