@@ -98,9 +98,32 @@ const Login = () => {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-                <AlertCircle className="h-5 w-5" />
-                <span>{error}</span>
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <AlertCircle className="h-5 w-5 mt-0.5" />
+                  <div className="flex-1">
+                    <span>{error}</span>
+                    {showResendButton && (
+                      <button
+                        type="button"
+                        onClick={handleResendVerification}
+                        className="block mt-2 text-sm text-blue-600 hover:text-blue-700 underline font-semibold"
+                        disabled={loading}
+                      >
+                        Reenviar email de verificación
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {resendSuccess && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-sm">Email de verificación enviado. Revisa tu bandeja de entrada.</span>
               </div>
             )}
             
