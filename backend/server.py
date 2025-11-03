@@ -3073,16 +3073,24 @@ async def update_user_nutrition_plan(user_id: str, plan_id: str, updated_plan: d
 
 
 @api_router.post("/admin/users/{user_id}/nutrition-pdf")
-async def generate_nutrition_pdf(user_id: str, request: Request):
-    """Admin genera PDF del plan de nutrición y lo sube a documentos del usuario"""
+async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Request = None):
+    """Admin genera PDF del plan de nutrición más reciente y lo sube a documentos del usuario"""
     await require_admin(request)
     
     user = await db.users.find_one({"_id": user_id})
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
-    nutrition_plan = user.get("nutrition_plan")
-    if not nutrition_plan:
+    # Si no se especifica plan_id, obtener el más reciente
+    if not plan_id:
+        plan = await db.nutrition_plans.find_one(
+            {"user_id": user_id},
+            sort=[("generated_at", -1)]
+        )
+    else:
+        plan = await db.nutrition_plans.find_one({"_id": plan_id, "user_id": user_id})
+    
+    if not plan:
         raise HTTPException(status_code=404, detail="Usuario no tiene plan de nutrición")
     
     try:
