@@ -3100,7 +3100,9 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
         import tempfile
         
         # Contenido del plan verificado
-        plan_content = nutrition_plan.get("plan_verificado", "")
+        plan_content = plan.get("plan_verificado", "")
+        month = plan.get("month")
+        year = plan.get("year")
         
         # Convertir markdown a HTML
         html_content = markdown.markdown(plan_content)
