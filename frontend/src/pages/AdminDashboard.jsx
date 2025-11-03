@@ -234,6 +234,53 @@ const AdminDashboard = () => {
     }
   };
 
+  // Send nutrition plan by email
+  const sendNutritionByEmail = async (userId) => {
+    if (!window.confirm('¿Enviar el plan de nutrición por email al cliente?')) {
+      return;
+    }
+
+    setSendingNutrition('email');
+    try {
+      const response = await axios.post(
+        `${API}/admin/users/${userId}/nutrition/send-email`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      alert('✅ Plan de nutrición enviado por email correctamente');
+    } catch (error) {
+      alert(`Error al enviar email: ${error.response?.data?.detail || error.message}`);
+    } finally {
+      setSendingNutrition(null);
+    }
+  };
+
+  // Send nutrition plan by WhatsApp
+  const sendNutritionByWhatsApp = async (userId) => {
+    setSendingNutrition('whatsapp');
+    try {
+      const response = await axios.get(
+        `${API}/admin/users/${userId}/nutrition/whatsapp-link`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      
+      if (response.data.whatsapp_link) {
+        window.open(response.data.whatsapp_link, '_blank');
+        alert('✅ Link de WhatsApp generado. Se abrirá en una nueva ventana.');
+      }
+    } catch (error) {
+      alert(`Error al generar link de WhatsApp: ${error.response?.data?.detail || error.message}`);
+    } finally {
+      setSendingNutrition(null);
+    }
+  };
+
   const openTemplateModal = (template) => {
     if (!selectedClient) return;
     
