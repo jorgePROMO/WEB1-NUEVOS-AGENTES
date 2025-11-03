@@ -230,7 +230,7 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
         { name: 'hora_merienda', label: 'Hora de la merienda (si aplica)', type: 'time' },
         { name: 'hora_cena', label: 'Hora de la cena', type: 'time', required: true },
         { name: 'hora_acuesta', label: '¿A qué hora te acuestas?', type: 'time', required: true },
-        { name: 'horas_duerme', label: '¿Cuántas horas duermes?', type: 'number', required: true }
+        { name: 'horas_duerme', label: '¿Cuántas horas duermes? (ej: 7 o 7-8)', type: 'text', required: true }
       ]
     },
     {
