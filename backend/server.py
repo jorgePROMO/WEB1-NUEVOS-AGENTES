@@ -2981,27 +2981,50 @@ async def submit_nutrition_questionnaire(questionnaire: NutritionQuestionnaireSu
 
 
 @api_router.get("/admin/users/{user_id}/nutrition")
-async def get_user_nutrition_plan(user_id: str, request: Request):
-    """Admin obtiene el plan de nutrición de un usuario"""
+async def get_user_nutrition_plans(user_id: str, request: Request):
+    """Admin obtiene el historial de planes de nutrición de un usuario"""
     await require_admin(request)
     
     user = await db.users.find_one({"_id": user_id})
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
-    nutrition_plan = user.get("nutrition_plan")
-    if not nutrition_plan:
-        raise HTTPException(status_code=404, detail="Usuario no tiene plan de nutrición")
+    # Obtener todos los planes ordenados por fecha (más reciente primero)
+    plans = await db.nutrition_plans.find(
+        {"user_id": user_id}
+    ).sort("generated_at", -1).to_list(length=None)
+    
+    if not plans:
+        raise HTTPException(status_code=404, detail="Usuario no tiene planes de nutrición")
+    
+    # Formatear planes para respuesta
+    formatted_plans = []
+    for plan in plans:
+        formatted_plans.append({
+            "id": plan["_id"],
+            "month": plan["month"],
+            "year": plan["year"],
+            "plan_verificado": plan["plan_verificado"],
+            "plan_inicial": plan["plan_inicial"],
+            "questionnaire_data": plan.get("questionnaire_data", {}),
+            "generated_at": plan["generated_at"].isoformat() if plan.get("generated_at") else None,
+            "edited": plan.get("edited", False),
+            "pdf_id": plan.get("pdf_id"),
+            "pdf_filename": plan.get("pdf_filename"),
+            "sent_email": plan.get("sent_email", False),
+            "sent_whatsapp": plan.get("sent_whatsapp", False)
+        })
     
     return {
         "success": True,
-        "nutrition_plan": nutrition_plan
+        "plans": formatted_plans,
+        "current_plan": formatted_plans[0] if formatted_plans else None
     }
 
 
-@api_router.patch("/admin/users/{user_id}/nutrition")
-async def update_user_nutrition_plan(user_id: str, updated_plan: dict, request: Request):
-    """Admin edita el plan de nutrición de un usuario"""
+@api_router.patch("/admin/users/{user_id}/nutrition/{plan_id}")
+async def update_user_nutrition_plan(user_id: str, plan_id: str, updated_plan: dict, request: Request):
+    """Admin edita un plan de nutrición específico"""
     await require_admin(request)
     
     user = await db.users.find_one({"_id": user_id})
