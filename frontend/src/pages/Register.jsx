@@ -66,19 +66,64 @@ const Register = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center px-6 py-12">
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-3xl font-bold text-center">Crear cuenta</CardTitle>
+          <CardTitle className="text-3xl font-bold text-center">
+            {registrationSuccess ? '✅ Registro Exitoso' : 'Crear cuenta'}
+          </CardTitle>
           <CardDescription className="text-center">
-            Únete al método de Jorge Calcerrada
+            {registrationSuccess 
+              ? 'Verifica tu email para continuar' 
+              : 'Únete al método de Jorge Calcerrada'}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-                <AlertCircle className="h-5 w-5" />
-                <span className="text-sm">{error}</span>
+          {registrationSuccess ? (
+            <div className="space-y-4">
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-4 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 mt-0.5 flex-shrink-0" />
+                  <div className="space-y-2">
+                    <p className="font-semibold">¡Cuenta creada exitosamente!</p>
+                    <p className="text-sm">
+                      Hemos enviado un email de verificación a <strong>{email}</strong>.
+                    </p>
+                    <p className="text-sm">
+                      Por favor, revisa tu bandeja de entrada y haz clic en el enlace de verificación para activar tu cuenta.
+                    </p>
+                  </div>
+                </div>
               </div>
-            )}
+              
+              <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg">
+                <p className="text-sm">
+                  <strong>⚠️ Importante:</strong> Si no ves el email, revisa tu carpeta de spam o correo no deseado.
+                </p>
+              </div>
+
+              <div className="space-y-2 pt-4">
+                <Button
+                  onClick={() => navigate('/login')}
+                  className="w-full bg-gradient-to-r from-blue-500 to-orange-400 hover:from-blue-600 hover:to-orange-500 text-white"
+                >
+                  Ir a Iniciar Sesión
+                </Button>
+                <Button
+                  onClick={() => navigate('/')}
+                  variant="outline"
+                  className="w-full"
+                >
+                  Volver al Inicio
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {error && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+                    <AlertCircle className="h-5 w-5" />
+                    <span className="text-sm">{error}</span>
+                  </div>
+                )}
             
             <div className="space-y-2">
               <Label htmlFor="username">Nombre de usuario</Label>
