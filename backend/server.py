@@ -3062,7 +3062,6 @@ async def update_user_nutrition_plan(user_id: str, plan_id: str, updated_plan: d
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error actualizando plan: {str(e)}"
         )
-        }
         
     except Exception as e:
         logger.error(f"Error actualizando plan de nutrición: {e}")
