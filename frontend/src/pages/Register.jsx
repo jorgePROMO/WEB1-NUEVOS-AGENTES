@@ -253,6 +253,8 @@ const Register = () => {
               ← Volver al inicio
             </Link>
           </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
