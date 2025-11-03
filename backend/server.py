@@ -246,6 +246,57 @@ async def login(email: str, password: str):
     return {"user": user_response, "token": access_token}
 
 
+@api_router.get("/auth/verify-email")
+async def verify_email(token: str):
+    """Verificar email del usuario mediante token"""
+    try:
+        # Buscar usuario por token
+        user = await db.users.find_one({"verification_token": token})
+        
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail="Token de verificación inválido o expirado"
+            )
+        
+        # Verificar si ya está verificado
+        if user.get("email_verified"):
+            return {
+                "success": True,
+                "message": "Email ya verificado previamente",
+                "already_verified": True
+            }
+        
+        # Actualizar usuario como verificado
+        await db.users.update_one(
+            {"_id": user["_id"]},
+            {
+                "$set": {
+                    "email_verified": True,
+                    "verification_token": None,  # Limpiar token
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        logger.info(f"Email verificado para usuario {user.get('email')}")
+        
+        return {
+            "success": True,
+            "message": "✅ Email verificado correctamente. Ya puedes iniciar sesión.",
+            "email": user.get("email")
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error verificando email: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Error verificando email"
+        )
+
+
 @api_router.get("/auth/me")
 async def get_me(request: Request):
     user = await get_current_user(request)
