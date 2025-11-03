@@ -1449,7 +1449,8 @@ const AdminDashboard = () => {
                                     {/* Plan Header - Siempre visible */}
                                     <CardHeader 
                                       className={`cursor-pointer hover:bg-gray-50 ${isExpanded ? 'bg-green-50' : ''}`}
-                                      onClick={() => {
+                                      onClick={(e) => {
+                                        e.stopPropagation();
                                         if (isExpanded) {
                                           setSelectedPlan(null);
                                         } else {
