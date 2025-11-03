@@ -173,25 +173,32 @@ const AdminDashboard = () => {
     }
   };
 
-  // Load nutrition plan
+  // Load nutrition plans (historial)
   const loadNutritionPlan = async (userId) => {
     try {
       const response = await axios.get(`${API}/admin/users/${userId}/nutrition`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
-      setNutritionPlan(response.data.nutrition_plan);
-      setNutritionContent(response.data.nutrition_plan.plan_verificado);
+      setNutritionPlans(response.data.plans || []);
+      // Seleccionar el plan más reciente por defecto
+      if (response.data.plans && response.data.plans.length > 0) {
+        setSelectedPlan(response.data.plans[0]);
+        setNutritionContent(response.data.plans[0].plan_verificado);
+      }
     } catch (error) {
       if (error.response?.status !== 404) {
         console.error('Error loading nutrition plan:', error);
       }
-      setNutritionPlan(null);
+      setNutritionPlans([]);
+      setSelectedPlan(null);
     }
   };
 
   // Save nutrition plan changes
   const saveNutritionChanges = async () => {
+    if (!selectedPlan) return;
+    
     try {
       await axios.patch(
         `${API}/admin/users/${selectedClient.id}/nutrition`,
