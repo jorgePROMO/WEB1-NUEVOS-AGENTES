@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v2.2.1-mobile-update';
+const CACHE_VERSION = 'v1.15'; // CRÍTICO: Service Worker NO intercepta API calls
 const CACHE_NAME = `ecj-trainer-${CACHE_VERSION}`;
 
 // Assets que se cachean (imágenes, fonts, etc)
