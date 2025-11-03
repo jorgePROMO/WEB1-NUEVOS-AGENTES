@@ -149,12 +149,12 @@ async def generate_nutrition_plan(client_data: dict) -> dict:
         print("🤖 Ejecutando AGENTE 1 (Nutricionista)...")
         agent_1_prompt = AGENTE_1_PROMPT.format(client_data=client_data_json)
         
-        # Inicializar chat para Agente 1 con GPT-5 mini
+        # Inicializar chat para Agente 1 con GPT-4o mini
         chat_agent_1 = LlmChat(
             api_key=OPENAI_API_KEY,
             session_id=f"nutrition_agent1_{client_data.get('email', 'unknown')}",
             system_message="Eres un experto nutricionista. Sigue las instrucciones al pie de la letra."
-        ).with_model("openai", "gpt-5-mini")
+        ).with_model("openai", "gpt-4o-mini")
         
         user_message_1 = UserMessage(text=agent_1_prompt)
         menu_from_agent_1 = await chat_agent_1.send_message(user_message_1)
