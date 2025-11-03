@@ -1445,12 +1445,17 @@ const AdminDashboard = () => {
                                 const isExpanded = selectedPlan?.id === plan.id;
                                 
                                 return (
-                                  <Card key={plan.id} className={`border-2 ${isExpanded ? 'border-green-500 shadow-lg' : 'border-gray-200'} transition-all`}>
+                                  <Card 
+                                    key={plan.id} 
+                                    className={`border-2 ${isExpanded ? 'border-green-500 shadow-lg' : 'border-gray-200'} transition-all`}
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
                                     {/* Plan Header - Siempre visible */}
                                     <CardHeader 
                                       className={`cursor-pointer hover:bg-gray-50 ${isExpanded ? 'bg-green-50' : ''}`}
                                       onClick={(e) => {
                                         e.stopPropagation();
+                                        e.preventDefault();
                                         if (isExpanded) {
                                           setSelectedPlan(null);
                                         } else {
