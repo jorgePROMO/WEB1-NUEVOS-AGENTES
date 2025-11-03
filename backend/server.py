@@ -231,6 +231,13 @@ async def login(email: str, password: str):
             detail="Tu cuenta ha sido desactivada. Contacta al administrador."
         )
     
+    # Check if email is verified (skip for admin users)
+    if user.get("role") != "admin" and not user.get("email_verified", False):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Por favor verifica tu email antes de iniciar sesión. Revisa tu bandeja de entrada."
+        )
+    
     # Create token
     access_token = create_access_token(data={"sub": user["_id"]})
     
