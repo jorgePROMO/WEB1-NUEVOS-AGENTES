@@ -75,6 +75,7 @@ const AdminDashboard = () => {
   const [editingNutrition, setEditingNutrition] = useState(false);
   const [nutritionContent, setNutritionContent] = useState('');
   const [generatingPDF, setGeneratingPDF] = useState(false);
+  const [sendingNutrition, setSendingNutrition] = useState(null);
 
 
   // Form states
