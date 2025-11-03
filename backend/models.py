@@ -454,6 +454,22 @@ class NutritionPlanResponse(BaseModel):
     pdf_url: Optional[str] = None
 
 
+class NutritionPlanHistoryItem(BaseModel):
+    id: str
+    user_id: str
+    month: int  # 1-12
+    year: int
+    questionnaire_data: dict
+    plan_inicial: str
+    plan_verificado: str
+    generated_at: datetime
+    edited: bool = False
+    pdf_id: Optional[str] = None
+    pdf_filename: Optional[str] = None
+    sent_email: bool = False
+    sent_whatsapp: bool = False
+
+
 class ProspectStageUpdate(BaseModel):
     stage_id: str
 
