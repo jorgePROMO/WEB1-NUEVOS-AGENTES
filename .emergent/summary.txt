@@ -1,71 +1,70 @@
 <analysis>
-The trajectory details the development of a full-stack application. Initially, fixes for documentation downloads and Google OAuth removal were addressed, followed by PWA caching and mobile responsiveness. Performance optimization and GPT integration for questionnaire reports were then implemented. The most significant recent work revolved around Google Calendar integration, which transitioned from a full system to a simple external link due to persistent connection issues. Subsequently, the AI engineer debugged numerous critical issues including admin login failures (due to incorrect password hashing, database, and user fields), frontend rendering errors ( and  on undefined arrays), and client listing issues in the Admin Dashboard. The system for GPT report generation was refined to be immediate and manually triggered. Finally, a major feature involving LLM-powered nutrition plan generation (using two agents) was introduced, including a new questionnaire, backend processing, PDF generation, and frontend integration. The AI is currently troubleshooting issues with the nutrition plan generation and a recurring admin login problem.
+The trajectory details the development of a full-stack application, focusing on CRM and nutrition plan features. Initial work included PWA, mobile responsiveness, and GPT integration for questionnaire reports. A major effort was Google Calendar integration, which was simplified to external links due to issues. Recent efforts involved debugging critical admin login failures (due to incorrect password hashing and  attributes), frontend rendering errors (e.g.,  on undefined arrays), and client listing problems. The LLM-powered nutrition plan generation using a new questionnaire, backend processing, and PDF generation was a significant new feature. The AI engineer debugged initial LLM timeouts (incorrect  model, fixed to ), frontend-backend field mismatches, and structural errors in . The system was refactored to store monthly nutrition plans and implement an accordion UI. Critically, persistent mobile registration failures were identified as a Service Worker issue, then as user-specific cached data/email conflicts. The final ongoing task is implementing email verification for new user registrations to enhance robustness.
 </analysis>
 
 <product_requirements>
-The application, CRM Fusion, is a Spanish-localized full-stack platform. Core functionalities include user/admin authentication, CRM features (prospects, team/external clients), calendar scheduling, profile management, and document handling. Recent requirements included a diagnostic questionnaire, a revamped Admin Dashboard with improved navigation, communication templates, and client risk indicators. A key feature was the GPT integration to automate report generation from questionnaires, email them, and update prospect status. This evolved to immediate report generation, storage, and manual email/WhatsApp sending. Google Calendar integration was required for event management, eventually reverting to an external link due to connection problems. The latest major request is a Nutrition Plan feature for paying team clients: a new questionnaire, LLM-based nutrition plan generation (using user-provided agents), admin review/editing, and conversion to PDF for user download within their Nutrition document tab.
+The CRM Fusion application is a full-stack platform with user/admin authentication, CRM features (prospects, team/external clients), calendar, profile management, and document handling. Initially, it included a diagnostic questionnaire, GPT integration for report generation, and Google Calendar. This evolved to immediate GPT report generation, storage, and manual email/WhatsApp sending. The latest major feature is a Nutrition Plan for team clients. This involves a new questionnaire, LLM-based nutrition plan generation (initially with user-provided agents like GPT-5 mini, now GPT-4o-mini), admin review/editing, PDF generation, and download in the user's dashboard. Critically, the user required monthly nutrition plans to be stored historically, displayed in an accordion-style UI for admins, and to be editable/sendable via Email/WhatsApp, with correct status updates. The platform also needed robust mobile registration, and an email verification flow for new users was requested to address persistent registration issues.
 </product_requirements>
 
 <key_technical_concepts>
 -   **Full-stack Development**: React (frontend), FastAPI (backend), MongoDB (database).
--   **Authentication**: JWT, .
--   **LLM Integration**:  (for OpenAI GPT-5 mini), prompt engineering.
--   **PWA**: Service Worker for auto-updates, .
--   **UI/UX**: Tailwind CSS, Shadcn UI components.
--   **Data Handling**: Pydantic models, UUIDs for IDs.
--   **PDF Generation**:  (backend dependency).
+-   **Authentication**: JWT, , password hashing ().
+-   **LLM Integration**:  (LiteLLM with OpenAI GPT-4o-mini), prompt engineering, asynchronous processing ().
+-   **PWA**: Service Worker for caching/auto-updates, .
+-   **UI/UX**: Tailwind CSS, Shadcn UI components, accordion pattern.
+-   **Data Handling**: Pydantic models, UUIDs for IDs, MongoDB collection design for historical data.
+-   **PDF Generation**:  (backend dependency, required system libraries).
 </key_technical_concepts>
 
 <code_architecture>
 
-
 -   ****: Core FastAPI application.
-    -   **Changes**: Removed Google OAuth endpoints. Modified  to immediately generate GPT reports and store them. Added new endpoints for sending GPT reports (email/WhatsApp) and retrieving WhatsApp links. Implemented endpoints for nutrition questionnaire submission, nutrition plan retrieval/update, and PDF generation. Updated registration to include phone, and user update () to allow phone modification. Updated  and  logic to correctly fetch and filter clients.
--   ****: Defines Pydantic data models.
-    -   **Changes**: Added , ,  to  model. Added  to  and  models. Added ,  models, and updated  model to include  (nutrition/training).
--   ****: Handles GPT report generation.
+    -   **Changes**: Removed Google OAuth. Modified  for immediate GPT reports. Added endpoints for nutrition questionnaire submission ( processing), plan retrieval (now returns historical plans), update, PDF generation (accepts ), and sending via email/WhatsApp (accepts ). Registration updated to handle phone; user update () allows phone modification. Fixed several syntax errors ().
+-   ****: Pydantic data models.
+    -   **Changes**: Added  fields to . Added  to  and . Introduced ,  (now a separate collection model with  and ),  models, and updated  model. Added , ,  to  model.
+-   ****: GPT report generation.
     -   **Changes**: Integrated for immediate report generation.
--   ** (NEW)**: Manages LLM interaction for nutrition plan generation using specified prompts and user-provided API key (GPT-5 mini), converts Markdown to HTML, and handles PDF generation via .
--   ****:
-    -   **Changes**: Added  function for styled email content.
+-   ****: Manages LLM interaction.
+    -   **Changes**: Updated LLM model from  to  for stability.
+-   ****: Email utility functions.
+    -   **Changes**:  function modified to correctly accept  parameter. Added  for styled content.
 -   ****: Admin interface.
-    -   **Changes**: Fixed admin login issues (user creation, password hashing, DB name). Removed Documentación button. Integrated UI for full Google Calendar management (then reverted/debugged). Added UI for managing GPT reports (status, send buttons). Added section for viewing/editing nutrition plans, generating PDFs, and a new tab. Fixed client filtering and loading logic. Removed Administrador button from header.
+    -   **Changes**: Fixed login. Integrated UI for GPT reports. Adapted UI for monthly nutrition plans, displaying them in an accordion, and added send/PDF buttons. Fixed numerous JSX syntax errors. Replaced  simple modal with full AdminDashboard tabs for nutrition. Updated ,  to handle plan history.
 -   ****: User interface.
-    -   **Changes**: Added Nutrition Questionnaire button and modal. Added document filtering by type (nutrition/training).
+    -   **Changes**: Added Nutrition Questionnaire button. Added document filtering by type.
 -   ****: Registration page.
-    -   **Changes**: Added phone number input field and validation.
+    -   **Changes**: Added phone number input and validation. Now integrates with email verification flow.
 -   ****: User profile editing.
-    -   **Changes**: Added phone number field to profile edit form.
+    -   **Changes**: Added phone number field.
 -   ****: Prospects CRM view.
-    -   **Changes**: Added report status, send email/WhatsApp buttons. Implemented error handling for  and  operations on  and  arrays. Updated report display and editing.
+    -   **Changes**: Added report status, send email/WhatsApp buttons.
 -   ****: Team Clients CRM view.
-    -   **Changes**: Fixed filtering to correctly display only converted team clients, not all prospects.
--   ** (NEW)**: Frontend component for the nutrition questionnaire, including form logic and validation.
--   ****: Application header.
-    -   **Changes**: Removed Administrador button.
+    -   **Changes**: Reverted direct nutrition plan display. Logic for displaying clients was updated.
+-   ****: Frontend component for nutrition questionnaire.
+    -   **Changes**: Added missing required fields to align with backend model (e.g., ).
 -   ** & **: PWA files.
-    -   **Changes**: Updated cache version for forced auto-updates on mobile.
--   ****:
-    -   **Changes**: Added  and .
--   ** and **:
-    -   **Changes**: Deleted as automatic delayed reports were deprecated.
+    -   **Changes**: Updated cache version for auto-updates. Modified service worker to not intercept network errors, then disabled completely for debugging, then re-enabled with proper error handling.
+-   ****: Added  and .
+-   ** and **: Deleted.
 </code_architecture>
 
 <pending_tasks>
--   Address the persistent Error al conectar con Google Calendar issue; the user initially requested a simple Open Google Calendar button as a fallback.
--   Debug why the LLM is responding Lo siento, no puedo asistir con la solicitud solicitada for the nutrition plan generation.
--   Resolve the recurring admin login issues preventing access to the dashboard.
--   Finalize the integration and display of generated nutrition plans in the Admin Dashboard.
+-   Address the persistent Error al conectar con Google Calendar issue; the user initially requested a simple Open Google Calendar button as a fallback (not explicitly re-requested but still a known issue).
+-   Finalize the implementation of the email verification endpoint () in  and integrate it into the frontend.
+-   Address the mobile responsiveness of the user dashboard documents (issue 3 from Chat Message 304).
+-   The expand/collapse functionality for nutrition plans in the Admin Dashboard is still not fully working (Chat Message 520, 538).
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI engineer was deep into implementing the new Nutrition Plan feature. This involved creating , adding relevant models in , setting up new API endpoints in  for questionnaire submission, plan retrieval, updating, and PDF generation, and integrating the frontend  component into . An admin view for nutrition plans was also added to .
+Immediately before this summary request, the AI engineer was implementing an **email verification system** for new user registrations. This was a direct response to critical and recurring issues where mobile users were unable to register successfully or their registrations were not appearing in the system, even when the frontend indicated success. The user requested this feature as a robust solution to prevent dirty or ghost registrations.
 
-During this, the  for LLM interaction was configured. However, the LLM-generated nutrition plan was returning a generic Lo siento, no puedo asistir con la solicitud solicitada. message, indicating a prompt or LLM configuration issue. The AI engineer attempted to debug this by testing the LLM service directly and then switched to using the user's provided OpenAI API key with GPT-5 mini, but this also resulted in a timeout.
+The work involved:
+1.  **Modifying **: Adding , , and  fields to the  model to track email verification status and manage tokens.
+2.  **Modifying **: The AI engineer has just modified the  endpoint. This modification is to generate a unique verification token upon user registration, set the  status to , and prepare to send an email containing a verification link to the user.
 
-Concurrently, the user reported that after completing the nutrition questionnaire from the mobile device (as jorge prueba), they could not log in as an administrator to verify the generated report. The current state is that the nutrition plan generation is not functioning correctly, and there's a critical, recurring admin login blocker that prevents further testing.
+The trajectory ends right at the point where the AI engineer is about to create the new  endpoint in the backend to handle the verification process when a user clicks the link in their email. The current state is that the model is updated, the registration endpoint has been partially modified to support token generation and email sending (though the email sending logic and verification link generation are not fully detailed), and the verification endpoint is yet to be created.
 </current_work>
 
 <optional_next_step>
-The next step is to debug the admin login issue, as requested by the user.
+Create the  endpoint in  to handle email verification.
 </optional_next_step>

@@ -140,7 +140,7 @@ async def register(user_data: UserCreate):
     # Enviar email de verificación
     try:
         from email_utils import send_email
-        verification_link = f"https://nutrition-manager.preview.emergentagent.com/verify-email?token={verification_token}"
+        verification_link = f"https://nutriplan-hub-4.preview.emergentagent.com/verify-email?token={verification_token}"
         
         email_html = f"""
         <!DOCTYPE html>
