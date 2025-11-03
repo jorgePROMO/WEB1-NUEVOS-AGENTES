@@ -38,6 +38,9 @@ export const TeamClientsCRM = ({ token }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [newNote, setNewNote] = useState('');
+  const [nutritionPlan, setNutritionPlan] = useState(null);
+  const [showNutritionModal, setShowNutritionModal] = useState(false);
+  const [loadingNutrition, setLoadingNutrition] = useState(false);
 
   useEffect(() => {
     loadClients();
