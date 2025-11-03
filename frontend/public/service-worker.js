@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v2.1.0-nutrition-fixed';
+const CACHE_VERSION = 'v2.2.0-fixes-complete';
 const CACHE_NAME = `ecj-trainer-${CACHE_VERSION}`;
 
 // Assets que se cachean (imágenes, fonts, etc)
