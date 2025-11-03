@@ -3031,28 +3031,37 @@ async def update_user_nutrition_plan(user_id: str, plan_id: str, updated_plan: d
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
-    if not user.get("nutrition_plan"):
-        raise HTTPException(status_code=404, detail="Usuario no tiene plan de nutrición")
+    # Verificar que el plan existe
+    plan = await db.nutrition_plans.find_one({"_id": plan_id, "user_id": user_id})
+    if not plan:
+        raise HTTPException(status_code=404, detail="Plan de nutrición no encontrado")
     
     try:
         # Actualizar el plan verificado con la versión editada
-        await db.users.update_one(
-            {"_id": user_id},
+        await db.nutrition_plans.update_one(
+            {"_id": plan_id},
             {
                 "$set": {
-                    "nutrition_plan.plan_verificado": updated_plan.get("plan_content"),
-                    "nutrition_plan.edited": True,
-                    "nutrition_plan.edited_at": datetime.now(timezone.utc),
-                    "updated_at": datetime.now(timezone.utc)
+                    "plan_verificado": updated_plan.get("plan_content"),
+                    "edited": True,
+                    "edited_at": datetime.now(timezone.utc)
                 }
             }
         )
         
-        logger.info(f"Plan de nutrición editado para usuario {user_id}")
+        logger.info(f"Plan de nutrición {plan_id} editado para usuario {user_id}")
         
         return {
             "success": True,
             "message": "Plan de nutrición actualizado correctamente"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error actualizando plan: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error actualizando plan: {str(e)}"
+        )
         }
         
     except Exception as e:
