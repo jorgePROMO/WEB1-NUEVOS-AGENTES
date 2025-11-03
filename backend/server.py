@@ -3376,8 +3376,16 @@ async def get_nutrition_whatsapp_link(user_id: str, plan_id: str = None, request
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
-    nutrition_plan = user.get("nutrition_plan")
-    if not nutrition_plan:
+    # Si no se especifica plan_id, obtener el más reciente
+    if not plan_id:
+        plan = await db.nutrition_plans.find_one(
+            {"user_id": user_id},
+            sort=[("generated_at", -1)]
+        )
+    else:
+        plan = await db.nutrition_plans.find_one({"_id": plan_id, "user_id": user_id})
+    
+    if not plan:
         raise HTTPException(status_code=404, detail="Usuario no tiene plan de nutrición")
     
     # Obtener teléfono del usuario
