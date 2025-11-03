@@ -15,12 +15,16 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showResendButton, setShowResendButton] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setShowResendButton(false);
+    setResendSuccess(false);
     setLoading(true);
 
     const result = await login(email, password);
@@ -35,6 +39,42 @@ const Login = () => {
       }
     } else {
       setError(result.error);
+      // Check if error is about email verification
+      if (result.error && result.error.includes('verifica tu email')) {
+        setShowResendButton(true);
+      }
+    }
+    
+    setLoading(false);
+  };
+
+  const handleResendVerification = async () => {
+    if (!email) {
+      setError('Por favor ingresa tu email primero');
+      return;
+    }
+    
+    setLoading(true);
+    setError('');
+    
+    try {
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
+      const response = await fetch(`${BACKEND_URL}/api/auth/resend-verification?email=${encodeURIComponent(email)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        setResendSuccess(true);
+        setShowResendButton(false);
+      } else {
+        const data = await response.json();
+        setError(data.detail || 'Error al reenviar email');
+      }
+    } catch (err) {
+      setError('Error al reenviar email de verificación');
     }
     
     setLoading(false);
