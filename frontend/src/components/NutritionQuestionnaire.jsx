@@ -254,7 +254,7 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
       title: '🎯 Objetivos',
       fields: [
         { name: 'objetivo_fisico', label: 'Objetivo físico principal', type: 'select', options: ['Perder grasa', 'Ganar músculo', 'Mantener', 'Tonificar', 'Mejorar rendimiento'], required: true },
-        { name: 'experiencia_ejercicio_constante', label: '¿Experiencia siendo constante con ejercicio?', type: 'textarea' },
+        { name: 'experiencia_ejercicio_constante', label: '¿Experiencia siendo constante con ejercicio?', type: 'textarea', required: true },
         { name: 'impedido_constancia', label: '¿Qué te ha impedido ser constante antes?', type: 'textarea' },
         { name: 'motiva_ejercicio', label: '¿Qué te motiva a hacer ejercicio?', type: 'textarea' },
         { name: 'nivel_energia_dia', label: 'Nivel de energía durante el día', type: 'select', options: ['Bajo', 'Medio', 'Alto'], required: true },
