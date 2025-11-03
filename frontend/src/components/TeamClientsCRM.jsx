@@ -452,6 +452,21 @@ export const TeamClientsCRM = ({ token }) => {
                 </div>
               </div>
 
+              {/* Nutrition Plan Button */}
+              <div className="flex justify-center">
+                <Button
+                  onClick={() => loadNutritionPlan(selectedClient.id)}
+                  disabled={loadingNutrition}
+                  className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 text-lg"
+                >
+                  {loadingNutrition ? (
+                    <>🔄 Cargando...</>
+                  ) : (
+                    <>🥗 Ver Plan de Nutrición</>
+                  )}
+                </Button>
+              </div>
+
               {/* Prospect Data if converted */}
               {selectedClient.prospect_data && (
                 <Card>
