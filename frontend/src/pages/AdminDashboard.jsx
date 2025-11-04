@@ -252,6 +252,53 @@ const AdminDashboard = () => {
     }
   };
 
+
+  // Generate plan with AI from questionnaire submission
+  const generatePlanWithAI = async (submissionId) => {
+    if (!selectedClient) return;
+    
+    if (!confirm('¿Generar plan de nutrición con IA a partir de las respuestas del cuestionario?')) {
+      return;
+    }
+    
+    setGeneratingPlan(true);
+    try {
+      const response = await axios.post(
+        `${API}/admin/users/${selectedClient.id}/nutrition/generate?submission_id=${submissionId}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      
+      alert('✅ Plan generado exitosamente con IA');
+      // Recargar nutrition plans
+      await loadNutritionPlan(selectedClient.id);
+      // Seleccionar el nuevo plan
+      setSelectedPlan(response.data.plan);
+      setNutritionContent(response.data.plan.plan_verificado);
+      // Cerrar vista de submission
+      setSelectedSubmission(null);
+    } catch (error) {
+      alert(`Error generando plan: ${error.response?.data?.detail || error.message}`);
+    } finally {
+      setGeneratingPlan(false);
+    }
+  };
+
+  // Create plan manually (without AI)
+  const createManualPlan = async (submissionId) => {
+    if (!selectedClient) return;
+    
+    // Marcar submission como procesada sin generar plan con IA
+    // El admin escribirá el plan manualmente
+    setSelectedSubmission(null);
+    setEditingNutrition(true);
+    setNutritionContent('# Plan de Nutrición Personalizado\n\n## Escribe aquí tu plan...\n\n');
+  };
+
+
   // Send nutrition plan by email
   const sendNutritionByEmail = async (userId) => {
     if (!selectedPlan) {
