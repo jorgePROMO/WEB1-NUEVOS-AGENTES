@@ -73,11 +73,14 @@ const AdminDashboard = () => {
 
   // Nutrition states
   const [nutritionPlans, setNutritionPlans] = useState([]); // Array de planes
+  const [questionnaireSubmissions, setQuestionnaireSubmissions] = useState([]); // Array de respuestas pendientes
   const [selectedPlan, setSelectedPlan] = useState(null); // Plan seleccionado actualmente
+  const [selectedSubmission, setSelectedSubmission] = useState(null); // Submission seleccionada
   const [editingNutrition, setEditingNutrition] = useState(false);
   const [nutritionContent, setNutritionContent] = useState('');
   const [generatingPDF, setGeneratingPDF] = useState(false);
   const [sendingNutrition, setSendingNutrition] = useState(null);
+  const [generatingPlan, setGeneratingPlan] = useState(false);
 
 
   // Form states
