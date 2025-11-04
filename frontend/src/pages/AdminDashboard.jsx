@@ -1450,12 +1450,9 @@ const AdminDashboard = () => {
                                     className={`border-2 ${isExpanded ? 'border-green-500 shadow-lg' : 'border-gray-200'} transition-all`}
                                   >
                                     {/* Plan Header - Siempre visible */}
-                                    <button
-                                      type="button"
-                                      className={`w-full text-left ${isExpanded ? 'bg-green-50' : ''}`}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        e.preventDefault();
+                                    <CardHeader 
+                                      className="cursor-pointer hover:bg-gray-50"
+                                      onClick={() => {
                                         console.log('Click en plan, isExpanded:', isExpanded, 'plan.id:', plan.id);
                                         if (isExpanded) {
                                           setSelectedPlan(null);
@@ -1466,7 +1463,6 @@ const AdminDashboard = () => {
                                         }
                                       }}
                                     >
-                                      <CardHeader className="cursor-pointer hover:bg-gray-50">
                                       <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
                                           <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isExpanded ? 'bg-green-500' : 'bg-blue-500'} text-white font-bold`}>
@@ -1512,7 +1508,6 @@ const AdminDashboard = () => {
                                         </div>
                                       </div>
                                     </CardHeader>
-                                    </button>
 
                                     {/* Plan Content - Solo visible cuando está expandido */}
                                     {isExpanded && (
