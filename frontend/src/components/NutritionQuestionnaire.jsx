@@ -320,6 +320,11 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
   };
 
   const handleSubmit = async () => {
+    // Prevenir múltiples submissions
+    if (loading) {
+      return;
+    }
+    
     setLoading(true);
     setError('');
 
@@ -330,7 +335,8 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true
+          withCredentials: true,
+          timeout: 60000 // 60 segundos timeout para generación LLM
         }
       );
 
@@ -339,6 +345,7 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
         onComplete(response.data);
       }
     } catch (error) {
+      console.error('Error al enviar cuestionario:', error);
       setError(error.response?.data?.detail || 'Error al enviar el cuestionario');
     } finally {
       setLoading(false);
