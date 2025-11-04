@@ -369,7 +369,8 @@ async def resend_verification_email(email: str):
         # Enviar nuevo email
         try:
             from email_utils import send_email
-            verification_link = f"https://nutriplan-hub-4.preview.emergentagent.com/verify-email?token={verification_token}"
+            frontend_url = os.environ.get('FRONTEND_URL', 'https://nutriplan-hub-4.preview.emergentagent.com')
+            verification_link = f"{frontend_url}/verify-email?token={verification_token}"
             
             email_html = f"""
             <!DOCTYPE html>
