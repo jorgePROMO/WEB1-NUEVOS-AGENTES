@@ -801,8 +801,8 @@ const UserDashboard = () => {
                 user={userData}
                 onComplete={(result) => {
                   setShowNutritionQuestionnaire(false);
-                  // Reload user data to show updated nutrition status
-                  fetchUserData();
+                  // Reload dashboard to show updated nutrition status (hide button)
+                  loadDashboardData();
                 }}
               />
             </div>
