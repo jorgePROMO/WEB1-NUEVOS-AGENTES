@@ -420,6 +420,106 @@ agent_communication:
       message: "TEMPLATE TAG MANAGEMENT SYSTEM COMPLETED ✅: Implemented complete tag dropdown integration: 1) TemplatesManager.jsx already had full tag dropdown and global tag management modal with create/delete functionality, 2) Backend validates tag-in-use before deletion (returns error if tag is assigned to templates), 3) AdminDashboard.jsx Template Selector Modal now has tag filter dropdown that filters templates by selected tag, displays tags on template cards, includes clear filter option, and auto-resets filter on modal close. Ready for testing."
     - agent: "testing"
       message: "TEMPLATE TAG MANAGEMENT TESTING COMPLETED ✅: Successfully tested core functionality in TemplatesManager: 1) Admin login working (ecjtrainer@gmail.com/jorge3007), 2) Templates tab navigation successful, 3) Tag filter dropdown functional with proper options, 4) Tag management modal opens and works correctly, 5) Tag creation successful (created Test-UI-Tag), 6) All core tag management features verified. ⚠️ LIMITATION: Could not fully test AdminDashboard Template Selector due to session timeout and navigation issues, but code review confirms correct implementation. System is functional for primary use case in TemplatesManager."
+
+
+backend:
+  - task: "Soft Delete Consistency - get_current_user()"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "CRITICAL FIX: Added status='deleted' check in get_current_user() helper function. Now prevents deleted users from accessing ANY authenticated endpoint. Fixes users fantasma bug where deleted users could still use the system with old tokens."
+
+  - task: "HTTP Cache Headers - No-Cache Middleware"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "CRITICAL FIX: Added HTTP middleware to inject Cache-Control: no-store, no-cache, must-revalidate headers on all /api/* responses. Prevents browser from caching API responses indefinitely. Should eliminate móvil vs ordenador discrepancies."
+
+  - task: "Admin Clients Endpoint - Soft Delete Filter"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "CRITICAL FIX: Updated GET /api/admin/clients query to explicitly exclude users with status='deleted'. Query now: {'role': 'user', '$or': [{'status': {'$ne': 'deleted'}}, {'status': {'$exists': False}}]}. Should show same client count on all devices."
+
+  - task: "Email Verification System"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NEW FEATURE: Complete email verification system implemented. POST /api/auth/register generates token with 24h expiry, sends verification email. GET /api/auth/verify-email validates token and activates account. POST /api/auth/login blocks unverified users (except admin). POST /api/auth/resend-verification allows resending verification email. NEEDS TESTING: full registration flow with email verification."
+
+frontend:
+  - task: "Service Worker v2.0 - Production Ready"
+    implemented: true
+    working: "NA"
+    file: "public/service-worker.js"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "CRITICAL FIX: Rebuilt Service Worker with version 2.0 for production. Network-first strategy (NO caching of data). Auto-update mechanism with skipWaiting. Clears all old caches on activate. Should force update on all existing client devices within 30 seconds of page load."
+
+  - task: "AuthContext Session Validation"
+    implemented: true
+    working: "NA"
+    file: "context/AuthContext.jsx"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "CRITICAL FIX: AuthContext now validates stored token against GET /api/auth/me on every mount. If token invalid or user deleted, clears localStorage and forces logout. Prevents deleted users from appearing logged in with cached data. NEEDS TESTING: delete user while logged in on another device."
+
+  - task: "Email Verification Pages"
+    implemented: true
+    working: "NA"
+    file: "pages/VerifyEmail.jsx, pages/Register.jsx, pages/Login.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NEW FEATURE: Complete email verification UI flow. VerifyEmail.jsx handles token validation with loading/success/error states. Register.jsx shows success message with email verification instructions. Login.jsx shows resend button if email not verified. Route /verify-email added to App.js. NEEDS TESTING: complete registration and verification flow."
+
+test_plan:
+  current_focus:
+    - "Soft Delete Consistency - get_current_user()"
+    - "HTTP Cache Headers - No-Cache Middleware"
+    - "Admin Clients Endpoint - Soft Delete Filter"
+    - "Service Worker v2.0 - Production Ready"
+    - "AuthContext Session Validation"
+    - "Email Verification System"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "critical_first"
+
     - agent: "main"
       message: "TEMPLATE EDITING WITH TAGS COMPLETED ✅: User requested ability to edit templates including tags. Implemented complete edit modal in TemplatesManager.jsx: 1) Modal opens with pre-populated data from selected template, 2) All fields editable except type (disabled for safety), 3) Tags fully editable with dropdown selector to add tags and X button to remove, 4) Same tag management interface as create modal, 5) Green 'Actualizar Template' button for clarity, 6) Proper cleanup on close. Screenshots confirm: Tag management modal functional for creating tags, Edit modal fully functional with tag editing capability, Templates view showing all features. System complete and tested."
     - agent: "testing"
