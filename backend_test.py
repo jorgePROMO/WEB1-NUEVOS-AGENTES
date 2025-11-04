@@ -972,6 +972,447 @@ class BackendTester:
             self.log_result("Verify WhatsApp Sent Status", False, f"Exception: {str(e)}")
         
         return False
+
+    # ==================== CRITICAL PRODUCTION TESTS ====================
+    
+    def test_28_admin_login_production_credentials(self):
+        """Test 28: Admin login with production credentials"""
+        url = f"{BACKEND_URL}/auth/login"
+        params = {
+            "email": "ecjtrainer@gmail.com",
+            "password": "jorge3007"
+        }
+        
+        try:
+            response = requests.post(url, params=params)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "user" in data and "token" in data and data["user"].get("role") == "admin":
+                    self.admin_token = data["token"]
+                    self.log_result("Admin Login Production Credentials", True, 
+                                  f"Admin logged in successfully with production credentials. Role: {data['user']['role']}")
+                    return True
+                else:
+                    self.log_result("Admin Login Production Credentials", False, 
+                                  "Response missing user/token or not admin role", data)
+            else:
+                self.log_result("Admin Login Production Credentials", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Admin Login Production Credentials", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_29_soft_delete_consistency_register_user(self):
+        """Test 29: Register test user for soft delete testing"""
+        url = f"{BACKEND_URL}/auth/register"
+        
+        # Use unique timestamp for test user
+        timestamp = str(int(datetime.now().timestamp()))
+        test_email = f"test_softdelete_{timestamp}@example.com"
+        
+        payload = {
+            "username": f"test_softdelete_{timestamp}",
+            "email": test_email,
+            "password": "Test123!",
+            "phone": "+34600000000"
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "user" in data and "token" in data:
+                    self.soft_delete_user_id = data["user"]["id"]
+                    self.soft_delete_user_token = data["token"]
+                    self.soft_delete_user_email = test_email
+                    self.log_result("Soft Delete - Register User", True, 
+                                  f"Test user registered for soft delete testing. ID: {self.soft_delete_user_id}")
+                    return True
+                else:
+                    self.log_result("Soft Delete - Register User", False, 
+                                  "Response missing user or token", data)
+            else:
+                self.log_result("Soft Delete - Register User", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Soft Delete - Register User", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_30_verify_user_in_admin_clients(self):
+        """Test 30: Verify registered user appears in admin clients list"""
+        if not self.admin_token or not hasattr(self, 'soft_delete_user_id'):
+            self.log_result("Verify User in Admin Clients", False, "No admin token or user ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/clients"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                clients = data.get("clients", [])
+                
+                # Check if our test user is in the list
+                user_found = False
+                for client in clients:
+                    if client.get("id") == self.soft_delete_user_id:
+                        user_found = True
+                        break
+                
+                if user_found:
+                    self.log_result("Verify User in Admin Clients", True, 
+                                  f"Test user found in admin clients list. Total clients: {len(clients)}")
+                    return True
+                else:
+                    self.log_result("Verify User in Admin Clients", False, 
+                                  f"Test user NOT found in admin clients list. Total clients: {len(clients)}")
+            else:
+                self.log_result("Verify User in Admin Clients", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Verify User in Admin Clients", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_31_soft_delete_user(self):
+        """Test 31: Soft delete the test user"""
+        if not self.admin_token or not hasattr(self, 'soft_delete_user_id'):
+            self.log_result("Soft Delete User", False, "No admin token or user ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/delete-client/{self.soft_delete_user_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.delete(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") == True:
+                    self.log_result("Soft Delete User", True, 
+                                  f"User soft deleted successfully: {data.get('message')}")
+                    return True
+                else:
+                    self.log_result("Soft Delete User", False, 
+                                  "Response success not True", data)
+            else:
+                self.log_result("Soft Delete User", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Soft Delete User", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_32_verify_deleted_user_not_in_clients(self):
+        """Test 32: Verify deleted user does NOT appear in admin clients list"""
+        if not self.admin_token:
+            self.log_result("Verify Deleted User Not in Clients", False, "No admin token available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/clients"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                clients = data.get("clients", [])
+                
+                # Check if our deleted user is NOT in the list
+                user_found = False
+                for client in clients:
+                    if client.get("id") == getattr(self, 'soft_delete_user_id', None):
+                        user_found = True
+                        break
+                
+                if not user_found:
+                    self.log_result("Verify Deleted User Not in Clients", True, 
+                                  f"Deleted user correctly NOT found in admin clients list. Total clients: {len(clients)}")
+                    return True
+                else:
+                    self.log_result("Verify Deleted User Not in Clients", False, 
+                                  f"CRITICAL: Deleted user still appears in admin clients list!")
+            else:
+                self.log_result("Verify Deleted User Not in Clients", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Verify Deleted User Not in Clients", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_33_deleted_user_auth_me_fails(self):
+        """Test 33: Verify deleted user cannot access /auth/me endpoint"""
+        if not hasattr(self, 'soft_delete_user_token'):
+            self.log_result("Deleted User Auth Me Fails", False, "No deleted user token available")
+            return False
+            
+        url = f"{BACKEND_URL}/auth/me"
+        headers = {"Authorization": f"Bearer {self.soft_delete_user_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 403:
+                self.log_result("Deleted User Auth Me Fails", True, 
+                              "Deleted user correctly blocked from /auth/me with 403 Forbidden")
+                return True
+            elif response.status_code == 401:
+                self.log_result("Deleted User Auth Me Fails", True, 
+                              "Deleted user correctly blocked from /auth/me with 401 Unauthorized")
+                return True
+            else:
+                self.log_result("Deleted User Auth Me Fails", False, 
+                              f"CRITICAL: Deleted user can still access /auth/me! HTTP {response.status_code}")
+        except Exception as e:
+            self.log_result("Deleted User Auth Me Fails", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_34_deleted_user_dashboard_fails(self):
+        """Test 34: Verify deleted user cannot access dashboard"""
+        if not hasattr(self, 'soft_delete_user_token'):
+            self.log_result("Deleted User Dashboard Fails", False, "No deleted user token available")
+            return False
+            
+        url = f"{BACKEND_URL}/users/dashboard"
+        headers = {"Authorization": f"Bearer {self.soft_delete_user_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 403:
+                self.log_result("Deleted User Dashboard Fails", True, 
+                              "Deleted user correctly blocked from dashboard with 403 Forbidden")
+                return True
+            elif response.status_code == 401:
+                self.log_result("Deleted User Dashboard Fails", True, 
+                              "Deleted user correctly blocked from dashboard with 401 Unauthorized")
+                return True
+            else:
+                self.log_result("Deleted User Dashboard Fails", False, 
+                              f"CRITICAL: Deleted user can still access dashboard! HTTP {response.status_code}")
+        except Exception as e:
+            self.log_result("Deleted User Dashboard Fails", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_35_cache_headers_verification(self):
+        """Test 35: Verify no-cache headers are present in API responses"""
+        if not self.admin_token:
+            self.log_result("Cache Headers Verification", False, "No admin token available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/clients"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                # Check for required cache control headers
+                cache_control = response.headers.get("Cache-Control", "")
+                pragma = response.headers.get("Pragma", "")
+                expires = response.headers.get("Expires", "")
+                
+                required_cache_directives = ["no-store", "no-cache", "must-revalidate", "max-age=0"]
+                has_all_directives = all(directive in cache_control for directive in required_cache_directives)
+                
+                if has_all_directives and pragma == "no-cache" and expires == "0":
+                    self.log_result("Cache Headers Verification", True, 
+                                  f"All required no-cache headers present: Cache-Control='{cache_control}', Pragma='{pragma}', Expires='{expires}'")
+                    return True
+                else:
+                    self.log_result("Cache Headers Verification", False, 
+                                  f"Missing cache headers: Cache-Control='{cache_control}', Pragma='{pragma}', Expires='{expires}'")
+            else:
+                self.log_result("Cache Headers Verification", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Cache Headers Verification", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_36_email_verification_register_user(self):
+        """Test 36: Register user for email verification testing"""
+        url = f"{BACKEND_URL}/auth/register"
+        
+        # Use unique timestamp for test user
+        timestamp = str(int(datetime.now().timestamp()))
+        test_email = f"test_verify_email_{timestamp}@example.com"
+        
+        payload = {
+            "username": f"test_verify_{timestamp}",
+            "email": test_email,
+            "password": "Test123!",
+            "phone": "+34600000001"
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "user" in data and "message" in data:
+                    self.verify_user_email = test_email
+                    message = data.get("message", "")
+                    if "verifica tu email" in message.lower():
+                        self.log_result("Email Verification - Register User", True, 
+                                      f"User registered with email verification message: {message}")
+                        return True
+                    else:
+                        self.log_result("Email Verification - Register User", False, 
+                                      f"Registration successful but no verification message: {message}")
+                else:
+                    self.log_result("Email Verification - Register User", False, 
+                                  "Response missing user or message", data)
+            else:
+                self.log_result("Email Verification - Register User", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Email Verification - Register User", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_37_verify_unverified_user_in_clients(self):
+        """Test 37: Verify unverified user appears in admin clients with email_verified=false"""
+        if not self.admin_token or not hasattr(self, 'verify_user_email'):
+            self.log_result("Verify Unverified User in Clients", False, "No admin token or user email available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/clients"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                clients = data.get("clients", [])
+                
+                # Find our test user
+                test_user = None
+                for client in clients:
+                    if client.get("email") == self.verify_user_email:
+                        test_user = client
+                        break
+                
+                if test_user:
+                    email_verified = test_user.get("email_verified", True)  # Default True if not present
+                    if email_verified == False:
+                        self.log_result("Verify Unverified User in Clients", True, 
+                                      f"Unverified user found with email_verified=false")
+                        return True
+                    else:
+                        self.log_result("Verify Unverified User in Clients", False, 
+                                      f"User found but email_verified={email_verified} (should be false)")
+                else:
+                    self.log_result("Verify Unverified User in Clients", False, 
+                                  f"Test user with email {self.verify_user_email} not found in clients list")
+            else:
+                self.log_result("Verify Unverified User in Clients", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Verify Unverified User in Clients", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_38_unverified_user_login_fails(self):
+        """Test 38: Verify unverified user cannot login"""
+        if not hasattr(self, 'verify_user_email'):
+            self.log_result("Unverified User Login Fails", False, "No test user email available")
+            return False
+            
+        url = f"{BACKEND_URL}/auth/login"
+        params = {
+            "email": self.verify_user_email,
+            "password": "Test123!"
+        }
+        
+        try:
+            response = requests.post(url, params=params)
+            
+            if response.status_code == 403:
+                data = response.json()
+                detail = data.get("detail", "")
+                if "verifica tu email" in detail.lower():
+                    self.log_result("Unverified User Login Fails", True, 
+                                  f"Unverified user correctly blocked from login: {detail}")
+                    return True
+                else:
+                    self.log_result("Unverified User Login Fails", False, 
+                                  f"403 returned but wrong message: {detail}")
+            else:
+                self.log_result("Unverified User Login Fails", False, 
+                              f"CRITICAL: Unverified user can login! HTTP {response.status_code}")
+        except Exception as e:
+            self.log_result("Unverified User Login Fails", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_39_admin_clients_consistency_multiple_calls(self):
+        """Test 39: Verify admin clients endpoint returns consistent data across multiple calls"""
+        if not self.admin_token:
+            self.log_result("Admin Clients Consistency", False, "No admin token available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/clients"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            # Make 3 consecutive calls
+            responses = []
+            for i in range(3):
+                response = requests.get(url, headers=headers)
+                if response.status_code == 200:
+                    responses.append(response.json())
+                else:
+                    self.log_result("Admin Clients Consistency", False, 
+                                  f"Call {i+1} failed: HTTP {response.status_code}")
+                    return False
+            
+            # Check consistency
+            first_total = responses[0].get("stats", {}).get("total", 0)
+            first_clients_count = len(responses[0].get("clients", []))
+            
+            consistent = True
+            for i, resp in enumerate(responses[1:], 2):
+                total = resp.get("stats", {}).get("total", 0)
+                clients_count = len(resp.get("clients", []))
+                
+                if total != first_total or clients_count != first_clients_count:
+                    consistent = False
+                    self.log_result("Admin Clients Consistency", False, 
+                                  f"Inconsistent data: Call 1 total={first_total}, Call {i} total={total}")
+                    return False
+            
+            # Check no deleted users
+            all_clients = []
+            for resp in responses:
+                all_clients.extend(resp.get("clients", []))
+            
+            deleted_users = [c for c in all_clients if c.get("status") == "deleted"]
+            
+            if deleted_users:
+                self.log_result("Admin Clients Consistency", False, 
+                              f"CRITICAL: Found {len(deleted_users)} clients with status='deleted'")
+                return False
+            
+            if consistent:
+                self.log_result("Admin Clients Consistency", True, 
+                              f"Admin clients data consistent across 3 calls. Total: {first_total}, No deleted users found")
+                return True
+                
+        except Exception as e:
+            self.log_result("Admin Clients Consistency", False, f"Exception: {str(e)}")
+        
+        return False
     
     def run_all_tests(self):
         """Run all tests in sequence"""
