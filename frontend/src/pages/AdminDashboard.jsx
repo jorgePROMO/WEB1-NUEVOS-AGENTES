@@ -182,14 +182,14 @@ const AdminDashboard = () => {
         withCredentials: true
       });
       setNutritionPlans(response.data.plans || []);
-      // NO seleccionar ninguno por defecto - todos colapsados
-      setSelectedPlan(null);
+      // REMOVED: setSelectedPlan(null) - esto causaba que el acordeón se cerrara inmediatamente
+      // El acordeón ahora mantiene su estado al recargar datos
     } catch (error) {
       if (error.response?.status !== 404) {
         console.error('Error loading nutrition plan:', error);
       }
       setNutritionPlans([]);
-      setSelectedPlan(null);
+      // REMOVED: setSelectedPlan(null) - dejar que el usuario controle el estado del acordeón
     }
   };
 
