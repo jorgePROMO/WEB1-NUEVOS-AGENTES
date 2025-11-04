@@ -3382,12 +3382,6 @@ async def get_user_nutrition_plans(user_id: str, request: Request):
         "plans": formatted_plans,
         "questionnaire_submissions": formatted_submissions  # Nueva respuesta con submissions
     }
-        })
-    
-    return {
-        "plans": formatted_plans,
-        "questionnaire_submissions": formatted_submissions  # Nueva respuesta con submissions
-    }
 
 
 @api_router.patch("/admin/users/{user_id}/nutrition/{plan_id}")
