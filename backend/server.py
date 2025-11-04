@@ -3385,9 +3385,8 @@ async def get_user_nutrition_plans(user_id: str, request: Request):
         })
     
     return {
-        "success": True,
         "plans": formatted_plans,
-        "current_plan": formatted_plans[0] if formatted_plans else None
+        "questionnaire_submissions": formatted_submissions  # Nueva respuesta con submissions
     }
 
 
