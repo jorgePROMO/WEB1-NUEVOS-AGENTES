@@ -3237,6 +3237,99 @@ async def submit_nutrition_questionnaire(questionnaire: NutritionQuestionnaireSu
         )
 
 
+
+@api_router.post("/admin/users/{user_id}/nutrition/generate")
+async def admin_generate_nutrition_plan(user_id: str, submission_id: str, request: Request):
+    """Admin genera el plan de nutrición desde las respuestas del cuestionario"""
+    await require_admin(request)
+    
+    try:
+        # Obtener la submission del cuestionario
+        submission = await db.nutrition_questionnaire_submissions.find_one({"_id": submission_id})
+        
+        if not submission:
+            raise HTTPException(status_code=404, detail="Cuestionario no encontrado")
+        
+        if submission["user_id"] != user_id:
+            raise HTTPException(status_code=403, detail="El cuestionario no pertenece a este usuario")
+        
+        if submission.get("plan_generated"):
+            raise HTTPException(status_code=400, detail="Ya existe un plan generado para este cuestionario")
+        
+        # Obtener datos del cuestionario
+        questionnaire_data = submission["responses"]
+        
+        # Obtener mes y año actual
+        now = datetime.now(timezone.utc)
+        current_month = now.month
+        current_year = now.year
+        
+        # Generar ID único para este plan
+        plan_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
+        
+        logger.info(f"🔄 Admin iniciando generación de plan para usuario {user_id} - submission {submission_id}")
+        
+        # Generar el plan con el LLM
+        from nutrition_service import generate_nutrition_plan
+        result = await generate_nutrition_plan(questionnaire_data)
+        
+        if not result["success"]:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Error generando plan: {result.get('error', 'Error desconocido')}"
+            )
+        
+        # Guardar el plan en nutrition_plans
+        nutrition_plan_doc = {
+            "_id": plan_id,
+            "user_id": user_id,
+            "month": current_month,
+            "year": current_year,
+            "questionnaire_data": questionnaire_data,
+            "plan_inicial": result["plan_inicial"],
+            "plan_verificado": result["plan_verificado"],
+            "generated_at": now,
+            "edited": False,
+            "pdf_id": None,
+            "pdf_filename": None,
+            "sent_email": False,
+            "sent_whatsapp": False
+        }
+        
+        await db.nutrition_plans.insert_one(nutrition_plan_doc)
+        
+        # Actualizar la submission para marcarla como procesada
+        await db.nutrition_questionnaire_submissions.update_one(
+            {"_id": submission_id},
+            {
+                "$set": {
+                    "plan_generated": True,
+                    "plan_id": plan_id
+                }
+            }
+        )
+        
+        logger.info(f"✅ Plan generado exitosamente para usuario {user_id} - {plan_id}")
+        
+        return {
+            "success": True,
+            "message": "Plan generado correctamente",
+            "plan_id": plan_id,
+            "plan": nutrition_plan_doc
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generando plan: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error generando plan: {str(e)}"
+        )
+
+
+
+
 @api_router.get("/admin/users/{user_id}/nutrition")
 async def get_user_nutrition_plans(user_id: str, request: Request):
     """Admin obtiene el historial de planes de nutrición de un usuario"""
