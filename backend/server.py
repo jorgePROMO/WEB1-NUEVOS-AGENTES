@@ -604,6 +604,15 @@ async def get_user_dashboard(request: Request):
     # Count unread alerts
     unread_count = len([a for a in alerts if not a.get("read", False)])
     
+    # Get nutrition plan (check if user has any nutrition plan)
+    nutrition_plan = await db.nutrition_plans.find_one(
+        {"user_id": user_id},
+        sort=[("generated_at", -1)]  # Get most recent plan
+    )
+    
+    if nutrition_plan:
+        nutrition_plan["id"] = str(nutrition_plan["_id"])
+    
     return {
         "user": {
             "id": user["_id"],
@@ -612,7 +621,8 @@ async def get_user_dashboard(request: Request):
             "name": user["name"],
             "role": user["role"],
             "subscription": user["subscription"],
-            "next_review": user.get("next_review")
+            "next_review": user.get("next_review"),
+            "nutrition_plan": nutrition_plan  # Add nutrition plan info
         },
         "forms": forms,
         "pdfs": pdfs,
