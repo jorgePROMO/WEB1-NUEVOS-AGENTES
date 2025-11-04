@@ -1416,12 +1416,26 @@ class BackendTester:
     
     def run_all_tests(self):
         """Run all tests in sequence"""
-        print(f"🚀 Starting Backend API Tests - GPT Report Generation Focus")
+        print(f"🚀 TESTING EXHAUSTIVO PARA PRODUCCIÓN - Sistema Jorge Calcerrada")
         print(f"Backend URL: {BACKEND_URL}")
         print("=" * 80)
         
-        # Run tests in order - focusing on GPT report generation
+        # Run tests in order - focusing on CRITICAL PRODUCTION TESTS
         tests = [
+            # CRITICAL PRODUCTION TESTS (HIGH PRIORITY)
+            self.test_28_admin_login_production_credentials,
+            self.test_29_soft_delete_consistency_register_user,
+            self.test_30_verify_user_in_admin_clients,
+            self.test_31_soft_delete_user,
+            self.test_32_verify_deleted_user_not_in_clients,
+            self.test_33_deleted_user_auth_me_fails,
+            self.test_34_deleted_user_dashboard_fails,
+            self.test_35_cache_headers_verification,
+            self.test_36_email_verification_register_user,
+            self.test_37_verify_unverified_user_in_clients,
+            self.test_38_unverified_user_login_fails,
+            self.test_39_admin_clients_consistency_multiple_calls,
+            
             # Basic system tests
             self.test_1_register_new_user,
             self.test_2_admin_login,
@@ -1446,7 +1460,7 @@ class BackendTester:
             self.test_19_update_external_client_status,
             self.test_20_delete_external_client,
             
-            # GPT Report Generation tests (main focus)
+            # GPT Report Generation tests
             self.test_21_admin_login_for_gpt_tests,
             self.test_22_submit_questionnaire_with_gpt_report,
             self.test_23_get_prospect_detail_verify_report,
