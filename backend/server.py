@@ -3332,7 +3332,7 @@ async def admin_generate_nutrition_plan(user_id: str, submission_id: str, reques
 
 @api_router.get("/admin/users/{user_id}/nutrition")
 async def get_user_nutrition_plans(user_id: str, request: Request):
-    """Admin obtiene el historial de planes de nutrición de un usuario"""
+    """Admin obtiene el historial de planes de nutrición Y respuestas del cuestionario de un usuario"""
     await require_admin(request)
     
     user = await db.users.find_one({"_id": user_id})
@@ -3344,8 +3344,10 @@ async def get_user_nutrition_plans(user_id: str, request: Request):
         {"user_id": user_id}
     ).sort("generated_at", -1).to_list(length=None)
     
-    if not plans:
-        raise HTTPException(status_code=404, detail="Usuario no tiene planes de nutrición")
+    # Obtener submissions del cuestionario (respuestas sin plan generado)
+    submissions = await db.nutrition_questionnaire_submissions.find(
+        {"user_id": user_id}
+    ).sort("submitted_at", -1).to_list(length=None)
     
     # Formatear planes para respuesta
     formatted_plans = []
@@ -3363,6 +3365,23 @@ async def get_user_nutrition_plans(user_id: str, request: Request):
             "pdf_filename": plan.get("pdf_filename"),
             "sent_email": plan.get("sent_email", False),
             "sent_whatsapp": plan.get("sent_whatsapp", False)
+        })
+    
+    # Formatear submissions
+    formatted_submissions = []
+    for sub in submissions:
+        formatted_submissions.append({
+            "id": sub["_id"],
+            "submitted_at": sub["submitted_at"].isoformat() if sub.get("submitted_at") else None,
+            "plan_generated": sub.get("plan_generated", False),
+            "plan_id": sub.get("plan_id"),
+            "responses": sub.get("responses", {})
+        })
+    
+    return {
+        "plans": formatted_plans,
+        "questionnaire_submissions": formatted_submissions  # Nueva respuesta con submissions
+    }
         })
     
     return {
