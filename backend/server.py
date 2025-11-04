@@ -110,10 +110,62 @@ async def register(user_data: UserCreate):
     ]})
     
     if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email or username already registered"
-        )
+        # Si el usuario existe pero está eliminado, permitir re-registro (reactivar)
+        if existing_user.get("status") == "deleted":
+            # Reactivar usuario eliminado
+            import secrets
+            verification_token = secrets.token_urlsafe(32)
+            verification_expires_at = datetime.now(timezone.utc) + timedelta(hours=24)
+            
+            await db.users.update_one(
+                {"_id": existing_user["_id"]},
+                {
+                    "$set": {
+                        "status": "active",  # Reactivar
+                        "password": get_password_hash(user_data.password),
+                        "phone": user_data.phone,
+                        "updated_at": datetime.now(timezone.utc),
+                        "email_verified": False,
+                        "verification_token": verification_token,
+                        "verification_token_expires_at": verification_expires_at
+                    }
+                }
+            )
+            
+            # Enviar email de verificación
+            try:
+                from email_utils import send_email
+                frontend_url = os.environ.get('FRONTEND_URL', 'https://nutriplan-hub-4.preview.emergentagent.com')
+                verification_link = f"{frontend_url}/verify-email?token={verification_token}"
+                
+                email_html = f"""
+                <!DOCTYPE html>
+                <html>
+                <head><meta charset="UTF-8"></head>
+                <body style="font-family: Arial, sans-serif;">
+                    <h2>¡Bienvenido de nuevo!</h2>
+                    <p>Tu cuenta ha sido reactivada. Por favor verifica tu email:</p>
+                    <a href="{verification_link}" style="background: blue; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Verificar Email</a>
+                </body>
+                </html>
+                """
+                
+                send_email(
+                    to_email=user_data.email,
+                    subject="✅ Reactivación de cuenta - Verifica tu email",
+                    html_body=email_html
+                )
+                logger.info(f"Email de reactivación enviado a {user_data.email}")
+            except Exception as e:
+                logger.error(f"Error enviando email de reactivación: {e}")
+            
+            return {"message": "Cuenta reactivada correctamente. Por favor verifica tu email."}
+        else:
+            # Usuario existe y NO está eliminado
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email or username already registered"
+            )
     
     # Generar token de verificación único
     import secrets
