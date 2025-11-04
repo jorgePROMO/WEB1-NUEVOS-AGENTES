@@ -1485,6 +1485,116 @@ const AdminDashboard = () => {
 
                         {/* Nutrition Tab */}
                         <TabsContent value="nutrition">
+                          {/* Questionnaire Submissions Pendientes */}
+                          {questionnaireSubmissions.length > 0 && questionnaireSubmissions.some(sub => !sub.plan_generated) && (
+                            <div className="mb-6">
+                              <div className="bg-gradient-to-r from-orange-50 to-amber-50 border-2 border-orange-300 rounded-lg p-4">
+                                <h3 className="text-xl font-bold text-orange-800 mb-3 flex items-center gap-2">
+                                  📝 Cuestionarios Pendientes de Procesar
+                                  <span className="bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
+                                    {questionnaireSubmissions.filter(sub => !sub.plan_generated).length}
+                                  </span>
+                                </h3>
+                                
+                                <div className="space-y-3">
+                                  {questionnaireSubmissions.filter(sub => !sub.plan_generated).map((submission) => (
+                                    <Card key={submission.id} className="border-orange-200 bg-white">
+                                      <CardHeader>
+                                        <div className="flex justify-between items-center">
+                                          <div>
+                                            <CardTitle className="text-lg text-gray-800">
+                                              📋 Respuestas del Cuestionario
+                                            </CardTitle>
+                                            <p className="text-sm text-gray-500">
+                                              Enviado el {new Date(submission.submitted_at).toLocaleDateString('es-ES', {
+                                                day: 'numeric',
+                                                month: 'long',
+                                                year: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                              })}
+                                            </p>
+                                          </div>
+                                          
+                                          <div className="flex gap-2">
+                                            <Button
+                                              onClick={() => setSelectedSubmission(selectedSubmission?.id === submission.id ? null : submission)}
+                                              variant={selectedSubmission?.id === submission.id ? "default" : "outline"}
+                                              className="flex items-center gap-2"
+                                            >
+                                              {selectedSubmission?.id === submission.id ? 'Ocultar' : 'Ver Respuestas'}
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      </CardHeader>
+                                      
+                                      {/* Respuestas del cuestionario */}
+                                      {selectedSubmission?.id === submission.id && (
+                                        <CardContent className="border-t pt-4">
+                                          <div className="bg-gray-50 p-4 rounded-lg mb-4 max-h-96 overflow-y-auto">
+                                            <h4 className="font-bold text-gray-800 mb-3">📊 Respuestas Completas:</h4>
+                                            <div className="space-y-3">
+                                              {Object.entries(submission.responses).map(([key, value]) => {
+                                                if (!value || key === 'submit') return null;
+                                                
+                                                // Formatear el nombre del campo
+                                                const fieldName = key
+                                                  .replace(/_/g, ' ')
+                                                  .replace(/\b\w/g, l => l.toUpperCase());
+                                                
+                                                return (
+                                                  <div key={key} className="border-b border-gray-200 pb-2">
+                                                    <p className="text-sm font-semibold text-gray-700">{fieldName}:</p>
+                                                    <p className="text-sm text-gray-600">{String(value)}</p>
+                                                  </div>
+                                                );
+                                              })}
+                                            </div>
+                                          </div>
+                                          
+                                          {/* Opciones: Generar con IA o Manual */}
+                                          <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-200">
+                                            <h4 className="font-bold text-gray-800 mb-3">¿Cómo quieres crear el plan?</h4>
+                                            <div className="flex gap-3">
+                                              <Button
+                                                onClick={() => generatePlanWithAI(submission.id)}
+                                                disabled={generatingPlan}
+                                                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
+                                              >
+                                                {generatingPlan ? (
+                                                  <>
+                                                    <span className="animate-spin mr-2">⏳</span>
+                                                    Generando con IA...
+                                                  </>
+                                                ) : (
+                                                  <>
+                                                    🤖 Generar con IA
+                                                  </>
+                                                )}
+                                              </Button>
+                                              
+                                              <Button
+                                                onClick={() => createManualPlan(submission.id)}
+                                                variant="outline"
+                                                className="flex-1 border-purple-300 hover:bg-purple-50"
+                                              >
+                                                ✍️ Escribir Manualmente
+                                              </Button>
+                                            </div>
+                                            <p className="text-xs text-gray-500 mt-2 text-center">
+                                              La IA tardará ~30-60 segundos. El manual te permite escribir libremente.
+                                            </p>
+                                          </div>
+                                        </CardContent>
+                                      )}
+                                    </Card>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* Planes de Nutrición Existentes */}
                           {nutritionPlans.length > 0 ? (
                             <div className="space-y-4">
                               <div className="flex justify-between items-center mb-4">
