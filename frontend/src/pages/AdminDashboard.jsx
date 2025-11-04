@@ -121,6 +121,8 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (selectedClient) {
+      // Reset accordion state when changing clients
+      setSelectedPlan(null);
       loadClientDetails(selectedClient.id);
       loadNutritionPlan(selectedClient.id);
     }
