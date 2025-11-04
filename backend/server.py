@@ -3934,6 +3934,17 @@ async def delete_event(request: Request, event_id: str):
 # Include the router in the main app
 app.include_router(api_router)
 
+# Add Cache Control Middleware to prevent browser caching of API responses
+@app.middleware("http")
+async def add_no_cache_headers(request, call_next):
+    response = await call_next(request)
+    # Only add no-cache headers to API responses
+    if request.url.path.startswith("/api/"):
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+    return response
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
