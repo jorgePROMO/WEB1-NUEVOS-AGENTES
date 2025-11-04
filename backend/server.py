@@ -77,6 +77,14 @@ async def get_current_user(request: Request):
     user = await db.users.find_one({"_id": user_id})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check if user has been deleted (soft delete)
+    if user.get("status") == "deleted":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Tu cuenta ha sido desactivada. Por favor contacta al administrador."
+        )
+    
     user["id"] = str(user["_id"])
     return user
 
