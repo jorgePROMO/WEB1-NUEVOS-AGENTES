@@ -19,16 +19,38 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Validate user session on mount
   useEffect(() => {
-    // Check if user is already logged in
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
+    const validateSession = async () => {
+      const storedToken = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
+      
+      if (storedToken && storedUser) {
+        try {
+          // Validate token against backend
+          const response = await axios.get(`${API}/auth/me`, {
+            headers: {
+              'Authorization': `Bearer ${storedToken}`
+            }
+          });
+          
+          // Token is valid, update state
+          setToken(storedToken);
+          setUser(response.data);
+          localStorage.setItem('user', JSON.stringify(response.data));
+        } catch (error) {
+          // Token is invalid or user deleted - clear localStorage
+          console.warn('Session validation failed:', error.response?.data?.detail);
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setToken(null);
+          setUser(null);
+        }
+      }
+      setLoading(false);
+    };
     
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
+    validateSession();
   }, []);
 
   const login = async (email, password) => {
