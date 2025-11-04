@@ -1820,15 +1820,29 @@ const AdminDashboard = () => {
                               })}
                             </div>
                           ) : (
-                            <div className="bg-gray-50 p-8 rounded-lg text-center">
-                              <UtensilsCrossed className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                              <h3 className="font-semibold text-lg mb-2 text-gray-700">
-                                Sin Plan de Nutrición
-                              </h3>
-                              <p className="text-gray-500">
-                                Este usuario aún no ha completado el cuestionario de nutrición.
-                              </p>
-                            </div>
+                            <>
+                              {questionnaireSubmissions.length === 0 ? (
+                                <div className="bg-gray-50 p-8 rounded-lg text-center">
+                                  <UtensilsCrossed className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                                  <h3 className="font-semibold text-lg mb-2 text-gray-700">
+                                    Sin Cuestionario
+                                  </h3>
+                                  <p className="text-gray-500">
+                                    Este usuario aún no ha completado el cuestionario de nutrición.
+                                  </p>
+                                </div>
+                              ) : (
+                                <div className="bg-green-50 p-8 rounded-lg text-center border-2 border-green-300">
+                                  <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+                                  <h3 className="font-semibold text-lg mb-2 text-green-800">
+                                    ✅ Cuestionario Completado
+                                  </h3>
+                                  <p className="text-gray-700">
+                                    Este usuario ha enviado sus respuestas. Revisa arriba para generar su plan.
+                                  </p>
+                                </div>
+                              )}
+                            </>
                           )}
                         </TabsContent>
 
