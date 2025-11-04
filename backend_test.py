@@ -1481,6 +1481,14 @@ class BackendTester:
         print("=" * 80)
         print(f"📊 TEST SUMMARY: {passed}/{total} tests passed")
         
+        # CRITICAL PRODUCTION TESTS summary
+        critical_keywords = ["Soft Delete", "Cache Headers", "Email Verification", "Admin Clients Consistency", "Production Credentials"]
+        critical_tests = [r for r in self.results if any(keyword in r["test"] for keyword in critical_keywords)]
+        critical_passed = sum(1 for r in critical_tests if r["success"])
+        critical_total = len(critical_tests)
+        
+        print(f"🚨 CRITICAL PRODUCTION TESTS: {critical_passed}/{critical_total} passed")
+        
         # Separate GPT tests summary
         gpt_tests = [r for r in self.results if "GPT" in r["test"] or "Report" in r["test"] or "WhatsApp" in r["test"] or "Email" in r["test"]]
         gpt_passed = sum(1 for r in gpt_tests if r["success"])
@@ -1495,8 +1503,15 @@ class BackendTester:
         
         print(f"🎯 CRM EXTERNAL CLIENTS TESTS: {crm_passed}/{crm_total} passed")
         
+        # Show critical test failures first
+        if critical_passed < critical_total:
+            print("🚨 CRITICAL PRODUCTION TEST FAILURES:")
+            critical_failures = [r["test"] for r in critical_tests if not r["success"]]
+            for failure in critical_failures:
+                print(f"   ❌ {failure}")
+        
         if passed == total:
-            print("🎉 All tests PASSED!")
+            print("🎉 All tests PASSED! System ready for production.")
         else:
             print("⚠️  Some tests FAILED!")
             failed_tests = [r["test"] for r in self.results if not r["success"]]
