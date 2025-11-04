@@ -102,7 +102,11 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Testear el sistema completo de Jorge Calcerrada con flujo específico de testing backend"
+user_problem_statement: "PREPARACIÓN PARA PRODUCCIÓN - Sistema completo de Jorge Calcerrada debe estar 100% funcional sin bugs de caché, usuarios fantasma, o discrepancias entre dispositivos. Implementadas 4 correcciones críticas."
+
+agent_communication:
+    - agent: "main"
+      message: "🚨 CORRECCIONES CRÍTICAS PARA PRODUCCIÓN IMPLEMENTADAS: 1) ✅ Soft Delete Consistente - get_current_user() ahora rechaza usuarios con status='deleted', previniendo usuarios fantasma logueados. 2) ✅ Headers HTTP No-Cache - Middleware añadido para enviar Cache-Control: no-store en todas las respuestas /api/*, eliminando caché del navegador. 3) ✅ Service Worker v2.0 - Versionado forzado con network-first strategy, auto-update cada 30s, limpieza de cachés antiguos. 4) ✅ Validación de Sesión - AuthContext valida token contra /api/auth/me en cada mount, limpia localStorage si usuario eliminado/token inválido. REQUIERE TESTING EXHAUSTIVO de: registro, login, dashboard usuario, admin clients, eliminación de clientes, verificación email."
 
 backend:
   - task: "User Registration API"
