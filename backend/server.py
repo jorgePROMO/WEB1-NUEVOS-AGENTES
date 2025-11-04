@@ -3182,7 +3182,7 @@ async def send_email_template(email_data: dict, request: Request):
 
 @api_router.post("/nutrition/questionnaire/submit")
 async def submit_nutrition_questionnaire(questionnaire: NutritionQuestionnaireSubmit, request: Request):
-    """Usuario completa cuestionario de nutrición - Procesamiento asíncrono"""
+    """Usuario completa cuestionario de nutrición - SOLO GUARDA RESPUESTAS (no genera plan)"""
     user = await get_current_user(request)
     user_id = user["_id"]
     
@@ -3203,102 +3203,37 @@ async def submit_nutrition_questionnaire(questionnaire: NutritionQuestionnaireSu
         # Convertir el cuestionario a dict
         questionnaire_data = questionnaire.dict()
         
-        # Obtener mes y año actual
-        now = datetime.now(timezone.utc)
-        current_month = now.month
-        current_year = now.year
+        # Generar ID único para esta submission
+        submission_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
         
-        # Generar ID único para este plan
-        plan_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
-        
-        # Guardar INMEDIATAMENTE en colección nutrition_plans con estado "processing"
-        nutrition_plan_doc = {
-            "_id": plan_id,
+        # Guardar SOLO LAS RESPUESTAS en la colección nutrition_questionnaire_submissions
+        submission_doc = {
+            "_id": submission_id,
             "user_id": user_id,
-            "month": current_month,
-            "year": current_year,
-            "questionnaire_data": questionnaire_data,
-            "plan_inicial": "",  # Se llenará después
-            "plan_verificado": "⏳ Generando tu plan personalizado... Esto puede tardar 1-2 minutos.",
-            "generated_at": now,
-            "edited": False,
-            "pdf_id": None,
-            "pdf_filename": None,
-            "sent_email": False,
-            "sent_whatsapp": False,
-            "status": "processing"  # Nuevo campo para tracking
+            "responses": questionnaire_data,
+            "submitted_at": datetime.now(timezone.utc),
+            "plan_generated": False,  # El admin generará el plan después
+            "plan_id": None
         }
         
-        # Insertar INMEDIATAMENTE
-        await db.nutrition_plans.insert_one(nutrition_plan_doc)
+        await db.nutrition_questionnaire_submissions.insert_one(submission_doc)
         
-        logger.info(f"Cuestionario guardado para usuario {user_id} - {current_month}/{current_year} - Iniciando generación en background")
-        
-        # Función async para generar el plan en background
-        async def generate_plan_background():
-            try:
-                from nutrition_service import generate_nutrition_plan
-                result = await generate_nutrition_plan(questionnaire_data)
-                
-                if result["success"]:
-                    # Actualizar con el plan generado
-                    await db.nutrition_plans.update_one(
-                        {"_id": plan_id},
-                        {
-                            "$set": {
-                                "plan_inicial": result["plan_inicial"],
-                                "plan_verificado": result["plan_verificado"],
-                                "status": "completed",
-                                "completed_at": datetime.now(timezone.utc)
-                            }
-                        }
-                    )
-                    logger.info(f"✅ Plan generado exitosamente para usuario {user_id} - {plan_id}")
-                else:
-                    # Marcar como error
-                    await db.nutrition_plans.update_one(
-                        {"_id": plan_id},
-                        {
-                            "$set": {
-                                "status": "error",
-                                "error_message": result.get("error", "Error desconocido"),
-                                "plan_verificado": f"❌ Error generando plan: {result.get('error', 'Error desconocido')}"
-                            }
-                        }
-                    )
-                    logger.error(f"❌ Error generando plan para usuario {user_id}: {result.get('error')}")
-            except Exception as e:
-                logger.error(f"❌ Excepción generando plan para usuario {user_id}: {e}")
-                await db.nutrition_plans.update_one(
-                    {"_id": plan_id},
-                    {
-                        "$set": {
-                            "status": "error",
-                            "error_message": str(e),
-                            "plan_verificado": f"❌ Error generando plan: {str(e)}"
-                        }
-                    }
-                )
-        
-        # Iniciar generación en background (NO esperar)
-        import asyncio
-        asyncio.create_task(generate_plan_background())
+        logger.info(f"✅ Cuestionario guardado para usuario {user_id} - {submission_id}")
         
         # Responder INMEDIATAMENTE al frontend
         return {
             "success": True,
-            "message": "Cuestionario recibido correctamente. Tu plan se está generando y estará listo en 1-2 minutos.",
-            "plan_id": plan_id,
-            "status": "processing"
+            "message": "¡Cuestionario enviado correctamente! Jorge revisará tus respuestas y generará tu plan personalizado.",
+            "submission_id": submission_id
         }
         
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error en cuestionario de nutrición: {e}")
+        logger.error(f"Error guardando cuestionario: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error procesando cuestionario: {str(e)}"
+            detail=f"Error guardando cuestionario: {str(e)}"
         )
 
 
