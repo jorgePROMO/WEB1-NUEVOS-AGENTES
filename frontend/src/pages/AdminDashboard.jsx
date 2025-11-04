@@ -176,7 +176,7 @@ const AdminDashboard = () => {
     }
   };
 
-  // Load nutrition plans (historial)
+  // Load nutrition plans (historial) y questionnaire submissions
   const loadNutritionPlan = async (userId) => {
     try {
       const response = await axios.get(`${API}/admin/users/${userId}/nutrition`, {
@@ -184,6 +184,7 @@ const AdminDashboard = () => {
         withCredentials: true
       });
       setNutritionPlans(response.data.plans || []);
+      setQuestionnaireSubmissions(response.data.questionnaire_submissions || []);
       // REMOVED: setSelectedPlan(null) - esto causaba que el acordeón se cerrara inmediatamente
       // El acordeón ahora mantiene su estado al recargar datos
     } catch (error) {
@@ -191,6 +192,7 @@ const AdminDashboard = () => {
         console.error('Error loading nutrition plan:', error);
       }
       setNutritionPlans([]);
+      setQuestionnaireSubmissions([]);
       // REMOVED: setSelectedPlan(null) - dejar que el usuario controle el estado del acordeón
     }
   };
