@@ -3398,28 +3398,6 @@ async def get_user_nutrition_plans(user_id: str, request: Request):
     
     # Obtener submissions del cuestionario (respuestas sin plan generado)
     submissions = await db.nutrition_questionnaire_submissions.find(
-
-
-# DEBUG endpoint - Temporal
-@api_router.get("/admin/debug/nutrition-data/{user_id}")
-async def debug_nutrition_data(user_id: str, request: Request):
-    """Debug endpoint para ver qué datos tiene un usuario"""
-    await require_admin(request)
-    
-    # Obtener planes
-    plans = await db.nutrition_plans.find({"user_id": user_id}).to_list(length=None)
-    
-    # Obtener submissions
-    submissions = await db.nutrition_questionnaire_submissions.find({"user_id": user_id}).to_list(length=None)
-    
-    return {
-        "user_id": user_id,
-        "plans_count": len(plans),
-        "submissions_count": len(submissions),
-        "plans": [{"id": p["_id"], "month": p.get("month"), "year": p.get("year")} for p in plans],
-        "submissions": [{"id": s["_id"], "submitted_at": s.get("submitted_at"), "plan_generated": s.get("plan_generated")} for s in submissions]
-    }
-
         {"user_id": user_id}
     ).sort("submitted_at", -1).to_list(length=None)
     
