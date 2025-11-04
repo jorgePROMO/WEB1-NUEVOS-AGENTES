@@ -446,6 +446,21 @@ class NutritionQuestionnaireSubmit(BaseModel):
     comentarios_adicionales: Optional[str] = None
 
 
+
+# Modelo para almacenar SOLO las respuestas del cuestionario (sin plan generado)
+class NutritionQuestionnaireSubmission(BaseModel):
+    id: str = Field(alias="_id")
+    user_id: str
+    responses: dict  # Todas las respuestas del cuestionario
+    submitted_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    plan_generated: bool = False  # Si el admin ya generó el plan
+    plan_id: Optional[str] = None  # ID del plan generado (si existe)
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str, datetime: str}
+
+
 class NutritionPlanResponse(BaseModel):
     user_id: str
     questionnaire_data: dict
