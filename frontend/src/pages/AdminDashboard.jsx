@@ -2185,9 +2185,11 @@ const AdminDashboard = () => {
       )}
 
       {/* Modal Fullscreen para Plan de Nutrición */}
-      <Dialog open={showNutritionModal} onOpenChange={setShowNutritionModal}>
+      <Dialog open={showNutritionModal} onOpenChange={(open) => {
+        if (!open) closePlanModal();
+      }}>
         <DialogContent className="max-w-[95vw] w-[95vw] h-[95vh] max-h-[95vh] p-0 overflow-hidden flex flex-col">
-          {selectedPlan && (
+          {selectedPlan ? (
             <>
               {/* Header del Modal */}
               <DialogHeader className="p-6 border-b bg-gradient-to-r from-blue-50 to-green-50">
