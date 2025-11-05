@@ -811,46 +811,70 @@ async def delete_client(user_id: str, request: Request):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    # SOFT DELETE: Mark user as deleted instead of removing
-    result = await db.users.update_one(
-        {"_id": user_id},
-        {"$set": {
-            "status": "deleted",
-            "deleted_at": datetime.now(timezone.utc),
-            "deleted_by": admin["_id"]
-        }}
-    )
+    logger.info(f"🗑️ HARD DELETE iniciado para usuario: {user.get('email')} por admin: {admin['email']}")
     
-    if result.modified_count == 0:
-        raise HTTPException(status_code=404, detail="User not found")
+    # HARD DELETE COMPLETO - Borrar de TODAS las colecciones
     
-    # Add to deleted_users collection to prevent re-registration
-    await db.deleted_users.insert_one({
-        "email": user["email"],
-        "user_id": user_id,
-        "deleted_at": datetime.now(timezone.utc),
-        "deleted_by": admin["_id"]
-    })
+    # 1. Borrar TODOS los planes de nutrición
+    nutrition_plans_deleted = await db.nutrition_plans.delete_many({"user_id": user_id})
+    logger.info(f"  ✅ {nutrition_plans_deleted.deleted_count} planes de nutrición eliminados")
     
-    # Delete all related data
-    await db.forms.delete_many({"user_id": user_id})
-    await db.alerts.delete_many({"user_id": user_id})
-    await db.messages.delete_many({"user_id": user_id})
-    await db.sessions.delete_many({"user_id": user_id})
-    await db.user_sessions.delete_many({"user_id": user_id})
+    # 2. Borrar TODAS las respuestas del cuestionario
+    questionnaire_submissions_deleted = await db.nutrition_questionnaire_submissions.delete_many({"user_id": user_id})
+    logger.info(f"  ✅ {questionnaire_submissions_deleted.deleted_count} respuestas de cuestionario eliminadas")
     
-    # Delete PDFs from filesystem and database
+    # 3. Borrar formularios
+    forms_deleted = await db.forms.delete_many({"user_id": user_id})
+    logger.info(f"  ✅ {forms_deleted.deleted_count} formularios eliminados")
+    
+    # 4. Borrar alertas
+    alerts_deleted = await db.alerts.delete_many({"user_id": user_id})
+    logger.info(f"  ✅ {alerts_deleted.deleted_count} alertas eliminadas")
+    
+    # 5. Borrar mensajes
+    messages_deleted = await db.messages.delete_many({"user_id": user_id})
+    logger.info(f"  ✅ {messages_deleted.deleted_count} mensajes eliminados")
+    
+    # 6. Borrar sesiones
+    sessions_deleted = await db.sessions.delete_many({"user_id": user_id})
+    logger.info(f"  ✅ {sessions_deleted.deleted_count} sesiones eliminadas")
+    
+    # 7. Borrar PDFs del filesystem y database
     pdfs = await db.pdfs.find({"user_id": user_id}).to_list(100)
     for pdf in pdfs:
         file_path = Path(pdf["file_path"])
         if file_path.exists():
             file_path.unlink()
+    pdfs_deleted = await db.pdfs.delete_many({"user_id": user_id})
+    logger.info(f"  ✅ {pdfs_deleted.deleted_count} PDFs eliminados")
     
-    await db.pdfs.delete_many({"user_id": user_id})
+    # 8. Borrar prospectos si existen
+    prospects_deleted = await db.prospects.delete_many({"user_id": user_id})
+    logger.info(f"  ✅ {prospects_deleted.deleted_count} prospectos eliminados")
     
-    logger.info(f"User soft-deleted: {user['email']} by admin: {admin['email']}")
+    # 9. FINALMENTE borrar el usuario
+    user_deleted = await db.users.delete_one({"_id": user_id})
+    logger.info(f"  ✅ Usuario eliminado de la base de datos")
     
-    return {"success": True, "message": "Client deleted successfully. They will not be able to login again."}
+    if user_deleted.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    logger.info(f"✅ HARD DELETE COMPLETO para {user['email']} - TODOS los datos eliminados permanentemente")
+    
+    return {
+        "success": True, 
+        "message": "Cliente y TODOS sus datos eliminados permanentemente. Si se vuelve a registrar, comenzará desde cero.",
+        "deleted_data": {
+            "nutrition_plans": nutrition_plans_deleted.deleted_count,
+            "questionnaire_submissions": questionnaire_submissions_deleted.deleted_count,
+            "forms": forms_deleted.deleted_count,
+            "alerts": alerts_deleted.deleted_count,
+            "messages": messages_deleted.deleted_count,
+            "sessions": sessions_deleted.deleted_count,
+            "pdfs": pdfs_deleted.deleted_count,
+            "prospects": prospects_deleted.deleted_count
+        }
+    }
 
 
 # ==================== FORM ENDPOINTS ====================
