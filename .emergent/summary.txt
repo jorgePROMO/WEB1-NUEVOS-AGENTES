@@ -1,70 +1,72 @@
 <analysis>
-The trajectory details the development of a full-stack application, focusing on CRM and nutrition plan features. Initial work included PWA, mobile responsiveness, and GPT integration for questionnaire reports. A major effort was Google Calendar integration, which was simplified to external links due to issues. Recent efforts involved debugging critical admin login failures (due to incorrect password hashing and  attributes), frontend rendering errors (e.g.,  on undefined arrays), and client listing problems. The LLM-powered nutrition plan generation using a new questionnaire, backend processing, and PDF generation was a significant new feature. The AI engineer debugged initial LLM timeouts (incorrect  model, fixed to ), frontend-backend field mismatches, and structural errors in . The system was refactored to store monthly nutrition plans and implement an accordion UI. Critically, persistent mobile registration failures were identified as a Service Worker issue, then as user-specific cached data/email conflicts. The final ongoing task is implementing email verification for new user registrations to enhance robustness.
+The previous AI engineer developed a full-stack CRM and nutrition planning application, from initial PWA features to complex LLM integrations. Key areas of work included implementing an email verification flow for new user registrations to combat ghost accounts, addressing mobile/desktop client list discrepancies by fixing soft-delete logic (eventually converting to hard delete), and a major re-architecture of the nutrition plan generation process. The nutrition plan now involves immediate questionnaire response storage in the database, with admin-triggered or manual LLM plan generation. Throughout the process, the AI engineer diligently debugged critical issues such as frontend rendering problems, login flow errors related to payment status, and persistent caching issues, leading to the complete removal of the Service Worker. The latest challenge, still ongoing, is fixing a React state management issue causing the nutrition plan accordion to immediately collapse due to  resetting to .
 </analysis>
 
 <product_requirements>
-The CRM Fusion application is a full-stack platform with user/admin authentication, CRM features (prospects, team/external clients), calendar, profile management, and document handling. Initially, it included a diagnostic questionnaire, GPT integration for report generation, and Google Calendar. This evolved to immediate GPT report generation, storage, and manual email/WhatsApp sending. The latest major feature is a Nutrition Plan for team clients. This involves a new questionnaire, LLM-based nutrition plan generation (initially with user-provided agents like GPT-5 mini, now GPT-4o-mini), admin review/editing, PDF generation, and download in the user's dashboard. Critically, the user required monthly nutrition plans to be stored historically, displayed in an accordion-style UI for admins, and to be editable/sendable via Email/WhatsApp, with correct status updates. The platform also needed robust mobile registration, and an email verification flow for new users was requested to address persistent registration issues.
+The CRM Fusion application is a full-stack platform with user/admin authentication, CRM features (prospects, team/external clients), calendar, profile management, and document handling. It initially featured a diagnostic questionnaire and GPT integration for report generation. This evolved to immediate GPT report generation, storage, and manual email/WhatsApp sending capabilities. A core recent feature is the Nutrition Plan for team clients, involving a new questionnaire, LLM-based plan generation (using GPT-4o-mini), admin review/editing, PDF generation, and user download. Critically, monthly nutrition plans must be stored historically, displayed in an accordion UI for admins, and be editable/sendable. A robust email verification flow for new users was required to address persistent mobile registration failures and prevent dirty or ghost registrations. Later, the user requested that questionnaire responses be saved immediately to the database, allowing admins to decide on AI generation or manual plan creation, and that deleted users' data be entirely purged (hard delete) to prevent data recovery upon re-registration.
 </product_requirements>
 
 <key_technical_concepts>
--   **Full-stack Development**: React (frontend), FastAPI (backend), MongoDB (database).
--   **Authentication**: JWT, , password hashing ().
--   **LLM Integration**:  (LiteLLM with OpenAI GPT-4o-mini), prompt engineering, asynchronous processing ().
--   **PWA**: Service Worker for caching/auto-updates, .
--   **UI/UX**: Tailwind CSS, Shadcn UI components, accordion pattern.
--   **Data Handling**: Pydantic models, UUIDs for IDs, MongoDB collection design for historical data.
--   **PDF Generation**:  (backend dependency, required system libraries).
+-   **Full-stack Development**: React, FastAPI, MongoDB.
+-   **Authentication**: JWT, React Context (),  hashing, email verification.
+-   **LLM Integration**:  (LiteLLM with OpenAI GPT-4o-mini).
+-   **PWA/Caching**: Service Worker, , HTTP  headers, client-side caching strategies.
+-   **UI/UX**: Tailwind CSS, Shadcn UI, accordion pattern.
+-   **Data Handling**: Pydantic models, UUIDs, MongoDB (historical data, hard delete).
 </key_technical_concepts>
 
 <code_architecture>
 
 -   ****: Core FastAPI application.
-    -   **Changes**: Removed Google OAuth. Modified  for immediate GPT reports. Added endpoints for nutrition questionnaire submission ( processing), plan retrieval (now returns historical plans), update, PDF generation (accepts ), and sending via email/WhatsApp (accepts ). Registration updated to handle phone; user update () allows phone modification. Fixed several syntax errors ().
+    -   **Changes**: Implemented , modified  for token generation. Updated  for email verification check (removed payment check later). Refactored  for accurate user fetching (initially soft delete filter, then hard delete). Added HTTP  headers. Modified  to save responses without immediate LLM processing. Added , , and  endpoints. Implemented hard delete for clients (), removing all associated data. Modified  to include  and . Fixed hardcoded URLs.
 -   ****: Pydantic data models.
-    -   **Changes**: Added  fields to . Added  to  and . Introduced ,  (now a separate collection model with  and ),  models, and updated  model. Added , ,  to  model.
--   ****: GPT report generation.
-    -   **Changes**: Integrated for immediate report generation.
--   ****: Manages LLM interaction.
-    -   **Changes**: Updated LLM model from  to  for stability.
+    -   **Changes**: Added , ,  to . Introduced  model to store raw questionnaire responses. Removed logic related to soft delete  field.
 -   ****: Email utility functions.
-    -   **Changes**:  function modified to correctly accept  parameter. Added  for styled content.
+    -   **Changes**:  updated for ,  added.
+-   ****: Manages LLM interaction.
+    -   **Changes**: Updated LLM model from  to .
+-   ****: New script to hard delete all users/data except admin.
+-   ****: New script to clean residual user data (case-insensitive email).
 -   ****: Admin interface.
-    -   **Changes**: Fixed login. Integrated UI for GPT reports. Adapted UI for monthly nutrition plans, displaying them in an accordion, and added send/PDF buttons. Fixed numerous JSX syntax errors. Replaced  simple modal with full AdminDashboard tabs for nutrition. Updated ,  to handle plan history.
+    -   **Changes**: UI updates for displaying monthly nutrition plans via accordion, showing Cuestionarios Pendientes (Pending Questionnaires), and buttons for Generar con IA or Escribir manualmente. Added confirmation modal for client deletion and buttons/badges for archive/unarchive. Currently undergoing debugging for the nutrition plan accordion functionality, with  and state management being investigated.  was removed from .
 -   ****: User interface.
-    -   **Changes**: Added Nutrition Questionnaire button. Added document filtering by type.
+    -   **Changes**: Updated logic to hide the Nutrition Questionnaire button once a plan or submission exists.  callback now triggers dashboard data reload.
 -   ****: Registration page.
-    -   **Changes**: Added phone number input and validation. Now integrates with email verification flow.
--   ****: User profile editing.
-    -   **Changes**: Added phone number field.
--   ****: Prospects CRM view.
-    -   **Changes**: Added report status, send email/WhatsApp buttons.
--   ****: Team Clients CRM view.
-    -   **Changes**: Reverted direct nutrition plan display. Logic for displaying clients was updated.
+    -   **Changes**: Integrated with email verification flow, displaying a message to verify email upon successful registration.
+-   ****: Login page.
+    -   **Changes**: Updated to show Please verify your email error, and a Resend verification button. Removed blocking logic based on .
+-   ****: New component for handling email verification.
+-   ****: Added route for .
+-   ****:
+    -   **Changes**: Added  check, implemented  versioning for auto-migration of cached data, and added checks for user  status.
 -   ****: Frontend component for nutrition questionnaire.
-    -   **Changes**: Added missing required fields to align with backend model (e.g., ).
+    -   **Changes**: Implemented  to prevent multiple form submissions.
 -   ** & **: PWA files.
-    -   **Changes**: Updated cache version for auto-updates. Modified service worker to not intercept network errors, then disabled completely for debugging, then re-enabled with proper error handling.
--   ****: Added  and .
--   ** and **: Deleted.
+    -   **Changes**: Service worker was completely deactivated and then removed,  updated to disable PWA features, to combat persistent caching issues.
+-   ****: Added anti-cache meta tags and a script to uninstall old service workers.
 </code_architecture>
 
 <pending_tasks>
--   Address the persistent Error al conectar con Google Calendar issue; the user initially requested a simple Open Google Calendar button as a fallback (not explicitly re-requested but still a known issue).
--   Finalize the implementation of the email verification endpoint () in  and integrate it into the frontend.
--   Address the mobile responsiveness of the user dashboard documents (issue 3 from Chat Message 304).
--   The expand/collapse functionality for nutrition plans in the Admin Dashboard is still not fully working (Chat Message 520, 538).
+-   Address the persistent Error al conectar con Google Calendar issue (user requested a fallback Open Google Calendar button).
+-   Fix the critical bug where the nutrition plan accordion in  fails to expand due to  being reset.
+-   Address mobile responsiveness issues for user dashboard documents.
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI engineer was implementing an **email verification system** for new user registrations. This was a direct response to critical and recurring issues where mobile users were unable to register successfully or their registrations were not appearing in the system, even when the frontend indicated success. The user requested this feature as a robust solution to prevent dirty or ghost registrations.
+Immediately before this summary request, the AI engineer was actively debugging a critical frontend issue in the  component. The user reported that the nutrition plan accordion was not expanding, despite previous attempts to fix it, including recommendations from the  to use  and implicitly remove  from .
 
-The work involved:
-1.  **Modifying **: Adding , , and  fields to the  model to track email verification status and manage tokens.
-2.  **Modifying **: The AI engineer has just modified the  endpoint. This modification is to generate a unique verification token upon user registration, set the  status to , and prepare to send an email containing a verification link to the user.
+The latest investigation involved adding extensive console logs to the  component to track the state of the  flag and . The logs revealed a crucial insight: upon clicking to expand a plan, the  state correctly updates to , but almost immediately after, it reverts to  and  becomes .
 
-The trajectory ends right at the point where the AI engineer is about to create the new  endpoint in the backend to handle the verification process when a user clicks the link in their email. The current state is that the model is updated, the registration endpoint has been partially modified to support token generation and email sending (though the email sending logic and verification link generation are not fully detailed), and the verification endpoint is yet to be created.
+The sequence observed in the logs is:
+
+
+
+
+
+
+This indicates a highly problematic infinite render loop or a state-resetting mechanism, likely stemming from incorrect dependencies in  or  hooks, or an unintended side effect, that is causing the  state to be cleared right after it's set. This issue is preventing the display of generated nutrition plans, which is a core feature.
 </current_work>
 
 <optional_next_step>
-Create the  endpoint in  to handle email verification.
+Identify and fix the root cause of  resetting to  in  to resolve the accordion collapse.
 </optional_next_step>

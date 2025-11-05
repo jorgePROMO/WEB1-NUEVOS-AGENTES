@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://nutriplan-hub-4.preview.emergentagent.com
+**URL Actual:** https://nutriplan-app-14.preview.emergentagent.com
 
 ---
 
