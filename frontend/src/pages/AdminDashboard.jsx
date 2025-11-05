@@ -342,7 +342,7 @@ const AdminDashboard = () => {
     setSendingNutrition('email');
     try {
       const response = await axios.post(
-        `${API}/admin/users/${userId}/nutrition/send-email?plan_id=${selectedPlan.id}`,
+        `${API}/admin/users/${userId}/nutrition/send-email?plan_id=${planToUse.id}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -361,7 +361,8 @@ const AdminDashboard = () => {
 
   // Send nutrition plan by WhatsApp
   const sendNutritionByWhatsApp = async (userId) => {
-    if (!selectedPlan) {
+    const planToUse = modalPlan || selectedPlan;
+    if (!planToUse) {
       alert('No hay plan seleccionado');
       return;
     }
@@ -369,7 +370,7 @@ const AdminDashboard = () => {
     setSendingNutrition('whatsapp');
     try {
       const response = await axios.get(
-        `${API}/admin/users/${userId}/nutrition/whatsapp-link?plan_id=${selectedPlan.id}`,
+        `${API}/admin/users/${userId}/nutrition/whatsapp-link?plan_id=${planToUse.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
