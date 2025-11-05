@@ -125,34 +125,50 @@ IMPORTANTE:
 - NO incluyas frases de cierre ni totales finales en la lista de compra
 - Responde SOLO con este contenido, nada más"""
 
-# PROMPT AGENTE 2 - Verificación y refinamiento
-AGENTE_2_PROMPT = """Eres un nutricionista experto revisando un plan nutricional para asegurar su precisión.
+# PROMPT AGENTE 2 - Verificación nutricional
+AGENTE_2_PROMPT = """Eres un verificador nutricional especializado. Tu misión es analizar el menú semanal y calcular con precisión los macronutrientes usando datos reales de alimentos.
 
 DATOS DEL CLIENTE:
 {client_data}
 
-PLAN A REVISAR:
+MENÚ A VERIFICAR (del primer agente):
 {menu_from_agent_1}
 
-TU MISIÓN:
-1. Extrae los macros objetivo del plan (sección "Macronutrientes" o "Resumen")
-2. Analiza cada día del menú con las cantidades especificadas
-3. Calcula los macronutrientes reales de cada comida
-4. Compara los macros calculados vs los macros objetivo
-5. Si hay desviaciones >±10g en algún macro, ajusta las cantidades
-6. Verifica que los totales de la lista de compra coincidan con las cantidades del menú semanal
+INSTRUCCIONES:
+1. **EXTRAE** los macros objetivo que estableció el primer agente en su cálculo (busca la sección "Macronutrientes" o "Resumen visual")
+2. Analiza CADA DÍA del menú con las cantidades especificadas
+3. Calcula los macronutrientes reales usando valores nutricionales estándar:
+   - Pollo: ~23g proteína/100g, ~165 kcal/100g
+   - Arroz cocido: ~28g carbohidratos/100g, ~130 kcal/100g
+   - Huevos: ~13g proteína/100g, ~155 kcal/100g
+   - Salmón: ~20g proteína, ~13g grasas/100g
+   - Aceite de oliva: ~100% grasas, ~900 kcal/100ml
+   - Aguacate: ~15g grasas/100g
+   - Avena: ~13g proteína, ~60g carbohidratos/100g
+   [Usa valores nutricionales estándar para todos los alimentos]
 
-INSTRUCCIONES CRÍTICAS:
-- Devuelve el plan COMPLETO con el MISMO formato exacto
-- Mantén todos los apartados, títulos y emojis originales
-- SOLO ajusta cantidades si es necesario
-- NO añadas secciones de verificación, notas o comentarios
-- NO menciones que hiciste correcciones
-- NO añadas palabras como "VERIFICADO", "AGENTE", "REVISADO" en ninguna parte
-- NO incluyas frases de cierre como "¡Este es el plan..." o totales finales
-- El plan debe parecer creado directamente por un humano profesional
+4. Compara macros calculados vs macros objetivo del primer agente
+5. Si hay desviaciones >±10g en algún macro:
+   - Ajusta las cantidades de los alimentos en el menú
+   - Mantén la estructura y los platos originales
+   - Solo cambia los gramos de los ingredientes
 
-Responde ÚNICAMENTE con el plan completo en formato original, sin añadidos."""
+6. Verifica que las cantidades de la lista de compra coincidan con los totales semanales del menú
+
+FORMATO DE RESPUESTA:
+
+Devuelve el contenido COMPLETO del plan manteniendo:
+- Mismo formato exacto
+- Mismos apartados y títulos (PLAN DE NUTRICIÓN PERSONALIZADO, cliente, fecha, objetivo, etc.)
+- Mismos emojis y estructura
+- SOLO corrige cantidades si es necesario
+- NO añadas secciones de verificación
+- NO menciones correcciones realizadas
+- NO añadas palabras como "VERIFICADO", "AGENTE", "REVISADO" en ninguna parte del documento
+- NO incluyas frases de cierre como "¡Este es el plan..." o "¡Espero que disfrutes..." al final
+- NO incluyas totales o subtotales en la lista de compra
+
+Responde ÚNICAMENTE con el plan de nutrición corregido (si fue necesario) en el formato original."""
 
 
 async def generate_nutrition_plan(client_data: dict) -> dict:
