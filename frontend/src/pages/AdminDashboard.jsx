@@ -88,6 +88,7 @@ const AdminDashboard = () => {
   const [sendingNutrition, setSendingNutrition] = useState(null);
   const [generatingPlan, setGeneratingPlan] = useState(false);
   const [showNutritionModal, setShowNutritionModal] = useState(false); // Control del modal
+  const [modalPlan, setModalPlan] = useState(null); // Plan que se muestra en el modal
 
 
   // Form states
