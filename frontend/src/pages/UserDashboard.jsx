@@ -328,7 +328,7 @@ const UserDashboard = () => {
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-700">
-                      ✅ Tu plan de nutrición ha sido generado y está siendo revisado por tu entrenador. 
+                      ✅ El equipo de Jorge está revisando tu cuestionario. Tu plan estará listo en un plazo de 24 horas. 
                       {userData.nutrition_plan.pdf_generated && (
                         <span className="block mt-2 text-green-700 font-semibold">
                           📄 Tu plan está disponible en la pestaña "Documentos"
