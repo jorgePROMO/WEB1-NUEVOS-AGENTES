@@ -5,9 +5,9 @@ import App from "@/App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  // StrictMode DESACTIVADO temporalmente - causaba doble-render del acordeón
+  // TODO: Reimplementar con useCallback cuando sea estable
+  <App />
 );
 
 // FORCE UNREGISTER ALL SERVICE WORKERS
