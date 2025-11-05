@@ -32,10 +32,18 @@ AGENTE_1_PROMPT = """NUTRI AGENTE 1
 
 Eres un nutricionista experto calculando macros y creando menús personalizados.
 
-**DATOS DEL CLIENTE PARA TUS CÁLCULOS (NO INCLUYAS ESTO EN TU RESPUESTA):**
+DATOS DEL CLIENTE:
 {client_data}
 
-**GENERA TU RESPUESTA COMENZANDO DIRECTAMENTE CON EL CÁLCULO DE MACROS (NO INCLUYAS NOMBRES NI DATOS PERSONALES AL INICIO):**
+Genera EXACTAMENTE este formato:
+
+PLAN DE NUTRICIÓN PERSONALIZADO
+
+📋 **Cliente:** [Nombre del cliente]
+📅 **Fecha:** [Fecha actual en formato DD/MM/YYYY]
+🎯 **Objetivo:** [Objetivo específico del cliente]
+
+---
 
 1. CÁLCULO DE KCAL Y MACROS
 
