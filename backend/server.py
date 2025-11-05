@@ -883,6 +883,83 @@ async def admin_update_user(user_id: str, user_update: AdminUserUpdate, request:
         {"_id": user_id},
         {"$set": prospect_update}
     )
+
+
+
+@api_router.patch("/admin/archive-client/{user_id}")
+async def archive_client(user_id: str, request: Request):
+    """Archivar cliente - No puede acceder pero mantiene todos sus datos"""
+    admin = await require_admin(request)
+    
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Marcar como archivado
+    result = await db.users.update_one(
+        {"_id": user_id},
+        {
+            "$set": {
+                "status": "archived",
+                "archived_at": datetime.now(timezone.utc),
+                "archived_by": admin["_id"],
+                "updated_at": datetime.now(timezone.utc)
+            }
+        }
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    logger.info(f"Cliente archivado: {user.get('email')} por admin: {admin['email']}")
+    
+    return {
+        "success": True,
+        "message": "Cliente archivado. No podrá acceder hasta que sea reactivado Y realice el pago."
+    }
+
+
+@api_router.patch("/admin/unarchive-client/{user_id}")
+async def unarchive_client(user_id: str, request: Request):
+    """Reactivar cliente archivado - Requiere verificación de pago"""
+    admin = await require_admin(request)
+    
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if user.get("status") != "archived":
+        raise HTTPException(status_code=400, detail="El usuario no está archivado")
+    
+    # Reactivar pero mantener pago pendiente
+    result = await db.users.update_one(
+        {"_id": user_id},
+        {
+            "$set": {
+                "status": "active",
+                "subscription.payment_status": "pending",  # Forzar que pague de nuevo
+                "unarchived_at": datetime.now(timezone.utc),
+                "unarchived_by": admin["_id"],
+                "updated_at": datetime.now(timezone.utc)
+            },
+            "$unset": {
+                "archived_at": "",
+                "archived_by": ""
+            }
+        }
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    logger.info(f"Cliente reactivado: {user.get('email')} por admin: {admin['email']}")
+    
+    return {
+        "success": True,
+        "message": "Cliente reactivado. Podrá acceder cuando realice el pago."
+    }
+
+
     
     if result.matched_count > 0:
         prospect = await db.questionnaire_responses.find_one({"_id": user_id})
