@@ -10,6 +10,31 @@ root.render(
   </React.StrictMode>,
 );
 
-// SERVICE WORKER DESACTIVADO - Causaba errores en producción
-// Se usará estrategia de cache HTTP en su lugar
-console.log('PWA: Service Worker desactivado para estabilidad en producción');
+// FORCE UNREGISTER ALL SERVICE WORKERS
+// Esto limpiará Service Workers de dispositivos que ya los tienen instalados
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for(let registration of registrations) {
+      registration.unregister().then(function(success) {
+        if (success) {
+          console.log('✅ Service Worker desinstalado correctamente');
+        }
+      });
+    }
+  }).catch(function(err) {
+    console.log('Error desinstalando Service Workers:', err);
+  });
+  
+  // También limpiar todos los caches
+  if ('caches' in window) {
+    caches.keys().then(function(names) {
+      for (let name of names) {
+        caches.delete(name);
+        console.log('✅ Cache eliminado:', name);
+      }
+    });
+  }
+}
+
+console.log('🚀 App cargada - Service Workers desactivados permanentemente');
+
