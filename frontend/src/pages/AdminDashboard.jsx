@@ -299,6 +299,22 @@ const AdminDashboard = () => {
   };
 
 
+
+  // Toggle plan expansion with useCallback to prevent double-execution
+  const togglePlanExpansion = useCallback((plan) => {
+    setSelectedPlan(currentPlan => {
+      // Si el plan ya está seleccionado, colapsarlo
+      if (currentPlan?.id === plan.id) {
+        return null;
+      }
+      // Si no, expandirlo
+      setNutritionContent(plan.plan_verificado);
+      setEditingNutrition(false);
+      return plan;
+    });
+  }, []);
+
+
   // Send nutrition plan by email
   const sendNutritionByEmail = async (userId) => {
     if (!selectedPlan) {
