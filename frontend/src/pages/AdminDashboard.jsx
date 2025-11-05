@@ -2404,11 +2404,11 @@ const AdminDashboard = () => {
                           </p>
                         </div>
                         <Button
-                          onClick={() => {
+                          onClick={async () => {
                             if (window.confirm('¿Regenerar el plan de nutrición con IA? El plan actual se reemplazará.')) {
                               // Find the submission_id for this user
                               if (questionnaireSubmissions.length > 0) {
-                                generatePlanWithAI(questionnaireSubmissions[0].id);
+                                await generatePlanWithAI(questionnaireSubmissions[0].id, true);
                                 closePlanModal();
                               } else {
                                 alert('No se encontró un cuestionario para regenerar el plan');
