@@ -88,6 +88,7 @@ const AdminDashboard = () => {
   const [generatingPDF, setGeneratingPDF] = useState(false);
   const [sendingNutrition, setSendingNutrition] = useState(null);
   const [generatingPlan, setGeneratingPlan] = useState(false);
+  const [showNutritionModal, setShowNutritionModal] = useState(false); // Control del modal
 
 
   // Form states
