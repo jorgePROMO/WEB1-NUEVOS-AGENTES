@@ -310,6 +310,7 @@ const AdminDashboard = () => {
 
   // Abrir modal con plan seleccionado
   const openPlanModal = useCallback((plan) => {
+    setModalPlan(plan); // Guardar plan en estado del modal
     setSelectedPlan(plan);
     setNutritionContent(plan.plan_verificado);
     setEditingNutrition(false);
@@ -320,7 +321,8 @@ const AdminDashboard = () => {
   const closePlanModal = useCallback(() => {
     setShowNutritionModal(false);
     setEditingNutrition(false);
-    setSelectedPlan(null);
+    setModalPlan(null);
+    // No resetear selectedPlan aquí para mantener la referencia
   }, []);
 
 
