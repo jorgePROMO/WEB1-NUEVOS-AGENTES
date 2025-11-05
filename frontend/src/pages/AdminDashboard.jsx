@@ -268,17 +268,17 @@ const AdminDashboard = () => {
 
 
   // Generate plan with AI from questionnaire submission
-  const generatePlanWithAI = async (submissionId) => {
+  const generatePlanWithAI = async (submissionId, regenerate = false) => {
     if (!selectedClient) return;
     
-    if (!confirm('¿Generar plan de nutrición con IA a partir de las respuestas del cuestionario?')) {
+    if (!regenerate && !confirm('¿Generar plan de nutrición con IA a partir de las respuestas del cuestionario?')) {
       return;
     }
     
     setGeneratingPlan(true);
     try {
       const response = await axios.post(
-        `${API}/admin/users/${selectedClient.id}/nutrition/generate?submission_id=${submissionId}`,
+        `${API}/admin/users/${selectedClient.id}/nutrition/generate?submission_id=${submissionId}&regenerate=${regenerate}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
