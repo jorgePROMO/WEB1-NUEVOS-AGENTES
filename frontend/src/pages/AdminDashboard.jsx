@@ -2184,6 +2184,203 @@ const AdminDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Modal Fullscreen para Plan de Nutrición */}
+      <Dialog open={showNutritionModal} onOpenChange={setShowNutritionModal}>
+        <DialogContent className="max-w-[95vw] w-[95vw] h-[95vh] max-h-[95vh] p-0 overflow-hidden flex flex-col">
+          {selectedPlan && (
+            <>
+              {/* Header del Modal */}
+              <DialogHeader className="p-6 border-b bg-gradient-to-r from-blue-50 to-green-50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-full flex items-center justify-center bg-blue-500 text-white font-bold text-xl">
+                      🥗
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl font-bold">
+                        Plan de Nutrición - {(() => {
+                          const monthNames = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                                             "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                          return `${monthNames[selectedPlan.month]} ${selectedPlan.year}`;
+                        })()}
+                      </DialogTitle>
+                      <DialogDescription className="text-sm">
+                        Generado: {new Date(selectedPlan.generated_at).toLocaleDateString('es-ES')} • 
+                        Cliente: {selectedClient?.name}
+                      </DialogDescription>
+                    </div>
+                  </div>
+                  
+                  {/* Status badges */}
+                  <div className="flex gap-2">
+                    {selectedPlan.pdf_id && (
+                      <Badge className="bg-orange-500">📄 PDF</Badge>
+                    )}
+                    {selectedPlan.sent_email && (
+                      <Badge className="bg-blue-500">✉️ Email</Badge>
+                    )}
+                    {selectedPlan.sent_whatsapp && (
+                      <Badge className="bg-green-500">💬 WhatsApp</Badge>
+                    )}
+                    {selectedPlan.edited && (
+                      <Badge className="bg-purple-500">✏️ Editado</Badge>
+                    )}
+                  </div>
+                </div>
+              </DialogHeader>
+
+              {/* Content del Modal - Scrollable */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                {/* Status Details */}
+                <div className="grid grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+                  <div className="text-center">
+                    <div className="text-3xl mb-1">{selectedPlan.pdf_id ? '✅' : '❌'}</div>
+                    <div className="text-sm text-gray-600 font-medium">PDF Generado</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl mb-1">{selectedPlan.sent_email ? '✅' : '❌'}</div>
+                    <div className="text-sm text-gray-600 font-medium">Enviado Email</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl mb-1">{selectedPlan.sent_whatsapp ? '✅' : '❌'}</div>
+                    <div className="text-sm text-gray-600 font-medium">Enviado WhatsApp</div>
+                  </div>
+                </div>
+
+                {/* Editor/Viewer */}
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle>Plan Verificado</CardTitle>
+                    <div className="flex gap-2">
+                      {!editingNutrition ? (
+                        <Button
+                          onClick={() => setEditingNutrition(true)}
+                          variant="outline"
+                        >
+                          <Edit className="h-4 w-4 mr-2" />
+                          Editar
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            onClick={() => {
+                              setEditingNutrition(false);
+                              setNutritionContent(selectedPlan.plan_verificado);
+                            }}
+                            variant="outline"
+                          >
+                            Cancelar
+                          </Button>
+                          <Button onClick={saveNutritionChanges}>
+                            <Save className="h-4 w-4 mr-2" />
+                            Guardar
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {editingNutrition ? (
+                      <Textarea
+                        value={nutritionContent}
+                        onChange={(e) => setNutritionContent(e.target.value)}
+                        rows={25}
+                        className="font-mono text-sm"
+                      />
+                    ) : (
+                      <div className="prose max-w-none">
+                        <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
+                          {selectedPlan.plan_verificado}
+                        </pre>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Action Buttons */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Generate PDF */}
+                  <Card className="border-2 border-orange-200 bg-orange-50">
+                    <CardContent className="pt-6">
+                      <Button
+                        onClick={generateNutritionPDF}
+                        disabled={generatingPDF}
+                        className="w-full bg-orange-600 hover:bg-orange-700"
+                      >
+                        {generatingPDF ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Generando...
+                          </>
+                        ) : (
+                          <>
+                            <FileText className="h-4 w-4 mr-2" />
+                            Generar PDF
+                          </>
+                        )}
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Send Email */}
+                  <Card className="border-2 border-blue-200 bg-blue-50">
+                    <CardContent className="pt-6">
+                      <Button
+                        onClick={() => sendNutritionByEmail(selectedClient.id)}
+                        disabled={sendingNutrition === 'email'}
+                        className="w-full bg-blue-600 hover:bg-blue-700"
+                      >
+                        {sendingNutrition === 'email' ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Enviando...
+                          </>
+                        ) : (
+                          <>
+                            <Mail className="h-4 w-4 mr-2" />
+                            Enviar Email
+                          </>
+                        )}
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Send WhatsApp */}
+                  <Card className="border-2 border-green-200 bg-green-50">
+                    <CardContent className="pt-6">
+                      <Button
+                        onClick={() => sendNutritionByWhatsApp(selectedClient.id)}
+                        disabled={sendingNutrition === 'whatsapp'}
+                        className="w-full bg-green-600 hover:bg-green-700"
+                      >
+                        {sendingNutrition === 'whatsapp' ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Abriendo...
+                          </>
+                        ) : (
+                          <>
+                            <MessageSquare className="h-4 w-4 mr-2" />
+                            Enviar WhatsApp
+                          </>
+                        )}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              {/* Footer del Modal */}
+              <div className="p-4 border-t bg-gray-50 flex justify-end gap-2">
+                <Button variant="outline" onClick={closePlanModal}>
+                  Cerrar
+                </Button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
