@@ -1110,7 +1110,14 @@ const AdminDashboard = () => {
                   <>
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
-                        <span>Gestión de {selectedClient.name}</span>
+                        <div className="flex items-center gap-3">
+                          <span>Gestión de {selectedClient.name}</span>
+                          {selectedClient.status === 'archived' && (
+                            <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">
+                              📦 ARCHIVADO
+                            </span>
+                          )}
+                        </div>
                         <div className="flex gap-2">
                           <Button
                             size="sm"
