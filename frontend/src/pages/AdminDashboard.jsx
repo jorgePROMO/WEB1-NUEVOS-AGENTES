@@ -2311,73 +2311,126 @@ const AdminDashboard = () => {
                 </Card>
 
                 {/* Action Buttons */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* Generate PDF */}
-                  <Card className="border-2 border-orange-200 bg-orange-50">
-                    <CardContent className="pt-6">
-                      <Button
-                        onClick={generateNutritionPDF}
-                        disabled={generatingPDF}
-                        className="w-full bg-orange-600 hover:bg-orange-700"
-                      >
-                        {generatingPDF ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Generando...
-                          </>
-                        ) : (
-                          <>
-                            <FileText className="h-4 w-4 mr-2" />
-                            Generar PDF
-                          </>
-                        )}
-                      </Button>
-                    </CardContent>
-                  </Card>
+                <div className="space-y-4">
+                  {/* Primary Actions Row */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Attach to Documents */}
+                    <Card className="border-2 border-orange-200 bg-orange-50">
+                      <CardContent className="pt-6">
+                        <Button
+                          onClick={generateNutritionPDF}
+                          disabled={generatingPDF}
+                          className="w-full bg-orange-600 hover:bg-orange-700"
+                        >
+                          {generatingPDF ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Adjuntando...
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="h-4 w-4 mr-2" />
+                              Adjuntar a Documentos
+                            </>
+                          )}
+                        </Button>
+                        <p className="text-xs text-gray-600 mt-2 text-center">
+                          Genera PDF y lo sube al dashboard del usuario
+                        </p>
+                      </CardContent>
+                    </Card>
 
-                  {/* Send Email */}
-                  <Card className="border-2 border-blue-200 bg-blue-50">
-                    <CardContent className="pt-6">
-                      <Button
-                        onClick={() => sendNutritionByEmail(selectedClient.id)}
-                        disabled={sendingNutrition === 'email'}
-                        className="w-full bg-blue-600 hover:bg-blue-700"
-                      >
-                        {sendingNutrition === 'email' ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Enviando...
-                          </>
-                        ) : (
-                          <>
-                            <Mail className="h-4 w-4 mr-2" />
-                            Enviar Email
-                          </>
-                        )}
-                      </Button>
-                    </CardContent>
-                  </Card>
+                    {/* Send Email */}
+                    <Card className="border-2 border-blue-200 bg-blue-50">
+                      <CardContent className="pt-6">
+                        <Button
+                          onClick={() => sendNutritionByEmail(selectedClient.id)}
+                          disabled={sendingNutrition === 'email'}
+                          className="w-full bg-blue-600 hover:bg-blue-700"
+                        >
+                          {sendingNutrition === 'email' ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Enviando...
+                            </>
+                          ) : (
+                            <>
+                              <Mail className="h-4 w-4 mr-2" />
+                              Enviar Email
+                            </>
+                          )}
+                        </Button>
+                        <p className="text-xs text-gray-600 mt-2 text-center">
+                          Envía el plan por correo electrónico
+                        </p>
+                      </CardContent>
+                    </Card>
 
-                  {/* Send WhatsApp */}
-                  <Card className="border-2 border-green-200 bg-green-50">
-                    <CardContent className="pt-6">
-                      <Button
-                        onClick={() => sendNutritionByWhatsApp(selectedClient.id)}
-                        disabled={sendingNutrition === 'whatsapp'}
-                        className="w-full bg-green-600 hover:bg-green-700"
-                      >
-                        {sendingNutrition === 'whatsapp' ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Abriendo...
-                          </>
-                        ) : (
-                          <>
-                            <MessageSquare className="h-4 w-4 mr-2" />
-                            Enviar WhatsApp
-                          </>
-                        )}
-                      </Button>
+                    {/* Send WhatsApp */}
+                    <Card className="border-2 border-green-200 bg-green-50">
+                      <CardContent className="pt-6">
+                        <Button
+                          onClick={() => sendNutritionByWhatsApp(selectedClient.id)}
+                          disabled={sendingNutrition === 'whatsapp'}
+                          className="w-full bg-green-600 hover:bg-green-700"
+                        >
+                          {sendingNutrition === 'whatsapp' ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Abriendo...
+                            </>
+                          ) : (
+                            <>
+                              <MessageSquare className="h-4 w-4 mr-2" />
+                              Enviar WhatsApp
+                            </>
+                          )}
+                        </Button>
+                        <p className="text-xs text-gray-600 mt-2 text-center">
+                          Abre WhatsApp con el plan
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Regenerate Action */}
+                  <Card className="border-2 border-purple-200 bg-purple-50">
+                    <CardContent className="pt-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-purple-900 mb-1">¿No te gusta este plan?</h4>
+                          <p className="text-xs text-gray-600">
+                            Genera un nuevo plan con IA usando los mismos datos del cuestionario
+                          </p>
+                        </div>
+                        <Button
+                          onClick={() => {
+                            if (window.confirm('¿Regenerar el plan de nutrición con IA? El plan actual se reemplazará.')) {
+                              // Find the submission_id for this user
+                              if (questionnaireSubmissions.length > 0) {
+                                generatePlanWithAI(questionnaireSubmissions[0].id);
+                                closePlanModal();
+                              } else {
+                                alert('No se encontró un cuestionario para regenerar el plan');
+                              }
+                            }
+                          }}
+                          disabled={generatingPlan}
+                          variant="outline"
+                          className="border-purple-300 hover:bg-purple-100"
+                        >
+                          {generatingPlan ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Regenerando...
+                            </>
+                          ) : (
+                            <>
+                              🔄 Regenerar Plan
+                            </>
+                          )}
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 </div>
