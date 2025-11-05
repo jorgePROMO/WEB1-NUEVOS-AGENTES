@@ -234,11 +234,11 @@ async def login(email: str, password: str):
             detail="Incorrect email or password"
         )
     
-    # Check if user is deleted
-    if user.get("status") == "deleted":
+    # Check if user is archived
+    if user.get("status") == "archived":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Tu cuenta ha sido desactivada. Contacta al administrador."
+            detail="Tu cuenta ha sido archivada. Contacta con Jorge para reactivarla."
         )
     
     # Check if email is verified (skip for admin users)
@@ -247,6 +247,15 @@ async def login(email: str, password: str):
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Por favor verifica tu email antes de iniciar sesión. Revisa tu bandeja de entrada."
         )
+    
+    # Check if payment is verified (for non-admin users)
+    if user.get("role") != "admin":
+        payment_status = user.get("subscription", {}).get("payment_status")
+        if payment_status == "pending":
+            raise HTTPException(
+                status_code=status.HTTP_402_PAYMENT_REQUIRED,
+                detail="Debes completar el pago para acceder a tu cuenta. Contacta con Jorge."
+            )
     
     # Create token
     access_token = create_access_token(data={"sub": user["_id"]})
