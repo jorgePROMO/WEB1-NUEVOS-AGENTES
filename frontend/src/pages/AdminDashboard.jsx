@@ -2379,6 +2379,10 @@ const AdminDashboard = () => {
                 </Button>
               </div>
             </>
+          ) : (
+            <div className="p-6 text-center">
+              <p className="text-gray-500">Cargando plan de nutrición...</p>
+            </div>
           )}
         </DialogContent>
       </Dialog>
