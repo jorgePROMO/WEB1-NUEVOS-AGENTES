@@ -745,6 +745,43 @@ const AdminDashboard = () => {
       );
       
       setSelectedClient(null);
+
+
+  // Archivar cliente
+  const handleArchiveClient = async (clientId, clientName) => {
+    if (!window.confirm(`¿Archivar a ${clientName}?\n\nEl cliente NO podrá acceder pero mantendrá todos sus datos.\nPodrás reactivarlo cuando quieras.`)) {
+      return;
+    }
+
+    try {
+      await axios.patch(`${API}/admin/archive-client/${clientId}`, {}, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      alert('✅ Cliente archivado correctamente');
+      setSelectedClient(null);
+      loadClients();
+    } catch (error) {
+      alert(`❌ Error: ${error.response?.data?.detail || error.message}`);
+    }
+  };
+
+  // Reactivar cliente archivado
+  const handleUnarchiveClient = async (clientId, clientName) => {
+    if (!window.confirm(`¿Reactivar a ${clientName}?\n\nEl cliente podrá acceder cuando realice el pago.`)) {
+      return;
+    }
+
+    try {
+      await axios.patch(`${API}/admin/unarchive-client/${clientId}`, {}, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      alert('✅ Cliente reactivado. Debe completar el pago para acceder.');
+      loadClients();
+    } catch (error) {
+      alert(`❌ Error: ${error.response?.data?.detail || error.message}`);
+    }
+  };
+
       loadClients();
     } catch (error) {
       console.error('Error deleting client:', error);
