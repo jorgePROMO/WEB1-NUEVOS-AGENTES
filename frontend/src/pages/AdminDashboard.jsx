@@ -210,11 +210,12 @@ const AdminDashboard = () => {
 
   // Save nutrition plan changes
   const saveNutritionChanges = async () => {
-    if (!selectedPlan) return;
+    const planToUse = modalPlan || selectedPlan;
+    if (!planToUse) return;
     
     try {
       await axios.patch(
-        `${API}/admin/users/${selectedClient.id}/nutrition/${selectedPlan.id}`,
+        `${API}/admin/users/${selectedClient.id}/nutrition/${planToUse.id}`,
         { plan_content: nutritionContent },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -223,6 +224,10 @@ const AdminDashboard = () => {
       );
       alert('✅ Plan de nutrición actualizado');
       setEditingNutrition(false);
+      // Actualizar modalPlan con el nuevo contenido
+      if (modalPlan) {
+        setModalPlan({...modalPlan, plan_verificado: nutritionContent});
+      }
       loadNutritionPlan(selectedClient.id);
     } catch (error) {
       alert(`Error: ${error.response?.data?.detail || error.message}`);
