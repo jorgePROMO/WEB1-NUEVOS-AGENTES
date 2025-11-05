@@ -699,22 +699,56 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteClient = async (clientId, clientName) => {
-    if (!window.confirm(`¿Estás seguro de que quieres ELIMINAR PERMANENTEMENTE a ${clientName}?\n\nEsto borrará:\n- Todos sus datos\n- Formularios\n- PDFs\n- Alertas\n- Mensajes\n- Sesiones\n\nEsta acción NO se puede deshacer.`)) {
+    // Primera confirmación
+    if (!window.confirm(`⚠️ ¿Eliminar PERMANENTEMENTE a ${clientName}?`)) {
+      return;
+    }
+    
+    // Segunda confirmación MÁS FUERTE
+    const confirmText = prompt(
+      `🚨 ADVERTENCIA FINAL\n\n` +
+      `Estás a punto de ELIMINAR PERMANENTEMENTE:\n\n` +
+      `👤 Usuario: ${clientName}\n` +
+      `📊 Todos los planes de nutrición\n` +
+      `📝 Todos los cuestionarios\n` +
+      `📄 Todos los documentos y PDFs\n` +
+      `💬 Todos los mensajes y alertas\n` +
+      `📅 Todas las sesiones\n\n` +
+      `⛔ ESTA ACCIÓN NO SE PUEDE DESHACER ⛔\n\n` +
+      `Si estás seguro, escribe: ELIMINAR`
+    );
+    
+    if (confirmText !== 'ELIMINAR') {
+      alert('❌ Eliminación cancelada');
       return;
     }
 
     try {
-      await axios.delete(`${API}/admin/delete-client/${clientId}`, {
+      const response = await axios.delete(`${API}/admin/delete-client/${clientId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      alert('Cliente eliminado correctamente');
+      
+      // Mostrar resumen de lo eliminado
+      const deleted = response.data.deleted_data;
+      alert(
+        `✅ Cliente eliminado permanentemente\n\n` +
+        `Datos eliminados:\n` +
+        `- Planes de nutrición: ${deleted.nutrition_plans}\n` +
+        `- Cuestionarios: ${deleted.questionnaire_submissions}\n` +
+        `- Formularios: ${deleted.forms}\n` +
+        `- PDFs: ${deleted.pdfs}\n` +
+        `- Mensajes: ${deleted.messages}\n` +
+        `- Alertas: ${deleted.alerts}\n` +
+        `- Sesiones: ${deleted.sessions}`
+      );
+      
       setSelectedClient(null);
       loadClients();
     } catch (error) {
       console.error('Error deleting client:', error);
-      alert('Error al eliminar cliente');
+      alert(`❌ Error: ${error.response?.data?.detail || error.message}`);
     }
   };
 
