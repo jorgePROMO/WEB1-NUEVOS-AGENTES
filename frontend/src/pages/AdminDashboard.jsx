@@ -1171,13 +1171,37 @@ const AdminDashboard = () => {
                               Verificar pago
                             </Button>
                           )}
+                          
+                          {/* Botones Archivar/Reactivar */}
+                          {selectedClient.status === 'archived' ? (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleUnarchiveClient(selectedClient.id, selectedClient.name)}
+                              className="border-green-300 text-green-600 hover:bg-green-50"
+                            >
+                              <CheckCircle className="h-4 w-4 mr-2" />
+                              Reactivar
+                            </Button>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleArchiveClient(selectedClient.id, selectedClient.name)}
+                              className="border-yellow-300 text-yellow-600 hover:bg-yellow-50"
+                            >
+                              📦 Archivar
+                            </Button>
+                          )}
+                          
+                          {/* Botón Eliminar */}
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => handleDeleteClient(selectedClient.id, selectedClient.name)}
                             className="border-red-300 text-red-600 hover:bg-red-50"
                           >
-                            Eliminar
+                            🗑️ Eliminar
                           </Button>
                         </div>
                       </CardTitle>
