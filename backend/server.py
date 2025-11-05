@@ -78,6 +78,13 @@ async def get_current_user(request: Request):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
+    # Check if user is archived
+    if user.get("status") == "archived":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Tu cuenta ha sido archivada. Contacta con el administrador para reactivarla."
+        )
+    
     user["id"] = str(user["_id"])
     return user
 
