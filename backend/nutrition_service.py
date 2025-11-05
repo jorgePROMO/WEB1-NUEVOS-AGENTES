@@ -27,15 +27,13 @@ if not OPENAI_API_KEY:
 else:
     print(f"✅ OpenAI Key cargada: {OPENAI_API_KEY[:20]}...")
 
-# PROMPT AGENTE 1 - EXACTO como lo proporcionó el usuario
-AGENTE_1_PROMPT = """NUTRI AGENTE 1
-
-Eres un nutricionista experto calculando macros y creando menús personalizados.
+# PROMPT AGENTE 1
+AGENTE_1_PROMPT = """Eres un nutricionista profesional creando un plan nutricional personalizado.
 
 DATOS DEL CLIENTE:
 {client_data}
 
-Genera EXACTAMENTE este formato:
+Crea un plan de nutrición siguiendo EXACTAMENTE esta estructura:
 
 PLAN DE NUTRICIÓN PERSONALIZADO
 
@@ -45,7 +43,7 @@ PLAN DE NUTRICIÓN PERSONALIZADO
 
 ---
 
-1. CÁLCULO DE KCAL Y MACROS
+1. CÁLCULO DE CALORÍAS Y MACRONUTRIENTES
 
 📢 Fórmula Mifflin–St Jeor:
 - TMB ≈ [calcula según datos reales] kcal/día
@@ -56,12 +54,12 @@ PLAN DE NUTRICIÓN PERSONALIZADO
 CALORÍAS TOTALES | PROTEÍNA (g / %) | CARBOHIDRATOS (g / %) | GRASAS (g / %)
 [total] kcal | [gramos] g / [%] % | [gramos] g / [%] % | [gramos] g / [%] %
 
-✅ Resumen visual:
+✅ Resumen:
 🔥 Objetivo: [objetivo específico]
 ✅ Calorías objetivo: [total] kcal/día
 🥩 Proteínas: [g] g — 🥑 Grasas: [g] g — 🍞 Carbohidratos: [g] g
 
-2. MENÚ NUTRICIONAL SEMANAL (CON GRAMOS) 🥗
+2. MENÚ SEMANAL 🥗
 
 **LUNES**
 🥣 Desayuno: [plato con gramos aproximados usando alimentos comunes]
@@ -72,7 +70,7 @@ CALORÍAS TOTALES | PROTEÍNA (g / %) | CARBOHIDRATOS (g / %) | GRASAS (g / %)
 **MARTES**
 [Continúa para toda la semana sin repetir platos, adaptando a horarios y preferencias del cliente]
 
-3. LISTA DE LA COMPRA SEMANAL CON TODAS LAS CANTIDADES SEMANALES, LAS CUENTAS, LAS SUMAS Y DAS EL TOTAL
+3. LISTA DE LA COMPRA SEMANAL
 
 🥩 PROTEÍNAS:
 - [alimento común]: [cantidad] kg/unidades
@@ -92,7 +90,7 @@ CALORÍAS TOTALES | PROTEÍNA (g / %) | CARBOHIDRATOS (g / %) | GRASAS (g / %)
 🥛 LÁCTEOS:
 - [alimento común]: [cantidad] L/unidades
 
-Usa alimentos comunes y conocidos. Adapta a horarios reales del cliente, restricciones alimentarias y preferencias. Responde SOLO con este contenido."""
+IMPORTANTE: Usa alimentos comunes y conocidos. Adapta a horarios reales del cliente, restricciones alimentarias y preferencias. NO incluyas totales finales ni frases de cierre automáticas."""
 
 # PROMPT AGENTE 2 - EXACTO como lo proporcionó el usuario
 AGENTE_2_PROMPT = """NUTRI AGENTE 2
