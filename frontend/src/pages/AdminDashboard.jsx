@@ -231,7 +231,8 @@ const AdminDashboard = () => {
 
   // Generate PDF and upload to user documents
   const generateNutritionPDF = async () => {
-    if (!selectedPlan) {
+    const planToUse = modalPlan || selectedPlan;
+    if (!planToUse) {
       alert('No hay plan seleccionado');
       return;
     }
