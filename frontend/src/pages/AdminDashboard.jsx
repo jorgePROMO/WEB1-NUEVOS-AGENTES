@@ -244,7 +244,7 @@ const AdminDashboard = () => {
     setGeneratingPDF(true);
     try {
       const response = await axios.post(
-        `${API}/admin/users/${selectedClient.id}/nutrition-pdf?plan_id=${selectedPlan.id}`,
+        `${API}/admin/users/${selectedClient.id}/nutrition-pdf?plan_id=${planToUse.id}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
