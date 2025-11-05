@@ -300,25 +300,20 @@ const AdminDashboard = () => {
 
 
 
-  // Toggle plan expansion with useCallback to prevent double-execution
+  // Toggle plan expansion - sin dependencias para evitar loops
   const togglePlanExpansion = useCallback((plan) => {
-    console.log('🔵 togglePlanExpansion called with plan:', plan.id);
-    console.log('🔵 Current selectedPlan:', selectedPlan?.id);
-    
     setSelectedPlan(currentPlan => {
-      console.log('🟢 Inside setSelectedPlan, currentPlan:', currentPlan?.id);
       // Si el plan ya está seleccionado, colapsarlo
       if (currentPlan?.id === plan.id) {
-        console.log('🔴 Collapsing plan');
         return null;
       }
       // Si no, expandirlo
-      console.log('🟢 Expanding plan:', plan.id);
-      setNutritionContent(plan.plan_verificado);
-      setEditingNutrition(false);
       return plan;
     });
-  }, [selectedPlan]);
+    // Actualizar contenido fuera del setState
+    setNutritionContent(plan.plan_verificado);
+    setEditingNutrition(false);
+  }, []); // SIN DEPENDENCIAS
 
 
   // Send nutrition plan by email
