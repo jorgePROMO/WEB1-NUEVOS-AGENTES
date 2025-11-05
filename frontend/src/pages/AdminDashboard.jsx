@@ -2192,7 +2192,7 @@ const AdminDashboard = () => {
         if (!open) closePlanModal();
       }}>
         <DialogContent className="max-w-[95vw] w-[95vw] h-[95vh] max-h-[95vh] p-0 overflow-hidden flex flex-col">
-          {selectedPlan ? (
+          {modalPlan ? (
             <>
               {/* Header del Modal */}
               <DialogHeader className="p-6 border-b bg-gradient-to-r from-blue-50 to-green-50">
@@ -2206,11 +2206,11 @@ const AdminDashboard = () => {
                         Plan de Nutrición - {(() => {
                           const monthNames = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
                                              "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-                          return `${monthNames[selectedPlan.month]} ${selectedPlan.year}`;
+                          return `${monthNames[modalPlan.month]} ${modalPlan.year}`;
                         })()}
                       </DialogTitle>
                       <DialogDescription className="text-sm">
-                        Generado: {new Date(selectedPlan.generated_at).toLocaleDateString('es-ES')} • 
+                        Generado: {new Date(modalPlan.generated_at).toLocaleDateString('es-ES')} • 
                         Cliente: {selectedClient?.name}
                       </DialogDescription>
                     </div>
@@ -2218,16 +2218,16 @@ const AdminDashboard = () => {
                   
                   {/* Status badges */}
                   <div className="flex gap-2">
-                    {selectedPlan.pdf_id && (
+                    {modalPlan.pdf_id && (
                       <Badge className="bg-orange-500">📄 PDF</Badge>
                     )}
-                    {selectedPlan.sent_email && (
+                    {modalPlan.sent_email && (
                       <Badge className="bg-blue-500">✉️ Email</Badge>
                     )}
-                    {selectedPlan.sent_whatsapp && (
+                    {modalPlan.sent_whatsapp && (
                       <Badge className="bg-green-500">💬 WhatsApp</Badge>
                     )}
-                    {selectedPlan.edited && (
+                    {modalPlan.edited && (
                       <Badge className="bg-purple-500">✏️ Editado</Badge>
                     )}
                   </div>
@@ -2239,15 +2239,15 @@ const AdminDashboard = () => {
                 {/* Status Details */}
                 <div className="grid grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
                   <div className="text-center">
-                    <div className="text-3xl mb-1">{selectedPlan.pdf_id ? '✅' : '❌'}</div>
+                    <div className="text-3xl mb-1">{modalPlan.pdf_id ? '✅' : '❌'}</div>
                     <div className="text-sm text-gray-600 font-medium">PDF Generado</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl mb-1">{selectedPlan.sent_email ? '✅' : '❌'}</div>
+                    <div className="text-3xl mb-1">{modalPlan.sent_email ? '✅' : '❌'}</div>
                     <div className="text-sm text-gray-600 font-medium">Enviado Email</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl mb-1">{selectedPlan.sent_whatsapp ? '✅' : '❌'}</div>
+                    <div className="text-3xl mb-1">{modalPlan.sent_whatsapp ? '✅' : '❌'}</div>
                     <div className="text-sm text-gray-600 font-medium">Enviado WhatsApp</div>
                   </div>
                 </div>
@@ -2270,7 +2270,7 @@ const AdminDashboard = () => {
                           <Button
                             onClick={() => {
                               setEditingNutrition(false);
-                              setNutritionContent(selectedPlan.plan_verificado);
+                              setNutritionContent(modalPlan.plan_verificado);
                             }}
                             variant="outline"
                           >
@@ -2295,7 +2295,7 @@ const AdminDashboard = () => {
                     ) : (
                       <div className="prose max-w-none">
                         <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
-                          {selectedPlan.plan_verificado}
+                          {modalPlan.plan_verificado}
                         </pre>
                       </div>
                     )}
