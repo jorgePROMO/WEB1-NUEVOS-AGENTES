@@ -1731,6 +1731,7 @@ const AdminDashboard = () => {
                                 const monthNames = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
                                                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
                                 const isExpanded = selectedPlan?.id === plan.id;
+                                console.log(`📊 Rendering plan ${plan.id}, isExpanded: ${isExpanded}, selectedPlan: ${selectedPlan?.id}`);
                                 
                                 return (
                                   <Card 
