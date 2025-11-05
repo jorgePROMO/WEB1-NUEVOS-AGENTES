@@ -64,7 +64,7 @@ CALORÍAS TOTALES | PROTEÍNA (g / %) | CARBOHIDRATOS (g / %) | GRASAS (g / %)
 **MARTES**
 [Continúa para toda la semana sin repetir platos, adaptando a horarios y preferencias del cliente]
 
-4- LISTA DE LA COMPRA SEMANAL CON TODAS LAS CANTIDADES SEMANALES, LAS CUENTAS, LAS SUMAS Y DAS EL TOTAL
+3. LISTA DE LA COMPRA SEMANAL CON TODAS LAS CANTIDADES SEMANALES, LAS CUENTAS, LAS SUMAS Y DAS EL TOTAL
 
 🥩 PROTEÍNAS:
 - [alimento común]: [cantidad] kg/unidades
