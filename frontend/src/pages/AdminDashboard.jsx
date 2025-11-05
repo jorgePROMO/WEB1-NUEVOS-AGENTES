@@ -2409,6 +2409,8 @@ const AdminDashboard = () => {
                               // Find the submission_id for this user
                               if (questionnaireSubmissions.length > 0) {
                                 await generatePlanWithAI(questionnaireSubmissions[0].id, true);
+                                // Reload nutrition plans after regeneration
+                                await loadNutritionPlan(selectedClient.id);
                                 closePlanModal();
                               } else {
                                 alert('No se encontró un cuestionario para regenerar el plan');
