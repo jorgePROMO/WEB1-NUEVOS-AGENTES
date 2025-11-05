@@ -248,14 +248,8 @@ async def login(email: str, password: str):
             detail="Por favor verifica tu email antes de iniciar sesión. Revisa tu bandeja de entrada."
         )
     
-    # Check if payment is verified (for non-admin users)
-    if user.get("role") != "admin":
-        payment_status = user.get("subscription", {}).get("payment_status")
-        if payment_status == "pending":
-            raise HTTPException(
-                status_code=status.HTTP_402_PAYMENT_REQUIRED,
-                detail="Debes completar el pago para acceder a tu cuenta. Contacta con Jorge."
-            )
+    # NO bloqueamos por payment_status - el usuario debe poder acceder al dashboard para pagar
+    # El dashboard mostrará el botón de pago si payment_status="pending"
     
     # Create token
     access_token = create_access_token(data={"sub": user["_id"]})
