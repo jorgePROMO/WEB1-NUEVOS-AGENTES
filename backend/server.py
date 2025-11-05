@@ -630,13 +630,9 @@ async def get_user_dashboard(request: Request):
 @api_router.get("/admin/clients")
 async def get_all_clients(request: Request):
     admin = await require_admin(request)
-    # Exclude deleted users (soft delete)
+    # Ya NO necesitamos filtrar "deleted" porque ahora es HARD DELETE
     users = await db.users.find({
-        "role": "user",
-        "$or": [
-            {"status": {"$ne": "deleted"}},
-            {"status": {"$exists": False}}
-        ]
+        "role": "user"
     }).to_list(1000)
     
     for user in users:
