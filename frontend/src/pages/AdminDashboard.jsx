@@ -308,20 +308,20 @@ const AdminDashboard = () => {
 
 
 
-  // Toggle plan expansion - sin dependencias para evitar loops
-  const togglePlanExpansion = useCallback((plan) => {
-    setSelectedPlan(currentPlan => {
-      // Si el plan ya está seleccionado, colapsarlo
-      if (currentPlan?.id === plan.id) {
-        return null;
-      }
-      // Si no, expandirlo
-      return plan;
-    });
-    // Actualizar contenido fuera del setState
+  // Abrir modal con plan seleccionado
+  const openPlanModal = useCallback((plan) => {
+    setSelectedPlan(plan);
     setNutritionContent(plan.plan_verificado);
     setEditingNutrition(false);
-  }, []); // SIN DEPENDENCIAS
+    setShowNutritionModal(true);
+  }, []);
+
+  // Cerrar modal
+  const closePlanModal = useCallback(() => {
+    setShowNutritionModal(false);
+    setEditingNutrition(false);
+    setSelectedPlan(null);
+  }, []);
 
 
   // Send nutrition plan by email
