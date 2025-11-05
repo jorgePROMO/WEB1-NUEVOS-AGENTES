@@ -3340,7 +3340,7 @@ async def submit_nutrition_questionnaire(questionnaire: NutritionQuestionnaireSu
 
 
 @api_router.post("/admin/users/{user_id}/nutrition/generate")
-async def admin_generate_nutrition_plan(user_id: str, submission_id: str, request: Request):
+async def admin_generate_nutrition_plan(user_id: str, submission_id: str, regenerate: bool = False, request: Request = None):
     """Admin genera el plan de nutrición desde las respuestas del cuestionario"""
     await require_admin(request)
     
@@ -3354,7 +3354,30 @@ async def admin_generate_nutrition_plan(user_id: str, submission_id: str, reques
         if submission["user_id"] != user_id:
             raise HTTPException(status_code=403, detail="El cuestionario no pertenece a este usuario")
         
-        if submission.get("plan_generated"):
+        # Si regenerate=True, eliminar planes existentes de este mes
+        if regenerate and submission.get("plan_generated"):
+            now = datetime.now(timezone.utc)
+            current_month = now.month
+            current_year = now.year
+            
+            logger.info(f"🔄 Regenerando plan - eliminando plan existente del mes {current_month}/{current_year}")
+            
+            # Eliminar el plan existente de este mes
+            delete_result = await db.nutrition_plans.delete_many({
+                "user_id": user_id,
+                "month": current_month,
+                "year": current_year
+            })
+            
+            logger.info(f"✅ Eliminados {delete_result.deleted_count} planes del mes actual")
+            
+            # Resetear flag en submission
+            await db.nutrition_questionnaire_submissions.update_one(
+                {"_id": submission_id},
+                {"$set": {"plan_generated": False}}
+            )
+        
+        if submission.get("plan_generated") and not regenerate:
             raise HTTPException(status_code=400, detail="Ya existe un plan generado para este cuestionario")
         
         # Obtener datos del cuestionario
