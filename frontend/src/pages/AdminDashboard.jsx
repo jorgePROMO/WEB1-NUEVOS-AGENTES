@@ -329,7 +329,8 @@ const AdminDashboard = () => {
 
   // Send nutrition plan by email
   const sendNutritionByEmail = async (userId) => {
-    if (!selectedPlan) {
+    const planToUse = modalPlan || selectedPlan;
+    if (!planToUse) {
       alert('No hay plan seleccionado');
       return;
     }
