@@ -37,7 +37,7 @@ Eres un nutricionista experto calculando macros y creando menús personalizados.
 
 **GENERA TU RESPUESTA COMENZANDO DIRECTAMENTE CON EL CÁLCULO DE MACROS (NO INCLUYAS NOMBRES NI DATOS PERSONALES AL INICIO):**
 
-CÁLCULO DE KCAL Y MACROS
+1. CÁLCULO DE KCAL Y MACROS
 
 📢 Fórmula Mifflin–St Jeor:
 - TMB ≈ [calcula según datos reales] kcal/día
@@ -53,7 +53,7 @@ CALORÍAS TOTALES | PROTEÍNA (g / %) | CARBOHIDRATOS (g / %) | GRASAS (g / %)
 ✅ Calorías objetivo: [total] kcal/día
 🥩 Proteínas: [g] g — 🥑 Grasas: [g] g — 🍞 Carbohidratos: [g] g
 
-3- MENÚ NUTRICIONAL SEMANAL (CON GRAMOS) 🥗
+2. MENÚ NUTRICIONAL SEMANAL (CON GRAMOS) 🥗
 
 **LUNES**
 🥣 Desayuno: [plato con gramos aproximados usando alimentos comunes]
