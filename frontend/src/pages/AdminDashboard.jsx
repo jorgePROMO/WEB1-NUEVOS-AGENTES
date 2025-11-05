@@ -1734,16 +1734,7 @@ const AdminDashboard = () => {
                                     {/* Plan Header - Siempre visible */}
                                     <CardHeader 
                                       className="cursor-pointer hover:bg-gray-50"
-                                      onClick={() => {
-                                        console.log('Click en plan, isExpanded:', isExpanded, 'plan.id:', plan.id);
-                                        if (isExpanded) {
-                                          setSelectedPlan(null);
-                                        } else {
-                                          setSelectedPlan(plan);
-                                          setNutritionContent(plan.plan_verificado);
-                                          setEditingNutrition(false);
-                                        }
-                                      }}
+                                      onClick={() => togglePlanExpansion(plan)}
                                     >
                                       <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
