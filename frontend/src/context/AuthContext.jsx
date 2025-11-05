@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+const APP_VERSION = '3.0.0'; // Incrementar esto fuerza limpieza de caché
 
 const AuthContext = createContext();
 
@@ -22,6 +23,17 @@ export const AuthProvider = ({ children }) => {
   // Validate user session on mount
   useEffect(() => {
     const validateSession = async () => {
+      // Check app version - if different, clear old data
+      const storedVersion = localStorage.getItem('app_version');
+      if (storedVersion !== APP_VERSION) {
+        console.log('🔄 Nueva versión detectada, limpiando datos antiguos...');
+        localStorage.clear();
+        sessionStorage.clear();
+        localStorage.setItem('app_version', APP_VERSION);
+        setLoading(false);
+        return;
+      }
+      
       const storedToken = localStorage.getItem('token');
       const storedUser = localStorage.getItem('user');
       
