@@ -6,7 +6,7 @@ import os
 import sys
 import json
 from pathlib import Path
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+from openai import AsyncOpenAI
 
 # Cargar variables de entorno manualmente
 env_path = Path(__file__).parent / '.env'
