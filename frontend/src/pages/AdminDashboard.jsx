@@ -89,6 +89,13 @@ const AdminDashboard = () => {
   const [generatingPlan, setGeneratingPlan] = useState(false);
   const [showNutritionModal, setShowNutritionModal] = useState(false); // Control del modal
   const [modalPlan, setModalPlan] = useState(null); // Plan que se muestra en el modal
+  
+  // Follow-up states
+  const [followUps, setFollowUps] = useState([]); // Array de seguimientos
+  const [selectedFollowUp, setSelectedFollowUp] = useState(null); // Seguimiento seleccionado
+  const [followUpAnalysis, setFollowUpAnalysis] = useState(''); // Análisis del seguimiento
+  const [editingAnalysis, setEditingAnalysis] = useState(false);
+  const [generatingAnalysis, setGeneratingAnalysis] = useState(false);
 
 
   // Form states
