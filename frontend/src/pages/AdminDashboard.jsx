@@ -1250,11 +1250,12 @@ const AdminDashboard = () => {
                     </CardHeader>
                     <CardContent>
                       <Tabs defaultValue="data" className="space-y-4">
-                        <TabsList className="grid w-full grid-cols-5">
+                        <TabsList className="grid w-full grid-cols-6">
                           <TabsTrigger value="data">Datos</TabsTrigger>
                           <TabsTrigger value="forms">Formularios</TabsTrigger>
                           <TabsTrigger value="pdfs">PDFs</TabsTrigger>
                           <TabsTrigger value="nutrition">🥗 Nutrición</TabsTrigger>
+                          <TabsTrigger value="followup">📊 Seguimiento</TabsTrigger>
                           <TabsTrigger value="alerts">Alertas</TabsTrigger>
                           <TabsTrigger value="sessions">Sesiones</TabsTrigger>
                         </TabsList>
