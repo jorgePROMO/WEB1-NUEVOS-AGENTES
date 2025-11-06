@@ -351,9 +351,35 @@ async def generate_nutrition_plan_with_context(questionnaire: dict, follow_up_an
     client_data_parts.append(f"- Objetivo para próximo mes: {feedback.get('objetivo_proximo_mes', 'N/A')}")
     client_data_parts.append(f"- Cambios deseados: {feedback.get('cambios_deseados', 'N/A')}")
     
+    # Agregar plan anterior si existe
+    if previous_plan:
+        client_data_parts.append(f"\n**PLAN DE NUTRICIÓN ANTERIOR:**")
+        client_data_parts.append(f"Generado: {previous_plan.get('generated_at', 'N/A')}")
+        client_data_parts.append(f"Contenido: {previous_plan.get('plan_verificado', 'N/A')[:500]}...")  # Primeros 500 caracteres
+    
     client_data_parts.append(f"\n**ANÁLISIS PREVIO DEL ENTRENADOR:**\n{follow_up_analysis}")
     
     client_data = "\n".join(client_data_parts)
+    
+    # Contexto adicional con TODA la información
+    context_adicional = f"""
+**IMPORTANTE - GENERAR NUEVO PLAN BASADO EN SEGUIMIENTO:**
+
+Tienes acceso a:
+1. Cuestionario inicial del cliente
+2. Plan de nutrición anterior (usado durante {follow_up_data.get('days_since_last_plan', 0)} días)
+3. Seguimiento mensual con mediciones actuales
+4. Análisis del entrenador
+
+{follow_up_analysis}
+
+**INSTRUCCIONES:**
+- Usa el MISMO FORMATO que el plan anterior
+- Ajusta calorías y macros según las recomendaciones del análisis
+- Considera los cambios corporales y adherencia del cliente
+- Mantén los alimentos que funcionaron bien, cambia los que no
+- Genera un plan personalizado para el próximo mes
+"""
     
     # Generar el plan usando la función existente con el contexto adicional
     result = await generate_nutrition_plan({
@@ -367,13 +393,10 @@ async def generate_nutrition_plan_with_context(questionnaire: dict, follow_up_an
         'trabajo_fisico': questionnaire.get('trabajo_fisico'),
         'alergias_intolerancias': questionnaire.get('alergias_intolerancias', 'Ninguna'),
         'comidas_dia': questionnaire.get('comidas_dia'),
-        'context_adicional': f"\n\n**IMPORTANTE - AJUSTES BASADOS EN SEGUIMIENTO:**\n{follow_up_analysis}\n\nAjusta el plan considerando el análisis anterior y las recomendaciones específicas."
+        'context_adicional': context_adicional
     })
     
-    if result["success"]:
-        return result["plan_verificado"]
-    else:
-        raise Exception(f"Error generando plan: {result.get('error', 'Error desconocido')}")
+    return result
 
 
 if __name__ == "__main__":
