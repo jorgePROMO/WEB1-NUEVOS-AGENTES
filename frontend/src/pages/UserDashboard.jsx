@@ -328,25 +328,15 @@ const UserDashboard = () => {
                 </Card>
               )}
 
-              {/* Show nutrition status if plan exists */}
+              {/* Show nutrition status if plan exists AND no documents yet */}
               {userData.subscription?.plan === 'team' && 
                userData.subscription?.payment_status === 'verified' && 
-               userData.nutrition_plan && (
-                <Card className="md:col-span-2 border-2 border-green-200 bg-green-50">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-green-800">
-                      <CheckCircle className="h-6 w-6 text-green-600" />
-                      Plan de Nutrición Generado
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-700">
-                      ✅ El equipo de Jorge está revisando tu cuestionario. Tu plan estará listo en un plazo de 24 horas. 
-                      {userData.nutrition_plan.pdf_generated && (
-                        <span className="block mt-2 text-green-700 font-semibold">
-                          📄 Tu plan está disponible en la pestaña "Documentos"
-                        </span>
-                      )}
+               userData.nutrition_plan && 
+               pdfs.length === 0 && (
+                <Card className="md:col-span-2 border-2 border-blue-200 bg-blue-50">
+                  <CardContent className="pt-6">
+                    <p className="text-gray-700 text-center text-lg">
+                      ✅ El equipo de Jorge está revisando tu cuestionario. Tu plan estará listo en un plazo de 24 horas.
                     </p>
                   </CardContent>
                 </Card>
