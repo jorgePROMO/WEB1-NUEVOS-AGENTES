@@ -2187,21 +2187,23 @@ class BackendTester:
         print(f"Backend URL: {BACKEND_URL}")
         print("=" * 80)
         
-        # Run tests in order - focusing on CRITICAL PRODUCTION TESTS
+        # Run tests in order - focusing on PHASE 3 FOLLOW-UP ANALYSIS & PLAN GENERATION
         tests = [
-            # CRITICAL PRODUCTION TESTS (HIGH PRIORITY)
-            self.test_28_admin_login_production_credentials,
-            self.test_29_soft_delete_consistency_register_user,
-            self.test_30_verify_user_in_admin_clients,
-            self.test_31_soft_delete_user,
-            self.test_32_verify_deleted_user_not_in_clients,
-            self.test_33_deleted_user_auth_me_fails,
-            self.test_34_deleted_user_dashboard_fails,
-            self.test_35_cache_headers_verification,
-            self.test_36_email_verification_register_user,
-            self.test_37_verify_unverified_user_in_clients,
-            self.test_38_unverified_user_login_fails,
-            self.test_39_admin_clients_consistency_multiple_calls,
+            # PHASE 3: FOLLOW-UP ANALYSIS & PLAN GENERATION TESTS (HIGH PRIORITY)
+            self.test_28_admin_login_for_phase3,
+            self.test_29_check_existing_followups,
+            self.test_30_analyze_followup_without_data,
+            self.test_31_generate_plan_without_analysis,
+            self.test_32_create_test_nutrition_questionnaire,
+            self.test_33_create_test_followup_submission,
+            self.test_34_ai_analysis_of_followup,
+            self.test_35_update_followup_analysis,
+            self.test_36_generate_new_plan_from_followup,
+            self.test_37_verify_followup_status_changes,
+            self.test_38_verify_data_persistence,
+            
+            # CRITICAL PRODUCTION TESTS
+            self.test_39_admin_login_production_credentials,
             
             # Basic system tests
             self.test_1_register_new_user,
