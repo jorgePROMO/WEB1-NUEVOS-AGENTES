@@ -1602,6 +1602,75 @@ const AdminDashboard = () => {
                             <p className="text-sm text-gray-700 mb-3">
                               Envía el cuestionario de seguimiento al cliente. Podrás analizar sus respuestas y generar un nuevo plan.
                             </p>
+                            
+                            {/* Control Manual del Botón */}
+                            <div className="mb-4 p-3 bg-white rounded-lg border border-purple-200">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-sm font-semibold">Control del botón en panel del cliente:</span>
+                                <Badge className={selectedClient.followup_activated ? 'bg-green-500' : 'bg-gray-400'}>
+                                  {selectedClient.followup_activated ? '🟢 Activado' : '⚫ Desactivado'}
+                                </Badge>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button
+                                  size="sm"
+                                  onClick={async () => {
+                                    try {
+                                      await axios.post(
+                                        `${API}/admin/users/${selectedClient.id}/activate-followup`,
+                                        {},
+                                        {
+                                          headers: { Authorization: `Bearer ${token}` },
+                                          withCredentials: true
+                                        }
+                                      );
+                                      setSelectedClient({...selectedClient, followup_activated: true});
+                                      alert('✅ Botón de seguimiento ACTIVADO en el panel del cliente');
+                                      loadClients();
+                                    } catch (error) {
+                                      alert(`❌ Error: ${error.response?.data?.detail || error.message}`);
+                                    }
+                                  }}
+                                  disabled={selectedClient.followup_activated}
+                                  className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50"
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-2" />
+                                  Activar Botón
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  onClick={async () => {
+                                    try {
+                                      await axios.post(
+                                        `${API}/admin/users/${selectedClient.id}/deactivate-followup`,
+                                        {},
+                                        {
+                                          headers: { Authorization: `Bearer ${token}` },
+                                          withCredentials: true
+                                        }
+                                      );
+                                      setSelectedClient({...selectedClient, followup_activated: false});
+                                      alert('✅ Botón de seguimiento DESACTIVADO en el panel del cliente');
+                                      loadClients();
+                                    } catch (error) {
+                                      alert(`❌ Error: ${error.response?.data?.detail || error.message}`);
+                                    }
+                                  }}
+                                  disabled={!selectedClient.followup_activated}
+                                  variant="outline"
+                                  className="flex-1 border-red-300 text-red-600 hover:bg-red-50 disabled:opacity-50"
+                                >
+                                  <XCircle className="h-4 w-4 mr-2" />
+                                  Desactivar Botón
+                                </Button>
+                              </div>
+                              <p className="text-xs text-gray-600 mt-2">
+                                {selectedClient.followup_activated 
+                                  ? '✓ El cliente puede ver y completar el cuestionario en su panel'
+                                  : '✗ El cliente NO verá el botón (solo se mostrará si tiene plan >= 30 días)'}
+                              </p>
+                            </div>
+                            
                             <div className="grid grid-cols-2 gap-2">
                               <Button
                                 onClick={() => {
