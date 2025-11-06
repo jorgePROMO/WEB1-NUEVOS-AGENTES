@@ -290,7 +290,7 @@ async def test_nutrition_service():
 
 
 
-async def generate_nutrition_plan_with_context(questionnaire: dict, follow_up_analysis: str, follow_up_data: dict) -> str:
+async def generate_nutrition_plan_with_context(questionnaire: dict, follow_up_analysis: str, follow_up_data: dict, previous_plan: dict = None) -> dict:
     """
     Genera un nuevo plan de nutrición considerando el análisis del seguimiento mensual
     
@@ -298,9 +298,10 @@ async def generate_nutrition_plan_with_context(questionnaire: dict, follow_up_an
         questionnaire: Cuestionario inicial del cliente
         follow_up_analysis: Análisis generado por IA del seguimiento
         follow_up_data: Datos del seguimiento (mediciones, adherencia, etc.)
+        previous_plan: Plan de nutrición anterior para referencia
     
     Returns:
-        str: Plan de nutrición generado
+        dict: Resultado con success, plan_verificado, plan_inicial
     """
     
     # Extraer datos actualizados del seguimiento
