@@ -1452,6 +1452,74 @@ const AdminDashboard = () => {
                                 </div>
                               </div>
 
+                              {/* Estado del Cliente */}
+                              <div className="border-t pt-4 mt-4">
+                                <h4 className="font-semibold text-lg mb-3">Estado del Cliente</h4>
+                                <div className="flex gap-2 flex-wrap">
+                                  <Button
+                                    size="sm"
+                                    onClick={async () => {
+                                      try {
+                                        await axios.patch(
+                                          `${API}/admin/team-clients/${selectedClient.id}/status`,
+                                          { status: 'active' },
+                                          {
+                                            headers: { Authorization: `Bearer ${token}` },
+                                            withCredentials: true
+                                          }
+                                        );
+                                        setSelectedClient({...selectedClient, client_status: 'active'});
+                                        alert('✅ Cliente activado correctamente');
+                                        loadClients();
+                                      } catch (error) {
+                                        alert(`❌ Error: ${error.response?.data?.detail || error.message}`);
+                                      }
+                                    }}
+                                    disabled={selectedClient.client_status === 'active'}
+                                    className="bg-green-600 hover:bg-green-700 disabled:opacity-50"
+                                  >
+                                    <UserCheck className="h-4 w-4 mr-2" />
+                                    Activar Cliente
+                                  </Button>
+                                  
+                                  <Button
+                                    size="sm"
+                                    onClick={async () => {
+                                      try {
+                                        await axios.patch(
+                                          `${API}/admin/team-clients/${selectedClient.id}/status`,
+                                          { status: 'inactive' },
+                                          {
+                                            headers: { Authorization: `Bearer ${token}` },
+                                            withCredentials: true
+                                          }
+                                        );
+                                        setSelectedClient({...selectedClient, client_status: 'inactive'});
+                                        alert('✅ Cliente desactivado correctamente');
+                                        loadClients();
+                                      } catch (error) {
+                                        alert(`❌ Error: ${error.response?.data?.detail || error.message}`);
+                                      }
+                                    }}
+                                    disabled={selectedClient.client_status === 'inactive'}
+                                    variant="outline"
+                                    className="border-orange-300 text-orange-600 hover:bg-orange-50 disabled:opacity-50"
+                                  >
+                                    <XCircle className="h-4 w-4 mr-2" />
+                                    Desactivar Cliente
+                                  </Button>
+                                  
+                                  <Badge className={`ml-2 ${
+                                    selectedClient.client_status === 'active' ? 'bg-green-100 text-green-700' :
+                                    selectedClient.client_status === 'inactive' ? 'bg-orange-100 text-orange-700' :
+                                    'bg-yellow-100 text-yellow-700'
+                                  }`}>
+                                    Estado actual: {selectedClient.client_status === 'active' ? 'Activo' : 
+                                                    selectedClient.client_status === 'inactive' ? 'Inactivo' : 'Pendiente'}
+                                  </Badge>
+                                </div>
+                              </div>
+
                               <div className="border-t pt-4 mt-4">
                                 <h4 className="font-semibold text-lg mb-3">Suscripción</h4>
                                 <div className="grid md:grid-cols-2 gap-4">
@@ -1460,7 +1528,7 @@ const AdminDashboard = () => {
                                     <p className="text-gray-900 bg-white p-2 rounded border">{selectedClient.subscription?.plan === 'team' ? 'Equipo' : 'Directo'}</p>
                                   </div>
                                   <div>
-                                    <label className="text-sm font-semibold text-gray-700">Estado</label>
+                                    <label className="text-sm font-semibold text-gray-700">Estado de Pago</label>
                                     <Badge className={
                                       selectedClient.subscription?.payment_status === 'verified'
                                         ? 'bg-green-100 text-green-700'
