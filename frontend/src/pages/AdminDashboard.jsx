@@ -1426,6 +1426,7 @@ const AdminDashboard = () => {
                           <TabsTrigger value="pdfs" className="flex-1 min-w-[70px]">PDFs</TabsTrigger>
                           <TabsTrigger value="nutrition" className="flex-1 min-w-[90px]">🥗 Nutrición</TabsTrigger>
                           <TabsTrigger value="followup" className="flex-1 min-w-[110px]">📊 Seguimiento</TabsTrigger>
+                          <TabsTrigger value="history" className="flex-1 min-w-[90px]">📋 Historial</TabsTrigger>
                           <TabsTrigger value="alerts" className="flex-1 min-w-[70px]">Alertas</TabsTrigger>
                           <TabsTrigger value="sessions" className="flex-1 min-w-[80px]">Sesiones</TabsTrigger>
                         </TabsList>
