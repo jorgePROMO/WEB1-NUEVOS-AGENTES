@@ -3002,7 +3002,34 @@ const AdminDashboard = () => {
               </div>
 
               {/* Footer del Modal */}
-              <div className="p-4 border-t bg-gray-50 flex justify-end gap-2">
+              <div className="p-4 border-t bg-gray-50 flex justify-between items-center">
+                <Button 
+                  variant="outline" 
+                  className="border-red-300 text-red-600 hover:bg-red-50"
+                  onClick={async () => {
+                    if (window.confirm('⚠️ ¿Estás seguro de que quieres ELIMINAR COMPLETAMENTE este plan de nutrición?\n\nEsta acción NO se puede deshacer. Se eliminará:\n- El plan de nutrición\n- El PDF asociado (si existe)\n- Todas las referencias\n\n¿Continuar?')) {
+                      try {
+                        await axios.delete(
+                          `${API}/admin/users/${selectedClient.id}/nutrition/${modalPlan.id}`,
+                          {
+                            headers: { Authorization: `Bearer ${token}` },
+                            withCredentials: true
+                          }
+                        );
+                        alert('✅ Plan de nutrición eliminado completamente');
+                        closePlanModal();
+                        await loadNutritionPlan(selectedClient.id);
+                        await loadClientDetails(selectedClient.id);
+                      } catch (error) {
+                        console.error('Error eliminando plan:', error);
+                        alert('❌ Error al eliminar el plan: ' + (error.response?.data?.detail || error.message));
+                      }
+                    }
+                  }}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Eliminar Plan
+                </Button>
                 <Button variant="outline" onClick={closePlanModal}>
                   Cerrar
                 </Button>
