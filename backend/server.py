@@ -3593,6 +3593,58 @@ async def update_user_nutrition_plan(user_id: str, plan_id: str, updated_plan: d
         )
 
 
+@api_router.delete("/admin/users/{user_id}/nutrition/{plan_id}")
+async def delete_nutrition_plan(user_id: str, plan_id: str, request: Request):
+    """Admin elimina completamente un plan de nutrición (hard delete)"""
+    await require_admin(request)
+    
+    try:
+        # Verificar que el usuario existe
+        user = await db.users.find_one({"_id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Verificar que el plan existe
+        plan = await db.nutrition_plans.find_one({"_id": plan_id, "user_id": user_id})
+        if not plan:
+            raise HTTPException(status_code=404, detail="Plan de nutrición no encontrado")
+        
+        # Eliminar el PDF asociado si existe
+        if plan.get("pdf_id"):
+            await db.pdfs.delete_one({"_id": plan["pdf_id"]})
+            logger.info(f"PDF eliminado: {plan['pdf_id']}")
+        
+        # Eliminar el plan de nutrición
+        result = await db.nutrition_plans.delete_one({"_id": plan_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="No se pudo eliminar el plan")
+        
+        # Si este era el plan actual del usuario, limpiar la referencia
+        if user.get("nutrition_plan") == plan_id:
+            await db.users.update_one(
+                {"_id": user_id},
+                {"$unset": {"nutrition_plan": ""}}
+            )
+            logger.info(f"Referencia al plan eliminada del usuario {user_id}")
+        
+        logger.info(f"✅ Plan de nutrición {plan_id} eliminado completamente por admin")
+        
+        return {
+            "success": True,
+            "message": "Plan de nutrición eliminado completamente"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error eliminando plan de nutrición: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error eliminando plan: {str(e)}"
+        )
+
+
 @api_router.post("/admin/users/{user_id}/nutrition-pdf")
 async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Request = None):
     """Admin genera PDF del plan de nutrición más reciente y lo sube a documentos del usuario"""
