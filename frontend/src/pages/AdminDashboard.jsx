@@ -194,24 +194,17 @@ const AdminDashboard = () => {
 
   const loadClientDetails = async (userId) => {
     try {
-      console.log('🔍 Loading client details for:', userId);
       const response = await axios.get(`${API}/admin/clients/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         },
         withCredentials: true
       });
-      console.log('✅ Client details loaded:', response.data);
-      console.log('📄 PDFs count:', response.data.pdfs?.length);
       setSelectedClientDetails(response.data);
       // Update selectedClient with complete data from backend
       setSelectedClient(response.data.user);
-      // Load follow-ups
-      loadFollowUps(userId);
     } catch (error) {
       console.error('❌ Error loading client details:', error);
-      console.error('Error response:', error.response?.data);
-      console.error('Error status:', error.response?.status);
       setSelectedClientDetails({ user: selectedClient, forms: [], pdfs: [], alerts: [] });
     }
   };
