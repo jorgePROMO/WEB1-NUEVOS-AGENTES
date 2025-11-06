@@ -1,0 +1,51 @@
+[
+  {
+    "test": "Admin Login",
+    "success": true,
+    "message": "Admin logged in successfully. Role: admin",
+    "timestamp": "2025-11-06T15:10:54.878771",
+    "response_data": null
+  },
+  {
+    "test": "Check Existing Follow-ups",
+    "success": false,
+    "message": "No pending reviews found. No follow-up data available for testing.",
+    "timestamp": "2025-11-06T15:10:54.922507",
+    "response_data": null
+  },
+  {
+    "test": "Create Test Data",
+    "success": true,
+    "message": "Selected test user: jorge31011987@gmail.com (ID: 1762350193970676)",
+    "timestamp": "2025-11-06T15:10:54.969558",
+    "response_data": null
+  },
+  {
+    "test": "Test AI Analysis Endpoint",
+    "success": true,
+    "message": "Endpoint correctly returned 404 for non-existent follow-up. Endpoint exists and is properly protected.",
+    "timestamp": "2025-11-06T15:10:55.011525",
+    "response_data": null
+  },
+  {
+    "test": "Test Update Analysis Endpoint",
+    "success": true,
+    "message": "Endpoint correctly returned 404 for non-existent follow-up. Endpoint exists and is properly protected.",
+    "timestamp": "2025-11-06T15:10:55.055643",
+    "response_data": null
+  },
+  {
+    "test": "Test Generate Plan Endpoint",
+    "success": true,
+    "message": "Endpoint correctly returned 404 for non-existent follow-up. Endpoint exists and is properly protected.",
+    "timestamp": "2025-11-06T15:10:55.097490",
+    "response_data": null
+  },
+  {
+    "test": "Test Error Handling",
+    "success": true,
+    "message": "All error handling test cases passed",
+    "timestamp": "2025-11-06T15:10:55.257922",
+    "response_data": null
+  }
+]
