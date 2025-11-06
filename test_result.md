@@ -546,15 +546,18 @@ backend:
 
   - task: "Follow-Up Activation API"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Implemented POST /api/admin/users/{user_id}/activate-followup endpoint. Admin can manually activate follow-up questionnaire for a client by setting followup_activated=true, followup_activated_at timestamp, and followup_activated_by='admin'. Also implemented POST /api/admin/users/{user_id}/deactivate-followup for reversing activation. Ready for testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ COMPREHENSIVE MONTHLY FOLLOW-UP SYSTEM TESTING COMPLETED - ALL ENDPOINTS WORKING PERFECTLY: 1) POST /api/admin/users/{user_id}/activate-followup - Successfully activates follow-up questionnaire, sets followup_activated=true, followup_activated_at timestamp, followup_activated_by='admin', returns correct message 'Cuestionario de seguimiento activado correctamente' ✅, 2) POST /api/admin/users/{user_id}/deactivate-followup - Successfully deactivates follow-up questionnaire, sets followup_activated=false, returns correct message 'Cuestionario de seguimiento desactivado' ✅, 3) Both endpoints correctly handle 404 errors for non-existent users ✅, 4) Admin authentication working correctly ✅. All activation/deactivation functionality verified through direct user data checks."
 
   - task: "Follow-Up Submit Auto-Deactivation"
     implemented: true
