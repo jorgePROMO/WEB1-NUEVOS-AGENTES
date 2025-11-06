@@ -2271,7 +2271,35 @@ const AdminDashboard = () => {
                           </h3>
                           
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Cuestionario Inicial */}
+                            {/* Cuestionario de Diagnóstico Inicial */}
+                            {selectedClientDetails?.forms?.find(f => f.type === 'diagnosis') && (() => {
+                              const diagnosisForm = selectedClientDetails.forms.find(f => f.type === 'diagnosis');
+                              return (
+                                <Card
+                                  className="border-2 border-green-200 hover:border-green-400 transition-all cursor-pointer hover:shadow-lg"
+                                  onClick={() => setSelectedHistoryItem({ type: 'diagnosis', data: diagnosisForm })}
+                                >
+                                  <CardHeader className="bg-green-50">
+                                    <CardTitle className="text-lg flex items-center gap-2">
+                                      🩺 Cuestionario de Diagnóstico
+                                    </CardTitle>
+                                    <p className="text-sm text-gray-600">
+                                      {new Date(diagnosisForm.submitted_at).toLocaleDateString('es-ES')}
+                                    </p>
+                                  </CardHeader>
+                                  <CardContent>
+                                    <div className="text-sm text-gray-600 mb-3">
+                                      Primer cuestionario completado tras el pago
+                                    </div>
+                                    <Button variant="outline" className="w-full">
+                                      Ver Respuestas Completas
+                                    </Button>
+                                  </CardContent>
+                                </Card>
+                              );
+                            })()}
+
+                            {/* Cuestionario Inicial de Nutrición */}
                             {selectedClientDetails?.forms?.filter(f => f.type === 'nutrition').length > 0 && (
                               <Card className="border-2 border-blue-300">
                                 <CardHeader className="bg-blue-50">
