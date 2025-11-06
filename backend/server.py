@@ -4583,26 +4583,34 @@ Genera el análisis en español, con formato markdown para facilitar la lectura.
         
         logger.info(f"Generating AI analysis for follow-up {followup_id} of user {user_id}")
         
-        # Llamar a la IA (usando emergentintegrations)
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        # Llamar a la IA usando OpenAI directamente
+        from openai import AsyncOpenAI
         import os
         
-        # Obtener la clave de emergent
-        emergent_key = os.environ.get('EMERGENT_LLM_KEY')
+        # Obtener la clave de OpenAI
+        openai_key = os.environ.get('OPENAI_API_KEY')
         
-        # Crear el chat con la configuración correcta
-        llm_chat = LlmChat(
-            api_key=emergent_key,
-            session_id=f"followup_analysis_{followup_id}",
-            system_message="Eres un entrenador personal experto analizando el progreso de un cliente después de seguir un plan de nutrición."
-        ).with_model("openai", "gpt-4o")
+        # Crear el cliente de OpenAI
+        client = AsyncOpenAI(api_key=openai_key)
         
-        # Crear el mensaje de usuario
-        user_message = UserMessage(text=prompt)
+        # Llamar a la API de OpenAI GPT-4o
+        response = await client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Eres un entrenador personal experto analizando el progreso de un cliente después de seguir un plan de nutrición."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.7,
+            max_tokens=2000
+        )
         
-        # Enviar el mensaje y obtener respuesta
-        response = await llm_chat.send_message(user_message)
-        ai_analysis = response
+        ai_analysis = response.choices[0].message.content
         
         # Guardar el análisis en el seguimiento
         await db.follow_up_submissions.update_one(
