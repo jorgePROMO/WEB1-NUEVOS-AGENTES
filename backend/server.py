@@ -2165,6 +2165,13 @@ async def get_team_clients(request: Request, status: Optional[str] = None):
         clients_list = []
         
         for user in users:
+            # Determinar el status del cliente (puede venir de client_status o del payment_status)
+            client_status = user.get("client_status")
+            if not client_status:
+                # Fallback a payment_status si no existe client_status
+                payment_status = user.get("subscription", {}).get("payment_status", "pending")
+                client_status = "active" if payment_status == "verified" else "pending"
+            
             clients_list.append({
                 "id": user["_id"],
                 "nombre": user.get("name"),
@@ -2172,7 +2179,7 @@ async def get_team_clients(request: Request, status: Optional[str] = None):
                 "email": user.get("email"),
                 "phone": user.get("phone"),
                 "created_at": user.get("created_at"),
-                "status": user.get("subscription", {}).get("payment_status", "pending"),
+                "status": client_status,
                 "source": "registration",
                 "subscription": user.get("subscription", {})
             })
