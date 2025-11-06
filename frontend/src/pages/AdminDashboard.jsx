@@ -2744,6 +2744,188 @@ const AdminDashboard = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Follow-up Details Modal */}
+      {selectedFollowUp && (
+        <Dialog open={!!selectedFollowUp} onOpenChange={() => setSelectedFollowUp(null)}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <MessageSquare className="h-6 w-6 text-purple-600" />
+                Seguimiento - {new Date(selectedFollowUp.submitted_at).toLocaleDateString('es-ES')}
+              </DialogTitle>
+              <DialogDescription>
+                Respuestas del cuestionario de seguimiento de {selectedClient?.name}
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-6">
+              {/* Follow-up Responses */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Respuestas del Cliente</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {selectedFollowUp.responses && Object.entries(selectedFollowUp.responses).map(([question, answer]) => (
+                    <div key={question} className="border-b pb-3 last:border-b-0">
+                      <h4 className="font-semibold text-gray-900 mb-2">{question}</h4>
+                      <p className="text-gray-700 whitespace-pre-wrap">{answer}</p>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              {/* Analysis Section */}
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="text-lg">Análisis del Seguimiento</CardTitle>
+                  <div className="flex gap-2">
+                    {!editingAnalysis ? (
+                      <>
+                        <Button
+                          onClick={() => {
+                            setEditingAnalysis(true);
+                            setFollowUpAnalysis(selectedFollowUp.analysis || '');
+                          }}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <Edit className="h-4 w-4 mr-2" />
+                          Editar
+                        </Button>
+                        <Button
+                          onClick={async () => {
+                            if (!selectedFollowUp.id) return;
+                            
+                            setGeneratingAnalysis(true);
+                            try {
+                              const response = await axios.post(
+                                `${API}/admin/follow-ups/${selectedFollowUp.id}/generate-analysis`,
+                                {},
+                                {
+                                  headers: { Authorization: `Bearer ${token}` },
+                                  withCredentials: true
+                                }
+                              );
+                              setFollowUpAnalysis(response.data.analysis);
+                              setSelectedFollowUp({...selectedFollowUp, analysis: response.data.analysis});
+                              alert('✅ Análisis generado con IA');
+                            } catch (error) {
+                              alert(`Error: ${error.response?.data?.detail || error.message}`);
+                            } finally {
+                              setGeneratingAnalysis(false);
+                            }
+                          }}
+                          disabled={generatingAnalysis}
+                          className="bg-purple-600 hover:bg-purple-700"
+                          size="sm"
+                        >
+                          {generatingAnalysis ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Generando...
+                            </>
+                          ) : (
+                            <>
+                              🤖 Generar con IA
+                            </>
+                          )}
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          onClick={() => {
+                            setEditingAnalysis(false);
+                            setFollowUpAnalysis(selectedFollowUp.analysis || '');
+                          }}
+                          variant="outline"
+                          size="sm"
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          onClick={async () => {
+                            if (!selectedFollowUp.id) return;
+                            
+                            try {
+                              await axios.patch(
+                                `${API}/admin/follow-ups/${selectedFollowUp.id}/analysis`,
+                                { analysis: followUpAnalysis },
+                                {
+                                  headers: { Authorization: `Bearer ${token}` },
+                                  withCredentials: true
+                                }
+                              );
+                              setSelectedFollowUp({...selectedFollowUp, analysis: followUpAnalysis});
+                              setEditingAnalysis(false);
+                              alert('✅ Análisis guardado');
+                              // Reload follow-ups to update the list
+                              loadFollowUps(selectedClient.id);
+                            } catch (error) {
+                              alert(`Error: ${error.response?.data?.detail || error.message}`);
+                            }
+                          }}
+                          size="sm"
+                        >
+                          <Save className="h-4 w-4 mr-2" />
+                          Guardar
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {editingAnalysis ? (
+                    <Textarea
+                      value={followUpAnalysis}
+                      onChange={(e) => setFollowUpAnalysis(e.target.value)}
+                      rows={10}
+                      placeholder="Escribe tu análisis del seguimiento aquí..."
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="min-h-[200px] p-4 bg-gray-50 rounded-lg">
+                      {selectedFollowUp.analysis ? (
+                        <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
+                          {selectedFollowUp.analysis}
+                        </pre>
+                      ) : (
+                        <p className="text-gray-500 italic">
+                          No hay análisis disponible. Haz clic en "Editar" para agregar uno o "Generar con IA" para crear uno automáticamente.
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Actions */}
+              <div className="flex justify-end gap-2 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  onClick={() => setSelectedFollowUp(null)}
+                >
+                  Cerrar
+                </Button>
+                <Button
+                  onClick={() => {
+                    // Generate new nutrition plan based on follow-up
+                    if (window.confirm('¿Generar un nuevo plan de nutrición basado en este seguimiento?')) {
+                      // This would trigger the nutrition plan generation
+                      // You might want to implement this functionality
+                      alert('Funcionalidad en desarrollo: Generar plan basado en seguimiento');
+                    }
+                  }}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  🥗 Generar Nuevo Plan
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };
