@@ -119,7 +119,7 @@ const FollowUpQuestionnaire = ({ onSubmitSuccess, daysSinceLastPlan }) => {
       }
 
       const response = await axios.post(
-        `${API}/api/follow-up/submit`,
+        `${API}/nutrition/followup/submit`,
         followUpData,
         {
           headers: { Authorization: `Bearer ${token}` },
