@@ -3021,6 +3021,154 @@ const AdminDashboard = () => {
         </DialogContent>
       </Dialog>
 
+      {/* History Item Details Modal */}
+      {selectedHistoryItem && (
+        <Dialog open={!!selectedHistoryItem} onOpenChange={() => setSelectedHistoryItem(null)}>
+          <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                {selectedHistoryItem.type === 'diagnosis' && '🩺 Cuestionario de Diagnóstico'}
+                {selectedHistoryItem.type === 'nutrition' && '📝 Cuestionario de Nutrición'}
+                {selectedHistoryItem.type === 'followup' && '📊 Seguimiento Mensual'}
+              </DialogTitle>
+              <DialogDescription>
+                Fecha: {new Date(selectedHistoryItem.data?.submitted_at || selectedHistoryItem.data?.submission_date).toLocaleDateString('es-ES', {
+                  weekday: 'long', 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric'
+                })}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4 mt-4">
+              {/* Mostrar contenido según el tipo */}
+              {selectedHistoryItem.type === 'diagnosis' && (() => {
+                const data = selectedHistoryItem.data?.data || {};
+                return (
+                  <div className="space-y-4">
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <h4 className="font-bold mb-3">Información del Diagnóstico</h4>
+                      {Object.entries(data).map(([key, value]) => (
+                        <div key={key} className="mb-2">
+                          <div className="text-sm font-semibold text-gray-700 capitalize">{key.replace(/_/g, ' ')}:</div>
+                          <div className="text-gray-900">{typeof value === 'object' ? JSON.stringify(value, null, 2) : value}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {selectedHistoryItem.type === 'nutrition' && (() => {
+                const data = selectedHistoryItem.data?.data || {};
+                return (
+                  <div className="space-y-4">
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <h4 className="font-bold mb-3">Datos Básicos</h4>
+                      <div className="grid grid-cols-3 gap-4">
+                        <div><strong>Edad:</strong> {data.edad} años</div>
+                        <div><strong>Altura:</strong> {data.altura} cm</div>
+                        <div><strong>Peso:</strong> {data.peso_actual} kg</div>
+                        <div><strong>Sexo:</strong> {data.sexo}</div>
+                        <div><strong>Objetivo:</strong> {data.objetivo_principal}</div>
+                        <div><strong>Actividad:</strong> {data.nivel_actividad}</div>
+                      </div>
+                    </div>
+
+                    {data.medidas_corporales && (
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h4 className="font-bold mb-3">Medidas Corporales</h4>
+                        <div className="grid grid-cols-3 gap-4">
+                          {data.medidas_corporales.pecho && <div><strong>Pecho:</strong> {data.medidas_corporales.pecho} cm</div>}
+                          {data.medidas_corporales.cintura && <div><strong>Cintura:</strong> {data.medidas_corporales.cintura} cm</div>}
+                          {data.medidas_corporales.cadera && <div><strong>Cadera:</strong> {data.medidas_corporales.cadera} cm</div>}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <h4 className="font-bold mb-3">Información Adicional</h4>
+                      <div className="space-y-2">
+                        <div><strong>Alergias/Intolerancias:</strong> {data.alergias_intolerancias || 'Ninguna'}</div>
+                        <div><strong>Comidas al día:</strong> {data.comidas_dia}</div>
+                        <div><strong>Trabajo físico:</strong> {data.trabajo_fisico}</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {selectedHistoryItem.type === 'followup' && (() => {
+                const followUp = selectedHistoryItem.data;
+                return (
+                  <div className="space-y-4">
+                    {followUp.measurements && (
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h4 className="font-bold mb-3">📊 Mediciones</h4>
+                        <div className="grid grid-cols-4 gap-3">
+                          {Object.entries(followUp.measurements).map(([key, value]) => (
+                            <div key={key}>
+                              <div className="text-xs text-gray-600 capitalize">{key.replace(/_/g, ' ')}</div>
+                              <div className="font-bold">{value}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <h4 className="font-bold mb-3">💪 Adherencia</h4>
+                      <div className="space-y-2">
+                        <div><strong>Entrenamiento:</strong> {followUp.adherence?.constancia_entrenamiento}</div>
+                        <div><strong>Alimentación:</strong> {followUp.adherence?.seguimiento_alimentacion}</div>
+                      </div>
+                    </div>
+
+                    <div className="bg-yellow-50 p-4 rounded-lg">
+                      <h4 className="font-bold mb-3">😊 Bienestar</h4>
+                      <div className="space-y-2">
+                        <div><strong>Energía/Ánimo:</strong> {followUp.wellbeing?.energia_animo_motivacion}</div>
+                        <div><strong>Sueño/Estrés:</strong> {followUp.wellbeing?.sueno_estres}</div>
+                        {followUp.wellbeing?.factores_externos && (
+                          <div><strong>Factores externos:</strong> {followUp.wellbeing.factores_externos}</div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="bg-purple-50 p-4 rounded-lg">
+                      <h4 className="font-bold mb-3">📈 Cambios Percibidos</h4>
+                      <div className="space-y-2">
+                        <div><strong>Molestias/Dolor:</strong> {followUp.changes_perceived?.molestias_dolor_lesion}</div>
+                        <div><strong>Cambios corporales:</strong> {followUp.changes_perceived?.cambios_corporales}</div>
+                        <div><strong>Fuerza/Rendimiento:</strong> {followUp.changes_perceived?.fuerza_rendimiento}</div>
+                      </div>
+                    </div>
+
+                    <div className="bg-pink-50 p-4 rounded-lg">
+                      <h4 className="font-bold mb-3">💬 Feedback</h4>
+                      <div className="space-y-2">
+                        <div><strong>Objetivo próximo mes:</strong> {followUp.feedback?.objetivo_proximo_mes}</div>
+                        <div><strong>Cambios deseados:</strong> {followUp.feedback?.cambios_deseados}</div>
+                        {followUp.feedback?.comentarios_adicionales && (
+                          <div><strong>Comentarios:</strong> {followUp.feedback.comentarios_adicionales}</div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+
+            <div className="flex gap-2 justify-end mt-6">
+              <Button onClick={() => setSelectedHistoryItem(null)} variant="outline">
+                Cerrar
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
       {/* Follow-up Details Modal */}
       {selectedFollowUp && (
         <Dialog open={!!selectedFollowUp} onOpenChange={() => setSelectedFollowUp(null)}>
