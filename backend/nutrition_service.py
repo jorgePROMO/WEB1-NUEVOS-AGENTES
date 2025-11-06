@@ -149,17 +149,19 @@ FORMATO DE RESPUESTA:
 Devuelve el contenido COMPLETO del plan manteniendo:
 - Mismo formato exacto del primer agente
 - Saludo personalizado al inicio (Hola [nombre], Gracias por tu paciencia, etc.)
-- Mismos apartados y títulos
+- Mención simple de calorías y macros en el saludo (NO como sección separada)
+- Mismos apartados y títulos del menú y lista de compra
 - Mismos emojis y estructura
-- SOLO corrige cantidades si es necesario
+- SOLO corrige cantidades en el menú si es necesario
 - NO añadas secciones de verificación
 - NO menciones correcciones realizadas
-- NO añadas palabras como "VERIFICADO", "AGENTE", "REVISADO" en ninguna parte del documento
+- NO añadas palabras como "VERIFICADO", "AGENTE", "REVISADO", "Plan Verificado" en ninguna parte
+- NO incluyas secciones técnicas: "CÁLCULO DE CALORÍAS Y MACRONUTRIENTES", fórmulas, TMB, TDEE, tablas de macros
 - NO incluyas frases de cierre como "¡Este es el plan..." o "¡Espero que disfrutes..." al final
 - NO incluyas totales o subtotales en la lista de compra
 - NO añadas información de cliente, fecha u objetivo después del saludo inicial
 
-Responde ÚNICAMENTE con el plan de nutrición corregido (si fue necesario) en el formato original."""
+Responde ÚNICAMENTE con el plan de nutrición corregido (si fue necesario) en el formato original, sin secciones técnicas."""
 
 
 async def generate_nutrition_plan(client_data: dict) -> dict:
