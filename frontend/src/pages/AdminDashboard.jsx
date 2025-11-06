@@ -2748,30 +2748,124 @@ const AdminDashboard = () => {
       {/* Follow-up Details Modal */}
       {selectedFollowUp && (
         <Dialog open={!!selectedFollowUp} onOpenChange={() => setSelectedFollowUp(null)}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <MessageSquare className="h-6 w-6 text-purple-600" />
-                Seguimiento - {new Date(selectedFollowUp.submitted_at).toLocaleDateString('es-ES')}
+                Seguimiento Mensual - {new Date(selectedFollowUp.submission_date).toLocaleDateString('es-ES')}
               </DialogTitle>
               <DialogDescription>
-                Respuestas del cuestionario de seguimiento de {selectedClient?.name}
+                Hace {selectedFollowUp.days_since_last_plan} días desde el último plan • Cliente: {selectedClient?.name}
               </DialogDescription>
             </DialogHeader>
             
             <div className="space-y-6">
-              {/* Follow-up Responses */}
+              {/* Measurements Section */}
+              {selectedFollowUp.measurements && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      📊 Mediciones Actuales
+                      <Badge className="ml-2">{
+                        selectedFollowUp.measurement_type === 'smart_scale' ? '📱 Báscula inteligente' :
+                        selectedFollowUp.measurement_type === 'tape_measure' ? '📏 Cinta métrica' : 'Sin medición'
+                      }</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {Object.entries(selectedFollowUp.measurements).map(([key, value]) => (
+                        <div key={key} className="bg-gray-50 p-3 rounded-lg">
+                          <div className="text-xs text-gray-500 mb-1 capitalize">{key.replace(/_/g, ' ')}</div>
+                          <div className="text-lg font-bold">{value}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Adherence */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Respuestas del Cliente</CardTitle>
+                  <CardTitle className="text-lg">💪 Adherencia al Plan</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  {selectedFollowUp.responses && Object.entries(selectedFollowUp.responses).map(([question, answer]) => (
-                    <div key={question} className="border-b pb-3 last:border-b-0">
-                      <h4 className="font-semibold text-gray-900 mb-2">{question}</h4>
-                      <p className="text-gray-700 whitespace-pre-wrap">{answer}</p>
+                <CardContent className="space-y-3">
+                  <div className="border-b pb-3">
+                    <div className="font-semibold text-gray-700 mb-1">Constancia en entrenamiento</div>
+                    <div className="text-gray-900">{selectedFollowUp.adherence?.constancia_entrenamiento}</div>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gray-700 mb-1">Seguimiento de alimentación</div>
+                    <div className="text-gray-900">{selectedFollowUp.adherence?.seguimiento_alimentacion}</div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Wellbeing */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">😊 Bienestar General</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="border-b pb-3">
+                    <div className="font-semibold text-gray-700 mb-1">Energía, ánimo y motivación</div>
+                    <div className="text-gray-900">{selectedFollowUp.wellbeing?.energia_animo_motivacion}</div>
+                  </div>
+                  <div className="border-b pb-3">
+                    <div className="font-semibold text-gray-700 mb-1">Sueño y estrés</div>
+                    <div className="text-gray-900">{selectedFollowUp.wellbeing?.sueno_estres}</div>
+                  </div>
+                  {selectedFollowUp.wellbeing?.factores_externos && (
+                    <div>
+                      <div className="font-semibold text-gray-700 mb-1">Factores externos</div>
+                      <div className="text-gray-900">{selectedFollowUp.wellbeing.factores_externos}</div>
                     </div>
-                  ))}
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Changes Perceived */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">📈 Cambios Percibidos</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="border-b pb-3">
+                    <div className="font-semibold text-gray-700 mb-1">Molestias, dolor o lesión</div>
+                    <div className="text-gray-900">{selectedFollowUp.changes_perceived?.molestias_dolor_lesion}</div>
+                  </div>
+                  <div className="border-b pb-3">
+                    <div className="font-semibold text-gray-700 mb-1">Cambios corporales</div>
+                    <div className="text-gray-900">{selectedFollowUp.changes_perceived?.cambios_corporales}</div>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gray-700 mb-1">Fuerza y rendimiento</div>
+                    <div className="text-gray-900">{selectedFollowUp.changes_perceived?.fuerza_rendimiento}</div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Feedback */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">💬 Feedback y Objetivos</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="border-b pb-3">
+                    <div className="font-semibold text-gray-700 mb-1">Objetivo para el próximo mes</div>
+                    <div className="text-gray-900">{selectedFollowUp.feedback?.objetivo_proximo_mes}</div>
+                  </div>
+                  <div className="border-b pb-3">
+                    <div className="font-semibold text-gray-700 mb-1">Cambios deseados en el plan</div>
+                    <div className="text-gray-900">{selectedFollowUp.feedback?.cambios_deseados}</div>
+                  </div>
+                  {selectedFollowUp.feedback?.comentarios_adicionales && (
+                    <div>
+                      <div className="font-semibold text-gray-700 mb-1">Comentarios adicionales</div>
+                      <div className="text-gray-900">{selectedFollowUp.feedback.comentarios_adicionales}</div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
