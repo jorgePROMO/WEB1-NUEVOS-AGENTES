@@ -3601,7 +3601,7 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
             <style>
                 body {{
                     font-family: 'Arial', sans-serif;
-                    line-height: 1.8;
+                    line-height: 1.4;
                     color: #333;
                     max-width: 800px;
                     margin: 0 auto;
@@ -3609,45 +3609,41 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
                 }}
                 h1, h2, h3 {{
                     color: #2563eb;
-                    margin-top: 20px;
-                    margin-bottom: 10px;
+                    margin-top: 15px;
+                    margin-bottom: 8px;
                 }}
                 h1 {{
                     border-bottom: 3px solid #2563eb;
                     padding-bottom: 10px;
                 }}
                 p {{
-                    margin-bottom: 8px;
-                    white-space: pre-wrap;
+                    margin: 5px 0;
                 }}
                 strong {{
                     font-weight: bold;
                     display: inline-block;
-                    margin-top: 15px;
+                    margin-top: 10px;
                 }}
                 table {{
                     width: 100%;
                     border-collapse: collapse;
-                    margin: 20px 0;
+                    margin: 15px 0;
                 }}
                 th, td {{
                     border: 1px solid #ddd;
-                    padding: 12px;
+                    padding: 10px;
                     text-align: left;
                 }}
                 th {{
                     background-color: #2563eb;
                     color: white;
                 }}
-                br {{
-                    line-height: 2.0;
-                }}
                 .header {{
                     text-align: center;
-                    margin-bottom: 40px;
+                    margin-bottom: 30px;
                 }}
                 .footer {{
-                    margin-top: 60px;
+                    margin-top: 40px;
                     text-align: center;
                     color: #666;
                     font-size: 14px;
