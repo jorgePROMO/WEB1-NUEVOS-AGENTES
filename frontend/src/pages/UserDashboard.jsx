@@ -26,6 +26,7 @@ import ChatBox from '../components/ChatBox';
 import { UserCalendar } from '../components/Calendar';
 import { EditProfileForm, UploadDocumentForm } from '../components/ProfileComponents';
 import NutritionQuestionnaire from '../components/NutritionQuestionnaire';
+import FollowUpQuestionnaire from '../components/FollowUpQuestionnaire';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
