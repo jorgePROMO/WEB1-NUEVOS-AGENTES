@@ -40,7 +40,8 @@ import {
   ExternalLink,
   UtensilsCrossed,
   Loader2,
-  Save
+  Save,
+  UserCheck
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { AdminCalendar } from '../components/Calendar';
