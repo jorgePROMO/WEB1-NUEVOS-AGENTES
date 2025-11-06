@@ -2138,16 +2138,44 @@ const AdminDashboard = () => {
                                             </Badge>
                                           )}
                                         </div>
-                                        <Button 
-                                          variant="outline" 
-                                          className="w-full mt-4"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            openPlanModal(plan);
-                                          }}
-                                        >
-                                          Ver Detalles →
-                                        </Button>
+                                        <div className="flex gap-2 mt-4">
+                                          <Button 
+                                            variant="outline" 
+                                            className="flex-1"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              openPlanModal(plan);
+                                            }}
+                                          >
+                                            Ver Detalles →
+                                          </Button>
+                                          <Button 
+                                            variant="outline" 
+                                            className="border-red-300 text-red-600 hover:bg-red-50"
+                                            onClick={async (e) => {
+                                              e.stopPropagation();
+                                              if (window.confirm('⚠️ ¿Eliminar completamente este plan de nutrición?\n\nEsta acción NO se puede deshacer.\n\n¿Continuar?')) {
+                                                try {
+                                                  await axios.delete(
+                                                    `${API}/admin/users/${selectedClient.id}/nutrition/${plan.id}`,
+                                                    {
+                                                      headers: { Authorization: `Bearer ${token}` },
+                                                      withCredentials: true
+                                                    }
+                                                  );
+                                                  alert('✅ Plan eliminado completamente');
+                                                  await loadNutritionPlan(selectedClient.id);
+                                                  await loadClientDetails(selectedClient.id);
+                                                } catch (error) {
+                                                  console.error('Error eliminando plan:', error);
+                                                  alert('❌ Error al eliminar: ' + (error.response?.data?.detail || error.message));
+                                                }
+                                              }
+                                            }}
+                                          >
+                                            <Trash2 className="h-4 w-4" />
+                                          </Button>
+                                        </div>
                                       </CardContent>
                                     </Card>
                                   );
