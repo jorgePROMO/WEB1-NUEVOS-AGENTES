@@ -2336,84 +2336,9 @@ const AdminDashboard = () => {
                             })()}
                             
                             {/* Seguimientos Mensuales - Cards */}
-                                  {(() => {
-                                    const form = selectedClientDetails.forms.find(f => f.type === 'nutrition');
-                                    const data = form?.data || {};
-                                    return (
-                                      <>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                          <div className="bg-gray-50 p-3 rounded">
-                                            <div className="text-xs text-gray-600">Edad</div>
-                                            <div className="font-bold">{data.edad} años</div>
-                                          </div>
-                                          <div className="bg-gray-50 p-3 rounded">
-                                            <div className="text-xs text-gray-600">Altura</div>
-                                            <div className="font-bold">{data.altura} cm</div>
-                                          </div>
-                                          <div className="bg-gray-50 p-3 rounded">
-                                            <div className="text-xs text-gray-600">Peso</div>
-                                            <div className="font-bold">{data.peso_actual} kg</div>
-                                          </div>
-                                          <div className="bg-gray-50 p-3 rounded">
-                                            <div className="text-xs text-gray-600">Sexo</div>
-                                            <div className="font-bold capitalize">{data.sexo}</div>
-                                          </div>
-                                          <div className="bg-gray-50 p-3 rounded">
-                                            <div className="text-xs text-gray-600">Objetivo</div>
-                                            <div className="font-bold text-sm">{data.objetivo_principal}</div>
-                                          </div>
-                                          <div className="bg-gray-50 p-3 rounded">
-                                            <div className="text-xs text-gray-600">Actividad</div>
-                                            <div className="font-bold text-sm">{data.nivel_actividad}</div>
-                                          </div>
-                                        </div>
-                                        
-                                        {data.medidas_corporales && (
-                                          <div>
-                                            <h4 className="font-semibold mb-2">Medidas Corporales Iniciales:</h4>
-                                            <div className="grid grid-cols-3 gap-3">
-                                              {data.medidas_corporales.pecho && (
-                                                <div className="bg-blue-50 p-2 rounded text-center">
-                                                  <div className="text-xs text-gray-600">Pecho</div>
-                                                  <div className="font-bold">{data.medidas_corporales.pecho} cm</div>
-                                                </div>
-                                              )}
-                                              {data.medidas_corporales.cintura && (
-                                                <div className="bg-blue-50 p-2 rounded text-center">
-                                                  <div className="text-xs text-gray-600">Cintura</div>
-                                                  <div className="font-bold">{data.medidas_corporales.cintura} cm</div>
-                                                </div>
-                                              )}
-                                              {data.medidas_corporales.cadera && (
-                                                <div className="bg-blue-50 p-2 rounded text-center">
-                                                  <div className="text-xs text-gray-600">Cadera</div>
-                                                  <div className="font-bold">{data.medidas_corporales.cadera} cm</div>
-                                                </div>
-                                              )}
-                                            </div>
-                                          </div>
-                                        )}
-                                        
-                                        <div className="space-y-2">
-                                          <div>
-                                            <div className="text-sm font-semibold text-gray-700">Alergias/Intolerancias:</div>
-                                            <div className="text-gray-900">{data.alergias_intolerancias || 'Ninguna'}</div>
-                                          </div>
-                                          <div>
-                                            <div className="text-sm font-semibold text-gray-700">Comidas al día:</div>
-                                            <div className="text-gray-900">{data.comidas_dia}</div>
-                                          </div>
-                                          <div>
-                                            <div className="text-sm font-semibold text-gray-700">Trabajo físico:</div>
-                                            <div className="text-gray-900">{data.trabajo_fisico}</div>
-                                          </div>
-                                        </div>
-                                      </>
-                                    );
-                                  })()}
-                                </CardContent>
-                              </Card>
-                            )}
+
+                              );
+                            })()}
                             
                             {/* Seguimientos Mensuales - Cards */}
                             {followUps.map((followUp, index) => (
