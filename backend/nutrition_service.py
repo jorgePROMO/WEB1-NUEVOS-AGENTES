@@ -124,7 +124,7 @@ MENÚ A VERIFICAR (del primer agente):
 {menu_from_agent_1}
 
 INSTRUCCIONES:
-1. **EXTRAE** los macros objetivo que estableció el primer agente en su cálculo (busca la sección "Macronutrientes" o "Resumen visual")
+1. **EXTRAE** los macros objetivo que estableció el primer agente (busca las cantidades mencionadas en el saludo inicial: "X kcal diarias, Xg proteínas, Xg carbohidratos, Xg grasas")
 2. Analiza CADA DÍA del menú con las cantidades especificadas
 3. Calcula los macronutrientes reales usando valores nutricionales estándar:
    - Pollo: ~23g proteína/100g, ~165 kcal/100g
