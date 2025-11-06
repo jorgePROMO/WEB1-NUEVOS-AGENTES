@@ -3086,35 +3086,40 @@ const AdminDashboard = () => {
                 const data = selectedHistoryItem.data?.data || {};
                 return (
                   <div className="space-y-4">
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <h4 className="font-bold mb-3">Datos Básicos</h4>
-                      <div className="grid grid-cols-3 gap-4">
-                        <div><strong>Edad:</strong> {data.edad} años</div>
-                        <div><strong>Altura:</strong> {data.altura} cm</div>
-                        <div><strong>Peso:</strong> {data.peso_actual} kg</div>
-                        <div><strong>Sexo:</strong> {data.sexo}</div>
-                        <div><strong>Objetivo:</strong> {data.objetivo_principal}</div>
-                        <div><strong>Actividad:</strong> {data.nivel_actividad}</div>
-                      </div>
-                    </div>
-
-                    {data.medidas_corporales && (
-                      <div className="bg-blue-50 p-4 rounded-lg">
-                        <h4 className="font-bold mb-3">Medidas Corporales</h4>
-                        <div className="grid grid-cols-3 gap-4">
-                          {data.medidas_corporales.pecho && <div><strong>Pecho:</strong> {data.medidas_corporales.pecho} cm</div>}
-                          {data.medidas_corporales.cintura && <div><strong>Cintura:</strong> {data.medidas_corporales.cintura} cm</div>}
-                          {data.medidas_corporales.cadera && <div><strong>Cadera:</strong> {data.medidas_corporales.cadera} cm</div>}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <h4 className="font-bold mb-3">Información Adicional</h4>
-                      <div className="space-y-2">
-                        <div><strong>Alergias/Intolerancias:</strong> {data.alergias_intolerancias || 'Ninguna'}</div>
-                        <div><strong>Comidas al día:</strong> {data.comidas_dia}</div>
-                        <div><strong>Trabajo físico:</strong> {data.trabajo_fisico}</div>
+                    <div className="bg-blue-50 p-4 rounded-lg max-h-[600px] overflow-y-auto">
+                      <h4 className="font-bold mb-3 text-lg">📋 Todas las Respuestas del Cuestionario de Nutrición</h4>
+                      <div className="space-y-3">
+                        {Object.entries(data).map(([key, value]) => {
+                          if (!value) return null;
+                          
+                          // Formatear el nombre del campo
+                          const fieldName = key
+                            .replace(/_/g, ' ')
+                            .replace(/\b\w/g, l => l.toUpperCase());
+                          
+                          // Manejar objetos (como medidas_corporales)
+                          let displayValue;
+                          if (typeof value === 'object' && value !== null) {
+                            displayValue = (
+                              <div className="ml-4 mt-1 space-y-1">
+                                {Object.entries(value).map(([subKey, subValue]) => (
+                                  <div key={subKey} className="text-sm">
+                                    <span className="font-medium">{subKey.replace(/_/g, ' ')}:</span> {String(subValue)}
+                                  </div>
+                                ))}
+                              </div>
+                            );
+                          } else {
+                            displayValue = <span className="text-gray-900">{String(value)}</span>;
+                          }
+                          
+                          return (
+                            <div key={key} className="border-b border-blue-200 pb-2">
+                              <p className="text-sm font-semibold text-blue-900">{fieldName}:</p>
+                              {displayValue}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
