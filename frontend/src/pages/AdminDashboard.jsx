@@ -1026,7 +1026,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Conditional View Rendering */}
-        {activeView === 'at-risk' && (
+        {activeView === 'pending-reviews' && (
           <div>
             <Button 
               variant="outline" 
@@ -1035,17 +1035,111 @@ const AdminDashboard = () => {
             >
               ← Volver a Gestión de Clientes
             </Button>
-            <ClientsAtRisk 
-              token={token} 
-              onClientSelect={(clientId) => {
-                // Find and select the client
-                const client = clients.find(c => c.id === clientId);
-                if (client) {
-                  setSelectedClient(client);
-                  setActiveView('clients');
-                }
-              }}
-            />
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <UtensilsCrossed className="h-6 w-6" />
+                  Revisiones Pendientes - Seguimientos Mensuales
+                </CardTitle>
+                <p className="text-sm text-gray-600 mt-2">
+                  Clientes que han completado 30+ días desde su último plan de nutrición. 
+                  Puedes activar el cuestionario de seguimiento manualmente o esperar que lo completen automáticamente.
+                </p>
+              </CardHeader>
+              <CardContent>
+                {loadingPendingReviews ? (
+                  <div className="text-center py-8">
+                    <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
+                    <p className="text-gray-600">Cargando revisiones pendientes...</p>
+                  </div>
+                ) : pendingReviews.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <CheckCircle className="h-12 w-12 mx-auto mb-2 text-green-500" />
+                    <p>No hay revisiones pendientes en este momento.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {pendingReviews.map((review) => (
+                      <Card key={review.user_id} className="border-2">
+                        <CardContent className="pt-6">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <h4 className="font-bold text-lg">{review.name}</h4>
+                                {review.status === 'completed' && (
+                                  <Badge className="bg-green-500">✅ Completado</Badge>
+                                )}
+                                {review.status === 'activated' && (
+                                  <Badge className="bg-blue-500">⏳ Activado</Badge>
+                                )}
+                                {review.status === 'pending' && (
+                                  <Badge className="bg-orange-500">⚠️ Pendiente</Badge>
+                                )}
+                              </div>
+                              
+                              <div className="text-sm text-gray-600 space-y-1">
+                                <p>📧 Email: {review.email}</p>
+                                {review.phone && <p>📱 Teléfono: {review.phone}</p>}
+                                <p>📅 Último plan: {new Date(review.last_plan_date).toLocaleDateString('es-ES')}</p>
+                                <p className="font-semibold text-purple-600">
+                                  ⏱️ Hace {review.days_since_plan} días
+                                </p>
+                                {review.status_date && (
+                                  <p className="text-xs text-gray-500">
+                                    Última acción: {new Date(review.status_date).toLocaleDateString('es-ES')}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            
+                            <div className="flex flex-col gap-2 ml-4">
+                              {review.status === 'completed' && review.last_followup_id && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => {
+                                    // Navigate to client with follow-up
+                                    const client = clients.find(c => c.id === review.user_id);
+                                    if (client) {
+                                      setSelectedClient(client);
+                                      setActiveView('clients');
+                                      // TODO: Auto-open followups tab
+                                    }
+                                  }}
+                                >
+                                  Ver Respuestas
+                                </Button>
+                              )}
+                              
+                              {review.status === 'pending' && !review.followup_activated && (
+                                <Button
+                                  size="sm"
+                                  className="bg-purple-500 hover:bg-purple-600"
+                                  onClick={() => activateFollowUpForClient(review.user_id)}
+                                >
+                                  🔔 Activar Cuestionario
+                                </Button>
+                              )}
+                              
+                              {review.status === 'activated' && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  disabled
+                                >
+                                  Esperando respuesta...
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
         )}
 
