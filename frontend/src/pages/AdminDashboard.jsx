@@ -219,6 +219,21 @@ const AdminDashboard = () => {
   const saveNutritionChanges = async () => {
     const planToUse = modalPlan || selectedPlan;
     if (!planToUse) return;
+
+  // Load follow-up submissions
+  const loadFollowUps = async (userId) => {
+    try {
+      const response = await axios.get(`${API}/admin/users/${userId}/follow-ups`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setFollowUps(response.data.follow_ups || []);
+    } catch (error) {
+      console.error('Error loading follow-ups:', error);
+      setFollowUps([]);
+    }
+  };
+
     
     try {
       await axios.patch(
