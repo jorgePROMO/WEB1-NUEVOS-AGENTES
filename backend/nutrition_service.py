@@ -35,17 +35,31 @@ DATOS DEL CLIENTE:
 
 Genera EXACTAMENTE este formato:
 
-**PLAN DE NUTRICIÓN PERSONALIZADO**
+PLAN DE NUTRICIÓN PERSONALIZADO
 
-Hola [Nombre del cliente],
-
-Gracias por tu paciencia. Mi equipo ha estado trabajando en tu plan de nutrición personalizado para que alcances tu objetivo de [objetivo del cliente], y yo personalmente he supervisado cada detalle para asegurarnos de que todo esté perfectamente ajustado a tus necesidades.
-
-He calculado que necesitas aproximadamente [cantidad] kcal diarias, distribuidas en: [X]g de proteínas, [X]g de carbohidratos y [X]g de grasas saludables. A continuación encontrarás tu menú semanal diseñado específicamente para cumplir con estos requerimientos:
+📋 **Cliente:** [Nombre del cliente]
+📅 **Fecha:** [Fecha actual en formato DD/MM/YYYY]
+🎯 **Objetivo:** [Objetivo específico del cliente]
 
 ---
 
-**TU MENÚ SEMANAL** 🥗
+CÁLCULO DE KCAL Y MACROS
+
+📢 Fórmula Mifflin–St Jeor:
+- TMB ≈ [calcula según datos reales] kcal/día
+- Factor de actividad: ×[factor según actividad] ≈ [resultado] kcal → TDEE ≈ [total] kcal/día
+🎯 Objetivo: [déficit/superávit según objetivo] ≈ [porcentaje]%, para [objetivo específico].
+
+📊 Macronutrientes:
+CALORÍAS TOTALES | PROTEÍNA (g / %) | CARBOHIDRATOS (g / %) | GRASAS (g / %)
+[total] kcal | [gramos] g / [%] % | [gramos] g / [%] % | [gramos] g / [%] %
+
+✅ Resumen visual:
+🔥 Objetivo: [objetivo específico]
+✅ Calorías objetivo: [total] kcal/día
+🥩 Proteínas: [g] g — 🥑 Grasas: [g] g — 🍞 Carbohidratos: [g] g
+
+MENÚ NUTRICIONAL SEMANAL (CON GRAMOS) 🥗
 
 **LUNES**
 🥣 Desayuno: [plato con gramos exactos de cada ingrediente]
