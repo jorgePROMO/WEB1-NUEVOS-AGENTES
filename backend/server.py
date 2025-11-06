@@ -4585,12 +4585,24 @@ Genera el análisis en español, con formato markdown para facilitar la lectura.
         
         # Llamar a la IA (usando emergentintegrations)
         from emergentintegrations.llm.chat import LlmChat, UserMessage
+        import os
         
-        llm_chat = LlmChat(model="gpt-4o")
-        messages = [UserMessage(content=prompt)]
+        # Obtener la clave de emergent
+        emergent_key = os.environ.get('EMERGENT_LLM_KEY')
         
-        response = llm_chat.generate(messages=messages)
-        ai_analysis = response.content
+        # Crear el chat con la configuración correcta
+        llm_chat = LlmChat(
+            api_key=emergent_key,
+            session_id=f"followup_analysis_{followup_id}",
+            system_message="Eres un entrenador personal experto analizando el progreso de un cliente después de seguir un plan de nutrición."
+        ).with_model("openai", "gpt-4o")
+        
+        # Crear el mensaje de usuario
+        user_message = UserMessage(text=prompt)
+        
+        # Enviar el mensaje y obtener respuesta
+        response = await llm_chat.send_message(user_message)
+        ai_analysis = response
         
         # Guardar el análisis en el seguimiento
         await db.follow_up_submissions.update_one(
