@@ -850,6 +850,35 @@ const UserDashboard = () => {
         </div>
       )}
 
+      {/* Modal - Follow-Up Questionnaire */}
+      {showFollowUpQuestionnaire && (
+        <div className="fixed inset-0 bg-black/50 z-50 overflow-y-auto">
+          <div className="min-h-screen p-4">
+            <div className="bg-white rounded-lg max-w-5xl mx-auto my-8">
+              <div className="p-4 border-b flex items-center justify-between sticky top-0 bg-white z-10">
+                <h3 className="text-xl font-bold">Cuestionario de Seguimiento Mensual</h3>
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  onClick={() => setShowFollowUpQuestionnaire(false)}
+                >
+                  Cerrar
+                </Button>
+              </div>
+              <FollowUpQuestionnaire 
+                daysSinceLastPlan={daysSinceLastPlan}
+                onSubmitSuccess={() => {
+                  setShowFollowUpQuestionnaire(false);
+                  alert('✅ Tu cuestionario ha sido enviado. Jorge lo revisará y te contactará pronto.');
+                  loadDashboardData();
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+
       {showChat && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
           <div className="bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-2xl max-h-[80vh] flex flex-col shadow-2xl">
