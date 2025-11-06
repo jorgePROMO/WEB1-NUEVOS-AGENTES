@@ -2415,104 +2415,60 @@ const AdminDashboard = () => {
                               </Card>
                             )}
                             
-                            {/* Seguimientos Mensuales */}
-                            {followUps.length > 0 && (
-                              <>
-                                <h4 className="text-lg font-semibold mt-8 mb-4">Seguimientos Mensuales ({followUps.length})</h4>
-                                {followUps.map((followUp, index) => (
-                                  <Card key={followUp.id} className="border-2 border-purple-200">
-                                    <CardHeader className="bg-purple-50">
-                                      <div className="flex items-center justify-between">
-                                        <div>
-                                          <CardTitle className="text-xl flex items-center gap-2">
-                                            📊 Seguimiento #{followUps.length - index}
-                                          </CardTitle>
-                                          <p className="text-sm text-gray-600">
-                                            {new Date(followUp.submission_date).toLocaleDateString('es-ES', { 
-                                              weekday: 'long', 
-                                              year: 'numeric', 
-                                              month: 'long', 
-                                              day: 'numeric' 
-                                            })} • Día {followUp.days_since_last_plan} desde último plan
-                                          </p>
-                                        </div>
-                                        <Badge className={
-                                          followUp.status === 'pending_analysis' ? 'bg-yellow-100 text-yellow-800' :
-                                          followUp.status === 'analyzed' ? 'bg-blue-100 text-blue-800' :
-                                          'bg-green-100 text-green-800'
-                                        }>
-                                          {followUp.status === 'pending_analysis' && '⏳ Pendiente'}
-                                          {followUp.status === 'analyzed' && '✅ Analizado'}
-                                          {followUp.status === 'plan_generated' && '🎯 Plan Generado'}
-                                        </Badge>
+                            {/* Seguimientos Mensuales - Cards */}
+                            {followUps.map((followUp, index) => (
+                              <Card
+                                key={followUp.id}
+                                className="border-2 border-purple-200 hover:border-purple-400 transition-all cursor-pointer hover:shadow-lg"
+                                onClick={() => setSelectedHistoryItem({ type: 'followup', data: followUp })}
+                              >
+                                <CardHeader className="bg-purple-50">
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <CardTitle className="text-lg flex items-center gap-2">
+                                        📊 Seguimiento #{followUps.length - index}
+                                      </CardTitle>
+                                      <p className="text-sm text-gray-600">
+                                        {new Date(followUp.submission_date).toLocaleDateString('es-ES')}
+                                      </p>
+                                    </div>
+                                    <Badge className={
+                                      followUp.status === 'pending_analysis' ? 'bg-yellow-100 text-yellow-800' :
+                                      followUp.status === 'analyzed' ? 'bg-blue-100 text-blue-800' :
+                                      'bg-green-100 text-green-800'
+                                    }>
+                                      {followUp.status === 'pending_analysis' && '⏳'}
+                                      {followUp.status === 'analyzed' && '✅'}
+                                      {followUp.status === 'plan_generated' && '🎯'}
+                                    </Badge>
+                                  </div>
+                                </CardHeader>
+                                <CardContent>
+                                  <div className="grid grid-cols-2 gap-2 text-sm mb-3">
+                                    <div>
+                                      <div className="font-semibold text-gray-600">Día</div>
+                                      <div>{followUp.days_since_last_plan}</div>
+                                    </div>
+                                    <div>
+                                      <div className="font-semibold text-gray-600">Tipo</div>
+                                      <div className="text-xs">
+                                        {followUp.measurement_type === 'smart_scale' && '📱 Báscula'}
+                                        {followUp.measurement_type === 'tape_measure' && '📏 Cinta'}
                                       </div>
-                                    </CardHeader>
-                                    <CardContent className="space-y-4 mt-4">
-                                      {/* Mediciones */}
-                                      {followUp.measurements && (
-                                        <div>
-                                          <h5 className="font-semibold mb-2">📊 Mediciones ({followUp.measurement_type === 'smart_scale' ? 'Báscula' : 'Cinta'}):</h5>
-                                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                            {Object.entries(followUp.measurements).map(([key, value]) => (
-                                              <div key={key} className="bg-blue-50 p-2 rounded text-center">
-                                                <div className="text-xs text-gray-600 capitalize">{key.replace(/_/g, ' ')}</div>
-                                                <div className="font-bold">{value}</div>
-                                              </div>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      )}
+                                    </div>
+                                  </div>
+                                  <Button variant="outline" className="w-full">
+                                    Ver Respuestas Completas
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            ))}
 
-                                      {/* Adherencia */}
-                                      <div>
-                                        <h5 className="font-semibold mb-2">💪 Adherencia:</h5>
-                                        <div className="space-y-1 text-sm">
-                                          <div><span className="font-semibold">Entrenamiento:</span> {followUp.adherence?.constancia_entrenamiento}</div>
-                                          <div><span className="font-semibold">Alimentación:</span> {followUp.adherence?.seguimiento_alimentacion}</div>
-                                        </div>
-                                      </div>
-
-                                      {/* Bienestar */}
-                                      <div>
-                                        <h5 className="font-semibold mb-2">😊 Bienestar:</h5>
-                                        <div className="space-y-1 text-sm">
-                                          <div><span className="font-semibold">Energía/Ánimo:</span> {followUp.wellbeing?.energia_animo_motivacion}</div>
-                                          <div><span className="font-semibold">Sueño/Estrés:</span> {followUp.wellbeing?.sueno_estres}</div>
-                                          {followUp.wellbeing?.factores_externos && (
-                                            <div><span className="font-semibold">Factores externos:</span> {followUp.wellbeing.factores_externos}</div>
-                                          )}
-                                        </div>
-                                      </div>
-
-                                      {/* Cambios */}
-                                      <div>
-                                        <h5 className="font-semibold mb-2">📈 Cambios Percibidos:</h5>
-                                        <div className="space-y-1 text-sm">
-                                          <div><span className="font-semibold">Molestias/Dolor:</span> {followUp.changes_perceived?.molestias_dolor_lesion}</div>
-                                          <div><span className="font-semibold">Cambios corporales:</span> {followUp.changes_perceived?.cambios_corporales}</div>
-                                          <div><span className="font-semibold">Fuerza/Rendimiento:</span> {followUp.changes_perceived?.fuerza_rendimiento}</div>
-                                        </div>
-                                      </div>
-
-                                      {/* Feedback */}
-                                      <div>
-                                        <h5 className="font-semibold mb-2">💬 Feedback:</h5>
-                                        <div className="space-y-1 text-sm">
-                                          <div><span className="font-semibold">Objetivo próximo mes:</span> {followUp.feedback?.objetivo_proximo_mes}</div>
-                                          <div><span className="font-semibold">Cambios deseados:</span> {followUp.feedback?.cambios_deseados}</div>
-                                          {followUp.feedback?.comentarios_adicionales && (
-                                            <div><span className="font-semibold">Comentarios:</span> {followUp.feedback.comentarios_adicionales}</div>
-                                          )}
-                                        </div>
-                                      </div>
-                                    </CardContent>
-                                  </Card>
-                                ))}
-                              </>
-                            )}
-
-                            {!selectedClientDetails?.forms?.find(f => f.type === 'nutrition') && followUps.length === 0 && (
-                              <div className="bg-gray-50 p-8 rounded-lg text-center">
+                            {/* Empty state */}
+                            {!selectedClientDetails?.forms?.find(f => f.type === 'diagnosis') && 
+                             !selectedClientDetails?.forms?.find(f => f.type === 'nutrition') && 
+                             followUps.length === 0 && (
+                              <div className="col-span-2 bg-gray-50 p-8 rounded-lg text-center">
                                 <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                                 <p className="text-gray-500">
                                   Este cliente aún no ha completado ningún cuestionario.
