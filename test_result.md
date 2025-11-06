@@ -573,15 +573,18 @@ backend:
 
   - task: "User Dashboard Follow-Up Status"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Updated GET /api/users/dashboard endpoint to include followup_activated status in response. This allows frontend to conditionally show follow-up button based on admin activation. Ready for testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ GET /api/users/dashboard - Dashboard endpoint correctly includes followup_activated field in user data. Tested with regular user token (not admin). Field correctly reflects activation status: initially false, changes to true after admin activation, changes back to false after deactivation. Integration between admin activation endpoints and user dashboard working perfectly."
 
 frontend:
   - task: "User Dashboard Follow-Up Button - Hybrid Control"
