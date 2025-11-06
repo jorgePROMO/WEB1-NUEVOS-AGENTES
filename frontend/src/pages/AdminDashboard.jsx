@@ -2264,10 +2264,10 @@ const AdminDashboard = () => {
                         {/* History Tab - Complete Questionnaire History */}
                         <TabsContent value="history" className="space-y-4">
                           <h3 className="text-lg font-semibold flex items-center gap-2">
-                            📋 Historial Completo de Cuestionarios
+                            📋 Historial de Cuestionarios
                           </h3>
                           
-                          <div className="space-y-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Cuestionario Inicial */}
                             {selectedClientDetails?.forms?.filter(f => f.type === 'nutrition').length > 0 && (
                               <Card className="border-2 border-blue-300">
