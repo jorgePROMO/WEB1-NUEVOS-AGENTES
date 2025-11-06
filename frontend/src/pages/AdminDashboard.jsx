@@ -96,6 +96,10 @@ const AdminDashboard = () => {
   const [followUpAnalysis, setFollowUpAnalysis] = useState(''); // Análisis del seguimiento
   const [editingAnalysis, setEditingAnalysis] = useState(false);
   const [generatingAnalysis, setGeneratingAnalysis] = useState(false);
+  
+  // Pending Reviews states
+  const [pendingReviews, setPendingReviews] = useState([]); // Array de clientes con seguimientos pendientes
+  const [loadingPendingReviews, setLoadingPendingReviews] = useState(false);
 
 
   // Form states
