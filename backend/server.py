@@ -4358,6 +4358,18 @@ async def submit_follow_up(follow_up: FollowUpSubmit, request: Request):
         
         await db.follow_up_submissions.insert_one(follow_up_doc)
         
+        # Desactivar el botón de seguimiento después de completar
+        await db.users.update_one(
+            {"_id": user_id},
+            {
+                "$set": {
+                    "followup_activated": False,
+                    "followup_activated_at": None,
+                    "followup_activated_by": None
+                }
+            }
+        )
+        
         # Crear alerta para el admin
         admin_user = await db.users.find_one({"role": "admin"})
         if admin_user:
