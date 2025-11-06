@@ -2846,18 +2846,18 @@ const AdminDashboard = () => {
                         </Button>
                         <Button
                           onClick={async () => {
-                            if (!selectedFollowUp.id) return;
+                            if (!selectedFollowUp.id || !selectedClient?.id) return;
                             
-                            try {
+                            try:
                               await axios.patch(
-                                `${API}/admin/follow-ups/${selectedFollowUp.id}/analysis`,
+                                `${API}/admin/users/${selectedClient.id}/followups/${selectedFollowUp.id}/analysis`,
                                 { analysis: followUpAnalysis },
                                 {
                                   headers: { Authorization: `Bearer ${token}` },
                                   withCredentials: true
                                 }
                               );
-                              setSelectedFollowUp({...selectedFollowUp, analysis: followUpAnalysis});
+                              setSelectedFollowUp({...selectedFollowUp, ai_analysis: followUpAnalysis, ai_analysis_edited: true});
                               setEditingAnalysis(false);
                               alert('✅ Análisis guardado');
                               // Reload follow-ups to update the list
