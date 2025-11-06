@@ -2848,7 +2848,7 @@ const AdminDashboard = () => {
                           onClick={async () => {
                             if (!selectedFollowUp.id || !selectedClient?.id) return;
                             
-                            try:
+                            try {
                               await axios.patch(
                                 `${API}/admin/users/${selectedClient.id}/followups/${selectedFollowUp.id}/analysis`,
                                 { analysis: followUpAnalysis },
