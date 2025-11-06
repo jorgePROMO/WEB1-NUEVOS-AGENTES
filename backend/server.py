@@ -4447,6 +4447,147 @@ async def get_pending_follow_ups(request: Request):
         return {"pending_follow_ups": follow_ups, "count": len(follow_ups)}
         
     except Exception as e:
+
+
+@api_router.get("/admin/pending-reviews")
+async def get_pending_reviews(request: Request):
+    """
+    Admin obtiene lista de clientes que necesitan revisión de seguimiento
+    (>= 30 días desde último plan y no han completado seguimiento)
+    """
+    await require_admin(request)
+    
+    try:
+        pending_reviews = []
+        
+        # Obtener todos los clientes team con plan de nutrición
+        team_clients = await db.users.find({
+            "subscription.plan": "team",
+            "nutrition_plan": {"$exists": True}
+        }).to_list(1000)
+        
+        for client in team_clients:
+            # Calcular días desde el último plan
+            if client.get("nutrition_plan") and client["nutrition_plan"].get("generated_at"):
+                plan_date = client["nutrition_plan"]["generated_at"]
+                days_since_plan = (datetime.now(timezone.utc) - plan_date).days
+                
+                if days_since_plan >= 30:
+                    # Verificar si tiene seguimiento completado reciente
+                    recent_followup = await db.follow_up_submissions.find_one({
+                        "user_id": client["_id"],
+                        "submission_date": {"$gte": plan_date}
+                    })
+                    
+                    # Determinar estado
+                    if recent_followup:
+                        status = "completed"
+                        status_date = recent_followup["submission_date"]
+                    elif client.get("followup_activated"):
+                        status = "activated"
+                        status_date = client.get("followup_activated_at")
+                    else:
+                        status = "pending"
+                        status_date = None
+                    
+                    pending_reviews.append({
+                        "user_id": client["_id"],
+                        "name": client.get("name", "Usuario"),
+                        "email": client.get("email"),
+                        "phone": client.get("phone"),
+                        "days_since_plan": days_since_plan,
+                        "last_plan_date": plan_date.isoformat(),
+                        "status": status,
+                        "status_date": status_date.isoformat() if status_date else None,
+                        "followup_activated": client.get("followup_activated", False),
+                        "last_followup_id": recent_followup["_id"] if recent_followup else None
+                    })
+        
+        # Ordenar por días transcurridos (más urgentes primero)
+        pending_reviews.sort(key=lambda x: x["days_since_plan"], reverse=True)
+        
+        return {
+            "pending_reviews": pending_reviews,
+            "count": len(pending_reviews)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting pending reviews: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al obtener revisiones pendientes: {str(e)}")
+
+
+@api_router.post("/admin/users/{user_id}/activate-followup")
+async def activate_followup(user_id: str, request: Request):
+    """
+    Admin activa el cuestionario de seguimiento para un cliente específico
+    """
+    await require_admin(request)
+    
+    try:
+        # Actualizar usuario para activar el cuestionario
+        result = await db.users.update_one(
+            {"_id": user_id},
+            {
+                "$set": {
+                    "followup_activated": True,
+                    "followup_activated_at": datetime.now(timezone.utc),
+                    "followup_activated_by": "admin"
+                }
+            }
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        logger.info(f"Follow-up activated for user {user_id} by admin")
+        
+        return {
+            "success": True,
+            "message": "Cuestionario de seguimiento activado correctamente"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error activating follow-up: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al activar cuestionario: {str(e)}")
+
+
+@api_router.post("/admin/users/{user_id}/deactivate-followup")
+async def deactivate_followup(user_id: str, request: Request):
+    """
+    Admin desactiva el cuestionario de seguimiento (por si se activó por error)
+    """
+    await require_admin(request)
+    
+    try:
+        result = await db.users.update_one(
+            {"_id": user_id},
+            {
+                "$set": {
+                    "followup_activated": False,
+                    "followup_activated_at": None,
+                    "followup_activated_by": None
+                }
+            }
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        logger.info(f"Follow-up deactivated for user {user_id} by admin")
+        
+        return {
+            "success": True,
+            "message": "Cuestionario de seguimiento desactivado"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deactivating follow-up: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al desactivar cuestionario: {str(e)}")
+
         logger.error(f"Error getting pending follow-ups: {e}")
         raise HTTPException(status_code=500, detail=f"Error al obtener seguimientos pendientes: {str(e)}")
 
