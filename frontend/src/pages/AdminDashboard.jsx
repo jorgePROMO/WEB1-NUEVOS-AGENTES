@@ -101,6 +101,9 @@ const AdminDashboard = () => {
   // Pending Reviews states
   const [pendingReviews, setPendingReviews] = useState([]); // Array de clientes con seguimientos pendientes
   const [loadingPendingReviews, setLoadingPendingReviews] = useState(false);
+  
+  // History modal state
+  const [selectedHistoryItem, setSelectedHistoryItem] = useState(null);
 
 
   // Form states
