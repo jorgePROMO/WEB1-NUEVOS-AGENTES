@@ -4460,6 +4460,8 @@ async def get_pending_follow_ups(request: Request):
         return {"pending_follow_ups": follow_ups, "count": len(follow_ups)}
         
     except Exception as e:
+        logger.error(f"Error getting pending follow-ups: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al obtener seguimientos pendientes: {str(e)}")
 
 
 @api_router.get("/admin/pending-reviews")
