@@ -4639,6 +4639,131 @@ async def get_pending_follow_ups(request: Request):
         raise HTTPException(status_code=500, detail=f"Error al obtener seguimientos pendientes: {str(e)}")
 
 
+@api_router.patch("/admin/users/{user_id}/followups/{followup_id}/analysis")
+async def update_follow_up_analysis(user_id: str, followup_id: str, analysis_data: dict, request: Request):
+    """
+    Admin actualiza/edita el análisis de un seguimiento
+    """
+    await require_admin(request)
+    
+    try:
+        result = await db.follow_up_submissions.update_one(
+            {"_id": followup_id, "user_id": user_id},
+            {
+                "$set": {
+                    "ai_analysis": analysis_data.get("analysis"),
+                    "ai_analysis_edited": True,
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Seguimiento no encontrado")
+        
+        return {"success": True, "message": "Análisis actualizado correctamente"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating analysis: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al actualizar análisis: {str(e)}")
+
+
+@api_router.post("/admin/users/{user_id}/followups/{followup_id}/generate-plan")
+async def generate_plan_from_follow_up(user_id: str, followup_id: str, request: Request):
+    """
+    Genera un nuevo plan de nutrición basado en el análisis del seguimiento
+    """
+    await require_admin(request)
+    
+    try:
+        # Obtener el seguimiento
+        follow_up = await db.follow_up_submissions.find_one({"_id": followup_id, "user_id": user_id})
+        if not follow_up:
+            raise HTTPException(status_code=404, detail="Seguimiento no encontrado")
+        
+        if not follow_up.get("ai_analysis"):
+            raise HTTPException(status_code=400, detail="Debe analizar el seguimiento antes de generar un nuevo plan")
+        
+        # Obtener usuario y cuestionario inicial
+        user = await db.users.find_one({"_id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        initial_questionnaire = await db.nutrition_questionnaire_submissions.find_one(
+            {"_id": follow_up.get("previous_questionnaire_id")}
+        )
+        
+        if not initial_questionnaire:
+            raise HTTPException(status_code=404, detail="Cuestionario inicial no encontrado")
+        
+        # Generar el nuevo plan usando el servicio de nutrición
+        # Pasamos el análisis como contexto adicional
+        from nutrition_service import generate_nutrition_plan_with_context
+        
+        plan_content = await generate_nutrition_plan_with_context(
+            questionnaire=initial_questionnaire,
+            follow_up_analysis=follow_up.get("ai_analysis"),
+            follow_up_data=follow_up
+        )
+        
+        # Guardar el nuevo plan
+        plan_id = str(datetime.now(timezone.utc).timestamp()).replace('.', '')
+        nutrition_plan = {
+            "_id": plan_id,
+            "user_id": user_id,
+            "plan_content": plan_content,
+            "generated_at": datetime.now(timezone.utc),
+            "uploaded_by": "admin",
+            "generated_from_followup": followup_id,
+            "status": "active"
+        }
+        
+        await db.nutrition_plans.insert_one(nutrition_plan)
+        
+        # Actualizar el usuario con el nuevo plan
+        await db.users.update_one(
+            {"_id": user_id},
+            {
+                "$set": {
+                    "nutrition_plan": {
+                        "id": plan_id,
+                        "generated_at": datetime.now(timezone.utc),
+                        "uploaded_by": "admin"
+                    }
+                }
+            }
+        )
+        
+        # Actualizar el seguimiento con el ID del nuevo plan
+        await db.follow_up_submissions.update_one(
+            {"_id": followup_id},
+            {
+                "$set": {
+                    "new_plan_id": plan_id,
+                    "status": "plan_generated",
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        logger.info(f"New nutrition plan generated from follow-up {followup_id} for user {user_id}")
+        
+        return {
+            "success": True,
+            "plan_id": plan_id,
+            "plan_content": plan_content,
+            "message": "Nuevo plan de nutrición generado correctamente"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating plan from follow-up: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al generar nuevo plan: {str(e)}")
+
+
 @api_router.get("/admin/pending-reviews")
 async def get_pending_reviews(request: Request):
     """
