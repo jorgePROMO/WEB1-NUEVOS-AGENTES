@@ -157,36 +157,20 @@ INSTRUCCIONES:
 
 FORMATO DE RESPUESTA:
 
-DESPUÉS DE VERIFICAR LOS MACROS, devuelve el plan con el siguiente formato MODIFICADO:
+Devuelve el contenido COMPLETO del plan manteniendo:
+- Mismo formato exacto del primer agente
+- Saludo personalizado al inicio (Hola [nombre], Gracias por tu paciencia, etc.)
+- MANTÉN la sección completa "CÁLCULO DE KCAL Y MACROS" con todas las fórmulas, TMB, TDEE y tablas
+- Mismos apartados y títulos
+- Mismos emojis y estructura
+- SOLO corrige cantidades en el menú si es necesario
+- NO añadas secciones de verificación
+- NO menciones correcciones realizadas
+- NO añadas palabras como "VERIFICADO", "AGENTE", "REVISADO", "Plan Verificado" en ninguna parte del documento
+- NO incluyas frases de cierre como "¡Este es el plan..." o "¡Espero que disfrutes..." al final
+- NO incluyas totales o subtotales en la lista de compra
 
-**PLAN DE NUTRICIÓN PERSONALIZADO**
-
-Hola [Nombre del cliente],
-
-Gracias por tu paciencia. Mi equipo ha estado trabajando en tu plan de nutrición personalizado para que alcances tu objetivo de [objetivo], y yo personalmente he supervisado cada detalle para asegurarnos de que todo esté perfectamente ajustado a tus necesidades.
-
-He calculado que necesitas aproximadamente [X] kcal diarias, distribuidas en: [X]g de proteínas, [X]g de carbohidratos y [X]g de grasas saludables. A continuación encontrarás tu menú semanal diseñado específicamente para cumplir con estos requerimientos:
-
----
-
-MENÚ NUTRICIONAL SEMANAL 🥗
-
-[Incluye el menú completo de 7 días con cantidades ajustadas]
-
-LISTA DE LA COMPRA SEMANAL
-
-[Incluye la lista de compra completa]
-
-INSTRUCCIONES CRÍTICAS:
-- ELIMINA completamente la sección "CÁLCULO DE KCAL Y MACROS" (fórmulas, TMB, TDEE, tabla de macros)
-- ELIMINA la información formal del cliente (📋 Cliente, 📅 Fecha, 🎯 Objetivo)
-- Usa los valores de macros calculados SOLO para la frase en el saludo: "He calculado que necesitas aproximadamente..."
-- Mantén el menú y lista de compra con las cantidades corregidas
-- NO añadas palabras como "VERIFICADO", "AGENTE", "REVISADO", "Plan Verificado"
-- NO incluyas frases de cierre como "¡Este es el plan..." al final
-- NO incluyas totales finales en la lista de compra
-
-Responde ÚNICAMENTE con el plan en el formato modificado."""
+Responde ÚNICAMENTE con el plan de nutrición corregido (si fue necesario) en el formato original."""
 
 
 async def generate_nutrition_plan(client_data: dict) -> dict:
