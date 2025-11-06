@@ -150,6 +150,28 @@ const AdminDashboard = () => {
     }
   }, [selectedClient]);
 
+  useEffect(() => {
+    // Load pending reviews when navigating to that view
+    if (activeView === 'pending-reviews') {
+      const fetchPendingReviews = async () => {
+        setLoadingPendingReviews(true);
+        try {
+          const response = await axios.get(`${API}/admin/pending-reviews`, {
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true
+          });
+          setPendingReviews(response.data.pending_reviews || []);
+        } catch (error) {
+          console.error('Error loading pending reviews:', error);
+          setPendingReviews([]);
+        } finally {
+          setLoadingPendingReviews(false);
+        }
+      };
+      fetchPendingReviews();
+    }
+  }, [activeView, token]);
+
   const loadClients = async () => {
     try {
       // Use clients endpoint to show web-registered clients
