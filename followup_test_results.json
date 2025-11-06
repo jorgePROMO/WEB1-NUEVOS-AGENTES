@@ -1,0 +1,72 @@
+[
+  {
+    "test": "Admin Login",
+    "success": true,
+    "message": "Admin logged in successfully. Role: admin",
+    "timestamp": "2025-11-06T14:39:33.626891",
+    "response_data": null
+  },
+  {
+    "test": "Get Pending Reviews",
+    "success": false,
+    "message": "HTTP 404",
+    "timestamp": "2025-11-06T14:39:33.670297",
+    "response_data": "{\"detail\":\"Not Found\"}"
+  },
+  {
+    "test": "Activate Follow-up for User",
+    "success": false,
+    "message": "No test user ID available from pending reviews",
+    "timestamp": "2025-11-06T14:39:33.670919",
+    "response_data": null
+  },
+  {
+    "test": "Verify Status Changed to Activated",
+    "success": false,
+    "message": "HTTP 404",
+    "timestamp": "2025-11-06T14:39:33.711535",
+    "response_data": "{\"detail\":\"Not Found\"}"
+  },
+  {
+    "test": "Register User for Dashboard Test",
+    "success": true,
+    "message": "Test user registered for dashboard testing. ID: 1762439973752277",
+    "timestamp": "2025-11-06T14:39:35.048320",
+    "response_data": null
+  },
+  {
+    "test": "Get User Dashboard Follow-up Status",
+    "success": true,
+    "message": "Dashboard includes followup_activated field: False",
+    "timestamp": "2025-11-06T14:39:35.125900",
+    "response_data": null
+  },
+  {
+    "test": "Deactivate Follow-up for User",
+    "success": false,
+    "message": "No test user ID available",
+    "timestamp": "2025-11-06T14:39:35.126571",
+    "response_data": null
+  },
+  {
+    "test": "Verify Status Changed Back After Deactivation",
+    "success": false,
+    "message": "HTTP 404",
+    "timestamp": "2025-11-06T14:39:35.204561",
+    "response_data": "{\"detail\":\"Not Found\"}"
+  },
+  {
+    "test": "Test 404 for Non-existent User Activate",
+    "success": true,
+    "message": "Correctly returned 404 for non-existent user in activate endpoint",
+    "timestamp": "2025-11-06T14:39:35.243356",
+    "response_data": null
+  },
+  {
+    "test": "Test 404 for Non-existent User Deactivate",
+    "success": true,
+    "message": "Correctly returned 404 for non-existent user in deactivate endpoint",
+    "timestamp": "2025-11-06T14:39:35.282004",
+    "response_data": null
+  }
+]
