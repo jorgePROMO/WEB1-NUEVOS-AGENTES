@@ -1848,7 +1848,19 @@ class BackendTester:
             self.test_24_send_report_via_email,
             self.test_25_verify_email_sent_status,
             self.test_26_generate_whatsapp_link,
-            self.test_27_verify_whatsapp_sent_status
+            self.test_27_verify_whatsapp_sent_status,
+            
+            # Monthly Follow-up System tests
+            self.test_40_admin_login_for_followup_tests,
+            self.test_41_get_pending_reviews,
+            self.test_42_activate_followup_for_user,
+            self.test_43_verify_status_changed_to_activated,
+            self.test_44_register_user_for_dashboard_test,
+            self.test_45_get_user_dashboard_followup_status,
+            self.test_46_deactivate_followup_for_user,
+            self.test_47_verify_status_changed_back_after_deactivation,
+            self.test_48_test_404_for_nonexistent_user_activate,
+            self.test_49_test_404_for_nonexistent_user_deactivate
         ]
         
         for test in tests:
