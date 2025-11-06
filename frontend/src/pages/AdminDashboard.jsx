@@ -127,7 +127,15 @@ const AdminDashboard = () => {
     loadClients();
     loadTemplates();
     loadAllTags();
+    loadPendingReviews(); // Load pending reviews on mount
   }, [isAdmin, navigate]);
+
+  // Reload pending reviews when navigating to that view
+  useEffect(() => {
+    if (activeView === 'pending-reviews') {
+      loadPendingReviews();
+    }
+  }, [activeView]);
 
   const loadAllTags = async () => {
     try {
