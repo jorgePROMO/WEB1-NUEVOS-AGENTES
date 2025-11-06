@@ -1362,7 +1362,7 @@ class BackendTester:
     # ==================== CRITICAL PRODUCTION TESTS ====================
     
     def test_39_admin_login_production_credentials(self):
-        """Test 28: Admin login with production credentials"""
+        """Test 39: Admin login with production credentials"""
         url = f"{BACKEND_URL}/auth/login"
         params = {
             "email": "ecjtrainer@gmail.com",
