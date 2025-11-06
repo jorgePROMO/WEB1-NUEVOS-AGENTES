@@ -1,345 +1,345 @@
 [
   {
+    "test": "Admin Login for Phase 3",
+    "success": true,
+    "message": "Admin logged in successfully for Phase 3 testing. Role: admin",
+    "timestamp": "2025-11-06T15:08:09.195227",
+    "response_data": null
+  },
+  {
+    "test": "Check Existing Follow-ups",
+    "success": true,
+    "message": "Found 4 clients in system. Will use client: jorge31011987@gmail.com for follow-up testing",
+    "timestamp": "2025-11-06T15:08:09.244174",
+    "response_data": null
+  },
+  {
+    "test": "Analyze Follow-up Without Data",
+    "success": true,
+    "message": "Correctly returned 404 for non-existent user/follow-up",
+    "timestamp": "2025-11-06T15:08:09.291199",
+    "response_data": null
+  },
+  {
+    "test": "Generate Plan Without Analysis",
+    "success": true,
+    "message": "Correctly returned 404 - Seguimiento no encontrado",
+    "timestamp": "2025-11-06T15:08:09.337071",
+    "response_data": null
+  },
+  {
+    "test": "Create Test Nutrition Questionnaire",
+    "success": false,
+    "message": "HTTP 422 - Nutrition questionnaire endpoint may not exist",
+    "timestamp": "2025-11-06T15:08:09.380325",
+    "response_data": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"nombre_completo\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"email\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"fecha_nacimiento\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"profesion\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"telefono\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"peso\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"altura_cm\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"estres_profesion\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"movimiento_trabajo\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"descansa_trabajo\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"horas_trabajo\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"actividad_fisica_diaria\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"trabajo_fisicamente\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"practicado_deporte\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"constante_deporte\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"entrenado_gimnasio\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"entrenador_personal\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"resistencia_cardiorespiratoria\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"fuerza\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"flexibilidad\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"agilidad_coordinacion\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"dias_semana_entrenar\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"tiempo_sesion\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"entrena_manana_tarde\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"gimnasio\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"tipo_persona\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"cuesta_coger_peso\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"motivos_entrenar\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"hora_levanta\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"hora_desayuno\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"hora_comida\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"hora_cena\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"hora_acuesta\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"horas_duerme\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"come_fuera_casa\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"azucar_dulces_bolleria\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"anade_sal\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"bebidas_gas\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"objetivo_fisico\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"experiencia_ejercicio_constante\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"nivel_energia_dia\"],\"msg\":\"Field required\",\"input\":{\"nombre\":\"Prueba 1\",\"edad\":30,\"altura\":175,\"peso_actual\":80,\"sexo\":\"HOMBRE\",\"objetivo_principal\":\"Perder grasa y ganar m\u00fasculo\",\"nivel_actividad\":\"Ejercicio moderado (3-5 d\u00edas/semana)\",\"trabajo_fisico\":\"sedentario\",\"alergias_intolerancias\":\"Ninguna\",\"comidas_dia\":\"5 comidas\",\"user_id\":\"1762350193970676\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"}]}"
+  },
+  {
+    "test": "Create Test Follow-up Submission",
+    "success": false,
+    "message": "HTTP 422 - Follow-up submission endpoint may not exist",
+    "timestamp": "2025-11-06T15:08:09.420235",
+    "response_data": "{\"detail\":[{\"type\":\"string_type\",\"loc\":[\"body\",\"measurements\",\"peso\"],\"msg\":\"Input should be a valid string\",\"input\":78.5,\"url\":\"https://errors.pydantic.dev/2.12/v/string_type\"},{\"type\":\"string_type\",\"loc\":[\"body\",\"measurements\",\"grasa_corporal\"],\"msg\":\"Input should be a valid string\",\"input\":15.2,\"url\":\"https://errors.pydantic.dev/2.12/v/string_type\"},{\"type\":\"string_type\",\"loc\":[\"body\",\"measurements\",\"masa_muscular\"],\"msg\":\"Input should be a valid string\",\"input\":65.3,\"url\":\"https://errors.pydantic.dev/2.12/v/string_type\"},{\"type\":\"missing\",\"loc\":[\"body\",\"wellbeing\",\"energia_animo_motivacion\"],\"msg\":\"Field required\",\"input\":{\"energia_nivel\":\"Alta - me siento con mucha energ\u00eda\",\"sueno_calidad\":\"Buena - duermo 7-8 horas\",\"estres_nivel\":\"Bajo - me siento relajado\",\"motivacion\":\"Alta - estoy muy motivado para continuar\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"wellbeing\",\"sueno_estres\"],\"msg\":\"Field required\",\"input\":{\"energia_nivel\":\"Alta - me siento con mucha energ\u00eda\",\"sueno_calidad\":\"Buena - duermo 7-8 horas\",\"estres_nivel\":\"Bajo - me siento relajado\",\"motivacion\":\"Alta - estoy muy motivado para continuar\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"},{\"type\":\"missing\",\"loc\":[\"body\",\"changes_perceived\",\"molestias_dolor_lesion\"],\"msg\":\"Field required\",\"input\":{\"cambios_corporales\":\"He notado p\u00e9rdida de grasa y ganancia de m\u00fasculo\",\"fuerza_rendimiento\":\"He mejorado mucho en fuerza y resistencia\",\"como_te_sientes\":\"Me siento mucho mejor, m\u00e1s fuerte y con m\u00e1s energ\u00eda\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"}]}"
+  },
+  {
+    "test": "AI Analysis of Follow-up",
+    "success": false,
+    "message": "No admin token, follow-up ID, or user ID available",
+    "timestamp": "2025-11-06T15:08:09.420851",
+    "response_data": null
+  },
+  {
+    "test": "Update Follow-up Analysis",
+    "success": false,
+    "message": "No admin token, follow-up ID, or user ID available",
+    "timestamp": "2025-11-06T15:08:09.420864",
+    "response_data": null
+  },
+  {
+    "test": "Generate New Plan from Follow-up",
+    "success": false,
+    "message": "No admin token, follow-up ID, or user ID available",
+    "timestamp": "2025-11-06T15:08:09.420880",
+    "response_data": null
+  },
+  {
+    "test": "Verify Follow-up Status Changes",
+    "success": false,
+    "message": "No admin token, follow-up ID, or user ID available",
+    "timestamp": "2025-11-06T15:08:09.420885",
+    "response_data": null
+  },
+  {
+    "test": "Verify Data Persistence",
+    "success": false,
+    "message": "No test user available for persistence verification",
+    "timestamp": "2025-11-06T15:08:09.420891",
+    "response_data": null
+  },
+  {
     "test": "Admin Login Production Credentials",
-    "success": false,
-    "message": "HTTP 502",
-    "timestamp": "2025-11-06T14:37:14.883130",
-    "response_data": ""
-  },
-  {
-    "test": "Soft Delete - Register User",
-    "success": false,
-    "message": "HTTP 502",
-    "timestamp": "2025-11-06T14:37:14.917984",
-    "response_data": ""
-  },
-  {
-    "test": "Verify User in Admin Clients",
-    "success": false,
-    "message": "No admin token or user ID available",
-    "timestamp": "2025-11-06T14:37:14.918506",
-    "response_data": null
-  },
-  {
-    "test": "Soft Delete User",
-    "success": false,
-    "message": "No admin token or user ID available",
-    "timestamp": "2025-11-06T14:37:14.918516",
-    "response_data": null
-  },
-  {
-    "test": "Verify Deleted User Not in Clients",
-    "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:14.918521",
-    "response_data": null
-  },
-  {
-    "test": "Deleted User Auth Me Fails",
-    "success": false,
-    "message": "No deleted user token available",
-    "timestamp": "2025-11-06T14:37:14.918530",
-    "response_data": null
-  },
-  {
-    "test": "Deleted User Dashboard Fails",
-    "success": false,
-    "message": "No deleted user token available",
-    "timestamp": "2025-11-06T14:37:14.918534",
-    "response_data": null
-  },
-  {
-    "test": "Cache Headers Verification",
-    "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:14.918544",
-    "response_data": null
-  },
-  {
-    "test": "Email Verification - Register User",
-    "success": false,
-    "message": "HTTP 502",
-    "timestamp": "2025-11-06T14:37:14.958808",
-    "response_data": ""
-  },
-  {
-    "test": "Verify Unverified User in Clients",
-    "success": false,
-    "message": "No admin token or user email available",
-    "timestamp": "2025-11-06T14:37:14.959367",
-    "response_data": null
-  },
-  {
-    "test": "Unverified User Login Fails",
-    "success": false,
-    "message": "No test user email available",
-    "timestamp": "2025-11-06T14:37:14.959378",
-    "response_data": null
-  },
-  {
-    "test": "Admin Clients Consistency",
-    "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:14.959383",
+    "success": true,
+    "message": "Admin logged in successfully with production credentials. Role: admin",
+    "timestamp": "2025-11-06T15:08:09.679217",
     "response_data": null
   },
   {
     "test": "Register New User",
     "success": false,
-    "message": "HTTP 502",
-    "timestamp": "2025-11-06T14:37:15.000353",
-    "response_data": ""
+    "message": "HTTP 422",
+    "timestamp": "2025-11-06T15:08:09.725836",
+    "response_data": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"phone\"],\"msg\":\"Field required\",\"input\":{\"username\":\"test_user\",\"email\":\"test@example.com\",\"password\":\"Test123!\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"}]}"
   },
   {
     "test": "Admin Login",
     "success": false,
-    "message": "HTTP 502",
-    "timestamp": "2025-11-06T14:37:15.035891",
-    "response_data": ""
+    "message": "HTTP 401",
+    "timestamp": "2025-11-06T15:08:09.768435",
+    "response_data": "{\"detail\":\"Incorrect email or password\"}"
   },
   {
     "test": "User Dashboard",
     "success": false,
     "message": "No user token available",
-    "timestamp": "2025-11-06T14:37:15.036396",
+    "timestamp": "2025-11-06T15:08:09.769196",
     "response_data": null
   },
   {
     "test": "Admin List Clients",
-    "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:15.036417",
+    "success": true,
+    "message": "Clients retrieved. Total: 4, Active: 1, Pending: 3",
+    "timestamp": "2025-11-06T15:08:09.811138",
     "response_data": null
   },
   {
     "test": "Admin Send Form",
     "success": false,
     "message": "No admin token or test user ID available",
-    "timestamp": "2025-11-06T14:37:15.036422",
+    "timestamp": "2025-11-06T15:08:09.811773",
     "response_data": null
   },
   {
     "test": "Admin Verify Payment",
     "success": false,
     "message": "No admin token or test user ID available",
-    "timestamp": "2025-11-06T14:37:15.036426",
+    "timestamp": "2025-11-06T15:08:09.811785",
     "response_data": null
   },
   {
     "test": "Diagnostic Questionnaire",
-    "success": false,
-    "message": "HTTP 502",
-    "timestamp": "2025-11-06T14:37:15.076195",
-    "response_data": ""
+    "success": true,
+    "message": "Questionnaire submitted successfully. Response: Cuestionario enviado correctamente",
+    "timestamp": "2025-11-06T15:08:42.481773",
+    "response_data": null
   },
   {
     "test": "Admin Login for CRM",
-    "success": false,
-    "message": "HTTP 502",
-    "timestamp": "2025-11-06T14:37:15.110778",
-    "response_data": ""
+    "success": true,
+    "message": "Admin logged in successfully with correct credentials. Role: admin",
+    "timestamp": "2025-11-06T15:08:42.775183",
+    "response_data": null
   },
   {
     "test": "Create External Client",
-    "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:15.111268",
+    "success": true,
+    "message": "External client created successfully. ID: 1762441722814151",
+    "timestamp": "2025-11-06T15:08:42.822123",
     "response_data": null
   },
   {
     "test": "Get External Clients List",
-    "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:15.111278",
+    "success": true,
+    "message": "External clients list retrieved. Total: 1",
+    "timestamp": "2025-11-06T15:08:42.867149",
     "response_data": null
   },
   {
     "test": "Get External Client Detail",
-    "success": false,
-    "message": "No admin token or client ID available",
-    "timestamp": "2025-11-06T14:37:15.111283",
+    "success": true,
+    "message": "External client detail retrieved. Name: Cliente Test CRM",
+    "timestamp": "2025-11-06T15:08:42.906016",
     "response_data": null
   },
   {
     "test": "Update External Client Basic Info",
-    "success": false,
-    "message": "No admin token or client ID available",
-    "timestamp": "2025-11-06T14:37:15.111288",
+    "success": true,
+    "message": "Basic info updated successfully: Cliente actualizado",
+    "timestamp": "2025-11-06T15:08:42.949912",
     "response_data": null
   },
   {
     "test": "Update External Client Plan Weeks",
-    "success": false,
-    "message": "No admin token or client ID available",
-    "timestamp": "2025-11-06T14:37:15.111294",
+    "success": true,
+    "message": "Plan weeks updated successfully: Cliente actualizado",
+    "timestamp": "2025-11-06T15:08:42.990172",
     "response_data": null
   },
   {
     "test": "Update External Client Start Date",
-    "success": false,
-    "message": "No admin token or client ID available",
-    "timestamp": "2025-11-06T14:37:15.111298",
+    "success": true,
+    "message": "Start date updated successfully: Cliente actualizado",
+    "timestamp": "2025-11-06T15:08:43.030360",
     "response_data": null
   },
   {
     "test": "Update External Client Weeks Completed",
-    "success": false,
-    "message": "No admin token or client ID available",
-    "timestamp": "2025-11-06T14:37:15.111303",
+    "success": true,
+    "message": "Weeks completed updated successfully: Cliente actualizado",
+    "timestamp": "2025-11-06T15:08:43.071083",
     "response_data": null
   },
   {
     "test": "Update External Client Partial",
-    "success": false,
-    "message": "No admin token or client ID available",
-    "timestamp": "2025-11-06T14:37:15.111308",
+    "success": true,
+    "message": "Partial update successful: Cliente actualizado",
+    "timestamp": "2025-11-06T15:08:43.118055",
     "response_data": null
   },
   {
     "test": "Update External Client 404",
-    "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:15.111313",
+    "success": true,
+    "message": "Correctly returned 404 for non-existent client",
+    "timestamp": "2025-11-06T15:08:43.160996",
     "response_data": null
   },
   {
     "test": "Verify Updates Applied",
-    "success": false,
-    "message": "No admin token or client ID available",
-    "timestamp": "2025-11-06T14:37:15.111318",
+    "success": true,
+    "message": "All updates were applied correctly",
+    "timestamp": "2025-11-06T15:08:43.205961",
     "response_data": null
   },
   {
     "test": "Update External Client Status",
-    "success": false,
-    "message": "No admin token or client ID available",
-    "timestamp": "2025-11-06T14:37:15.111323",
+    "success": true,
+    "message": "Status updated successfully: Estado actualizado",
+    "timestamp": "2025-11-06T15:08:43.247051",
     "response_data": null
   },
   {
     "test": "Delete External Client",
-    "success": false,
-    "message": "No admin token or client ID available",
-    "timestamp": "2025-11-06T14:37:15.111327",
+    "success": true,
+    "message": "Test client deleted successfully: Cliente eliminado",
+    "timestamp": "2025-11-06T15:08:43.285573",
     "response_data": null
   },
   {
     "test": "Admin Login for GPT Tests",
     "success": false,
-    "message": "HTTP 502",
-    "timestamp": "2025-11-06T14:37:15.148784",
-    "response_data": ""
+    "message": "HTTP 401",
+    "timestamp": "2025-11-06T15:08:43.322421",
+    "response_data": "{\"detail\":\"Incorrect email or password\"}"
   },
   {
     "test": "Submit Questionnaire with GPT Report",
-    "success": false,
-    "message": "HTTP 502",
-    "timestamp": "2025-11-06T14:37:15.184574",
-    "response_data": ""
+    "success": true,
+    "message": "Questionnaire submitted successfully. Response: Cuestionario enviado correctamente",
+    "timestamp": "2025-11-06T15:09:08.404068",
+    "response_data": null
   },
   {
     "test": "Get Prospect Detail - Verify Report",
-    "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:15.185130",
+    "success": true,
+    "message": "GPT report verified: generated=True, content_length=3418, generated_at=2025-11-06T15:09:07.652000",
+    "timestamp": "2025-11-06T15:09:08.504678",
     "response_data": null
   },
   {
     "test": "Send Report via Email",
-    "success": false,
-    "message": "No admin token or prospect ID available",
-    "timestamp": "2025-11-06T14:37:15.185140",
+    "success": true,
+    "message": "Report sent via email successfully: Informe enviado por email correctamente",
+    "timestamp": "2025-11-06T15:09:09.461378",
     "response_data": null
   },
   {
     "test": "Verify Email Sent Status",
-    "success": false,
-    "message": "No admin token or prospect ID available",
-    "timestamp": "2025-11-06T14:37:15.185145",
+    "success": true,
+    "message": "Email status verified: sent_at=2025-11-06T15:09:09.456000, sent_via=email",
+    "timestamp": "2025-11-06T15:09:09.501137",
     "response_data": null
   },
   {
     "test": "Generate WhatsApp Link",
-    "success": false,
-    "message": "No admin token or prospect ID available",
-    "timestamp": "2025-11-06T14:37:15.185151",
+    "success": true,
+    "message": "WhatsApp link generated successfully: phone=34612345678, link_length=5054",
+    "timestamp": "2025-11-06T15:09:09.541371",
     "response_data": null
   },
   {
     "test": "Verify WhatsApp Sent Status",
-    "success": false,
-    "message": "No admin token or prospect ID available",
-    "timestamp": "2025-11-06T14:37:15.185155",
+    "success": true,
+    "message": "WhatsApp status verified: sent_at=2025-11-06T15:09:09.537000, sent_via=whatsapp",
+    "timestamp": "2025-11-06T15:09:09.581791",
     "response_data": null
   },
   {
     "test": "Admin Login for Follow-up Tests",
-    "success": false,
-    "message": "HTTP 502",
-    "timestamp": "2025-11-06T14:37:15.216120",
-    "response_data": ""
+    "success": true,
+    "message": "Admin logged in successfully. Role: admin",
+    "timestamp": "2025-11-06T15:09:09.882045",
+    "response_data": null
   },
   {
     "test": "Get Pending Reviews",
-    "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:15.216615",
+    "success": true,
+    "message": "Pending reviews retrieved successfully. Count: 0, Reviews: 0",
+    "timestamp": "2025-11-06T15:09:09.925096",
     "response_data": null
   },
   {
     "test": "Activate Follow-up for User",
     "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:15.216625",
+    "message": "No test user ID available from pending reviews",
+    "timestamp": "2025-11-06T15:09:09.925709",
     "response_data": null
   },
   {
     "test": "Verify Status Changed to Activated",
     "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:15.216631",
+    "message": "Test user not found in pending reviews",
+    "timestamp": "2025-11-06T15:09:09.962961",
     "response_data": null
   },
   {
     "test": "Register User for Dashboard Test",
-    "success": false,
-    "message": "HTTP 502",
-    "timestamp": "2025-11-06T14:37:15.255964",
-    "response_data": ""
+    "success": true,
+    "message": "Test user registered for dashboard testing. ID: 1762441750000151",
+    "timestamp": "2025-11-06T15:09:10.984531",
+    "response_data": null
   },
   {
     "test": "Get User Dashboard Follow-up Status",
-    "success": false,
-    "message": "No user token available",
-    "timestamp": "2025-11-06T14:37:15.256537",
+    "success": true,
+    "message": "Dashboard includes followup_activated field: False",
+    "timestamp": "2025-11-06T15:09:11.026108",
     "response_data": null
   },
   {
     "test": "Deactivate Follow-up for User",
     "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:15.256547",
+    "message": "No test user ID available",
+    "timestamp": "2025-11-06T15:09:11.026760",
     "response_data": null
   },
   {
     "test": "Verify Status Changed Back After Deactivation",
     "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:15.256552",
+    "message": "Test user not found in pending reviews",
+    "timestamp": "2025-11-06T15:09:11.066142",
     "response_data": null
   },
   {
     "test": "Test 404 for Non-existent User Activate",
-    "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:15.256557",
+    "success": true,
+    "message": "Correctly returned 404 for non-existent user in activate endpoint",
+    "timestamp": "2025-11-06T15:09:11.108474",
     "response_data": null
   },
   {
     "test": "Test 404 for Non-existent User Deactivate",
-    "success": false,
-    "message": "No admin token available",
-    "timestamp": "2025-11-06T14:37:15.256564",
+    "success": true,
+    "message": "Correctly returned 404 for non-existent user in deactivate endpoint",
+    "timestamp": "2025-11-06T15:09:11.146522",
     "response_data": null
   }
 ]
