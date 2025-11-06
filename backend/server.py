@@ -3589,8 +3589,12 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
         month = plan.get("month")
         year = plan.get("year")
         
-        # Convertir markdown a HTML
-        html_content = markdown.markdown(plan_content)
+        # Convertir saltos de línea simples a <br> para HTML
+        # Esto preserva los saltos de línea en el PDF
+        plan_content_html = plan_content.replace('\n', '<br>\n')
+        
+        # Convertir markdown a HTML con saltos de línea preservados
+        html_content = markdown.markdown(plan_content_html, extensions=['nl2br'])
         
         # Template HTML con estilos
         full_html = f"""
