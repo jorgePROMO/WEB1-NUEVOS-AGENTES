@@ -4603,8 +4603,9 @@ async def deactivate_followup(user_id: str, request: Request):
         logger.error(f"Error deactivating follow-up: {e}")
         raise HTTPException(status_code=500, detail=f"Error al desactivar cuestionario: {str(e)}")
 
-        logger.error(f"Error getting pending follow-ups: {e}")
-        raise HTTPException(status_code=500, detail=f"Error al obtener seguimientos pendientes: {str(e)}")
+
+# Include the router in the main app (moved to end to include all endpoints)
+app.include_router(api_router)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
