@@ -120,11 +120,8 @@ LISTA DE LA COMPRA SEMANAL
 
 IMPORTANTE: 
 - USA GRAMOS ESPECÍFICOS en cada comida, no aproximaciones
-- Los macros del menú semanal DEBEN coincidir con tus cálculos internos
+- Los macros del menú semanal DEBEN coincidir con los calculados arriba
 - Calcula las cantidades de cada alimento para que sumen los macros objetivo
-- NO incluyas "Plan Verificado" en ninguna parte
-- NO incluyas secciones de cálculos técnicos (fórmulas, TMB, TDEE, tablas de macros)
-- En el saludo menciona solo de forma simple: "necesitas aproximadamente X kcal diarias, distribuidas en Xg proteínas, Xg carbohidratos y Xg grasas"
 - NO incluyas frases de cierre ni totales finales en la lista de compra
 - Responde SOLO con este contenido, nada más"""
 
