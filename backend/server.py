@@ -4729,26 +4729,43 @@ async def generate_plan_from_follow_up(user_id: str, followup_id: str, request: 
         if not initial_questionnaire:
             raise HTTPException(status_code=404, detail="Cuestionario inicial no encontrado")
         
-        # Generar el nuevo plan usando el servicio de nutrición
-        # Pasamos el análisis como contexto adicional
-        from nutrition_service import generate_nutrition_plan_with_context
-        
-        plan_content = await generate_nutrition_plan_with_context(
-            questionnaire=initial_questionnaire,
-            follow_up_analysis=follow_up.get("ai_analysis"),
-            follow_up_data=follow_up
+        # Obtener el plan anterior para referencia
+        previous_plan = await db.nutrition_plans.find_one(
+            {"_id": follow_up.get("previous_plan_id")}
         )
         
-        # Guardar el nuevo plan
+        # Generar el nuevo plan usando el servicio de nutrición
+        # Pasamos TODA la información necesaria
+        from nutrition_service import generate_nutrition_plan_with_context
+        
+        result = await generate_nutrition_plan_with_context(
+            questionnaire=initial_questionnaire,
+            follow_up_analysis=follow_up.get("ai_analysis"),
+            follow_up_data=follow_up,
+            previous_plan=previous_plan
+        )
+        
+        if not result["success"]:
+            raise HTTPException(status_code=500, detail=result.get("error", "Error generando plan"))
+        
+        # Guardar el nuevo plan con TODOS los campos necesarios
         plan_id = str(datetime.now(timezone.utc).timestamp()).replace('.', '')
+        now = datetime.now(timezone.utc)
+        
         nutrition_plan = {
             "_id": plan_id,
             "user_id": user_id,
-            "plan_content": plan_content,
-            "generated_at": datetime.now(timezone.utc),
+            "month": now.month,
+            "year": now.year,
+            "plan_verificado": result["plan_verificado"],
+            "plan_inicial": result.get("plan_inicial", ""),
+            "questionnaire_data": initial_questionnaire,
+            "generated_at": now,
             "uploaded_by": "admin",
             "generated_from_followup": followup_id,
-            "status": "active"
+            "previous_plan_id": follow_up.get("previous_plan_id"),
+            "status": "active",
+            "edited": False
         }
         
         await db.nutrition_plans.insert_one(nutrition_plan)
