@@ -521,10 +521,7 @@ frontend:
           comment: "NEW FEATURE: Complete email verification UI flow. VerifyEmail.jsx handles token validation with loading/success/error states. Register.jsx shows success message with email verification instructions. Login.jsx shows resend button if email not verified. Route /verify-email added to App.js. NEEDS TESTING: complete registration and verification flow."
 
 test_plan:
-  current_focus:
-    - "AI Analysis of Follow-Up"
-    - "Update Follow-Up Analysis"
-    - "Generate New Plan from Follow-Up"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
