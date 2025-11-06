@@ -521,10 +521,86 @@ frontend:
           comment: "NEW FEATURE: Complete email verification UI flow. VerifyEmail.jsx handles token validation with loading/success/error states. Register.jsx shows success message with email verification instructions. Login.jsx shows resend button if email not verified. Route /verify-email added to App.js. NEEDS TESTING: complete registration and verification flow."
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Pending Reviews Backend API"
+    - "Follow-Up Activation Backend API"
   stuck_tasks: []
   test_all: false
-  test_priority: "critical_first"
+  test_priority: "high_first"
+
+backend:
+  - task: "Pending Reviews API"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implemented GET /api/admin/pending-reviews endpoint. Fetches all team clients with nutrition_plan generated >= 30 days ago. Returns user info, days_since_plan, status (pending/activated/completed), followup_activated flag, and last_followup_id if exists. Sorts by days_since_plan (most urgent first). Ready for testing."
+
+  - task: "Follow-Up Activation API"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implemented POST /api/admin/users/{user_id}/activate-followup endpoint. Admin can manually activate follow-up questionnaire for a client by setting followup_activated=true, followup_activated_at timestamp, and followup_activated_by='admin'. Also implemented POST /api/admin/users/{user_id}/deactivate-followup for reversing activation. Ready for testing."
+
+  - task: "Follow-Up Submit Auto-Deactivation"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Updated POST /api/nutrition/followup/submit endpoint to automatically deactivate followup_activated=false after client submits questionnaire. This prevents button from showing again until admin reactivates or 30 days pass. Ready for testing."
+
+  - task: "User Dashboard Follow-Up Status"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Updated GET /api/users/dashboard endpoint to include followup_activated status in response. This allows frontend to conditionally show follow-up button based on admin activation. Ready for testing."
+
+frontend:
+  - task: "User Dashboard Follow-Up Button - Hybrid Control"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/UserDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Updated UserDashboard to show follow-up questionnaire button if: 1) followup_activated=true (admin manual control) OR 2) daysSinceLastPlan>=30 (automatic). Card message changes based on activation source. Ready for testing."
+
+  - task: "Admin Pending Reviews Card & View"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Replaced 'Clientes en Riesgo' card with 'Revisiones Pendientes' card in AdminDashboard. Card shows count badge with number of pending reviews. Created new pending-reviews view that displays: 1) All clients with plans >= 30 days old, 2) Status badges (completed/activated/pending), 3) Days since last plan, 4) Activate button for pending clients, 5) View responses button for completed reviews. Includes loadPendingReviews() function and activateFollowUpForClient() function. Ready for testing."
 
 agent_communication:
     - agent: "main"
