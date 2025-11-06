@@ -1,72 +1,75 @@
 <analysis>
-The previous AI engineer developed a full-stack CRM and nutrition planning application, from initial PWA features to complex LLM integrations. Key areas of work included implementing an email verification flow for new user registrations to combat ghost accounts, addressing mobile/desktop client list discrepancies by fixing soft-delete logic (eventually converting to hard delete), and a major re-architecture of the nutrition plan generation process. The nutrition plan now involves immediate questionnaire response storage in the database, with admin-triggered or manual LLM plan generation. Throughout the process, the AI engineer diligently debugged critical issues such as frontend rendering problems, login flow errors related to payment status, and persistent caching issues, leading to the complete removal of the Service Worker. The latest challenge, still ongoing, is fixing a React state management issue causing the nutrition plan accordion to immediately collapse due to  resetting to .
+The trajectory details the AI engineer's work on the CRM Fusion application, primarily focusing on enhancing the nutrition planning feature and introducing a monthly follow-up system. Initially, the engineer resolved a critical frontend bug where the nutrition plan accordion in  collapsed immediately; this was fixed by replacing the accordion with a fullscreen modal and refining state management using . The engineer then tackled various user requests: fine-tuning LLM prompts for nutrition plans (including client greetings and accurate macro calculations), enabling plan regeneration, fixing PDF generation issues (missing  dependency, preserving line breaks, adjusting spacing), and correcting Invalid Date display in the User Dashboard.
+
+The latest major feature introduced is a comprehensive monthly follow-up system. The AI engineer defined backend models and endpoints for follow-up questionnaires and integrated a frontend component for user submissions. A key architectural decision was a hybrid Manual + Auto Backup system for follow-up reminders, centralizing notifications in an Pending Reviews panel in the Admin Dashboard, replacing Clients at Risk. The engineer is currently implementing the backend for this new system.
 </analysis>
 
 <product_requirements>
-The CRM Fusion application is a full-stack platform with user/admin authentication, CRM features (prospects, team/external clients), calendar, profile management, and document handling. It initially featured a diagnostic questionnaire and GPT integration for report generation. This evolved to immediate GPT report generation, storage, and manual email/WhatsApp sending capabilities. A core recent feature is the Nutrition Plan for team clients, involving a new questionnaire, LLM-based plan generation (using GPT-4o-mini), admin review/editing, PDF generation, and user download. Critically, monthly nutrition plans must be stored historically, displayed in an accordion UI for admins, and be editable/sendable. A robust email verification flow for new users was required to address persistent mobile registration failures and prevent dirty or ghost registrations. Later, the user requested that questionnaire responses be saved immediately to the database, allowing admins to decide on AI generation or manual plan creation, and that deleted users' data be entirely purged (hard delete) to prevent data recovery upon re-registration.
+The CRM Fusion application is a full-stack platform managing user/admin authentication, CRM, calendar, profile, and documents. Key features include a diagnostic questionnaire and GPT-driven reports. A central Nutrition Plan for team clients involves a questionnaire, LLM-based plan generation (GPT-4o-mini), admin review/editing, PDF generation, and user download, with plans stored historically and displayed in an accordion UI (later replaced by a modal). Robust email verification was added to prevent ghost registrations. Questionnaire responses are saved immediately for admin-triggered AI or manual plan creation, and client data is hard-deleted. Recent additions include a monthly follow-up questionnaire system, where an AI agent will analyze responses against initial data to generate new nutrition plans, with admin manual control over sending and editable analysis.
 </product_requirements>
 
 <key_technical_concepts>
--   **Full-stack Development**: React, FastAPI, MongoDB.
--   **Authentication**: JWT, React Context (),  hashing, email verification.
+-   **Full-stack Development**: React (Frontend), FastAPI (Backend), MongoDB (Database).
+-   **Authentication**: JWT, React Context (), email verification.
 -   **LLM Integration**:  (LiteLLM with OpenAI GPT-4o-mini).
--   **PWA/Caching**: Service Worker, , HTTP  headers, client-side caching strategies.
--   **UI/UX**: Tailwind CSS, Shadcn UI, accordion pattern.
--   **Data Handling**: Pydantic models, UUIDs, MongoDB (historical data, hard delete).
+-   **UI/UX**: Shadcn UI, modal components, form management.
+-   **Data Handling**: Pydantic models, UUIDs, MongoDB.
+-   **PDF Generation**: WeasyPrint (backend).
 </key_technical_concepts>
 
 <code_architecture>
 
 -   ****: Core FastAPI application.
-    -   **Changes**: Implemented , modified  for token generation. Updated  for email verification check (removed payment check later). Refactored  for accurate user fetching (initially soft delete filter, then hard delete). Added HTTP  headers. Modified  to save responses without immediate LLM processing. Added , , and  endpoints. Implemented hard delete for clients (), removing all associated data. Modified  to include  and . Fixed hardcoded URLs.
+    -   **Importance**: Handles all API routing, business logic, and database interactions.
+    -   **Changes**: Replaced accordion with modal logic. Updated nutrition plan generation endpoint to accept  parameter. Modified PDF generation to include , used  with  extension for line breaks, and adjusted styling. Converted  objects to ISO strings for JSON serialization in user dashboard data. Added new endpoints for follow-up submissions (), retrieving follow-ups (), and AI analysis (). Also added endpoints for  and , and updated  to deactivate the follow-up button on submission.
 -   ****: Pydantic data models.
-    -   **Changes**: Added , ,  to . Introduced  model to store raw questionnaire responses. Removed logic related to soft delete  field.
--   ****: Email utility functions.
-    -   **Changes**:  updated for ,  added.
+    -   **Importance**: Defines the structure and validation for data exchanged with the frontend and stored in MongoDB.
+    -   **Changes**: Added  model to store monthly follow-up questionnaire responses. Added a  field to the  model to manage the state of the follow-up button.
 -   ****: Manages LLM interaction.
-    -   **Changes**: Updated LLM model from  to .
--   ****: New script to hard delete all users/data except admin.
--   ****: New script to clean residual user data (case-insensitive email).
+    -   **Importance**: Contains the logic and prompts for generating nutrition plans using GPT-4o-mini.
+    -   **Changes**: Multiple iterations to refine LLM prompts: initially removed client intro/technical calculations, then restored calculations for accuracy (while managing presentation), and finally reverted to full technical details plus a personalized greeting based on user feedback. The prompt for AGENT 2 was adjusted to ensure precise macro calculations.
 -   ****: Admin interface.
-    -   **Changes**: UI updates for displaying monthly nutrition plans via accordion, showing Cuestionarios Pendientes (Pending Questionnaires), and buttons for Generar con IA or Escribir manualmente. Added confirmation modal for client deletion and buttons/badges for archive/unarchive. Currently undergoing debugging for the nutrition plan accordion functionality, with  and state management being investigated.  was removed from .
+    -   **Importance**: Central hub for admin to manage clients, view plans, and now manage follow-ups.
+    -   **Changes**: Replaced nutrition plan accordion with a fullscreen modal ( component). Implemented , , ,  states/functions. Updated action buttons (e.g., Generar PDF to Adjuntar a Documentos, added Regenerar Plan). Corrected , , ,  functions to use . Added a card to the Formularios tab for sending the monthly follow-up questionnaire link. Added a new Seguimientos tab () to display client follow-up data. States (, ) and a  function were added. Call  when  changes.
 -   ****: User interface.
-    -   **Changes**: Updated logic to hide the Nutrition Questionnaire button once a plan or submission exists.  callback now triggers dashboard data reload.
--   ****: Registration page.
-    -   **Changes**: Integrated with email verification flow, displaying a message to verify email upon successful registration.
--   ****: Login page.
-    -   **Changes**: Updated to show Please verify your email error, and a Resend verification button. Removed blocking logic based on .
--   ****: New component for handling email verification.
--   ****: Added route for .
--   ****:
-    -   **Changes**: Added  check, implemented  versioning for auto-migration of cached data, and added checks for user  status.
--   ****: Frontend component for nutrition questionnaire.
-    -   **Changes**: Implemented  to prevent multiple form submissions.
--   ** & **: PWA files.
-    -   **Changes**: Service worker was completely deactivated and then removed,  updated to disable PWA features, to combat persistent caching issues.
--   ****: Added anti-cache meta tags and a script to uninstall old service workers.
+    -   **Importance**: Where users view their plans and submit questionnaires.
+    -   **Changes**: Modified the success message after submitting the nutrition questionnaire. Added logic to calculate  from . Implemented a new card and button for Cuestionario de Seguimiento visible when . Integrated the new  component.
+-   ****: UI component for modals.
+    -   **Importance**: Provides a reusable dialog/modal component based on Shadcn UI.
+    -   **Changes**: No direct changes, but heavily utilized in  for the new modal.
+-   ****: New component.
+    -   **Importance**: Frontend form for clients to submit their monthly follow-up questionnaire responses.
+    -   **Changes**: New file created to handle the follow-up questionnaire.
 </code_architecture>
 
 <pending_tasks>
--   Address the persistent Error al conectar con Google Calendar issue (user requested a fallback Open Google Calendar button).
--   Fix the critical bug where the nutrition plan accordion in  fails to expand due to  being reset.
+-   Address Error al conectar con Google Calendar (implement fallback Open Google Calendar button).
 -   Address mobile responsiveness issues for user dashboard documents.
+-   Complete backend logic for  to fetch clients for review.
+-   Complete backend logic for .
+-   Implement frontend Revisiones Pendientes card in , replacing Clientes en Riesgo.
+-   Implement AI agent for analyzing follow-up responses and generating new nutrition plans (prompt needed).
+-   Design and implement admin notification system for follow-ups (alerts, emails, WhatsApp).
+-   Ensure AI analysis generated for follow-ups is editable by the admin.
+-   Implement the Desaparece de pendientes después de X días logic for the Revisiones Pendientes card.
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI engineer was actively debugging a critical frontend issue in the  component. The user reported that the nutrition plan accordion was not expanding, despite previous attempts to fix it, including recommendations from the  to use  and implicitly remove  from .
+Immediately before this summary request, the AI engineer was implementing a comprehensive monthly follow-up system for clients. The previous accordion bug in  was resolved by replacing it with a fullscreen modal. The engineer has since focused on the new follow-up feature, starting with the backend.
 
-The latest investigation involved adding extensive console logs to the  component to track the state of the  flag and . The logs revealed a crucial insight: upon clicking to expand a plan, the  state correctly updates to , but almost immediately after, it reverts to  and  becomes .
-
-The sequence observed in the logs is:
-
-
-
-
-
-
-This indicates a highly problematic infinite render loop or a state-resetting mechanism, likely stemming from incorrect dependencies in  or  hooks, or an unintended side effect, that is causing the  state to be cleared right after it's set. This issue is preventing the display of generated nutrition plans, which is a core feature.
+The current work involves:
+1.  **Adding new backend endpoints** to  for managing follow-up submissions (), retrieving follow-ups (), and AI analysis ().
+2.  **Defining a new data model**  in  to store these responses.
+3.  **Implementing a hybrid Manual + Auto Backup system** for follow-up reminders. This involves introducing a  field to the  model.
+4.  **Creating a new frontend component**  for the user to submit the questionnaire.
+5.  **Integrating the follow-up questionnaire visibility** in , displaying a button when  is >= 30 days.
+6.  **Adding an admin control** in  under the Formularios tab, allowing admins to manually trigger the follow-up questionnaire link.
+7.  **Setting up a Seguimientos tab** in  to display client follow-up history.
+8.  **Implementing the core backend logic** for the proposed Revisiones Pendientes feature. The AI engineer has just inserted new endpoints (expected to be  and ) into .
+9.  **Modifying the  endpoint** in  to automatically deactivate the  status (which controls the client's visible follow-up button) once a client submits a questionnaire.
+10. **Updating the  endpoint** in  to include the  status, allowing the frontend to correctly display or hide the follow-up button for the user.
 </current_work>
 
 <optional_next_step>
-Identify and fix the root cause of  resetting to  in  to resolve the accordion collapse.
+Complete the backend implementation by implementing the logic for  and  endpoints.
 </optional_next_step>

@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://nutriplan-app-14.preview.emergentagent.com/api"
+BACKEND_URL = "https://crm-fusion-3.preview.emergentagent.com/api"
 
 class CRMExternalClientsTester:
     def __init__(self):

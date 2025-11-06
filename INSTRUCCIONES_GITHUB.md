@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://nutriplan-app-14.preview.emergentagent.com
+https://crm-fusion-3.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 
