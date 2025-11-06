@@ -2300,22 +2300,42 @@ const AdminDashboard = () => {
                             })()}
 
                             {/* Cuestionario Inicial de Nutrición */}
-                            {selectedClientDetails?.forms?.filter(f => f.type === 'nutrition').length > 0 && (
-                              <Card className="border-2 border-blue-300">
-                                <CardHeader className="bg-blue-50">
-                                  <CardTitle className="text-xl flex items-center gap-2">
-                                    📝 Cuestionario Inicial de Nutrición
-                                  </CardTitle>
-                                  <p className="text-sm text-gray-600">
-                                    Fecha: {new Date(selectedClientDetails.forms.find(f => f.type === 'nutrition')?.submitted_at).toLocaleDateString('es-ES', { 
-                                      weekday: 'long', 
-                                      year: 'numeric', 
-                                      month: 'long', 
-                                      day: 'numeric' 
-                                    })}
-                                  </p>
-                                </CardHeader>
-                                <CardContent className="space-y-4 mt-4">
+                            {selectedClientDetails?.forms?.find(f => f.type === 'nutrition') && (() => {
+                              const nutritionForm = selectedClientDetails.forms.find(f => f.type === 'nutrition');
+                              const data = nutritionForm?.data || {};
+                              return (
+                                <Card
+                                  className="border-2 border-blue-200 hover:border-blue-400 transition-all cursor-pointer hover:shadow-lg"
+                                  onClick={() => setSelectedHistoryItem({ type: 'nutrition', data: nutritionForm })}
+                                >
+                                  <CardHeader className="bg-blue-50">
+                                    <CardTitle className="text-lg flex items-center gap-2">
+                                      📝 Cuestionario de Nutrición
+                                    </CardTitle>
+                                    <p className="text-sm text-gray-600">
+                                      {new Date(nutritionForm.submitted_at).toLocaleDateString('es-ES')}
+                                    </p>
+                                  </CardHeader>
+                                  <CardContent>
+                                    <div className="grid grid-cols-2 gap-2 text-sm mb-3">
+                                      <div>
+                                        <div className="font-semibold text-gray-600">Peso inicial</div>
+                                        <div>{data.peso_actual} kg</div>
+                                      </div>
+                                      <div>
+                                        <div className="font-semibold text-gray-600">Objetivo</div>
+                                        <div className="text-xs">{data.objetivo_principal?.substring(0, 20)}...</div>
+                                      </div>
+                                    </div>
+                                    <Button variant="outline" className="w-full">
+                                      Ver Respuestas Completas
+                                    </Button>
+                                  </CardContent>
+                                </Card>
+                              );
+                            })()}
+                            
+                            {/* Seguimientos Mensuales - Cards */}
                                   {(() => {
                                     const form = selectedClientDetails.forms.find(f => f.type === 'nutrition');
                                     const data = form?.data || {};
