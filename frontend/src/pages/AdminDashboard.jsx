@@ -1894,6 +1894,89 @@ const AdminDashboard = () => {
                           )}
                         </TabsContent>
 
+
+                        {/* Follow-Up Tab */}
+                        <TabsContent value="followup" className="space-y-4">
+                          <h3 className="text-lg font-semibold flex items-center gap-2">
+                            📊 Seguimientos Mensuales
+                          </h3>
+
+                          {followUps.length === 0 ? (
+                            <div className="bg-gray-50 p-8 rounded-lg text-center">
+                              <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                              <p className="text-gray-500">
+                                Este cliente aún no ha completado ningún seguimiento mensual.
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="space-y-4">
+                              {followUps.map((followUp, index) => (
+                                <Card
+                                  key={followUp.id}
+                                  className="border-2 hover:border-purple-400 transition cursor-pointer"
+                                  onClick={() => setSelectedFollowUp(followUp)}
+                                >
+                                  <CardHeader>
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold text-lg">
+                                          {followUps.length - index}
+                                        </div>
+                                        <div>
+                                          <CardTitle className="text-lg">
+                                            Seguimiento #{followUps.length - index}
+                                          </CardTitle>
+                                          <p className="text-sm text-gray-600">
+                                            {new Date(followUp.submission_date).toLocaleDateString('es-ES')} • 
+                                            Día {followUp.days_since_last_plan}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="flex gap-2">
+                                        {followUp.status === 'pending_analysis' && (
+                                          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                                            ⏳ Pendiente
+                                          </Badge>
+                                        )}
+                                        {followUp.status === 'analyzed' && (
+                                          <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                                            ✅ Analizado
+                                          </Badge>
+                                        )}
+                                        {followUp.status === 'plan_generated' && (
+                                          <Badge variant="secondary" className="bg-green-100 text-green-800">
+                                            🎯 Plan Generado
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </CardHeader>
+                                  <CardContent>
+                                    <div className="grid grid-cols-3 gap-4 text-sm">
+                                      <div>
+                                        <div className="font-semibold text-gray-600">Medición</div>
+                                        <div className="capitalize">
+                                          {followUp.measurement_type === 'smart_scale' && '📱 Báscula inteligente'}
+                                          {followUp.measurement_type === 'tape_measure' && '📏 Cinta métrica'}
+                                          {followUp.measurement_type === 'none' && '❌ Sin medición'}
+                                        </div>
+                                      </div>
+                                      <div>
+                                        <div className="font-semibold text-gray-600">Adherencia</div>
+                                        <div className="truncate">{followUp.adherence?.constancia_entrenamiento?.substring(0, 30)}...</div>
+                                      </div>
+                                      <div>
+                                        <div className="font-semibold text-gray-600">Objetivo próximo mes</div>
+                                        <div className="truncate">{followUp.feedback?.objetivo_proximo_mes?.substring(0, 30)}...</div>
+                                      </div>
+                                    </div>
+                                  </CardContent>
+                                </Card>
+                              ))}
+                            </div>
+                          )}
+                        </TabsContent>
+
                         {/* Sessions Tab - placeholder */}
                         <TabsContent value="sessions">
                           <div className="bg-gray-50 p-8 rounded-lg text-center">
