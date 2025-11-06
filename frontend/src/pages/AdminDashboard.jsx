@@ -1359,24 +1359,6 @@ const AdminDashboard = () => {
                             Templates
                           </Button>
                           
-                          {selectedClient.subscription?.archived ? (
-                            <Button
-                              size="sm"
-                              onClick={() => handleUnarchiveClient(selectedClient.id)}
-                              className="bg-green-500 hover:bg-green-600"
-                            >
-                              Desarchivar
-                            </Button>
-                          ) : (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleArchiveClient(selectedClient.id)}
-                              className="border-orange-300 text-orange-600 hover:bg-orange-50"
-                            >
-                              Archivar
-                            </Button>
-                          )}
                           {selectedClient.subscription?.payment_status === 'pending' && (
                             <Button
                               size="sm"
