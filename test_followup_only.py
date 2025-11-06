@@ -327,8 +327,13 @@ class FollowUpTester:
         if not self.admin_token:
             self.log_result("Verify Status Changed Back After Deactivation", False, "No admin token available")
             return False
+        
+        if not self.followup_test_user_id:
+            self.log_result("Verify Status Changed Back After Deactivation", False, "No test user ID available")
+            return False
             
-        url = f"{BACKEND_URL}/admin/pending-reviews"
+        # Check user directly via admin/clients endpoint
+        url = f"{BACKEND_URL}/admin/clients/{self.followup_test_user_id}"
         headers = {"Authorization": f"Bearer {self.admin_token}"}
         
         try:
@@ -336,28 +341,17 @@ class FollowUpTester:
             
             if response.status_code == 200:
                 data = response.json()
-                pending_reviews = data.get("pending_reviews", [])
+                user_data = data.get("user", {})
                 
-                # Find our test user
-                test_user_review = None
-                for review in pending_reviews:
-                    if review.get("user_id") == self.followup_test_user_id:
-                        test_user_review = review
-                        break
+                followup_activated = user_data.get("followup_activated", False)
                 
-                if test_user_review:
-                    followup_activated = test_user_review.get("followup_activated")
-                    
-                    if followup_activated == False:
-                        self.log_result("Verify Status Changed Back After Deactivation", True, 
-                                      f"Follow-up correctly deactivated: followup_activated={followup_activated}")
-                        return True
-                    else:
-                        self.log_result("Verify Status Changed Back After Deactivation", False, 
-                                      f"Follow-up not deactivated: followup_activated={followup_activated}")
+                if followup_activated == False:
+                    self.log_result("Verify Status Changed Back After Deactivation", True, 
+                                  f"Follow-up correctly deactivated: followup_activated={followup_activated}")
+                    return True
                 else:
                     self.log_result("Verify Status Changed Back After Deactivation", False, 
-                                  "Test user not found in pending reviews")
+                                  f"Follow-up not deactivated: followup_activated={followup_activated}")
             else:
                 self.log_result("Verify Status Changed Back After Deactivation", False, 
                               f"HTTP {response.status_code}", response.text)
