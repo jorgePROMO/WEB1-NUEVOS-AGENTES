@@ -2795,12 +2795,12 @@ const AdminDashboard = () => {
                         </Button>
                         <Button
                           onClick={async () => {
-                            if (!selectedFollowUp.id) return;
+                            if (!selectedFollowUp.id || !selectedClient?.id) return;
                             
                             setGeneratingAnalysis(true);
                             try {
                               const response = await axios.post(
-                                `${API}/admin/follow-ups/${selectedFollowUp.id}/generate-analysis`,
+                                `${API}/admin/users/${selectedClient.id}/followups/${selectedFollowUp.id}/analyze-with-ia`,
                                 {},
                                 {
                                   headers: { Authorization: `Bearer ${token}` },
@@ -2808,7 +2808,7 @@ const AdminDashboard = () => {
                                 }
                               );
                               setFollowUpAnalysis(response.data.analysis);
-                              setSelectedFollowUp({...selectedFollowUp, analysis: response.data.analysis});
+                              setSelectedFollowUp({...selectedFollowUp, ai_analysis: response.data.analysis, status: 'analyzed'});
                               alert('✅ Análisis generado con IA');
                             } catch (error) {
                               alert(`Error: ${error.response?.data?.detail || error.message}`);
