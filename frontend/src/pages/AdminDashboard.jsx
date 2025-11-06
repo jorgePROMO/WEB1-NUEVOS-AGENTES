@@ -2336,11 +2336,6 @@ const AdminDashboard = () => {
                             })()}
                             
                             {/* Seguimientos Mensuales - Cards */}
-
-                              );
-                            })()}
-                            
-                            {/* Seguimientos Mensuales - Cards */}
                             {followUps.map((followUp, index) => (
                               <Card
                                 key={followUp.id}
