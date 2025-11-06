@@ -614,6 +614,9 @@ async def get_user_dashboard(request: Request):
     alerts = await db.alerts.find({"user_id": user_id}).to_list(100)
     for alert in alerts:
         alert["id"] = str(alert["_id"])
+        # Convertir fechas a ISO string
+        if "date" in alert and alert["date"]:
+            alert["date"] = alert["date"].isoformat() if hasattr(alert["date"], 'isoformat') else alert["date"]
     
     # Count unread alerts
     unread_count = len([a for a in alerts if not a.get("read", False)])
