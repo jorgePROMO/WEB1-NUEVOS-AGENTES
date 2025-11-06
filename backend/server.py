@@ -3689,7 +3689,8 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
             "type": "nutrition",  # IMPORTANTE: categoría nutrición
             "file_path": str(pdf_full_path),
             "sent_date": datetime.now(timezone.utc),
-            "created_at": datetime.now(timezone.utc)
+            "created_at": datetime.now(timezone.utc),
+            "uploaded_by": "admin"  # PDF generado por admin
         }
         
         await db.pdfs.insert_one(pdf_doc)
