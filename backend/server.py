@@ -3605,7 +3605,7 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
             <style>
                 body {{
                     font-family: 'Arial', sans-serif;
-                    line-height: 1.6;
+                    line-height: 1.8;
                     color: #333;
                     max-width: 800px;
                     margin: 0 auto;
@@ -3613,10 +3613,21 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
                 }}
                 h1, h2, h3 {{
                     color: #2563eb;
+                    margin-top: 20px;
+                    margin-bottom: 10px;
                 }}
                 h1 {{
                     border-bottom: 3px solid #2563eb;
                     padding-bottom: 10px;
+                }}
+                p {{
+                    margin-bottom: 8px;
+                    white-space: pre-wrap;
+                }}
+                strong {{
+                    font-weight: bold;
+                    display: inline-block;
+                    margin-top: 15px;
                 }}
                 table {{
                     width: 100%;
@@ -3631,6 +3642,9 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
                 th {{
                     background-color: #2563eb;
                     color: white;
+                }}
+                br {{
+                    line-height: 2.0;
                 }}
                 .header {{
                     text-align: center;
