@@ -2980,13 +2980,13 @@ const AdminDashboard = () => {
                     />
                   ) : (
                     <div className="min-h-[200px] p-4 bg-gray-50 rounded-lg">
-                      {selectedFollowUp.analysis ? (
-                        <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
-                          {selectedFollowUp.analysis}
-                        </pre>
+                      {selectedFollowUp.ai_analysis ? (
+                        <div className="whitespace-pre-wrap font-sans text-sm leading-relaxed prose prose-sm max-w-none">
+                          {selectedFollowUp.ai_analysis}
+                        </div>
                       ) : (
                         <p className="text-gray-500 italic">
-                          No hay análisis disponible. Haz clic en "Editar" para agregar uno o "Generar con IA" para crear uno automáticamente.
+                          No hay análisis disponible. Haz clic en "Editar" para agregar uno manualmente o "🤖 Generar con IA" para crear un análisis automático basado en el seguimiento.
                         </p>
                       )}
                     </div>
