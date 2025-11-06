@@ -20,7 +20,8 @@ import {
   ExternalLink,
   Upload,
   Trash2,
-  UtensilsCrossed
+  UtensilsCrossed,
+  RefreshCw
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { UserCalendar } from '../components/Calendar';
