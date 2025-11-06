@@ -1368,17 +1368,51 @@ const AdminDashboard = () => {
 
                         {/* Forms Tab */}
                         <TabsContent value="forms" className="space-y-4">
+                          {/* Cuestionario de Seguimiento Mensual */}
+                          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border-2 border-purple-300">
+                            <h3 className="font-semibold mb-3 flex items-center gap-2">
+                              📊 Cuestionario de Seguimiento Mensual
+                            </h3>
+                            <p className="text-sm text-gray-700 mb-3">
+                              Envía el cuestionario de seguimiento al cliente. Podrás analizar sus respuestas y generar un nuevo plan.
+                            </p>
+                            <div className="grid grid-cols-2 gap-2">
+                              <Button
+                                onClick={() => {
+                                  const message = `Hola ${selectedClient.name}! 👋\n\nEs momento de hacer tu seguimiento mensual. Por favor completa este cuestionario para evaluar tu progreso:\n\n${window.location.origin}/dashboard\n\n¡Gracias! 💪`;
+                                  const whatsappUrl = `https://wa.me/${selectedClient.phone?.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
+                                  window.open(whatsappUrl, '_blank');
+                                }}
+                                className="bg-green-600 hover:bg-green-700"
+                              >
+                                <MessageSquare className="h-4 w-4 mr-2" />
+                                WhatsApp
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(`${window.location.origin}/dashboard`);
+                                  alert('✅ Link copiado al portapapeles');
+                                }}
+                                variant="outline"
+                                className="border-purple-300"
+                              >
+                                <Copy className="h-4 w-4 mr-2" />
+                                Copiar Link
+                              </Button>
+                            </div>
+                          </div>
+
                           <div className="bg-blue-50 p-4 rounded-lg">
                             <h3 className="font-semibold mb-3 flex items-center gap-2">
                               <Send className="h-5 w-5" />
-                              Enviar nuevo formulario
+                              Enviar otro formulario
                             </h3>
                             <div className="space-y-3">
                               <div>
                                 <Label htmlFor="form-title">Título del formulario</Label>
                                 <Input
                                   id="form-title"
-                                  placeholder="Ej: Cuestionario de seguimiento mensual"
+                                  placeholder="Ej: Cuestionario personalizado"
                                   value={formData.title}
                                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                 />
