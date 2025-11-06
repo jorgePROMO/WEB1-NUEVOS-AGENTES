@@ -531,15 +531,18 @@ test_plan:
 backend:
   - task: "Pending Reviews API"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Implemented GET /api/admin/pending-reviews endpoint. Fetches all team clients with nutrition_plan generated >= 30 days ago. Returns user info, days_since_plan, status (pending/activated/completed), followup_activated flag, and last_followup_id if exists. Sorts by days_since_plan (most urgent first). Ready for testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ GET /api/admin/pending-reviews - Endpoint working correctly. Fixed router inclusion issue (endpoints were defined after app.include_router). Successfully returns pending_reviews array and count. Response structure validated with all required fields: user_id, name, email, phone, days_since_plan, last_plan_date, status, status_date, followup_activated, last_followup_id. Admin authentication working correctly with ecjtrainer@gmail.com/jorge3007."
 
   - task: "Follow-Up Activation API"
     implemented: true
