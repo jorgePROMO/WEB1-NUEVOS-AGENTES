@@ -4801,7 +4801,7 @@ async def generate_plan_from_follow_up(user_id: str, followup_id: str, request: 
         return {
             "success": True,
             "plan_id": plan_id,
-            "plan_content": plan_content,
+            "plan_content": result["plan_verificado"],
             "message": "Nuevo plan de nutrición generado correctamente"
         }
         
