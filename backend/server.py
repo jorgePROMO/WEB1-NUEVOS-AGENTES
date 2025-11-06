@@ -640,7 +640,8 @@ async def get_user_dashboard(request: Request):
             "role": user["role"],
             "subscription": user["subscription"],
             "next_review": user.get("next_review"),
-            "nutrition_plan": nutrition_plan  # Add nutrition plan info
+            "nutrition_plan": nutrition_plan,  # Add nutrition plan info
+            "followup_activated": user.get("followup_activated", False)  # Incluir estado de activación del cuestionario de seguimiento
         },
         "forms": forms,
         "pdfs": pdfs,
