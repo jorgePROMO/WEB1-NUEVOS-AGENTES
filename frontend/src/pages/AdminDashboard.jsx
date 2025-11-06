@@ -2196,8 +2196,7 @@ const AdminDashboard = () => {
                               {followUps.map((followUp, index) => (
                                 <Card
                                   key={followUp.id}
-                                  className="border-2 hover:border-purple-400 transition cursor-pointer"
-                                  onClick={() => setSelectedFollowUp(followUp)}
+                                  className="border-2 border-purple-200"
                                 >
                                   <CardHeader>
                                     <div className="flex items-center justify-between">
@@ -2210,8 +2209,12 @@ const AdminDashboard = () => {
                                             Seguimiento #{followUps.length - index}
                                           </CardTitle>
                                           <p className="text-sm text-gray-600">
-                                            {new Date(followUp.submission_date).toLocaleDateString('es-ES')} • 
-                                            Día {followUp.days_since_last_plan}
+                                            {new Date(followUp.submission_date).toLocaleDateString('es-ES', { 
+                                              weekday: 'long', 
+                                              year: 'numeric', 
+                                              month: 'long', 
+                                              day: 'numeric' 
+                                            })} • Día {followUp.days_since_last_plan} desde último plan
                                           </p>
                                         </div>
                                       </div>
@@ -2234,24 +2237,120 @@ const AdminDashboard = () => {
                                       </div>
                                     </div>
                                   </CardHeader>
-                                  <CardContent>
-                                    <div className="grid grid-cols-3 gap-4 text-sm">
-                                      <div>
-                                        <div className="font-semibold text-gray-600">Medición</div>
-                                        <div className="capitalize">
-                                          {followUp.measurement_type === 'smart_scale' && '📱 Báscula inteligente'}
-                                          {followUp.measurement_type === 'tape_measure' && '📏 Cinta métrica'}
-                                          {followUp.measurement_type === 'none' && '❌ Sin medición'}
+                                  <CardContent className="space-y-6">
+                                    {/* Mediciones */}
+                                    {followUp.measurements && (
+                                      <div className="bg-blue-50 p-4 rounded-lg">
+                                        <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
+                                          📊 Mediciones ({followUp.measurement_type === 'smart_scale' ? '📱 Báscula inteligente' : '📏 Cinta métrica'})
+                                        </h4>
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                          {Object.entries(followUp.measurements).map(([key, value]) => (
+                                            <div key={key} className="bg-white p-3 rounded">
+                                              <div className="text-xs text-gray-600 capitalize">{key.replace(/_/g, ' ')}</div>
+                                              <div className="text-lg font-bold">{value}</div>
+                                            </div>
+                                          ))}
                                         </div>
                                       </div>
-                                      <div>
-                                        <div className="font-semibold text-gray-600">Adherencia</div>
-                                        <div className="truncate">{followUp.adherence?.constancia_entrenamiento?.substring(0, 30)}...</div>
+                                    )}
+
+                                    {/* Adherencia */}
+                                    <div className="bg-green-50 p-4 rounded-lg">
+                                      <h4 className="font-bold text-lg mb-3">💪 Adherencia</h4>
+                                      <div className="space-y-2">
+                                        <div>
+                                          <div className="text-sm font-semibold text-gray-700">Entrenamiento:</div>
+                                          <div className="text-gray-900">{followUp.adherence?.constancia_entrenamiento}</div>
+                                        </div>
+                                        <div>
+                                          <div className="text-sm font-semibold text-gray-700">Alimentación:</div>
+                                          <div className="text-gray-900">{followUp.adherence?.seguimiento_alimentacion}</div>
+                                        </div>
                                       </div>
-                                      <div>
-                                        <div className="font-semibold text-gray-600">Objetivo próximo mes</div>
-                                        <div className="truncate">{followUp.feedback?.objetivo_proximo_mes?.substring(0, 30)}...</div>
+                                    </div>
+
+                                    {/* Bienestar */}
+                                    <div className="bg-yellow-50 p-4 rounded-lg">
+                                      <h4 className="font-bold text-lg mb-3">😊 Bienestar</h4>
+                                      <div className="space-y-2">
+                                        <div>
+                                          <div className="text-sm font-semibold text-gray-700">Energía y ánimo:</div>
+                                          <div className="text-gray-900">{followUp.wellbeing?.energia_animo_motivacion}</div>
+                                        </div>
+                                        <div>
+                                          <div className="text-sm font-semibold text-gray-700">Sueño y estrés:</div>
+                                          <div className="text-gray-900">{followUp.wellbeing?.sueno_estres}</div>
+                                        </div>
+                                        {followUp.wellbeing?.factores_externos && (
+                                          <div>
+                                            <div className="text-sm font-semibold text-gray-700">Factores externos:</div>
+                                            <div className="text-gray-900">{followUp.wellbeing.factores_externos}</div>
+                                          </div>
+                                        )}
                                       </div>
+                                    </div>
+
+                                    {/* Cambios Percibidos */}
+                                    <div className="bg-purple-50 p-4 rounded-lg">
+                                      <h4 className="font-bold text-lg mb-3">📈 Cambios Percibidos</h4>
+                                      <div className="space-y-2">
+                                        <div>
+                                          <div className="text-sm font-semibold text-gray-700">Molestias/dolor:</div>
+                                          <div className="text-gray-900">{followUp.changes_perceived?.molestias_dolor_lesion}</div>
+                                        </div>
+                                        <div>
+                                          <div className="text-sm font-semibold text-gray-700">Cambios corporales:</div>
+                                          <div className="text-gray-900">{followUp.changes_perceived?.cambios_corporales}</div>
+                                        </div>
+                                        <div>
+                                          <div className="text-sm font-semibold text-gray-700">Fuerza y rendimiento:</div>
+                                          <div className="text-gray-900">{followUp.changes_perceived?.fuerza_rendimiento}</div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Feedback */}
+                                    <div className="bg-pink-50 p-4 rounded-lg">
+                                      <h4 className="font-bold text-lg mb-3">💬 Feedback del Cliente</h4>
+                                      <div className="space-y-2">
+                                        <div>
+                                          <div className="text-sm font-semibold text-gray-700">Objetivo próximo mes:</div>
+                                          <div className="text-gray-900">{followUp.feedback?.objetivo_proximo_mes}</div>
+                                        </div>
+                                        <div>
+                                          <div className="text-sm font-semibold text-gray-700">Cambios deseados:</div>
+                                          <div className="text-gray-900">{followUp.feedback?.cambios_deseados}</div>
+                                        </div>
+                                        {followUp.feedback?.comentarios_adicionales && (
+                                          <div>
+                                            <div className="text-sm font-semibold text-gray-700">Comentarios:</div>
+                                            <div className="text-gray-900">{followUp.feedback.comentarios_adicionales}</div>
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+
+                                    {/* Acciones */}
+                                    <div className="flex gap-2 pt-4 border-t">
+                                      <Button
+                                        onClick={() => setSelectedFollowUp(followUp)}
+                                        variant="outline"
+                                        className="flex-1"
+                                      >
+                                        👁️ Ver en Modal Completo
+                                      </Button>
+                                      {followUp.ai_analysis && (
+                                        <Button
+                                          onClick={() => {
+                                            setSelectedFollowUp(followUp);
+                                            setFollowUpAnalysis(followUp.ai_analysis);
+                                          }}
+                                          className="flex-1 bg-purple-600 hover:bg-purple-700"
+                                        >
+                                          📄 Ver Análisis IA
+                                        </Button>
+                                      )}
                                     </div>
                                   </CardContent>
                                 </Card>
