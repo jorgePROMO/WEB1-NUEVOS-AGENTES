@@ -151,7 +151,7 @@ async def register(user_data: UserCreate):
     # Enviar email de verificación
     try:
         from email_utils import send_email
-        frontend_url = os.environ.get('FRONTEND_URL', 'https://crm-fusion-3.preview.emergentagent.com')
+        frontend_url = os.environ.get('FRONTEND_URL', 'https://followup-system-1.preview.emergentagent.com')
         verification_link = f"{frontend_url}/verify-email?token={verification_token}"
         
         email_html = f"""
@@ -374,7 +374,7 @@ async def resend_verification_email(email: str):
         # Enviar nuevo email
         try:
             from email_utils import send_email
-            frontend_url = os.environ.get('FRONTEND_URL', 'https://crm-fusion-3.preview.emergentagent.com')
+            frontend_url = os.environ.get('FRONTEND_URL', 'https://followup-system-1.preview.emergentagent.com')
             verification_link = f"{frontend_url}/verify-email?token={verification_token}"
             
             email_html = f"""
