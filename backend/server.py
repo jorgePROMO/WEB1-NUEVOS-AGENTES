@@ -594,6 +594,9 @@ async def get_user_dashboard(request: Request):
     forms = await db.forms.find({"user_id": user_id}).to_list(100)
     for form in forms:
         form["id"] = str(form["_id"])
+        # Convertir fechas a ISO string
+        if "sent_date" in form and form["sent_date"]:
+            form["sent_date"] = form["sent_date"].isoformat() if hasattr(form["sent_date"], 'isoformat') else form["sent_date"]
     
     # Get PDFs
     pdfs = await db.pdfs.find({"user_id": user_id}).to_list(100)
