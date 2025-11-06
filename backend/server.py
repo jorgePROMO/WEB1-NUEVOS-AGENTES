@@ -24,7 +24,8 @@ from models import (
     ExternalClientCreate, ExternalClientUpdate, ExternalClientInDB,
     MessageTemplate, TemplateCreate, TemplateResponse, TemplateUpdate,
     ReminderConfig, ClientRiskStatus,
-    NutritionQuestionnaireSubmit, NutritionPlanResponse
+    NutritionQuestionnaireSubmit, NutritionPlanResponse,
+    FollowUpSubmit, FollowUpSubmissionInDB
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
