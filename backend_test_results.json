@@ -1,275 +1,345 @@
 [
   {
     "test": "Admin Login Production Credentials",
-    "success": true,
-    "message": "Admin logged in successfully with production credentials. Role: admin",
-    "timestamp": "2025-11-04T13:53:29.652458",
-    "response_data": null
+    "success": false,
+    "message": "HTTP 502",
+    "timestamp": "2025-11-06T14:37:14.883130",
+    "response_data": ""
   },
   {
     "test": "Soft Delete - Register User",
-    "success": true,
-    "message": "Test user registered for soft delete testing. ID: 1762264409695359",
-    "timestamp": "2025-11-04T13:53:31.014439",
-    "response_data": null
+    "success": false,
+    "message": "HTTP 502",
+    "timestamp": "2025-11-06T14:37:14.917984",
+    "response_data": ""
   },
   {
     "test": "Verify User in Admin Clients",
-    "success": true,
-    "message": "Test user found in admin clients list. Total clients: 3",
-    "timestamp": "2025-11-04T13:53:31.072881",
+    "success": false,
+    "message": "No admin token or user ID available",
+    "timestamp": "2025-11-06T14:37:14.918506",
     "response_data": null
   },
   {
     "test": "Soft Delete User",
-    "success": true,
-    "message": "User soft deleted successfully: Client deleted successfully. They will not be able to login again.",
-    "timestamp": "2025-11-04T13:53:31.159640",
+    "success": false,
+    "message": "No admin token or user ID available",
+    "timestamp": "2025-11-06T14:37:14.918516",
     "response_data": null
   },
   {
     "test": "Verify Deleted User Not in Clients",
-    "success": true,
-    "message": "Deleted user correctly NOT found in admin clients list. Total clients: 2",
-    "timestamp": "2025-11-04T13:53:31.203276",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:14.918521",
     "response_data": null
   },
   {
     "test": "Deleted User Auth Me Fails",
-    "success": true,
-    "message": "Deleted user correctly blocked from /auth/me with 403 Forbidden",
-    "timestamp": "2025-11-04T13:53:31.242038",
+    "success": false,
+    "message": "No deleted user token available",
+    "timestamp": "2025-11-06T14:37:14.918530",
     "response_data": null
   },
   {
     "test": "Deleted User Dashboard Fails",
-    "success": true,
-    "message": "Deleted user correctly blocked from dashboard with 403 Forbidden",
-    "timestamp": "2025-11-04T13:53:31.286610",
+    "success": false,
+    "message": "No deleted user token available",
+    "timestamp": "2025-11-06T14:37:14.918534",
     "response_data": null
   },
   {
     "test": "Cache Headers Verification",
-    "success": true,
-    "message": "All required no-cache headers present: Cache-Control='no-store, no-cache, must-revalidate, max-age=0', Pragma='no-cache', Expires='0'",
-    "timestamp": "2025-11-04T13:53:31.329267",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:14.918544",
     "response_data": null
   },
   {
     "test": "Email Verification - Register User",
-    "success": true,
-    "message": "User registered with email verification message: Registro exitoso. Por favor verifica tu email para activar tu cuenta.",
-    "timestamp": "2025-11-04T13:53:32.306348",
-    "response_data": null
+    "success": false,
+    "message": "HTTP 502",
+    "timestamp": "2025-11-06T14:37:14.958808",
+    "response_data": ""
   },
   {
     "test": "Verify Unverified User in Clients",
-    "success": true,
-    "message": "Unverified user found with email_verified=false",
-    "timestamp": "2025-11-04T13:53:32.345720",
+    "success": false,
+    "message": "No admin token or user email available",
+    "timestamp": "2025-11-06T14:37:14.959367",
     "response_data": null
   },
   {
     "test": "Unverified User Login Fails",
-    "success": true,
-    "message": "Unverified user correctly blocked from login: Por favor verifica tu email antes de iniciar sesi\u00f3n. Revisa tu bandeja de entrada.",
-    "timestamp": "2025-11-04T13:53:32.645842",
+    "success": false,
+    "message": "No test user email available",
+    "timestamp": "2025-11-06T14:37:14.959378",
     "response_data": null
   },
   {
     "test": "Admin Clients Consistency",
-    "success": true,
-    "message": "Admin clients data consistent across 3 calls. Total: 3, No deleted users found",
-    "timestamp": "2025-11-04T13:53:32.772449",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:14.959383",
     "response_data": null
   },
   {
     "test": "Register New User",
     "success": false,
-    "message": "HTTP 422",
-    "timestamp": "2025-11-04T13:53:32.811030",
-    "response_data": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"phone\"],\"msg\":\"Field required\",\"input\":{\"username\":\"test_user\",\"email\":\"test@example.com\",\"password\":\"Test123!\"},\"url\":\"https://errors.pydantic.dev/2.12/v/missing\"}]}"
+    "message": "HTTP 502",
+    "timestamp": "2025-11-06T14:37:15.000353",
+    "response_data": ""
   },
   {
     "test": "Admin Login",
     "success": false,
-    "message": "HTTP 401",
-    "timestamp": "2025-11-04T13:53:32.848620",
-    "response_data": "{\"detail\":\"Incorrect email or password\"}"
+    "message": "HTTP 502",
+    "timestamp": "2025-11-06T14:37:15.035891",
+    "response_data": ""
   },
   {
     "test": "User Dashboard",
     "success": false,
     "message": "No user token available",
-    "timestamp": "2025-11-04T13:53:32.849290",
+    "timestamp": "2025-11-06T14:37:15.036396",
     "response_data": null
   },
   {
     "test": "Admin List Clients",
-    "success": true,
-    "message": "Clients retrieved. Total: 3, Active: 2, Pending: 1",
-    "timestamp": "2025-11-04T13:53:32.886104",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:15.036417",
     "response_data": null
   },
   {
     "test": "Admin Send Form",
     "success": false,
     "message": "No admin token or test user ID available",
-    "timestamp": "2025-11-04T13:53:32.886681",
+    "timestamp": "2025-11-06T14:37:15.036422",
     "response_data": null
   },
   {
     "test": "Admin Verify Payment",
     "success": false,
     "message": "No admin token or test user ID available",
-    "timestamp": "2025-11-04T13:53:32.886692",
+    "timestamp": "2025-11-06T14:37:15.036426",
     "response_data": null
   },
   {
     "test": "Diagnostic Questionnaire",
-    "success": true,
-    "message": "Questionnaire submitted successfully. Response: Cuestionario enviado correctamente",
-    "timestamp": "2025-11-04T13:53:53.837218",
-    "response_data": null
+    "success": false,
+    "message": "HTTP 502",
+    "timestamp": "2025-11-06T14:37:15.076195",
+    "response_data": ""
   },
   {
     "test": "Admin Login for CRM",
-    "success": true,
-    "message": "Admin logged in successfully with correct credentials. Role: admin",
-    "timestamp": "2025-11-04T13:53:54.112821",
-    "response_data": null
+    "success": false,
+    "message": "HTTP 502",
+    "timestamp": "2025-11-06T14:37:15.110778",
+    "response_data": ""
   },
   {
     "test": "Create External Client",
-    "success": true,
-    "message": "External client created successfully. ID: 1762264434148024",
-    "timestamp": "2025-11-04T13:53:54.196356",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:15.111268",
     "response_data": null
   },
   {
     "test": "Get External Clients List",
-    "success": true,
-    "message": "External clients list retrieved. Total: 1",
-    "timestamp": "2025-11-04T13:53:54.236891",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:15.111278",
     "response_data": null
   },
   {
     "test": "Get External Client Detail",
-    "success": true,
-    "message": "External client detail retrieved. Name: Cliente Test CRM",
-    "timestamp": "2025-11-04T13:53:54.275613",
+    "success": false,
+    "message": "No admin token or client ID available",
+    "timestamp": "2025-11-06T14:37:15.111283",
     "response_data": null
   },
   {
     "test": "Update External Client Basic Info",
-    "success": true,
-    "message": "Basic info updated successfully: Cliente actualizado",
-    "timestamp": "2025-11-04T13:53:54.319553",
+    "success": false,
+    "message": "No admin token or client ID available",
+    "timestamp": "2025-11-06T14:37:15.111288",
     "response_data": null
   },
   {
     "test": "Update External Client Plan Weeks",
-    "success": true,
-    "message": "Plan weeks updated successfully: Cliente actualizado",
-    "timestamp": "2025-11-04T13:53:54.363660",
+    "success": false,
+    "message": "No admin token or client ID available",
+    "timestamp": "2025-11-06T14:37:15.111294",
     "response_data": null
   },
   {
     "test": "Update External Client Start Date",
-    "success": true,
-    "message": "Start date updated successfully: Cliente actualizado",
-    "timestamp": "2025-11-04T13:53:54.403032",
+    "success": false,
+    "message": "No admin token or client ID available",
+    "timestamp": "2025-11-06T14:37:15.111298",
     "response_data": null
   },
   {
     "test": "Update External Client Weeks Completed",
-    "success": true,
-    "message": "Weeks completed updated successfully: Cliente actualizado",
-    "timestamp": "2025-11-04T13:53:54.445121",
+    "success": false,
+    "message": "No admin token or client ID available",
+    "timestamp": "2025-11-06T14:37:15.111303",
     "response_data": null
   },
   {
     "test": "Update External Client Partial",
-    "success": true,
-    "message": "Partial update successful: Cliente actualizado",
-    "timestamp": "2025-11-04T13:53:54.485773",
+    "success": false,
+    "message": "No admin token or client ID available",
+    "timestamp": "2025-11-06T14:37:15.111308",
     "response_data": null
   },
   {
     "test": "Update External Client 404",
-    "success": true,
-    "message": "Correctly returned 404 for non-existent client",
-    "timestamp": "2025-11-04T13:53:54.524246",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:15.111313",
     "response_data": null
   },
   {
     "test": "Verify Updates Applied",
-    "success": true,
-    "message": "All updates were applied correctly",
-    "timestamp": "2025-11-04T13:53:54.563796",
+    "success": false,
+    "message": "No admin token or client ID available",
+    "timestamp": "2025-11-06T14:37:15.111318",
     "response_data": null
   },
   {
     "test": "Update External Client Status",
-    "success": true,
-    "message": "Status updated successfully: Estado actualizado",
-    "timestamp": "2025-11-04T13:53:54.601680",
+    "success": false,
+    "message": "No admin token or client ID available",
+    "timestamp": "2025-11-06T14:37:15.111323",
     "response_data": null
   },
   {
     "test": "Delete External Client",
-    "success": true,
-    "message": "Test client deleted successfully: Cliente eliminado",
-    "timestamp": "2025-11-04T13:53:54.644411",
+    "success": false,
+    "message": "No admin token or client ID available",
+    "timestamp": "2025-11-06T14:37:15.111327",
     "response_data": null
   },
   {
     "test": "Admin Login for GPT Tests",
     "success": false,
-    "message": "HTTP 401",
-    "timestamp": "2025-11-04T13:53:54.680630",
-    "response_data": "{\"detail\":\"Incorrect email or password\"}"
+    "message": "HTTP 502",
+    "timestamp": "2025-11-06T14:37:15.148784",
+    "response_data": ""
   },
   {
     "test": "Submit Questionnaire with GPT Report",
-    "success": true,
-    "message": "Questionnaire submitted successfully. Response: Cuestionario enviado correctamente",
-    "timestamp": "2025-11-04T13:54:11.683034",
-    "response_data": null
+    "success": false,
+    "message": "HTTP 502",
+    "timestamp": "2025-11-06T14:37:15.184574",
+    "response_data": ""
   },
   {
     "test": "Get Prospect Detail - Verify Report",
-    "success": true,
-    "message": "GPT report verified: generated=True, content_length=2942, generated_at=2025-11-04T13:54:10.500000",
-    "timestamp": "2025-11-04T13:54:11.797030",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:15.185130",
     "response_data": null
   },
   {
     "test": "Send Report via Email",
-    "success": true,
-    "message": "Report sent via email successfully: Informe enviado por email correctamente",
-    "timestamp": "2025-11-04T13:54:12.400970",
+    "success": false,
+    "message": "No admin token or prospect ID available",
+    "timestamp": "2025-11-06T14:37:15.185140",
     "response_data": null
   },
   {
     "test": "Verify Email Sent Status",
-    "success": true,
-    "message": "Email status verified: sent_at=2025-11-04T13:54:12.395000, sent_via=email",
-    "timestamp": "2025-11-04T13:54:12.443094",
+    "success": false,
+    "message": "No admin token or prospect ID available",
+    "timestamp": "2025-11-06T14:37:15.185145",
     "response_data": null
   },
   {
     "test": "Generate WhatsApp Link",
-    "success": true,
-    "message": "WhatsApp link generated successfully: phone=34612345678, link_length=4345",
-    "timestamp": "2025-11-04T13:54:12.483395",
+    "success": false,
+    "message": "No admin token or prospect ID available",
+    "timestamp": "2025-11-06T14:37:15.185151",
     "response_data": null
   },
   {
     "test": "Verify WhatsApp Sent Status",
-    "success": true,
-    "message": "WhatsApp status verified: sent_at=2025-11-04T13:54:12.479000, sent_via=whatsapp",
-    "timestamp": "2025-11-04T13:54:12.521148",
+    "success": false,
+    "message": "No admin token or prospect ID available",
+    "timestamp": "2025-11-06T14:37:15.185155",
+    "response_data": null
+  },
+  {
+    "test": "Admin Login for Follow-up Tests",
+    "success": false,
+    "message": "HTTP 502",
+    "timestamp": "2025-11-06T14:37:15.216120",
+    "response_data": ""
+  },
+  {
+    "test": "Get Pending Reviews",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:15.216615",
+    "response_data": null
+  },
+  {
+    "test": "Activate Follow-up for User",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:15.216625",
+    "response_data": null
+  },
+  {
+    "test": "Verify Status Changed to Activated",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:15.216631",
+    "response_data": null
+  },
+  {
+    "test": "Register User for Dashboard Test",
+    "success": false,
+    "message": "HTTP 502",
+    "timestamp": "2025-11-06T14:37:15.255964",
+    "response_data": ""
+  },
+  {
+    "test": "Get User Dashboard Follow-up Status",
+    "success": false,
+    "message": "No user token available",
+    "timestamp": "2025-11-06T14:37:15.256537",
+    "response_data": null
+  },
+  {
+    "test": "Deactivate Follow-up for User",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:15.256547",
+    "response_data": null
+  },
+  {
+    "test": "Verify Status Changed Back After Deactivation",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:15.256552",
+    "response_data": null
+  },
+  {
+    "test": "Test 404 for Non-existent User Activate",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:15.256557",
+    "response_data": null
+  },
+  {
+    "test": "Test 404 for Non-existent User Deactivate",
+    "success": false,
+    "message": "No admin token available",
+    "timestamp": "2025-11-06T14:37:15.256564",
     "response_data": null
   }
 ]
