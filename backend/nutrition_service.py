@@ -37,9 +37,9 @@ Genera EXACTAMENTE este formato:
 
 PLAN DE NUTRICIÓN PERSONALIZADO
 
-📋 **Cliente:** [Nombre del cliente]
-📅 **Fecha:** [Fecha actual en formato DD/MM/YYYY]
-🎯 **Objetivo:** [Objetivo específico del cliente]
+Hola [Nombre del cliente],
+
+Gracias por tu paciencia. Mi equipo ha estado trabajando en tu plan de nutrición personalizado para que alcances tu objetivo de [objetivo del cliente], y yo personalmente he supervisado cada detalle para asegurarnos de que todo esté perfectamente ajustado a tus necesidades.
 
 ---
 
