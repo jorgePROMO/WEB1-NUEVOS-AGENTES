@@ -148,7 +148,7 @@ const AdminDashboard = () => {
       setSelectedPlan(null);
       loadClientDetails(selectedClient.id);
       loadNutritionPlan(selectedClient.id);
-      loadFollowUps(selectedClient.id);
+      // loadFollowUps se llamará desde loadClientDetails después de cargar los datos
     }
   }, [selectedClient]);
 
