@@ -287,7 +287,20 @@ const AdminDashboard = () => {
         withCredentials: true
       });
       alert('✅ Cuestionario de seguimiento activado correctamente');
-      loadPendingReviews(); // Reload to update status
+      
+      // Reload pending reviews to update status
+      setLoadingPendingReviews(true);
+      try {
+        const response = await axios.get(`${API}/admin/pending-reviews`, {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        });
+        setPendingReviews(response.data.pending_reviews || []);
+      } catch (error) {
+        console.error('Error reloading pending reviews:', error);
+      } finally {
+        setLoadingPendingReviews(false);
+      }
     } catch (error) {
       console.error('Error activating follow-up:', error);
       alert('❌ Error al activar cuestionario de seguimiento');
