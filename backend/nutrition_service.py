@@ -192,6 +192,10 @@ async def generate_nutrition_plan(client_data: dict) -> dict:
         print("🤖 Ejecutando AGENTE 1 (Nutricionista)...")
         agent_1_prompt = AGENTE_1_PROMPT.format(client_data=client_data_json)
         
+        # Si hay contexto adicional del seguimiento, agregarlo
+        if client_data.get('context_adicional'):
+            agent_1_prompt += f"\n\n{client_data['context_adicional']}"
+        
         # Inicializar chat para Agente 1 con GPT-4o mini
         chat_agent_1 = LlmChat(
             api_key=OPENAI_API_KEY,
