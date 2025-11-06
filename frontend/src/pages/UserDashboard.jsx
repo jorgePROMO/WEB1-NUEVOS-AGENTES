@@ -63,6 +63,16 @@ const UserDashboard = () => {
       setPdfs(response.data.pdfs || []);
       setAlerts(response.data.alerts || []);
       setUnreadAlerts(response.data.unread_alerts || 0);
+      
+      // Calcular días desde el último plan de nutrición
+      if (response.data.user?.nutrition_plan?.generated_at) {
+        const planDate = new Date(response.data.user.nutrition_plan.generated_at);
+        const now = new Date();
+        const diffTime = Math.abs(now - planDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        setDaysSinceLastPlan(diffDays);
+      }
+      
       setLoading(false);
     } catch (error) {
       console.error('Error loading dashboard:', error);
