@@ -420,9 +420,9 @@ class FollowUpTester:
         tests = [
             self.test_admin_login,
             self.test_get_pending_reviews,
+            self.test_register_user_for_dashboard_test,
             self.test_activate_followup_for_user,
             self.test_verify_status_changed_to_activated,
-            self.test_register_user_for_dashboard_test,
             self.test_get_user_dashboard_followup_status,
             self.test_deactivate_followup_for_user,
             self.test_verify_status_changed_back_after_deactivation,
