@@ -691,12 +691,26 @@ async def get_client_details(user_id: str, request: Request):
     pdfs = await db.pdfs.find({"user_id": user_id}).to_list(100)
     alerts = await db.alerts.find({"user_id": user_id}).to_list(100)
     
+    # Get nutrition questionnaire submissions and add as 'nutrition' type form
+    nutrition_submissions = await db.nutrition_questionnaire_submissions.find({"user_id": user_id}).to_list(100)
+    
     for form in forms:
         form["id"] = str(form["_id"])
     for pdf in pdfs:
         pdf["id"] = str(pdf["_id"])
     for alert in alerts:
         alert["id"] = str(alert["_id"])
+    
+    # Add nutrition submissions to forms list with type 'nutrition'
+    for submission in nutrition_submissions:
+        forms.append({
+            "id": str(submission["_id"]),
+            "type": "nutrition",
+            "submitted_at": submission.get("submitted_at"),
+            "data": submission.get("responses", {}),
+            "plan_generated": submission.get("plan_generated", False),
+            "plan_id": submission.get("plan_id")
+        })
     
     user["id"] = str(user["_id"])
     del user["password"]
