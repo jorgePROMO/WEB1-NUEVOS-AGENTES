@@ -181,6 +181,18 @@ const UserDashboard = () => {
               <Button
                 variant="outline"
                 size="sm"
+                onClick={() => {
+                  loadDashboardData();
+                }}
+                className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4"
+                title="Actualizar datos"
+              >
+                <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Actualizar</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleLogout}
                 className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4"
               >
