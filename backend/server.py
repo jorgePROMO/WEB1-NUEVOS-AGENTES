@@ -599,6 +599,13 @@ async def get_user_dashboard(request: Request):
     pdfs = await db.pdfs.find({"user_id": user_id}).to_list(100)
     for pdf in pdfs:
         pdf["id"] = str(pdf["_id"])
+        # Convertir fechas a ISO string para que el frontend pueda parsearlas
+        if "sent_date" in pdf and pdf["sent_date"]:
+            pdf["upload_date"] = pdf["sent_date"].isoformat() if hasattr(pdf["sent_date"], 'isoformat') else pdf["sent_date"]
+        elif "upload_date" in pdf and pdf["upload_date"]:
+            pdf["upload_date"] = pdf["upload_date"].isoformat() if hasattr(pdf["upload_date"], 'isoformat') else pdf["upload_date"]
+        elif "created_at" in pdf and pdf["created_at"]:
+            pdf["upload_date"] = pdf["created_at"].isoformat() if hasattr(pdf["created_at"], 'isoformat') else pdf["created_at"]
     
     # Get alerts
     alerts = await db.alerts.find({"user_id": user_id}).to_list(100)
