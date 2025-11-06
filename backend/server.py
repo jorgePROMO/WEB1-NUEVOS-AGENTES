@@ -4430,6 +4430,184 @@ async def get_user_follow_ups(user_id: str, request: Request):
         raise HTTPException(status_code=500, detail=f"Error al obtener seguimientos: {str(e)}")
 
 
+@api_router.post("/admin/users/{user_id}/followups/{followup_id}/analyze-with-ia")
+async def analyze_follow_up_with_ai(user_id: str, followup_id: str, request: Request):
+    """
+    Admin solicita análisis con IA de un seguimiento mensual
+    Compara datos iniciales vs actuales y genera recomendaciones
+    """
+    await require_admin(request)
+    
+    try:
+        # Obtener el seguimiento
+        follow_up = await db.follow_up_submissions.find_one({"_id": followup_id, "user_id": user_id})
+        if not follow_up:
+            raise HTTPException(status_code=404, detail="Seguimiento no encontrado")
+        
+        # Obtener usuario
+        user = await db.users.find_one({"_id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Obtener cuestionario inicial de nutrición
+        initial_questionnaire = await db.nutrition_questionnaire_submissions.find_one(
+            {"_id": follow_up.get("previous_questionnaire_id")}
+        )
+        
+        # Obtener plan de nutrición previo
+        previous_plan = await db.nutrition_plans.find_one(
+            {"_id": follow_up.get("previous_plan_id")}
+        )
+        
+        # Construir el prompt para el análisis
+        prompt = f"""Eres un entrenador personal experto analizando el progreso de un cliente después de seguir un plan de nutrición.
+
+**DATOS DEL CLIENTE:**
+Nombre: {user.get('name', 'Cliente')}
+Días desde el último plan: {follow_up.get('days_since_last_plan', 0)} días
+
+**DATOS INICIALES (del cuestionario original):**
+"""
+        
+        if initial_questionnaire:
+            prompt += f"""
+- Peso inicial: {initial_questionnaire.get('peso_actual', 'N/A')} kg
+- Altura: {initial_questionnaire.get('altura', 'N/A')} cm
+- Objetivo: {initial_questionnaire.get('objetivo_principal', 'N/A')}
+- Nivel de actividad: {initial_questionnaire.get('nivel_actividad', 'N/A')}
+"""
+            
+            if initial_questionnaire.get('medidas_corporales'):
+                medidas = initial_questionnaire['medidas_corporales']
+                prompt += f"\n**Medidas iniciales:**\n"
+                if medidas.get('pecho'): prompt += f"- Pecho: {medidas['pecho']} cm\n"
+                if medidas.get('cintura'): prompt += f"- Cintura: {medidas['cintura']} cm\n"
+                if medidas.get('cadera'): prompt += f"- Cadera: {medidas['cadera']} cm\n"
+        
+        prompt += f"""
+
+**SEGUIMIENTO ACTUAL (después de {follow_up.get('days_since_last_plan', 0)} días):**
+
+**Tipo de medición:** {follow_up.get('measurement_type', 'N/A')}
+"""
+        
+        # Agregar mediciones actuales si existen
+        if follow_up.get('measurements'):
+            measurements = follow_up['measurements']
+            prompt += "\n**Mediciones actuales:**\n"
+            if measurements.get('peso'): prompt += f"- Peso: {measurements['peso']} kg\n"
+            if measurements.get('grasa_corporal'): prompt += f"- Grasa corporal: {measurements['grasa_corporal']}%\n"
+            if measurements.get('masa_muscular'): prompt += f"- Masa muscular: {measurements['masa_muscular']} kg\n"
+            if measurements.get('circunferencia_cintura'): prompt += f"- Cintura: {measurements['circunferencia_cintura']} cm\n"
+            if measurements.get('circunferencia_pecho'): prompt += f"- Pecho: {measurements['circunferencia_pecho']} cm\n"
+            if measurements.get('satisfecho_cambios'): prompt += f"- ¿Satisfecho con cambios?: {measurements['satisfecho_cambios']}\n"
+        
+        # Adherencia
+        adherence = follow_up.get('adherence', {})
+        prompt += f"""
+**Adherencia al plan:**
+- Constancia entrenamiento: {adherence.get('constancia_entrenamiento', 'N/A')}
+- Seguimiento alimentación: {adherence.get('seguimiento_alimentacion', 'N/A')}
+"""
+        
+        # Bienestar
+        wellbeing = follow_up.get('wellbeing', {})
+        prompt += f"""
+**Bienestar general:**
+- Energía, ánimo y motivación: {wellbeing.get('energia_animo_motivacion', 'N/A')}
+- Sueño y estrés: {wellbeing.get('sueno_estres', 'N/A')}
+"""
+        if wellbeing.get('factores_externos'):
+            prompt += f"- Factores externos: {wellbeing['factores_externos']}\n"
+        
+        # Cambios percibidos
+        changes = follow_up.get('changes_perceived', {})
+        prompt += f"""
+**Cambios percibidos:**
+- Molestias/dolor/lesión: {changes.get('molestias_dolor_lesion', 'N/A')}
+- Cambios corporales: {changes.get('cambios_corporales', 'N/A')}
+- Fuerza y rendimiento: {changes.get('fuerza_rendimiento', 'N/A')}
+"""
+        
+        # Feedback
+        feedback = follow_up.get('feedback', {})
+        prompt += f"""
+**Feedback del cliente:**
+- Objetivo próximo mes: {feedback.get('objetivo_proximo_mes', 'N/A')}
+- Cambios deseados: {feedback.get('cambios_deseados', 'N/A')}
+"""
+        if feedback.get('comentarios_adicionales'):
+            prompt += f"- Comentarios adicionales: {feedback['comentarios_adicionales']}\n"
+        
+        prompt += """
+
+**TU TAREA:**
+Genera un análisis completo y motivador del progreso del cliente. Debe incluir:
+
+1. **Felicitación y reconocimiento**: Empieza reconociendo el esfuerzo y destacando los logros positivos.
+
+2. **Análisis de cambios físicos**: Compara las mediciones iniciales vs actuales. Si hay mejoras, celébralas. Si no hay cambios significativos, explica posibles razones de forma constructiva.
+
+3. **Evaluación de adherencia**: Analiza cómo ha sido su constancia con el entrenamiento y alimentación. Da feedback positivo y constructivo.
+
+4. **Bienestar y factores externos**: Considera cómo el sueño, estrés y otros factores pueden estar afectando sus resultados.
+
+5. **Recomendaciones específicas**: Basándote en TODO lo anterior, recomienda ajustes concretos para el próximo mes:
+   - ¿Debe cambiar calorías? (aumentar/mantener/reducir)
+   - ¿Ajustar macronutrientes?
+   - ¿Cambiar frecuencia de comidas?
+   - ¿Incluir alimentos específicos?
+   - ¿Modificar intensidad/volumen de entrenamiento?
+
+6. **Motivación final**: Termina con un mensaje motivador y realista sobre qué esperar en el próximo mes.
+
+**IMPORTANTE:**
+- Sé empático y motivador, nunca crítico o desalentador
+- Usa un tono cercano y profesional
+- Sé específico en las recomendaciones
+- Si hay mediciones, compáralas explícitamente con las iniciales
+- Adapta el análisis según la adherencia del cliente
+
+Genera el análisis en español, con formato markdown para facilitar la lectura."""
+        
+        logger.info(f"Generating AI analysis for follow-up {followup_id} of user {user_id}")
+        
+        # Llamar a la IA (usando emergentintegrations)
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        
+        llm_chat = LlmChat(model="gpt-4o")
+        messages = [UserMessage(content=prompt)]
+        
+        response = llm_chat.generate(messages=messages)
+        ai_analysis = response.content
+        
+        # Guardar el análisis en el seguimiento
+        await db.follow_up_submissions.update_one(
+            {"_id": followup_id},
+            {
+                "$set": {
+                    "ai_analysis": ai_analysis,
+                    "status": "analyzed",
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        logger.info(f"AI analysis generated successfully for follow-up {followup_id}")
+        
+        return {
+            "success": True,
+            "analysis": ai_analysis,
+            "message": "Análisis generado correctamente"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error analyzing follow-up with AI: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al analizar seguimiento: {str(e)}")
+
+
 @api_router.get("/admin/follow-ups/pending")
 async def get_pending_follow_ups(request: Request):
     """
