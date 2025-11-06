@@ -1896,6 +1896,13 @@ class BackendTester:
         
         print(f"🎯 CRM EXTERNAL CLIENTS TESTS: {crm_passed}/{crm_total} passed")
         
+        # Separate Monthly Follow-up tests summary
+        followup_tests = [r for r in self.results if "Follow-up" in r["test"] or "Pending Reviews" in r["test"] or "Dashboard" in r["test"] and "followup" in r["test"].lower()]
+        followup_passed = sum(1 for r in followup_tests if r["success"])
+        followup_total = len(followup_tests)
+        
+        print(f"📅 MONTHLY FOLLOW-UP SYSTEM TESTS: {followup_passed}/{followup_total} passed")
+        
         # Show critical test failures first
         if critical_passed < critical_total:
             print("🚨 CRITICAL PRODUCTION TEST FAILURES:")
