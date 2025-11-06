@@ -240,6 +240,38 @@ const AdminDashboard = () => {
     }
   };
 
+  // Load pending reviews (clientes que necesitan revisión de seguimiento)
+  const loadPendingReviews = async () => {
+    setLoadingPendingReviews(true);
+    try {
+      const response = await axios.get(`${API}/admin/pending-reviews`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setPendingReviews(response.data.pending_reviews || []);
+    } catch (error) {
+      console.error('Error loading pending reviews:', error);
+      setPendingReviews([]);
+    } finally {
+      setLoadingPendingReviews(false);
+    }
+  };
+
+  // Activate follow-up for a client
+  const activateFollowUpForClient = async (userId) => {
+    try {
+      await axios.post(`${API}/admin/users/${userId}/activate-followup`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      alert('✅ Cuestionario de seguimiento activado correctamente');
+      loadPendingReviews(); // Reload to update status
+    } catch (error) {
+      console.error('Error activating follow-up:', error);
+      alert('❌ Error al activar cuestionario de seguimiento');
+    }
+  };
+
     
     try {
       await axios.patch(
