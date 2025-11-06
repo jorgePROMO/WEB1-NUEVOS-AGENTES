@@ -196,15 +196,27 @@ async def generate_nutrition_plan(client_data: dict) -> dict:
         if client_data.get('context_adicional'):
             agent_1_prompt += f"\n\n{client_data['context_adicional']}"
         
-        # Inicializar chat para Agente 1 con GPT-4o mini
-        chat_agent_1 = LlmChat(
-            api_key=OPENAI_API_KEY,
-            session_id=f"nutrition_agent1_{client_data.get('email', 'unknown')}",
-            system_message="Eres un experto nutricionista. Sigue las instrucciones al pie de la letra."
-        ).with_model("openai", "gpt-4o-mini")
+        # Inicializar cliente de OpenAI
+        client = AsyncOpenAI(api_key=OPENAI_API_KEY)
         
-        user_message_1 = UserMessage(text=agent_1_prompt)
-        menu_from_agent_1 = await chat_agent_1.send_message(user_message_1)
+        # AGENTE 1: Llamar a OpenAI GPT-4o-mini
+        response_1 = await client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Eres un experto nutricionista. Sigue las instrucciones al pie de la letra."
+                },
+                {
+                    "role": "user",
+                    "content": agent_1_prompt
+                }
+            ],
+            temperature=0.7,
+            max_tokens=3000
+        )
+        
+        menu_from_agent_1 = response_1.choices[0].message.content
         print("✅ AGENTE 1 completado")
         
         # AGENTE 2: Verificar y corregir
