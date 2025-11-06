@@ -3003,17 +3003,52 @@ const AdminDashboard = () => {
                   Cerrar
                 </Button>
                 <Button
-                  onClick={() => {
-                    // Generate new nutrition plan based on follow-up
-                    if (window.confirm('¿Generar un nuevo plan de nutrición basado en este seguimiento?')) {
-                      // This would trigger the nutrition plan generation
-                      // You might want to implement this functionality
-                      alert('Funcionalidad en desarrollo: Generar plan basado en seguimiento');
+                  onClick={async () => {
+                    if (!selectedFollowUp.ai_analysis) {
+                      alert('⚠️ Primero debes analizar el seguimiento antes de generar un nuevo plan');
+                      return;
+                    }
+                    
+                    if (!window.confirm('¿Generar un nuevo plan de nutrición basado en el análisis de este seguimiento? Esto reemplazará el plan actual del cliente.')) {
+                      return;
+                    }
+                    
+                    setGeneratingPlan(true);
+                    try {
+                      const response = await axios.post(
+                        `${API}/admin/users/${selectedClient.id}/followups/${selectedFollowUp.id}/generate-plan`,
+                        {},
+                        {
+                          headers: { Authorization: `Bearer ${token}` },
+                          withCredentials: true
+                        }
+                      );
+                      
+                      alert(`✅ ${response.data.message}`);
+                      setSelectedFollowUp({...selectedFollowUp, status: 'plan_generated', new_plan_id: response.data.plan_id});
+                      setSelectedFollowUp(null); // Close modal
+                      loadNutritionPlan(selectedClient.id); // Reload nutrition plans
+                      loadFollowUps(selectedClient.id); // Reload follow-ups to update status
+                    } catch (error) {
+                      console.error('Error generating plan:', error);
+                      alert(`❌ Error: ${error.response?.data?.detail || error.message}`);
+                    } finally {
+                      setGeneratingPlan(false);
                     }
                   }}
-                  className="bg-green-600 hover:bg-green-700"
+                  disabled={generatingPlan || !selectedFollowUp.ai_analysis}
+                  className="bg-green-600 hover:bg-green-700 disabled:opacity-50"
                 >
-                  🥗 Generar Nuevo Plan
+                  {generatingPlan ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Generando plan...
+                    </>
+                  ) : (
+                    <>
+                      🥗 Generar Nuevo Plan
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
