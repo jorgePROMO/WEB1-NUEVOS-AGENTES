@@ -48,6 +48,13 @@ const UserDashboard = () => {
 
   useEffect(() => {
     loadDashboardData();
+    
+    // Auto-reload data every 30 seconds to catch updates from admin
+    const interval = setInterval(() => {
+      loadDashboardData();
+    }, 30000); // 30 seconds
+    
+    return () => clearInterval(interval);
   }, []);
 
   const loadDashboardData = async () => {
