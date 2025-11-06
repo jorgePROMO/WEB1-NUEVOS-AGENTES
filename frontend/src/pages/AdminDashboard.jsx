@@ -148,6 +148,7 @@ const AdminDashboard = () => {
       setSelectedPlan(null);
       loadClientDetails(selectedClient.id);
       loadNutritionPlan(selectedClient.id);
+      loadFollowUps(selectedClient.id);
     }
   }, [selectedClient]);
 
