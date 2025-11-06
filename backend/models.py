@@ -595,3 +595,110 @@ class ClientRiskStatus(BaseModel):
     pending_forms_days: Optional[int] = None
     last_session_date: Optional[datetime] = None
     last_activity_date: Optional[datetime] = None
+
+
+
+# ==================== MONTHLY FOLLOW-UP MODELS ====================
+
+class FollowUpMeasurements(BaseModel):
+    """Mediciones del seguimiento - estructura condicional según tipo"""
+    # Smart Scale measurements
+    peso: Optional[str] = None
+    grasa_corporal: Optional[str] = None
+    masa_muscular: Optional[str] = None
+    grasa_visceral: Optional[str] = None
+    agua_corporal: Optional[str] = None
+    
+    # Tape measure circumferences
+    circunferencia_pecho: Optional[str] = None
+    circunferencia_cintura: Optional[str] = None
+    circunferencia_gluteo: Optional[str] = None
+    circunferencia_muslo: Optional[str] = None
+    circunferencia_brazo_relajado: Optional[str] = None
+    circunferencia_brazo_flexionado: Optional[str] = None
+    circunferencia_gemelo: Optional[str] = None
+    
+    # Satisfacción con cambios
+    satisfecho_cambios: Optional[str] = None  # "SI" o "NO"
+
+
+class FollowUpAdherence(BaseModel):
+    """Adherencia al plan"""
+    constancia_entrenamiento: str
+    seguimiento_alimentacion: str
+
+
+class FollowUpWellbeing(BaseModel):
+    """Bienestar general"""
+    factores_externos: Optional[str] = None
+    energia_animo_motivacion: str
+    sueno_estres: str
+
+
+class FollowUpChanges(BaseModel):
+    """Cambios percibidos"""
+    molestias_dolor_lesion: str
+    cambios_corporales: str
+    fuerza_rendimiento: str
+
+
+class FollowUpFeedback(BaseModel):
+    """Comentarios y ajustes"""
+    objetivo_proximo_mes: str
+    cambios_deseados: str
+    comentarios_adicionales: Optional[str] = None
+
+
+class FollowUpSubmit(BaseModel):
+    """Modelo para recibir el cuestionario de seguimiento del cliente"""
+    # Tipo de medición
+    measurement_type: str  # "smart_scale", "tape_measure", "none"
+    
+    # Mediciones (condicionales)
+    measurements: Optional[FollowUpMeasurements] = None
+    
+    # Secciones obligatorias
+    adherence: FollowUpAdherence
+    wellbeing: FollowUpWellbeing
+    changes_perceived: FollowUpChanges
+    feedback: FollowUpFeedback
+
+
+class FollowUpSubmissionInDB(BaseModel):
+    """Seguimiento mensual guardado en BD"""
+    id: str = Field(alias="_id")
+    user_id: str
+    submission_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    days_since_last_plan: int  # Días desde el último plan
+    previous_plan_id: Optional[str] = None  # Referencia al plan previo
+    previous_questionnaire_id: Optional[str] = None  # Cuestionario inicial
+    
+    # Respuestas del cuestionario
+    measurement_type: str
+    measurements: Optional[dict] = None
+    adherence: dict
+    wellbeing: dict
+    changes_perceived: dict
+    feedback: dict
+    
+    # Estado del seguimiento
+    status: str = "pending_analysis"  # pending_analysis, analyzed, plan_generated
+    ai_analysis: Optional[str] = None  # Análisis generado por IA
+    ai_analysis_edited: bool = False  # Si el admin editó el análisis
+    new_plan_id: Optional[str] = None  # Plan generado después del análisis
+    
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str, datetime: str}
+
+
+class FollowUpAlertCreate(BaseModel):
+    """Alerta para el admin cuando un cliente cumple 30 días"""
+    user_id: str
+    user_name: str
+    user_email: str
+    days_since_plan: int
+    last_plan_date: datetime
