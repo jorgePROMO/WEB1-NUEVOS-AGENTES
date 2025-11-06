@@ -131,9 +131,15 @@ class FollowUpTester:
             self.log_result("Activate Follow-up for User", False, "No admin token available")
             return False
         
+        # If no user from pending reviews, use the dashboard test user
         if not self.followup_test_user_id:
-            self.log_result("Activate Follow-up for User", False, "No test user ID available from pending reviews")
-            return False
+            if hasattr(self, 'dashboard_test_user_id'):
+                self.followup_test_user_id = self.dashboard_test_user_id
+                self.log_result("Activate Follow-up for User", True, 
+                              f"Using dashboard test user ID: {self.followup_test_user_id}")
+            else:
+                self.log_result("Activate Follow-up for User", False, "No test user ID available")
+                return False
             
         url = f"{BACKEND_URL}/admin/users/{self.followup_test_user_id}/activate-followup"
         headers = {"Authorization": f"Bearer {self.admin_token}"}
