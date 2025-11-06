@@ -175,8 +175,13 @@ class FollowUpTester:
         if not self.admin_token:
             self.log_result("Verify Status Changed to Activated", False, "No admin token available")
             return False
+        
+        if not self.followup_test_user_id:
+            self.log_result("Verify Status Changed to Activated", False, "No test user ID available")
+            return False
             
-        url = f"{BACKEND_URL}/admin/pending-reviews"
+        # Check user directly via admin/clients endpoint since user might not have nutrition plan
+        url = f"{BACKEND_URL}/admin/clients/{self.followup_test_user_id}"
         headers = {"Authorization": f"Bearer {self.admin_token}"}
         
         try:
@@ -184,29 +189,19 @@ class FollowUpTester:
             
             if response.status_code == 200:
                 data = response.json()
-                pending_reviews = data.get("pending_reviews", [])
+                user_data = data.get("user", {})
                 
-                # Find our test user
-                test_user_review = None
-                for review in pending_reviews:
-                    if review.get("user_id") == self.followup_test_user_id:
-                        test_user_review = review
-                        break
+                followup_activated = user_data.get("followup_activated", False)
+                followup_activated_at = user_data.get("followup_activated_at")
+                followup_activated_by = user_data.get("followup_activated_by")
                 
-                if test_user_review:
-                    status = test_user_review.get("status")
-                    followup_activated = test_user_review.get("followup_activated")
-                    
-                    if status == "activated" and followup_activated == True:
-                        self.log_result("Verify Status Changed to Activated", True, 
-                                      f"Status correctly changed to 'activated' and followup_activated=true")
-                        return True
-                    else:
-                        self.log_result("Verify Status Changed to Activated", False, 
-                                      f"Status not updated correctly: status={status}, followup_activated={followup_activated}")
+                if followup_activated == True and followup_activated_by == "admin":
+                    self.log_result("Verify Status Changed to Activated", True, 
+                                  f"Follow-up correctly activated: followup_activated={followup_activated}, activated_by={followup_activated_by}, activated_at={followup_activated_at}")
+                    return True
                 else:
                     self.log_result("Verify Status Changed to Activated", False, 
-                                  "Test user not found in pending reviews")
+                                  f"Follow-up not activated correctly: followup_activated={followup_activated}, activated_by={followup_activated_by}")
             else:
                 self.log_result("Verify Status Changed to Activated", False, 
                               f"HTTP {response.status_code}", response.text)
