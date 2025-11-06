@@ -4133,9 +4133,6 @@ async def delete_event(request: Request, event_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# Include the router in the main app
-app.include_router(api_router)
-
 # Add Cache Control Middleware to prevent browser caching of API responses
 @app.middleware("http")
 async def add_no_cache_headers(request, call_next):
