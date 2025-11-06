@@ -142,13 +142,27 @@ const AdminDashboard = () => {
     }
   };
 
+  // Load all client data when client is selected
+  const loadAllClientData = async (clientId) => {
+    setSelectedPlan(null);
+    await loadClientDetails(clientId);
+    await loadNutritionPlan(clientId);
+    // Now load follow-ups after other data is loaded
+    try {
+      const response = await axios.get(`${API}/admin/users/${clientId}/follow-ups`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setFollowUps(response.data.follow_ups || []);
+    } catch (error) {
+      console.error('Error loading follow-ups:', error);
+      setFollowUps([]);
+    }
+  };
+
   useEffect(() => {
     if (selectedClient) {
-      // Reset accordion state when changing clients
-      setSelectedPlan(null);
-      loadClientDetails(selectedClient.id);
-      loadNutritionPlan(selectedClient.id);
-      // loadFollowUps se llamará desde loadClientDetails después de cargar los datos
+      loadAllClientData(selectedClient.id);
     }
   }, [selectedClient]);
 
