@@ -584,6 +584,42 @@ backend:
           agent: "testing"
           comment: "✅ GET /api/users/dashboard - Dashboard endpoint correctly includes followup_activated field in user data. Tested with regular user token (not admin). Field correctly reflects activation status: initially false, changes to true after admin activation, changes back to false after deactivation. Integration between admin activation endpoints and user dashboard working perfectly."
 
+  - task: "AI Analysis of Follow-Up"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implemented POST /api/admin/users/{user_id}/followups/{followup_id}/analyze-with-ia endpoint. Uses GPT-4o to generate comprehensive analysis comparing initial questionnaire data vs follow-up responses. Includes: congratulations, physical changes analysis, adherence evaluation, wellbeing factors, specific recommendations for adjusting calories/macros/food/training. Saves analysis to follow_up_submissions collection with status='analyzed'. Ready for testing."
+
+  - task: "Update Follow-Up Analysis"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implemented PATCH /api/admin/users/{user_id}/followups/{followup_id}/analysis endpoint. Admin can edit AI-generated analysis. Sets ai_analysis_edited=true flag. Ready for testing."
+
+  - task: "Generate New Plan from Follow-Up"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py, /app/backend/nutrition_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implemented POST /api/admin/users/{user_id}/followups/{followup_id}/generate-plan endpoint. Requires ai_analysis to exist. Uses generate_nutrition_plan_with_context() in nutrition_service.py that includes follow-up analysis, updated measurements, and recommendations as context for 2-agent nutrition plan generation (GPT-4o-mini). Creates new nutrition_plan, updates user.nutrition_plan, sets follow_up.new_plan_id and status='plan_generated'. Ready for testing."
+
 frontend:
   - task: "User Dashboard Follow-Up Button - Hybrid Control"
     implemented: true
