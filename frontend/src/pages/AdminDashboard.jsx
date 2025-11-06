@@ -2931,7 +2931,7 @@ const AdminDashboard = () => {
                         <Button
                           onClick={() => {
                             setEditingAnalysis(false);
-                            setFollowUpAnalysis(selectedFollowUp.analysis || '');
+                            setFollowUpAnalysis(selectedFollowUp.ai_analysis || '');
                           }}
                           variant="outline"
                           size="sm"
