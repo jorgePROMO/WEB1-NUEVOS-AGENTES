@@ -263,6 +263,93 @@ async def test_nutrition_service():
         print(f"\n❌ Error: {result['error']}")
 
 
+
+
+async def generate_nutrition_plan_with_context(questionnaire: dict, follow_up_analysis: str, follow_up_data: dict) -> str:
+    """
+    Genera un nuevo plan de nutrición considerando el análisis del seguimiento mensual
+    
+    Args:
+        questionnaire: Cuestionario inicial del cliente
+        follow_up_analysis: Análisis generado por IA del seguimiento
+        follow_up_data: Datos del seguimiento (mediciones, adherencia, etc.)
+    
+    Returns:
+        str: Plan de nutrición generado
+    """
+    
+    # Extraer datos actualizados del seguimiento
+    current_measurements = {}
+    if follow_up_data.get('measurements'):
+        measurements = follow_up_data['measurements']
+        current_measurements = {
+            'peso': measurements.get('peso', questionnaire.get('peso_actual')),
+            'grasa_corporal': measurements.get('grasa_corporal'),
+            'masa_muscular': measurements.get('masa_muscular')
+        }
+    
+    # Preparar datos del cliente con información actualizada
+    client_data_parts = []
+    client_data_parts.append(f"Nombre: {questionnaire.get('nombre', 'Cliente')}")
+    client_data_parts.append(f"Edad: {questionnaire.get('edad', 'N/A')} años")
+    client_data_parts.append(f"Altura: {questionnaire.get('altura', 'N/A')} cm")
+    
+    # Usar peso actualizado si existe
+    peso_actual = current_measurements.get('peso') or questionnaire.get('peso_actual', 'N/A')
+    client_data_parts.append(f"Peso actual: {peso_actual} kg")
+    
+    if current_measurements.get('grasa_corporal'):
+        client_data_parts.append(f"Grasa corporal actual: {current_measurements['grasa_corporal']}%")
+    if current_measurements.get('masa_muscular'):
+        client_data_parts.append(f"Masa muscular actual: {current_measurements['masa_muscular']} kg")
+    
+    client_data_parts.append(f"Sexo: {questionnaire.get('sexo', 'N/A')}")
+    client_data_parts.append(f"Objetivo: {questionnaire.get('objetivo_principal', 'N/A')}")
+    client_data_parts.append(f"Nivel de actividad: {questionnaire.get('nivel_actividad', 'N/A')}")
+    client_data_parts.append(f"Trabajo físico: {questionnaire.get('trabajo_fisico', 'N/A')}")
+    client_data_parts.append(f"Alergias: {questionnaire.get('alergias_intolerancias', 'Ninguna')}")
+    client_data_parts.append(f"Preferencia de comidas: {questionnaire.get('comidas_dia', 'N/A')}")
+    
+    # Agregar contexto del seguimiento
+    client_data_parts.append(f"\n**CONTEXTO DEL SEGUIMIENTO (después de {follow_up_data.get('days_since_last_plan', 0)} días):**")
+    
+    adherence = follow_up_data.get('adherence', {})
+    client_data_parts.append(f"- Adherencia al entrenamiento: {adherence.get('constancia_entrenamiento', 'N/A')}")
+    client_data_parts.append(f"- Adherencia a la alimentación: {adherence.get('seguimiento_alimentacion', 'N/A')}")
+    
+    changes = follow_up_data.get('changes_perceived', {})
+    client_data_parts.append(f"- Cambios corporales percibidos: {changes.get('cambios_corporales', 'N/A')}")
+    client_data_parts.append(f"- Cambios en fuerza/rendimiento: {changes.get('fuerza_rendimiento', 'N/A')}")
+    
+    feedback = follow_up_data.get('feedback', {})
+    client_data_parts.append(f"- Objetivo para próximo mes: {feedback.get('objetivo_proximo_mes', 'N/A')}")
+    client_data_parts.append(f"- Cambios deseados: {feedback.get('cambios_deseados', 'N/A')}")
+    
+    client_data_parts.append(f"\n**ANÁLISIS PREVIO DEL ENTRENADOR:**\n{follow_up_analysis}")
+    
+    client_data = "\n".join(client_data_parts)
+    
+    # Generar el plan usando la función existente con el contexto adicional
+    result = await generate_nutrition_plan({
+        'nombre': questionnaire.get('nombre', 'Cliente'),
+        'edad': questionnaire.get('edad'),
+        'altura': questionnaire.get('altura'),
+        'peso_actual': peso_actual,
+        'sexo': questionnaire.get('sexo'),
+        'objetivo_principal': questionnaire.get('objetivo_principal'),
+        'nivel_actividad': questionnaire.get('nivel_actividad'),
+        'trabajo_fisico': questionnaire.get('trabajo_fisico'),
+        'alergias_intolerancias': questionnaire.get('alergias_intolerancias', 'Ninguna'),
+        'comidas_dia': questionnaire.get('comidas_dia'),
+        'context_adicional': f"\n\n**IMPORTANTE - AJUSTES BASADOS EN SEGUIMIENTO:**\n{follow_up_analysis}\n\nAjusta el plan considerando el análisis anterior y las recomendaciones específicas."
+    })
+    
+    if result["success"]:
+        return result["plan_verificado"]
+    else:
+        raise Exception(f"Error generando plan: {result.get('error', 'Error desconocido')}")
+
+
 if __name__ == "__main__":
     import asyncio
     asyncio.run(test_nutrition_service())
