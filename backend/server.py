@@ -4301,6 +4301,154 @@ async def startup_db():
         logger.error(f"Error initializing defaults: {e}")
 
 
+
+
+# ==================== MONTHLY FOLLOW-UP ENDPOINTS ====================
+
+@api_router.post("/follow-up/submit")
+async def submit_follow_up(follow_up: FollowUpSubmit, request: Request):
+    """
+    Cliente envía cuestionario de seguimiento mensual
+    """
+    try:
+        current_user = await get_current_user(request)
+        user_id = current_user["id"]
+        
+        # Buscar el plan de nutrición más reciente del usuario
+        latest_plan = await db.nutrition_plans.find_one(
+            {"user_id": user_id},
+            sort=[("generated_at", -1)]
+        )
+        
+        if not latest_plan:
+            raise HTTPException(status_code=404, detail="No se encontró un plan de nutrición previo")
+        
+        # Calcular días desde el último plan
+        days_since_plan = (datetime.now(timezone.utc) - latest_plan["generated_at"]).days
+        
+        # Buscar el cuestionario inicial
+        initial_questionnaire = await db.nutrition_questionnaire_submissions.find_one(
+            {"user_id": user_id},
+            sort=[("submitted_at", -1)]
+        )
+        
+        # Crear el documento de seguimiento
+        follow_up_id = str(datetime.now(timezone.utc).timestamp()).replace('.', '')
+        follow_up_doc = {
+            "_id": follow_up_id,
+            "user_id": user_id,
+            "submission_date": datetime.now(timezone.utc),
+            "days_since_last_plan": days_since_plan,
+            "previous_plan_id": latest_plan["_id"],
+            "previous_questionnaire_id": initial_questionnaire["_id"] if initial_questionnaire else None,
+            "measurement_type": follow_up.measurement_type,
+            "measurements": follow_up.measurements.dict() if follow_up.measurements else None,
+            "adherence": follow_up.adherence.dict(),
+            "wellbeing": follow_up.wellbeing.dict(),
+            "changes_perceived": follow_up.changes_perceived.dict(),
+            "feedback": follow_up.feedback.dict(),
+            "status": "pending_analysis",
+            "ai_analysis": None,
+            "ai_analysis_edited": False,
+            "new_plan_id": None,
+            "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc)
+        }
+        
+        await db.follow_up_submissions.insert_one(follow_up_doc)
+        
+        # Crear alerta para el admin
+        admin_user = await db.users.find_one({"role": "admin"})
+        if admin_user:
+            alert_id = str(datetime.now(timezone.utc).timestamp()).replace('.', '') + "_alert"
+            alert_doc = {
+                "_id": alert_id,
+                "user_id": admin_user["_id"],
+                "title": f"📊 Seguimiento mensual recibido - {current_user['name']}",
+                "message": f"{current_user['name']} ha completado su cuestionario de seguimiento mensual ({days_since_plan} días desde su último plan). Revisa sus respuestas y genera su análisis.",
+                "type": "follow_up",
+                "link": f"/admin?client={user_id}&tab=seguimiento",
+                "read": False,
+                "date": datetime.now(timezone.utc),
+                "created_at": datetime.now(timezone.utc)
+            }
+            await db.alerts.insert_one(alert_doc)
+        
+        logger.info(f"Follow-up submission saved for user {user_id}")
+        
+        return {
+            "success": True,
+            "message": "Cuestionario de seguimiento enviado correctamente",
+            "follow_up_id": follow_up_id,
+            "days_since_plan": days_since_plan
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error submitting follow-up: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al enviar el cuestionario: {str(e)}")
+
+
+@api_router.get("/admin/users/{user_id}/follow-ups")
+async def get_user_follow_ups(user_id: str, request: Request):
+    """
+    Admin obtiene todos los seguimientos de un usuario
+    """
+    await require_admin(request)
+    
+    try:
+        follow_ups = await db.follow_up_submissions.find(
+            {"user_id": user_id}
+        ).sort("submission_date", -1).to_list(100)
+        
+        # Convertir fechas a ISO string
+        for follow_up in follow_ups:
+            follow_up["id"] = str(follow_up["_id"])
+            if "submission_date" in follow_up:
+                follow_up["submission_date"] = follow_up["submission_date"].isoformat()
+            if "created_at" in follow_up:
+                follow_up["created_at"] = follow_up["created_at"].isoformat()
+            if "updated_at" in follow_up:
+                follow_up["updated_at"] = follow_up["updated_at"].isoformat()
+        
+        return {"follow_ups": follow_ups}
+        
+    except Exception as e:
+        logger.error(f"Error getting follow-ups: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al obtener seguimientos: {str(e)}")
+
+
+@api_router.get("/admin/follow-ups/pending")
+async def get_pending_follow_ups(request: Request):
+    """
+    Admin obtiene todos los seguimientos pendientes de análisis
+    """
+    await require_admin(request)
+    
+    try:
+        follow_ups = await db.follow_up_submissions.find(
+            {"status": "pending_analysis"}
+        ).sort("submission_date", -1).to_list(100)
+        
+        # Enriquecer con datos del usuario
+        for follow_up in follow_ups:
+            follow_up["id"] = str(follow_up["_id"])
+            user = await db.users.find_one({"_id": follow_up["user_id"]})
+            if user:
+                follow_up["user_name"] = user.get("name", "Usuario")
+                follow_up["user_email"] = user.get("email", "")
+            
+            # Convertir fechas
+            if "submission_date" in follow_up:
+                follow_up["submission_date"] = follow_up["submission_date"].isoformat()
+        
+        return {"pending_follow_ups": follow_ups, "count": len(follow_ups)}
+        
+    except Exception as e:
+        logger.error(f"Error getting pending follow-ups: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al obtener seguimientos pendientes: {str(e)}")
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
