@@ -1277,14 +1277,14 @@ const AdminDashboard = () => {
                           </div>
                           <Badge
                             className={
-                              client.status === 'active'
+                              client.client_status === 'active'
                                 ? 'bg-green-100 text-green-700'
-                                : client.status === 'pending'
+                                : client.client_status === 'pending'
                                 ? 'bg-orange-100 text-orange-700'
                                 : 'bg-gray-100 text-gray-700'
                             }
                           >
-                            {client.status === 'active' ? 'Activo' : client.status === 'pending' ? 'Pendiente' : 'Inactivo'}
+                            {client.client_status === 'active' ? 'Activo' : client.client_status === 'pending' ? 'Pendiente' : 'Inactivo'}
                           </Badge>
                         </div>
                         
