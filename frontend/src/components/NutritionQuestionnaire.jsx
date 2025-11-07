@@ -287,6 +287,46 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
     const section = sections[sectionIndex];
     if (section.isReview) return { valid: true, missing: [] };
     
+    // Validación especial para método de medición
+    if (section.isSpecial === 'measurement_type') {
+      if (!formData.measurement_type) {
+        return { valid: false, missing: ['Método de medición'] };
+      }
+      return { valid: true, missing: [] };
+    }
+    
+    // Validación para sección dinámica de medidas
+    if (section.isDynamic) {
+      const missingFields = [];
+      
+      // Peso y altura siempre requeridos
+      if (!formData.peso || formData.peso.toString().trim() === '') {
+        missingFields.push('Peso');
+      }
+      if (!formData.altura_cm || formData.altura_cm.toString().trim() === '') {
+        missingFields.push('Altura');
+      }
+      
+      // Campos adicionales según tipo de medición
+      if (formData.measurement_type === 'smart_scale') {
+        if (!formData.grasa_porcentaje || formData.grasa_porcentaje.toString().trim() === '') {
+          missingFields.push('% Grasa Corporal');
+        }
+      } else if (formData.measurement_type === 'tape_measure') {
+        if (!formData.cintura_cm || formData.cintura_cm.toString().trim() === '') {
+          missingFields.push('Cintura');
+        }
+        if (!formData.cadera_cm || formData.cadera_cm.toString().trim() === '') {
+          missingFields.push('Cadera');
+        }
+      }
+      
+      return {
+        valid: missingFields.length === 0,
+        missing: missingFields
+      };
+    }
+    
     const requiredFields = section.fields.filter(f => f.required);
     const missingFields = [];
     
