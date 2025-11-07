@@ -177,7 +177,13 @@ const AdminDashboard = () => {
   };
 
   const generateTrainingPlan = async (sourceType, sourceId) => {
-    setGeneratingTrainingPlan(true);
+    // Set the appropriate loading state based on source type
+    if (sourceType === 'initial') {
+      setGeneratingTrainingPlan(true);
+    } else if (sourceType === 'followup') {
+      setGeneratingFromFollowup(true);
+    }
+    
     try {
       const response = await axios.post(
         `${API}/admin/users/${selectedClient.id}/training/generate`,
@@ -198,7 +204,11 @@ const AdminDashboard = () => {
       console.error('Error generating training plan:', error);
       alert('❌ Error al generar plan: ' + (error.response?.data?.detail || error.message));
     } finally {
-      setGeneratingTrainingPlan(false);
+      if (sourceType === 'initial') {
+        setGeneratingTrainingPlan(false);
+      } else if (sourceType === 'followup') {
+        setGeneratingFromFollowup(false);
+      }
     }
   };
 
