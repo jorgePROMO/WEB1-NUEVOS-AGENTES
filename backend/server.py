@@ -724,10 +724,14 @@ async def get_client_details(user_id: str, request: Request):
     
     # Add nutrition submissions to forms list with type 'nutrition'
     for submission in nutrition_submissions:
+        submitted_at = submission.get("submitted_at")
+        if isinstance(submitted_at, datetime):
+            submitted_at = submitted_at.isoformat()
+        
         forms.append({
             "id": str(submission["_id"]),
             "type": "nutrition",
-            "submitted_at": submission.get("submitted_at"),
+            "submitted_at": submitted_at,
             "data": submission.get("responses", {}),
             "plan_generated": submission.get("plan_generated", False),
             "plan_id": submission.get("plan_id")
