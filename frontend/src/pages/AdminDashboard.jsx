@@ -898,8 +898,6 @@ const AdminDashboard = () => {
       alert(`❌ Error: ${error.response?.data?.detail || error.message}`);
     }
   };
-    }
-  };
 
   if (loading) {
     return (
