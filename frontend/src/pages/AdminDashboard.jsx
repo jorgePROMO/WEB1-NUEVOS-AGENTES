@@ -258,6 +258,7 @@ const AdminDashboard = () => {
       
       alert('✅ PDF generado correctamente');
       await loadTrainingPlans(selectedClient.id);
+      await loadClientDetails(selectedClient.id); // Reload PDFs list
       
       if (modalTrainingPlan && modalTrainingPlan.id === planId) {
         const response = await axios.get(`${API}/admin/users/${selectedClient.id}/training`, {
