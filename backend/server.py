@@ -4646,7 +4646,7 @@ Genera un análisis completo y motivador del progreso del cliente. Debe incluir:
 
 1. **Felicitación y reconocimiento**: Empieza reconociendo el esfuerzo y destacando los logros positivos.
 
-2. **Análisis de cambios físicos**: Compara las mediciones iniciales vs actuales. Si hay mejoras, celébralas. Si no hay cambios significativos, explica posibles razones de forma constructiva.
+2. **Análisis de cambios físicos**: Compara las mediciones del seguimiento ANTERIOR vs las ACTUALES. Si hay mejoras, celébralas. Si no hay cambios significativos, explica posibles razones de forma constructiva. Si es el primer seguimiento, analiza las mediciones actuales sin comparación.
 
 3. **Evaluación de adherencia**: Analiza cómo ha sido su constancia con el entrenamiento y alimentación. Da feedback positivo y constructivo.
 
