@@ -2029,7 +2029,9 @@ const AdminDashboard = () => {
                                         {pdf.type || 'General'}
                                       </Badge>
                                     </div>
-                                    <p className="text-xs text-gray-600 mb-2">Recibido: {new Date(pdf.upload_date).toLocaleDateString('es-ES')}</p>
+                                    <p className="text-xs text-gray-600 mb-2">
+                                      Recibido: {pdf.upload_date ? new Date(pdf.upload_date).toLocaleDateString('es-ES') : 'Fecha no disponible'}
+                                    </p>
                                     <div className="flex gap-2">
                                       <Button
                                         size="sm"
