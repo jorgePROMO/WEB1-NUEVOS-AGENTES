@@ -461,21 +461,7 @@ const AdminDashboard = () => {
     }
   };
 
-  // Load training plans
-  const loadTrainingPlans = async (userId) => {
-    try {
-      const response = await axios.get(`${API}/admin/users/${userId}/training`, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true
-      });
-      setTrainingPlans(response.data.plans || []);
-    } catch (error) {
-      if (error.response?.status !== 404) {
-        console.error('Error loading training plans:', error);
-      }
-      setTrainingPlans([]);
-    }
-  };
+  // MOVED UP - loadTrainingPlans function moved before loadAllClientData
 
   // Generate training plan
   const generateTrainingPlan = async (sourceType, sourceId) => {
