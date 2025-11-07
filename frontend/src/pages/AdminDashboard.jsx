@@ -2736,8 +2736,13 @@ const AdminDashboard = () => {
                             })()}
 
                             {/* Cuestionario Inicial de Nutrición */}
-                            {selectedClientDetails?.forms?.find(f => f.type === 'nutrition') && (() => {
-                              const nutritionForm = selectedClientDetails.forms.find(f => f.type === 'nutrition');
+                            {(() => {
+                              console.log('selectedClientDetails.forms:', selectedClientDetails?.forms);
+                              const nutritionForm = selectedClientDetails?.forms?.find(f => f.type === 'nutrition');
+                              console.log('nutritionForm found:', nutritionForm);
+                              
+                              if (!nutritionForm) return null;
+                              
                               const data = nutritionForm?.data || {};
                               return (
                                 <Card
