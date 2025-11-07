@@ -15,6 +15,9 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
+    // Tipo de medición (nueva pregunta)
+    measurement_type: '',
+    
     // Datos básicos
     nombre_completo: user?.name || '',
     email: user?.email || '',
@@ -28,8 +31,13 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
     peso: '',
     altura_cm: '',
     grasa_porcentaje: '',
+    masa_muscular_porcentaje: '',
+    masa_osea_kg: '',
+    agua_porcentaje: '',
+    grasa_visceral: '',
     cintura_cm: '',
     cadera_cm: '',
+    pecho_cm: '',
     biceps_relajado_cm: '',
     biceps_flexionado_cm: '',
     muslo_cm: '',
