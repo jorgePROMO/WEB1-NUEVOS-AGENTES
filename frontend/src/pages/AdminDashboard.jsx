@@ -290,6 +290,167 @@ const AdminDashboard = () => {
     }
   };
 
+  // Load training plans
+  const loadTrainingPlans = async (userId) => {
+    try {
+      const response = await axios.get(`${API}/admin/users/${userId}/training`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setTrainingPlans(response.data.plans || []);
+    } catch (error) {
+      if (error.response?.status !== 404) {
+        console.error('Error loading training plans:', error);
+      }
+      setTrainingPlans([]);
+    }
+  };
+
+  // Generate training plan
+  const generateTrainingPlan = async (sourceType, sourceId) => {
+    setGeneratingTrainingPlan(true);
+    try {
+      const response = await axios.post(
+        `${API}/admin/users/${selectedClient.id}/training/generate`,
+        null,
+        {
+          params: {
+            source_type: sourceType,
+            source_id: sourceId
+          },
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      
+      alert('✅ Plan de entrenamiento generado exitosamente!');
+      await loadTrainingPlans(selectedClient.id);
+    } catch (error) {
+      console.error('Error generating training plan:', error);
+      alert('❌ Error al generar plan: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setGeneratingTrainingPlan(false);
+    }
+  };
+
+  // Open training plan modal
+  const openTrainingPlanModal = (plan) => {
+    setModalTrainingPlan(plan);
+    setTrainingContent(plan.plan_final);
+    setShowTrainingModal(true);
+  };
+
+  // Save training plan changes
+  const saveTrainingChanges = async () => {
+    if (!modalTrainingPlan) return;
+    
+    try {
+      await axios.patch(
+        `${API}/admin/users/${selectedClient.id}/training/${modalTrainingPlan.id}`,
+        { plan_final: trainingContent },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      
+      alert('✅ Plan de entrenamiento actualizado correctamente');
+      setEditingTraining(false);
+      await loadTrainingPlans(selectedClient.id);
+      
+      // Update modal plan
+      const updatedPlan = { ...modalTrainingPlan, plan_final: trainingContent, edited: true };
+      setModalTrainingPlan(updatedPlan);
+    } catch (error) {
+      console.error('Error saving training plan:', error);
+      alert('❌ Error al guardar cambios');
+    }
+  };
+
+  // Generate training PDF
+  const generateTrainingPDF = async (planId) => {
+    setGeneratingTrainingPDF(true);
+    try {
+      await axios.post(
+        `${API}/admin/users/${selectedClient.id}/training-pdf`,
+        null,
+        {
+          params: { plan_id: planId },
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      
+      alert('✅ PDF generado correctamente');
+      await loadTrainingPlans(selectedClient.id);
+      
+      // Reload modal plan if open
+      if (modalTrainingPlan && modalTrainingPlan.id === planId) {
+        const response = await axios.get(`${API}/admin/users/${selectedClient.id}/training`, {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        });
+        const updatedPlan = response.data.plans.find(p => p.id === planId);
+        if (updatedPlan) {
+          setModalTrainingPlan(updatedPlan);
+        }
+      }
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('❌ Error al generar PDF: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setGeneratingTrainingPDF(false);
+    }
+  };
+
+  // Send training via email
+  const sendTrainingEmail = async (planId) => {
+    setSendingTraining('email');
+    try {
+      await axios.post(
+        `${API}/admin/users/${selectedClient.id}/training/send-email`,
+        null,
+        {
+          params: { plan_id: planId },
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      
+      alert('✅ Plan enviado por email correctamente');
+      await loadTrainingPlans(selectedClient.id);
+    } catch (error) {
+      console.error('Error sending email:', error);
+      alert('❌ Error al enviar email: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setSendingTraining(null);
+    }
+  };
+
+  // Send training via WhatsApp
+  const sendTrainingWhatsApp = async (planId) => {
+    setSendingTraining('whatsapp');
+    try {
+      const response = await axios.get(
+        `${API}/admin/users/${selectedClient.id}/training/whatsapp-link`,
+        {
+          params: { plan_id: planId },
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      
+      window.open(response.data.whatsapp_link, '_blank');
+      await loadTrainingPlans(selectedClient.id);
+    } catch (error) {
+      console.error('Error generating WhatsApp link:', error);
+      alert('❌ Error al generar link: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setSendingTraining(null);
+    }
+  };
+
+
   // Activate follow-up for a client
   const activateFollowUpForClient = async (userId) => {
     try {
