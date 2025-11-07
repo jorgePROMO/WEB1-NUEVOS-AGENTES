@@ -478,6 +478,92 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
                 )}
               </Button>
             </div>
+          ) : currentSectionData.isSpecial === 'measurement_type' ? (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold mb-4">¿Cómo vas a medirte?</h3>
+              <p className="text-sm text-gray-600 mb-6">Selecciona el método que usarás para registrar tus medidas corporales:</p>
+              
+              <div className="space-y-3">
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition" style={{borderColor: formData.measurement_type === 'smart_scale' ? '#3b82f6' : '#e5e7eb'}}>
+                  <input
+                    type="radio"
+                    name="measurement_type"
+                    value="smart_scale"
+                    checked={formData.measurement_type === 'smart_scale'}
+                    onChange={handleInputChange}
+                    className="mr-3 mt-1"
+                  />
+                  <div>
+                    <div className="font-semibold text-base">⚖️ Báscula inteligente</div>
+                    <div className="text-sm text-gray-600">Con datos de % grasa, % músculo, % agua, masa ósea, grasa visceral, etc.</div>
+                  </div>
+                </label>
+
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition" style={{borderColor: formData.measurement_type === 'tape_measure' ? '#3b82f6' : '#e5e7eb'}}>
+                  <input
+                    type="radio"
+                    name="measurement_type"
+                    value="tape_measure"
+                    checked={formData.measurement_type === 'tape_measure'}
+                    onChange={handleInputChange}
+                    className="mr-3 mt-1"
+                  />
+                  <div>
+                    <div className="font-semibold text-base">📏 Báscula + Cinta métrica</div>
+                    <div className="text-sm text-gray-600">Con circunferencias corporales (pecho, cintura, cadera, bíceps, muslo)</div>
+                  </div>
+                </label>
+
+                <label className="flex items-start p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition" style={{borderColor: formData.measurement_type === 'none' ? '#3b82f6' : '#e5e7eb'}}>
+                  <input
+                    type="radio"
+                    name="measurement_type"
+                    value="none"
+                    checked={formData.measurement_type === 'none'}
+                    onChange={handleInputChange}
+                    className="mr-3 mt-1"
+                  />
+                  <div>
+                    <div className="font-semibold text-base">❌ No tengo cómo medirme</div>
+                    <div className="text-sm text-gray-600">Solo proporcionaré peso y altura estimados</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          ) : currentSectionData.isDynamic ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {formData.measurement_type === 'smart_scale' && (
+                <>
+                  {renderField({ name: 'peso', label: 'Peso (kg)', type: 'number', required: true })}
+                  {renderField({ name: 'altura_cm', label: 'Altura (cm)', type: 'number', required: true })}
+                  {renderField({ name: 'grasa_porcentaje', label: '% Grasa Corporal', type: 'number', required: true })}
+                  {renderField({ name: 'masa_muscular_porcentaje', label: '% Masa Muscular', type: 'number' })}
+                  {renderField({ name: 'masa_osea_kg', label: 'Masa Ósea (kg)', type: 'number' })}
+                  {renderField({ name: 'agua_porcentaje', label: '% Agua Corporal', type: 'number' })}
+                  {renderField({ name: 'grasa_visceral', label: 'Grasa Visceral (nivel)', type: 'number' })}
+                </>
+              )}
+              
+              {formData.measurement_type === 'tape_measure' && (
+                <>
+                  {renderField({ name: 'peso', label: 'Peso (kg)', type: 'number', required: true })}
+                  {renderField({ name: 'altura_cm', label: 'Altura (cm)', type: 'number', required: true })}
+                  {renderField({ name: 'pecho_cm', label: 'Pecho (cm)', type: 'number' })}
+                  {renderField({ name: 'cintura_cm', label: 'Cintura (cm)', type: 'number', required: true })}
+                  {renderField({ name: 'cadera_cm', label: 'Cadera (cm)', type: 'number', required: true })}
+                  {renderField({ name: 'biceps_relajado_cm', label: 'Bíceps Relajado (cm)', type: 'number' })}
+                  {renderField({ name: 'biceps_flexionado_cm', label: 'Bíceps Flexionado (cm)', type: 'number' })}
+                  {renderField({ name: 'muslo_cm', label: 'Muslo (cm)', type: 'number' })}
+                </>
+              )}
+              
+              {formData.measurement_type === 'none' && (
+                <>
+                  {renderField({ name: 'peso', label: 'Peso estimado (kg)', type: 'number', required: true })}
+                  {renderField({ name: 'altura_cm', label: 'Altura (cm)', type: 'number', required: true })}
+                </>
+              )}
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {currentSectionData.fields.map(renderField)}
