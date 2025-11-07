@@ -4809,8 +4809,10 @@ async def generate_plan_from_follow_up(user_id: str, followup_id: str, request: 
         if not user:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
         
+        # Obtener el cuestionario inicial (el primero del usuario)
         initial_questionnaire = await db.nutrition_questionnaire_submissions.find_one(
-            {"_id": follow_up.get("previous_questionnaire_id")}
+            {"user_id": user_id},
+            sort=[("submitted_at", 1)]  # El más antiguo
         )
         
         if not initial_questionnaire:
