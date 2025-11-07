@@ -41,7 +41,8 @@ import {
   UtensilsCrossed,
   Loader2,
   Save,
-  UserCheck
+  UserCheck,
+  Dumbbell
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { AdminCalendar } from '../components/Calendar';
