@@ -709,7 +709,6 @@ async def get_client_details(user_id: str, request: Request):
     
     # Get nutrition questionnaire submissions and add as 'nutrition' type form
     nutrition_submissions = await db.nutrition_questionnaire_submissions.find({"user_id": user_id}).to_list(100)
-    logger.info(f"Found {len(nutrition_submissions)} nutrition submissions for user {user_id}")
     
     for form in forms:
         form["id"] = str(form["_id"])
