@@ -418,6 +418,7 @@ const AdminDashboard = () => {
       setSelectedClient(response.data.user);
     } catch (error) {
       console.error('❌ Error loading client details:', error);
+      console.error('Error details:', error.response?.data || error.message);
       setSelectedClientDetails({ user: selectedClient, forms: [], pdfs: [], alerts: [] });
     }
   };
