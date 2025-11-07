@@ -1586,17 +1586,19 @@ const AdminDashboard = () => {
                     </CardHeader>
                     <CardContent>
                       <Tabs defaultValue="data" className="space-y-4">
-                        <TabsList className="flex flex-wrap w-full gap-1">
-                          <TabsTrigger value="data" className="flex-1 min-w-[80px]">Datos</TabsTrigger>
-                          <TabsTrigger value="forms" className="flex-1 min-w-[100px]">Formularios</TabsTrigger>
-                          <TabsTrigger value="pdfs" className="flex-1 min-w-[70px]">PDFs</TabsTrigger>
-                          <TabsTrigger value="nutrition" className="flex-1 min-w-[90px]">🥗 Nutrición</TabsTrigger>
-                          <TabsTrigger value="training" className="flex-1 min-w-[110px]">🏋️ Entrenamiento</TabsTrigger>
-                          <TabsTrigger value="followup" className="flex-1 min-w-[110px]">📊 Seguimiento</TabsTrigger>
-                          <TabsTrigger value="history" className="flex-1 min-w-[90px]">📋 Historial</TabsTrigger>
-                          <TabsTrigger value="alerts" className="flex-1 min-w-[70px]">Alertas</TabsTrigger>
-                          <TabsTrigger value="sessions" className="flex-1 min-w-[80px]">Sesiones</TabsTrigger>
-                        </TabsList>
+                        <div className="overflow-x-auto">
+                          <TabsList className="flex w-full min-w-max gap-1">
+                            <TabsTrigger value="data" className="whitespace-nowrap px-3">Datos</TabsTrigger>
+                            <TabsTrigger value="forms" className="whitespace-nowrap px-3">Formularios</TabsTrigger>
+                            <TabsTrigger value="pdfs" className="whitespace-nowrap px-3">PDFs</TabsTrigger>
+                            <TabsTrigger value="nutrition" className="whitespace-nowrap px-3">🥗 Nutrición</TabsTrigger>
+                            <TabsTrigger value="training" className="whitespace-nowrap px-3">🏋️ Entrenamiento</TabsTrigger>
+                            <TabsTrigger value="followup" className="whitespace-nowrap px-3">📊 Seguimiento</TabsTrigger>
+                            <TabsTrigger value="history" className="whitespace-nowrap px-3">📋 Historial</TabsTrigger>
+                            <TabsTrigger value="alerts" className="whitespace-nowrap px-3">Alertas</TabsTrigger>
+                            <TabsTrigger value="sessions" className="whitespace-nowrap px-3">Sesiones</TabsTrigger>
+                          </TabsList>
+                        </div>
 
                         {/* Data Tab */}
                         <TabsContent value="data" className="space-y-4">
