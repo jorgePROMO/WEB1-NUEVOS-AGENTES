@@ -271,7 +271,8 @@ const AdminDashboard = () => {
       }
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('❌ Error al generar PDF: ' + (error.response?.data?.detail || error.message));
+      const errorMsg = error.response?.data?.detail || error.message || 'Error desconocido';
+      alert('❌ Error al generar PDF: ' + (typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg)));
     } finally {
       setGeneratingTrainingPDF(false);
     }
