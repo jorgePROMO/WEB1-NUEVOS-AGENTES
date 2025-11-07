@@ -700,7 +700,11 @@ async def get_client_details(user_id: str, request: Request):
     
     # Get forms, pdfs, alerts for this user
     forms = await db.forms.find({"user_id": user_id}).to_list(100)
-    pdfs = await db.pdfs.find({"user_id": user_id}).to_list(100)
+    # Exclude file_data from PDFs to avoid serialization issues
+    pdfs = await db.pdfs.find(
+        {"user_id": user_id},
+        {"file_data": 0}  # Exclude binary data
+    ).to_list(100)
     alerts = await db.alerts.find({"user_id": user_id}).to_list(100)
     
     # Get nutrition questionnaire submissions and add as 'nutrition' type form
