@@ -5255,9 +5255,6 @@ async def generate_followup_analysis_pdf(user_id: str, followup_id: str, request
             detail=f"Error generando PDF: {str(e)}"
         )
 
-        )
-
-
 
 @api_router.get("/admin/pending-reviews")
 async def get_pending_reviews(request: Request):
