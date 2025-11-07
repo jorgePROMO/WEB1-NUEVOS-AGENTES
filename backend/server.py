@@ -710,6 +710,9 @@ async def get_client_details(user_id: str, request: Request):
         form["id"] = str(form["_id"])
     for pdf in pdfs:
         pdf["id"] = str(pdf["_id"])
+        # Convert upload_date to ISO string for JavaScript
+        if pdf.get("upload_date"):
+            pdf["upload_date"] = pdf["upload_date"].isoformat()
     for alert in alerts:
         alert["id"] = str(alert["_id"])
     
