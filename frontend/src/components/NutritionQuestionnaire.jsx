@@ -383,7 +383,7 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
         }
       );
 
-      alert('✅ ¡Cuestionario enviado! Tu plan de nutrición se está generando...');
+      alert('✅ ¡Cuestionario enviado! Jorge y su equipo están revisando tu información para crear tu plan personalizado.');
       if (onComplete) {
         onComplete(response.data);
       }
