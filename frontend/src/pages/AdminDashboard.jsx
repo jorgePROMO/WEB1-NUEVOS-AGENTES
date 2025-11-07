@@ -91,6 +91,17 @@ const AdminDashboard = () => {
   const [showNutritionModal, setShowNutritionModal] = useState(false); // Control del modal
   const [modalPlan, setModalPlan] = useState(null); // Plan que se muestra en el modal
   
+  // Training states
+  const [trainingPlans, setTrainingPlans] = useState([]); // Array de planes de entrenamiento
+  const [selectedTrainingPlan, setSelectedTrainingPlan] = useState(null); // Plan seleccionado
+  const [editingTraining, setEditingTraining] = useState(false);
+  const [trainingContent, setTrainingContent] = useState('');
+  const [generatingTrainingPDF, setGeneratingTrainingPDF] = useState(false);
+  const [sendingTraining, setSendingTraining] = useState(null);
+  const [generatingTrainingPlan, setGeneratingTrainingPlan] = useState(false);
+  const [showTrainingModal, setShowTrainingModal] = useState(false);
+  const [modalTrainingPlan, setModalTrainingPlan] = useState(null);
+  
   // Follow-up states
   const [followUps, setFollowUps] = useState([]); // Array de seguimientos
   const [selectedFollowUp, setSelectedFollowUp] = useState(null); // Seguimiento seleccionado
