@@ -4899,6 +4899,195 @@ async def generate_plan_from_follow_up(user_id: str, followup_id: str, request: 
         raise HTTPException(status_code=500, detail=f"Error al generar nuevo plan: {str(e)}")
 
 
+@api_router.post("/admin/users/{user_id}/followups/{followup_id}/send-email")
+async def send_followup_analysis_email(user_id: str, followup_id: str, request: Request):
+    """Admin envía el análisis de seguimiento por email al cliente"""
+    await require_admin(request)
+    
+    try:
+        from email_utils import send_email
+        import markdown
+        
+        # Obtener el seguimiento
+        follow_up = await db.follow_up_submissions.find_one({"_id": followup_id, "user_id": user_id})
+        if not follow_up:
+            raise HTTPException(status_code=404, detail="Seguimiento no encontrado")
+        
+        # Obtener usuario
+        user = await db.users.find_one({"_id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Verificar que hay análisis
+        analysis_content = follow_up.get("ai_analysis", "")
+        if not analysis_content:
+            raise HTTPException(
+                status_code=400,
+                detail="El seguimiento no tiene análisis. Por favor, genera el análisis primero."
+            )
+        
+        submission_date = follow_up.get("submission_date")
+        if isinstance(submission_date, str):
+            from datetime import datetime
+            submission_date = datetime.fromisoformat(submission_date.replace('Z', '+00:00'))
+        
+        month_name = submission_date.strftime("%B") if submission_date else "este mes"
+        
+        # Convertir markdown a HTML
+        html_content = markdown.markdown(analysis_content, extensions=['nl2br', 'tables'])
+        
+        # Construir el email
+        subject = f"Tu Análisis de Seguimiento - {month_name.capitalize()}"
+        
+        html_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 800px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .analysis-box {{ background-color: white; padding: 25px; border-left: 4px solid #667eea; margin: 20px 0; border-radius: 5px; }}
+                .footer {{ text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee; color: #666; }}
+                h1 {{ margin: 0; font-size: 28px; }}
+                h2 {{ color: #667eea; margin-top: 20px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>📊 Tu Análisis de Progreso</h1>
+                    <p style="margin: 10px 0 0 0; font-size: 18px;">Seguimiento de {month_name.capitalize()}</p>
+                </div>
+                <div class="content">
+                    <p style="font-size: 16px;">Hola <strong>{user.get('name', 'Cliente')}</strong>,</p>
+                    <p>He revisado tu cuestionario de seguimiento y aquí está mi análisis detallado de tu progreso:</p>
+                    
+                    <div class="analysis-box">
+                        {html_content}
+                    </div>
+                    
+                    <p style="margin-top: 25px;">Si tienes alguna duda sobre este análisis o quieres comentar algo, no dudes en contactarme.</p>
+                    <p>¡Sigamos trabajando juntos para alcanzar tus objetivos!</p>
+                    
+                    <div class="footer">
+                        <p><strong>Jorge Calcerrada</strong><br>
+                        Entrenador Personal</p>
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Enviar el email
+        success = send_email(
+            to_email=user.get('email'),
+            subject=subject,
+            html_body=html_body
+        )
+        
+        if success:
+            logger.info(f"Follow-up analysis email sent to {user.get('email')} for followup {followup_id}")
+            return {
+                "success": True,
+                "message": f"Análisis enviado correctamente a {user.get('email')}"
+            }
+        else:
+            raise HTTPException(
+                status_code=500,
+                detail="Error al enviar el email. Verifica la configuración SMTP."
+            )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error sending follow-up analysis email: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error enviando email: {str(e)}"
+        )
+
+
+@api_router.post("/admin/users/{user_id}/followups/{followup_id}/send-whatsapp")
+async def send_followup_analysis_whatsapp(user_id: str, followup_id: str, request: Request):
+    """Admin envía el análisis de seguimiento por WhatsApp al cliente"""
+    await require_admin(request)
+    
+    try:
+        # Obtener el seguimiento
+        follow_up = await db.follow_up_submissions.find_one({"_id": followup_id, "user_id": user_id})
+        if not follow_up:
+            raise HTTPException(status_code=404, detail="Seguimiento no encontrado")
+        
+        # Obtener usuario
+        user = await db.users.find_one({"_id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Verificar que hay análisis
+        analysis_content = follow_up.get("ai_analysis", "")
+        if not analysis_content:
+            raise HTTPException(
+                status_code=400,
+                detail="El seguimiento no tiene análisis. Por favor, genera el análisis primero."
+            )
+        
+        # Obtener teléfono del usuario
+        phone = user.get('telefono') or user.get('phone')
+        if not phone:
+            raise HTTPException(
+                status_code=400,
+                detail="El usuario no tiene teléfono registrado"
+            )
+        
+        submission_date = follow_up.get("submission_date")
+        if isinstance(submission_date, str):
+            from datetime import datetime
+            submission_date = datetime.fromisoformat(submission_date.replace('Z', '+00:00'))
+        
+        month_name = submission_date.strftime("%B") if submission_date else "este mes"
+        
+        # Construir el mensaje para WhatsApp (texto plano, sin HTML)
+        message = f"""Hola {user.get('name', 'Cliente')} 👋
+
+📊 *Tu Análisis de Progreso - {month_name.capitalize()}*
+
+He revisado tu cuestionario de seguimiento y aquí está mi análisis:
+
+{analysis_content}
+
+Si tienes alguna duda, no dudes en escribirme.
+
+¡Sigamos trabajando juntos! 💪
+
+Jorge Calcerrada
+Entrenador Personal"""
+        
+        # Crear URL de WhatsApp
+        import urllib.parse
+        whatsapp_url = f"https://wa.me/{phone}?text={urllib.parse.quote(message)}"
+        
+        logger.info(f"WhatsApp URL generated for follow-up {followup_id} to user {user_id}")
+        
+        return {
+            "success": True,
+            "whatsapp_url": whatsapp_url,
+            "message": "URL de WhatsApp generada correctamente"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating WhatsApp URL for follow-up: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error generando WhatsApp: {str(e)}"
+        )
+
+
+
 @api_router.get("/admin/pending-reviews")
 async def get_pending_reviews(request: Request):
     """
