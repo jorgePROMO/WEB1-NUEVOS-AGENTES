@@ -100,6 +100,7 @@ const AdminDashboard = () => {
   const [generatingTrainingPDF, setGeneratingTrainingPDF] = useState(false);
   const [sendingTraining, setSendingTraining] = useState(null);
   const [generatingTrainingPlan, setGeneratingTrainingPlan] = useState(false);
+  const [generatingFromFollowup, setGeneratingFromFollowup] = useState(false);
   const [showTrainingModal, setShowTrainingModal] = useState(false);
   const [modalTrainingPlan, setModalTrainingPlan] = useState(null);
   
