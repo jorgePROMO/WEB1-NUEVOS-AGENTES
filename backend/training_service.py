@@ -438,11 +438,12 @@ async def generate_training_plan(questionnaire_data: dict) -> dict:
         agent_3_response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "Eres un generador de planes de entrenamiento semanales. Generas plan completo + tabla tabulada en formato JSON."},
+                {"role": "system", "content": "Eres un generador de planes de entrenamiento semanales. Generas plan completo + tabla tabulada en formato JSON válido."},
                 {"role": "user", "content": AGENT_3_PROMPT.format(agent_2_output=agent_2_output)}
             ],
             temperature=0.4,
-            max_tokens=3000
+            max_tokens=3000,
+            response_format={"type": "json_object"}
         )
         
         agent_3_output = agent_3_response.choices[0].message.content
@@ -455,6 +456,7 @@ async def generate_training_plan(questionnaire_data: dict) -> dict:
             tabla_tabulada = agent_3_json.get("tabla_tabulada", "")
         except json.JSONDecodeError as e:
             logger.error(f"❌ Agent 3 output is not valid JSON: {e}")
+            logger.error(f"Agent 3 output preview: {agent_3_output[:1000]}")
             return {"success": False, "error": f"Agent 3 JSON parsing error: {str(e)}"}
         
         # ==================== AGENT 4: PROFESSIONAL COMPACTOR ====================
