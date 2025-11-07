@@ -4665,7 +4665,8 @@ Genera un análisis completo y motivador del progreso del cliente. Debe incluir:
 - Sé empático y motivador, nunca crítico o desalentador
 - Usa un tono cercano y profesional
 - Sé específico en las recomendaciones
-- Si hay mediciones, compáralas explícitamente con las iniciales
+- Si hay mediciones del seguimiento anterior, compáralas explícitamente con las actuales mostrando la diferencia
+- Si es el primer seguimiento, indica que no hay datos previos para comparar
 - Adapta el análisis según la adherencia del cliente
 
 Genera el análisis en español, con formato markdown para facilitar la lectura."""
