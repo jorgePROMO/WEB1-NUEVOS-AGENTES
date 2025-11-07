@@ -4506,7 +4506,7 @@ async def send_training_email(user_id: str, plan_id: str = None, request: Reques
         
         subject = f"🏋️ Tu Plan de Entrenamiento - {month_names[month]} {year}"
         
-        await send_email(
+        send_email(
             to_email=user.get('email'),
             subject=subject,
             html_body=email_html
