@@ -4569,12 +4569,14 @@ async def analyze_follow_up_with_ai(user_id: str, followup_id: str, request: Req
 Nombre: {user.get('name', 'Cliente')}
 Días desde el último plan: {follow_up.get('days_since_last_plan', 0)} días
 
-**MEDICIONES DEL SEGUIMIENTO ANTERIOR:**
+**MEDICIONES ANTERIORES PARA COMPARACIÓN:**
 """
         
         if previous_follow_up and previous_follow_up.get('measurements'):
+            # Hay seguimiento anterior - usar esos datos
             prev_measurements = previous_follow_up['measurements']
             prompt += f"""
+(Del seguimiento anterior)
 - Peso anterior: {prev_measurements.get('peso', 'N/A')} kg
 - Tipo de medición: {previous_follow_up.get('measurement_type', 'N/A')}
 
@@ -4590,8 +4592,37 @@ Días desde el último plan: {follow_up.get('days_since_last_plan', 0)} días
                 prompt += f"- Pecho: {prev_measurements.get('circunferencia_pecho')} cm\n"
             if prev_measurements.get('circunferencia_cadera'):
                 prompt += f"- Cadera: {prev_measurements.get('circunferencia_cadera')} cm\n"
+        elif initial_nutrition_questionnaire:
+            # Es el PRIMER seguimiento - usar datos del cuestionario inicial
+            responses = initial_nutrition_questionnaire.get('responses', {})
+            prompt += f"""
+(Del cuestionario inicial de nutrición - PRIMER SEGUIMIENTO)
+- Peso inicial: {responses.get('peso', 'N/A')} kg
+- Altura: {responses.get('altura_cm', 'N/A')} cm
+- Tipo de medición: {responses.get('measurement_type', 'N/A')}
+
+**Medidas corporales iniciales:**
+"""
+            if responses.get('grasa_porcentaje'):
+                prompt += f"- Grasa corporal: {responses.get('grasa_porcentaje')}%\n"
+            if responses.get('masa_muscular_porcentaje'):
+                prompt += f"- Masa muscular: {responses.get('masa_muscular_porcentaje')}%\n"
+            if responses.get('masa_osea_kg'):
+                prompt += f"- Masa ósea: {responses.get('masa_osea_kg')} kg\n"
+            if responses.get('agua_porcentaje'):
+                prompt += f"- Agua corporal: {responses.get('agua_porcentaje')}%\n"
+            if responses.get('cintura_cm'):
+                prompt += f"- Cintura: {responses.get('cintura_cm')} cm\n"
+            if responses.get('cadera_cm'):
+                prompt += f"- Cadera: {responses.get('cadera_cm')} cm\n"
+            if responses.get('pecho_cm'):
+                prompt += f"- Pecho: {responses.get('pecho_cm')} cm\n"
+            if responses.get('biceps_relajado_cm'):
+                prompt += f"- Bíceps relajado: {responses.get('biceps_relajado_cm')} cm\n"
+            if responses.get('muslo_cm'):
+                prompt += f"- Muslo: {responses.get('muslo_cm')} cm\n"
         else:
-            prompt += "\n(Este es el primer seguimiento, no hay datos anteriores para comparar)\n"
+            prompt += "\n(No se encontraron datos de referencia)\n"
         
         prompt += f"""
 
