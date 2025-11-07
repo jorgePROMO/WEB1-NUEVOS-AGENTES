@@ -385,21 +385,26 @@ async def generate_training_plan(questionnaire_data: dict) -> dict:
         agent_1_response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "Eres un evaluador de perfiles deportivos experto. SOLO generas JSON estructurado, SIN texto adicional."},
+                {"role": "system", "content": "Eres un evaluador de perfiles deportivos experto. SOLO generas JSON estructurado válido, SIN texto adicional antes o después del JSON."},
                 {"role": "user", "content": AGENT_1_PROMPT.format(client_data=client_data_json)}
             ],
             temperature=0.3,
-            max_tokens=3000
+            max_tokens=3000,
+            response_format={"type": "json_object"}
         )
         
         agent_1_output = agent_1_response.choices[0].message.content
         logger.info(f"✅ Agent 1 completed - Output length: {len(agent_1_output)} chars")
+        
+        # Log first 500 chars for debugging
+        logger.info(f"Agent 1 output preview: {agent_1_output[:500]}")
         
         # Validate Agent 1 output is valid JSON
         try:
             agent_1_json = json.loads(agent_1_output)
         except json.JSONDecodeError as e:
             logger.error(f"❌ Agent 1 output is not valid JSON: {e}")
+            logger.error(f"Agent 1 full output: {agent_1_output[:1000]}")
             return {"success": False, "error": f"Agent 1 JSON parsing error: {str(e)}"}
         
         # ==================== AGENT 2: ADVANCED CONTEXTUALIZER ====================
