@@ -5089,6 +5089,171 @@ Entrenador Personal"""
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error generando WhatsApp: {str(e)}"
+
+
+@api_router.post("/admin/users/{user_id}/followups/{followup_id}/generate-pdf")
+async def generate_followup_analysis_pdf(user_id: str, followup_id: str, request: Request):
+    """Admin genera PDF del análisis de seguimiento"""
+    await require_admin(request)
+    
+    try:
+        # Obtener el seguimiento
+        follow_up = await db.follow_up_submissions.find_one({"_id": followup_id, "user_id": user_id})
+        if not follow_up:
+            raise HTTPException(status_code=404, detail="Seguimiento no encontrado")
+        
+        # Obtener usuario
+        user = await db.users.find_one({"_id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Verificar que hay análisis
+        analysis_content = follow_up.get("ai_analysis", "")
+        if not analysis_content:
+            raise HTTPException(
+                status_code=400,
+                detail="El seguimiento no tiene análisis. Por favor, genera el análisis primero."
+            )
+        
+        submission_date = follow_up.get("submission_date")
+        if isinstance(submission_date, str):
+            from datetime import datetime
+            submission_date = datetime.fromisoformat(submission_date.replace('Z', '+00:00'))
+        
+        month_name = submission_date.strftime("%B") if submission_date else "Seguimiento"
+        year = submission_date.strftime("%Y") if submission_date else ""
+        
+        # Convertir markdown a HTML
+        import markdown
+        html_content = markdown.markdown(analysis_content, extensions=['nl2br', 'tables'])
+        
+        # Crear HTML completo para el PDF
+        html_template = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                @page {{
+                    size: A4;
+                    margin: 2cm;
+                }}
+                body {{
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                }}
+                .header {{
+                    text-align: center;
+                    margin-bottom: 30px;
+                    padding-bottom: 20px;
+                    border-bottom: 3px solid #667eea;
+                }}
+                .header h1 {{
+                    color: #667eea;
+                    font-size: 28px;
+                    margin-bottom: 10px;
+                }}
+                .header .subtitle {{
+                    font-size: 18px;
+                    color: #666;
+                }}
+                .client-info {{
+                    background-color: #f5f5f5;
+                    padding: 15px;
+                    border-radius: 5px;
+                    margin-bottom: 25px;
+                }}
+                .content {{
+                    margin-top: 20px;
+                }}
+                h2 {{
+                    color: #667eea;
+                    margin-top: 25px;
+                    border-bottom: 2px solid #eee;
+                    padding-bottom: 10px;
+                }}
+                h3 {{
+                    color: #555;
+                    margin-top: 20px;
+                }}
+                .footer {{
+                    margin-top: 40px;
+                    padding-top: 20px;
+                    border-top: 2px solid #eee;
+                    text-align: center;
+                    color: #666;
+                    font-size: 14px;
+                }}
+                strong {{
+                    color: #667eea;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>📊 Análisis de Progreso</h1>
+                <div class="subtitle">Seguimiento de {month_name.capitalize()} {year}</div>
+            </div>
+            
+            <div class="client-info">
+                <strong>Cliente:</strong> {user.get('name', 'Cliente')}<br>
+                <strong>Fecha de análisis:</strong> {datetime.now(timezone.utc).strftime("%d de %B de %Y")}
+            </div>
+            
+            <div class="content">
+                {html_content}
+            </div>
+            
+            <div class="footer">
+                <strong>Jorge Calcerrada</strong><br>
+                Entrenador Personal
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Generar PDF usando WeasyPrint
+        from weasyprint import HTML
+        import io
+        
+        pdf_buffer = io.BytesIO()
+        HTML(string=html_template).write_pdf(pdf_buffer)
+        pdf_buffer.seek(0)
+        pdf_content = pdf_buffer.read()
+        
+        # Guardar el PDF en la base de datos
+        pdf_id = str(datetime.now(timezone.utc).timestamp()).replace('.', '')
+        pdf_title = f"Análisis de Seguimiento - {month_name.capitalize()} {year}"
+        
+        await db.pdfs.insert_one({
+            "_id": pdf_id,
+            "user_id": user_id,
+            "title": pdf_title,
+            "content": pdf_content,
+            "type": "follow_up_analysis",
+            "follow_up_id": followup_id,
+            "uploaded_at": datetime.now(timezone.utc),
+            "uploaded_by": "admin"
+        })
+        
+        logger.info(f"Follow-up analysis PDF generated: {pdf_id} for user {user_id}")
+        
+        return {
+            "success": True,
+            "pdf_id": pdf_id,
+            "message": "PDF del análisis generado correctamente"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating follow-up analysis PDF: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error generando PDF: {str(e)}"
+        )
+
         )
 
 
