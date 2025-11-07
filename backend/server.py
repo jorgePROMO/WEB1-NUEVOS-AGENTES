@@ -4560,31 +4560,29 @@ async def analyze_follow_up_with_ai(user_id: str, followup_id: str, request: Req
 Nombre: {user.get('name', 'Cliente')}
 Días desde el último plan: {follow_up.get('days_since_last_plan', 0)} días
 
-**DATOS INICIALES (del cuestionario original):**
+**MEDICIONES DEL SEGUIMIENTO ANTERIOR:**
 """
         
-        if initial_questionnaire:
-            responses = initial_questionnaire.get('responses', {})
+        if previous_follow_up and previous_follow_up.get('measurements'):
+            prev_measurements = previous_follow_up['measurements']
             prompt += f"""
-- Peso inicial: {responses.get('peso', 'N/A')} kg
-- Altura: {responses.get('altura_cm', 'N/A')} cm
-- Tipo de medición: {responses.get('measurement_type', 'N/A')}
-- Objetivo: {responses.get('objetivo_principal', 'N/A')}
-- Nivel de actividad: {responses.get('nivel_actividad', 'N/A')}
+- Peso anterior: {prev_measurements.get('peso', 'N/A')} kg
+- Tipo de medición: {previous_follow_up.get('measurement_type', 'N/A')}
+
+**Medidas corporales anteriores:**
 """
-            
-            # Agregar medidas iniciales según el tipo de medición
-            prompt += f"\n**Medidas corporales iniciales:**\n"
-            if responses.get('grasa_porcentaje'):
-                prompt += f"- Grasa corporal: {responses.get('grasa_porcentaje')}%\n"
-            if responses.get('masa_muscular_porcentaje'):
-                prompt += f"- Masa muscular: {responses.get('masa_muscular_porcentaje')}%\n"
-            if responses.get('cintura_cm'):
-                prompt += f"- Cintura: {responses.get('cintura_cm')} cm\n"
-            if responses.get('cadera_cm'):
-                prompt += f"- Cadera: {responses.get('cadera_cm')} cm\n"
-            if responses.get('pecho_cm'):
-                prompt += f"- Pecho: {responses.get('pecho_cm')} cm\n"
+            if prev_measurements.get('grasa_corporal'):
+                prompt += f"- Grasa corporal: {prev_measurements.get('grasa_corporal')}%\n"
+            if prev_measurements.get('masa_muscular'):
+                prompt += f"- Masa muscular: {prev_measurements.get('masa_muscular')} kg\n"
+            if prev_measurements.get('circunferencia_cintura'):
+                prompt += f"- Cintura: {prev_measurements.get('circunferencia_cintura')} cm\n"
+            if prev_measurements.get('circunferencia_pecho'):
+                prompt += f"- Pecho: {prev_measurements.get('circunferencia_pecho')} cm\n"
+            if prev_measurements.get('circunferencia_cadera'):
+                prompt += f"- Cadera: {prev_measurements.get('circunferencia_cadera')} cm\n"
+        else:
+            prompt += "\n(Este es el primer seguimiento, no hay datos anteriores para comparar)\n"
         
         prompt += f"""
 
