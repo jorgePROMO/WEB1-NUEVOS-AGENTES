@@ -795,21 +795,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleUnarchiveClient = async (clientId) => {
-    try {
-      await axios.post(`${API}/admin/unarchive-client/${clientId}`, {}, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      alert('Cliente desarchivado correctamente');
-      loadClients();
-    } catch (error) {
-      console.error('Error unarchiving client:', error);
-      alert('Error al desarchivar cliente');
-    }
-  };
-
   const handleDeleteClient = async (clientId, clientName) => {
     // Primera confirmación
     if (!window.confirm(`⚠️ ¿Eliminar PERMANENTEMENTE a ${clientName}?`)) {
