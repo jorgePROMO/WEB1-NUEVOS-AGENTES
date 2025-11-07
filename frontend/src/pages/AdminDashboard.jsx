@@ -875,7 +875,12 @@ const AdminDashboard = () => {
       );
       
       setSelectedClient(null);
-
+      loadClients();
+    } catch (error) {
+      console.error('Error eliminando cliente:', error);
+      alert(`❌ Error al eliminar cliente: ${error.response?.data?.detail || error.message}`);
+    }
+  };
 
   // Archivar cliente
   const handleArchiveClient = async (clientId, clientName) => {
