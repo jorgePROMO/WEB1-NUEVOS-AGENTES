@@ -488,6 +488,39 @@ class NutritionPlanHistoryItem(BaseModel):
     sent_whatsapp: bool = False
 
 
+# ==================== TRAINING PLANS MODELS ====================
+
+class TrainingPlanResponse(BaseModel):
+    user_id: str
+    questionnaire_data: dict
+    agent_1_output: str  # Basic profile analysis
+    agent_2_output: str  # Advanced contextualization
+    agent_3_output: dict  # Weekly plan + table
+    plan_final: str  # Final professional document
+    generated_at: datetime
+    edited: bool = False
+    pdf_generated: bool = False
+    pdf_url: Optional[str] = None
+
+
+class TrainingPlanHistoryItem(BaseModel):
+    id: str
+    user_id: str
+    month: int  # 1-12
+    year: int
+    questionnaire_data: dict
+    agent_1_output: str
+    agent_2_output: str
+    agent_3_output: dict
+    plan_final: str
+    generated_at: datetime
+    edited: bool = False
+    pdf_id: Optional[str] = None
+    pdf_filename: Optional[str] = None
+    sent_email: bool = False
+    sent_whatsapp: bool = False
+
+
 class ProspectStageUpdate(BaseModel):
     stage_id: str
 
