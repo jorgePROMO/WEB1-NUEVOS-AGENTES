@@ -4315,10 +4315,51 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
         month_names = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
                        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
         
-        # Convertir markdown a HTML básico
-        html_content = plan_content.replace('\n', '<br>')
-        html_content = html_content.replace('**', '<strong>').replace('**', '</strong>')
-        html_content = html_content.replace('##', '<h2>').replace('\n', '</h2>\n')
+        # Mejorar conversión de texto a HTML
+        lines = plan_content.split('\n')
+        html_lines = []
+        in_list = False
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                if in_list:
+                    html_lines.append('</ul>')
+                    in_list = False
+                html_lines.append('<br>')
+                continue
+            
+            # Títulos principales (emojis + texto en mayúsculas)
+            if line.startswith('🏋') or line.startswith('📅') or line.startswith('⚠️') or line.startswith('📈') or line.startswith('📞'):
+                if in_list:
+                    html_lines.append('</ul>')
+                    in_list = False
+                html_lines.append(f'<h2 style="color: #2563eb; margin-top: 20px; margin-bottom: 10px;">{line}</h2>')
+            # Subtítulos (** text **)
+            elif line.startswith('**') and line.endswith('**'):
+                if in_list:
+                    html_lines.append('</ul>')
+                    in_list = False
+                clean_line = line.replace('**', '')
+                html_lines.append(f'<h3 style="color: #1e40af; margin-top: 15px; margin-bottom: 8px;">{clean_line}</h3>')
+            # Items de lista (- texto)
+            elif line.startswith('-'):
+                if not in_list:
+                    html_lines.append('<ul style="margin-left: 20px; line-height: 1.8;">')
+                    in_list = True
+                clean_line = line[1:].strip()
+                html_lines.append(f'<li>{clean_line}</li>')
+            # Texto normal
+            else:
+                if in_list:
+                    html_lines.append('</ul>')
+                    in_list = False
+                html_lines.append(f'<p style="margin: 8px 0;">{line}</p>')
+        
+        if in_list:
+            html_lines.append('</ul>')
+        
+        html_content = '\n'.join(html_lines)
         
         html_template = f"""
         <!DOCTYPE html>
