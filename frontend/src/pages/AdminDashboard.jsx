@@ -2176,6 +2176,244 @@ const AdminDashboard = () => {
                         </TabsContent>
 
 
+                        {/* Training Tab */}
+                        <TabsContent value="training">
+                          {/* Pending questionnaires - can generate from nutrition questionnaire */}
+                          {questionnaireSubmissions.length > 0 && (
+                            <div className="mb-6">
+                              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-lg p-4">
+                                <h3 className="text-xl font-bold text-blue-800 mb-3 flex items-center gap-2">
+                                  💪 Generar Plan de Entrenamiento
+                                  <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+                                    Desde Cuestionario
+                                  </span>
+                                </h3>
+                                
+                                <div className="space-y-3">
+                                  {questionnaireSubmissions.map((submission) => (
+                                    <Card key={submission.id} className="border-blue-200 bg-white">
+                                      <CardHeader>
+                                        <div className="flex justify-between items-center">
+                                          <div>
+                                            <CardTitle className="text-lg text-gray-800">
+                                              📋 Cuestionario Disponible
+                                            </CardTitle>
+                                            <p className="text-sm text-gray-500">
+                                              Enviado el {new Date(submission.submitted_at).toLocaleDateString('es-ES', {
+                                                day: 'numeric',
+                                                month: 'long',
+                                                year: 'numeric'
+                                              })}
+                                            </p>
+                                          </div>
+                                          
+                                          <Button
+                                            onClick={() => generateTrainingPlan('initial', submission.id)}
+                                            disabled={generatingTrainingPlan}
+                                            className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white"
+                                          >
+                                            {generatingTrainingPlan ? (
+                                              <>
+                                                <span className="animate-spin mr-2">⏳</span>
+                                                Generando...
+                                              </>
+                                            ) : (
+                                              '💪 Generar Plan de Entrenamiento'
+                                            )}
+                                          </Button>
+                                        </div>
+                                      </CardHeader>
+                                    </Card>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Follow-ups available for training plan generation */}
+                          {followUps.length > 0 && (
+                            <div className="mb-6">
+                              <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-300 rounded-lg p-4">
+                                <h3 className="text-xl font-bold text-purple-800 mb-3 flex items-center gap-2">
+                                  📊 Generar desde Seguimiento
+                                  <span className="bg-purple-500 text-white text-xs px-2 py-1 rounded-full">
+                                    {followUps.length}
+                                  </span>
+                                </h3>
+                                
+                                <div className="space-y-3">
+                                  {followUps.map((followup) => (
+                                    <Card key={followup.id} className="border-purple-200 bg-white">
+                                      <CardHeader>
+                                        <div className="flex justify-between items-center">
+                                          <div>
+                                            <CardTitle className="text-lg text-gray-800">
+                                              📋 Seguimiento Mensual
+                                            </CardTitle>
+                                            <p className="text-sm text-gray-500">
+                                              Enviado el {new Date(followup.submitted_at).toLocaleDateString('es-ES', {
+                                                day: 'numeric',
+                                                month: 'long',
+                                                year: 'numeric'
+                                              })}
+                                            </p>
+                                          </div>
+                                          
+                                          <Button
+                                            onClick={() => generateTrainingPlan('followup', followup.id)}
+                                            disabled={generatingTrainingPlan}
+                                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+                                          >
+                                            {generatingTrainingPlan ? (
+                                              <>
+                                                <span className="animate-spin mr-2">⏳</span>
+                                                Generando...
+                                              </>
+                                            ) : (
+                                              '💪 Generar desde Seguimiento'
+                                            )}
+                                          </Button>
+                                        </div>
+                                      </CardHeader>
+                                    </Card>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* Existing Training Plans */}
+                          {trainingPlans.length > 0 ? (
+                            <div className="space-y-4">
+                              <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-xl font-bold text-gray-800">💪 Planes de Entrenamiento Mensuales</h3>
+                                <span className="text-sm text-gray-500">{trainingPlans.length} plan(es) total</span>
+                              </div>
+
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {trainingPlans.map((plan, index) => {
+                                  const monthNames = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                                                     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                                  
+                                  return (
+                                    <Card 
+                                      key={plan.id} 
+                                      className="border-2 border-blue-200 hover:border-blue-400 transition-all cursor-pointer hover:shadow-lg"
+                                      onClick={() => openTrainingPlanModal(plan)}
+                                    >
+                                      <CardHeader>
+                                        <div className="flex items-center justify-between">
+                                          <div className="flex items-center gap-3">
+                                            <div className="w-12 h-12 rounded-full flex items-center justify-center bg-blue-500 text-white font-bold text-lg">
+                                              {index + 1}
+                                            </div>
+                                            <div>
+                                              <CardTitle className="text-lg">
+                                                🏋️ {monthNames[plan.month]} {plan.year}
+                                              </CardTitle>
+                                              <p className="text-sm text-gray-500">
+                                                {new Date(plan.generated_at).toLocaleDateString('es-ES')}
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <div className="flex flex-wrap gap-2">
+                                          {plan.pdf_id && (
+                                            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                                              📄 PDF
+                                            </Badge>
+                                          )}
+                                          {plan.sent_email && (
+                                            <Badge variant="secondary" className="bg-green-100 text-green-800">
+                                              ✉️ Email
+                                            </Badge>
+                                          )}
+                                          {plan.sent_whatsapp && (
+                                            <Badge variant="secondary" className="bg-teal-100 text-teal-800">
+                                              💬 WhatsApp
+                                            </Badge>
+                                          )}
+                                          {plan.edited && (
+                                            <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+                                              ✏️ Editado
+                                            </Badge>
+                                          )}
+                                        </div>
+                                        <div className="flex gap-2 mt-4">
+                                          <Button 
+                                            variant="outline" 
+                                            className="flex-1"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              openTrainingPlanModal(plan);
+                                            }}
+                                          >
+                                            Ver Detalles →
+                                          </Button>
+                                          <Button 
+                                            variant="outline" 
+                                            className="border-red-300 text-red-600 hover:bg-red-50"
+                                            onClick={async (e) => {
+                                              e.stopPropagation();
+                                              if (window.confirm('⚠️ ¿Eliminar completamente este plan de entrenamiento?\n\nEsta acción NO se puede deshacer.\n\n¿Continuar?')) {
+                                                try {
+                                                  await axios.delete(
+                                                    `${API}/admin/users/${selectedClient.id}/training/${plan.id}`,
+                                                    {
+                                                      headers: { Authorization: `Bearer ${token}` },
+                                                      withCredentials: true
+                                                    }
+                                                  );
+                                                  alert('✅ Plan de entrenamiento eliminado completamente');
+                                                  await loadTrainingPlans(selectedClient.id);
+                                                  await loadClientDetails(selectedClient.id);
+                                                } catch (error) {
+                                                  console.error('Error eliminando plan de entrenamiento:', error);
+                                                  alert('❌ Error al eliminar: ' + (error.response?.data?.detail || error.message));
+                                                }
+                                              }
+                                            }}
+                                          >
+                                            <Trash2 className="h-4 w-4" />
+                                          </Button>
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              {questionnaireSubmissions.length === 0 ? (
+                                <div className="bg-gray-50 p-8 rounded-lg text-center">
+                                  <Dumbbell className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                                  <h3 className="font-semibold text-lg mb-2 text-gray-700">
+                                    Sin Cuestionario
+                                  </h3>
+                                  <p className="text-gray-500">
+                                    Este usuario aún no ha completado el cuestionario. Los planes de entrenamiento se generan desde las respuestas del cuestionario de nutrición.
+                                  </p>
+                                </div>
+                              ) : (
+                                <div className="bg-blue-50 p-8 rounded-lg text-center border-2 border-blue-300">
+                                  <CheckCircle className="h-16 w-16 text-blue-500 mx-auto mb-4" />
+                                  <h3 className="font-semibold text-lg mb-2 text-blue-800">
+                                    ✅ Cuestionario Disponible
+                                  </h3>
+                                  <p className="text-gray-700">
+                                    Puedes generar el plan de entrenamiento desde el cuestionario del usuario. Haz clic en el botón arriba.
+                                  </p>
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </TabsContent>
+
+
+
                         {/* Follow-Up Tab */}
                         <TabsContent value="followup" className="space-y-4">
                           <h3 className="text-lg font-semibold flex items-center gap-2">
