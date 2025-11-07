@@ -898,11 +898,6 @@ const AdminDashboard = () => {
       alert(`❌ Error: ${error.response?.data?.detail || error.message}`);
     }
   };
-
-      loadClients();
-    } catch (error) {
-      console.error('Error deleting client:', error);
-      alert(`❌ Error: ${error.response?.data?.detail || error.message}`);
     }
   };
 
