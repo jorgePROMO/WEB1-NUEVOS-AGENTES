@@ -86,40 +86,40 @@ VOLUMEN_FINAL = aplicar_reduccion(VOLUMEN_BASE, factor_reduccion)
 
 **DEBES GENERAR EXACTAMENTE ESTA ESTRUCTURA:**
 
-{
-  "flujo_entrenamiento": {
-    "input_data": {
-      "clienteData": {...}
-    },
-    "agente_4_analysis": {
-      "experiencia_determinada": {
+{{
+  "flujo_entrenamiento": {{
+    "input_data": {{
+      "clienteData": {{...}}
+    }},
+    "agente_4_analysis": {{
+      "experiencia_determinada": {{
         "clasificacion": "AVANZADO/INTERMEDIO/PRINCIPIANTE",
         "justificacion": "...",
-        "factores_evaluados": {...}
-      },
-      "limitaciones_medicas": {
-        "hernias": {...},
-        "cardiovasculares": {...},
-        "neurologicas": {...},
-        "articulares": {...},
-        "otros_problemas": {...},
+        "factores_evaluados": {{...}}
+      }},
+      "limitaciones_medicas": {{
+        "hernias": {{...}},
+        "cardiovasculares": {{...}},
+        "neurologicas": {{...}},
+        "articulares": {{...}},
+        "otros_problemas": {{...}},
         "factor_edad": "BAJO/MODERADO/ALTO",
         "factor_hormonal": "NINGUNO/MODERADO"
-      },
-      "parametros_base_calculados": {
+      }},
+      "parametros_base_calculados": {{
         "volumen_semanal": "...",
         "frecuencia_grupo": "...",
-        "ajustes_aplicados": {...}
-      },
-      "contexto_preservado": {...}
-    },
-    "metadata": {
+        "ajustes_aplicados": {{...}}
+      }},
+      "contexto_preservado": {{...}}
+    }},
+    "metadata": {{
       "agente_id": "AGENTE_4",
       "timestamp": "...",
       "cliente_procesado": "..."
-    }
-  }
-}
+    }}
+  }}
+}}
 
 ---
 
