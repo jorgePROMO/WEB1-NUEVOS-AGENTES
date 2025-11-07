@@ -545,7 +545,7 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
                     name="measurement_type"
                     value="tape_measure"
                     checked={formData.measurement_type === 'tape_measure'}
-                    onChange={handleInputChange}
+                    onChange={(e) => handleChange('measurement_type', e.target.value)}
                     className="mr-3 mt-1"
                   />
                   <div>
