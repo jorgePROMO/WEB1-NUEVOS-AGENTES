@@ -162,7 +162,21 @@ const AdminDashboard = () => {
     setSelectedPlan(null);
     await loadClientDetails(clientId);
     await loadNutritionPlan(clientId);
-    await loadTrainingPlans(clientId);
+    
+    // Load training plans
+    try {
+      const trainingResponse = await axios.get(`${API}/admin/users/${clientId}/training`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setTrainingPlans(trainingResponse.data.plans || []);
+    } catch (error) {
+      if (error.response?.status !== 404) {
+        console.error('Error loading training plans:', error);
+      }
+      setTrainingPlans([]);
+    }
+    
     // Now load follow-ups after other data is loaded
     try {
       const response = await axios.get(`${API}/admin/users/${clientId}/follow-ups`, {
