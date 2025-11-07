@@ -508,12 +508,12 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Enviando al equipo de nutrición...
+                    Enviando a Jorge y su equipo...
                   </>
                 ) : (
                   <>
                     <CheckCircle className="mr-2 h-5 w-5" />
-                    Enviar Cuestionario al Equipo
+                    Enviar a Jorge y su Equipo
                   </>
                 )}
               </Button>
