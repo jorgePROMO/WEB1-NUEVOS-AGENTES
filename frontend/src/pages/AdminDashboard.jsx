@@ -2405,7 +2405,7 @@ const AdminDashboard = () => {
                                           
                                           <Button
                                             onClick={() => generateTrainingPlan('initial', submission.id)}
-                                            disabled={generatingTrainingPlan}
+                                            disabled={generatingTrainingPlan || generatingFromFollowup}
                                             className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white"
                                           >
                                             {generatingTrainingPlan ? (
