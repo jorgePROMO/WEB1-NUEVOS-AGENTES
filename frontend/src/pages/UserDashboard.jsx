@@ -321,10 +321,11 @@ const UserDashboard = () => {
               </Card>
 
 
-              {/* Nutrition Questionnaire Button - Only for team plan + verified payment */}
+              {/* Nutrition Questionnaire Button - Only for team plan + verified payment + no submission yet */}
               {userData.subscription?.plan === 'team' && 
                userData.subscription?.payment_status === 'verified' && 
-               !userData.nutrition_plan && (
+               !userData.nutrition_plan && 
+               !forms.some(f => f.type === 'nutrition') && (
                 <Card className="md:col-span-2 border-4 border-green-500 bg-gradient-to-r from-green-50 to-emerald-50">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-3 text-2xl text-green-800">
