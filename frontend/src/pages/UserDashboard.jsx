@@ -329,20 +329,20 @@ const UserDashboard = () => {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-3 text-2xl text-green-800">
                       <UtensilsCrossed className="h-8 w-8 text-green-600" />
-                      ¡Completa tu Cuestionario de Nutrición!
+                      ¡Cuéntanos sobre ti!
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-700 mb-6">
-                      Genera tu plan de nutrición personalizado. Nuestros agentes calcularán tus macros ideales 
-                      y crearán un menú semanal adaptado específicamente a ti.
+                      Completa el cuestionario para que Jorge y su equipo puedan conocerte mejor y diseñar 
+                      un plan de nutrición 100% personalizado para ti.
                     </p>
                     <Button
                       onClick={() => setShowNutritionQuestionnaire(true)}
                       className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-lg py-6"
                     >
                       <UtensilsCrossed className="mr-3 h-6 w-6" />
-                      Empezar Cuestionario de Nutrición
+                      Comenzar Cuestionario
                     </Button>
                   </CardContent>
                 </Card>
