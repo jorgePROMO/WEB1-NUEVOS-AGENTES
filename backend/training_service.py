@@ -185,25 +185,25 @@ AUTORREGULACIÓN según factor laboral y capacidad de recuperación
 
 ## 📤 OUTPUT OBLIGATORIO - GENERAR EXACTAMENTE ESTA ESTRUCTURA JSON:
 
-{
-  "flujo_entrenamiento": {
-    "input_data": {...},
-    "agente_4_analysis": {...},
-    "agente_5_analysis": {
-      "contexto_laboral_evaluado": {...},
-      "estructura_determinada": {...},
-      "ejercicios_seguridad": {
+{{
+  "flujo_entrenamiento": {{
+    "input_data": {{...}},
+    "agente_4_analysis": {{...}},
+    "agente_5_analysis": {{
+      "contexto_laboral_evaluado": {{...}},
+      "estructura_determinada": {{...}},
+      "ejercicios_seguridad": {{
         "ejercicios_prohibidos": [...],
         "ejercicios_seguros": [...],
         "ejercicios_condicionales": [...],
         "adaptaciones_tecnicas": [...]
-      },
-      "parametros_intensidad": {...},
-      "consideraciones_especiales": {...}
-    },
-    "metadata": {...}
-  }
-}
+      }},
+      "parametros_intensidad": {{...}},
+      "consideraciones_especiales": {{...}}
+    }},
+    "metadata": {{...}}
+  }}
+}}
 
 ---
 
