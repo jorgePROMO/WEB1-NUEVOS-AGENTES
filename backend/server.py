@@ -4548,6 +4548,15 @@ async def analyze_follow_up_with_ai(user_id: str, followup_id: str, request: Req
             sort=[("submission_date", -1)]  # El más reciente anterior
         )
         
+        # Si no hay seguimiento anterior, es el PRIMER seguimiento
+        # En ese caso, obtener el cuestionario INICIAL de nutrición para comparar
+        initial_nutrition_questionnaire = None
+        if not previous_follow_up:
+            initial_nutrition_questionnaire = await db.nutrition_questionnaire_submissions.find_one(
+                {"user_id": user_id},
+                sort=[("submitted_at", 1)]  # El más antiguo (primer cuestionario)
+            )
+        
         # Obtener plan de nutrición previo
         previous_plan = await db.nutrition_plans.find_one(
             {"_id": follow_up.get("previous_plan_id")}
