@@ -4538,9 +4538,10 @@ async def analyze_follow_up_with_ai(user_id: str, followup_id: str, request: Req
         if not user:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
         
-        # Obtener cuestionario inicial de nutrición
+        # Obtener cuestionario inicial de nutrición (el primero del usuario)
         initial_questionnaire = await db.nutrition_questionnaire_submissions.find_one(
-            {"_id": follow_up.get("previous_questionnaire_id")}
+            {"user_id": user_id},
+            sort=[("submitted_at", 1)]  # El más antiguo (primero)
         )
         
         # Obtener plan de nutrición previo
