@@ -413,11 +413,12 @@ async def generate_training_plan(questionnaire_data: dict) -> dict:
         agent_2_response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "Eres un contextualizador de entrenamiento experto. SOLO generas JSON estructurado, SIN texto adicional."},
+                {"role": "system", "content": "Eres un contextualizador de entrenamiento experto. SOLO generas JSON estructurado válido, SIN texto adicional antes o después del JSON."},
                 {"role": "user", "content": AGENT_2_PROMPT.format(agent_1_output=agent_1_output)}
             ],
             temperature=0.3,
-            max_tokens=4000
+            max_tokens=4000,
+            response_format={"type": "json_object"}
         )
         
         agent_2_output = agent_2_response.choices[0].message.content
@@ -428,6 +429,7 @@ async def generate_training_plan(questionnaire_data: dict) -> dict:
             agent_2_json = json.loads(agent_2_output)
         except json.JSONDecodeError as e:
             logger.error(f"❌ Agent 2 output is not valid JSON: {e}")
+            logger.error(f"Agent 2 output preview: {agent_2_output[:1000]}")
             return {"success": False, "error": f"Agent 2 JSON parsing error: {str(e)}"}
         
         # ==================== AGENT 3: WEEKLY PLAN GENERATOR ====================
