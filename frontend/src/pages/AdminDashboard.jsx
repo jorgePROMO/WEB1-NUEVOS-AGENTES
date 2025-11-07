@@ -161,6 +161,7 @@ const AdminDashboard = () => {
     setSelectedPlan(null);
     await loadClientDetails(clientId);
     await loadNutritionPlan(clientId);
+    await loadTrainingPlans(clientId);
     // Now load follow-ups after other data is loaded
     try {
       const response = await axios.get(`${API}/admin/users/${clientId}/follow-ups`, {
