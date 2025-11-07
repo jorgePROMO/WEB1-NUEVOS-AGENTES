@@ -4705,8 +4705,9 @@ Genera un análisis completo y motivador del progreso del cliente. Debe incluir:
 - Sé empático y motivador, nunca crítico o desalentador
 - Usa un tono cercano y profesional
 - Sé específico en las recomendaciones
-- Si hay mediciones del seguimiento anterior, compáralas explícitamente con las actuales mostrando la diferencia
-- Si es el primer seguimiento, indica que no hay datos previos para comparar
+- SIEMPRE compara las mediciones anteriores (ya sea del seguimiento previo o del cuestionario inicial) con las actuales
+- Muestra las diferencias explícitamente (ej: "Tu peso ha bajado de 85kg a 82kg, una pérdida de 3kg")
+- Si es el primer seguimiento, menciona que estás comparando con las mediciones iniciales del cuestionario
 - Adapta el análisis según la adherencia del cliente
 
 Genera el análisis en español, con formato markdown para facilitar la lectura."""
