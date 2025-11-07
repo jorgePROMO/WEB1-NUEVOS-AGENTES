@@ -4047,6 +4047,577 @@ _Si necesitas el plan completo, revísalo en tu panel de usuario o te lo envío 
 
 
 
+# ==================== TRAINING PLANS ENDPOINTS ====================
+
+@api_router.post("/admin/users/{user_id}/training/generate")
+async def admin_generate_training_plan(
+    user_id: str,
+    source_type: str = "initial",  # "initial" or "followup"
+    source_id: str = None,  # questionnaire submission ID or followup ID
+    regenerate: bool = False,
+    request: Request = None
+):
+    """Admin genera el plan de entrenamiento desde cuestionario inicial o follow-up"""
+    await require_admin(request)
+    
+    try:
+        # Obtener datos del cuestionario según el tipo de fuente
+        if source_type == "initial":
+            # Generar desde cuestionario inicial de nutrición
+            submission = await db.nutrition_questionnaire_submissions.find_one({"_id": source_id})
+            
+            if not submission:
+                raise HTTPException(status_code=404, detail="Cuestionario no encontrado")
+            
+            if submission["user_id"] != user_id:
+                raise HTTPException(status_code=403, detail="El cuestionario no pertenece a este usuario")
+            
+            questionnaire_data = submission["responses"]
+            context_data = None
+            
+        elif source_type == "followup":
+            # Generar desde follow-up
+            followup = await db.follow_up_submissions.find_one({"_id": source_id})
+            
+            if not followup:
+                raise HTTPException(status_code=404, detail="Follow-up no encontrado")
+            
+            if followup["user_id"] != user_id:
+                raise HTTPException(status_code=403, detail="El follow-up no pertenece a este usuario")
+            
+            # Obtener cuestionario inicial
+            initial_submission = await db.nutrition_questionnaire_submissions.find_one(
+                {"user_id": user_id},
+                sort=[("submitted_at", 1)]
+            )
+            
+            if not initial_submission:
+                raise HTTPException(
+                    status_code=404,
+                    detail="No se encontró cuestionario inicial para contexto"
+                )
+            
+            questionnaire_data = initial_submission["responses"]
+            context_data = {
+                "followup_responses": followup.get("responses", {}),
+                "ai_analysis": followup.get("ai_analysis", "")
+            }
+        else:
+            raise HTTPException(status_code=400, detail="source_type debe ser 'initial' o 'followup'")
+        
+        # Obtener mes y año actual
+        now = datetime.now(timezone.utc)
+        current_month = now.month
+        current_year = now.year
+        
+        # Si regenerate=True, eliminar planes existentes de este mes
+        if regenerate:
+            logger.info(f"🔄 Regenerando plan - eliminando plan existente del mes {current_month}/{current_year}")
+            
+            delete_result = await db.training_plans.delete_many({
+                "user_id": user_id,
+                "month": current_month,
+                "year": current_year
+            })
+            
+            logger.info(f"✅ Eliminados {delete_result.deleted_count} planes del mes actual")
+        
+        # Generar ID único para este plan
+        plan_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
+        
+        logger.info(f"🏋️ Admin iniciando generación de plan de entrenamiento para usuario {user_id}")
+        
+        # Generar el plan con el servicio de entrenamiento
+        from training_service import generate_training_plan, generate_training_plan_with_context
+        
+        if context_data:
+            # Generar con contexto de follow-up
+            result = await generate_training_plan_with_context(
+                questionnaire_data,
+                context_data["followup_responses"],
+                context_data["ai_analysis"]
+            )
+        else:
+            # Generar desde cuestionario inicial
+            result = await generate_training_plan(questionnaire_data)
+        
+        if not result["success"]:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Error generando plan: {result.get('error', 'Error desconocido')}"
+            )
+        
+        # Guardar el plan en training_plans
+        training_plan_doc = {
+            "_id": plan_id,
+            "user_id": user_id,
+            "month": current_month,
+            "year": current_year,
+            "source_type": source_type,
+            "source_id": source_id,
+            "questionnaire_data": questionnaire_data,
+            "agent_1_output": result["agent_1_output"],
+            "agent_2_output": result["agent_2_output"],
+            "agent_3_output": result["agent_3_output"],
+            "plan_final": result["plan_final"],
+            "generated_at": now,
+            "edited": False,
+            "pdf_id": None,
+            "pdf_filename": None,
+            "sent_email": False,
+            "sent_whatsapp": False
+        }
+        
+        await db.training_plans.insert_one(training_plan_doc)
+        
+        logger.info(f"✅ Plan de entrenamiento generado exitosamente para usuario {user_id} - {plan_id}")
+        
+        return {
+            "success": True,
+            "message": "Plan de entrenamiento generado correctamente",
+            "plan_id": plan_id,
+            "plan": training_plan_doc
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generando plan de entrenamiento: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error generando plan: {str(e)}"
+        )
+
+
+@api_router.get("/admin/users/{user_id}/training")
+async def get_user_training_plans(user_id: str, request: Request):
+    """Admin obtiene el historial de planes de entrenamiento de un usuario"""
+    await require_admin(request)
+    
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    # Obtener planes de entrenamiento ordenados por fecha
+    plans = await db.training_plans.find(
+        {"user_id": user_id}
+    ).sort("generated_at", -1).to_list(length=None)
+    
+    # Obtener información de PDFs asociados
+    for plan in plans:
+        if plan.get("pdf_id"):
+            pdf = await db.pdfs.find_one({"_id": plan["pdf_id"]})
+            if pdf:
+                plan["pdf_filename"] = pdf.get("filename")
+                plan["pdf_url"] = pdf.get("file_path")
+    
+    return {
+        "success": True,
+        "plans": plans,
+        "total": len(plans)
+    }
+
+
+@api_router.patch("/admin/users/{user_id}/training/{plan_id}")
+async def update_training_plan(
+    user_id: str,
+    plan_id: str,
+    plan_final: str,
+    request: Request = None
+):
+    """Admin edita manualmente el plan de entrenamiento final"""
+    await require_admin(request)
+    
+    plan = await db.training_plans.find_one({"_id": plan_id, "user_id": user_id})
+    if not plan:
+        raise HTTPException(status_code=404, detail="Plan no encontrado")
+    
+    # Actualizar plan
+    await db.training_plans.update_one(
+        {"_id": plan_id},
+        {
+            "$set": {
+                "plan_final": plan_final,
+                "edited": True
+            }
+        }
+    )
+    
+    logger.info(f"✅ Plan de entrenamiento {plan_id} editado por admin")
+    
+    return {
+        "success": True,
+        "message": "Plan actualizado correctamente"
+    }
+
+
+@api_router.delete("/admin/users/{user_id}/training/{plan_id}")
+async def delete_training_plan(user_id: str, plan_id: str, request: Request = None):
+    """Admin elimina completamente un plan de entrenamiento"""
+    await require_admin(request)
+    
+    try:
+        # Buscar el plan
+        plan = await db.training_plans.find_one({"_id": plan_id, "user_id": user_id})
+        if not plan:
+            raise HTTPException(status_code=404, detail="Plan de entrenamiento no encontrado")
+        
+        # Eliminar PDF asociado si existe
+        if plan.get("pdf_id"):
+            pdf_result = await db.pdfs.delete_one({"_id": plan["pdf_id"]})
+            logger.info(f"🗑️ PDF asociado eliminado: {pdf_result.deleted_count} documento(s)")
+        
+        # Eliminar el plan de entrenamiento
+        result = await db.training_plans.delete_one({"_id": plan_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Plan no encontrado")
+        
+        logger.info(f"✅ Plan de entrenamiento {plan_id} eliminado completamente")
+        
+        return {
+            "success": True,
+            "message": "Plan de entrenamiento eliminado correctamente"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error eliminando plan de entrenamiento: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error eliminando plan: {str(e)}"
+        )
+
+
+@api_router.post("/admin/users/{user_id}/training-pdf")
+async def generate_training_pdf(user_id: str, plan_id: str, request: Request = None):
+    """Admin genera PDF del plan de entrenamiento"""
+    await require_admin(request)
+    
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    plan = await db.training_plans.find_one({"_id": plan_id, "user_id": user_id})
+    if not plan:
+        raise HTTPException(status_code=404, detail="Plan de entrenamiento no encontrado")
+    
+    try:
+        from weasyprint import HTML
+        import io
+        
+        plan_content = plan.get("plan_final", "")
+        month = plan.get("month")
+        year = plan.get("year")
+        
+        month_names = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        
+        # Convertir markdown a HTML básico
+        html_content = plan_content.replace('\n', '<br>')
+        html_content = html_content.replace('**', '<strong>').replace('**', '</strong>')
+        html_content = html_content.replace('##', '<h2>').replace('\n', '</h2>\n')
+        
+        html_template = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                @page {{
+                    size: A4;
+                    margin: 2cm;
+                }}
+                body {{
+                    font-family: 'Arial', sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                }}
+                h1 {{
+                    color: #2563eb;
+                    border-bottom: 3px solid #2563eb;
+                    padding-bottom: 10px;
+                }}
+                h2 {{
+                    color: #1e40af;
+                    margin-top: 20px;
+                }}
+                .header {{
+                    text-align: center;
+                    margin-bottom: 30px;
+                }}
+                .footer {{
+                    margin-top: 50px;
+                    text-align: center;
+                    color: #666;
+                    font-size: 0.9em;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>🏋️ Plan de Entrenamiento Personalizado</h1>
+                <p><strong>{user.get('name', 'Cliente')}</strong></p>
+                <p>{month_names[month]} {year}</p>
+            </div>
+            <div class="content">
+                {html_content}
+            </div>
+            <div class="footer">
+                <p>Jorge Calcerrada - Entrenador Personal</p>
+                <p>Plan generado el {datetime.now(timezone.utc).strftime('%d/%m/%Y')}</p>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Generar PDF
+        pdf_bytes = HTML(string=html_template).write_pdf()
+        
+        # Guardar en base de datos
+        pdf_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
+        filename = f"plan_entrenamiento_{user.get('name', user_id)}_{month}_{year}.pdf"
+        
+        pdf_doc = {
+            "_id": pdf_id,
+            "user_id": user_id,
+            "filename": filename,
+            "title": f"Plan de Entrenamiento - {month_names[month]} {year}",
+            "type": "training",  # IMPORTANTE: tipo training
+            "file_data": pdf_bytes,
+            "upload_date": datetime.now(timezone.utc),
+            "uploaded_by": "admin"
+        }
+        
+        await db.pdfs.insert_one(pdf_doc)
+        
+        # Actualizar plan con referencia al PDF
+        await db.training_plans.update_one(
+            {"_id": plan_id},
+            {
+                "$set": {
+                    "pdf_id": pdf_id,
+                    "pdf_filename": filename,
+                    "pdf_generated": True
+                }
+            }
+        )
+        
+        logger.info(f"✅ PDF de entrenamiento generado para usuario {user_id} - {pdf_id}")
+        
+        return {
+            "success": True,
+            "message": "PDF generado correctamente",
+            "pdf_id": pdf_id,
+            "filename": filename
+        }
+        
+    except Exception as e:
+        logger.error(f"Error generando PDF de entrenamiento: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error generando PDF: {str(e)}"
+        )
+
+
+@api_router.post("/admin/users/{user_id}/training/send-email")
+async def send_training_email(user_id: str, plan_id: str = None, request: Request = None):
+    """Admin envía el plan de entrenamiento por email"""
+    await require_admin(request)
+    
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    # Si no se especifica plan_id, obtener el más reciente
+    if not plan_id:
+        plan = await db.training_plans.find_one(
+            {"user_id": user_id},
+            sort=[("generated_at", -1)]
+        )
+    else:
+        plan = await db.training_plans.find_one({"_id": plan_id, "user_id": user_id})
+    
+    if not plan:
+        raise HTTPException(status_code=404, detail="Usuario no tiene plan de entrenamiento")
+    
+    try:
+        from email_utils import send_email
+        import markdown
+        
+        plan_content = plan.get("plan_final", "")
+        month = plan.get("month")
+        year = plan.get("year")
+        
+        month_names = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        
+        # Convertir markdown a HTML
+        html_content = markdown.markdown(plan_content)
+        
+        email_html = f"""
+        <html>
+        <head>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                }}
+                .header {{
+                    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+                    color: white;
+                    padding: 30px;
+                    text-align: center;
+                    border-radius: 10px 10px 0 0;
+                }}
+                .content {{
+                    padding: 30px;
+                    background: #f9fafb;
+                }}
+                .footer {{
+                    background: #1f2937;
+                    color: white;
+                    padding: 20px;
+                    text-align: center;
+                    border-radius: 0 0 10px 10px;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>🏋️ Tu Plan de Entrenamiento Personalizado</h1>
+                <p><strong>{month_names[month]} {year}</strong></p>
+            </div>
+            <div class="content">
+                <p>Hola <strong>{user.get('name', 'Cliente')}</strong>,</p>
+                <p>Te envío tu plan de entrenamiento personalizado para este mes:</p>
+                <hr>
+                {html_content}
+            </div>
+            <div class="footer">
+                <p><strong>Jorge Calcerrada</strong></p>
+                <p>Entrenador Personal</p>
+            </div>
+        </body>
+        </html>
+        """
+        
+        subject = f"🏋️ Tu Plan de Entrenamiento - {month_names[month]} {year}"
+        
+        await send_email(
+            to_email=user.get('email'),
+            subject=subject,
+            html_content=email_html
+        )
+        
+        # Marcar como enviado
+        await db.training_plans.update_one(
+            {"_id": plan["_id"]},
+            {"$set": {"sent_email": True}}
+        )
+        
+        logger.info(f"✅ Plan de entrenamiento enviado por email a {user.get('email')}")
+        
+        return {
+            "success": True,
+            "message": "Plan enviado por email correctamente"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error enviando email de entrenamiento: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error enviando email: {str(e)}"
+        )
+
+
+@api_router.get("/admin/users/{user_id}/training/whatsapp-link")
+async def get_training_whatsapp_link(user_id: str, plan_id: str = None, request: Request = None):
+    """Admin obtiene link de WhatsApp con el plan de entrenamiento"""
+    await require_admin(request)
+    
+    user = await db.users.find_one({"_id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    # Si no se especifica plan_id, obtener el más reciente
+    if not plan_id:
+        plan = await db.training_plans.find_one(
+            {"user_id": user_id},
+            sort=[("generated_at", -1)]
+        )
+    else:
+        plan = await db.training_plans.find_one({"_id": plan_id, "user_id": user_id})
+    
+    if not plan:
+        raise HTTPException(status_code=404, detail="Usuario no tiene plan de entrenamiento")
+    
+    # Obtener teléfono del usuario
+    phone = user.get('phone', '')
+    if not phone:
+        raise HTTPException(
+            status_code=400,
+            detail="El usuario no tiene número de teléfono registrado"
+        )
+    
+    try:
+        import urllib.parse
+        
+        # Contenido del plan (limitado para WhatsApp)
+        plan_content = plan.get("plan_final", "")
+        month = plan.get("month")
+        year = plan.get("year")
+        
+        month_names = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        
+        # Crear mensaje para WhatsApp (con límite de caracteres)
+        message = f"""🏋️ *Tu Plan de Entrenamiento Personalizado - {month_names[month]} {year}*
+
+Hola {user.get('name', 'Cliente')}!
+
+Te envío tu plan de entrenamiento personalizado:
+
+{plan_content[:3000]}...
+
+_Si necesitas el plan completo, revísalo en tu panel de usuario o te lo envío por email._
+
+*Jorge Calcerrada - Entrenador Personal*"""
+        
+        # Limpiar número de teléfono (solo dígitos)
+        clean_phone = ''.join(filter(str.isdigit, phone))
+        
+        # Generar link de WhatsApp
+        encoded_message = urllib.parse.quote(message)
+        whatsapp_link = f"https://wa.me/{clean_phone}?text={encoded_message}"
+        
+        # Marcar como enviado por WhatsApp
+        await db.training_plans.update_one(
+            {"_id": plan["_id"]},
+            {"$set": {"sent_whatsapp": True}}
+        )
+        
+        logger.info(f"Link de WhatsApp generado para plan de entrenamiento {user_id} - Plan {plan['_id']}")
+        
+        return {
+            "success": True,
+            "whatsapp_link": whatsapp_link,
+            "phone": phone,
+            "plan_id": plan["_id"]
+        }
+        
+    except Exception as e:
+        logger.error(f"Error generando link de WhatsApp de entrenamiento: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error generando link: {str(e)}"
+        )
+
+
+
+
 from google_calendar_service import (
     get_authorization_url,
     exchange_code_for_tokens,
