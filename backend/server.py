@@ -3571,12 +3571,22 @@ async def update_user_nutrition_plan(user_id: str, plan_id: str, updated_plan: d
         raise HTTPException(status_code=404, detail="Plan de nutrición no encontrado")
     
     try:
+        # Obtener el contenido actualizado
+        new_content = updated_plan.get("plan_content")
+        
+        # Verificar que hay contenido antes de actualizar
+        if not new_content or new_content.strip() == "":
+            raise HTTPException(
+                status_code=400,
+                detail="El contenido del plan no puede estar vacío"
+            )
+        
         # Actualizar el plan verificado con la versión editada
         await db.nutrition_plans.update_one(
             {"_id": plan_id},
             {
                 "$set": {
-                    "plan_verificado": updated_plan.get("plan_content"),
+                    "plan_verificado": new_content,
                     "edited": True,
                     "edited_at": datetime.now(timezone.utc)
                 }
