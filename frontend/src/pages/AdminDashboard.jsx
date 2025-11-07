@@ -737,24 +737,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleArchiveClient = async (clientId) => {
-    const reason = prompt('Razón del archivado (opcional):');
-    try {
-      await axios.post(`${API}/admin/archive-client/${clientId}`, null, {
-        params: { reason },
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      alert('Cliente archivado correctamente');
-      loadClients();
-      setSelectedClient(null);
-    } catch (error) {
-      console.error('Error archiving client:', error);
-      alert('Error al archivar cliente');
-    }
-  };
-
   const handleDownloadPDF = async (pdfId) => {
     try {
       const response = await axios.get(`${API}/pdfs/${pdfId}/download`, {
