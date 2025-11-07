@@ -1393,6 +1393,7 @@ const AdminDashboard = () => {
                           <TabsTrigger value="forms" className="flex-1 min-w-[100px]">Formularios</TabsTrigger>
                           <TabsTrigger value="pdfs" className="flex-1 min-w-[70px]">PDFs</TabsTrigger>
                           <TabsTrigger value="nutrition" className="flex-1 min-w-[90px]">🥗 Nutrición</TabsTrigger>
+                          <TabsTrigger value="training" className="flex-1 min-w-[110px]">🏋️ Entrenamiento</TabsTrigger>
                           <TabsTrigger value="followup" className="flex-1 min-w-[110px]">📊 Seguimiento</TabsTrigger>
                           <TabsTrigger value="history" className="flex-1 min-w-[90px]">📋 Historial</TabsTrigger>
                           <TabsTrigger value="alerts" className="flex-1 min-w-[70px]">Alertas</TabsTrigger>
