@@ -3864,13 +3864,6 @@ async def send_nutrition_email(user_id: str, plan_id: str = None, request: Reque
         month = plan.get("month")
         year = plan.get("year")
         
-        # Validar que hay contenido antes de enviar
-        if not plan_content or plan_content.strip() == "":
-            raise HTTPException(
-                status_code=400,
-                detail="El plan de nutrición no tiene contenido. Por favor, genera o edita el plan primero."
-            )
-        
         # Convertir markdown a HTML
         html_content = markdown.markdown(plan_content, extensions=['nl2br', 'tables'])
         
