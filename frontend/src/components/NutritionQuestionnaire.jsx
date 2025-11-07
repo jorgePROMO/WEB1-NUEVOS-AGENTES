@@ -135,6 +135,10 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
 
   const sections = [
     {
+      title: '⚖️ Método de Medición',
+      isSpecial: 'measurement_type'
+    },
+    {
       title: '📋 Datos Básicos',
       fields: [
         { name: 'nombre_completo', label: 'Nombre Completo', type: 'text', required: true },
@@ -148,16 +152,7 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
     },
     {
       title: '📏 Medidas Corporales',
-      fields: [
-        { name: 'peso', label: 'Peso (kg)', type: 'number', required: true },
-        { name: 'altura_cm', label: 'Altura (cm)', type: 'number', required: true },
-        { name: 'grasa_porcentaje', label: '% Grasa Corporal (si lo conoces)', type: 'number' },
-        { name: 'cintura_cm', label: 'Cintura (cm)', type: 'number' },
-        { name: 'cadera_cm', label: 'Cadera (cm)', type: 'number' },
-        { name: 'biceps_relajado_cm', label: 'Bíceps Relajado (cm)', type: 'number' },
-        { name: 'biceps_flexionado_cm', label: 'Bíceps Flexionado (cm)', type: 'number' },
-        { name: 'muslo_cm', label: 'Muslo (cm)', type: 'number' }
-      ]
+      isDynamic: true // Campos dependen del tipo de medición
     },
     {
       title: '🏥 Salud y Medicación',
