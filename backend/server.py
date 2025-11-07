@@ -599,6 +599,18 @@ async def get_user_dashboard(request: Request):
         if "sent_date" in form and form["sent_date"]:
             form["sent_date"] = form["sent_date"].isoformat() if hasattr(form["sent_date"], 'isoformat') else form["sent_date"]
     
+    # Get nutrition questionnaire submissions and add as 'nutrition' type form
+    nutrition_submissions = await db.nutrition_questionnaire_submissions.find({"user_id": user_id}).to_list(100)
+    for submission in nutrition_submissions:
+        forms.append({
+            "id": str(submission["_id"]),
+            "type": "nutrition",
+            "submitted_at": submission.get("submitted_at").isoformat() if submission.get("submitted_at") else None,
+            "data": submission.get("responses", {}),
+            "plan_generated": submission.get("plan_generated", False),
+            "plan_id": submission.get("plan_id")
+        })
+    
     # Get PDFs
     pdfs = await db.pdfs.find({"user_id": user_id}).to_list(100)
     for pdf in pdfs:
