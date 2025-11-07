@@ -737,9 +737,6 @@ async def get_client_details(user_id: str, request: Request):
             "plan_id": submission.get("plan_id")
         }
         forms.append(nutrition_form)
-        logger.info(f"Added nutrition form to forms list: {nutrition_form['id']}, submitted_at: {submitted_at}")
-    
-    logger.info(f"Total forms to return: {len(forms)}")
     
     user["id"] = str(user["_id"])
     del user["password"]
