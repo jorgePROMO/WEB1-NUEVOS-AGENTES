@@ -1984,7 +1984,9 @@ const AdminDashboard = () => {
                                         {pdf.type === 'training' ? 'Entrenamiento' : 'Nutrición'}
                                       </Badge>
                                     </div>
-                                    <p className="text-xs text-gray-600 mb-2">Subido: {new Date(pdf.upload_date).toLocaleDateString('es-ES')}</p>
+                                    <p className="text-xs text-gray-600 mb-2">
+                                      Subido: {pdf.upload_date ? new Date(pdf.upload_date).toLocaleDateString('es-ES') : 'Fecha no disponible'}
+                                    </p>
                                     <div className="flex gap-2">
                                       <Button
                                         size="sm"
