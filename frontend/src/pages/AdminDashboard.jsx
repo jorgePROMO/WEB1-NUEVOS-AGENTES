@@ -3439,13 +3439,94 @@ const AdminDashboard = () => {
               </Card>
 
               {/* Actions */}
-              <div className="flex justify-end gap-2 pt-4 border-t">
-                <Button
-                  variant="outline"
-                  onClick={() => setSelectedFollowUp(null)}
-                >
-                  Cerrar
-                </Button>
+              <div className="flex justify-between items-center gap-2 pt-4 border-t">
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setSelectedFollowUp(null)}
+                  >
+                    Cerrar
+                  </Button>
+                </div>
+                
+                {selectedFollowUp.ai_analysis && (
+                  <div className="flex gap-2">
+                    {/* Send Email Button */}
+                    <Button
+                      variant="outline"
+                      className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                      onClick={async () => {
+                        try {
+                          const response = await axios.post(
+                            `${API}/admin/users/${selectedClient.id}/followups/${selectedFollowUp.id}/send-email`,
+                            {},
+                            {
+                              headers: { Authorization: `Bearer ${token}` },
+                              withCredentials: true
+                            }
+                          );
+                          alert(`✅ ${response.data.message}`);
+                        } catch (error) {
+                          console.error('Error sending email:', error);
+                          alert('❌ Error al enviar email: ' + (error.response?.data?.detail || error.message));
+                        }
+                      }}
+                    >
+                      📧 Enviar Email
+                    </Button>
+                    
+                    {/* Send WhatsApp Button */}
+                    <Button
+                      variant="outline"
+                      className="border-green-300 text-green-600 hover:bg-green-50"
+                      onClick={async () => {
+                        try {
+                          const response = await axios.post(
+                            `${API}/admin/users/${selectedClient.id}/followups/${selectedFollowUp.id}/send-whatsapp`,
+                            {},
+                            {
+                              headers: { Authorization: `Bearer ${token}` },
+                              withCredentials: true
+                            }
+                          );
+                          window.open(response.data.whatsapp_url, '_blank');
+                        } catch (error) {
+                          console.error('Error generating WhatsApp:', error);
+                          alert('❌ Error al generar WhatsApp: ' + (error.response?.data?.detail || error.message));
+                        }
+                      }}
+                    >
+                      💬 Enviar WhatsApp
+                    </Button>
+                    
+                    {/* Generate PDF Button */}
+                    <Button
+                      variant="outline"
+                      className="border-red-300 text-red-600 hover:bg-red-50"
+                      onClick={async () => {
+                        try {
+                          const response = await axios.post(
+                            `${API}/admin/users/${selectedClient.id}/followups/${selectedFollowUp.id}/generate-pdf`,
+                            {},
+                            {
+                              headers: { Authorization: `Bearer ${token}` },
+                              withCredentials: true
+                            }
+                          );
+                          alert(`✅ ${response.data.message}`);
+                          // Reload client details to show new PDF
+                          loadClientDetails(selectedClient.id);
+                        } catch (error) {
+                          console.error('Error generating PDF:', error);
+                          alert('❌ Error al generar PDF: ' + (error.response?.data?.detail || error.message));
+                        }
+                      }}
+                    >
+                      📄 Generar PDF
+                    </Button>
+                  </div>
+                )}
+                
                 <Button
                   onClick={async () => {
                     if (!selectedFollowUp.ai_analysis) {
