@@ -5089,6 +5089,7 @@ Entrenador Personal"""
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error generando WhatsApp: {str(e)}"
+        )
 
 
 @api_router.post("/admin/users/{user_id}/followups/{followup_id}/generate-pdf")
