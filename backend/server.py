@@ -4560,19 +4560,27 @@ Días desde el último plan: {follow_up.get('days_since_last_plan', 0)} días
 """
         
         if initial_questionnaire:
+            responses = initial_questionnaire.get('responses', {})
             prompt += f"""
-- Peso inicial: {initial_questionnaire.get('peso_actual', 'N/A')} kg
-- Altura: {initial_questionnaire.get('altura', 'N/A')} cm
-- Objetivo: {initial_questionnaire.get('objetivo_principal', 'N/A')}
-- Nivel de actividad: {initial_questionnaire.get('nivel_actividad', 'N/A')}
+- Peso inicial: {responses.get('peso', 'N/A')} kg
+- Altura: {responses.get('altura_cm', 'N/A')} cm
+- Tipo de medición: {responses.get('measurement_type', 'N/A')}
+- Objetivo: {responses.get('objetivo_principal', 'N/A')}
+- Nivel de actividad: {responses.get('nivel_actividad', 'N/A')}
 """
             
-            if initial_questionnaire.get('medidas_corporales'):
-                medidas = initial_questionnaire['medidas_corporales']
-                prompt += f"\n**Medidas iniciales:**\n"
-                if medidas.get('pecho'): prompt += f"- Pecho: {medidas['pecho']} cm\n"
-                if medidas.get('cintura'): prompt += f"- Cintura: {medidas['cintura']} cm\n"
-                if medidas.get('cadera'): prompt += f"- Cadera: {medidas['cadera']} cm\n"
+            # Agregar medidas iniciales según el tipo de medición
+            prompt += f"\n**Medidas corporales iniciales:**\n"
+            if responses.get('grasa_porcentaje'):
+                prompt += f"- Grasa corporal: {responses.get('grasa_porcentaje')}%\n"
+            if responses.get('masa_muscular_porcentaje'):
+                prompt += f"- Masa muscular: {responses.get('masa_muscular_porcentaje')}%\n"
+            if responses.get('cintura_cm'):
+                prompt += f"- Cintura: {responses.get('cintura_cm')} cm\n"
+            if responses.get('cadera_cm'):
+                prompt += f"- Cadera: {responses.get('cadera_cm')} cm\n"
+            if responses.get('pecho_cm'):
+                prompt += f"- Pecho: {responses.get('pecho_cm')} cm\n"
         
         prompt += f"""
 
