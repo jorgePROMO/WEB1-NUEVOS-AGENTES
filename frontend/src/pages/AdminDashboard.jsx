@@ -3448,6 +3448,220 @@ const AdminDashboard = () => {
         </DialogContent>
       </Dialog>
 
+
+      {/* Training Plan Modal */}
+      <Dialog open={showTrainingModal} onOpenChange={(open) => {
+        if (!open) {
+          setShowTrainingModal(false);
+          setEditingTraining(false);
+          setModalTrainingPlan(null);
+        }
+      }}>
+        <DialogContent className="max-w-[95vw] w-[95vw] h-[95vh] max-h-[95vh] p-0 overflow-hidden flex flex-col">
+          {modalTrainingPlan ? (
+            <>
+              {/* Header del Modal */}
+              <DialogHeader className="p-6 border-b bg-gradient-to-r from-blue-50 to-cyan-50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-full flex items-center justify-center bg-blue-500 text-white font-bold text-xl">
+                      🏋️
+                    </div>
+                    <div>
+                      <DialogTitle className="text-2xl font-bold">
+                        Plan de Entrenamiento - {(() => {
+                          const monthNames = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                                             "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                          return `${monthNames[modalTrainingPlan.month]} ${modalTrainingPlan.year}`;
+                        })()}
+                      </DialogTitle>
+                      <DialogDescription className="text-sm">
+                        Generado: {new Date(modalTrainingPlan.generated_at).toLocaleDateString('es-ES')} • 
+                        Cliente: {selectedClient?.name}
+                      </DialogDescription>
+                    </div>
+                  </div>
+                  
+                  {/* Status badges */}
+                  <div className="flex gap-2">
+                    {modalTrainingPlan.pdf_id && (
+                      <Badge className="bg-blue-500">📄 PDF</Badge>
+                    )}
+                    {modalTrainingPlan.sent_email && (
+                      <Badge className="bg-green-500">✉️ Email</Badge>
+                    )}
+                    {modalTrainingPlan.sent_whatsapp && (
+                      <Badge className="bg-teal-500">💬 WhatsApp</Badge>
+                    )}
+                    {modalTrainingPlan.edited && (
+                      <Badge className="bg-purple-500">✏️ Editado</Badge>
+                    )}
+                  </div>
+                </div>
+              </DialogHeader>
+
+              {/* Content del Modal - Scrollable */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                {/* Status Details */}
+                <div className="grid grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+                  <div className="text-center">
+                    <div className="text-3xl mb-1">{modalTrainingPlan.pdf_id ? '✅' : '❌'}</div>
+                    <div className="text-sm text-gray-600 font-medium">PDF Generado</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl mb-1">{modalTrainingPlan.sent_email ? '✅' : '❌'}</div>
+                    <div className="text-sm text-gray-600 font-medium">Enviado Email</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl mb-1">{modalTrainingPlan.sent_whatsapp ? '✅' : '❌'}</div>
+                    <div className="text-sm text-gray-600 font-medium">Enviado WhatsApp</div>
+                  </div>
+                </div>
+
+                {/* Editor/Viewer */}
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle>Plan Final</CardTitle>
+                    <div className="flex gap-2">
+                      {!editingTraining ? (
+                        <Button
+                          onClick={() => setEditingTraining(true)}
+                          variant="outline"
+                        >
+                          <Edit className="h-4 w-4 mr-2" />
+                          Editar
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            onClick={() => {
+                              setEditingTraining(false);
+                              setTrainingContent(modalTrainingPlan.plan_final);
+                            }}
+                            variant="outline"
+                          >
+                            Cancelar
+                          </Button>
+                          <Button onClick={saveTrainingChanges}>
+                            <Save className="h-4 w-4 mr-2" />
+                            Guardar
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {editingTraining ? (
+                      <Textarea
+                        value={trainingContent}
+                        onChange={(e) => setTrainingContent(e.target.value)}
+                        rows={25}
+                        className="font-mono text-sm"
+                      />
+                    ) : (
+                      <div className="prose max-w-none">
+                        <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
+                          {modalTrainingPlan.plan_final}
+                        </pre>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Action Buttons */}
+                <div className="space-y-4">
+                  {/* Primary Actions Row */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Attach to Documents */}
+                    <Card className="border-2 border-blue-200 bg-blue-50">
+                      <CardContent className="pt-6">
+                        <Button
+                          onClick={() => generateTrainingPDF(modalTrainingPlan.id)}
+                          disabled={generatingTrainingPDF}
+                          className="w-full bg-blue-600 hover:bg-blue-700"
+                        >
+                          {generatingTrainingPDF ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Adjuntando...
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="h-4 w-4 mr-2" />
+                              Adjuntar a Documentos
+                            </>
+                          )}
+                        </Button>
+                        <p className="text-xs text-gray-600 mt-2 text-center">
+                          Genera PDF y lo sube al dashboard del usuario
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    {/* Send Email */}
+                    <Card className="border-2 border-green-200 bg-green-50">
+                      <CardContent className="pt-6">
+                        <Button
+                          onClick={() => sendTrainingEmail(modalTrainingPlan.id)}
+                          disabled={sendingTraining === 'email'}
+                          className="w-full bg-green-600 hover:bg-green-700"
+                        >
+                          {sendingTraining === 'email' ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Enviando...
+                            </>
+                          ) : (
+                            <>
+                              <Mail className="h-4 w-4 mr-2" />
+                              Enviar Email
+                            </>
+                          )}
+                        </Button>
+                        <p className="text-xs text-gray-600 mt-2 text-center">
+                          Envía el plan por correo electrónico
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    {/* Send WhatsApp */}
+                    <Card className="border-2 border-teal-200 bg-teal-50">
+                      <CardContent className="pt-6">
+                        <Button
+                          onClick={() => sendTrainingWhatsApp(modalTrainingPlan.id)}
+                          disabled={sendingTraining === 'whatsapp'}
+                          className="w-full bg-teal-600 hover:bg-teal-700"
+                        >
+                          {sendingTraining === 'whatsapp' ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Abriendo...
+                            </>
+                          ) : (
+                            <>
+                              <MessageSquare className="h-4 w-4 mr-2" />
+                              Enviar WhatsApp
+                            </>
+                          )}
+                        </Button>
+                        <p className="text-xs text-gray-600 mt-2 text-center">
+                          Abre WhatsApp con el plan
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="p-6 text-center">
+              <p className="text-gray-500">Cargando plan de entrenamiento...</p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+
       {/* History Item Details Modal */}
       {selectedHistoryItem && (
         <Dialog open={!!selectedHistoryItem} onOpenChange={() => setSelectedHistoryItem(null)}>
