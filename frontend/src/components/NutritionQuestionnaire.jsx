@@ -530,7 +530,7 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
                     name="measurement_type"
                     value="smart_scale"
                     checked={formData.measurement_type === 'smart_scale'}
-                    onChange={handleInputChange}
+                    onChange={(e) => handleChange('measurement_type', e.target.value)}
                     className="mr-3 mt-1"
                   />
                   <div>
