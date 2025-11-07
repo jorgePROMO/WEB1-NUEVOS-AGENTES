@@ -4203,8 +4203,9 @@ async def get_user_training_plans(user_id: str, request: Request):
         {"user_id": user_id}
     ).sort("generated_at", -1).to_list(length=None)
     
-    # Obtener información de PDFs asociados
+    # Obtener información de PDFs asociados y convertir _id a id
     for plan in plans:
+        plan["id"] = str(plan["_id"])  # Convert _id to id for frontend
         if plan.get("pdf_id"):
             pdf = await db.pdfs.find_one({"_id": plan["pdf_id"]})
             if pdf:
