@@ -279,10 +279,10 @@ REQUISITOS CRÍTICOS TABLA:
 ---
 
 **GENERAR AMBOS OUTPUTS EN JSON:**
-{
+{{
   "plan_completo": "...",
   "tabla_tabulada": "..."
-}"""
+}}"""
 
 
 # ==================== AGENT 4: PROFESSIONAL COMPACTOR ====================
