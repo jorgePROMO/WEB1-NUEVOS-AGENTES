@@ -2956,6 +2956,66 @@ const AdminDashboard = () => {
               </div>
             </div>
           </TabsContent>
+
+
+          {/* Finances Tab */}
+          <TabsContent value="finances">
+            <div className="space-y-6">
+              {/* Financial Metrics Overview */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <CreditCard className="h-6 w-6" />
+                    Métricas Financieras
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <p className="text-sm text-gray-600 mb-1">Ingresos Totales</p>
+                      <p className="text-2xl font-bold text-green-600">€0.00</p>
+                    </div>
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <p className="text-sm text-gray-600 mb-1">Ingresos del Mes</p>
+                      <p className="text-2xl font-bold text-blue-600">€0.00</p>
+                    </div>
+                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                      <p className="text-sm text-gray-600 mb-1">Ingresos del Año</p>
+                      <p className="text-2xl font-bold text-purple-600">€0.00</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <p className="text-sm text-gray-600 mb-1">Suscripciones Activas</p>
+                      <p className="text-xl font-bold">0</p>
+                    </div>
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <p className="text-sm text-gray-600 mb-1">MRR (Ingresos Recurrentes Mensuales)</p>
+                      <p className="text-xl font-bold">€0.00</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Payment History */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-6 w-6" />
+                    Historial de Pagos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-8 text-gray-500">
+                    <FileText className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+                    <p>No hay pagos registrados aún</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
         </Tabs>
         )}
       </div>
