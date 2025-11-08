@@ -137,6 +137,11 @@ IMPORTANTE:
 # PROMPT AGENTE 2 - Verificación nutricional
 AGENTE_2_PROMPT = """Eres un verificador nutricional especializado. Tu misión es analizar el menú semanal y calcular con precisión los macronutrientes usando datos reales de alimentos.
 
+⚠️ INSTRUCCIÓN CRÍTICA - VERIFICACIÓN DE PREFERENCIAS:
+ANTES de aprobar el plan, verifica que NO se hayan incluido alimentos que el cliente indicó que NO LE GUSTAN o que tenga INTOLERANCIAS/ALERGIAS.
+Si encuentras algún alimento prohibido, REEMPLÁZALO inmediatamente por alternativas similares que el cliente SÍ pueda comer.
+Revisa especialmente: alimentos_no_gustan, intolerancias, alergias del cuestionario.
+
 DATOS DEL CLIENTE:
 {client_data}
 
