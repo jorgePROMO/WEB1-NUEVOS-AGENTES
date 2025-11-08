@@ -222,9 +222,8 @@ export const ProspectsCRM = ({ token }) => {
     try {
       await axios.patch(
         `${API}/admin/prospects/${prospectId}/update-report`,
-        null,
+        { report_content: reportContent },
         {
-          params: { report_content: reportContent },
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
         }
