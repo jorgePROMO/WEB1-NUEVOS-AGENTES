@@ -5976,10 +5976,11 @@ async def generate_followup_analysis_pdf(user_id: str, followup_id: str, request
             "_id": pdf_id,
             "user_id": user_id,
             "title": pdf_title,
-            "content": pdf_content,
+            "filename": f"{pdf_title}.pdf",
+            "file_data": pdf_content,
             "type": "follow_up_analysis",
             "follow_up_id": followup_id,
-            "uploaded_at": datetime.now(timezone.utc),
+            "upload_date": datetime.now(timezone.utc),
             "uploaded_by": "admin"
         })
         
