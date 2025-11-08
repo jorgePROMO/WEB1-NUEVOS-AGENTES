@@ -735,3 +735,73 @@ class FollowUpAlertCreate(BaseModel):
     user_email: str
     days_since_plan: int
     last_plan_date: datetime
+
+
+# ===================================
+# STRIPE PAYMENT & SUBSCRIPTION MODELS
+# ===================================
+
+class StripeSubscriptionCreate(BaseModel):
+    """Modelo para crear suscripción de Stripe"""
+    plan_type: str = Field(..., description="Tipo de plan: monthly, annual")
+    
+class PaymentTransaction(BaseModel):
+    """Modelo para transacciones de pago de Stripe"""
+    transaction_id: str  # UUID único
+    user_id: str
+    user_email: str
+    session_id: str  # Stripe session ID
+    payment_status: str = "pending"  # pending, succeeded, failed, expired
+    amount: float  # Monto en formato decimal (ej: 29.99)
+    currency: str = "eur"
+    subscription_id: Optional[str] = None  # ID de suscripción asociada
+    metadata: Optional[dict] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {datetime: str}
+
+class UserSubscription(BaseModel):
+    """Modelo para suscripciones de usuarios"""
+    subscription_id: str  # UUID único
+    user_id: str
+    user_email: str
+    stripe_session_id: Optional[str] = None
+    stripe_customer_id: Optional[str] = None
+    plan_type: str  # monthly, annual
+    status: str = "active"  # active, cancelled, expired, pending
+    amount: float
+    currency: str = "eur"
+    start_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    next_billing_date: Optional[datetime] = None
+    cancelled_at: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {datetime: str}
+
+class FinancialMetrics(BaseModel):
+    """Modelo para métricas financieras del admin"""
+    total_revenue: float
+    monthly_revenue: float
+    annual_revenue: float
+    active_subscriptions: int
+    cancelled_subscriptions: int
+    total_transactions: int
+    successful_payments: int
+    failed_payments: int
+    mrr: float  # Monthly Recurring Revenue
+    
+class PaymentHistoryItem(BaseModel):
+    """Item del historial de pagos"""
+    transaction_id: str
+    date: datetime
+    amount: float
+    currency: str
+    status: str
+    user_name: Optional[str] = None
+    user_email: str
