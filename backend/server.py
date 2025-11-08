@@ -6642,7 +6642,7 @@ async def get_all_payments(
         enriched_payments = []
         for payment in payments:
             # Buscar usuario
-            user_data = await db.users.find_one({"user_id": payment["user_id"]})
+            user_data = await db.users.find_one({"_id": ObjectId(payment["user_id"])})
             
             payment_item = {
                 "transaction_id": payment["transaction_id"],
