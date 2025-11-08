@@ -6182,6 +6182,533 @@ async def deactivate_followup(user_id: str, request: Request):
         logger.error(f"Error deactivating follow-up: {e}")
         raise HTTPException(status_code=500, detail=f"Error al desactivar cuestionario: {str(e)}")
 
+# ============================================
+# STRIPE PAYMENT & SUBSCRIPTION ENDPOINTS
+# ============================================
+
+# Planes de suscripción (FIJO EN BACKEND - NO MODIFICABLE DESDE FRONTEND)
+SUBSCRIPTION_PLANS = {
+    "monthly": {
+        "amount": 29.99,
+        "currency": "eur",
+        "name": "Plan Mensual",
+        "billing_period": "monthly"
+    }
+}
+
+@api_router.post("/stripe/create-subscription-session")
+async def create_subscription_session(
+    request: Request,
+    subscription_data: StripeSubscriptionCreate,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """
+    Crea una sesión de pago de Stripe para suscripción
+    SEGURIDAD: Monto definido en backend, no aceptado desde frontend
+    """
+    try:
+        from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionRequest
+        import uuid
+        
+        # Obtener usuario
+        user = await db.users.find_one({"user_id": current_user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Validar plan seleccionado
+        if subscription_data.plan_type not in SUBSCRIPTION_PLANS:
+            raise HTTPException(status_code=400, detail="Plan de suscripción inválido")
+        
+        plan = SUBSCRIPTION_PLANS[subscription_data.plan_type]
+        
+        # Obtener host URL desde el frontend
+        origin_url = str(request.headers.get("origin", "https://crmfusion.preview.emergentagent.com"))
+        
+        # Construir URLs de éxito y cancelación
+        success_url = f"{origin_url}/subscription-success?session_id={{{{CHECKOUT_SESSION_ID}}}}"
+        cancel_url = f"{origin_url}/dashboard"
+        
+        # Inicializar Stripe Checkout
+        api_key = os.environ.get("STRIPE_API_KEY")
+        webhook_url = f"{origin_url}/api/webhook/stripe"
+        stripe_checkout = StripeCheckout(api_key=api_key, webhook_url=webhook_url)
+        
+        # Metadata para identificar el pago
+        metadata = {
+            "user_id": current_user_id,
+            "user_email": user.get("email"),
+            "plan_type": subscription_data.plan_type,
+            "payment_type": "subscription"
+        }
+        
+        # Crear checkout session
+        checkout_request = CheckoutSessionRequest(
+            amount=plan["amount"],
+            currency=plan["currency"],
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata=metadata
+        )
+        
+        session_response = await stripe_checkout.create_checkout_session(checkout_request)
+        
+        # Generar transaction_id único
+        transaction_id = str(uuid.uuid4())
+        
+        # Crear registro de transacción PENDIENTE
+        payment_transaction = {
+            "transaction_id": transaction_id,
+            "user_id": current_user_id,
+            "user_email": user.get("email"),
+            "session_id": session_response.session_id,
+            "payment_status": "pending",
+            "amount": plan["amount"],
+            "currency": plan["currency"],
+            "subscription_id": None,  # Se asignará después del pago exitoso
+            "metadata": metadata,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+        await db.payment_transactions.insert_one(payment_transaction)
+        
+        logger.info(f"Stripe checkout session created: {session_response.session_id} for user {current_user_id}")
+        
+        return {
+            "checkout_url": session_response.url,
+            "session_id": session_response.session_id,
+            "transaction_id": transaction_id
+        }
+        
+    except Exception as e:
+        logger.error(f"Error creating Stripe checkout session: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al crear sesión de pago: {str(e)}")
+
+
+@api_router.get("/stripe/checkout-status/{session_id}")
+async def get_checkout_status(
+    session_id: str,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """
+    Verifica el estado de una sesión de checkout de Stripe
+    Se usa para polling desde el frontend después del pago
+    """
+    try:
+        from emergentintegrations.payments.stripe.checkout import StripeCheckout
+        
+        # Inicializar Stripe Checkout
+        api_key = os.environ.get("STRIPE_API_KEY")
+        webhook_url = "https://crmfusion.preview.emergentagent.com/api/webhook/stripe"
+        stripe_checkout = StripeCheckout(api_key=api_key, webhook_url=webhook_url)
+        
+        # Obtener estado del checkout
+        checkout_status = await stripe_checkout.get_checkout_status(session_id)
+        
+        # Buscar transacción en DB
+        transaction = await db.payment_transactions.find_one({"session_id": session_id})
+        
+        if not transaction:
+            raise HTTPException(status_code=404, detail="Transacción no encontrada")
+        
+        # Solo procesar si el pago fue exitoso y aún no se ha procesado
+        if checkout_status.payment_status == "paid" and transaction["payment_status"] != "succeeded":
+            
+            # Actualizar transacción
+            await db.payment_transactions.update_one(
+                {"session_id": session_id},
+                {
+                    "$set": {
+                        "payment_status": "succeeded",
+                        "updated_at": datetime.now(timezone.utc).isoformat()
+                    }
+                }
+            )
+            
+            # Crear/Actualizar suscripción del usuario
+            subscription_id = str(uuid.uuid4())
+            plan_type = transaction["metadata"].get("plan_type", "monthly")
+            
+            user_subscription = {
+                "subscription_id": subscription_id,
+                "user_id": transaction["user_id"],
+                "user_email": transaction["user_email"],
+                "stripe_session_id": session_id,
+                "plan_type": plan_type,
+                "status": "active",
+                "amount": transaction["amount"],
+                "currency": transaction["currency"],
+                "start_date": datetime.now(timezone.utc).isoformat(),
+                "next_billing_date": (datetime.now(timezone.utc) + timedelta(days=30)).isoformat(),
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }
+            
+            # Insertar o actualizar suscripción
+            existing_subscription = await db.user_subscriptions.find_one({"user_id": transaction["user_id"], "status": "active"})
+            
+            if existing_subscription:
+                # Actualizar suscripción existente
+                await db.user_subscriptions.update_one(
+                    {"user_id": transaction["user_id"], "status": "active"},
+                    {"$set": user_subscription}
+                )
+            else:
+                # Crear nueva suscripción
+                await db.user_subscriptions.insert_one(user_subscription)
+            
+            # Actualizar transaction con subscription_id
+            await db.payment_transactions.update_one(
+                {"session_id": session_id},
+                {"$set": {"subscription_id": subscription_id}}
+            )
+            
+            # Actualizar usuario - marcar como con suscripción activa
+            await db.users.update_one(
+                {"user_id": transaction["user_id"]},
+                {
+                    "$set": {
+                        "subscription.status": "active",
+                        "subscription.plan": plan_type,
+                        "subscription.payment_status": "verified",
+                        "updated_at": datetime.now(timezone.utc).isoformat()
+                    }
+                }
+            )
+            
+            logger.info(f"Payment succeeded and subscription activated for user {transaction['user_id']}")
+        
+        return {
+            "session_id": session_id,
+            "payment_status": checkout_status.payment_status,
+            "status": checkout_status.status,
+            "amount_total": checkout_status.amount_total,
+            "currency": checkout_status.currency,
+            "transaction_status": transaction.get("payment_status", "pending")
+        }
+        
+    except Exception as e:
+        logger.error(f"Error checking checkout status: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al verificar estado del pago: {str(e)}")
+
+
+@api_router.post("/webhook/stripe")
+async def stripe_webhook(request: Request):
+    """
+    Webhook de Stripe para recibir eventos de pago
+    """
+    try:
+        from emergentintegrations.payments.stripe.checkout import StripeCheckout
+        
+        # Leer el body del webhook
+        body = await request.body()
+        signature = request.headers.get("Stripe-Signature")
+        
+        # Inicializar Stripe Checkout
+        api_key = os.environ.get("STRIPE_API_KEY")
+        webhook_url = "https://crmfusion.preview.emergentagent.com/api/webhook/stripe"
+        stripe_checkout = StripeCheckout(api_key=api_key, webhook_url=webhook_url)
+        
+        # Procesar webhook
+        webhook_response = await stripe_checkout.handle_webhook(body, signature)
+        
+        logger.info(f"Stripe webhook received: {webhook_response.event_type} - Session: {webhook_response.session_id}")
+        
+        # Actualizar transacción según el evento
+        if webhook_response.event_type == "checkout.session.completed":
+            if webhook_response.payment_status == "paid":
+                await db.payment_transactions.update_one(
+                    {"session_id": webhook_response.session_id},
+                    {
+                        "$set": {
+                            "payment_status": "succeeded",
+                            "updated_at": datetime.now(timezone.utc).isoformat()
+                        }
+                    }
+                )
+        
+        return {"status": "success", "event": webhook_response.event_type}
+        
+    except Exception as e:
+        logger.error(f"Error processing Stripe webhook: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+@api_router.get("/stripe/my-subscription")
+async def get_user_subscription(
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """
+    Obtiene la suscripción activa del usuario actual
+    """
+    try:
+        subscription = await db.user_subscriptions.find_one({
+            "user_id": current_user_id,
+            "status": "active"
+        })
+        
+        if not subscription:
+            return {"has_subscription": False, "subscription": None}
+        
+        # Limpiar ObjectId si existe
+        if "_id" in subscription:
+            del subscription["_id"]
+        
+        return {
+            "has_subscription": True,
+            "subscription": subscription
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting user subscription: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al obtener suscripción: {str(e)}")
+
+
+@api_router.get("/stripe/my-payments")
+async def get_user_payments(
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """
+    Obtiene el historial de pagos del usuario actual
+    """
+    try:
+        payments_cursor = db.payment_transactions.find({
+            "user_id": current_user_id,
+            "payment_status": "succeeded"
+        }).sort("created_at", -1)
+        
+        payments = await payments_cursor.to_list(length=100)
+        
+        # Limpiar ObjectId
+        for payment in payments:
+            if "_id" in payment:
+                del payment["_id"]
+        
+        return {"payments": payments, "count": len(payments)}
+        
+    except Exception as e:
+        logger.error(f"Error getting user payments: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al obtener historial de pagos: {str(e)}")
+
+
+@api_router.post("/stripe/cancel-subscription")
+async def cancel_user_subscription(
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """
+    Cancela la suscripción activa del usuario
+    """
+    try:
+        # Buscar suscripción activa
+        subscription = await db.user_subscriptions.find_one({
+            "user_id": current_user_id,
+            "status": "active"
+        })
+        
+        if not subscription:
+            raise HTTPException(status_code=404, detail="No tienes una suscripción activa")
+        
+        # Actualizar suscripción a cancelada
+        await db.user_subscriptions.update_one(
+            {"subscription_id": subscription["subscription_id"]},
+            {
+                "$set": {
+                    "status": "cancelled",
+                    "cancelled_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": datetime.now(timezone.utc).isoformat()
+                }
+            }
+        )
+        
+        # Actualizar usuario
+        await db.users.update_one(
+            {"user_id": current_user_id},
+            {
+                "$set": {
+                    "subscription.status": "cancelled",
+                    "updated_at": datetime.now(timezone.utc).isoformat()
+                }
+            }
+        )
+        
+        logger.info(f"Subscription cancelled for user {current_user_id}")
+        
+        return {
+            "success": True,
+            "message": "Suscripción cancelada exitosamente",
+            "cancelled_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error cancelling subscription: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al cancelar suscripción: {str(e)}")
+
+
+# ============================================
+# ADMIN - FINANCIAL OVERVIEW ENDPOINTS
+# ============================================
+
+@api_router.get("/admin/financial-overview")
+async def get_financial_overview(
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """
+    Obtiene métricas financieras completas para el admin
+    """
+    try:
+        # Verificar que es admin
+        user = await db.users.find_one({"user_id": current_user_id})
+        if not user or user.get("role") != "admin":
+            raise HTTPException(status_code=403, detail="Acceso denegado")
+        
+        # Total revenue (todos los pagos exitosos)
+        successful_payments = await db.payment_transactions.find({"payment_status": "succeeded"}).to_list(length=None)
+        total_revenue = sum(payment["amount"] for payment in successful_payments)
+        
+        # Revenue del mes actual
+        now = datetime.now(timezone.utc)
+        start_of_month = datetime(now.year, now.month, 1, tzinfo=timezone.utc).isoformat()
+        monthly_payments = [p for p in successful_payments if p["created_at"] >= start_of_month]
+        monthly_revenue = sum(payment["amount"] for payment in monthly_payments)
+        
+        # Revenue del año actual
+        start_of_year = datetime(now.year, 1, 1, tzinfo=timezone.utc).isoformat()
+        annual_payments = [p for p in successful_payments if p["created_at"] >= start_of_year]
+        annual_revenue = sum(payment["amount"] for payment in annual_payments)
+        
+        # Suscripciones activas y canceladas
+        active_subscriptions = await db.user_subscriptions.count_documents({"status": "active"})
+        cancelled_subscriptions = await db.user_subscriptions.count_documents({"status": "cancelled"})
+        
+        # MRR (Monthly Recurring Revenue) - suma de todas las suscripciones activas
+        active_subs = await db.user_subscriptions.find({"status": "active"}).to_list(length=None)
+        mrr = sum(sub["amount"] for sub in active_subs)
+        
+        # Total transacciones
+        total_transactions = await db.payment_transactions.count_documents({})
+        successful_count = len(successful_payments)
+        failed_payments = await db.payment_transactions.count_documents({"payment_status": "failed"})
+        
+        metrics = {
+            "total_revenue": round(total_revenue, 2),
+            "monthly_revenue": round(monthly_revenue, 2),
+            "annual_revenue": round(annual_revenue, 2),
+            "active_subscriptions": active_subscriptions,
+            "cancelled_subscriptions": cancelled_subscriptions,
+            "total_transactions": total_transactions,
+            "successful_payments": successful_count,
+            "failed_payments": failed_payments,
+            "mrr": round(mrr, 2)
+        }
+        
+        return metrics
+        
+    except Exception as e:
+        logger.error(f"Error getting financial overview: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al obtener métricas financieras: {str(e)}")
+
+
+@api_router.get("/admin/all-payments")
+async def get_all_payments(
+    current_user_id: str = Depends(get_current_user_id),
+    status: Optional[str] = None,
+    limit: int = 100
+):
+    """
+    Obtiene todos los pagos del sistema para el admin con filtros opcionales
+    """
+    try:
+        # Verificar que es admin
+        user = await db.users.find_one({"user_id": current_user_id})
+        if not user or user.get("role") != "admin":
+            raise HTTPException(status_code=403, detail="Acceso denegado")
+        
+        # Construir query con filtros
+        query = {}
+        if status:
+            query["payment_status"] = status
+        
+        # Obtener pagos
+        payments_cursor = db.payment_transactions.find(query).sort("created_at", -1).limit(limit)
+        payments = await payments_cursor.to_list(length=limit)
+        
+        # Enriquecer con datos de usuario
+        enriched_payments = []
+        for payment in payments:
+            # Buscar usuario
+            user_data = await db.users.find_one({"user_id": payment["user_id"]})
+            
+            payment_item = {
+                "transaction_id": payment["transaction_id"],
+                "date": payment["created_at"],
+                "amount": payment["amount"],
+                "currency": payment["currency"],
+                "status": payment["payment_status"],
+                "user_name": user_data.get("name", "Usuario Desconocido") if user_data else "Usuario Desconocido",
+                "user_email": payment["user_email"],
+                "session_id": payment.get("session_id"),
+                "subscription_id": payment.get("subscription_id")
+            }
+            enriched_payments.append(payment_item)
+        
+        return {
+            "payments": enriched_payments,
+            "count": len(enriched_payments),
+            "filter_applied": status if status else "none"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting all payments: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al obtener pagos: {str(e)}")
+
+
+@api_router.get("/admin/client-subscription/{user_id}")
+async def get_client_subscription(
+    user_id: str,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """
+    Obtiene la suscripción de un cliente específico (admin only)
+    """
+    try:
+        # Verificar que es admin
+        user = await db.users.find_one({"user_id": current_user_id})
+        if not user or user.get("role") != "admin":
+            raise HTTPException(status_code=403, detail="Acceso denegado")
+        
+        # Buscar suscripción del cliente
+        subscription = await db.user_subscriptions.find_one({"user_id": user_id})
+        
+        if not subscription:
+            return {"has_subscription": False, "subscription": None}
+        
+        # Limpiar ObjectId
+        if "_id" in subscription:
+            del subscription["_id"]
+        
+        # Obtener historial de pagos del cliente
+        payments = await db.payment_transactions.find({
+            "user_id": user_id,
+            "payment_status": "succeeded"
+        }).sort("created_at", -1).to_list(length=50)
+        
+        for payment in payments:
+            if "_id" in payment:
+                del payment["_id"]
+        
+        return {
+            "has_subscription": True,
+            "subscription": subscription,
+            "payments": payments,
+            "payments_count": len(payments)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting client subscription: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al obtener suscripción del cliente: {str(e)}")
+
+
+
 
 # Include the router in the main app (moved to end to include all endpoints)
 app.include_router(api_router)
