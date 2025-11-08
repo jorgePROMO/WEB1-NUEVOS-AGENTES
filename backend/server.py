@@ -11,6 +11,7 @@ from typing import List, Optional
 import shutil
 import httpx
 import socketio
+import uuid
 
 from models import (
     UserCreate, UserResponse, UserInDB, Subscription,
