@@ -8,6 +8,7 @@ import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
 import UserDashboard from './pages/UserDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import SubscriptionSuccess from './pages/SubscriptionSuccess';
 import './App.css';
 
 // Protected Route Component
