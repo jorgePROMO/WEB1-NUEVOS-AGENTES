@@ -1658,10 +1658,14 @@ async def generate_prospect_report_manual(prospect_id: str, request: Request, re
         raise HTTPException(status_code=500, detail=f"Error al generar informe: {str(e)}")
 
 
+class UpdateReportRequest(BaseModel):
+    report_content: str
+
 @api_router.patch("/admin/prospects/{prospect_id}/update-report")
-async def update_prospect_report_manual(prospect_id: str, report_content: str, request: Request):
+async def update_prospect_report_manual(prospect_id: str, data: UpdateReportRequest, request: Request):
     """Update diagnostic report manually"""
     await require_admin(request)
+    report_content = data.report_content
     
     try:
         # Update report
