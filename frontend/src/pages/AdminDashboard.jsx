@@ -1154,15 +1154,6 @@ const AdminDashboard = () => {
     });
   };
 
-  // Cargar datos financieros cuando se cambia a la vista de finanzas
-  useEffect(() => {
-    if (activeView === 'finances') {
-      loadFinancialMetrics();
-      loadAllPayments();
-    }
-  }, [activeView]);
-
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
