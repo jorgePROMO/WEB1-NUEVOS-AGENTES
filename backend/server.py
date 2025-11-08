@@ -1611,6 +1611,11 @@ async def get_prospect_detail(prospect_id: str, request: Request):
         prospect["id"] = prospect["_id"]
         prospect["notes"] = notes
         
+        return prospect
+    
+    except Exception as e:
+        logger.error(f"Error fetching prospect detail: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener detalle del prospecto")
 
 
 @api_router.post("/admin/prospects/{prospect_id}/generate-report")
