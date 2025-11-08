@@ -1386,9 +1386,9 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {(activeView === 'clients' || activeView === 'calendar') && (
+        {(activeView === 'clients' || activeView === 'calendar' || activeView === 'finances') && (
           <Tabs value={activeView} onValueChange={setActiveView} className="space-y-6">
-            <TabsList className="grid w-full max-w-4xl mx-auto grid-cols-3">
+            <TabsList className="grid w-full max-w-4xl mx-auto grid-cols-4">
               <TabsTrigger value="clients">
                 <Users className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Gestión de Clientes</span>
@@ -1401,6 +1401,11 @@ const AdminDashboard = () => {
               <TabsTrigger value="calendar">
                 <Calendar className="h-4 w-4 mr-2" />
                 Calendario
+              </TabsTrigger>
+              <TabsTrigger value="finances">
+                <CreditCard className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Finanzas</span>
+                <span className="sm:hidden">€</span>
               </TabsTrigger>
             </TabsList>
 
