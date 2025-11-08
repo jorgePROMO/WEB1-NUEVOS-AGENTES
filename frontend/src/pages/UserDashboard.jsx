@@ -666,50 +666,27 @@ const UserDashboard = () => {
                     ) : (
                       <>
                         {/* Sin Suscripción */}
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
-                          <AlertCircle className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                          <h3 className="text-lg font-semibold text-blue-900 mb-2">
-                            No tienes una suscripción activa
-                          </h3>
-                          <p className="text-blue-700 mb-6">
-                            Activa tu suscripción mensual para acceder a todos los servicios y funcionalidades del equipo de Jorge Calcerrada.
-                          </p>
-                          
-                          <div className="bg-white rounded-lg p-6 mb-6 border border-blue-200">
-                            <h4 className="font-semibold text-lg mb-4">Plan Mensual</h4>
-                            <div className="text-3xl font-bold text-blue-600 mb-2">29,99€</div>
-                            <p className="text-sm text-gray-600 mb-4">por mes</p>
-                            <ul className="text-left space-y-2 text-sm">
-                              <li className="flex items-center gap-2">
-                                <CheckCircle className="h-4 w-4 text-green-500" />
-                                Plan de nutrición personalizado
-                              </li>
-                              <li className="flex items-center gap-2">
-                                <CheckCircle className="h-4 w-4 text-green-500" />
-                                Plan de entrenamiento personalizado
-                              </li>
-                              <li className="flex items-center gap-2">
-                                <CheckCircle className="h-4 w-4 text-green-500" />
-                                Seguimiento mensual con IA
-                              </li>
-                              <li className="flex items-center gap-2">
-                                <CheckCircle className="h-4 w-4 text-green-500" />
-                                Acceso al chat con el equipo
-                              </li>
-                              <li className="flex items-center gap-2">
-                                <CheckCircle className="h-4 w-4 text-green-500" />
-                                Gestión de calendario y sesiones
-                              </li>
-                            </ul>
+                        <div className="text-center py-8">
+                          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-8 max-w-md mx-auto">
+                            <CreditCard className="h-16 w-16 text-blue-600 mx-auto mb-4" />
+                            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                              Suscripción Mensual
+                            </h3>
+                            <div className="mb-6">
+                              <span className="text-5xl font-bold text-blue-600">29,99€</span>
+                              <span className="text-gray-600 ml-2">/mes</span>
+                            </div>
+                            <p className="text-gray-600 mb-8">
+                              Acceso completo a todos los servicios y funcionalidades del equipo de Jorge Calcerrada.
+                            </p>
+                            <Button
+                              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-6 text-lg font-semibold shadow-lg"
+                              onClick={handleActivateSubscription}
+                              disabled={loadingSubscription}
+                            >
+                              {loadingSubscription ? 'Procesando...' : '🚀 Activar Suscripción'}
+                            </Button>
                           </div>
-                          
-                          <Button
-                            className="w-full bg-blue-600 hover:bg-blue-700"
-                            onClick={handleActivateSubscription}
-                            disabled={loadingSubscription}
-                          >
-                            {loadingSubscription ? 'Procesando...' : 'Activar Suscripción'}
-                          </Button>
                         </div>
                       </>
                     )}
