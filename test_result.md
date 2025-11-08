@@ -703,3 +703,69 @@ agent_communication:
       message: "✅ FOLLOW-UP ANALYSIS COMPARISON FIXED + SEND OPTIONS ADDED: User clarified 2 critical issues: 1) ANALYSIS SHOULD COMPARE PREVIOUS VS CURRENT (not initial vs current) - changed to query previous_follow_up (most recent before current) instead of initial_questionnaire. Updated prompt to show 'MEDICIONES DEL SEGUIMIENTO ANTERIOR' and compare with current. Modified AI instructions to compare previous follow-up measurements vs current. 2) FRONTEND BUTTONS MISSING - only created backend endpoints but no UI integration. ADDED TO FRONTEND: 3 action buttons in follow-up modal (AdminDashboard.jsx) shown only when ai_analysis exists: '📧 Enviar Email' (blue), '💬 Enviar WhatsApp' (green), '📄 Generar PDF' (red). Email button calls POST endpoint and shows success message. WhatsApp button generates URL and opens in new tab. PDF button generates and saves to pdfs collection, reloads client details. 3) ADDED PDF GENERATION ENDPOINT: POST /admin/users/{user_id}/followups/{followup_id}/generate-pdf - creates styled HTML with header/footer, uses WeasyPrint to generate PDF, saves to database with type 'follow_up_analysis'. All services restarted."
     - agent: "main"
       message: "✅ FIRST FOLLOW-UP SHOULD COMPARE WITH INITIAL QUESTIONNAIRE: User correctly pointed out that when generating analysis for FIRST follow-up, system says 'no hay datos para comparar' but it SHOULD compare with initial nutrition questionnaire data. LOGIC FIXED: Now system checks if previous_follow_up exists. If NO (first follow-up), queries initial_nutrition_questionnaire (oldest by submitted_at). If YES, uses previous follow-up data. Updated prompt section from 'MEDICIONES DEL SEGUIMIENTO ANTERIOR' to 'MEDICIONES ANTERIORES PARA COMPARACIÓN' with 3 cases: 1) Previous follow-up exists - shows those measurements with label '(Del seguimiento anterior)', 2) First follow-up - shows initial questionnaire data with ALL measurement types (peso, grasa_porcentaje, masa_muscular_porcentaje, masa_osea_kg, agua_porcentaje, cintura_cm, cadera_cm, pecho_cm, biceps_relajado_cm, muslo_cm) labeled '(Del cuestionario inicial de nutrición - PRIMER SEGUIMIENTO)', 3) No data - shows error. Updated AI instructions: 'SIEMPRE hay datos de referencia para comparar' and 'Si es el primer seguimiento, menciona que estás comparando con las mediciones iniciales'. Backend restarted."
+
+
+agent_communication:
+    - agent: "main"
+      message: "🚀 STRIPE PAYMENT & SUBSCRIPTION SYSTEM IMPLEMENTED - FASE COMPLETA: Implementado sistema completo de suscripciones y pagos con Stripe usando clave de prueba sk_test_emergent. BACKEND: 8 endpoints implementados con emergentintegrations library, modelos PaymentTransaction/UserSubscription/FinancialMetrics creados, seguridad implementada (precios fijos en backend, URLs dinámicas). FRONTEND CLIENTE: Tab Suscripción en UserDashboard con activación/cancelación, historial pagos, página SubscriptionSuccess con polling automático. FRONTEND ADMIN: Tab Finanzas en AdminDashboard con métricas completas (ingresos totales/mensuales/anuales, MRR, suscripciones) y tabla de pagos. Sistema listo para testing backend."
+
+backend:
+  - task: "Stripe Subscription System - Backend API"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py, /app/backend/models.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implementado sistema completo de suscripciones Stripe con 8 endpoints: create-subscription-session, checkout-status, webhook, my-subscription, my-payments, cancel-subscription, financial-overview, all-payments. SEGURIDAD: Plan MONTHLY fijo (29.99€). Usa emergentintegrations con StripeCheckout. NECESITA TESTING con admin credentials."
+
+frontend:
+  - task: "User Subscription Management - UserDashboard"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/UserDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implementado tab Suscripción en UserDashboard. Vista completa con activar suscripción (29.99€/mes), historial de pagos, cancelar suscripción. NECESITA TESTING con usuario registrado."
+
+  - task: "Subscription Success Page"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/SubscriptionSuccess.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Creada página SubscriptionSuccess con polling automático (5 intentos cada 2s). Ruta /subscription-success añadida. NECESITA TESTING con flujo completo de pago."
+
+  - task: "Admin Financial Dashboard"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implementado tab Finanzas en AdminDashboard con métricas financieras completas y tabla de pagos. Carga automática al cambiar a tab finanzas. NECESITA TESTING con admin."
+
+test_plan:
+  current_focus:
+    - "Stripe Subscription System - Backend API"
+    - "User Subscription Management - UserDashboard"
+    - "Subscription Success Page"
+    - "Admin Financial Dashboard"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
