@@ -175,7 +175,7 @@ async def register(user_data: UserCreate):
     # Generar token de verificación único
     import secrets
     verification_token = secrets.token_urlsafe(32)
-    verification_expires_at = datetime.now(timezone.utc) + timedelta(hours=24)
+    verification_expires_at = datetime.now(timezone.utc) + timedelta(days=7)
     
     # Create user
     user_dict = {
@@ -412,7 +412,7 @@ async def resend_verification_email(email: str):
         # Generar nuevo token
         import secrets
         verification_token = secrets.token_urlsafe(32)
-        verification_expires_at = datetime.now(timezone.utc) + timedelta(hours=24)
+        verification_expires_at = datetime.now(timezone.utc) + timedelta(days=7)
         
         # Actualizar token en la base de datos
         await db.users.update_one(
