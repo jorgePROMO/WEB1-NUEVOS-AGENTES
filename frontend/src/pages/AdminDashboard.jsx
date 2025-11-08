@@ -1214,6 +1214,19 @@ const AdminDashboard = () => {
               <p className="text-sm text-gray-600">Clientes Harbiz (trabajo directo)</p>
             </CardContent>
           </Card>
+
+
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-green-200 hover:border-green-400"
+            onClick={() => setActiveView('finances')}
+          >
+            <CardContent className="pt-6 text-center">
+              <CreditCard className="h-12 w-12 text-green-500 mx-auto mb-3" />
+              <h3 className="text-lg font-bold mb-2">💰 Finanzas</h3>
+              <p className="text-sm text-gray-600">Ingresos y suscripciones</p>
+            </CardContent>
+          </Card>
+
         </div>
 
         {/* Conditional View Rendering */}
