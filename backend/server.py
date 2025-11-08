@@ -5995,17 +5995,15 @@ async def generate_followup_analysis_pdf(user_id: str, followup_id: str, request
         pdf_id = str(datetime.now(timezone.utc).timestamp()).replace('.', '')
         pdf_title = f"Análisis de Seguimiento - {month_name.capitalize()} {year}"
         
-        await db.pdfs.insert_one({
-            "_id": pdf_id,
-            "user_id": user_id,
-            "title": pdf_title,
-            "filename": f"{pdf_title}.pdf",
-            "file_data": pdf_content,
-            "type": "follow_up_analysis",
-            "follow_up_id": followup_id,
-            "upload_date": datetime.now(timezone.utc),
-            "uploaded_by": "admin"
-        })
+        # Create standardized PDF document
+        pdf_id = await create_pdf_document(
+            user_id=user_id,
+            title=pdf_title,
+            content=pdf_content,
+            pdf_type="follow_up_analysis",
+            related_id=followup_id,
+            filename=f"{pdf_title}.pdf"
+        )
         
         logger.info(f"Follow-up analysis PDF generated: {pdf_id} for user {user_id}")
         
