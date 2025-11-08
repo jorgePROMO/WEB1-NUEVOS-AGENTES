@@ -7,7 +7,7 @@ import requests
 import json
 
 # Backend URL
-BACKEND_URL = "https://health-crm-4.preview.emergentagent.com/api"
+BACKEND_URL = "https://crmfusion.preview.emergentagent.com/api"
 
 # Admin login
 login_response = requests.post(f"{BACKEND_URL}/auth/login", params={

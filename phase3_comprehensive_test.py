@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://health-crm-4.preview.emergentagent.com/api"
+BACKEND_URL = "https://crmfusion.preview.emergentagent.com/api"
 
 class ComprehensivePhase3Tester:
     def __init__(self):
