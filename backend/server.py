@@ -1274,19 +1274,22 @@ async def delete_pdf(pdf_id: str, request: Request):
         raise HTTPException(status_code=404, detail="Document not found")
     
     # Check permissions: users can delete their own uploaded docs, admin can delete any
-    if user["role"] != "admin" and pdf["uploaded_by"] != "user":
+    if user["role"] != "admin" and pdf.get("uploaded_by") != "user":
         raise HTTPException(status_code=403, detail="You can only delete documents you uploaded")
     
     if user["role"] != "admin" and pdf["user_id"] != user["_id"]:
         raise HTTPException(status_code=403, detail="Access denied")
     
-    # Delete file from filesystem
-    file_path = Path(pdf["file_path"])
-    if file_path.exists():
-        file_path.unlink()
+    # Delete file from filesystem if it exists (for backwards compatibility)
+    if pdf.get("file_path"):
+        file_path = Path(pdf["file_path"])
+        if file_path.exists():
+            file_path.unlink()
     
-    # Delete from database
+    # Delete from database (file_data is stored in MongoDB)
     await db.pdfs.delete_one({"_id": pdf_id})
+    
+    logger.info(f"✅ PDF deleted: {pdf_id} by {user['email']}")
     
     return {"success": True, "message": "Document deleted successfully"}
 
