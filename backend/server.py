@@ -6190,7 +6190,7 @@ async def deactivate_followup(user_id: str, request: Request):
 # Planes de suscripción (FIJO EN BACKEND - NO MODIFICABLE DESDE FRONTEND)
 SUBSCRIPTION_PLANS = {
     "monthly": {
-        "amount": 29.99,
+        "amount": 49.9,
         "currency": "eur",
         "name": "Plan Mensual",
         "billing_period": "monthly"
