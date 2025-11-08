@@ -612,7 +612,11 @@ async def get_user_dashboard(request: Request):
         })
     
     # Get PDFs
-    pdfs = await db.pdfs.find({"user_id": user_id}).to_list(100)
+    # Exclude file_data from PDFs to avoid serialization issues
+    pdfs = await db.pdfs.find(
+        {"user_id": user_id},
+        {"file_data": 0}
+    ).to_list(100)
     for pdf in pdfs:
         pdf["id"] = str(pdf["_id"])
         # Convertir fechas a ISO string para que el frontend pueda parsearlas
@@ -843,7 +847,11 @@ async def delete_client(user_id: str, request: Request):
     logger.info(f"  ✅ {sessions_deleted.deleted_count} sesiones eliminadas")
     
     # 7. Borrar PDFs del filesystem y database
-    pdfs = await db.pdfs.find({"user_id": user_id}).to_list(100)
+    # Exclude file_data from PDFs to avoid serialization issues
+    pdfs = await db.pdfs.find(
+        {"user_id": user_id},
+        {"file_data": 0}
+    ).to_list(100)
     for pdf in pdfs:
         file_path = Path(pdf["file_path"])
         if file_path.exists():
