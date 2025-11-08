@@ -42,7 +42,8 @@ import {
   Loader2,
   Save,
   UserCheck,
-  Dumbbell
+  Dumbbell,
+  CreditCard
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { AdminCalendar } from '../components/Calendar';
