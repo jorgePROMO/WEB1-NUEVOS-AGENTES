@@ -4303,11 +4303,14 @@ async def get_user_training_plans(user_id: str, request: Request):
 async def update_training_plan(
     user_id: str,
     plan_id: str,
-    plan_final: str,
-    request: Request = None
+    request: Request
 ):
     """Admin edita manualmente el plan de entrenamiento final"""
     await require_admin(request)
+    
+    # Get body
+    body = await request.json()
+    plan_final = body.get("plan_final")
     
     plan = await db.training_plans.find_one({"_id": plan_id, "user_id": user_id})
     if not plan:
