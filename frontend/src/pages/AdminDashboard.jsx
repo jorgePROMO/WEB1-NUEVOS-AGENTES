@@ -392,6 +392,16 @@ const AdminDashboard = () => {
     }
   }, [activeView, token]);
 
+
+  useEffect(() => {
+    // Load financial data when navigating to finances view
+    if (activeView === 'finances') {
+      loadFinancialMetrics();
+      loadAllPayments();
+    }
+  }, [activeView, token]);
+
+
   const loadClients = async () => {
     try {
       // Use clients endpoint to show web-registered clients
