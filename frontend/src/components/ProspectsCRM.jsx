@@ -160,7 +160,12 @@ export const ProspectsCRM = ({ token }) => {
       
       alert('✅ WhatsApp abierto. Revisa el mensaje y dale enviar.');
       loadProspectDetail(prospectId);
-
+    } catch (error) {
+      alert(`❌ Error al abrir WhatsApp: ${error.response?.data?.detail || error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   const generateReport = async (prospectId) => {
