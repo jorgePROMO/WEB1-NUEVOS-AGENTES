@@ -3906,44 +3906,23 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
         </html>
         """
         
-        # Crear PDF temporal
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
-            HTML(string=full_html).write_pdf(tmp_file.name)
-            pdf_path = tmp_file.name
+        # Generate PDF content
+        pdf_content = HTML(string=full_html).write_pdf()
         
-        # Leer contenido del PDF
-        with open(pdf_path, 'rb') as f:
-            pdf_content = f.read()
-        
-        # Guardar PDF en uploads
-        upload_dir = Path("/app/backend/uploads")
-        upload_dir.mkdir(exist_ok=True)
-        
-        pdf_filename = f"nutrition_plan_{user_id}_{month}_{year}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-        pdf_full_path = upload_dir / pdf_filename
-        
-        with open(pdf_full_path, 'wb') as f:
-            f.write(pdf_content)
-        
-        # Limpiar archivo temporal
-        os.unlink(pdf_path)
-        
-        # Crear registro en base de datos
-        pdf_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+        # Create standardized PDF document
         month_names = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
                        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
-        pdf_doc = {
-            "_id": pdf_id,
-            "user_id": user_id,
-            "title": f"Plan de Nutrición - {month_names[month]} {year}",
-            "type": "nutrition",  # IMPORTANTE: categoría nutrición
-            "file_path": str(pdf_full_path),
-            "sent_date": datetime.now(timezone.utc),
-            "created_at": datetime.now(timezone.utc),
-            "uploaded_by": "admin"  # PDF generado por admin
-        }
+        pdf_title = f"Plan de Nutrición - {month_names[month]} {year}"
+        pdf_filename = f"nutrition_plan_{user_id}_{month}_{year}_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.pdf"
         
-        await db.pdfs.insert_one(pdf_doc)
+        pdf_id = await create_pdf_document(
+            user_id=user_id,
+            title=pdf_title,
+            content=pdf_content,
+            pdf_type="nutrition",
+            related_id=plan["_id"],
+            filename=pdf_filename
+        )
         
         # Actualizar el plan en la colección marcando PDF generado
         await db.nutrition_plans.update_one(
