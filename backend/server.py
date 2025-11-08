@@ -51,6 +51,58 @@ db = client[os.environ['DB_NAME']]
 # Create the main app without a prefix
 app = FastAPI()
 
+
+# ==================== PDF HELPER FUNCTIONS ====================
+
+async def create_pdf_document(
+    user_id: str, 
+    title: str, 
+    content: bytes, 
+    pdf_type: str, 
+    related_id: str = None, 
+    filename: str = None
+):
+    """
+    Standardized PDF document creation for all AI-generated documents
+    
+    Args:
+        user_id: ID of the user
+        title: Display title for the PDF
+        content: PDF binary content
+        pdf_type: Type of PDF ("nutrition", "training", "follow_up_analysis")
+        related_id: ID of the source plan/analysis
+        filename: Custom filename (auto-generated if None)
+    
+    Returns:
+        pdf_id: UUID of created PDF document
+    """
+    import uuid
+    
+    pdf_id = str(uuid.uuid4())
+    current_time = datetime.now(timezone.utc)
+    
+    if not filename:
+        filename = f"{pdf_type}_{user_id}_{current_time.strftime('%Y%m%d_%H%M%S')}.pdf"
+    
+    pdf_doc = {
+        "_id": pdf_id,
+        "user_id": user_id,
+        "title": title,
+        "filename": filename,
+        "file_data": content,  # Always store binary data
+        "type": pdf_type,  # "nutrition", "training", "follow_up_analysis"
+        "upload_date": current_time,  # Standardized date field
+        "uploaded_by": "admin",
+        "related_id": related_id  # Link to source plan/analysis
+    }
+    
+    await db.pdfs.insert_one(pdf_doc)
+    logger.info(f"✅ PDF created: {pdf_id} | Type: {pdf_type} | User: {user_id}")
+    
+    return pdf_id
+
+
+
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
