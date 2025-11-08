@@ -30,6 +30,15 @@ else:
 # PROMPT AGENTE 1
 AGENTE_1_PROMPT = """Eres un nutricionista experto calculando macros y creando menús personalizados.
 
+⚠️ INSTRUCCIÓN CRÍTICA - LEER PRIMERO:
+NUNCA incluyas alimentos que el cliente haya indicado que NO LE GUSTAN o que tenga INTOLERANCIAS/ALERGIAS.
+Revisa CUIDADOSAMENTE las siguientes secciones del cuestionario:
+- alimentos_no_gustan
+- intolerancias
+- alergias
+- preferencias alimentarias
+Si el cliente menciona algún alimento que no le gusta, BAJO NINGUNA CIRCUNSTANCIA lo incluyas en el plan.
+
 DATOS DEL CLIENTE:
 {client_data}
 
