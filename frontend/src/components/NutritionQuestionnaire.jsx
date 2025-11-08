@@ -482,6 +482,46 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
             </div>
           )}
 
+          {/* Welcome Message - Only on first section */}
+          {currentSection === 0 && (
+            <div className="mb-6 p-6 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300 rounded-xl">
+              <div className="flex items-start gap-4">
+                <div className="text-4xl">💙</div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-blue-900 mb-3">
+                    ¡Bienvenido/a a tu Cuestionario Personalizado!
+                  </h3>
+                  <div className="space-y-3 text-gray-700">
+                    <p className="leading-relaxed">
+                      <span className="font-semibold">Sé que puede parecer extenso</span>, pero cada pregunta tiene un propósito importante. 
+                      Tu cuerpo es único, y para crear un plan verdaderamente personalizado que te ayude a alcanzar tus objetivos, 
+                      necesito conocerte a fondo.
+                    </p>
+                    <p className="leading-relaxed">
+                      Este cuestionario me permite entender tu <span className="font-semibold text-blue-700">estilo de vida, tu salud, tus rutinas y tus metas</span>. 
+                      Con esta información, podré diseñar un programa específico para ti, no una receta genérica.
+                    </p>
+                    <div className="mt-4 p-4 bg-white rounded-lg border border-blue-200">
+                      <p className="text-sm font-semibold text-blue-800 mb-2">
+                        💡 Consejos para completarlo:
+                      </p>
+                      <ul className="text-sm space-y-1 list-disc list-inside text-gray-600">
+                        <li>Tómate tu tiempo, no hay prisa</li>
+                        <li>Puedes ir avanzando sección por sección</li>
+                        <li>Sé sincero/a en tus respuestas - no hay respuestas correctas o incorrectas</li>
+                        <li>Si no sabes algún dato exacto, proporciona tu mejor estimación</li>
+                      </ul>
+                    </div>
+                    <p className="text-sm text-gray-600 italic mt-3">
+                      Recuerda: Cuanto más completa y honesta sea tu información, más efectivo será tu plan. 
+                      Estoy aquí para ayudarte a alcanzar tus objetivos de la manera más segura y efectiva posible. 💪
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {currentSectionData.isReview ? (
             <div className="space-y-6">
               <div className="bg-blue-50 border border-blue-200 p-6 rounded-lg">
