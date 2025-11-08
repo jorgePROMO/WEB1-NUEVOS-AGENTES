@@ -673,7 +673,7 @@ const UserDashboard = () => {
                               Suscripción Mensual
                             </h3>
                             <div className="mb-6">
-                              <span className="text-5xl font-bold text-blue-600">29,99€</span>
+                              <span className="text-5xl font-bold text-blue-600">49,9€</span>
                               <span className="text-gray-600 ml-2">/mes</span>
                             </div>
                             <p className="text-gray-600 mb-8">
