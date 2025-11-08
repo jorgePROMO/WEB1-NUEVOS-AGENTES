@@ -162,6 +162,56 @@ export const ProspectsCRM = ({ token }) => {
       loadProspectDetail(prospectId);
 
 
+
+  const generateReport = async (prospectId) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${API}/admin/prospects/${prospectId}/generate-report`,
+        null,
+        {
+          params: { regenerate: false },
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      alert('✅ Informe generado correctamente');
+      await loadProspectDetail(prospectId);
+      await loadProspects(filterStage || null);
+    } catch (error) {
+      alert(`❌ Error al generar informe: ${error.response?.data?.detail || error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const regenerateReport = async (prospectId) => {
+    if (!window.confirm('¿Estás seguro de regenerar el informe? El contenido actual se reemplazará.')) {
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${API}/admin/prospects/${prospectId}/generate-report`,
+        null,
+        {
+          params: { regenerate: true },
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      alert('✅ Informe regenerado correctamente');
+      await loadProspectDetail(prospectId);
+      await loadProspects(filterStage || null);
+    } catch (error) {
+      alert(`❌ Error al regenerar informe: ${error.response?.data?.detail || error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   const saveReportChanges = async (prospectId, reportContent) => {
     if (!reportContent || !reportContent.trim()) {
       alert('El contenido del informe no puede estar vacío');
