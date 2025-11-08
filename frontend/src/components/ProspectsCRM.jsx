@@ -164,6 +164,7 @@ export const ProspectsCRM = ({ token }) => {
 
 
   const generateReport = async (prospectId) => {
+    console.log('🔵 generateReport called for:', prospectId);
     setLoading(true);
     try {
       const response = await axios.post(
