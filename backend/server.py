@@ -4535,25 +4535,21 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
         </html>
         """
         
-        # Generar PDF
-        pdf_bytes = HTML(string=html_template).write_pdf()
+        # Generate PDF content
+        pdf_content = HTML(string=html_template).write_pdf()
         
-        # Guardar en base de datos
-        pdf_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
-        filename = f"plan_entrenamiento_{user.get('name', user_id)}_{month}_{year}.pdf"
+        # Create standardized PDF document
+        pdf_title = f"Plan de Entrenamiento - {month_names[month]} {year}"
+        pdf_filename = f"plan_entrenamiento_{user.get('name', user_id)}_{month}_{year}.pdf"
         
-        pdf_doc = {
-            "_id": pdf_id,
-            "user_id": user_id,
-            "filename": filename,
-            "title": f"Plan de Entrenamiento - {month_names[month]} {year}",
-            "type": "training",  # IMPORTANTE: tipo training
-            "file_data": pdf_bytes,
-            "upload_date": datetime.now(timezone.utc),
-            "uploaded_by": "admin"
-        }
-        
-        await db.pdfs.insert_one(pdf_doc)
+        pdf_id = await create_pdf_document(
+            user_id=user_id,
+            title=pdf_title,
+            content=pdf_content,
+            pdf_type="training",
+            related_id=plan_id,
+            filename=pdf_filename
+        )
         
         # Actualizar plan con referencia al PDF
         await db.training_plans.update_one(
