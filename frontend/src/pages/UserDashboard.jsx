@@ -591,6 +591,183 @@ const UserDashboard = () => {
           </TabsContent>
 
 
+
+          {/* Subscription Tab */}
+          <TabsContent value="subscription" className="space-y-6">
+            {loadingSubscription ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              </div>
+            ) : (
+              <>
+                {/* Estado de Suscripción */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <CreditCard className="h-5 w-5" />
+                      Estado de tu Suscripción
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {hasSubscription && subscription ? (
+                      <>
+                        {/* Suscripción Activa */}
+                        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              <CheckCircle className="h-5 w-5 text-green-600" />
+                              <span className="font-semibold text-green-900">Suscripción Activa</span>
+                            </div>
+                            <Badge className={subscription.status === 'active' ? 'bg-green-500' : 'bg-gray-500'}>
+                              {subscription.status === 'active' ? 'Activa' : subscription.status === 'cancelled' ? 'Cancelada' : 'Pendiente'}
+                            </Badge>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-sm text-gray-600">Plan</p>
+                              <p className="font-medium">Plan Mensual</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-600">Monto</p>
+                              <p className="font-medium">{formatAmount(subscription.amount, subscription.currency)}/mes</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-600">Fecha de Inicio</p>
+                              <p className="font-medium">{formatDate(subscription.start_date)}</p>
+                            </div>
+                            {subscription.status === 'active' && subscription.next_billing_date && (
+                              <div>
+                                <p className="text-sm text-gray-600">Próximo Pago</p>
+                                <p className="font-medium">{formatDate(subscription.next_billing_date)}</p>
+                              </div>
+                            )}
+                            {subscription.status === 'cancelled' && subscription.cancelled_at && (
+                              <div>
+                                <p className="text-sm text-gray-600">Cancelada el</p>
+                                <p className="font-medium">{formatDate(subscription.cancelled_at)}</p>
+                              </div>
+                            )}
+                          </div>
+                          
+                          {subscription.status === 'active' && (
+                            <div className="mt-4 pt-4 border-t border-green-200">
+                              <Button
+                                variant="outline"
+                                className="w-full border-red-300 text-red-600 hover:bg-red-50"
+                                onClick={handleCancelSubscription}
+                              >
+                                Cancelar Suscripción
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {/* Sin Suscripción */}
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+                          <AlertCircle className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                          <h3 className="text-lg font-semibold text-blue-900 mb-2">
+                            No tienes una suscripción activa
+                          </h3>
+                          <p className="text-blue-700 mb-6">
+                            Activa tu suscripción mensual para acceder a todos los servicios y funcionalidades del equipo de Jorge Calcerrada.
+                          </p>
+                          
+                          <div className="bg-white rounded-lg p-6 mb-6 border border-blue-200">
+                            <h4 className="font-semibold text-lg mb-4">Plan Mensual</h4>
+                            <div className="text-3xl font-bold text-blue-600 mb-2">29,99€</div>
+                            <p className="text-sm text-gray-600 mb-4">por mes</p>
+                            <ul className="text-left space-y-2 text-sm">
+                              <li className="flex items-center gap-2">
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                Plan de nutrición personalizado
+                              </li>
+                              <li className="flex items-center gap-2">
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                Plan de entrenamiento personalizado
+                              </li>
+                              <li className="flex items-center gap-2">
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                Seguimiento mensual con IA
+                              </li>
+                              <li className="flex items-center gap-2">
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                Acceso al chat con el equipo
+                              </li>
+                              <li className="flex items-center gap-2">
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                Gestión de calendario y sesiones
+                              </li>
+                            </ul>
+                          </div>
+                          
+                          <Button
+                            className="w-full bg-blue-600 hover:bg-blue-700"
+                            onClick={handleActivateSubscription}
+                            disabled={loadingSubscription}
+                          >
+                            {loadingSubscription ? 'Procesando...' : 'Activar Suscripción'}
+                          </Button>
+                        </div>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Historial de Pagos */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="h-5 w-5" />
+                      Historial de Pagos
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {payments.length === 0 ? (
+                      <div className="text-center py-8 text-gray-500">
+                        <FileText className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+                        <p>No hay pagos registrados</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {payments.map((payment) => (
+                          <div
+                            key={payment.transaction_id}
+                            className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-3 mb-2">
+                                  <Badge className="bg-green-500">
+                                    {payment.payment_status === 'succeeded' ? 'Exitoso' : payment.payment_status}
+                                  </Badge>
+                                  <span className="text-sm text-gray-600">
+                                    {formatDate(payment.created_at)}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                  <span className="font-semibold text-lg">
+                                    {formatAmount(payment.amount, payment.currency)}
+                                  </span>
+                                  <span className="text-sm text-gray-500">
+                                    ID: {payment.transaction_id.substring(0, 8)}...
+                                  </span>
+                                </div>
+                              </div>
+                              <CheckCircle className="h-5 w-5 text-green-500" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </TabsContent>
+
           {/* Calendar Tab */}
           <TabsContent value="calendar">
             {user && <UserCalendar userId={user.id} />}
