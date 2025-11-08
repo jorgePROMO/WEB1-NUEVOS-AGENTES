@@ -4575,7 +4575,7 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
             {
                 "$set": {
                     "pdf_id": pdf_id,
-                    "pdf_filename": filename,
+                    "pdf_filename": pdf_filename,
                     "pdf_generated": True
                 }
             }
