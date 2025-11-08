@@ -1611,6 +1611,83 @@ async def get_prospect_detail(prospect_id: str, request: Request):
         prospect["id"] = prospect["_id"]
         prospect["notes"] = notes
         
+
+
+@api_router.post("/admin/prospects/{prospect_id}/generate-report")
+async def generate_prospect_report_manual(prospect_id: str, request: Request, regenerate: bool = False):
+    """Generate or regenerate diagnostic report for a prospect"""
+    await require_admin(request)
+    
+    try:
+        # Get prospect
+        prospect = await db.questionnaire_responses.find_one({"_id": prospect_id})
+        if not prospect:
+            raise HTTPException(status_code=404, detail="Prospecto no encontrado")
+        
+        # Generate report
+        from gpt_service import generate_prospect_report
+        questionnaire_data = {k: v for k, v in prospect.items() if k not in ['_id', 'submitted_at', 'stage_name', 'stage_id', 'converted_to_client', 'report_generated', 'report_sent_at', 'report_content', 'report_sent_via', 'report_generated_at']}
+        
+        report = await generate_prospect_report(questionnaire_data)
+        
+        # Update prospect with generated report
+        await db.questionnaire_responses.update_one(
+            {"_id": prospect_id},
+            {
+                "$set": {
+                    "report_generated": True,
+                    "report_content": report,
+                    "report_generated_at": datetime.now(timezone.utc),
+                    "stage_id": "stage_001",
+                    "stage_name": "INFORME GENERADO"
+                }
+            }
+        )
+        
+        action = "regenerado" if regenerate else "generado"
+        logger.info(f"Report {action} for prospect {prospect_id}")
+        
+        return {
+            "success": True,
+            "message": f"Informe {action} correctamente",
+            "report": report
+        }
+    
+    except Exception as e:
+        logger.error(f"Error generating report: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al generar informe: {str(e)}")
+
+
+@api_router.patch("/admin/prospects/{prospect_id}/update-report")
+async def update_prospect_report_manual(prospect_id: str, report_content: str, request: Request):
+    """Update diagnostic report manually"""
+    await require_admin(request)
+    
+    try:
+        # Update report
+        result = await db.questionnaire_responses.update_one(
+            {"_id": prospect_id},
+            {
+                "$set": {
+                    "report_content": report_content,
+                    "report_edited": True,
+                    "report_edited_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Prospecto no encontrado")
+        
+        logger.info(f"Report manually updated for prospect {prospect_id}")
+        
+        return {"success": True, "message": "Informe actualizado correctamente"}
+    
+    except Exception as e:
+        logger.error(f"Error updating report: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al actualizar informe: {str(e)}")
+
+
         return prospect
     
     except HTTPException:
