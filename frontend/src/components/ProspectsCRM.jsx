@@ -220,17 +220,19 @@ export const ProspectsCRM = ({ token }) => {
     
     setLoading(true);
     try {
-      await axios.patch(`${API}/admin/prospects/${prospectId}/update-report`,
-        { report_content: reportContent },
+      await axios.patch(
+        `${API}/admin/prospects/${prospectId}/update-report`,
+        null,
         {
+          params: { report_content: reportContent },
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
         }
       );
       alert('✅ Informe actualizado correctamente');
-      loadProspectDetail(prospectId);
+      await loadProspectDetail(prospectId);
     } catch (error) {
-      alert(`Error al actualizar el informe: ${error.response?.data?.detail || error.message}`);
+      alert(`❌ Error al actualizar el informe: ${error.response?.data?.detail || error.message}`);
     } finally {
       setLoading(false);
     }
