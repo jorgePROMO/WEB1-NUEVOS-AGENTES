@@ -46,6 +46,12 @@ const UserDashboard = () => {
   const [daysSinceLastPlan, setDaysSinceLastPlan] = useState(0);
   const [documentFilter, setDocumentFilter] = useState('all'); // all, nutrition, training
   const [loading, setLoading] = useState(true);
+  
+  // Subscription states
+  const [subscription, setSubscription] = useState(null);
+  const [hasSubscription, setHasSubscription] = useState(false);
+  const [payments, setPayments] = useState([]);
+  const [loadingSubscription, setLoadingSubscription] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
