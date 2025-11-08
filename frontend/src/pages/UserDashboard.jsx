@@ -144,8 +144,9 @@ const UserDashboard = () => {
     navigate('/');
   };
 
-  const handlePayment = () => {
-    window.open('https://buy.stripe.com/fZu6oGamGbw1444gr1cs80d', '_blank');
+  const handlePayment = async () => {
+    // Usar el nuevo sistema de Stripe integrado
+    await handleActivateSubscription();
   };
 
 
