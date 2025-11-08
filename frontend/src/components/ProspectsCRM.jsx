@@ -478,8 +478,8 @@ export const ProspectsCRM = ({ token }) => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {/* Report Status */}
-                  <div className="flex items-center justify-between">
+                  {/* Report Status & Generation Buttons */}
+                  <div className="flex items-center justify-between flex-wrap gap-3">
                     <div className="flex items-center gap-2">
                       {selectedProspect.report_generated ? (
                         <>
@@ -491,7 +491,33 @@ export const ProspectsCRM = ({ token }) => {
                           )}
                         </>
                       ) : (
-                        <Badge className="bg-gray-400">⏳ Generando...</Badge>
+                        <Badge className="bg-orange-400">⏳ Pendiente de Generar</Badge>
+                      )}
+                    </div>
+                    
+                    {/* Generate/Regenerate Buttons */}
+                    <div className="flex gap-2">
+                      {!selectedProspect.report_generated ? (
+                        <Button
+                          onClick={() => generateReport(selectedProspect.id)}
+                          disabled={loading}
+                          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                          size="sm"
+                        >
+                          <FileText className="h-4 w-4 mr-2" />
+                          {loading ? 'Generando...' : '💡 Generar Informe'}
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={() => regenerateReport(selectedProspect.id)}
+                          disabled={loading}
+                          variant="outline"
+                          className="border-purple-500 text-purple-600 hover:bg-purple-50"
+                          size="sm"
+                        >
+                          <FileText className="h-4 w-4 mr-2" />
+                          {loading ? 'Regenerando...' : '🔄 Regenerar Informe'}
+                        </Button>
                       )}
                     </div>
                   </div>
