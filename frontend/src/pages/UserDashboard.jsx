@@ -148,6 +148,107 @@ const UserDashboard = () => {
     window.open('https://buy.stripe.com/fZu6oGamGbw1444gr1cs80d', '_blank');
   };
 
+
+  // Subscription Functions
+  const loadSubscriptionData = async () => {
+    try {
+      setLoadingSubscription(true);
+      
+      // Cargar suscripción
+      const subResponse = await axios.get(`${API}/stripe/my-subscription`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      setHasSubscription(subResponse.data.has_subscription);
+      setSubscription(subResponse.data.subscription);
+      
+      // Cargar historial de pagos
+      const paymentsResponse = await axios.get(`${API}/stripe/my-payments`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      setPayments(paymentsResponse.data.payments || []);
+      
+      setLoadingSubscription(false);
+    } catch (error) {
+      console.error('Error loading subscription data:', error);
+      setLoadingSubscription(false);
+    }
+  };
+
+  const handleActivateSubscription = async () => {
+    try {
+      setLoadingSubscription(true);
+      
+      // Obtener origin para construir URLs dinámicamente
+      const origin = window.location.origin;
+      
+      const response = await axios.post(
+        `${API}/stripe/create-subscription-session`,
+        { plan_type: "monthly" },
+        {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'origin': origin
+          }
+        }
+      );
+      
+      // Redirigir a Stripe Checkout
+      if (response.data.checkout_url) {
+        window.location.href = response.data.checkout_url;
+      }
+      
+    } catch (error) {
+      console.error('Error activating subscription:', error);
+      alert('Error al activar suscripción. Por favor, inténtalo de nuevo.');
+      setLoadingSubscription(false);
+    }
+  };
+
+  const handleCancelSubscription = async () => {
+    if (!window.confirm('¿Estás seguro de que deseas cancelar tu suscripción?')) {
+      return;
+    }
+    
+    try {
+      setLoadingSubscription(true);
+      
+      await axios.post(
+        `${API}/stripe/cancel-subscription`,
+        {},
+        {
+          headers: { 'Authorization': `Bearer ${token}` }
+        }
+      );
+      
+      alert('Suscripción cancelada exitosamente');
+      loadSubscriptionData(); // Recargar datos
+      
+    } catch (error) {
+      console.error('Error cancelling subscription:', error);
+      alert('Error al cancelar suscripción. Por favor, inténtalo de nuevo.');
+      setLoadingSubscription(false);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const formatAmount = (amount, currency = 'EUR') => {
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency',
+      currency: currency.toUpperCase()
+    }).format(amount);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
