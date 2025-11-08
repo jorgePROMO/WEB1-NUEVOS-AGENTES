@@ -118,6 +118,12 @@ const AdminDashboard = () => {
   // History modal state
   const [selectedHistoryItem, setSelectedHistoryItem] = useState(null);
 
+  // Financial states
+  const [financialMetrics, setFinancialMetrics] = useState(null);
+  const [allPayments, setAllPayments] = useState([]);
+  const [loadingFinancials, setLoadingFinancials] = useState(false);
+
+
 
   // Form states
   const [formData, setFormData] = useState({
