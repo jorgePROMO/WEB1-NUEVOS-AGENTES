@@ -4569,7 +4569,7 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
             "success": True,
             "message": "PDF generado correctamente",
             "pdf_id": pdf_id,
-            "filename": filename
+            "filename": pdf_filename
         }
         
     except Exception as e:
