@@ -243,14 +243,6 @@ export const ProspectsCRM = ({ token }) => {
     }
   };
 
-    } catch (error) {
-      alert(`Error: ${error.response?.data?.detail || error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
   const deleteProspect = async (prospectId) => {
     if (!window.confirm('¿Estás seguro de eliminar este prospecto? Esta acción no se puede deshacer.')) {
       return;
