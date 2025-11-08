@@ -1296,6 +1296,8 @@ async def delete_pdf(pdf_id: str, request: Request):
 
 @api_router.get("/pdfs/{pdf_id}/download")
 async def download_pdf(pdf_id: str, request: Request):
+    from fastapi.responses import Response
+    
     user = await get_current_user(request)
     pdf = await db.pdfs.find_one({"_id": pdf_id})
     
@@ -1306,11 +1308,24 @@ async def download_pdf(pdf_id: str, request: Request):
     if pdf["user_id"] != user["_id"] and user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Access denied")
     
-    file_path = Path(pdf["file_path"])
-    if not file_path.exists():
-        raise HTTPException(status_code=404, detail="File not found")
+    # New structure: file_data stored in MongoDB
+    if pdf.get("file_data"):
+        filename = pdf.get("filename", f"{pdf.get('title', 'document')}.pdf")
+        return Response(
+            content=pdf["file_data"],
+            media_type="application/pdf",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+        )
     
-    return FileResponse(file_path, media_type="application/pdf", filename=file_path.name)
+    # Backwards compatibility: file_path in filesystem
+    elif pdf.get("file_path"):
+        file_path = Path(pdf["file_path"])
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail="File not found")
+        return FileResponse(file_path, media_type="application/pdf", filename=file_path.name)
+    
+    else:
+        raise HTTPException(status_code=404, detail="PDF content not found")
 
 
 # ==================== ALERT ENDPOINTS ====================
