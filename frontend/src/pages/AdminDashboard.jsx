@@ -1100,6 +1100,59 @@ const AdminDashboard = () => {
     );
   }
 
+
+  // Financial Functions
+  const loadFinancialMetrics = async () => {
+    try {
+      setLoadingFinancials(true);
+      const response = await axios.get(`${API}/admin/financial-overview`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setFinancialMetrics(response.data);
+    } catch (error) {
+      console.error('Error loading financial metrics:', error);
+    } finally {
+      setLoadingFinancials(false);
+    }
+  };
+
+  const loadAllPayments = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/all-payments`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setAllPayments(response.data.payments || []);
+    } catch (error) {
+      console.error('Error loading payments:', error);
+    }
+  };
+
+  const formatAmount = (amount, currency = 'EUR') => {
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency',
+      currency: currency.toUpperCase()
+    }).format(amount);
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  // Cargar datos financieros cuando se cambia a la vista de finanzas
+  useEffect(() => {
+    if (activeView === 'finances') {
+      loadFinancialMetrics();
+      loadAllPayments();
+    }
+  }, [activeView]);
+
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
