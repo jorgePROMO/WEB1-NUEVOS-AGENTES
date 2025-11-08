@@ -6501,6 +6501,7 @@ async def cancel_user_subscription(
     Cancela la suscripción activa del usuario
     """
     try:
+        from bson import ObjectId
         # Buscar suscripción activa
         subscription = await db.user_subscriptions.find_one({
             "user_id": current_user_id,
