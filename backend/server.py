@@ -3941,8 +3941,7 @@ async def generate_nutrition_pdf(user_id: str, plan_id: str = None, request: Req
             "success": True,
             "message": "PDF generado y subido a documentos del usuario",
             "pdf_id": pdf_id,
-            "filename": pdf_filename,
-            "plan_id": plan["_id"]
+            "filename": pdf_filename
         }
         
     except Exception as e:
