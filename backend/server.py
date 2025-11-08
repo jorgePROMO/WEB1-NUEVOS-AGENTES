@@ -5678,7 +5678,6 @@ async def send_followup_analysis_email(user_id: str, followup_id: str, request: 
         
         submission_date = follow_up.get("submission_date")
         if isinstance(submission_date, str):
-            from datetime import datetime
             submission_date = datetime.fromisoformat(submission_date.replace('Z', '+00:00'))
         
         month_name = submission_date.strftime("%B") if submission_date else "este mes"
@@ -5794,7 +5793,6 @@ async def send_followup_analysis_whatsapp(user_id: str, followup_id: str, reques
         
         submission_date = follow_up.get("submission_date")
         if isinstance(submission_date, str):
-            from datetime import datetime
             submission_date = datetime.fromisoformat(submission_date.replace('Z', '+00:00'))
         
         month_name = submission_date.strftime("%B") if submission_date else "este mes"
@@ -5863,7 +5861,6 @@ async def generate_followup_analysis_pdf(user_id: str, followup_id: str, request
         
         submission_date = follow_up.get("submission_date")
         if isinstance(submission_date, str):
-            from datetime import datetime
             submission_date = datetime.fromisoformat(submission_date.replace('Z', '+00:00'))
         
         month_name = submission_date.strftime("%B") if submission_date else "Seguimiento"
