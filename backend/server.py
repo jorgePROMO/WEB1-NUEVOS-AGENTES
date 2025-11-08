@@ -25,7 +25,9 @@ from models import (
     MessageTemplate, TemplateCreate, TemplateResponse, TemplateUpdate,
     ReminderConfig, ClientRiskStatus,
     NutritionQuestionnaireSubmit, NutritionPlanResponse,
-    FollowUpSubmit, FollowUpSubmissionInDB
+    FollowUpSubmit, FollowUpSubmissionInDB,
+    StripeSubscriptionCreate, PaymentTransaction, UserSubscription,
+    FinancialMetrics, PaymentHistoryItem
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
