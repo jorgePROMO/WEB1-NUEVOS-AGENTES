@@ -3994,14 +3994,18 @@ const AdminDashboard = () => {
       {modalTrainingPlan && (
         <TrainingPlanChatDialog
           isOpen={showTrainingChat}
-          onClose={() => setShowTrainingChat(false)}
+          onClose={() => {
+            setShowTrainingChat(false);
+            // Reopen the training modal after chat closes
+            setTimeout(() => setShowTrainingModal(true), 100);
+          }}
           planId={modalTrainingPlan.id}
           planContent={modalTrainingPlan.plan_final}
           onPlanUpdated={(updatedPlan) => {
             // Update the modal display
             setModalTrainingPlan(prev => ({ ...prev, plan_final: updatedPlan }));
             setTrainingContent(updatedPlan);
-            // Optionally reload the full plan from server
+            // Reload the full plan from server
             if (selectedClient) {
               loadTrainingPlans(selectedClient._id);
             }
