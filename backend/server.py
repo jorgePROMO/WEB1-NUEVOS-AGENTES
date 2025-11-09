@@ -28,7 +28,8 @@ from models import (
     NutritionQuestionnaireSubmit, NutritionPlanResponse,
     FollowUpSubmit, FollowUpSubmissionInDB,
     StripeSubscriptionCreate, PaymentTransaction, UserSubscription,
-    FinancialMetrics, PaymentHistoryItem
+    FinancialMetrics, PaymentHistoryItem,
+    Exercise, ExerciseResponse, ExerciseQuery
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
