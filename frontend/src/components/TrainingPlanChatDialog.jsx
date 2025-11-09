@@ -79,7 +79,7 @@ const TrainingPlanChatDialog = ({ isOpen, onClose, planId, planContent, onPlanUp
 
     } catch (error) {
       console.error('Error sending message:', error);
-      const errorMessage = error.message || 'Error desconocido';
+      const errorMessage = error.response?.data?.detail || error.message || 'Error desconocido';
       setMessages(prev => [...prev, {
         role: 'assistant',
         content: `❌ Error: ${errorMessage}\n\nPor favor, intenta de nuevo o contacta con soporte si el problema persiste.`,
