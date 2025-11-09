@@ -52,6 +52,7 @@ const TrainingPlanChatDialog = ({ isOpen, onClose, planId, planContent, onPlanUp
           'Content-Type': 'application/json',
         },
         credentials: 'include',
+        cache: 'no-cache',
         body: JSON.stringify({
           plan_id: planId,
           user_message: userMessage
