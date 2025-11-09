@@ -6796,6 +6796,128 @@ async def cleanup_pending_payments(
         raise HTTPException(status_code=500, detail=f"Error al obtener suscripción del cliente: {str(e)}")
 
 
+# ==================== EXERCISE DATABASE ENDPOINTS ====================
+
+@api_router.get("/exercises/all", response_model=List[ExerciseResponse])
+async def get_all_exercises(request: Request):
+    """Get all exercises from the database (requires authentication)"""
+    await get_current_user(request)
+    
+    try:
+        exercises = await db.exercises.find().to_list(length=None)
+        
+        for exercise in exercises:
+            exercise["id"] = exercise["_id"]
+        
+        return exercises
+    
+    except Exception as e:
+        logger.error(f"Error fetching exercises: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener ejercicios")
+
+
+@api_router.post("/exercises/query", response_model=List[ExerciseResponse])
+async def query_exercises(query: ExerciseQuery, request: Request):
+    """Query exercises by muscle group, difficulty, location, or equipment"""
+    await get_current_user(request)
+    
+    try:
+        # Build MongoDB query
+        mongo_query = {}
+        
+        if query.grupo_muscular:
+            # Search in both primary and secondary muscle groups
+            mongo_query["$or"] = [
+                {"grupo_muscular_principal": {"$regex": query.grupo_muscular, "$options": "i"}},
+                {"grupo_muscular_secundario": {"$regex": query.grupo_muscular, "$options": "i"}}
+            ]
+        
+        if query.nivel_dificultad:
+            mongo_query["nivel_dificultad"] = {"$regex": query.nivel_dificultad, "$options": "i"}
+        
+        if query.lugar_entrenamiento:
+            mongo_query["lugar_entrenamiento"] = {"$regex": query.lugar_entrenamiento, "$options": "i"}
+        
+        if query.material_disponible:
+            # Match exercises that can be done with available equipment
+            material_conditions = []
+            for material in query.material_disponible:
+                material_conditions.append({"material_necesario": {"$regex": material, "$options": "i"}})
+            if material_conditions:
+                mongo_query["$or"] = material_conditions
+        
+        exercises = await db.exercises.find(mongo_query).to_list(length=None)
+        
+        for exercise in exercises:
+            exercise["id"] = exercise["_id"]
+        
+        logger.info(f"Found {len(exercises)} exercises matching query")
+        
+        return exercises
+    
+    except Exception as e:
+        logger.error(f"Error querying exercises: {e}")
+        raise HTTPException(status_code=500, detail="Error al buscar ejercicios")
+
+
+@api_router.get("/exercises/by-muscle-group/{muscle_group}", response_model=List[ExerciseResponse])
+async def get_exercises_by_muscle_group(muscle_group: str, request: Request):
+    """Get exercises by muscle group (e.g., 'Pectoral', 'Biceps', 'Espalda')"""
+    await get_current_user(request)
+    
+    try:
+        exercises = await db.exercises.find({
+            "$or": [
+                {"grupo_muscular_principal": {"$regex": muscle_group, "$options": "i"}},
+                {"grupo_muscular_secundario": {"$regex": muscle_group, "$options": "i"}}
+            ]
+        }).to_list(length=None)
+        
+        for exercise in exercises:
+            exercise["id"] = exercise["_id"]
+        
+        return exercises
+    
+    except Exception as e:
+        logger.error(f"Error fetching exercises by muscle group: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener ejercicios por grupo muscular")
+
+
+@api_router.get("/exercises/stats")
+async def get_exercise_stats(request: Request):
+    """Get statistics about the exercise database"""
+    await get_current_user(request)
+    
+    try:
+        total = await db.exercises.count_documents({})
+        
+        # Count by difficulty
+        principiante = await db.exercises.count_documents({"nivel_dificultad": {"$regex": "Principiante", "$options": "i"}})
+        intermedio = await db.exercises.count_documents({"nivel_dificultad": {"$regex": "Intermedio", "$options": "i"}})
+        avanzado = await db.exercises.count_documents({"nivel_dificultad": {"$regex": "Avanzado", "$options": "i"}})
+        
+        # Get unique muscle groups
+        muscle_groups_pipeline = [
+            {"$group": {"_id": "$grupo_muscular_principal"}},
+            {"$sort": {"_id": 1}}
+        ]
+        muscle_groups = await db.exercises.aggregate(muscle_groups_pipeline).to_list(length=None)
+        unique_muscle_groups = [mg["_id"] for mg in muscle_groups if mg["_id"]]
+        
+        return {
+            "total_exercises": total,
+            "by_difficulty": {
+                "principiante": principiante,
+                "intermedio": intermedio,
+                "avanzado": avanzado
+            },
+            "muscle_groups": unique_muscle_groups,
+            "muscle_groups_count": len(unique_muscle_groups)
+        }
+    
+    except Exception as e:
+        logger.error(f"Error fetching exercise stats: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener estadísticas de ejercicios")
 
 
 # Include the router in the main app (moved to end to include all endpoints)
