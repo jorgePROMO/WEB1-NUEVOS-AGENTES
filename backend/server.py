@@ -6364,9 +6364,9 @@ async def get_checkout_status(
                 {"$set": {"subscription_id": subscription_id}}
             )
             
-            # Actualizar usuario - marcar como con suscripción activa
+            # Actualizar usuario - marcar como con suscripción activa (_id es string)
             await db.users.update_one(
-                {"user_id": transaction["user_id"]},
+                {"_id": transaction["user_id"]},
                 {
                     "$set": {
                         "subscription.status": "active",
