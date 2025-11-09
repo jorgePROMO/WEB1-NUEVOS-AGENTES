@@ -137,12 +137,7 @@ sio = socketio.AsyncServer(
 )
 socket_app = socketio.ASGIApp(sio, app)
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+# Logging already configured at the top of the file
 
 
 # ==================== HELPER FUNCTIONS ====================
