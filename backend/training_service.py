@@ -264,21 +264,17 @@ Basándote en los datos recibidos, crea:
 ## 📄 GENERAR DOS OUTPUTS:
 
 ### OUTPUT 1: PLAN COMPLETO (para referencia)
-Texto completo del plan con:
-- Cada día escrito completamente
-- Cada ejercicio con (Video: URL)
-- Series, reps, RIR
-- Técnicas específicas
+Texto completo del plan con todas las explicaciones
 
 ### OUTPUT 2: TABLA TABULADA FINAL (para exportar)
 FORMATO OBLIGATORIO:
-DÍA	EJERCICIO (Video: URL)	SERIES	REPS	RIR	OBSERVACIÓN
+DÍA     EJERCICIO       SERIES  REPS    RIR     OBSERVACIÓN CLAVE
 
-REQUISITOS:
-- USAR TABULACIONES entre columnas
-- Incluir URL en columna EJERCICIO
+REQUISITOS CRÍTICOS TABLA:
+- USAR TABULACIONES entre columnas (NO espacios)
 - Máximo 60 caracteres por observación
-- Un ejercicio por fila
+- Solo la tabla pura, sin texto adicional
+- Un ejercicio por fila con su día correspondiente
 
 ---
 
@@ -286,12 +282,7 @@ REQUISITOS:
 {{
   "plan_completo": "...",
   "tabla_tabulada": "..."
-}}
-
-**RECORDATORIO FINAL:** 
-✅ SOLO usar ejercicios de la BASE DE DATOS arriba
-✅ SIEMPRE incluir (Video: URL) en cada ejercicio
-✅ Escribir CADA DÍA completamente, sin repeticiones"""
+}}"""
 
 
 # ==================== AGENT 4: PROFESSIONAL COMPACTOR ====================
