@@ -6707,6 +6707,17 @@ async def get_client_subscription(
         for payment in payments:
             if "_id" in payment:
                 del payment["_id"]
+        
+        return {
+            "has_subscription": True,
+            "subscription": subscription,
+            "payments": payments,
+            "payments_count": len(payments)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting client subscription: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al obtener suscripción del cliente: {str(e)}")
 
 
 @api_router.delete("/admin/payment/{transaction_id}")
