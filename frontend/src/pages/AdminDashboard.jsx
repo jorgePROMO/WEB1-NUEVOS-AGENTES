@@ -3840,13 +3840,22 @@ const AdminDashboard = () => {
                     <CardTitle>Plan Final</CardTitle>
                     <div className="flex gap-2">
                       {!editingTraining ? (
-                        <Button
-                          onClick={() => setEditingTraining(true)}
-                          variant="outline"
-                        >
-                          <Edit className="h-4 w-4 mr-2" />
-                          Editar
-                        </Button>
+                        <>
+                          <Button
+                            onClick={() => setShowTrainingChat(true)}
+                            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                          >
+                            <MessageSquare className="h-4 w-4 mr-2" />
+                            💬 Chat con IA
+                          </Button>
+                          <Button
+                            onClick={() => setEditingTraining(true)}
+                            variant="outline"
+                          >
+                            <Edit className="h-4 w-4 mr-2" />
+                            Editar Manual
+                          </Button>
+                        </>
                       ) : (
                         <>
                           <Button
