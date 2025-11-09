@@ -47,25 +47,22 @@ const TrainingPlanChatDialog = ({ isOpen, onClose, planId, planContent, onPlanUp
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${BACKEND_URL}/api/training-plan/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        cache: 'no-cache',
-        body: JSON.stringify({
+      // Using axios instead of fetch to avoid React 19 Response.clone() bug
+      const response = await axios.post(
+        `${BACKEND_URL}/api/training-plan/chat`,
+        {
           plan_id: planId,
           user_message: userMessage
-        })
-      });
+        },
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      );
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error('Backend error:', data);
-        throw new Error(data.detail || 'Error al procesar mensaje');
-      }
+      const data = response.data;
       
       // Add assistant message
       setMessages(prev => [...prev, {
