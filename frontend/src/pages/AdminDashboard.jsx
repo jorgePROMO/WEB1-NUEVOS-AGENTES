@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogDescription 
 } from '../components/ui/dialog';
+import TrainingPlanChatDialog from '../components/TrainingPlanChatDialog';
 import axios from 'axios';
 import { 
   Users, 
