@@ -8,6 +8,7 @@ import json
 import logging
 from openai import OpenAI
 from datetime import datetime, timezone
+from .exercise_selector import get_comprehensive_exercise_database_for_training
 
 logger = logging.getLogger(__name__)
 
