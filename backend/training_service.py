@@ -232,6 +232,8 @@ Eres un entrenador personal que crea planes ejecutables directos. Genera ÚNICAM
 - Justificaciones extensas
 - Planes hardcodeados
 - Más de 800 palabras
+- **❌ PROHIBIDO ABSOLUTAMENTE: Copiar ejercicios idénticos entre días diferentes**
+- **❌ PROHIBIDO: Decir "movilidad" o "estiramientos" sin especificar ejercicios concretos**
 
 ## ✅ GENERAR DINÁMICAMENTE:
 Basándote en los datos recibidos, crea:
@@ -248,15 +250,37 @@ Basándote en los datos recibidos, crea:
 - Interpretar cada día según el patrón (L:Upper, M:Lower, etc.)
 
 ### PASO 2: SELECCIONAR EJERCICIOS DINÁMICAMENTE
-- Para días UPPER: Usar ejercicios seguros de upper body
-- Para días LOWER: Usar ejercicios seguros de lower body
-- Para días CARDIO: Cardio suave progresivo
-- Para días DESCANSO: Especificar descanso
+**CRÍTICO: CADA DÍA DEBE TENER EJERCICIOS DIFERENTES**
+- Para días UPPER: Usar VARIEDAD de ejercicios de upper body (pecho, espalda, hombros, brazos)
+- Para días LOWER: Usar VARIEDAD de ejercicios de lower body (cuádriceps, femoral, glúteo, gemelos)
+- Para días CARDIO: Especificar tipo (caminata, bicicleta, elíptica) con duración
+- Para días DESCANSO: Especificar "Descanso completo" o "Descanso activo (caminata suave 20-30 min)"
 
-### PASO 3: APLICAR PARÁMETROS CALCULADOS
+**REGLA DE VARIEDAD:**
+- LUNES: Ejercicios A, B, C, D
+- JUEVES: Ejercicios E, F, G, H (NUNCA repetir A, B, C, D)
+- Ejemplo CORRECTO:
+  - LUNES: Press banca, Remo barra, Press militar, Curl bíceps
+  - JUEVES: Press inclinado, Dominadas, Elevaciones laterales, Tríceps polea
+- Ejemplo INCORRECTO:
+  - LUNES: Press banca, Remo barra
+  - JUEVES: Press banca, Remo barra ❌ (repetición prohibida)
+
+### PASO 3: ESPECIFICAR MOVILIDAD Y ESTIRAMIENTOS
+Si incluyes movilidad o estiramientos, debes especificar:
+- Círculos de brazos: 10 repeticiones cada lado
+- Rotaciones de cuello: 5 repeticiones cada lado
+- Movilidad de cadera: Cat-Cow 10 repeticiones
+- Estiramiento de isquiotibiales: 30 segundos cada pierna
+- Estiramiento de cuádriceps: 30 segundos cada pierna
+- Etc.
+
+NUNCA escribir solo "movilidad articular" o "estiramientos" sin detalles.
+
+### PASO 4: APLICAR PARÁMETROS CALCULADOS
 - RIR, Volumen, Duración según análisis previo
 
-### PASO 4: APLICAR LIMITACIONES ESPECÍFICAS
+### PASO 5: APLICAR LIMITACIONES ESPECÍFICAS
 - Usar SOLO ejercicios seguros de la lista
 
 ---
@@ -282,7 +306,11 @@ REQUISITOS CRÍTICOS TABLA:
 {{
   "plan_completo": "...",
   "tabla_tabulada": "..."
-}}"""
+}}
+
+**RECORDATORIO FINAL:**
+✅ CADA DÍA = EJERCICIOS DIFERENTES (no repetir)
+✅ MOVILIDAD = Especificar ejercicios concretos con duración"""
 
 
 # ==================== AGENT 4: PROFESSIONAL COMPACTOR ====================
