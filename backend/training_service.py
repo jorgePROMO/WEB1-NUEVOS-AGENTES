@@ -498,14 +498,22 @@ async def generate_training_plan(questionnaire_data: dict) -> dict:
         agent_3_response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "Eres un generador de planes de entrenamiento semanales. Generas plan completo + tabla tabulada en formato JSON válido."},
+                {"role": "system", "content": """Eres un generador de planes de entrenamiento ESTRICTO. 
+                
+REGLAS ABSOLUTAS:
+1. SOLO usar ejercicios de la BASE DE DATOS proporcionada
+2. CADA ejercicio DEBE tener formato: Nombre (Video: URL_COMPLETA)
+3. Mínimo 4-6 ejercicios por día de entrenamiento
+4. PROHIBIDO inventar ejercicios
+5. PROHIBIDO decir "repite X día"
+6. Generar JSON válido con plan_completo y tabla_tabulada"""},
                 {"role": "user", "content": AGENT_3_PROMPT.format(
                     agent_2_output=agent_2_output,
                     exercise_database=exercise_database
                 )}
             ],
-            temperature=0.4,
-            max_tokens=4000,  # Increased due to larger context with exercise database
+            temperature=0.2,  # Reduced for more adherence to instructions
+            max_tokens=5000,  # Increased for more detailed plans
             response_format={"type": "json_object"}
         )
         
