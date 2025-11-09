@@ -4001,6 +4001,7 @@ const AdminDashboard = () => {
           }}
           planId={modalTrainingPlan.id}
           planContent={modalTrainingPlan.plan_final}
+          token={token}
           onPlanUpdated={(updatedPlan) => {
             // Update the modal display
             setModalTrainingPlan(prev => ({ ...prev, plan_final: updatedPlan }));
