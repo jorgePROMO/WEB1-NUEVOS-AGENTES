@@ -105,6 +105,7 @@ const AdminDashboard = () => {
   const [generatingFromFollowup, setGeneratingFromFollowup] = useState(false);
   const [showTrainingModal, setShowTrainingModal] = useState(false);
   const [modalTrainingPlan, setModalTrainingPlan] = useState(null);
+  const [showTrainingChat, setShowTrainingChat] = useState(false);
   
   // Follow-up states
   const [followUps, setFollowUps] = useState([]); // Array de seguimientos
