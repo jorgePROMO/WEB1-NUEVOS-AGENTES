@@ -805,3 +805,55 @@ class PaymentHistoryItem(BaseModel):
     status: str
     user_name: Optional[str] = None
     user_email: str
+
+
+class FinancialOverviewResponse(BaseModel):
+    total_revenue: float
+    monthly_revenue: float
+    annual_revenue: float
+    active_subscriptions: int
+    cancelled_subscriptions: int
+    pending_payments: int
+    failed_payments: int
+
+
+# ==================== EXERCISE DATABASE MODELS ====================
+
+class Exercise(BaseModel):
+    """Model for exercise from custom database"""
+    id: Optional[str] = Field(alias="_id", default=None)
+    nombre_ejercicio: str
+    grupo_muscular_principal: str
+    grupo_muscular_secundario: Optional[str] = None
+    lugar_entrenamiento: str  # Casa / Gimnasio
+    nivel_dificultad: str  # Principiante / Intermedio / Avanzado
+    material_necesario: str
+    equipamiento_opcional: Optional[str] = None
+    tags_gpt: str  # Comma-separated tags
+    url_video: str  # Google Drive URL
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+
+
+class ExerciseResponse(BaseModel):
+    """Response model for exercises"""
+    id: str
+    nombre_ejercicio: str
+    grupo_muscular_principal: str
+    grupo_muscular_secundario: Optional[str] = None
+    lugar_entrenamiento: str
+    nivel_dificultad: str
+    material_necesario: str
+    equipamiento_opcional: Optional[str] = None
+    tags_gpt: str
+    url_video: str
+
+
+class ExerciseQuery(BaseModel):
+    """Query parameters for filtering exercises"""
+    grupo_muscular: Optional[str] = None
+    nivel_dificultad: Optional[str] = None
+    lugar_entrenamiento: Optional[str] = None
+    material_disponible: Optional[List[str]] = None
