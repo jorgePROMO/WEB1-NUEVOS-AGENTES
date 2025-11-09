@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { X, Send, Loader2, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 
-const TrainingPlanChatDialog = ({ isOpen, onClose, planId, planContent, onPlanUpdated }) => {
+const TrainingPlanChatDialog = ({ isOpen, onClose, planId, planContent, onPlanUpdated, token }) => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
