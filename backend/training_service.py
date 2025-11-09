@@ -217,7 +217,7 @@ AUTORREGULACIÓN según factor laboral y capacidad de recuperación
 
 # ==================== AGENT 3: WEEKLY PLAN GENERATOR ====================
 
-AGENT_3_PROMPT = """# AGENTE 6 DINÁMICO - GENERADOR PLAN SEMANAL CON BASE DE DATOS REAL
+AGENT_3_PROMPT = """# AGENTE 6 DINÁMICO - GENERADOR PLAN SEMANAL
 
 ## 🎯 MISIÓN:
 Eres un entrenador personal que crea planes ejecutables directos usando EXCLUSIVAMENTE ejercicios de la base de datos proporcionada.
