@@ -6975,6 +6975,16 @@ async def get_exercise_stats(request: Request):
 # Include the router in the main app (moved to end to include all endpoints)
 app.include_router(api_router)
 
+# Verify database connection at startup
+@app.on_event("startup")
+async def startup_db_verification():
+    try:
+        await db.command('ping')
+        logger.info(f"✅ Successfully connected to database: {db_name}")
+    except Exception as e:
+        logger.error(f"❌ CRITICAL: Failed to connect to database {db_name}: {e}")
+        raise RuntimeError(f"Database connection failed: {e}")
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
