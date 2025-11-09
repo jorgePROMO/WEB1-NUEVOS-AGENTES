@@ -436,14 +436,37 @@ async def generate_training_plan(questionnaire_data: dict) -> dict:
         # ==================== AGENT 3: WEEKLY PLAN GENERATOR ====================
         logger.info("🤖 Agent 3: Weekly Plan Generator - Starting...")
         
+        # Get exercise database for Agent 3
+        logger.info("📚 Loading exercise database for Agent 3...")
+        try:
+            # Extract difficulty level from Agent 2 analysis for exercise filtering
+            difficulty_level = "Intermedio"  # Default
+            if agent_2_json and "flujo_entrenamiento" in agent_2_json:
+                agente_4_analysis = agent_2_json["flujo_entrenamiento"].get("agente_4_analysis", {})
+                experiencia = agente_4_analysis.get("experiencia_determinada", {})
+                clasificacion = experiencia.get("clasificacion", "Intermedio")
+                difficulty_level = clasificacion
+            
+            exercise_database = await get_comprehensive_exercise_database_for_training(
+                difficulty_level=difficulty_level,
+                location="Gimnasio / Casa equipada"
+            )
+            logger.info(f"✅ Exercise database loaded - {len(exercise_database)} characters")
+        except Exception as e:
+            logger.error(f"❌ Error loading exercise database: {e}")
+            exercise_database = "Error al cargar base de datos de ejercicios. Usar ejercicios básicos conocidos."
+        
         agent_3_response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": "Eres un generador de planes de entrenamiento semanales. Generas plan completo + tabla tabulada en formato JSON válido."},
-                {"role": "user", "content": AGENT_3_PROMPT.format(agent_2_output=agent_2_output)}
+                {"role": "user", "content": AGENT_3_PROMPT.format(
+                    agent_2_output=agent_2_output,
+                    exercise_database=exercise_database
+                )}
             ],
             temperature=0.4,
-            max_tokens=3000,
+            max_tokens=4000,  # Increased due to larger context with exercise database
             response_format={"type": "json_object"}
         )
         
