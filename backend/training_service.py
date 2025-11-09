@@ -474,45 +474,23 @@ async def generate_training_plan(questionnaire_data: dict) -> dict:
         # ==================== AGENT 3: WEEKLY PLAN GENERATOR ====================
         logger.info("🤖 Agent 3: Weekly Plan Generator - Starting...")
         
-        # Get exercise database for Agent 3
-        logger.info("📚 Loading exercise database for Agent 3...")
-        try:
-            # Extract difficulty level from Agent 2 analysis for exercise filtering
-            difficulty_level = "Intermedio"  # Default
-            if agent_2_json and "flujo_entrenamiento" in agent_2_json:
-                agente_4_analysis = agent_2_json["flujo_entrenamiento"].get("agente_4_analysis", {})
-                experiencia = agente_4_analysis.get("experiencia_determinada", {})
-                clasificacion = experiencia.get("clasificacion", "Intermedio")
-                difficulty_level = clasificacion
-            
-            exercise_database = await get_comprehensive_exercise_database_for_training(
-                difficulty_level=difficulty_level,
-                location="Gimnasio / Casa equipada"
-            )
-            logger.info(f"✅ Exercise database loaded - {len(exercise_database)} characters")
-        except Exception as e:
-            logger.error(f"❌ Error loading exercise database: {e}")
-            exercise_database = "Error al cargar base de datos de ejercicios. Usar ejercicios básicos conocidos."
-        
         agent_3_response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": """Eres un generador de planes de entrenamiento ESTRICTO. 
+                {"role": "system", "content": """Eres un generador de planes de entrenamiento profesional. 
                 
-REGLAS ABSOLUTAS:
-1. SOLO usar ejercicios de la BASE DE DATOS proporcionada
-2. CADA ejercicio DEBE tener formato: Nombre (Video: URL_COMPLETA)
+REGLAS:
+1. Generar planes completos y profesionales
+2. Usar ejercicios seguros y apropiados
 3. Mínimo 4-6 ejercicios por día de entrenamiento
-4. PROHIBIDO inventar ejercicios
-5. PROHIBIDO decir "repite X día"
-6. Generar JSON válido con plan_completo y tabla_tabulada"""},
+4. PROHIBIDO decir "repite X día"
+5. Generar JSON válido con plan_completo y tabla_tabulada"""},
                 {"role": "user", "content": AGENT_3_PROMPT.format(
-                    agent_2_output=agent_2_output,
-                    exercise_database=exercise_database
+                    agent_2_output=agent_2_output
                 )}
             ],
-            temperature=0.2,  # Reduced for more adherence to instructions
-            max_tokens=5000,  # Increased for more detailed plans
+            temperature=0.5,
+            max_tokens=4000,
             response_format={"type": "json_object"}
         )
         
