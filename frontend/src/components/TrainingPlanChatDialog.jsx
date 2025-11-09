@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Send, Loader2, CheckCircle } from 'lucide-react';
+import axios from 'axios';
 
 const TrainingPlanChatDialog = ({ isOpen, onClose, planId, planContent, onPlanUpdated }) => {
   const [messages, setMessages] = useState([]);
