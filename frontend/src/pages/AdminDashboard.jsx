@@ -3842,7 +3842,11 @@ const AdminDashboard = () => {
                       {!editingTraining ? (
                         <>
                           <Button
-                            onClick={() => setShowTrainingChat(true)}
+                            onClick={() => {
+                              // Close the modal first, then open chat
+                              setShowTrainingModal(false);
+                              setTimeout(() => setShowTrainingChat(true), 100);
+                            }}
                             className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
                           >
                             <MessageSquare className="h-4 w-4 mr-2" />
