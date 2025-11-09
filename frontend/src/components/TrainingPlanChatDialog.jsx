@@ -206,7 +206,8 @@ const TrainingPlanChatDialog = ({ isOpen, onClose, planId, planContent, onPlanUp
           </p>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
