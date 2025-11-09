@@ -47,6 +47,13 @@ from email_utils import (
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+# Configure logging FIRST (before any logging calls)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 # ==================== ENVIRONMENT VALIDATION ====================
 # Validate critical environment variables at startup
 required_env_vars = ['MONGO_URL', 'DB_NAME']
@@ -62,19 +69,6 @@ logger.info(f"🔧 Starting server with database: {db_name}")
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[db_name]
-
-# Verify database connection at startup
-async def verify_database_connection():
-    try:
-        await db.command('ping')
-        logger.info(f"✅ Successfully connected to database: {db_name}")
-    except Exception as e:
-        logger.error(f"❌ CRITICAL: Failed to connect to database {db_name}: {e}")
-        raise RuntimeError(f"Database connection failed: {e}")
-
-@app.on_event("startup")
-async def startup_db_verification():
-    await verify_database_connection()
 
 # Create the main app without a prefix
 app = FastAPI()
