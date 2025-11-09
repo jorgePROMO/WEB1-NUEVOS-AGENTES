@@ -1,57 +1,88 @@
 <analysis>
-The AI engineer's work on CRM Fusion evolved from initial bug fixes to a robust monthly follow-up system. Key achievements include replacing a UI accordion with a modal, refining LLM prompts for nutrition plans, and addressing various PDF generation and date display issues. The engineer then developed a comprehensive monthly follow-up system, implementing backend models and endpoints for questionnaires, AI analysis, and admin review, alongside frontend components for user submission and admin management. This involved a hybrid Manual + Auto Backup reminder system. Subsequent efforts focused on refining user activation, fixing recurring PDF display problems (due to API authentication and data issues), and addressing LLM integration errors, eventually switching to direct OpenAI API usage. The final phase involved restructuring dashboard views to provide clearer historical access to all questionnaires. The engineer is currently refining the Historial tab to display initial and follow-up questionnaires in a card-based modal system.
+The AI engineer's trajectory commenced with confirming the successful implementation of the Training Ecosystem and fixing various bugs. The primary focus then shifted to a significant new feature: **Stripe integration for subscription management**. This involved extensive backend development (new models, API endpoints for checkout, webhooks, financial metrics, and payment management) and corresponding frontend updates (new tabs, cards, and functions in  and ).
+
+Throughout the Stripe integration, numerous debugging cycles were undertaken, addressing critical issues like incorrect database queries due to  vs. string/integer ID mismatches,  hook order errors in React, missing icon imports, incorrect Stripe session ID formatting, and ensuring automated user activation and questionnaire visibility post-payment. Concurrently, fixes were implemented for user registration and email verification token expiration.
+
+The most recent work involves a pivot to refining the **Training Ecosystem presentation** and integrating a custom exercise database. The user expressed dissatisfaction with the current AI-generated training plans and provided a CSV of exercises, signaling the next major development phase.
 </analysis>
 
 <product_requirements>
-The CRM Fusion app provides full-stack management for user/admin authentication, CRM, calendar, profiles, and documents. It features a diagnostic questionnaire and GPT-driven reports. A core Nutrition Plan for team clients uses a questionnaire, LLM-based plan generation, admin review, PDF generation, and historical storage, initially in an accordion, then a modal UI. Email verification was added for registration. Questionnaire responses are saved for admin-triggered AI or manual plan creation, with hard-deletion of client data. The most recent major feature is a monthly follow-up questionnaire system. An AI agent will analyze these responses against initial data to generate new nutrition plans, with admin manual control over sending and editable analysis, providing a Revisiones Pendientes (Pending Reviews) view for admins.
+The CRM Fusion application is a full-stack platform for client management, encompassing authentication, CRM, calendar, profiles, and document handling. Core features include a diagnostic questionnaire and GPT-driven Nutrition Plans with LLM generation, admin review, PDF creation, and historical tracking. A monthly follow-up system uses AI for new plan generation based on historical data, with admin approval.
+
+Recent enhancements expanded this to a Training Ecosystem (LLM-driven training plans, similar to nutrition). Key UX improvements included immediate questionnaire submission feedback and manual/editable prospect report generation for admins. Robust PDF generation/display/deletion and accurate date reporting were also critical.
+
+The latest major requirement is a **Stripe integration** for client subscription management. This mandates:
+-   **Payment Model**: Recurring monthly subscriptions.
+-   **Payment Flow**: Clients register, verify email, access their panel, then initiate payment/subscription.
+-   **Admin Panel**: Detailed financial overview including payment lists (date, amount), active/canceled subscription statuses, pending/failed payments, total revenues (monthly, annual), and downloadable invoices.
+-   **Client Panel**: Payment history, downloadable PDF invoices, ability to manage/cancel subscriptions, and view next scheduled payment.
+
+Additionally, a new requirement surfaced to **improve the presentation of training plans**, moving away from repetitive AI output, and to **integrate a user-provided exercise database** (including video URLs) to allow clickable video links within generated training plan PDFs.
 </product_requirements>
 
 <key_technical_concepts>
--   **Full-stack Development**: React (Frontend), FastAPI (Backend), MongoDB (Database).
--   **Authentication**: JWT, React Context, email verification.
--   **LLM Integration**: OpenAI (GPT-4o/GPT-4o-mini via  initially, then direct OpenAI API).
--   **UI/UX**: Shadcn UI components (Dialog, Tabs, Cards).
--   **Data Handling**: Pydantic models, UUIDs, MongoDB for data storage and retrieval.
--   **PDF Generation**: WeasyPrint (backend).
+-   **Full-stack**: React (Frontend), FastAPI (Backend), MongoDB (Database).
+-   **LLM Integration**: OpenAI API (GPT-4o), multi-agent orchestration via .
+-   **UI/UX**: Shadcn UI (Dialog, Tabs, Cards),  for icons.
+-   **Data Handling**: Pydantic models, UUIDs, MongoDB (custom integer/timestamp  instead of ).
+-   **Payment Integration**: Stripe API via  library (checkout sessions, webhooks).
+-   **PDF Generation**: WeasyPrint.
+-   **Containerization**: Kubernetes, Supervisor, .
+-   **Authentication**: JWT, React Context, custom email verification with 7-day token expiration.
 </key_technical_concepts>
 
 <code_architecture>
 
--   ****: Core FastAPI application.
-    -   **Importance**: Handles all API routing and business logic.
-    -   **Changes**: New endpoints added for follow-up submissions (), retrieving follow-ups (), AI analysis (), updating analysis (), generating new plans (), pending reviews (), and activating/deactivating follow-ups (, ).  was corrected for  and . Timezone handling was fixed in . LLM calls were switched from  to direct OpenAI API. Logic for  and  in generated plans was updated.
--   ****: Pydantic data models.
-    -   **Importance**: Defines data structure and validation.
-    -   **Changes**: Added  model. Added  and  fields to the  model.
--   ****: Manages LLM interaction for nutrition plans.
-    -   **Importance**: Contains logic and prompts for GPT-based nutrition plan generation.
-    -   **Changes**: Refined LLM prompts for accuracy and personalized greetings. Modified  to accept additional context (initial questionnaire, follow-up, previous plan) for new plan generation. Switched LLM calls from  to direct OpenAI API.
--   ****: Admin interface.
-    -   **Importance**: Central hub for admin client management.
-    -   **Changes**: Replaced nutrition plan accordion with a fullscreen  modal. Replaced Clientes en Riesgo with a Revisiones Pendientes card and corresponding tab. Implemented states and functions (, ) for managing follow-ups. Added a Seguimientos tab () to display client follow-up data as cards with a modal for details. Added quick activation/deactivation buttons for follow-ups in the Formularios tab. Implemented Analizar con IA and Generar Nuevo Plan buttons within the follow-up detail modal. Fixed  call order. Corrected  to  in sidebar. Updated PDF display logic by ensuring authentication and correct data handling (title, uploaded_by). Introduced a new Historial tab () to display initial diagnosis/nutrition questionnaires and all follow-up questionnaires as cards that open a detailed modal.
--   ****: User interface.
-    -   **Importance**: Where users view plans and submit questionnaires.
-    -   **Changes**: The Cuestionario de Seguimiento button visibility now depends on  OR .
--   ****: Frontend form for follow-ups.
-    -   **Importance**: Allows clients to submit monthly follow-up questionnaires.
-    -   **Changes**: Corrected the API endpoint for submission from  to  (adding  prefix to the base URL).
--   ****: Component for managing team clients.
-    -   **Importance**: Displays and manages client list and status.
-    -   **Changes**: Corrected  field usage for displaying and updating client status in the dropdown.
+
+-   ****:
+    -   **Summary**: Added  and  for Stripe integration.
+-   ****:
+    -   **Summary**: New Pydantic models for Stripe integration, including , , , , , and . These models define the data structures for managing subscriptions, payments, and financial overviews.
+-   ****:
+    -   **Summary**: Implemented numerous Stripe API endpoints for:
+        -   : Initiates a Stripe checkout session.
+        -   : Handles Stripe events (e.g., successful payments).
+        -   : Verifies the status of a Stripe checkout session.
+        -   : Allows canceling a user's subscription.
+        -   : Retrieves all payment transactions (for admin).
+        -   : Provides aggregated financial metrics (for admin).
+        -   : Retrieves a client's subscription details.
+        -   : Deletes a specific payment transaction (for admin).
+        -   : Deletes all pending payment transactions (for admin).
+    -   **Changes**: Corrected the logic for user lookups in the database, switching from  to  as a string because  is stored as a long integer/timestamp string. Fixed Stripe  escaping to correctly pass . Ensured  is updated to active upon successful payment. Adjusted the  saved for users to team to ensure questionnaire visibility. Increased email verification token expiry from 24 hours to 7 days. Fixed a  (missing  block) in . Updated the subscription price to 49.9.
+-   ****:
+    -   **Summary**: Contains the  function, orchestrating multi-agent LLM logic for training plans. Prompts were noted for generating generic exercises and needing an update to use a custom database.
+-   ****:
+    -   **Summary**: Added a new route for  to handle Stripe redirect after payment.
+-   ****:
+    -   **Summary**: Integrated a new Suscripción tab. Added states and functions for managing subscriptions (, , ). The payment button () was updated to use the new Stripe integration flow. The subscription display card was simplified and updated to reflect the 49.9€ price and automatically hide when a subscription is active.
+-   ****:
+    -   **Summary**: Integrated a new Finanzas tab and a corresponding card in the dashboard overview. Added states and functions (, , , , , , , ) to fetch and display financial data, payment history, and revenue overviews. Implemented UI for deleting individual or all pending payment transactions. Fixed React  hook order and imported  icon from .
+-   ****: **New file.**
+    -   **Summary**: A new React component to handle the redirect from Stripe after a successful payment, verifying the payment status and displaying appropriate messages.
+-   ****:
+    -   **Summary**: Updated to include  and its dependencies.
 </code_architecture>
 
 <pending_tasks>
--   Complete the conversion of the Historial tab in  to fully use cards for displaying initial diagnosis/nutrition and all follow-up questionnaires, with a modal for detailed viewing.
--   Ensure the initial diagnosis and nutrition questionnaires are correctly retrieved and displayed in the Historial tab.
 -   Address Error al conectar con Google Calendar (implement fallback button).
 -   Address mobile responsiveness issues for user dashboard documents.
 -   Implement the Desaparece de pendientes después de X días logic for the Revisiones Pendientes card.
+-   Refine LLM prompts for generated training plans (user perceived initial output as not professional enough).
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI engineer was actively working on enhancing the . The user requested that the newly introduced Historial tab should display the initial diagnosis questionnaire, the initial nutrition questionnaire (which generates the first plan), and all subsequent monthly follow-up questionnaires. All these documents needed to be presented in a card-based format, and each card should open a detailed modal view. The AI engineer has been in the process of replacing expanded content with these cards and is in the final stages of creating the necessary modal component within the Historial tab. This involves removing old expanded content and structuring the new card-modal system to display comprehensive questionnaire data.
+The previous AI engineer has just finalized the integration of the core Stripe subscription functionality. This includes setting up backend endpoints for creating checkout sessions, handling webhooks, retrieving payment status, and managing subscriptions. Frontend components in  now allow users to activate subscriptions via the new Stripe flow, and  features a dedicated Finanzas tab displaying financial metrics, payment history, and revenue overviews. Payments are simulated using test keys, and users are automatically activated and granted access to the initial questionnaire upon successful subscription. Admin users can also delete individual or all pending payment transactions.
+
+Several critical bugs encountered during the Stripe implementation have been resolved:
+1.  **Login issues**: Fixed React hook order in  and missing  icon import.
+2.  **Payment Activation Errors**: Addressed  vs. string ID mismatches when querying users in MongoDB, and incorrect Stripe session ID formatting in the .
+3.  **Post-Payment Flow**: Ensured  updates to active and  is set to team upon successful payment, which correctly triggers the display of the initial questionnaire for the user.
+4.  **Admin Login**: Fixed a  in  related to a missing  block, restoring admin login functionality.
+
+The immediate task now, following the user's feedback, is to overhaul the **Training Ecosystem**. The user is dissatisfied with the current AI-generated training plans and has provided a CSV containing a custom database of exercises, including video URLs. The goal is to refine the AI prompts to use this new database, improve the clarity and professionalism of the generated plans, and integrate clickable video links into the PDF outputs.
 </current_work>
 
 <optional_next_step>
-Complete the implementation of the Historial tab in  to display all questionnaires in a card-based modal system.
+Analyze the provided CSV of exercises to understand its structure and content for integration.
 </optional_next_step>

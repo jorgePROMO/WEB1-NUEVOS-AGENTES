@@ -403,7 +403,7 @@ frontend:
 
 agent_communication:
     - agent: "testing"
-      message: "Comprehensive backend testing completed successfully. All 6 critical API endpoints tested and working correctly: 1) User registration, 2) Admin login, 3) User dashboard, 4) Admin client listing, 5) Form sending, 6) Payment verification. System is fully functional for the Jorge Calcerrada platform. Backend URL https://crmfusion.preview.emergentagent.com/api is responding correctly. Admin user jorge@jorgecalcerrada.com exists and has proper admin role. All data persistence verified through follow-up checks."
+      message: "Comprehensive backend testing completed successfully. All 6 critical API endpoints tested and working correctly: 1) User registration, 2) Admin login, 3) User dashboard, 4) Admin client listing, 5) Form sending, 6) Payment verification. System is fully functional for the Jorge Calcerrada platform. Backend URL https://crm-fusion-4.preview.emergentagent.com/api is responding correctly. Admin user jorge@jorgecalcerrada.com exists and has proper admin role. All data persistence verified through follow-up checks."
     - agent: "testing"
       message: "FRONTEND TESTING COMPLETED - CRITICAL ISSUE FOUND: Registration and login flows work perfectly, but admin dashboard has integration bug. AdminDashboard component uses mock data (line 58: setClients(mockUsers)) instead of calling /api/admin/clients API. Registered users don't appear in admin panel. Backend API exists and works, but frontend not connected. Screenshots captured showing successful registration flow but missing user in admin panel."
     - agent: "main"
