@@ -6973,6 +6973,149 @@ async def get_exercise_stats(request: Request):
         raise HTTPException(status_code=500, detail="Error al obtener estadísticas de ejercicios")
 
 
+# ==================== TRAINING PLAN CHAT ENDPOINT ====================
+
+@api_router.post("/training-plan/chat", response_model=TrainingPlanChatResponse)
+async def chat_about_training_plan(chat_request: TrainingPlanChatRequest, request: Request):
+    """
+    Chat with AI to modify an existing training plan
+    """
+    current_user = await get_current_user(request)
+    
+    try:
+        # Get the training plan
+        plan = await db.training_plans.find_one({"_id": chat_request.plan_id})
+        
+        if not plan:
+            raise HTTPException(status_code=404, detail="Plan de entrenamiento no encontrado")
+        
+        # Verify user has access (admin or owner)
+        if current_user.get("role") != "admin" and plan.get("user_id") != current_user.get("_id"):
+            raise HTTPException(status_code=403, detail="No tienes permiso para modificar este plan")
+        
+        # Get chat history if exists
+        chat_history = plan.get("chat_history", [])
+        
+        # Prepare context for AI
+        current_plan_content = plan.get("plan_final", "")
+        
+        # Call OpenAI to process the modification request
+        from openai import OpenAI
+        client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        
+        messages = [
+            {
+                "role": "system",
+                "content": """Eres un entrenador personal experto que ayuda a ajustar planes de entrenamiento.
+
+Tu misión es:
+1. Entender la petición del entrenador
+2. Modificar el plan según sus indicaciones
+3. Mantener la estructura profesional del documento
+4. Explicar brevemente los cambios realizados
+
+REGLAS:
+- Ser conciso en las explicaciones
+- Mantener el formato del plan original
+- Solo modificar lo que se solicita
+- Asegurar que los cambios tengan sentido técnicamente"""
+            },
+            {
+                "role": "user",
+                "content": f"""PLAN ACTUAL:
+{current_plan_content}
+
+PETICIÓN DEL ENTRENADOR:
+{chat_request.user_message}
+
+Por favor:
+1. Modifica el plan según la petición
+2. Devuelve el plan COMPLETO modificado
+3. Explica brevemente qué cambiaste"""
+            }
+        ]
+        
+        # Add chat history
+        for msg in chat_history[-5:]:  # Last 5 messages for context
+            messages.append({"role": msg["role"], "content": msg["content"]})
+        
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=messages,
+            temperature=0.7,
+            max_tokens=4000
+        )
+        
+        ai_response = response.choices[0].message.content
+        
+        # Check if AI modified the plan (look for plan structure in response)
+        updated_plan = None
+        if "🏋️" in ai_response or "PROGRAMA" in ai_response or "PLAN DE ENTRENAMIENTO" in ai_response:
+            # AI returned a modified plan
+            updated_plan = ai_response
+            
+            # Update the plan in database
+            await db.training_plans.update_one(
+                {"_id": chat_request.plan_id},
+                {
+                    "$set": {
+                        "plan_final": updated_plan,
+                        "last_modified": datetime.now(timezone.utc).isoformat()
+                    },
+                    "$push": {
+                        "chat_history": {
+                            "$each": [
+                                {
+                                    "role": "user",
+                                    "content": chat_request.user_message,
+                                    "timestamp": datetime.now(timezone.utc).isoformat()
+                                },
+                                {
+                                    "role": "assistant",
+                                    "content": ai_response,
+                                    "timestamp": datetime.now(timezone.utc).isoformat()
+                                }
+                            ]
+                        }
+                    }
+                }
+            )
+            
+            logger.info(f"✅ Training plan {chat_request.plan_id} modified via chat")
+        else:
+            # AI just answered without modifying plan
+            await db.training_plans.update_one(
+                {"_id": chat_request.plan_id},
+                {
+                    "$push": {
+                        "chat_history": {
+                            "$each": [
+                                {
+                                    "role": "user",
+                                    "content": chat_request.user_message,
+                                    "timestamp": datetime.now(timezone.utc).isoformat()
+                                },
+                                {
+                                    "role": "assistant",
+                                    "content": ai_response,
+                                    "timestamp": datetime.now(timezone.utc).isoformat()
+                                }
+                            ]
+                        }
+                    }
+                }
+            )
+        
+        return TrainingPlanChatResponse(
+            assistant_message=ai_response,
+            updated_plan=updated_plan
+        )
+        
+    except Exception as e:
+        logger.error(f"Error in training plan chat: {e}")
+        raise HTTPException(status_code=500, detail=f"Error procesando chat: {str(e)}")
+
+
 # Include the router in the main app (moved to end to include all endpoints)
 app.include_router(api_router)
 
