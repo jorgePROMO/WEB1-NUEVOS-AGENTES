@@ -6558,10 +6558,8 @@ async def get_financial_overview(
     Obtiene métricas financieras completas para el admin
     """
     try:
-        from bson import ObjectId
-        
-        # Verificar que es admin
-        user = await db.users.find_one({"_id": ObjectId(current_user_id)})
+        # Verificar que es admin (_id es un string)
+        user = await db.users.find_one({"_id": current_user_id})
         if not user or user.get("role") != "admin":
             raise HTTPException(status_code=403, detail="Acceso denegado")
         
@@ -6622,10 +6620,8 @@ async def get_all_payments(
     Obtiene todos los pagos del sistema para el admin con filtros opcionales
     """
     try:
-        from bson import ObjectId
-        
-        # Verificar que es admin
-        user = await db.users.find_one({"_id": ObjectId(current_user_id)})
+        # Verificar que es admin (_id es un string)
+        user = await db.users.find_one({"_id": current_user_id})
         if not user or user.get("role") != "admin":
             raise HTTPException(status_code=403, detail="Acceso denegado")
         
@@ -6677,10 +6673,8 @@ async def get_client_subscription(
     Obtiene la suscripción de un cliente específico (admin only)
     """
     try:
-        from bson import ObjectId
-        
-        # Verificar que es admin
-        user = await db.users.find_one({"_id": ObjectId(current_user_id)})
+        # Verificar que es admin (_id es un string)
+        user = await db.users.find_one({"_id": current_user_id})
         if not user or user.get("role") != "admin":
             raise HTTPException(status_code=403, detail="Acceso denegado")
         
