@@ -59,7 +59,9 @@ const TrainingPlanChatDialog = ({ isOpen, onClose, planId, planContent, onPlanUp
       });
 
       if (!response.ok) {
-        throw new Error('Error al procesar mensaje');
+        const errorData = await response.json().catch(() => ({ detail: 'Error desconocido' }));
+        console.error('Backend error:', errorData);
+        throw new Error(errorData.detail || 'Error al procesar mensaje');
       }
 
       const data = await response.json();
