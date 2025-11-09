@@ -47,10 +47,34 @@ from email_utils import (
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+# ==================== ENVIRONMENT VALIDATION ====================
+# Validate critical environment variables at startup
+required_env_vars = ['MONGO_URL', 'DB_NAME']
+missing_vars = [var for var in required_env_vars if not os.environ.get(var)]
+if missing_vars:
+    raise RuntimeError(f"❌ CRITICAL: Missing required environment variables: {missing_vars}. Check your .env file!")
+
+# Log configuration at startup
+db_name = os.environ['DB_NAME']
+logger.info(f"🔧 Starting server with database: {db_name}")
+
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+db = client[db_name]
+
+# Verify database connection at startup
+async def verify_database_connection():
+    try:
+        await db.command('ping')
+        logger.info(f"✅ Successfully connected to database: {db_name}")
+    except Exception as e:
+        logger.error(f"❌ CRITICAL: Failed to connect to database {db_name}: {e}")
+        raise RuntimeError(f"Database connection failed: {e}")
+
+@app.on_event("startup")
+async def startup_db_verification():
+    await verify_database_connection()
 
 # Create the main app without a prefix
 app = FastAPI()
