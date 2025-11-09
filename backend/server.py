@@ -6298,13 +6298,17 @@ async def get_checkout_status(
     try:
         from emergentintegrations.payments.stripe.checkout import StripeCheckout
         
+        logger.info(f"Checking checkout status for session: {session_id}")
+        
         # Inicializar Stripe Checkout
         api_key = os.environ.get("STRIPE_API_KEY")
         webhook_url = "https://crmfusion.preview.emergentagent.com/api/webhook/stripe"
         stripe_checkout = StripeCheckout(api_key=api_key, webhook_url=webhook_url)
         
         # Obtener estado del checkout
+        logger.info(f"Calling Stripe API to get checkout status...")
         checkout_status = await stripe_checkout.get_checkout_status(session_id)
+        logger.info(f"Stripe API returned: payment_status={checkout_status.payment_status}, status={checkout_status.status}")
         
         # Buscar transacción en DB
         transaction = await db.payment_transactions.find_one({"session_id": session_id})
