@@ -47,7 +47,10 @@ async def get_exercises_for_muscle_group(
         }
         
         if difficulty_level:
-            query["nivel_dificultad"] = {"$regex": difficulty_level, "$options": "i"}
+            # Normalize difficulty level (AVANZADO -> Avanzado, INTERMEDIO -> Intermedio)
+            difficulty_normalized = difficulty_level.capitalize() if difficulty_level else None
+            if difficulty_normalized:
+                query["nivel_dificultad"] = {"$regex": difficulty_normalized, "$options": "i"}
         
         if location:
             query["lugar_entrenamiento"] = {"$regex": location, "$options": "i"}
@@ -86,7 +89,10 @@ async def get_exercises_by_tags(
         query = {"$and": tag_patterns}
         
         if difficulty_level:
-            query["nivel_dificultad"] = {"$regex": difficulty_level, "$options": "i"}
+            # Normalize difficulty level (AVANZADO -> Avanzado, INTERMEDIO -> Intermedio)
+            difficulty_normalized = difficulty_level.capitalize() if difficulty_level else None
+            if difficulty_normalized:
+                query["nivel_dificultad"] = {"$regex": difficulty_normalized, "$options": "i"}
         
         exercises = await db.exercises.find(query).limit(limit).to_list(length=limit)
         
