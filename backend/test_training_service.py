@@ -6,10 +6,11 @@ Test script for the updated training service with exercise database integration
 import asyncio
 import json
 import os
-from training_service import generate_training_plan
 
 # Set a dummy OpenAI API key for testing (won't actually call OpenAI)
 os.environ["OPENAI_API_KEY"] = "test-key"
+
+from training_service import generate_training_plan
 
 async def test_training_service():
     """Test the training service with sample questionnaire data"""
