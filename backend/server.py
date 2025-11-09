@@ -29,7 +29,8 @@ from models import (
     FollowUpSubmit, FollowUpSubmissionInDB,
     StripeSubscriptionCreate, PaymentTransaction, UserSubscription,
     FinancialMetrics, PaymentHistoryItem,
-    Exercise, ExerciseResponse, ExerciseQuery
+    Exercise, ExerciseResponse, ExerciseQuery,
+    TrainingPlanChatRequest, TrainingPlanChatResponse
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
