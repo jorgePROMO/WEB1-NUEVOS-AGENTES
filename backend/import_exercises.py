@@ -12,7 +12,7 @@ from datetime import datetime
 
 # MongoDB connection
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
-DATABASE_NAME = "crm_fusion"
+DATABASE_NAME = os.environ.get("DB_NAME", "crm_fusion")
 
 async def import_exercises_from_csv(csv_file_path):
     """Import exercises from CSV file to MongoDB"""
