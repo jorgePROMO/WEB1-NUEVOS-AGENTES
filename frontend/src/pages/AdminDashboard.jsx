@@ -3093,10 +3093,22 @@ const AdminDashboard = () => {
                 {/* Payment History */}
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <FileText className="h-6 w-6" />
-                      Historial de Pagos ({allPayments.length})
-                    </CardTitle>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="flex items-center gap-2">
+                        <FileText className="h-6 w-6" />
+                        Historial de Pagos ({allPayments.length})
+                      </CardTitle>
+                      {allPayments.some(p => p.status === 'pending') && (
+                        <Button
+                          variant="outline"
+                          className="border-red-300 text-red-600 hover:bg-red-50"
+                          onClick={handleCleanupPendingPayments}
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Limpiar Pagos Pendientes
+                        </Button>
+                      )}
+                    </div>
                   </CardHeader>
                   <CardContent>
                     {allPayments.length === 0 ? (
