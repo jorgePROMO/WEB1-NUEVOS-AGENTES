@@ -1138,6 +1138,52 @@ const AdminDashboard = () => {
     }
   };
 
+
+  const handleDeletePayment = async (transactionId) => {
+    if (!window.confirm('¿Estás seguro de que deseas eliminar esta transacción?')) {
+      return;
+    }
+    
+    try {
+      await axios.delete(`${API}/admin/payment/${transactionId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      alert('✅ Transacción eliminada exitosamente');
+      
+      // Recargar datos
+      loadAllPayments();
+      loadFinancialMetrics();
+    } catch (error) {
+      console.error('Error deleting payment:', error);
+      alert('❌ Error al eliminar la transacción');
+    }
+  };
+
+  const handleCleanupPendingPayments = async () => {
+    const pendingCount = allPayments.filter(p => p.status === 'pending').length;
+    
+    if (!window.confirm(`¿Estás seguro de que deseas eliminar ${pendingCount} transacciones pendientes?`)) {
+      return;
+    }
+    
+    try {
+      const response = await axios.delete(`${API}/admin/payments/cleanup`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      alert(`✅ ${response.data.deleted_count} transacciones eliminadas exitosamente`);
+      
+      // Recargar datos
+      loadAllPayments();
+      loadFinancialMetrics();
+    } catch (error) {
+      console.error('Error cleaning up payments:', error);
+      alert('❌ Error al limpiar transacciones');
+    }
+  };
+
+
   const formatAmount = (amount, currency = 'EUR') => {
     return new Intl.NumberFormat('es-ES', {
       style: 'currency',
