@@ -4458,7 +4458,20 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
         month_names = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
                        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
         
-        # Mejorar conversión de texto a HTML
+        # Helper function to convert video URLs to clickable links
+        import re
+        def convert_video_urls_to_links(text):
+            """Convert (Video: URL) format to clickable HTML links"""
+            # Pattern: (Video: URL)
+            pattern = r'\(Video:\s*(https?://[^\)]+)\)'
+            
+            def replace_video(match):
+                url = match.group(1).strip()
+                return f' (<a href="{url}" style="color: #2563eb; text-decoration: none; font-weight: bold;" target="_blank">📹 Ver Video</a>)'
+            
+            return re.sub(pattern, replace_video, text)
+        
+        # Mejorar conversión de texto a HTML con soporte para video links
         lines = plan_content.split('\n')
         html_lines = []
         in_list = False
@@ -4471,6 +4484,9 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
                     in_list = False
                 html_lines.append('<br>')
                 continue
+            
+            # Convert video URLs to clickable links
+            line = convert_video_urls_to_links(line)
             
             # Títulos principales (emojis + texto en mayúsculas)
             if line.startswith('🏋') or line.startswith('📅') or line.startswith('⚠️') or line.startswith('📈') or line.startswith('📞'):
