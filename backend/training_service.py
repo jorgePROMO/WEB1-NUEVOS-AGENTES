@@ -242,44 +242,22 @@ Basándote en los datos recibidos, crea:
 
 ---
 
-## 📋 ALGORITMO DE GENERACIÓN:
+## 📋 ALGORITMO DE GENERACIÓN DINÁMICA:
 
 ### PASO 1: EXTRAER PATRÓN SEMANAL
-- Interpretar cada día según el patrón del análisis
+- Interpretar cada día según el patrón (L:Upper, M:Lower, etc.)
 
-### PASO 2: SELECCIONAR EJERCICIOS DE LA BASE DE DATOS
-**CRÍTICO:** SOLO copiar nombres EXACTOS de la base de datos arriba
-- Para UPPER: Buscar en Pectoral, Espalda, Hombros, Bíceps, Tríceps
-- Para LOWER: Buscar en Cuádriceps, Femoral, Glúteo, Gemelo
-- Para CORE: Buscar en Core, Abdominales
+### PASO 2: SELECCIONAR EJERCICIOS DINÁMICAMENTE
+- Para días UPPER: Usar ejercicios seguros de upper body
+- Para días LOWER: Usar ejercicios seguros de lower body
+- Para días CARDIO: Cardio suave progresivo
+- Para días DESCANSO: Especificar descanso
 
-### PASO 3: FORMATO OBLIGATORIO DE EJERCICIOS
-**Cada ejercicio DEBE incluir su Video URL:**
-```
-Nombre del Ejercicio (Video: https://drive.google.com/...)
-```
+### PASO 3: APLICAR PARÁMETROS CALCULADOS
+- RIR, Volumen, Duración según análisis previo
 
-**EJEMPLO CORRECTO:**
-```
-LUNES - PECHO Y TRÍCEPS
-1. Press banca con barra (Video: https://drive.google.com/file/d/xxx) - 3x10 RIR 2
-2. Fondos en paralelas (Video: https://drive.google.com/file/d/yyy) - 3x12 RIR 3
-```
-
-**EJEMPLO INCORRECTO (NO HACER):**
-```
-LUNES - PECHO
-1. Press banca - 3x10  ❌ (falta video)
-JUEVES - Repite el lunes  ❌ (no específico)
-```
-
-### PASO 4: ESCRIBIR CADA DÍA COMPLETO
-- LUNES: Escribir plan completo
-- MARTES: Escribir plan completo
-- MIÉRCOLES: Escribir plan completo
-- JUEVES: Escribir plan completo (NO decir "igual que lunes")
-- VIERNES: Escribir plan completo
-- etc.
+### PASO 4: APLICAR LIMITACIONES ESPECÍFICAS
+- Usar SOLO ejercicios seguros de la lista
 
 ---
 
