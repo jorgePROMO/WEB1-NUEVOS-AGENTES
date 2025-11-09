@@ -6210,10 +6210,9 @@ async def create_subscription_session(
     try:
         from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionRequest
         import uuid
-        from bson import ObjectId
         
-        # Obtener usuario (el token contiene _id como string)
-        user = await db.users.find_one({"_id": ObjectId(current_user_id)})
+        # Obtener usuario (el _id es un string, no un ObjectId)
+        user = await db.users.find_one({"_id": current_user_id})
         if not user:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
         
