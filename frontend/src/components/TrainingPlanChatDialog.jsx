@@ -58,13 +58,12 @@ const TrainingPlanChatDialog = ({ isOpen, onClose, planId, planContent, onPlanUp
         })
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ detail: 'Error desconocido' }));
-        console.error('Backend error:', errorData);
-        throw new Error(errorData.detail || 'Error al procesar mensaje');
-      }
-
       const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Backend error:', data);
+        throw new Error(data.detail || 'Error al procesar mensaje');
+      }
       
       // Add assistant message
       setMessages(prev => [...prev, {
