@@ -465,7 +465,7 @@ async def generate_training_plan(questionnaire_data: dict) -> dict:
         
         # Validate Agent 2 output is valid JSON
         try:
-            agent_2_json = json.loads(agent_2_output)
+            json.loads(agent_2_output)
         except json.JSONDecodeError as e:
             logger.error(f"❌ Agent 2 output is not valid JSON: {e}")
             logger.error(f"Agent 2 output preview: {agent_2_output[:1000]}")
