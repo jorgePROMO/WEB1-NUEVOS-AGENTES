@@ -4544,6 +4544,19 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
                     color: #1e40af;
                     margin-top: 20px;
                 }}
+                h3 {{
+                    color: #1e40af;
+                    margin-top: 15px;
+                    margin-bottom: 8px;
+                }}
+                a {{
+                    color: #2563eb;
+                    text-decoration: none;
+                    font-weight: bold;
+                }}
+                a:hover {{
+                    text-decoration: underline;
+                }}
                 .header {{
                     text-align: center;
                     margin-bottom: 30px;
@@ -4553,6 +4566,16 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
                     text-align: center;
                     color: #666;
                     font-size: 0.9em;
+                }}
+                ul {{
+                    margin-left: 20px;
+                    line-height: 1.8;
+                }}
+                li {{
+                    margin-bottom: 8px;
+                }}
+                p {{
+                    margin: 8px 0;
                 }}
             </style>
         </head>
