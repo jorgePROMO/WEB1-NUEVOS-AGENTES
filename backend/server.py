@@ -6524,7 +6524,7 @@ async def cancel_user_subscription(
         
         # Actualizar usuario
         await db.users.update_one(
-            {"_id": ObjectId(current_user_id)},
+            {"_id": current_user_id},
             {
                 "$set": {
                     "subscription.status": "cancelled",
