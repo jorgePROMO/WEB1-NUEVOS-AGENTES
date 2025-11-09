@@ -6707,6 +6707,70 @@ async def get_client_subscription(
         for payment in payments:
             if "_id" in payment:
                 del payment["_id"]
+
+
+@api_router.delete("/admin/payment/{transaction_id}")
+async def delete_payment_transaction(
+    transaction_id: str,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """
+    Borra una transacción de pago específica (admin only)
+    """
+    try:
+        # Verificar que es admin
+        user = await db.users.find_one({"_id": current_user_id})
+        if not user or user.get("role") != "admin":
+            raise HTTPException(status_code=403, detail="Acceso denegado")
+        
+        # Borrar la transacción
+        result = await db.payment_transactions.delete_one({"transaction_id": transaction_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Transacción no encontrada")
+        
+        logger.info(f"Payment transaction deleted: {transaction_id} by admin {current_user_id}")
+        
+        return {
+            "success": True,
+            "message": "Transacción eliminada exitosamente",
+            "transaction_id": transaction_id
+        }
+        
+    except Exception as e:
+        logger.error(f"Error deleting payment transaction: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al eliminar transacción: {str(e)}")
+
+
+@api_router.delete("/admin/payments/cleanup")
+async def cleanup_pending_payments(
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """
+    Limpia todas las transacciones con estado 'pending' (admin only)
+    Útil para limpiar transacciones de prueba fallidas
+    """
+    try:
+        # Verificar que es admin
+        user = await db.users.find_one({"_id": current_user_id})
+        if not user or user.get("role") != "admin":
+            raise HTTPException(status_code=403, detail="Acceso denegado")
+        
+        # Borrar todas las transacciones pending
+        result = await db.payment_transactions.delete_many({"payment_status": "pending"})
+        
+        logger.info(f"Cleaned up {result.deleted_count} pending payment transactions by admin {current_user_id}")
+        
+        return {
+            "success": True,
+            "message": f"Se eliminaron {result.deleted_count} transacciones pendientes",
+            "deleted_count": result.deleted_count
+        }
+        
+    except Exception as e:
+        logger.error(f"Error cleaning up pending payments: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al limpiar transacciones: {str(e)}")
+
         
         return {
             "has_subscription": True,
