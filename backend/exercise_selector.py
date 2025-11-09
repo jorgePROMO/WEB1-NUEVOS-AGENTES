@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 # MongoDB connection
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
-DATABASE_NAME = os.environ.get("DB_NAME", "crm_fusion")
+DATABASE_NAME = os.environ.get("DB_NAME", "test_database")
 
 # Initialize MongoDB client
 mongo_client = AsyncIOMotorClient(MONGO_URL)
