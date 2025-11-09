@@ -41,6 +41,13 @@ async def import_exercises_from_csv(csv_file_path):
                     continue
                     
                 # Create exercise document
+                # Handle malformed column names (with newlines or extra characters)
+                url_video_key = None
+                for key in row.keys():
+                    if 'URL video' in key:
+                        url_video_key = key
+                        break
+                
                 exercise_doc = {
                     "_id": f"ex_{imported_count + 1}",  # Simple ID format
                     "nombre_ejercicio": row['Nombre ejercicio'].strip(),
@@ -51,7 +58,7 @@ async def import_exercises_from_csv(csv_file_path):
                     "material_necesario": row['Material necesario'].strip() if row.get('Material necesario') else "",
                     "equipamiento_opcional": row['Equipamiento opcional'].strip() if row.get('Equipamiento opcional') else "",
                     "tags_gpt": row['Tags GPT'].strip() if row.get('Tags GPT') else "",
-                    "url_video": row['URL video'].strip() if row.get('URL video') else "",
+                    "url_video": row[url_video_key].strip() if url_video_key and row.get(url_video_key) else "",
                     "created_at": datetime.utcnow().isoformat()
                 }
                 
