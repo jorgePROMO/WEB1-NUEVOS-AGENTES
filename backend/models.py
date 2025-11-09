@@ -857,3 +857,24 @@ class ExerciseQuery(BaseModel):
     nivel_dificultad: Optional[str] = None
     lugar_entrenamiento: Optional[str] = None
     material_disponible: Optional[List[str]] = None
+
+
+# ==================== TRAINING PLAN CHAT MODELS ====================
+
+class TrainingPlanChatMessage(BaseModel):
+    """Message in training plan chat"""
+    role: str  # "user" or "assistant"
+    content: str
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class TrainingPlanChatRequest(BaseModel):
+    """Request to chat about a training plan"""
+    plan_id: str
+    user_message: str
+
+
+class TrainingPlanChatResponse(BaseModel):
+    """Response from training plan chat"""
+    assistant_message: str
+    updated_plan: Optional[str] = None  # If the plan was modified
