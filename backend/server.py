@@ -6314,9 +6314,14 @@ async def get_checkout_status(
         transaction = await db.payment_transactions.find_one({"session_id": session_id})
         
         if not transaction:
+            logger.error(f"Transaction not found for session_id: {session_id}")
             raise HTTPException(status_code=404, detail="Transacción no encontrada")
         
+        logger.info(f"Transaction found: payment_status={transaction.get('payment_status')}, user_id={transaction.get('user_id')}")
+        
         # Solo procesar si el pago fue exitoso y aún no se ha procesado
+        logger.info(f"Checking conditions: checkout_status.payment_status={checkout_status.payment_status}, transaction payment_status={transaction['payment_status']}")
+        
         if checkout_status.payment_status == "paid" and transaction["payment_status"] != "succeeded":
             
             # Actualizar transacción
