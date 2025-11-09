@@ -6381,7 +6381,7 @@ async def get_checkout_status(
                     "$set": {
                         "status": "active",  # Cambiar de inactive a active
                         "subscription.status": "active",
-                        "subscription.plan": plan_type,
+                        "subscription.plan": "team",  # El plan mensual incluye acceso completo al equipo
                         "subscription.payment_status": "verified",
                         "updated_at": datetime.now(timezone.utc).isoformat()
                     }
