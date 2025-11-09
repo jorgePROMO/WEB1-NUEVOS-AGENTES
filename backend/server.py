@@ -6521,7 +6521,7 @@ async def cancel_user_subscription(
             }
         )
         
-        # Actualizar usuario
+        # Actualizar usuario (_id es un string)
         await db.users.update_one(
             {"_id": current_user_id},
             {
