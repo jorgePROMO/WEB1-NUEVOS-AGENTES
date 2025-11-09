@@ -3118,17 +3118,18 @@ const AdminDashboard = () => {
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        <div className="grid grid-cols-5 gap-4 pb-2 border-b font-semibold text-sm">
+                        <div className="grid grid-cols-6 gap-4 pb-2 border-b font-semibold text-sm">
                           <div>Cliente</div>
                           <div>Fecha</div>
                           <div>Monto</div>
                           <div>Estado</div>
                           <div>ID</div>
+                          <div className="text-center">Acciones</div>
                         </div>
                         {allPayments.map((payment) => (
                           <div
                             key={payment.transaction_id}
-                            className="grid grid-cols-5 gap-4 p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+                            className="grid grid-cols-6 gap-4 p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
                           >
                             <div>
                               <p className="font-medium">{payment.user_name}</p>
@@ -3147,6 +3148,16 @@ const AdminDashboard = () => {
                             </div>
                             <div className="text-xs text-gray-500 truncate">
                               {payment.transaction_id.substring(0, 12)}...
+                            </div>
+                            <div className="flex justify-center">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                onClick={() => handleDeletePayment(payment.transaction_id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
                             </div>
                           </div>
                         ))}
