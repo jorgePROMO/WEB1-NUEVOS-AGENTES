@@ -6226,7 +6226,8 @@ async def create_subscription_session(
         origin_url = str(request.headers.get("origin", "https://crmfusion.preview.emergentagent.com"))
         
         # Construir URLs de éxito y cancelación
-        success_url = f"{origin_url}/subscription-success?session_id={{{{CHECKOUT_SESSION_ID}}}}"
+        # Usar {CHECKOUT_SESSION_ID} sin las dobles llaves para que Stripe lo reemplace correctamente
+        success_url = f"{origin_url}/subscription-success?session_id=" + "{CHECKOUT_SESSION_ID}"
         cancel_url = f"{origin_url}/dashboard"
         
         # Inicializar Stripe Checkout
