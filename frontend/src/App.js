@@ -10,6 +10,7 @@ import UserDashboard from './pages/UserDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import SubscriptionSuccess from './pages/SubscriptionSuccess';
 import TrabajaConmigo from './pages/TrabajaConmigo';
+import WaitlistConfirmacion from './pages/WaitlistConfirmacion';
 import './App.css';
 
 // Protected Route Component
