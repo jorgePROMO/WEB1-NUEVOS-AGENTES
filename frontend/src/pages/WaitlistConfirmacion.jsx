@@ -19,49 +19,46 @@ const WaitlistConfirmacion = () => {
   if (!result) return null;
   
   const getPrioridadInfo = () => {
+    // Texto común para todos
+    const commonMessage = `Gracias por tomarte el tiempo de completar tu solicitud.
+
+Durante los próximos días, estaré revisando cada candidatura personalmente para asegurarme de que las próximas plazas se asignan a las personas que realmente van a aprovechar el proceso.`;
+
+    const commonSteps = [
+      '🔸 El periodo de revisión dura aproximadamente una semana.',
+      '🔸 Si tu perfil encaja con el programa, recibirás un mensaje privado con los siguientes pasos para agendar una breve llamada de valoración.',
+      '🔸 Si aún no hay plazas disponibles, te mantendremos en la lista prioritaria de espera y serás de los primeros en enterarte cuando se abra la siguiente tanda.'
+    ];
+
     if (result.prioridad === 'alta') {
       return {
         icon: <CheckCircle className="w-16 h-16 text-green-500" />,
-        title: '🔥 ¡Perfil Prioritario!',
-        subtitle: 'Eres candidato ideal para el programa',
-        message: `Gracias por completar tu solicitud, ${result.nombre.split(' ')[0]}. Tu perfil ha sido calificado con una puntuación de **${result.score} puntos**, lo que te coloca en la **categoría prioritaria**.`,
-        nextSteps: [
-          'Recibirás un mensaje privado en las próximas **24-48 horas**',
-          'Te enviaré los siguientes pasos para agendar una breve llamada de valoración',
-          'Esta llamada dura aproximadamente 15 minutos y es el último paso antes de comenzar'
-        ],
+        title: '¡Formulario enviado correctamente!',
+        subtitle: `Perfil prioritario - ${result.score} puntos`,
+        message: commonMessage,
+        nextSteps: commonSteps,
         bgColor: 'bg-green-50',
         borderColor: 'border-green-200'
       };
     } else if (result.prioridad === 'media') {
       return {
-        icon: <Clock className="w-16 h-16 text-yellow-500" />,
-        title: '⚡ En Lista de Espera',
-        subtitle: 'Tu solicitud está siendo revisada',
-        message: `Gracias por completar tu solicitud, ${result.nombre.split(' ')[0]}. Tu perfil ha sido calificado con **${result.score} puntos**.`,
-        nextSteps: [
-          'Revisaré tu candidatura durante la próxima semana',
-          'Si tu perfil encaja, recibirás un mensaje con los siguientes pasos',
-          'Mientras tanto, te mantendré en la lista prioritaria de espera',
-          'Recibirás contenido exclusivo por email para quienes están en la lista'
-        ],
+        icon: <CheckCircle className="w-16 h-16 text-yellow-500" />,
+        title: '¡Formulario enviado correctamente!',
+        subtitle: `En lista de espera - ${result.score} puntos`,
+        message: commonMessage,
+        nextSteps: commonSteps,
         bgColor: 'bg-yellow-50',
         borderColor: 'border-yellow-200'
       };
     } else {
       return {
-        icon: <AlertCircle className="w-16 h-16 text-blue-500" />,
-        title: '💙 Gracias por tu Interés',
-        subtitle: 'Explora otras opciones',
-        message: `Gracias por tu interés, ${result.nombre.split(' ')[0]}. Después de revisar tu candidatura, creo que podrías beneficiarte más de trabajar con mi equipo.`,
-        nextSteps: [
-          'El programa personal tiene requisitos muy específicos de compromiso y disponibilidad',
-          'Sin embargo, mi equipo ofrece opciones más flexibles que pueden adaptarse mejor a tu situación actual',
-          'Te recomiendo explorar la opción de **Trabaja con mi Equipo**'
-        ],
+        icon: <CheckCircle className="w-16 h-16 text-blue-500" />,
+        title: '¡Formulario enviado correctamente!',
+        subtitle: `Solicitud recibida - ${result.score} puntos`,
+        message: commonMessage,
+        nextSteps: commonSteps,
         bgColor: 'bg-blue-50',
-        borderColor: 'border-blue-200',
-        showTeamButton: true
+        borderColor: 'border-blue-200'
       };
     }
   };
