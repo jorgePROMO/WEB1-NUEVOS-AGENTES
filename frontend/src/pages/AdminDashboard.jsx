@@ -1173,7 +1173,8 @@ const AdminDashboard = () => {
     }
   };
 
-  const updateLeadStatus = async (leadId, newStatus) => {
+  const updateLeadStatus = async (lead, newStatus) => {
+    const leadId = lead._id || lead.id;
     try {
       await axios.put(
         `${API}/admin/waitlist/${leadId}/status`,
@@ -1181,6 +1182,13 @@ const AdminDashboard = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       loadWaitlistLeads(); // Reload list
+      // Update selectedLead if it's open
+      if (selectedLead && (selectedLead._id === leadId || selectedLead.id === leadId)) {
+        const response = await axios.get(`${API}/admin/waitlist/${leadId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setSelectedLead(response.data);
+      }
     } catch (error) {
       console.error('Error updating lead status:', error);
       alert('Error al actualizar estado');
