@@ -430,6 +430,10 @@ const AdminDashboard = () => {
     if (activeView === 'waitlist') {
       loadWaitlistLeads();
     }
+    // Load manual payments when navigating to finances
+    if (activeView === 'finances') {
+      loadManualPayments();
+    }
   }, [activeView, token]);
 
 
