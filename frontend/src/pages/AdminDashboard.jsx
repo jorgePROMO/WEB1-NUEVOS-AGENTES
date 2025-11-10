@@ -132,6 +132,7 @@ const AdminDashboard = () => {
   const [selectedLead, setSelectedLead] = useState(null);
   const [loadingWaitlist, setLoadingWaitlist] = useState(false);
   const [waitlistCount, setWaitlistCount] = useState(0);
+  const [newLeadNote, setNewLeadNote] = useState('');
 
 
 
