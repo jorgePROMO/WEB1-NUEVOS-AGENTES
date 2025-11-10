@@ -1148,6 +1148,72 @@ const AdminDashboard = () => {
   };
 
 
+  const loadWaitlistLeads = async () => {
+    setLoadingWaitlist(true);
+    try {
+      const response = await axios.get(`${API}/admin/waitlist/all`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setWaitlistLeads(response.data || []);
+      setWaitlistCount(response.data?.length || 0);
+    } catch (error) {
+      console.error('Error loading waitlist leads:', error);
+    } finally {
+      setLoadingWaitlist(false);
+    }
+  };
+
+  const updateLeadStatus = async (leadId, newStatus) => {
+    try {
+      await axios.put(
+        `${API}/admin/waitlist/${leadId}/status`,
+        { estado: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      loadWaitlistLeads(); // Reload list
+    } catch (error) {
+      console.error('Error updating lead status:', error);
+      alert('Error al actualizar estado');
+    }
+  };
+
+  const addLeadNote = async (leadId, nota) => {
+    try {
+      await axios.post(
+        `${API}/admin/waitlist/${leadId}/note`,
+        { nota },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      // Reload detailed view
+      const response = await axios.get(`${API}/admin/waitlist/${leadId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSelectedLead(response.data);
+    } catch (error) {
+      console.error('Error adding note:', error);
+      alert('Error al añadir nota');
+    }
+  };
+
+  const deleteWaitlistLead = async (leadId) => {
+    if (!window.confirm('¿Estás seguro de que deseas eliminar este lead?')) {
+      return;
+    }
+    try {
+      await axios.delete(`${API}/admin/waitlist/${leadId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSelectedLead(null);
+      loadWaitlistLeads();
+      setActiveView('waitlist');
+    } catch (error) {
+      console.error('Error deleting lead:', error);
+      alert('Error al eliminar lead');
+    }
+  };
+
+
+
   const handleDeletePayment = async (transactionId) => {
     if (!window.confirm('¿Estás seguro de que deseas eliminar esta transacción?')) {
       return;
