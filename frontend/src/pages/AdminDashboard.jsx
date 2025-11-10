@@ -1218,6 +1218,81 @@ const AdminDashboard = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       // Reload detailed view
+
+
+  // Manual Payments Functions
+  const loadManualPayments = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/manual-payments`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setManualPayments(response.data.payments || []);
+    } catch (error) {
+      console.error('Error loading manual payments:', error);
+    }
+  };
+
+  const createManualPayment = async () => {
+    if (!newManualPayment.concepto || !newManualPayment.amount || !newManualPayment.metodo_pago) {
+      alert('Completa concepto, monto y método de pago');
+      return;
+    }
+
+    try {
+      await axios.post(`${API}/admin/manual-payments`, newManualPayment, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setNewManualPayment({
+        concepto: '',
+        amount: '',
+        fecha: new Date().toISOString().split('T')[0],
+        metodo_pago: 'Transferencia',
+        notas: ''
+      });
+      setShowPaymentModal(false);
+      loadManualPayments();
+      alert('✅ Pago registrado correctamente');
+    } catch (error) {
+      alert('Error al registrar pago');
+    }
+  };
+
+  const updateManualPayment = async () => {
+    if (!editingManualPayment.concepto || !editingManualPayment.amount || !editingManualPayment.metodo_pago) {
+      alert('Completa todos los campos');
+      return;
+    }
+
+    try {
+      await axios.put(
+        `${API}/admin/manual-payments/${editingManualPayment._id}`,
+        editingManualPayment,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      setEditingManualPayment(null);
+      loadManualPayments();
+      alert('✅ Pago actualizado');
+    } catch (error) {
+      alert('Error al actualizar pago');
+    }
+  };
+
+  const deleteManualPayment = async (paymentId) => {
+    if (!window.confirm('¿Eliminar este pago?')) return;
+
+    try {
+      await axios.delete(`${API}/admin/manual-payments/${paymentId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      loadManualPayments();
+      alert('✅ Pago eliminado');
+    } catch (error) {
+      alert('Error al eliminar pago');
+    }
+  };
+
       const response = await axios.get(`${API}/admin/waitlist/${leadId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
