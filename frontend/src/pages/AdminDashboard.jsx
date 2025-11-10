@@ -1744,11 +1744,35 @@ const AdminDashboard = () => {
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <Label className="text-sm font-semibold text-gray-700">Email</Label>
-                        <p className="text-gray-900">{selectedLead.email}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-gray-900">{selectedLead.email}</p>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => window.location.href = `mailto:${selectedLead.email}`}
+                            className="ml-auto"
+                          >
+                            <Mail className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                       <div>
                         <Label className="text-sm font-semibold text-gray-700">Teléfono</Label>
-                        <p className="text-gray-900">{selectedLead.telefono}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-gray-900">{selectedLead.telefono}</p>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              const phone = selectedLead.telefono.replace(/[^0-9]/g, '');
+                              const message = `Hola ${selectedLead.nombre_apellidos.split(' ')[0]}, soy Jorge Calcerrada. He revisado tu solicitud para trabajar conmigo...`;
+                              window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                            }}
+                            className="ml-auto bg-green-50 hover:bg-green-100 text-green-600 border-green-200"
+                          >
+                            <MessageSquare className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                       <div>
                         <Label className="text-sm font-semibold text-gray-700">Edad</Label>
