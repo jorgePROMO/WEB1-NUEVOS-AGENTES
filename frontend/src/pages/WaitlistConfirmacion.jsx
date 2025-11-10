@@ -86,36 +86,23 @@ Durante los próximos días, estaré revisando cada candidatura personalmente pa
         {/* Main Card */}
         <div className={`${info.bgColor} border-2 ${info.borderColor} rounded-xl p-8 mb-6`}>
           <div className="prose max-w-none">
-            <p className="text-lg text-gray-800 mb-6">
+            <p className="text-lg text-gray-800 mb-6 whitespace-pre-line">
               {info.message}
             </p>
             
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
-              📸 Próximos pasos:
-            </h3>
-            <ul className="space-y-3">
+            <div className="space-y-2 mb-6">
               {info.nextSteps.map((step, index) => (
-                <li key={index} className="text-gray-700">
+                <p key={index} className="text-gray-700">
                   {step}
-                </li>
+                </p>
               ))}
-            </ul>
+            </div>
+            
+            <p className="text-gray-700 mt-6">
+              Mientras tanto, te recomiendo mantenerte activo/a en tus entrenamientos y revisar los 
+              correos que te irán llegando con contenido exclusivo para quienes están en la lista prioritaria.
+            </p>
           </div>
-        </div>
-        
-        {/* Additional Info Card */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-3">
-            📋 Mientras tanto...
-          </h3>
-          <p className="text-gray-700 mb-4">
-            Te recomiendo mantenerte activo/a en tus entrenamientos y revisar los 
-            correos que te irán llegando con contenido exclusivo para quienes están 
-            en la lista prioritaria.
-          </p>
-          <p className="text-gray-700">
-            Recuerda revisar tu carpeta de spam por si el email cae ahí.
-          </p>
         </div>
         
         {/* Action Buttons */}
