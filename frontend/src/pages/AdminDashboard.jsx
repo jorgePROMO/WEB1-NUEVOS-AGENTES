@@ -1746,7 +1746,7 @@ const AdminDashboard = () => {
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => deleteWaitlistLead(selectedLead.id)}
+                        onClick={() => deleteWaitlistLead(selectedLead)}
                       >
                         <Trash2 className="h-4 w-4 mr-1" />
                         Eliminar
