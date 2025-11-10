@@ -56,9 +56,9 @@ const ServicesSection = () => {
               </ul>
               <Button
                 className="w-full bg-blue-500 hover:bg-blue-600 text-white py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                onClick={() => window.location.href = '/trabaja-conmigo'}
+                onClick={() => window.location.href = '/register'}
               >
-                UNIRSE A LA LISTA DE ESPERA
+                QUIERO ESTE PLAN
               </Button>
             </CardContent>
           </Card>
