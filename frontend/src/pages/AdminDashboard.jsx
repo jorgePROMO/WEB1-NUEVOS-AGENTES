@@ -1418,6 +1418,25 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
 
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-pink-200 hover:border-pink-400"
+            onClick={() => setActiveView('waitlist')}
+          >
+            <CardContent className="pt-6 text-center">
+              <div className="relative">
+                <UserPlus className="h-12 w-12 text-pink-500 mx-auto mb-3" />
+                {/* Add notification badge if there are waitlist leads */}
+                {waitlistCount > 0 && (
+                  <div className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold">
+                    {waitlistCount}
+                  </div>
+                )}
+              </div>
+              <h3 className="text-lg font-bold mb-2">🎯 Waitlist</h3>
+              <p className="text-sm text-gray-600">Lista de espera prioritaria</p>
+            </CardContent>
+          </Card>
+
         </div>
 
         {/* Conditional View Rendering */}
