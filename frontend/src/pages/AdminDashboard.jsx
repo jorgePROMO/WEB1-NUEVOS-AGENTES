@@ -1218,7 +1218,8 @@ const AdminDashboard = () => {
     }
   };
 
-  const deleteWaitlistLead = async (leadId) => {
+  const deleteWaitlistLead = async (lead) => {
+    const leadId = lead._id || lead.id;
     if (!window.confirm('¿Estás seguro de que deseas eliminar este lead?')) {
       return;
     }
