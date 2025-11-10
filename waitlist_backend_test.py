@@ -218,7 +218,7 @@ class WaitlistTester:
         url = f"{BACKEND_URL}/admin/waitlist/{self.test_waitlist_lead_id}/status"
         headers = {"Authorization": f"Bearer {self.admin_token}"}
         payload = {
-            "status": "contactado"
+            "estado": "contactado"
         }
         
         try:
