@@ -188,7 +188,10 @@ export const ExternalClientsCRM = ({ token }) => {
   };
 
   const addPayment = async () => {
-    if (!selectedClient || !newPayment.amount) return;
+    if (!selectedClient || !newPayment.amount || !newPayment.metodo_pago) {
+      alert('Completa todos los campos');
+      return;
+    }
     
     try {
       await axios.post(`${API}/admin/external-clients/${selectedClient.id}/payments`, newPayment, {
@@ -198,13 +201,55 @@ export const ExternalClientsCRM = ({ token }) => {
       setNewPayment({
         amount: '',
         date: new Date().toISOString().split('T')[0],
-        notes: ''
+        notes: '',
+        metodo_pago: 'Transferencia'
       });
       setShowPaymentModal(false);
       loadClientDetail(selectedClient.id);
-      alert('Pago registrado correctamente');
+      alert('✅ Pago registrado correctamente');
     } catch (error) {
       alert('Error al registrar pago');
+    }
+  };
+
+  const editPayment = async () => {
+    if (!selectedClient || !editingPayment || !editingPayment.amount || !editingPayment.metodo_pago) {
+      alert('Completa todos los campos');
+      return;
+    }
+    
+    try {
+      await axios.put(
+        `${API}/admin/external-clients/${selectedClient.id}/payments/${editingPayment.id}`,
+        editingPayment,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      setEditingPayment(null);
+      loadClientDetail(selectedClient.id);
+      alert('✅ Pago actualizado correctamente');
+    } catch (error) {
+      alert('Error al actualizar pago');
+    }
+  };
+
+  const deletePayment = async (paymentId) => {
+    if (!window.confirm('¿Eliminar este pago?')) return;
+    
+    try {
+      await axios.delete(
+        `${API}/admin/external-clients/${selectedClient.id}/payments/${paymentId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      loadClientDetail(selectedClient.id);
+      alert('✅ Pago eliminado');
+    } catch (error) {
+      alert('Error al eliminar pago');
     }
   };
 
