@@ -1006,3 +1006,20 @@ class WaitlistStatusUpdate(BaseModel):
 class WaitlistNoteAdd(BaseModel):
     """Añadir nota a un lead"""
     nota: str
+
+
+class ManualPayment(BaseModel):
+    """Pago manual para Caja A o B"""
+    concepto: str
+    amount: float
+    fecha: str
+    metodo_pago: str  # Stripe, Transferencia, Bizum, Efectivo
+    notas: Optional[str] = ""
+
+class ManualPaymentCreate(BaseModel):
+    """Crear pago manual"""
+    concepto: str
+    amount: float
+    fecha: str
+    metodo_pago: str
+    notas: Optional[str] = ""
