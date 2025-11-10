@@ -303,6 +303,45 @@ frontend:
           agent: "testing"
           comment: "✅ WhatsApp Link Generation WORKING PERFECTLY: 1) GET /api/admin/prospects/{prospect_id}/whatsapp-link successfully generates WhatsApp Web link, 2) Link format correct: https://wa.me/34612345678?text={encoded_report}, 3) Report content properly URL-encoded (4833 chars), 4) Markdown formatting converted for WhatsApp (** to *, headers removed), 5) Prospect updated with report_sent_at timestamp and report_sent_via='whatsapp', 6) Phone number correctly extracted and formatted. All WhatsApp functionality working as expected."
 
+
+backend:
+  - task: "Waitlist Submit Endpoint (Public)"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "POST /api/waitlist/submit - Endpoint público para enviar formulario de waitlist. Recibe datos del lead, calcula scoring automático usando waitlist_scoring.py, asigna tags y prioridad, guarda en BD. Necesita testing."
+
+  - task: "Waitlist Admin Endpoints"
+    implemented: true
+    working: "NA"
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoints admin para gestionar leads: GET /api/admin/waitlist/all (listar todos), GET /api/admin/waitlist/{lead_id} (detalle), PUT /api/admin/waitlist/{lead_id}/status (cambiar estado), POST /api/admin/waitlist/{lead_id}/note (añadir nota), DELETE /api/admin/waitlist/{lead_id} (eliminar). Todos requieren autenticación admin. Necesitan testing."
+
+frontend:
+  - task: "TrabajaConmigo Public Form"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/TrabajaConmigo.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Formulario multi-step público en /trabaja-conmigo. 7 pasos: 1) Datos básicos (incluye 'cómo conociste a Jorge'), 2) Capacidad económica, 3) Objetivos y motivación, 4) Experiencia y hábitos, 5) Disponibilidad y compromiso, 6) Personalidad y afinidad, 7) Disponibilidad para entrevista. Incluye validación, progress indicator, submit a POST /api/waitlist/submit. Ruta añadida a App.js. Necesita testing UI completo."
+
 metadata:
   created_by: "testing_agent"
   version: "1.0"
