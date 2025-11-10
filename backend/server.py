@@ -223,7 +223,7 @@ async def register(user_data: UserCreate):
     # Enviar email de verificación
     try:
         from email_utils import send_email
-        frontend_url = os.environ.get('FRONTEND_URL', 'https://crm-fusion-4.preview.emergentagent.com')
+        frontend_url = os.environ.get('FRONTEND_URL', 'https://waitlistsys.preview.emergentagent.com')
         verification_link = f"{frontend_url}/verify-email?token={verification_token}"
         
         email_html = f"""
@@ -446,7 +446,7 @@ async def resend_verification_email(email: str):
         # Enviar nuevo email
         try:
             from email_utils import send_email
-            frontend_url = os.environ.get('FRONTEND_URL', 'https://crm-fusion-4.preview.emergentagent.com')
+            frontend_url = os.environ.get('FRONTEND_URL', 'https://waitlistsys.preview.emergentagent.com')
             verification_link = f"{frontend_url}/verify-email?token={verification_token}"
             
             email_html = f"""
@@ -6279,7 +6279,7 @@ async def create_subscription_session(
         plan = SUBSCRIPTION_PLANS[subscription_data.plan_type]
         
         # Obtener host URL desde el frontend
-        origin_url = str(request.headers.get("origin", "https://crm-fusion-4.preview.emergentagent.com"))
+        origin_url = str(request.headers.get("origin", "https://waitlistsys.preview.emergentagent.com"))
         
         # Construir URLs de éxito y cancelación
         # Usar {CHECKOUT_SESSION_ID} sin las dobles llaves para que Stripe lo reemplace correctamente
@@ -6359,7 +6359,7 @@ async def get_checkout_status(
         
         # Inicializar Stripe Checkout
         api_key = os.environ.get("STRIPE_API_KEY")
-        webhook_url = "https://crm-fusion-4.preview.emergentagent.com/api/webhook/stripe"
+        webhook_url = "https://waitlistsys.preview.emergentagent.com/api/webhook/stripe"
         stripe_checkout = StripeCheckout(api_key=api_key, webhook_url=webhook_url)
         
         # Obtener estado del checkout
@@ -6474,7 +6474,7 @@ async def stripe_webhook(request: Request):
         
         # Inicializar Stripe Checkout
         api_key = os.environ.get("STRIPE_API_KEY")
-        webhook_url = "https://crm-fusion-4.preview.emergentagent.com/api/webhook/stripe"
+        webhook_url = "https://waitlistsys.preview.emergentagent.com/api/webhook/stripe"
         stripe_checkout = StripeCheckout(api_key=api_key, webhook_url=webhook_url)
         
         # Procesar webhook

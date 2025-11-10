@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://crm-fusion-4.preview.emergentagent.com
+**URL Actual:** https://waitlistsys.preview.emergentagent.com
 
 ---
 
