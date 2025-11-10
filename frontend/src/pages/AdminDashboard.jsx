@@ -1913,7 +1913,7 @@ const AdminDashboard = () => {
                           onChange={(e) => setNewLeadNote(e.target.value)}
                           onKeyPress={(e) => {
                             if (e.key === 'Enter' && newLeadNote.trim()) {
-                              addLeadNote(selectedLead.id, newLeadNote.trim());
+                              addLeadNote(selectedLead, newLeadNote.trim());
                             }
                           }}
                         />
@@ -1921,7 +1921,7 @@ const AdminDashboard = () => {
                           size="sm"
                           onClick={() => {
                             if (newLeadNote.trim()) {
-                              addLeadNote(selectedLead.id, newLeadNote.trim());
+                              addLeadNote(selectedLead, newLeadNote.trim());
                             }
                           }}
                           disabled={!newLeadNote.trim()}
