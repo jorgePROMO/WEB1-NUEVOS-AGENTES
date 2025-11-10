@@ -2752,9 +2752,11 @@ async def add_payment(client_id: str, payment_data: dict, request: Request):
     
     try:
         payment = {
+            "id": str(int(datetime.now(timezone.utc).timestamp() * 1000000)),
             "amount": float(payment_data.get("amount")),
             "date": datetime.fromisoformat(payment_data.get("date")).replace(tzinfo=timezone.utc),
-            "notes": payment_data.get("notes", "")
+            "notes": payment_data.get("notes", ""),
+            "metodo_pago": payment_data.get("metodo_pago", "Transferencia")  # Bizum, Transferencia, Efectivo
         }
         
         # Get client to calculate new next_payment_date
@@ -2777,14 +2779,85 @@ async def add_payment(client_id: str, payment_data: dict, request: Request):
         if result.matched_count == 0:
             raise HTTPException(status_code=404, detail="Cliente no encontrado")
         
-        logger.info(f"Payment added to external client {client_id}")
-        return {"success": True, "message": "Pago registrado"}
+        logger.info(f"Payment added to external client {client_id} - Método: {payment['metodo_pago']}")
+        return {"success": True, "message": "Pago registrado", "payment": payment}
     
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Error adding payment: {e}")
         raise HTTPException(status_code=500, detail="Error al registrar pago")
+
+
+@api_router.put("/admin/external-clients/{client_id}/payments/{payment_id}")
+async def edit_payment(client_id: str, payment_id: str, payment_data: dict, request: Request):
+    """Edit a payment from external client"""
+    await require_admin(request)
+    
+    try:
+        client = await db.external_clients.find_one({"_id": client_id})
+        if not client:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        payments = client.get("payment_history", [])
+        payment_found = False
+        
+        for i, payment in enumerate(payments):
+            if payment.get("id") == payment_id:
+                payments[i] = {
+                    "id": payment_id,
+                    "amount": float(payment_data.get("amount")),
+                    "date": datetime.fromisoformat(payment_data.get("date")).replace(tzinfo=timezone.utc),
+                    "notes": payment_data.get("notes", ""),
+                    "metodo_pago": payment_data.get("metodo_pago", "Transferencia")
+                }
+                payment_found = True
+                break
+        
+        if not payment_found:
+            raise HTTPException(status_code=404, detail="Pago no encontrado")
+        
+        result = await db.external_clients.update_one(
+            {"_id": client_id},
+            {"$set": {"payment_history": payments}}
+        )
+        
+        logger.info(f"Payment {payment_id} edited for client {client_id}")
+        return {"success": True, "message": "Pago actualizado"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error editing payment: {e}")
+        raise HTTPException(status_code=500, detail="Error al editar pago")
+
+
+@api_router.delete("/admin/external-clients/{client_id}/payments/{payment_id}")
+async def delete_payment(client_id: str, payment_id: str, request: Request):
+    """Delete a payment from external client"""
+    await require_admin(request)
+    
+    try:
+        client = await db.external_clients.find_one({"_id": client_id})
+        if not client:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        payments = client.get("payment_history", [])
+        payments = [p for p in payments if p.get("id") != payment_id]
+        
+        result = await db.external_clients.update_one(
+            {"_id": client_id},
+            {"$set": {"payment_history": payments}}
+        )
+        
+        logger.info(f"Payment {payment_id} deleted from client {client_id}")
+        return {"success": True, "message": "Pago eliminado"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting payment: {e}")
+        raise HTTPException(status_code=500, detail="Error al eliminar pago")
 
 
 @api_router.post("/admin/external-clients/{client_id}/notes")
