@@ -46,6 +46,7 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/trabaja-conmigo" element={<TrabajaConmigo />} />
       <Route
         path="/dashboard"
         element={
