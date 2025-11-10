@@ -815,4 +815,7 @@ test_plan:
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
+  completed_focus:
+    - "Waitlist Submit Endpoint (Public)"
+    - "Waitlist Admin Endpoints"
 
