@@ -62,8 +62,11 @@ export const ExternalClientsCRM = ({ token }) => {
   const [newPayment, setNewPayment] = useState({
     amount: '',
     date: new Date().toISOString().split('T')[0],
-    notes: ''
+    notes: '',
+    metodo_pago: 'Transferencia'
   });
+
+  const [editingPayment, setEditingPayment] = useState(null);
 
   const [editClient, setEditClient] = useState({
     nombre: '',
