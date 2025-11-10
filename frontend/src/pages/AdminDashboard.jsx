@@ -127,6 +127,13 @@ const AdminDashboard = () => {
   const [loadingFinancials, setLoadingFinancials] = useState(false);
 
 
+  // Waitlist states
+  const [waitlistLeads, setWaitlistLeads] = useState([]);
+  const [selectedLead, setSelectedLead] = useState(null);
+  const [loadingWaitlist, setLoadingWaitlist] = useState(false);
+  const [waitlistCount, setWaitlistCount] = useState(0);
+
+
 
   // Form states
   const [formData, setFormData] = useState({
