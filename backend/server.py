@@ -7118,6 +7118,241 @@ Por favor:
         raise HTTPException(status_code=500, detail=f"Error procesando chat: {str(e)}")
 
 
+# ==================== WAITLIST ENDPOINTS ====================
+
+from waitlist_scoring import calculate_waitlist_score
+
+@api_router.post("/waitlist/submit")
+async def submit_waitlist(lead_data: WaitlistLeadSubmit):
+    """
+    Endpoint público para enviar el formulario de waitlist
+    No requiere autenticación
+    """
+    try:
+        # Convertir datos a dict
+        responses = lead_data.dict()
+        
+        # Calcular scoring y tags automáticos
+        scoring_result = calculate_waitlist_score(responses)
+        
+        # Crear ID único
+        lead_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
+        
+        # Preparar documento para MongoDB
+        lead_document = {
+            "_id": lead_id,
+            "nombre_apellidos": lead_data.nombre_apellidos,
+            "email": lead_data.email,
+            "telefono": lead_data.telefono,
+            "edad": lead_data.edad,
+            "ciudad_pais": lead_data.ciudad_pais,
+            "como_conociste": lead_data.como_conociste,
+            "responses": responses,
+            "score_total": scoring_result["score_total"],
+            "score_capacidad_economica": scoring_result["score_capacidad_economica"],
+            "score_objetivos_motivacion": scoring_result["score_objetivos_motivacion"],
+            "score_experiencia_habitos": scoring_result["score_experiencia_habitos"],
+            "score_disponibilidad_compromiso": scoring_result["score_disponibilidad_compromiso"],
+            "score_personalidad_afinidad": scoring_result["score_personalidad_afinidad"],
+            "score_disponibilidad_entrevista": scoring_result["score_disponibilidad_entrevista"],
+            "capacidad_economica": scoring_result["capacidad_economica"],
+            "objetivo": scoring_result["objetivo"],
+            "motivacion": scoring_result["motivacion"],
+            "nivel_experiencia": scoring_result["nivel_experiencia"],
+            "nivel_compromiso": scoring_result["nivel_compromiso"],
+            "urgencia": scoring_result["urgencia"],
+            "afinidad_estilo": scoring_result["afinidad_estilo"],
+            "prioridad": scoring_result["prioridad"],
+            "estado": "pendiente",
+            "notas_admin": [],
+            "historial_contacto": [],
+            "submitted_at": datetime.now(timezone.utc).isoformat(),
+            "contacted_at": None,
+            "converted_at": None,
+            "converted_to_client": False,
+            "client_id": None
+        }
+        
+        # Guardar en MongoDB
+        await db.waitlist_leads.insert_one(lead_document)
+        
+        logger.info(f"✅ Waitlist lead submitted: {lead_data.email} - Score: {scoring_result['score_total']} - Prioridad: {scoring_result['prioridad']}")
+        
+        # TODO: Enviar email de confirmación según prioridad
+        
+        return {
+            "success": True,
+            "message": "Formulario enviado correctamente",
+            "score": scoring_result["score_total"],
+            "prioridad": scoring_result["prioridad"]
+        }
+        
+    except Exception as e:
+        logger.error(f"Error submitting waitlist lead: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al enviar formulario: {str(e)}")
+
+
+@api_router.get("/admin/waitlist/all", response_model=List[WaitlistLeadResponse])
+async def get_all_waitlist_leads(request: Request):
+    """
+    Obtener todos los leads de waitlist (solo admin)
+    """
+    current_user = await get_current_user(request)
+    
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    try:
+        leads = await db.waitlist_leads.find().sort("submitted_at", -1).to_list(length=None)
+        
+        # Formatear para respuesta
+        leads_response = []
+        for lead in leads:
+            leads_response.append({
+                "id": lead["_id"],
+                "nombre_apellidos": lead.get("nombre_apellidos"),
+                "email": lead.get("email"),
+                "telefono": lead.get("telefono"),
+                "edad": lead.get("edad"),
+                "ciudad_pais": lead.get("ciudad_pais"),
+                "como_conociste": lead.get("como_conociste"),
+                "score_total": lead.get("score_total", 0),
+                "prioridad": lead.get("prioridad", "media"),
+                "estado": lead.get("estado", "pendiente"),
+                "capacidad_economica": lead.get("capacidad_economica", "media"),
+                "objetivo": lead.get("objetivo", "indefinido"),
+                "motivacion": lead.get("motivacion", "media"),
+                "nivel_compromiso": lead.get("nivel_compromiso", "medio"),
+                "submitted_at": lead.get("submitted_at"),
+                "notas_admin": lead.get("notas_admin", [])
+            })
+        
+        return leads_response
+        
+    except Exception as e:
+        logger.error(f"Error fetching waitlist leads: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener leads")
+
+
+@api_router.get("/admin/waitlist/{lead_id}")
+async def get_waitlist_lead_detail(lead_id: str, request: Request):
+    """
+    Obtener detalle completo de un lead
+    """
+    current_user = await get_current_user(request)
+    
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    try:
+        lead = await db.waitlist_leads.find_one({"_id": lead_id})
+        
+        if not lead:
+            raise HTTPException(status_code=404, detail="Lead no encontrado")
+        
+        return lead
+        
+    except Exception as e:
+        logger.error(f"Error fetching lead detail: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener detalle del lead")
+
+
+@api_router.put("/admin/waitlist/{lead_id}/status")
+async def update_waitlist_lead_status(lead_id: str, status_update: WaitlistStatusUpdate, request: Request):
+    """
+    Actualizar estado de un lead
+    """
+    current_user = await get_current_user(request)
+    
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    try:
+        update_data = {
+            "estado": status_update.estado
+        }
+        
+        # Si se marca como contactado, guardar timestamp
+        if status_update.estado == "contactado":
+            update_data["contacted_at"] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.waitlist_leads.update_one(
+            {"_id": lead_id},
+            {"$set": update_data}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Lead no encontrado")
+        
+        logger.info(f"✅ Lead {lead_id} status updated to {status_update.estado}")
+        
+        return {"success": True, "message": "Estado actualizado"}
+        
+    except Exception as e:
+        logger.error(f"Error updating lead status: {e}")
+        raise HTTPException(status_code=500, detail="Error al actualizar estado")
+
+
+@api_router.post("/admin/waitlist/{lead_id}/note")
+async def add_waitlist_lead_note(lead_id: str, note_data: WaitlistNoteAdd, request: Request):
+    """
+    Añadir nota a un lead
+    """
+    current_user = await get_current_user(request)
+    
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    try:
+        nota = {
+            "texto": note_data.nota,
+            "fecha": datetime.now(timezone.utc).isoformat(),
+            "admin_id": current_user.get("_id"),
+            "admin_name": current_user.get("name", "Admin")
+        }
+        
+        result = await db.waitlist_leads.update_one(
+            {"_id": lead_id},
+            {"$push": {"notas_admin": nota}}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Lead no encontrado")
+        
+        logger.info(f"✅ Note added to lead {lead_id}")
+        
+        return {"success": True, "message": "Nota añadida", "nota": nota}
+        
+    except Exception as e:
+        logger.error(f"Error adding note: {e}")
+        raise HTTPException(status_code=500, detail="Error al añadir nota")
+
+
+@api_router.delete("/admin/waitlist/{lead_id}")
+async def delete_waitlist_lead(lead_id: str, request: Request):
+    """
+    Eliminar un lead de waitlist
+    """
+    current_user = await get_current_user(request)
+    
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    try:
+        result = await db.waitlist_leads.delete_one({"_id": lead_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Lead no encontrado")
+        
+        logger.info(f"✅ Lead {lead_id} deleted")
+        
+        return {"success": True, "message": "Lead eliminado"}
+        
+    except Exception as e:
+        logger.error(f"Error deleting lead: {e}")
+        raise HTTPException(status_code=500, detail="Error al eliminar lead")
+
+
 # Include the router in the main app (moved to end to include all endpoints)
 app.include_router(api_router)
 
