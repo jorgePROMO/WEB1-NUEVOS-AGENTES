@@ -30,7 +30,9 @@ from models import (
     StripeSubscriptionCreate, PaymentTransaction, UserSubscription,
     FinancialMetrics, PaymentHistoryItem,
     Exercise, ExerciseResponse, ExerciseQuery,
-    TrainingPlanChatRequest, TrainingPlanChatResponse
+    TrainingPlanChatRequest, TrainingPlanChatResponse,
+    WaitlistLeadSubmit, WaitlistLeadInDB, WaitlistLeadResponse,
+    WaitlistStatusUpdate, WaitlistNoteAdd
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
