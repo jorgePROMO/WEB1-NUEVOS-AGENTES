@@ -347,6 +347,33 @@ frontend:
         - working: "NA"
           agent: "main"
           comment: "Formulario multi-step público en /trabaja-conmigo. 7 pasos: 1) Datos básicos (incluye 'cómo conociste a Jorge'), 2) Capacidad económica, 3) Objetivos y motivación, 4) Experiencia y hábitos, 5) Disponibilidad y compromiso, 6) Personalidad y afinidad, 7) Disponibilidad para entrevista. Incluye validación, progress indicator, submit a POST /api/waitlist/submit. Ruta añadida a App.js. Necesita testing UI completo."
+        - working: "NA"
+          agent: "main"
+          comment: "✅ Ruta /trabaja-conmigo configurada y funcionando correctamente. Form multi-step carga con progress indicator (Paso 1 de 7, 14% completado). Campos implementados: nombre_apellidos, email, telefono, edad, ciudad_pais, como_conociste (dropdown). Navegación Anterior/Siguiente visible. Form conectado a POST /api/waitlist/submit. LISTO PARA TESTING E2E COMPLETO."
+
+  - task: "Waitlist Navigation Links"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/HeroSection.jsx, FinalCTA.jsx, Footer.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ Actualizados todos los CTAs de landing page para dirigir a /trabaja-conmigo: 1) Hero button 'TRABAJA CON JORGE' (azul), 2) Final CTA button 'TRABAJA CON JORGE' (naranja), 3) Footer link 'Trabaja con Jorge' en sección Enlaces rápidos. Todos los links funcionando correctamente. LISTO PARA TESTING."
+
+  - task: "Admin Waitlist Card & View"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ Implementado sistema completo de gestión de Waitlist en AdminDashboard: 1) Card '🎯 Waitlist' en CRM Navigation Cards (rosa) con badge de count, 2) Vista completa con tabla de leads (nombre, email, score/100, prioridad, estado, fecha, acciones), 3) Modal detallado con info contacto, desglose scoring (6 categorías), tags automáticos, respuestas completas, cambiar estado (pendiente/contactado/aceptado/rechazado), sistema de notas admin, botón eliminar lead, 4) Estados y funciones: loadWaitlistLeads(), updateLeadStatus(), addLeadNote(), deleteWaitlistLead(). Badge prioridad con colores (alta=rojo, media=amarillo, baja=gris). useEffect carga data cuando activeView='waitlist'. LISTO PARA TESTING."
 
 metadata:
   created_by: "testing_agent"
