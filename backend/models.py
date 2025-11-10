@@ -878,3 +878,131 @@ class TrainingPlanChatResponse(BaseModel):
     """Response from training plan chat"""
     assistant_message: str
     updated_plan: Optional[str] = None  # If the plan was modified
+
+
+# ==================== WAITLIST MODELS ====================
+
+class WaitlistLeadSubmit(BaseModel):
+    """Modelo para recibir el formulario de waitlist"""
+    # 1. Datos básicos
+    nombre_apellidos: str
+    email: EmailStr
+    telefono: str
+    edad: str
+    ciudad_pais: str
+    como_conociste: str  # Nueva pregunta
+    
+    # 2. Capacidad económica y prioridades
+    inversion_mensual: str  # "< 50€/mes", "100-200€/mes", "200-500€/mes", "500+€/mes"
+    invierte_actualmente: str  # "No invierto", "Gimnasio o suplementos", etc.
+    frase_representa: str  # "Busco algo económico", "Busco resultados reales", etc.
+    
+    # 3. Objetivos y motivación
+    objetivo_principal: str  # "Perder grasa", "Ganar músculo", etc.
+    por_que_ahora: str  # "Razón clara", "Cansado de posponer", etc.
+    intentado_antes: str  # "No he hecho nada", "Dietas por mi cuenta", etc.
+    como_verte_3_meses: str  # Respuesta abierta
+    
+    # 4. Experiencia y hábitos
+    entrenas_actualmente: str  # "Sí con entrenador", "Sí por mi cuenta", etc.
+    dias_semana_entrenar: str  # "1-2 días", "3-4 días", "5+ días"
+    nivel_experiencia: str  # "Principiante", "Intermedio", "Avanzado"
+    limitaciones_fisicas: Optional[str] = None
+    
+    # 5. Disponibilidad y compromiso
+    tiempo_semanal: str  # "< 2h", "3-4h", "5-6h", "6+h"
+    nivel_compromiso: str  # "1-4", "5-6", "7-8", "9-10"
+    que_pasaria_sin_cambiar: str  # "No pasaría nada", "Me frustraría", etc.
+    
+    # 6. Personalidad y afinidad
+    preferencia_comunicacion: str  # "Directa y exigente", "Intermedio", "Flexible"
+    que_motiva_mas: str  # "Resultados visibles", "Sentirme mejor", etc.
+    esperas_del_coach: str  # "Que me exijas", "Que me acompañes", etc.
+    
+    # 7. Disponibilidad para entrevista
+    disponibilidad_llamada: str  # "Sí puedo adaptarme", "Prefiero WhatsApp", etc.
+
+
+class WaitlistLeadInDB(BaseModel):
+    """Lead de waitlist almacenado en BD con scoring y tags"""
+    id: str = Field(alias="_id")
+    
+    # Datos básicos
+    nombre_apellidos: str
+    email: EmailStr
+    telefono: str
+    edad: str
+    ciudad_pais: str
+    como_conociste: str
+    
+    # Todas las respuestas (JSON completo)
+    responses: dict
+    
+    # Scoring (calculado automáticamente)
+    score_total: int  # 0-100
+    score_capacidad_economica: int  # 0-25
+    score_objetivos_motivacion: int  # 0-25
+    score_experiencia_habitos: int  # 0-15
+    score_disponibilidad_compromiso: int  # 0-20
+    score_personalidad_afinidad: int  # 0-10
+    score_disponibilidad_entrevista: int  # 0-5
+    
+    # Tags automáticos
+    capacidad_economica: str  # "baja", "media", "alta"
+    objetivo: str  # "definicion", "volumen", "recomposicion", "habitos"
+    motivacion: str  # "baja", "media", "alta"
+    nivel_experiencia: str  # "bajo", "medio", "alto"
+    nivel_compromiso: str  # "bajo", "medio", "alto"
+    urgencia: str  # "baja", "media", "alta"
+    afinidad_estilo: str  # "alta", "media", "baja"
+    
+    # Prioridad (calculada según score)
+    prioridad: str  # "alta" (66-100), "media" (41-65), "baja" (0-40)
+    
+    # Estado y gestión
+    estado: str = "pendiente"  # "pendiente", "contactado", "aceptado", "rechazado"
+    notas_admin: List[dict] = []  # [{texto, fecha, admin_id}]
+    historial_contacto: List[dict] = []  # [{tipo, fecha, contenido}]
+    
+    # Fechas
+    submitted_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    contacted_at: Optional[datetime] = None
+    converted_at: Optional[datetime] = None
+    
+    # Conversión
+    converted_to_client: bool = False
+    client_id: Optional[str] = None
+    
+    class Config:
+        populate_by_name = True
+        json_encoders = {ObjectId: str, datetime: str}
+
+
+class WaitlistLeadResponse(BaseModel):
+    """Respuesta del lead para el frontend"""
+    id: str
+    nombre_apellidos: str
+    email: str
+    telefono: str
+    edad: str
+    ciudad_pais: str
+    como_conociste: str
+    score_total: int
+    prioridad: str
+    estado: str
+    capacidad_economica: str
+    objetivo: str
+    motivacion: str
+    nivel_compromiso: str
+    submitted_at: datetime
+    notas_admin: List[dict]
+
+
+class WaitlistStatusUpdate(BaseModel):
+    """Actualizar estado de un lead"""
+    estado: str  # "pendiente", "contactado", "aceptado", "rechazado"
+
+
+class WaitlistNoteAdd(BaseModel):
+    """Añadir nota a un lead"""
+    nota: str
