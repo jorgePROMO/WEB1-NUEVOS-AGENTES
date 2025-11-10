@@ -1199,9 +1199,11 @@ const AdminDashboard = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSelectedLead(response.data);
+      setNewLeadNote(''); // Clear input after adding note
+      alert('✅ Nota añadida correctamente');
     } catch (error) {
       console.error('Error adding note:', error);
-      alert('Error al añadir nota');
+      alert('Error al añadir nota: ' + (error.response?.data?.detail || error.message));
     }
   };
 
