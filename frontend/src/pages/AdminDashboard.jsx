@@ -1906,26 +1906,22 @@ const AdminDashboard = () => {
                       <div className="flex gap-2">
                         <Input
                           placeholder="Añadir nota..."
-                          id="new-note-input"
+                          value={newLeadNote}
+                          onChange={(e) => setNewLeadNote(e.target.value)}
                           onKeyPress={(e) => {
-                            if (e.key === 'Enter') {
-                              const input = e.target;
-                              if (input.value.trim()) {
-                                addLeadNote(selectedLead.id, input.value.trim());
-                                input.value = '';
-                              }
+                            if (e.key === 'Enter' && newLeadNote.trim()) {
+                              addLeadNote(selectedLead.id, newLeadNote.trim());
                             }
                           }}
                         />
                         <Button
                           size="sm"
                           onClick={() => {
-                            const input = document.getElementById('new-note-input');
-                            if (input.value.trim()) {
-                              addLeadNote(selectedLead.id, input.value.trim());
-                              input.value = '';
+                            if (newLeadNote.trim()) {
+                              addLeadNote(selectedLead.id, newLeadNote.trim());
                             }
                           }}
+                          disabled={!newLeadNote.trim()}
                         >
                           <Send className="h-4 w-4" />
                         </Button>
