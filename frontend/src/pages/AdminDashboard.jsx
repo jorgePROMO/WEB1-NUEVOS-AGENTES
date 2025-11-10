@@ -134,6 +134,18 @@ const AdminDashboard = () => {
   const [waitlistCount, setWaitlistCount] = useState(0);
   const [newLeadNote, setNewLeadNote] = useState('');
 
+  // Manual Payments (Caja A/B)
+  const [manualPayments, setManualPayments] = useState([]);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [editingManualPayment, setEditingManualPayment] = useState(null);
+  const [newManualPayment, setNewManualPayment] = useState({
+    concepto: '',
+    amount: '',
+    fecha: new Date().toISOString().split('T')[0],
+    metodo_pago: 'Transferencia',
+    notas: ''
+  });
+
 
 
   // Form states
