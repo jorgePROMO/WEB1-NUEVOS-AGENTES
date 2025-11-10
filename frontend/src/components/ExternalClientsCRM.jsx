@@ -1009,6 +1009,93 @@ export const ExternalClientsCRM = ({ token }) => {
         </div>
       )}
 
+      {/* Edit Payment Modal */}
+      {editingPayment && selectedClient && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-md">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold">Editar Pago</h3>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setEditingPayment(null)}
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <Label>Cliente</Label>
+                  <p className="font-medium">{selectedClient.nombre}</p>
+                </div>
+
+                <div>
+                  <Label>Monto (€) *</Label>
+                  <Input
+                    type="number"
+                    value={editingPayment.amount}
+                    onChange={(e) => setEditingPayment({...editingPayment, amount: e.target.value})}
+                    placeholder="0"
+                  />
+                </div>
+
+                <div>
+                  <Label>Fecha de Pago *</Label>
+                  <Input
+                    type="date"
+                    value={editingPayment.date}
+                    onChange={(e) => setEditingPayment({...editingPayment, date: e.target.value})}
+                  />
+                </div>
+
+                <div>
+                  <Label>Método de Pago * 💰</Label>
+                  <select
+                    value={editingPayment.metodo_pago}
+                    onChange={(e) => setEditingPayment({...editingPayment, metodo_pago: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Transferencia">Transferencia (Caja A)</option>
+                    <option value="Bizum">Bizum (Caja A)</option>
+                    <option value="Efectivo">Efectivo (Caja B)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <Label>Notas</Label>
+                  <Textarea
+                    value={editingPayment.notes}
+                    onChange={(e) => setEditingPayment({...editingPayment, notes: e.target.value})}
+                    placeholder="Notas sobre este pago..."
+                    rows={2}
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    onClick={editPayment}
+                    disabled={!editingPayment.amount}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    Actualizar Pago
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setEditingPayment(null)}
+                    className="flex-1"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Payment Modal */}
       {showPaymentModal && selectedClient && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
