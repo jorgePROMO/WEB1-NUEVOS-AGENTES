@@ -32,7 +32,8 @@ from models import (
     Exercise, ExerciseResponse, ExerciseQuery,
     TrainingPlanChatRequest, TrainingPlanChatResponse,
     WaitlistLeadSubmit, WaitlistLeadInDB, WaitlistLeadResponse,
-    WaitlistStatusUpdate, WaitlistNoteAdd
+    WaitlistStatusUpdate, WaitlistNoteAdd,
+    ManualPayment, ManualPaymentCreate
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
