@@ -1296,7 +1296,17 @@ const AdminDashboard = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       // Reload detailed view
-
+      const response = await axios.get(`${API}/admin/waitlist/${leadId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSelectedLead(response.data);
+      setNewLeadNote(''); // Clear input after adding note
+      alert('✅ Nota añadida correctamente');
+    } catch (error) {
+      console.error('Error adding note:', error);
+      alert('Error al añadir nota: ' + (error.response?.data?.detail || error.message));
+    }
+  };
 
   const deleteLeadNote = async (lead, noteIndex) => {
     const leadId = lead._id || lead.id;
