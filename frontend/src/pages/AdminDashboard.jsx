@@ -1218,6 +1218,28 @@ const AdminDashboard = () => {
     }
   };
 
+  const deleteLeadNote = async (lead, noteIndex) => {
+    const leadId = lead._id || lead.id;
+    
+    if (!window.confirm('¿Eliminar esta nota?')) return;
+    
+    try {
+      await axios.delete(
+        `${API}/admin/waitlist/${leadId}/note/${noteIndex}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      // Reload detailed view
+      const response = await axios.get(`${API}/admin/waitlist/${leadId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setSelectedLead(response.data);
+      alert('✅ Nota eliminada');
+    } catch (error) {
+      console.error('Error deleting note:', error);
+      alert('Error al eliminar nota: ' + (error.response?.data?.detail || error.message));
+    }
+  };
+
   const deleteWaitlistLead = async (lead) => {
     const leadId = lead._id || lead.id;
     if (!window.confirm('¿Estás seguro de que deseas eliminar este lead?')) {
