@@ -38,6 +38,11 @@ const Footer = () => {
                   Testimonios
                 </a>
               </li>
+              <li>
+                <a href="/trabaja-conmigo" className="hover:text-orange-400 transition-colors duration-300 font-semibold">
+                  Trabaja con Jorge
+                </a>
+              </li>
             </ul>
           </div>
 
