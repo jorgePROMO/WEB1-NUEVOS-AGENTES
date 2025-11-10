@@ -1187,7 +1187,10 @@ const AdminDashboard = () => {
     }
   };
 
-  const addLeadNote = async (leadId, nota) => {
+  const addLeadNote = async (lead, nota) => {
+    // Use _id if available (from detail view), otherwise use id (from list view)
+    const leadId = lead._id || lead.id;
+    
     try {
       await axios.post(
         `${API}/admin/waitlist/${leadId}/note`,
