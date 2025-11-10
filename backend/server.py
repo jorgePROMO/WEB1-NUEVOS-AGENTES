@@ -7397,6 +7397,121 @@ async def add_waitlist_lead_note(lead_id: str, note_data: WaitlistNoteAdd, reque
         return {"success": True, "message": "Nota añadida", "nota": nota}
         
     except Exception as e:
+
+
+# ============================================
+# MANUAL PAYMENTS (CAJA A / CAJA B)
+# ============================================
+
+@api_router.get("/admin/manual-payments")
+async def get_manual_payments(request: Request):
+    """Obtener todos los pagos manuales (Caja A y B)"""
+    current_user = await get_current_user(request)
+    
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    try:
+        payments = await db.manual_payments.find().sort("fecha", -1).to_list(length=None)
+        return {"success": True, "payments": payments}
+    except Exception as e:
+        logger.error(f"Error fetching manual payments: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener pagos")
+
+
+@api_router.post("/admin/manual-payments")
+async def create_manual_payment(payment_data: ManualPaymentCreate, request: Request):
+    """Crear pago manual"""
+    current_user = await get_current_user(request)
+    
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    try:
+        payment_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
+        
+        payment = {
+            "_id": payment_id,
+            "concepto": payment_data.concepto,
+            "amount": payment_data.amount,
+            "fecha": payment_data.fecha,
+            "metodo_pago": payment_data.metodo_pago,
+            "notas": payment_data.notas or "",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "created_by": current_user.get("name", "Admin")
+        }
+        
+        await db.manual_payments.insert_one(payment)
+        
+        logger.info(f"✅ Manual payment created: {payment_data.concepto} - {payment_data.amount}€ - {payment_data.metodo_pago}")
+        
+        return {"success": True, "message": "Pago registrado", "payment": payment}
+        
+    except Exception as e:
+        logger.error(f"Error creating manual payment: {e}")
+        raise HTTPException(status_code=500, detail="Error al crear pago")
+
+
+@api_router.put("/admin/manual-payments/{payment_id}")
+async def update_manual_payment(payment_id: str, payment_data: ManualPaymentCreate, request: Request):
+    """Actualizar pago manual"""
+    current_user = await get_current_user(request)
+    
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    try:
+        update_data = {
+            "concepto": payment_data.concepto,
+            "amount": payment_data.amount,
+            "fecha": payment_data.fecha,
+            "metodo_pago": payment_data.metodo_pago,
+            "notas": payment_data.notas or ""
+        }
+        
+        result = await db.manual_payments.update_one(
+            {"_id": payment_id},
+            {"$set": update_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Pago no encontrado")
+        
+        logger.info(f"✅ Manual payment updated: {payment_id}")
+        
+        return {"success": True, "message": "Pago actualizado"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating manual payment: {e}")
+        raise HTTPException(status_code=500, detail="Error al actualizar pago")
+
+
+@api_router.delete("/admin/manual-payments/{payment_id}")
+async def delete_manual_payment(payment_id: str, request: Request):
+    """Eliminar pago manual"""
+    current_user = await get_current_user(request)
+    
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    try:
+        result = await db.manual_payments.delete_one({"_id": payment_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Pago no encontrado")
+        
+        logger.info(f"✅ Manual payment deleted: {payment_id}")
+        
+        return {"success": True, "message": "Pago eliminado"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting manual payment: {e}")
+        raise HTTPException(status_code=500, detail="Error al eliminar pago")
+
         logger.error(f"Error adding note: {e}")
         raise HTTPException(status_code=500, detail="Error al añadir nota")
 
