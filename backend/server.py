@@ -7328,6 +7328,48 @@ async def add_waitlist_lead_note(lead_id: str, note_data: WaitlistNoteAdd, reque
         raise HTTPException(status_code=500, detail="Error al añadir nota")
 
 
+@api_router.delete("/admin/waitlist/{lead_id}/note/{note_index}")
+async def delete_waitlist_lead_note(lead_id: str, note_index: int, request: Request):
+    """
+    Eliminar una nota específica de un lead
+    """
+    current_user = await get_current_user(request)
+    
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="No autorizado")
+    
+    try:
+        # Obtener el lead
+        lead = await db.waitlist_leads.find_one({"_id": lead_id})
+        
+        if not lead:
+            raise HTTPException(status_code=404, detail="Lead no encontrado")
+        
+        notas = lead.get("notas_admin", [])
+        
+        if note_index < 0 or note_index >= len(notas):
+            raise HTTPException(status_code=404, detail="Nota no encontrada")
+        
+        # Eliminar la nota por índice
+        notas.pop(note_index)
+        
+        # Actualizar el documento
+        result = await db.waitlist_leads.update_one(
+            {"_id": lead_id},
+            {"$set": {"notas_admin": notas}}
+        )
+        
+        logger.info(f"✅ Note {note_index} deleted from lead {lead_id}")
+        
+        return {"success": True, "message": "Nota eliminada"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting note: {e}")
+        raise HTTPException(status_code=500, detail="Error al eliminar nota")
+
+
 @api_router.delete("/admin/waitlist/{lead_id}")
 async def delete_waitlist_lead(lead_id: str, request: Request):
     """
