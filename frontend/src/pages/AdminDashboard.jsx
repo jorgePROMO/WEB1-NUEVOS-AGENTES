@@ -1907,8 +1907,16 @@ const AdminDashboard = () => {
                       <Label className="font-semibold mb-2">Notas del Admin</Label>
                       <div className="space-y-2 mb-3">
                         {(selectedLead.notas_admin || []).map((note, idx) => (
-                          <div key={idx} className="bg-yellow-50 p-3 rounded border border-yellow-200">
-                            <p className="text-sm text-gray-900">{note.texto}</p>
+                          <div key={idx} className="bg-yellow-50 p-3 rounded border border-yellow-200 relative group">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100 hover:text-red-600"
+                              onClick={() => deleteLeadNote(selectedLead, idx)}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                            <p className="text-sm text-gray-900 pr-8">{note.texto}</p>
                             <p className="text-xs text-gray-500 mt-1">
                               {new Date(note.fecha).toLocaleString('es-ES')}
                             </p>
