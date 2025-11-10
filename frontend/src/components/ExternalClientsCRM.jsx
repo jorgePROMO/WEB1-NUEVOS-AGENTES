@@ -1018,6 +1018,19 @@ export const ExternalClientsCRM = ({ token }) => {
                 </div>
 
                 <div>
+                  <Label>Método de Pago * 💰</Label>
+                  <select
+                    value={newPayment.metodo_pago}
+                    onChange={(e) => setNewPayment({...newPayment, metodo_pago: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Transferencia">Transferencia (Caja A)</option>
+                    <option value="Bizum">Bizum (Caja A)</option>
+                    <option value="Efectivo">Efectivo (Caja B)</option>
+                  </select>
+                </div>
+
+                <div>
                   <Label>Notas</Label>
                   <Textarea
                     value={newPayment.notes}
