@@ -1609,6 +1609,309 @@ const AdminDashboard = () => {
           </div>
         )}
 
+
+        {activeView === 'waitlist' && (
+          <div>
+            <Button 
+              variant="outline" 
+              className="mb-4"
+              onClick={() => setActiveView('clients')}
+            >
+              ← Volver a Gestión de Clientes
+            </Button>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <UserPlus className="h-6 w-6" />
+                    Waitlist - Lista de Espera Prioritaria
+                  </div>
+                  <Badge className="bg-pink-100 text-pink-700 border-pink-300">
+                    {waitlistCount} leads
+                  </Badge>
+                </CardTitle>
+                <p className="text-sm text-gray-600 mt-2">
+                  Leads capturados desde el formulario público de waitlist, ordenados por score y prioridad automática.
+                </p>
+              </CardHeader>
+              <CardContent>
+                {loadingWaitlist ? (
+                  <div className="flex justify-center items-center py-8">
+                    <Loader2 className="h-8 w-8 animate-spin text-pink-500" />
+                  </div>
+                ) : waitlistLeads.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <UserPlus className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                    <p>No hay leads en la waitlist</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left py-2 px-4">Nombre</th>
+                          <th className="text-left py-2 px-4">Email</th>
+                          <th className="text-left py-2 px-4">Score</th>
+                          <th className="text-left py-2 px-4">Prioridad</th>
+                          <th className="text-left py-2 px-4">Estado</th>
+                          <th className="text-left py-2 px-4">Fecha</th>
+                          <th className="text-left py-2 px-4">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {waitlistLeads.map((lead) => (
+                          <tr key={lead.id} className="border-b hover:bg-gray-50">
+                            <td className="py-3 px-4 font-medium">{lead.nombre_apellidos}</td>
+                            <td className="py-3 px-4 text-sm text-gray-600">{lead.email}</td>
+                            <td className="py-3 px-4">
+                              <span className="font-bold text-lg">{lead.score_total}/100</span>
+                            </td>
+                            <td className="py-3 px-4">
+                              <Badge className={
+                                lead.prioridad === 'alta' ? 'bg-red-100 text-red-700 border-red-300' :
+                                lead.prioridad === 'media' ? 'bg-yellow-100 text-yellow-700 border-yellow-300' :
+                                'bg-gray-100 text-gray-700 border-gray-300'
+                              }>
+                                {lead.prioridad}
+                              </Badge>
+                            </td>
+                            <td className="py-3 px-4">
+                              <Badge className={
+                                lead.estado === 'pendiente' ? 'bg-blue-100 text-blue-700 border-blue-300' :
+                                lead.estado === 'contactado' ? 'bg-purple-100 text-purple-700 border-purple-300' :
+                                lead.estado === 'aceptado' ? 'bg-green-100 text-green-700 border-green-300' :
+                                'bg-gray-100 text-gray-700 border-gray-300'
+                              }>
+                                {lead.estado}
+                              </Badge>
+                            </td>
+                            <td className="py-3 px-4 text-sm text-gray-600">
+                              {new Date(lead.submitted_at).toLocaleDateString('es-ES')}
+                            </td>
+                            <td className="py-3 px-4">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={async () => {
+                                  const response = await axios.get(`${API}/admin/waitlist/${lead.id}`, {
+                                    headers: { Authorization: `Bearer ${token}` }
+                                  });
+                                  setSelectedLead(response.data);
+                                }}
+                              >
+                                Ver detalles →
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Lead Detail Modal */}
+            {selectedLead && (
+              <Dialog open={!!selectedLead} onOpenChange={() => setSelectedLead(null)}>
+                <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span>{selectedLead.nombre_apellidos}</span>
+                        <Badge className={
+                          selectedLead.prioridad === 'alta' ? 'bg-red-100 text-red-700 border-red-300' :
+                          selectedLead.prioridad === 'media' ? 'bg-yellow-100 text-yellow-700 border-yellow-300' :
+                          'bg-gray-100 text-gray-700 border-gray-300'
+                        }>
+                          {selectedLead.prioridad} - {selectedLead.score_total}/100
+                        </Badge>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => deleteWaitlistLead(selectedLead.id)}
+                      >
+                        <Trash2 className="h-4 w-4 mr-1" />
+                        Eliminar
+                      </Button>
+                    </DialogTitle>
+                  </DialogHeader>
+
+                  <div className="space-y-6">
+                    {/* Contact Info */}
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-sm font-semibold text-gray-700">Email</Label>
+                        <p className="text-gray-900">{selectedLead.email}</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-semibold text-gray-700">Teléfono</Label>
+                        <p className="text-gray-900">{selectedLead.telefono}</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-semibold text-gray-700">Edad</Label>
+                        <p className="text-gray-900">{selectedLead.edad}</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-semibold text-gray-700">Ciudad/País</Label>
+                        <p className="text-gray-900">{selectedLead.ciudad_pais}</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-semibold text-gray-700">Cómo conoció a Jorge</Label>
+                        <p className="text-gray-900">{selectedLead.como_conociste}</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-semibold text-gray-700">Fecha de envío</Label>
+                        <p className="text-gray-900">{new Date(selectedLead.submitted_at).toLocaleString('es-ES')}</p>
+                      </div>
+                    </div>
+
+                    {/* Scoring Breakdown */}
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="font-semibold mb-3">Desglose de Scoring</h4>
+                      <div className="grid md:grid-cols-2 gap-3 text-sm">
+                        <div className="flex justify-between">
+                          <span>💰 Capacidad económica:</span>
+                          <span className="font-bold">{selectedLead.score_capacidad_economica}/25</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>🎯 Objetivos y motivación:</span>
+                          <span className="font-bold">{selectedLead.score_objetivos_motivacion}/25</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>💪 Experiencia y hábitos:</span>
+                          <span className="font-bold">{selectedLead.score_experiencia_habitos}/15</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>⏰ Disponibilidad y compromiso:</span>
+                          <span className="font-bold">{selectedLead.score_disponibilidad_compromiso}/20</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>🤝 Personalidad y afinidad:</span>
+                          <span className="font-bold">{selectedLead.score_personalidad_afinidad}/10</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>📞 Disponibilidad entrevista:</span>
+                          <span className="font-bold">{selectedLead.score_disponibilidad_entrevista}/5</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Tags */}
+                    <div>
+                      <h4 className="font-semibold mb-2">Tags Automáticos</h4>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge className="bg-blue-100 text-blue-700">Cap. Econ: {selectedLead.capacidad_economica}</Badge>
+                        <Badge className="bg-green-100 text-green-700">Objetivo: {selectedLead.objetivo}</Badge>
+                        <Badge className="bg-purple-100 text-purple-700">Motivación: {selectedLead.motivacion}</Badge>
+                        <Badge className="bg-orange-100 text-orange-700">Experiencia: {selectedLead.nivel_experiencia}</Badge>
+                        <Badge className="bg-pink-100 text-pink-700">Compromiso: {selectedLead.nivel_compromiso}</Badge>
+                        <Badge className="bg-red-100 text-red-700">Urgencia: {selectedLead.urgencia}</Badge>
+                        <Badge className="bg-indigo-100 text-indigo-700">Afinidad: {selectedLead.afinidad_estilo}</Badge>
+                      </div>
+                    </div>
+
+                    {/* All Responses */}
+                    <div>
+                      <h4 className="font-semibold mb-3">Respuestas Completas</h4>
+                      <div className="space-y-3 max-h-96 overflow-y-auto bg-gray-50 p-4 rounded-lg">
+                        {Object.entries(selectedLead.responses || {}).map(([key, value]) => (
+                          <div key={key} className="border-b pb-2">
+                            <Label className="text-sm font-semibold text-gray-700">
+                              {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            </Label>
+                            <p className="text-gray-900 text-sm mt-1">{value || 'N/A'}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Status Update */}
+                    <div>
+                      <Label className="font-semibold mb-2">Cambiar Estado</Label>
+                      <div className="flex gap-2 mt-2">
+                        <Button
+                          size="sm"
+                          variant={selectedLead.estado === 'pendiente' ? 'default' : 'outline'}
+                          onClick={() => updateLeadStatus(selectedLead.id, 'pendiente')}
+                        >
+                          Pendiente
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant={selectedLead.estado === 'contactado' ? 'default' : 'outline'}
+                          onClick={() => updateLeadStatus(selectedLead.id, 'contactado')}
+                        >
+                          Contactado
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant={selectedLead.estado === 'aceptado' ? 'default' : 'outline'}
+                          onClick={() => updateLeadStatus(selectedLead.id, 'aceptado')}
+                        >
+                          Aceptado
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant={selectedLead.estado === 'rechazado' ? 'default' : 'outline'}
+                          onClick={() => updateLeadStatus(selectedLead.id, 'rechazado')}
+                        >
+                          Rechazado
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Notes */}
+                    <div>
+                      <Label className="font-semibold mb-2">Notas del Admin</Label>
+                      <div className="space-y-2 mb-3">
+                        {(selectedLead.notas_admin || []).map((note, idx) => (
+                          <div key={idx} className="bg-yellow-50 p-3 rounded border border-yellow-200">
+                            <p className="text-sm text-gray-900">{note.texto}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {new Date(note.fecha).toLocaleString('es-ES')}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Añadir nota..."
+                          id="new-note-input"
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                              const input = e.target;
+                              if (input.value.trim()) {
+                                addLeadNote(selectedLead.id, input.value.trim());
+                                input.value = '';
+                              }
+                            }
+                          }}
+                        />
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            const input = document.getElementById('new-note-input');
+                            if (input.value.trim()) {
+                              addLeadNote(selectedLead.id, input.value.trim());
+                              input.value = '';
+                            }
+                          }}
+                        >
+                          <Send className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
+        )}
+
+
         {(activeView === 'clients' || activeView === 'calendar' || activeView === 'finances') && (
           <Tabs value={activeView} onValueChange={setActiveView} className="space-y-6">
             <TabsList className="grid w-full max-w-4xl mx-auto grid-cols-4">
