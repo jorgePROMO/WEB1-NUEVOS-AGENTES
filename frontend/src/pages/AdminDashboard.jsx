@@ -3630,6 +3630,161 @@ const AdminDashboard = () => {
           {/* Finances Tab */}
           <TabsContent value="finances">
             <div className="space-y-6">
+                {/* Header con botón */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold">💰 Sistema de Cajas</h2>
+                    <p className="text-gray-600">Gestión de pagos Stripe y manuales</p>
+                  </div>
+                  <Button
+                    onClick={() => setShowPaymentModal(true)}
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    <DollarSign className="h-5 w-5 mr-2" />
+                    Registrar Pago Manual
+                  </Button>
+                </div>
+
+                {/* CAJA A - Stripe + Transferencia + Bizum */}
+                <Card className="border-blue-200 border-2">
+                  <CardHeader className="bg-blue-50">
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <CreditCard className="h-6 w-6 text-blue-600" />
+                        <span>CAJA A - Pagos Digitales</span>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-gray-600">Total</p>
+                        <p className="text-2xl font-bold text-blue-600">
+                          {(manualPayments
+                            .filter(p => ['Stripe', 'Transferencia', 'Bizum'].includes(p.metodo_pago))
+                            .reduce((sum, p) => sum + p.amount, 0) || 0).toFixed(2)}€
+                        </p>
+                      </div>
+                    </CardTitle>
+                    <p className="text-sm text-gray-600 mt-2">
+                      Stripe · Transferencia · Bizum
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {manualPayments.filter(p => ['Stripe', 'Transferencia', 'Bizum'].includes(p.metodo_pago)).length === 0 ? (
+                        <p className="text-center py-8 text-gray-500">No hay pagos en Caja A</p>
+                      ) : (
+                        manualPayments
+                          .filter(p => ['Stripe', 'Transferencia', 'Bizum'].includes(p.metodo_pago))
+                          .map(payment => (
+                            <div key={payment._id} className="flex items-center justify-between p-4 bg-blue-50 rounded-lg group hover:bg-blue-100 transition-colors">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-3">
+                                  <p className="font-bold text-lg">{payment.amount}€</p>
+                                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-200 text-blue-800">
+                                    {payment.metodo_pago}
+                                  </span>
+                                </div>
+                                <p className="text-sm font-medium text-gray-900 mt-1">{payment.concepto}</p>
+                                <div className="flex items-center gap-3 mt-1">
+                                  <p className="text-xs text-gray-600">
+                                    {new Date(payment.fecha).toLocaleDateString('es-ES')}
+                                  </p>
+                                  {payment.notas && <p className="text-xs text-gray-500">· {payment.notas}</p>}
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={() => setEditingManualPayment(payment)}
+                                >
+                                  <Edit className="h-4 w-4 text-blue-600" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={() => deleteManualPayment(payment._id)}
+                                >
+                                  <Trash2 className="h-4 w-4 text-red-600" />
+                                </Button>
+                              </div>
+                            </div>
+                          ))
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* CAJA B - Efectivo */}
+                <Card className="border-orange-200 border-2">
+                  <CardHeader className="bg-orange-50">
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="h-6 w-6 text-orange-600" />
+                        <span>CAJA B - Pagos en Efectivo</span>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-gray-600">Total</p>
+                        <p className="text-2xl font-bold text-orange-600">
+                          {(manualPayments
+                            .filter(p => p.metodo_pago === 'Efectivo')
+                            .reduce((sum, p) => sum + p.amount, 0) || 0).toFixed(2)}€
+                        </p>
+                      </div>
+                    </CardTitle>
+                    <p className="text-sm text-gray-600 mt-2">
+                      Efectivo · Cobros en mano
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {manualPayments.filter(p => p.metodo_pago === 'Efectivo').length === 0 ? (
+                        <p className="text-center py-8 text-gray-500">No hay pagos en Caja B</p>
+                      ) : (
+                        manualPayments
+                          .filter(p => p.metodo_pago === 'Efectivo')
+                          .map(payment => (
+                            <div key={payment._id} className="flex items-center justify-between p-4 bg-orange-50 rounded-lg group hover:bg-orange-100 transition-colors">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-3">
+                                  <p className="font-bold text-lg">{payment.amount}€</p>
+                                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-orange-200 text-orange-800">
+                                    Efectivo
+                                  </span>
+                                </div>
+                                <p className="text-sm font-medium text-gray-900 mt-1">{payment.concepto}</p>
+                                <div className="flex items-center gap-3 mt-1">
+                                  <p className="text-xs text-gray-600">
+                                    {new Date(payment.fecha).toLocaleDateString('es-ES')}
+                                  </p>
+                                  {payment.notas && <p className="text-xs text-gray-500">· {payment.notas}</p>}
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={() => setEditingManualPayment(payment)}
+                                >
+                                  <Edit className="h-4 w-4 text-orange-600" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={() => deleteManualPayment(payment._id)}
+                                >
+                                  <Trash2 className="h-4 w-4 text-red-600" />
+                                </Button>
+                              </div>
+                            </div>
+                          ))
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
                 {/* Financial Metrics Overview */}
                 <Card>
                   <CardHeader>
