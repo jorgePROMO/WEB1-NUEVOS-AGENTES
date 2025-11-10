@@ -918,15 +918,48 @@ export const ExternalClientsCRM = ({ token }) => {
                   {selectedClient.payment_history && selectedClient.payment_history.length > 0 ? (
                     <div className="space-y-2">
                       {selectedClient.payment_history.map((payment, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                          <div>
-                            <p className="font-medium">{payment.amount}€</p>
+                        <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg group hover:bg-gray-100 transition-colors">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium">{payment.amount}€</p>
+                              <span className={`text-xs px-2 py-1 rounded ${
+                                payment.metodo_pago === 'Efectivo' 
+                                  ? 'bg-orange-100 text-orange-700' 
+                                  : 'bg-blue-100 text-blue-700'
+                              }`}>
+                                {payment.metodo_pago || 'Transferencia'} {payment.metodo_pago === 'Efectivo' ? '(B)' : '(A)'}
+                              </span>
+                            </div>
                             <p className="text-xs text-gray-600">
                               {new Date(payment.date).toLocaleDateString('es-ES')}
                             </p>
                             {payment.notes && <p className="text-xs text-gray-500 mt-1">{payment.notes}</p>}
                           </div>
-                          <CheckCircle className="h-5 w-5 text-green-600" />
+                          <div className="flex items-center gap-2">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="opacity-0 group-hover:opacity-100 transition-opacity"
+                              onClick={() => setEditingPayment({
+                                id: payment.id,
+                                amount: payment.amount,
+                                date: new Date(payment.date).toISOString().split('T')[0],
+                                notes: payment.notes || '',
+                                metodo_pago: payment.metodo_pago || 'Transferencia'
+                              })}
+                            >
+                              <Edit className="h-4 w-4 text-blue-600" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="opacity-0 group-hover:opacity-100 transition-opacity"
+                              onClick={() => deletePayment(payment.id)}
+                            >
+                              <Trash2 className="h-4 w-4 text-red-600" />
+                            </Button>
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                          </div>
                         </div>
                       ))}
                     </div>
