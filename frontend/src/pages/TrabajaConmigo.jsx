@@ -194,9 +194,49 @@ const TrabajaConmigo = () => {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Lista Prioritaria - Trabaja con Jorge
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-xl text-gray-700 font-semibold mb-4">
             Tu acceso a un programa personal y exigente
           </p>
+        </div>
+
+        {/* Texto Introductorio */}
+        <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+          <div className="prose prose-lg max-w-none">
+            <p className="text-gray-700 mb-4">
+              Este breve cuestionario (3–4 minutos) <strong>no es una prueba ni una entrevista</strong>: es una forma de saber si este programa encaja contigo y si realmente estás preparado para comprometerte con tu proceso.
+            </p>
+            
+            <p className="text-gray-700 mb-4">
+              <strong>No se trata de si puedes o no pagarlo.</strong><br />
+              Se trata de si estás dispuesto a invertir en ti mismo, en tu salud, en tu físico y en el tipo de vida que quieres construir.
+            </p>
+            
+            <p className="text-gray-700 mb-4">
+              Este programa no es barato, y no pretende serlo. Es un acompañamiento cercano, exigente y profundamente personalizado.<br />
+              Por eso selecciono personalmente a cada persona antes de abrir plaza: porque <strong>no busco cantidad, busco compromiso real</strong>.
+            </p>
+            
+            <p className="text-gray-700 mb-6">
+              Si respondes con sinceridad, podré valorar si formas parte del grupo reducido que recibe acceso prioritario a la próxima tanda.
+            </p>
+
+            <div className="bg-blue-50 rounded-lg p-4 border-l-4 border-blue-500">
+              <ul className="space-y-2 text-gray-700">
+                <li className="flex items-center">
+                  <span className="mr-2">✅</span>
+                  Dura menos de 5 minutos
+                </li>
+                <li className="flex items-center">
+                  <span className="mr-2">✅</span>
+                  No compromete a nada
+                </li>
+                <li className="flex items-center">
+                  <span className="mr-2">✅</span>
+                  Pero puede ser el inicio de un cambio real
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
         
         {/* Progress Bar */}
