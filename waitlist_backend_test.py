@@ -250,7 +250,7 @@ class WaitlistTester:
         url = f"{BACKEND_URL}/admin/waitlist/{self.test_waitlist_lead_id}/note"
         headers = {"Authorization": f"Bearer {self.admin_token}"}
         payload = {
-            "note": "Test note added during backend testing - lead looks promising for conversion"
+            "nota": "Test note added during backend testing - lead looks promising for conversion"
         }
         
         try:
