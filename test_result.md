@@ -373,9 +373,9 @@ frontend:
 
   - task: "Admin Waitlist Card & View"
     implemented: true
-    working: true
+    working: false
     file: "/app/frontend/src/pages/AdminDashboard.jsx"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -385,6 +385,9 @@ frontend:
         - working: true
           agent: "testing"
           comment: "✅ ADMIN WAITLIST MANAGEMENT TESTING COMPLETED SUCCESSFULLY: 1) Admin login successful with ecjtrainer@gmail.com/jorge3007, 2) Waitlist card '🎯 Waitlist' found and clickable in admin dashboard, 3) Waitlist view loads correctly with title 'Waitlist - Lista de Espera Prioritaria', 4) Table structure complete with all required columns (Nombre, Email, Score, Prioridad, Estado, Fecha, Acciones), 5) Test lead 'Test Frontend Lead' (testfrontend@example.com) successfully appears in admin table, 6) 'Ver detalles' button opens detailed modal with complete lead information, 7) Modal shows: contact info (email, teléfono, edad, ciudad), scoring breakdown (6 categories: Capacidad económica 15/25, Objetivos y motivación 17/25, Experiencia y hábitos 10/15, Disponibilidad y compromiso 14/20, Personalidad y afinidad 10/10, Disponibilidad entrevista 5/5), automatic tags (Cap. Econ: media, Objetivo: volumen, Motivación: media, Experiencia: media, Compromiso: alto, Urgencia: media, Afinidad: alta), complete form responses, 8) Backend API working correctly (3 leads total), 9) Status change and notes system functional. Complete admin waitlist management system working perfectly."
+        - working: false
+          agent: "testing"
+          comment: "✅ CONTACT BUTTONS WORKING - ❌ NOTES SYSTEM CRITICAL BUG: Comprehensive testing completed of Waitlist Admin contact and notes functionality as requested. CONTACT BUTTONS: Both Email button (Mail icon) and WhatsApp button (green MessageSquare icon) found and working correctly in lead detail modal. NOTES SYSTEM CRITICAL ISSUE: API error 500 when adding notes - URL shows '/api/admin/waitlist/undefined/note' indicating lead ID is undefined. Console errors: 'Failed to load resource: the server responded with a status of 500' and 'Error adding note: AxiosError'. Notes input and Send button UI working but backend integration failing. Notes do not appear in list, input not cleared, no persistence. Root cause: Lead ID not being passed correctly to addLeadNote function. Screenshots captured showing contact buttons working and notes system failing."
 
 metadata:
   created_by: "testing_agent"
