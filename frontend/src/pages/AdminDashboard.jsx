@@ -412,6 +412,15 @@ const AdminDashboard = () => {
   }, [activeView, token]);
 
 
+  useEffect(() => {
+    // Load waitlist data when navigating to waitlist view
+    if (activeView === 'waitlist') {
+      loadWaitlistLeads();
+    }
+  }, [activeView, token]);
+
+
+
   const loadClients = async () => {
     try {
       // Use clients endpoint to show web-registered clients
