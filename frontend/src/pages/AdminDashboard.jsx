@@ -5268,6 +5268,177 @@ const AdminDashboard = () => {
           </DialogContent>
         </Dialog>
       )}
+      {/* Manual Payment Modal */}
+      {showPaymentModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-md">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold">💰 Registrar Pago Manual</h3>
+                <Button size="sm" variant="ghost" onClick={() => setShowPaymentModal(false)}>
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <Label>Concepto *</Label>
+                  <Input
+                    value={newManualPayment.concepto}
+                    onChange={(e) => setNewManualPayment({...newManualPayment, concepto: e.target.value})}
+                    placeholder="Ej: Pago de cliente X"
+                  />
+                </div>
+
+                <div>
+                  <Label>Monto (€) *</Label>
+                  <Input
+                    type="number"
+                    value={newManualPayment.amount}
+                    onChange={(e) => setNewManualPayment({...newManualPayment, amount: e.target.value})}
+                    placeholder="0"
+                  />
+                </div>
+
+                <div>
+                  <Label>Fecha *</Label>
+                  <Input
+                    type="date"
+                    value={newManualPayment.fecha}
+                    onChange={(e) => setNewManualPayment({...newManualPayment, fecha: e.target.value})}
+                  />
+                </div>
+
+                <div>
+                  <Label>Método de Pago *</Label>
+                  <select
+                    value={newManualPayment.metodo_pago}
+                    onChange={(e) => setNewManualPayment({...newManualPayment, metodo_pago: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Transferencia">💳 Transferencia (Caja A)</option>
+                    <option value="Bizum">📱 Bizum (Caja A)</option>
+                    <option value="Efectivo">💵 Efectivo (Caja B)</option>
+                    <option value="Stripe">🔷 Stripe (Caja A)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <Label>Notas</Label>
+                  <Textarea
+                    value={newManualPayment.notas}
+                    onChange={(e) => setNewManualPayment({...newManualPayment, notas: e.target.value})}
+                    placeholder="Notas adicionales..."
+                    rows={2}
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    onClick={createManualPayment}
+                    className="flex-1 bg-green-600 hover:bg-green-700"
+                  >
+                    <DollarSign className="h-4 w-4 mr-2" />
+                    Registrar Pago
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowPaymentModal(false)}
+                    className="flex-1"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Manual Payment Modal */}
+      {editingManualPayment && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg w-full max-w-md">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold">✏️ Editar Pago</h3>
+                <Button size="sm" variant="ghost" onClick={() => setEditingManualPayment(null)}>
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <Label>Concepto *</Label>
+                  <Input
+                    value={editingManualPayment.concepto}
+                    onChange={(e) => setEditingManualPayment({...editingManualPayment, concepto: e.target.value})}
+                  />
+                </div>
+
+                <div>
+                  <Label>Monto (€) *</Label>
+                  <Input
+                    type="number"
+                    value={editingManualPayment.amount}
+                    onChange={(e) => setEditingManualPayment({...editingManualPayment, amount: e.target.value})}
+                  />
+                </div>
+
+                <div>
+                  <Label>Fecha *</Label>
+                  <Input
+                    type="date"
+                    value={editingManualPayment.fecha}
+                    onChange={(e) => setEditingManualPayment({...editingManualPayment, fecha: e.target.value})}
+                  />
+                </div>
+
+                <div>
+                  <Label>Método de Pago *</Label>
+                  <select
+                    value={editingManualPayment.metodo_pago}
+                    onChange={(e) => setEditingManualPayment({...editingManualPayment, metodo_pago: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Transferencia">💳 Transferencia (Caja A)</option>
+                    <option value="Bizum">📱 Bizum (Caja A)</option>
+                    <option value="Efectivo">💵 Efectivo (Caja B)</option>
+                    <option value="Stripe">🔷 Stripe (Caja A)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <Label>Notas</Label>
+                  <Textarea
+                    value={editingManualPayment.notas}
+                    onChange={(e) => setEditingManualPayment({...editingManualPayment, notas: e.target.value})}
+                    rows={2}
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    onClick={updateManualPayment}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    Actualizar
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setEditingManualPayment(null)}
+                    className="flex-1"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
