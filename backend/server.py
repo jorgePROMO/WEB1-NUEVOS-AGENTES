@@ -7397,6 +7397,8 @@ async def add_waitlist_lead_note(lead_id: str, note_data: WaitlistNoteAdd, reque
         return {"success": True, "message": "Nota añadida", "nota": nota}
         
     except Exception as e:
+        logger.error(f"Error adding note: {e}")
+        raise HTTPException(status_code=500, detail="Error al añadir nota")
 
 
 # ============================================
