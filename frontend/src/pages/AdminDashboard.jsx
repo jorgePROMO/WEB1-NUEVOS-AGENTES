@@ -1874,28 +1874,28 @@ const AdminDashboard = () => {
                         <Button
                           size="sm"
                           variant={selectedLead.estado === 'pendiente' ? 'default' : 'outline'}
-                          onClick={() => updateLeadStatus(selectedLead.id, 'pendiente')}
+                          onClick={() => updateLeadStatus(selectedLead, 'pendiente')}
                         >
                           Pendiente
                         </Button>
                         <Button
                           size="sm"
                           variant={selectedLead.estado === 'contactado' ? 'default' : 'outline'}
-                          onClick={() => updateLeadStatus(selectedLead.id, 'contactado')}
+                          onClick={() => updateLeadStatus(selectedLead, 'contactado')}
                         >
                           Contactado
                         </Button>
                         <Button
                           size="sm"
                           variant={selectedLead.estado === 'aceptado' ? 'default' : 'outline'}
-                          onClick={() => updateLeadStatus(selectedLead.id, 'aceptado')}
+                          onClick={() => updateLeadStatus(selectedLead, 'aceptado')}
                         >
                           Aceptado
                         </Button>
                         <Button
                           size="sm"
                           variant={selectedLead.estado === 'rechazado' ? 'default' : 'outline'}
-                          onClick={() => updateLeadStatus(selectedLead.id, 'rechazado')}
+                          onClick={() => updateLeadStatus(selectedLead, 'rechazado')}
                         >
                           Rechazado
                         </Button>
