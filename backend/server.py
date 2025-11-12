@@ -4324,48 +4324,137 @@ def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
     try:
         adapted = {}
         
-        # Campos básicos del usuario
-        adapted["nombre"] = questionnaire_data.get("name", questionnaire_data.get("nombre", "Usuario"))
-        adapted["edad"] = questionnaire_data.get("age", questionnaire_data.get("edad", 30))
-        adapted["sexo"] = questionnaire_data.get("gender", questionnaire_data.get("sexo", "hombre"))
-        adapted["peso_actual_kg"] = questionnaire_data.get("weight", questionnaire_data.get("peso", questionnaire_data.get("peso_actual_kg", 70)))
-        adapted["altura_cm"] = questionnaire_data.get("height", questionnaire_data.get("altura", questionnaire_data.get("altura_cm", 170)))
+        # Campos básicos - REQUERIDOS por E1
+        adapted["nombre"] = questionnaire_data.get("nombre", "Usuario")
+        
+        # Edad - convertir a int
+        edad_str = questionnaire_data.get("edad", "30")
+        try:
+            adapted["edad"] = int(edad_str.split()[0]) if isinstance(edad_str, str) else int(edad_str)
+        except:
+            adapted["edad"] = 30
+        
+        # Sexo - inferir del objetivo o asumir
+        adapted["sexo"] = questionnaire_data.get("sexo", "hombre")
+        
+        # Peso y altura - valores por defecto si no existen
+        adapted["peso_actual_kg"] = questionnaire_data.get("peso_actual_kg", 70)
+        adapted["altura_cm"] = questionnaire_data.get("altura_cm", 170)
         
         # Objetivo
-        adapted["objetivo_principal"] = questionnaire_data.get("goals", questionnaire_data.get("objetivo", "perder grasa"))
+        objetivo = questionnaire_data.get("objetivo", "")
+        if "adelgazar" in objetivo.lower() or "perder" in objetivo.lower():
+            adapted["objetivo_principal"] = "perdida_grasa"
+        elif "ganar" in objetivo.lower() or "musculo" in objetivo.lower():
+            adapted["objetivo_principal"] = "ganancia_muscular"
+        else:
+            adapted["objetivo_principal"] = objetivo or "mejora_general"
         
-        # Experiencia
-        adapted["experiencia_entrenamiento"] = questionnaire_data.get("experience", questionnaire_data.get("experiencia", "principiante"))
+        # Experiencia de entrenamiento
+        entrena = questionnaire_data.get("entrena", "")
+        if "no" in entrena.lower() or "nunca" in entrena.lower():
+            adapted["experiencia_entrenamiento"] = "principiante absoluto, sin experiencia previa"
+        elif "gym" in entrena.lower() or "gimnasio" in entrena.lower():
+            adapted["experiencia_entrenamiento"] = "experiencia en gimnasio"
+        else:
+            adapted["experiencia_entrenamiento"] = entrena or "principiante"
         
-        # Lesiones
-        adapted["lesiones_previas"] = questionnaire_data.get("injuries", questionnaire_data.get("lesiones", "ninguna"))
+        # Intentos previos como historial
+        intentos = questionnaire_data.get("intentos_previos", "")
+        adapted["historial_entrenamiento"] = intentos
+        
+        # Dificultades como lesiones/limitaciones
+        dificultades = questionnaire_data.get("dificultades", [])
+        if isinstance(dificultades, list):
+            dificultades_str = ", ".join(dificultades)
+        else:
+            dificultades_str = str(dificultades)
+        
+        # Añadir otro si existe
+        dificultades_otro = questionnaire_data.get("dificultades_otro", "")
+        if dificultades_otro:
+            dificultades_str += f", {dificultades_otro}"
+        
+        adapted["lesiones_previas"] = dificultades_str or "ninguna"
+        adapted["limitaciones"] = dificultades_str or "ninguna"
         
         # Disponibilidad
-        adapted["tiempo_disponible_semanal"] = questionnaire_data.get("availability", questionnaire_data.get("disponibilidad", "3 días, 60 min"))
-        adapted["dias_semana"] = questionnaire_data.get("days_per_week", questionnaire_data.get("dias_semana", 3))
-        adapted["minutos_por_sesion"] = questionnaire_data.get("minutes_per_session", questionnaire_data.get("minutos_sesion", 60))
-        adapted["horario_preferido"] = questionnaire_data.get("preferred_time", questionnaire_data.get("horario", "tarde"))
+        tiempo_semanal = questionnaire_data.get("tiempo_semanal", "")
+        adapted["tiempo_disponible_semanal"] = tiempo_semanal
         
-        # Equipo
-        adapted["equipo_disponible"] = questionnaire_data.get("equipment", questionnaire_data.get("equipo", "gym completo"))
+        # Extraer días y minutos del tiempo_semanal si está en formato "X días/semana, Y min/sesión"
+        try:
+            if "días" in tiempo_semanal or "dias" in tiempo_semanal:
+                import re
+                dias_match = re.search(r'(\d+)\s*d[íi]as?', tiempo_semanal, re.IGNORECASE)
+                min_match = re.search(r'(\d+)\s*min', tiempo_semanal, re.IGNORECASE)
+                
+                adapted["dias_semana"] = int(dias_match.group(1)) if dias_match else 3
+                adapted["minutos_por_sesion"] = int(min_match.group(1)) if min_match else 60
+            else:
+                adapted["dias_semana"] = 3
+                adapted["minutos_por_sesion"] = 60
+        except:
+            adapted["dias_semana"] = 3
+            adapted["minutos_por_sesion"] = 60
         
-        # Datos adicionales
-        adapted["nutricion_actual"] = questionnaire_data.get("current_nutrition", questionnaire_data.get("nutricion", "normal"))
-        adapted["sueno_promedio_h"] = questionnaire_data.get("sleep_hours", questionnaire_data.get("sueno", 7))
-        adapted["estres_nivel"] = questionnaire_data.get("stress_level", questionnaire_data.get("estres", "medio"))
+        # Horario (no está en el cuestionario, asumimos tarde)
+        adapted["horario_preferido"] = "tarde"
         
-        # Copiar el resto de campos que puedan existir
-        for key, value in questionnaire_data.items():
-            if key not in adapted:
-                adapted[key] = value
+        # Equipo - inferir del campo entrena
+        if "gym" in entrena.lower() or "gimnasio" in entrena.lower():
+            adapted["equipo_disponible"] = "gym completo"
+        elif "casa" in entrena.lower():
+            adapted["equipo_disponible"] = "casa con equipo básico"
+        else:
+            adapted["equipo_disponible"] = "gym completo"
         
-        logger.info(f"✅ Cuestionario adaptado para E.D.N.360: {list(adapted.keys())}")
+        # Nutrición
+        alimentacion = questionnaire_data.get("alimentacion", "")
+        adapted["nutricion_actual"] = alimentacion or "sin seguimiento específico"
+        
+        # Salud
+        salud_info = questionnaire_data.get("salud_info", "")
+        adapted["condiciones_salud"] = salud_info or "sin condiciones especiales"
+        
+        # Motivación
+        adapted["motivacion"] = questionnaire_data.get("por_que_ahora", "")
+        adapted["nivel_compromiso"] = questionnaire_data.get("dispuesto_invertir", "")
+        
+        # Datos adicionales por defecto
+        adapted["sueno_promedio_h"] = 7
+        adapted["estres_nivel"] = "medio"
+        
+        # Copiar todos los campos originales también
+        adapted["_original_questionnaire"] = questionnaire_data
+        
+        logger.info(f"✅ Cuestionario adaptado para E.D.N.360")
+        logger.info(f"   - Nombre: {adapted['nombre']}")
+        logger.info(f"   - Edad: {adapted['edad']}")
+        logger.info(f"   - Objetivo: {adapted['objetivo_principal']}")
+        logger.info(f"   - Disponibilidad: {adapted['dias_semana']} días x {adapted['minutos_por_sesion']} min")
+        
         return adapted
         
     except Exception as e:
-        logger.error(f"Error adaptando cuestionario: {e}")
-        # Si falla, devolver el original
-        return questionnaire_data
+        logger.error(f"❌ Error adaptando cuestionario: {e}")
+        logger.error(f"   Datos recibidos: {list(questionnaire_data.keys())}")
+        # Devolver datos mínimos para que no falle
+        return {
+            "nombre": questionnaire_data.get("nombre", "Usuario"),
+            "edad": 30,
+            "sexo": "hombre",
+            "peso_actual_kg": 70,
+            "altura_cm": 170,
+            "objetivo_principal": "mejora_general",
+            "experiencia_entrenamiento": "principiante",
+            "lesiones_previas": "ninguna",
+            "tiempo_disponible_semanal": "3 días, 60 min",
+            "dias_semana": 3,
+            "minutos_por_sesion": 60,
+            "equipo_disponible": "gym completo",
+            "_original_questionnaire": questionnaire_data
+        }
 
 def _format_edn360_nutrition_for_display(edn360_data: dict) -> dict:
     """
