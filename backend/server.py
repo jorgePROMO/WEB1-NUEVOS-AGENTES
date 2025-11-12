@@ -4279,6 +4279,35 @@ _Si necesitas el plan completo, revísalo en tu panel de usuario o te lo envío 
 
 # ==================== TRAINING PLANS ENDPOINTS ====================
 
+def _format_edn360_plan_for_display(edn360_data: dict) -> dict:
+    """
+    Convierte el output de E.D.N.360 al formato que espera el frontend actual
+    """
+    try:
+        # Extraer información clave de los agentes
+        e4_program = edn360_data.get("E4", {})
+        e5_sessions = edn360_data.get("E5", {})
+        e7_load = edn360_data.get("E7", {})
+        
+        # Formatear para el frontend
+        formatted_plan = {
+            "mesociclo": e4_program.get("mesociclo", {}),
+            "semanas": e4_program.get("semanas", []),
+            "sesiones_detalladas": e5_sessions.get("sesiones_detalladas", []),
+            "volumen_por_grupo": e4_program.get("volumen_por_grupo", {}),
+            "metricas": {
+                "cit_semanal": e7_load.get("cit_semanal", 0),
+                "irg_score": e7_load.get("irg_score", 0)
+            },
+            "system": "edn360",
+            "agents_executed": list(edn360_data.keys())
+        }
+        
+        return formatted_plan
+    except Exception as e:
+        logger.error(f"Error formateando plan E.D.N.360: {e}")
+        return edn360_data
+
 @api_router.post("/admin/users/{user_id}/training/generate")
 async def admin_generate_training_plan(
     user_id: str,
@@ -4287,7 +4316,7 @@ async def admin_generate_training_plan(
     regenerate: bool = False,
     request: Request = None
 ):
-    """Admin genera el plan de entrenamiento desde cuestionario inicial o follow-up"""
+    """Admin genera el plan de entrenamiento desde cuestionario inicial o follow-up con E.D.N.360"""
     await require_admin(request)
     
     try:
