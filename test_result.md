@@ -109,6 +109,30 @@ agent_communication:
       message: "🔧 FIX CRÍTICO E.D.N.360 DATA MAPPING COMPLETED: Identificado y corregido el problema raíz del error 'E1 falló: Datos de entrada inválidos'. PROBLEMA: El adapter buscaba 'peso_actual_kg' pero NutritionQuestionnaire envía 'peso'. SOLUCIÓN IMPLEMENTADA: 1) ✅ ADAPTER MEJORADO (_adapt_questionnaire_for_edn360): Ahora busca correctamente 'peso' o 'peso_actual_kg', 'nombre_completo' o 'nombre', calcula edad desde 'fecha_nacimiento', normaliza 'sexo' (HOMBRE/MUJER → hombre/mujer), mapea todos los campos del NutritionQuestionnaire (experiencia, lesiones, disponibilidad, equipo, salud, motivación), logging detallado de campos críticos. 2) ✅ FOLLOW-UP SUPPORT (_adapt_followup_for_edn360): Nueva función que combina datos del cuestionario inicial (sexo, altura) con datos actualizados del follow-up (peso), maneja correctamente los seguimientos mensuales. 3) ✅ UI CONDICIONAL (NutritionQuestionnaire.jsx): Filtrado de campos según sexo - preguntas de 'embarazo' y 'menopausia' solo se muestran si sexo !== 'HOMBRE'. READY FOR TESTING con datos reales de NutritionQuestionnaire."
 
 backend:
+  - task: "E.D.N.360 Data Adapter Fix"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "CRITICAL FIX: Corregido adapter function _adapt_questionnaire_for_edn360() para mapear correctamente campos del NutritionQuestionnaire. Campos críticos ahora mapeados: 'peso' → 'peso_actual_kg', 'nombre_completo' → 'nombre', calcular 'edad' desde 'fecha_nacimiento', normalizar 'sexo'. También mejorado mapeo de experiencia, lesiones, disponibilidad (dias_semana_entrenar, tiempo_sesion), equipo (gimnasio, material_casa), condiciones de salud (medicamentos, enfermedad_cronica, hipertension, diabetes), motivación. Logging detallado añadido para debug."
+
+  - task: "E.D.N.360 Follow-Up Data Combination"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NEW FEATURE: Creada función async _adapt_followup_for_edn360() que combina datos del cuestionario inicial del usuario (sexo, altura_cm que no cambian) con datos actualizados del follow-up (peso, circunferencias). Obtiene el cuestionario inicial desde nutrition_questionnaire_submissions ordenado por fecha (el más antiguo). Esto resuelve el problema de que FollowUpQuestionnaire solo tiene peso actualizado."
+
   - task: "User Registration API"
     implemented: true
     working: true
