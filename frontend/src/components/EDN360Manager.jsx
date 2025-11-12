@@ -480,6 +480,16 @@ const EDN360Manager = () => {
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Dialog para visualizar plan completo */}
+      <Dialog open={showPlanViewer} onOpenChange={setShowPlanViewer}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Plan E.D.N.360 Completo</DialogTitle>
+          </DialogHeader>
+          <EDN360PlanViewer plan={planToView} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
