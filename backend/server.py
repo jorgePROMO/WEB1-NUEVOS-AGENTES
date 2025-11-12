@@ -4399,7 +4399,7 @@ async def admin_generate_training_plan(
                 detail=f"Error generando plan: {result.get('error', 'Error desconocido')}"
             )
         
-        # Guardar el plan en training_plans
+        # Guardar el plan en training_plans con formato E.D.N.360
         training_plan_doc = {
             "_id": plan_id,
             "user_id": user_id,
@@ -4408,10 +4408,18 @@ async def admin_generate_training_plan(
             "source_type": source_type,
             "source_id": source_id,
             "questionnaire_data": questionnaire_data,
-            "agent_1_output": result["agent_1_output"],
-            "agent_2_output": result["agent_2_output"],
-            "agent_3_output": result["agent_3_output"],
-            "plan_final": result["plan_final"],
+            
+            # Datos de E.D.N.360
+            "edn360_data": result["plan_data"],
+            "agent_executions": result.get("executions", []),
+            "system_version": "edn360_v1",
+            
+            # Compatibilidad con formato antiguo (para renderizado)
+            "agent_1_output": result["plan_data"].get("E1", {}),
+            "agent_2_output": result["plan_data"].get("E2", {}),
+            "agent_3_output": result["plan_data"].get("E4", {}),  # Arquitecto del programa
+            "plan_final": self._format_plan_for_display(result["plan_data"]),
+            
             "generated_at": now,
             "edited": False,
             "pdf_id": None,
