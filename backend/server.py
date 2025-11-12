@@ -7904,6 +7904,169 @@ async def send_edn360_plan(
         raise HTTPException(status_code=500, detail="Error al enviar plan")
 
 
+@api_router.post("/admin/edn360/plans/{plan_id}/chat")
+async def chat_modify_edn360_plan(
+    plan_id: str,
+    request: Request,
+    message: str = Form(...),
+    context: Optional[str] = Form(None)
+):
+    """
+    Chat con IA para modificar un plan E.D.N.360 existente
+    Usa GPT-4o para entender la solicitud y aplicar cambios
+    """
+    await require_admin(request)
+    
+    try:
+        # Obtener plan
+        plan = await db.edn360_plans.find_one({"_id": plan_id})
+        if not plan:
+            raise HTTPException(status_code=404, detail="Plan no encontrado")
+        
+        # Obtener historial de chat
+        chat_history = plan.get("chat_history", [])
+        
+        # Preparar contexto del plan para la IA
+        plan_context = f"""
+# Plan E.D.N.360 Actual
+
+**Cliente:** {plan.get('client_name')}
+**Tipo de Plan:** {plan.get('plan_type')}
+**Estado:** {plan.get('status')}
+
+## Plan de Entrenamiento:
+{json.dumps(plan.get('training_plan', {}), indent=2, ensure_ascii=False)}
+
+## Plan de Nutrición:
+{json.dumps(plan.get('nutrition_plan', {}), indent=2, ensure_ascii=False)}
+
+## Historial de Modificaciones:
+{json.dumps(plan.get('modifications', []), indent=2, ensure_ascii=False)}
+"""
+        
+        # Prompt del sistema para modificaciones
+        system_prompt = """Eres un experto entrenador y nutricionista que ayuda a modificar planes E.D.N.360.
+
+Tu trabajo es:
+1. Entender la solicitud de modificación del administrador
+2. Identificar qué partes del plan deben cambiar
+3. Aplicar los cambios de forma precisa y profesional
+4. Mantener la coherencia del plan (reglas E.D.N.360)
+5. Explicar los cambios realizados
+
+REGLAS IMPORTANTES:
+- Sesiones ≤90 minutos
+- Proteína ≥1.8 g/kg
+- Grasas ≥0.6 g/kg
+- Equilibrios Push/Pull (0.9-1.1)
+- CIT óptimo: 35-55
+
+Si la solicitud es solo una pregunta sin cambios, responde sin modificar el plan.
+Si requiere cambios, genera el plan modificado en formato JSON."""
+        
+        # Preparar mensaje para la IA
+        full_message = f"""{plan_context}
+
+---
+
+**Solicitud del Administrador:**
+{message}
+
+{f"**Contexto adicional:** {context}" if context else ""}
+
+---
+
+Analiza la solicitud y genera el plan modificado o responde la pregunta."""
+        
+        # Ejecutar LLM
+        from emergentintegrations.llm.chat import LlmChat
+        llm = LlmChat(
+            api_key=os.environ.get("EMERGENT_LLM_KEY"),
+            model="gpt-4o",
+            temperature=0.7,
+            max_tokens=8000
+        )
+        
+        ai_response = await llm.async_send_message_stream(
+            message=full_message,
+            system_prompt=system_prompt
+        )
+        
+        # Intentar detectar si hay modificaciones en la respuesta
+        modifications_made = False
+        modified_plan = None
+        
+        try:
+            # Buscar JSON en la respuesta
+            import re
+            json_pattern = r'```(?:json)?\s*(\{.*?\})\s*```'
+            matches = re.findall(json_pattern, ai_response, re.DOTALL)
+            
+            if matches:
+                modified_plan = json.loads(matches[0])
+                modifications_made = True
+        except:
+            pass
+        
+        # Actualizar historial de chat
+        chat_entry = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "user_message": message,
+            "ai_response": ai_response,
+            "modifications_made": modifications_made
+        }
+        chat_history.append(chat_entry)
+        
+        # Actualizar plan en DB
+        update_data = {
+            "chat_history": chat_history,
+            "updated_at": datetime.now(timezone.utc)
+        }
+        
+        if modifications_made and modified_plan:
+            # Incrementar versión
+            new_version = plan.get("current_version", 1) + 1
+            
+            # Registrar modificación
+            modification = {
+                "version": new_version,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "modification_type": "chat_ai",
+                "message": message,
+                "changes_applied": ai_response[:500]  # Resumen
+            }
+            
+            modifications = plan.get("modifications", [])
+            modifications.append(modification)
+            
+            update_data.update({
+                "training_plan": modified_plan.get("training_plan", plan.get("training_plan")),
+                "nutrition_plan": modified_plan.get("nutrition_plan", plan.get("nutrition_plan")),
+                "current_version": new_version,
+                "modifications": modifications
+            })
+            
+            logger.info(f"✅ Plan {plan_id} modificado vía chat (v{new_version})")
+        
+        await db.edn360_plans.update_one(
+            {"_id": plan_id},
+            {"$set": update_data}
+        )
+        
+        return {
+            "success": True,
+            "ai_response": ai_response,
+            "modifications_made": modifications_made,
+            "new_version": plan.get("current_version", 1) + 1 if modifications_made else plan.get("current_version", 1)
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Error en chat modificación: {e}")
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+
 # Include the router in the main app (moved to end to include all endpoints)
 app.include_router(api_router)
 
