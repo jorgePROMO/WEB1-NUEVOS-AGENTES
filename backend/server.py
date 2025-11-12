@@ -4314,6 +4314,37 @@ _Si necesitas el plan completo, revísalo en tu panel de usuario o te lo envío 
 
 # ==================== TRAINING PLANS ENDPOINTS ====================
 
+def _format_edn360_nutrition_for_display(edn360_data: dict) -> dict:
+    """
+    Convierte el output de nutrición E.D.N.360 al formato que espera el frontend actual
+    """
+    try:
+        # Extraer información clave de los agentes de nutrición
+        n1_metabolic = edn360_data.get("N1", {})
+        n2_energy = edn360_data.get("N2", {})
+        n3_template = edn360_data.get("N3", {})
+        n4_amb = edn360_data.get("N4", {})
+        n5_timing = edn360_data.get("N5", {})
+        n6_menus = edn360_data.get("N6", {})
+        
+        # Formatear para el frontend
+        formatted_plan = {
+            "objetivo_calorico": n2_energy.get("kcal_objetivo", 0),
+            "tdee": n1_metabolic.get("tdee", 0),
+            "macros": n2_energy.get("macros_gkg", {}),
+            "plantilla": n3_template.get("plantilla_asignada", ""),
+            "calendario_amb": n4_amb.get("calendario_mensual", []),
+            "comidas": n5_timing.get("horarios_comidas", []),
+            "menus_semanales": n6_menus.get("menus_semanales", {}),
+            "system": "edn360",
+            "agents_executed": list(edn360_data.keys())
+        }
+        
+        return formatted_plan
+    except Exception as e:
+        logger.error(f"Error formateando plan nutricional E.D.N.360: {e}")
+        return edn360_data
+
 def _format_edn360_plan_for_display(edn360_data: dict) -> dict:
     """
     Convierte el output de E.D.N.360 al formato que espera el frontend actual
