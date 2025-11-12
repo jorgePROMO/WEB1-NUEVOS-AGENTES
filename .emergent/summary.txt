@@ -1,88 +1,93 @@
 <analysis>
-The AI engineer's trajectory commenced with confirming the successful implementation of the Training Ecosystem and fixing various bugs. The primary focus then shifted to a significant new feature: **Stripe integration for subscription management**. This involved extensive backend development (new models, API endpoints for checkout, webhooks, financial metrics, and payment management) and corresponding frontend updates (new tabs, cards, and functions in  and ).
+The project began with a user request to preview an existing web application. After successfully restarting the services and providing screenshots, the user initiated a major pivot. The goal shifted to replacing the application's core AI logic for generating fitness and nutrition plans with a new, highly sophisticated system named E.D.N.360.
 
-Throughout the Stripe integration, numerous debugging cycles were undertaken, addressing critical issues like incorrect database queries due to  vs. string/integer ID mismatches,  hook order errors in React, missing icon imports, incorrect Stripe session ID formatting, and ensuring automated user activation and questionnaire visibility post-payment. Concurrently, fixes were implemented for user registration and email verification token expiration.
+The user provided a detailed technical specification for this system, which consists of 26 specialized AI agents organized into four sequential blocks (Initial Training, Initial Nutrition, Follow-up Training, Follow-up Nutrition). The AI engineer received the prompts for all 26 agents and proceeded with a multi-phase implementation.
 
-The most recent work involves a pivot to refining the **Training Ecosystem presentation** and integrating a custom exercise database. The user expressed dissatisfaction with the current AI-generated training plans and provided a CSV of exercises, signaling the next major development phase.
+Phase 1 involved building the backend foundation: creating a new  directory, populating it with files for all 26 agents, a central orchestrator, data contracts, and validators. Phase 2 focused on integrating this new system into the existing FastAPI backend by adding new API endpoints.
+
+A significant part of the work involved extensive debugging. This included resolving a series of cascading issues: a user login failure (due to incorrect credentials, a backend crash from an , syntax errors, creating the user in the wrong database, and a missing 'subscription' field in the user model), and multiple errors related to the new E.D.N.360 integration (invalid input data format for agents, incorrect LLM service calls).
+
+The current work is focused on resolving a data mismatch between the existing frontend questionnaire and the input requirements of the new E.D.N.360 agents, as requested by the user who wants to integrate the new logic into the existing UI flow.
 </analysis>
 
 <product_requirements>
-The CRM Fusion application is a full-stack platform for client management, encompassing authentication, CRM, calendar, profiles, and document handling. Core features include a diagnostic questionnaire and GPT-driven Nutrition Plans with LLM generation, admin review, PDF creation, and historical tracking. A monthly follow-up system uses AI for new plan generation based on historical data, with admin approval.
+The project is a full-stack web application for a professional fitness coach, Jorge Calcerrada, to manage his clients. The application's primary function is to automate the creation of comprehensive and highly personalized training and nutrition programs.
 
-Recent enhancements expanded this to a Training Ecosystem (LLM-driven training plans, similar to nutrition). Key UX improvements included immediate questionnaire submission feedback and manual/editable prospect report generation for admins. Robust PDF generation/display/deletion and accurate date reporting were also critical.
+**Initial State & Core Requirement:**
+The application already had a functional frontend (React), backend (FastAPI), and database (MongoDB), with features for user registration, login, an admin dashboard to view clients, and a basic system for generating and modifying plans.
 
-The latest major requirement is a **Stripe integration** for client subscription management. This mandates:
--   **Payment Model**: Recurring monthly subscriptions.
--   **Payment Flow**: Clients register, verify email, access their panel, then initiate payment/subscription.
--   **Admin Panel**: Detailed financial overview including payment lists (date, amount), active/canceled subscription statuses, pending/failed payments, total revenues (monthly, annual), and downloadable invoices.
--   **Client Panel**: Payment history, downloadable PDF invoices, ability to manage/cancel subscriptions, and view next scheduled payment.
+**Major Pivot - E.D.N.360 System:**
+The user mandated a complete overhaul of the plan generation logic, replacing it with a proprietary system named E.D.N.360. This system is an orchestrated chain of 26 distinct AI agents, each with a specific role in analyzing client data and building the plans. The system is divided into four main modules:
+1.  **Initial Training Plan (E1-E9):** From client data analysis to a full monthly program.
+2.  **Initial Nutrition Plan (N0-N8):** From metabolic analysis to detailed meal plans.
+3.  **Follow-up Training (ES1-ES4):** Monthly adjustments based on client feedback.
+4.  **Follow-up Nutrition (NS1-NS4):** Monthly recalibration of diet plans.
 
-Additionally, a new requirement surfaced to **improve the presentation of training plans**, moving away from repetitive AI output, and to **integrate a user-provided exercise database** (including video URLs) to allow clickable video links within generated training plan PDFs.
+**User Flow:**
+1.  A new client signs up, pays, and fills out an initial questionnaire.
+2.  The admin (coach) sees the pending client in their dashboard.
+3.  The admin triggers the generation of the training and nutrition plans using the E.D.N.360 system from within the client's profile.
+4.  The admin can review, modify (manually or via an integrated AI chat), and send the final plan to the client.
+5.  The process is repeated monthly for follow-up adjustments.
 </product_requirements>
 
 <key_technical_concepts>
--   **Full-stack**: React (Frontend), FastAPI (Backend), MongoDB (Database).
--   **LLM Integration**: OpenAI API (GPT-4o), multi-agent orchestration via .
--   **UI/UX**: Shadcn UI (Dialog, Tabs, Cards),  for icons.
--   **Data Handling**: Pydantic models, UUIDs, MongoDB (custom integer/timestamp  instead of ).
--   **Payment Integration**: Stripe API via  library (checkout sessions, webhooks).
--   **PDF Generation**: WeasyPrint.
--   **Containerization**: Kubernetes, Supervisor, .
--   **Authentication**: JWT, React Context, custom email verification with 7-day token expiration.
+- **Full-Stack Application:** React (frontend), FastAPI (backend), MongoDB (database).
+- **Agent-Based Architecture (E.D.N.360):** A sophisticated system where 26 specialized AI agents run in a predefined sequence (orchestration) to generate complex plans.
+- **JSON Contracts:** Strict JSON schemas define the input and output for each agent, ensuring data consistency throughout the chain.
+- **Data Adaptation:** An adapter/mapper layer is required to translate data from the existing frontend forms into the format expected by the new E.D.N.360 agents.
+- **AI Service Integration:** Utilizes the  library, specifically the  class, to interact with language models.
 </key_technical_concepts>
 
 <code_architecture>
+The application follows a standard full-stack monorepo structure with separate  and  directories.
 
 
--   ****:
-    -   **Summary**: Added  and  for Stripe integration.
--   ****:
-    -   **Summary**: New Pydantic models for Stripe integration, including , , , , , and . These models define the data structures for managing subscriptions, payments, and financial overviews.
--   ****:
-    -   **Summary**: Implemented numerous Stripe API endpoints for:
-        -   : Initiates a Stripe checkout session.
-        -   : Handles Stripe events (e.g., successful payments).
-        -   : Verifies the status of a Stripe checkout session.
-        -   : Allows canceling a user's subscription.
-        -   : Retrieves all payment transactions (for admin).
-        -   : Provides aggregated financial metrics (for admin).
-        -   : Retrieves a client's subscription details.
-        -   : Deletes a specific payment transaction (for admin).
-        -   : Deletes all pending payment transactions (for admin).
-    -   **Changes**: Corrected the logic for user lookups in the database, switching from  to  as a string because  is stored as a long integer/timestamp string. Fixed Stripe  escaping to correctly pass . Ensured  is updated to active upon successful payment. Adjusted the  saved for users to team to ensure questionnaire visibility. Increased email verification token expiry from 24 hours to 7 days. Fixed a  (missing  block) in . Updated the subscription price to 49.9.
--   ****:
-    -   **Summary**: Contains the  function, orchestrating multi-agent LLM logic for training plans. Prompts were noted for generating generic exercises and needing an update to use a custom database.
--   ****:
-    -   **Summary**: Added a new route for  to handle Stripe redirect after payment.
--   ****:
-    -   **Summary**: Integrated a new Suscripción tab. Added states and functions for managing subscriptions (, , ). The payment button () was updated to use the new Stripe integration flow. The subscription display card was simplified and updated to reflect the 49.9€ price and automatically hide when a subscription is active.
--   ****:
-    -   **Summary**: Integrated a new Finanzas tab and a corresponding card in the dashboard overview. Added states and functions (, , , , , , , ) to fetch and display financial data, payment history, and revenue overviews. Implemented UI for deleting individual or all pending payment transactions. Fixed React  hook order and imported  icon from .
--   ****: **New file.**
-    -   **Summary**: A new React component to handle the redirect from Stripe after a successful payment, verifying the payment status and displaying appropriate messages.
--   ****:
-    -   **Summary**: Updated to include  and its dependencies.
+
+- ****
+    - **Importance:** This is the main FastAPI application file containing all API endpoints.
+    - **Changes:** It has been significantly modified to integrate the new E.D.N.360 system. The core logic within the  and  endpoints was replaced. Instead of calling the old services, they now invoke the . A data adapter function, , was added to bridge the data format gap between the old questionnaire and the new agents. It was also modified to fix an incorrect LLM service call in the plan modification chat feature.
+
+- ****
+    - **Importance:** This new file is the brain of the E.D.N.360 system. It contains the logic to execute the 26 AI agents in the correct sequence, passing the output of one agent as the input to the next.
+
+- ****
+    - **Importance:** A new base class created to standardize the behavior of all 26 agents.
+    - **Changes:** It was modified to correct the instantiation of the  service, changing from  to , which resolved a critical backend crash.
+
+- ****
+    - **Importance:** These 26 new files contain the specific prompts and logic for each individual agent in the E.D.N.360 chain. They were created programmatically.
+
+- ****
+    - **Importance:** The main UI for the admin to manage clients and generate plans.
+    - **Changes:** Initially modified to add a new E.D.N.360 tab. However, the user's final requirement is to use the existing Generate Plan buttons within the client's training/nutrition tabs, making the backend integration the critical part, not the UI change.
+
+- ****
+    - **Importance:** This component renders the initial form that clients fill out. It is the source of the data that is currently causing input validation errors in the E.D.N.360 system. It is the subject of the current investigation.
 </code_architecture>
 
 <pending_tasks>
--   Address Error al conectar con Google Calendar (implement fallback button).
--   Address mobile responsiveness issues for user dashboard documents.
--   Implement the Desaparece de pendientes después de X días logic for the Revisiones Pendientes card.
--   Refine LLM prompts for generated training plans (user perceived initial output as not professional enough).
+The user reported several issues with the *old* system () which were put on hold to integrate E.D.N.360 first. These remain pending:
+- Implement a chat modification feature for the Nutrition plan.
+- Fix PDF generation failure (missing  library).
+- Fix message truncation when sending plans via WhatsApp.
+- Fix disordered formatting when sending plans via Email.
+- Ensure the nutrition plan properly accounts for the training schedule (e.g., post-workout meals).
 </pending_tasks>
 
 <current_work>
-The previous AI engineer has just finalized the integration of the core Stripe subscription functionality. This includes setting up backend endpoints for creating checkout sessions, handling webhooks, retrieving payment status, and managing subscriptions. Frontend components in  now allow users to activate subscriptions via the new Stripe flow, and  features a dedicated Finanzas tab displaying financial metrics, payment history, and revenue overviews. Payments are simulated using test keys, and users are automatically activated and granted access to the initial questionnaire upon successful subscription. Admin users can also delete individual or all pending payment transactions.
+The immediate task is to resolve a critical data mismatch issue. The new E.D.N.360 agent system, specifically the first agent (E1), requires certain input fields (, , ) that are not being correctly passed from the existing frontend questionnaire. This is causing the plan generation to fail with an error: .
 
-Several critical bugs encountered during the Stripe implementation have been resolved:
-1.  **Login issues**: Fixed React hook order in  and missing  icon import.
-2.  **Payment Activation Errors**: Addressed  vs. string ID mismatches when querying users in MongoDB, and incorrect Stripe session ID formatting in the .
-3.  **Post-Payment Flow**: Ensured  updates to active and  is set to team upon successful payment, which correctly triggers the display of the initial questionnaire for the user.
-4.  **Admin Login**: Fixed a  in  related to a missing  block, restoring admin login functionality.
+The user has asserted that these questions already exist in the initial questionnaire and has requested a review. They also requested that if a user selects hombre (male) for their sex, any questions related to menstruation, pregnancy, or menopause should be conditionally hidden.
 
-The immediate task now, following the user's feedback, is to overhaul the **Training Ecosystem**. The user is dissatisfied with the current AI-generated training plans and has provided a CSV containing a custom database of exercises, including video URLs. The goal is to refine the AI prompts to use this new database, improve the clarity and professionalism of the generated plans, and integrate clickable video links into the PDF outputs.
+The AI engineer was in the process of investigating the frontend source code, specifically , to:
+1.  Verify exactly which fields are present in the questionnaire form.
+2.  Identify the source of the data mapping discrepancy.
+3.  Plan the implementation of the conditional logic for gender-specific questions.
+
+This debugging step is crucial to make the newly integrated E.D.N.360 backend logic work with the existing frontend user flow.
 </current_work>
 
 <optional_next_step>
-Analyze the provided CSV of exercises to understand its structure and content for integration.
+Continue the investigation of  to confirm the form's fields and then modify the  function in  to correctly map the data.
 </optional_next_step>

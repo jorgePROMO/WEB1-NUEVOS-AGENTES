@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://web-progress-1.preview.emergentagent.com
+**URL Actual:** https://smartcoach-edn.preview.emergentagent.com
 
 ---
 

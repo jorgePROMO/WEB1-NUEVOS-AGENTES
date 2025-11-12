@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://web-progress-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://smartcoach-edn.preview.emergentagent.com/api"
 
 class CRMExternalClientsTester:
     def __init__(self):
