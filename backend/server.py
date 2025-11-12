@@ -3729,15 +3729,24 @@ async def admin_generate_nutrition_plan(user_id: str, submission_id: str, regene
                 detail=f"Error generando plan: {result.get('error', 'Error desconocido')}"
             )
         
-        # Guardar el plan en nutrition_plans
+        # Guardar el plan en nutrition_plans con formato E.D.N.360
         nutrition_plan_doc = {
             "_id": plan_id,
             "user_id": user_id,
             "month": current_month,
             "year": current_year,
             "questionnaire_data": questionnaire_data,
-            "plan_inicial": result["plan_inicial"],
-            "plan_verificado": result["plan_verificado"],
+            
+            # Datos de E.D.N.360
+            "edn360_data": result["plan_data"],
+            "agent_executions": result.get("executions", []),
+            "system_version": "edn360_v1",
+            "training_synchronized": training_plan is not None,
+            
+            # Compatibilidad con formato antiguo
+            "plan_inicial": _format_edn360_nutrition_for_display(result["plan_data"]),
+            "plan_verificado": result["plan_data"].get("N8", {}),
+            
             "generated_at": now,
             "edited": False,
             "pdf_id": None,
