@@ -4,9 +4,13 @@ import { Button } from './ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Badge } from './ui/badge';
 import { Alert, AlertDescription } from './ui/alert';
-import { Loader2, CheckCircle, Clock, Send, MessageSquare, FileText, ArrowRight } from 'lucide-react';
+import { Loader2, CheckCircle, Clock, Send, MessageSquare, FileText, ArrowRight, Eye } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import EDN360PlanViewer from './EDN360PlanViewer';
 
 const EDN360Manager = () => {
+  const [showPlanViewer, setShowPlanViewer] = useState(false);
+  const [planToView, setPlanToView] = useState(null);
   const [activeTab, setActiveTab] = useState('generate');
   const [clients, setClients] = useState([]);
   const [plans, setPlans] = useState([]);
