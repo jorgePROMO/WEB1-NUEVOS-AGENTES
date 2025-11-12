@@ -4355,21 +4355,43 @@ async def admin_generate_training_plan(
         # Generar ID único para este plan
         plan_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
         
-        logger.info(f"🏋️ Admin iniciando generación de plan de entrenamiento para usuario {user_id}")
+        logger.info(f"🏋️ Admin iniciando generación de plan de entrenamiento E.D.N.360 para usuario {user_id}")
         
-        # Generar el plan con el servicio de entrenamiento
-        from training_service import generate_training_plan, generate_training_plan_with_context
+        # Obtener datos del cliente
+        user = await db.users.find_one({"_id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
         
+        # Usar el nuevo orquestador E.D.N.360
         if context_data:
-            # Generar con contexto de follow-up
-            result = await generate_training_plan_with_context(
-                questionnaire_data,
-                context_data["followup_responses"],
-                context_data["ai_analysis"]
+            # Generar con seguimiento (ES1-ES4)
+            logger.info("📊 Generando plan de seguimiento con agentes ES1-ES4")
+            
+            # Obtener plan anterior
+            previous_plan = await db.training_plans.find_one(
+                {"user_id": user_id},
+                sort=[("generated_at", -1)]
+            )
+            
+            if not previous_plan:
+                raise HTTPException(status_code=404, detail="No hay plan anterior para seguimiento")
+            
+            # Ejecutar agentes de seguimiento
+            from edn360.orchestrator import EDN360Orchestrator
+            orchestrator = EDN360Orchestrator()
+            
+            result = await orchestrator._execute_training_followup(
+                followup_data=context_data["followup_responses"],
+                previous_training_plan=previous_plan
             )
         else:
-            # Generar desde cuestionario inicial
-            result = await generate_training_plan(questionnaire_data)
+            # Generar desde cuestionario inicial (E1-E9)
+            logger.info("🚀 Generando plan inicial con agentes E1-E9")
+            
+            from edn360.orchestrator import EDN360Orchestrator
+            orchestrator = EDN360Orchestrator()
+            
+            result = await orchestrator._execute_training_initial(questionnaire_data)
         
         if not result["success"]:
             raise HTTPException(
