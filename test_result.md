@@ -883,14 +883,16 @@ frontend:
 
 test_plan:
   current_focus:
+    - "E.D.N.360 Data Adapter Fix"
+    - "E.D.N.360 Follow-Up Data Combination"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "critical_first"
+  completed_focus:
+    - "Waitlist Submit Endpoint (Public)"
+    - "Waitlist Admin Endpoints"
     - "Stripe Subscription System - Backend API"
     - "User Subscription Management - UserDashboard"
     - "Subscription Success Page"
     - "Admin Financial Dashboard"
-  stuck_tasks: []
-  test_all: false
-  test_priority: "high_first"
-  completed_focus:
-    - "Waitlist Submit Endpoint (Public)"
-    - "Waitlist Admin Endpoints"
 
