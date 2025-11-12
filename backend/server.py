@@ -4447,7 +4447,7 @@ async def admin_generate_training_plan(
             "agent_1_output": result["plan_data"].get("E1", {}),
             "agent_2_output": result["plan_data"].get("E2", {}),
             "agent_3_output": result["plan_data"].get("E4", {}),  # Arquitecto del programa
-            "plan_final": self._format_plan_for_display(result["plan_data"]),
+            "plan_final": _format_edn360_plan_for_display(result["plan_data"]),
             
             "generated_at": now,
             "edited": False,
