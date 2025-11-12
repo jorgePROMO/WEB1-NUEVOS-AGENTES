@@ -206,6 +206,18 @@ backend:
           comment: "✅ POST /api/admin/verify-payment/{user_id} - Payment verification working correctly. Successfully updated user payment status to 'verified' and subscription status to 'active'."
 
 frontend:
+  - task: "Conditional Gender Fields - NutritionQuestionnaire"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/NutritionQuestionnaire.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "UI IMPROVEMENT: Añadido filtrado condicional de campos en NutritionQuestionnaire. Las preguntas 'embarazo' y 'menopausia' ahora se ocultan automáticamente cuando formData.sexo === 'HOMBRE'. Implementado con .filter() antes del .map() en el render de campos. Esto mejora UX evitando preguntas irrelevantes para usuarios masculinos."
+
   - task: "User Registration Flow"
     implemented: true
     working: true
