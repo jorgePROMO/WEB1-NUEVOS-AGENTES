@@ -4507,6 +4507,9 @@ async def admin_generate_training_plan(
         if not user:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
         
+        # Adaptar cuestionario al formato E.D.N.360
+        adapted_questionnaire = _adapt_questionnaire_for_edn360(questionnaire_data)
+        
         # Usar el nuevo orquestador E.D.N.360
         if context_data:
             # Generar con seguimiento (ES1-ES4)
@@ -4536,7 +4539,7 @@ async def admin_generate_training_plan(
             from edn360.orchestrator import EDN360Orchestrator
             orchestrator = EDN360Orchestrator()
             
-            result = await orchestrator._execute_training_initial(questionnaire_data)
+            result = await orchestrator._execute_training_initial(adapted_questionnaire)
         
         if not result["success"]:
             raise HTTPException(
