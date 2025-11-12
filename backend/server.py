@@ -4320,26 +4320,70 @@ _Si necesitas el plan completo, revísalo en tu panel de usuario o te lo envío 
 def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
     """
     Adapta el formato del cuestionario actual al formato esperado por E.D.N.360
+    Soporta tanto NutritionQuestionnaire como DiagnosisQuestionnaire
     """
     try:
+        from datetime import datetime
         adapted = {}
         
-        # Campos básicos - REQUERIDOS por E1
-        adapted["nombre"] = questionnaire_data.get("nombre", "Usuario")
+        # === CAMPOS BÁSICOS - REQUERIDOS por E1 ===
         
-        # Edad - convertir a int
-        edad_str = questionnaire_data.get("edad", "30")
+        # NOMBRE: Buscar nombre_completo (NutritionQuestionnaire) o nombre (DiagnosisQuestionnaire)
+        adapted["nombre"] = questionnaire_data.get("nombre_completo") or questionnaire_data.get("nombre", "Usuario")
+        
+        # EDAD: Calcular desde fecha_nacimiento o usar edad directa
+        if "fecha_nacimiento" in questionnaire_data and questionnaire_data["fecha_nacimiento"]:
+            try:
+                # Calcular edad desde fecha de nacimiento
+                fecha_nac = questionnaire_data["fecha_nacimiento"]
+                if isinstance(fecha_nac, str):
+                    # Formato esperado: YYYY-MM-DD
+                    birth_date = datetime.strptime(fecha_nac, "%Y-%m-%d")
+                    today = datetime.now()
+                    edad = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+                    adapted["edad"] = edad
+                else:
+                    adapted["edad"] = 30
+            except Exception as e:
+                logger.warning(f"⚠️ Error calculando edad desde fecha_nacimiento: {e}")
+                adapted["edad"] = questionnaire_data.get("edad", 30)
+        else:
+            # Usar edad directa
+            edad_str = questionnaire_data.get("edad", "30")
+            try:
+                adapted["edad"] = int(edad_str.split()[0]) if isinstance(edad_str, str) else int(edad_str)
+            except:
+                adapted["edad"] = 30
+        
+        # SEXO: Normalizar a minúsculas y mapear
+        sexo_raw = questionnaire_data.get("sexo", "hombre")
+        if isinstance(sexo_raw, str):
+            sexo_normalized = sexo_raw.lower().strip()
+            # Mapear HOMBRE/MUJER a hombre/mujer
+            if sexo_normalized in ["hombre", "masculino", "male", "m"]:
+                adapted["sexo"] = "hombre"
+            elif sexo_normalized in ["mujer", "femenino", "female", "f"]:
+                adapted["sexo"] = "mujer"
+            else:
+                adapted["sexo"] = sexo_normalized
+        else:
+            adapted["sexo"] = "hombre"
+        
+        # PESO: Buscar 'peso' (NutritionQuestionnaire) o 'peso_actual_kg' (otros)
+        peso = questionnaire_data.get("peso") or questionnaire_data.get("peso_actual_kg")
         try:
-            adapted["edad"] = int(edad_str.split()[0]) if isinstance(edad_str, str) else int(edad_str)
-        except:
-            adapted["edad"] = 30
+            adapted["peso_actual_kg"] = float(peso) if peso else 70
+        except (ValueError, TypeError):
+            adapted["peso_actual_kg"] = 70
+            logger.warning(f"⚠️ Peso inválido '{peso}', usando default 70kg")
         
-        # Sexo - inferir del objetivo o asumir
-        adapted["sexo"] = questionnaire_data.get("sexo", "hombre")
-        
-        # Peso y altura - valores por defecto si no existen
-        adapted["peso_actual_kg"] = questionnaire_data.get("peso_actual_kg", 70)
-        adapted["altura_cm"] = questionnaire_data.get("altura_cm", 170)
+        # ALTURA: Buscar 'altura_cm' (presente en ambos cuestionarios)
+        altura = questionnaire_data.get("altura_cm")
+        try:
+            adapted["altura_cm"] = float(altura) if altura else 170
+        except (ValueError, TypeError):
+            adapted["altura_cm"] = 170
+            logger.warning(f"⚠️ Altura inválida '{altura}', usando default 170cm")
         
         # Objetivo
         objetivo = questionnaire_data.get("objetivo", "")
