@@ -2070,11 +2070,16 @@ const AdminDashboard = () => {
 
         {(activeView === 'clients' || activeView === 'calendar' || activeView === 'finances') && (
           <Tabs value={activeView} onValueChange={setActiveView} className="space-y-6">
-            <TabsList className="grid w-full max-w-4xl mx-auto grid-cols-4">
+            <TabsList className="grid w-full max-w-5xl mx-auto grid-cols-5">
               <TabsTrigger value="clients">
                 <Users className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Gestión de Clientes</span>
                 <span className="sm:hidden">Clientes</span>
+              </TabsTrigger>
+              <TabsTrigger value="edn360">
+                <Dumbbell className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">E.D.N.360</span>
+                <span className="sm:hidden">E.D.N</span>
               </TabsTrigger>
               <TabsTrigger value="templates">
                 <MessageSquare className="h-4 w-4 mr-2" />
