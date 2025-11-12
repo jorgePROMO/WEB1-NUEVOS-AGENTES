@@ -4314,6 +4314,56 @@ _Si necesitas el plan completo, revísalo en tu panel de usuario o te lo envío 
 
 # ==================== TRAINING PLANS ENDPOINTS ====================
 
+def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
+    """
+    Adapta el formato del cuestionario actual al formato esperado por E.D.N.360
+    """
+    try:
+        adapted = {}
+        
+        # Campos básicos del usuario
+        adapted["nombre"] = questionnaire_data.get("name", questionnaire_data.get("nombre", "Usuario"))
+        adapted["edad"] = questionnaire_data.get("age", questionnaire_data.get("edad", 30))
+        adapted["sexo"] = questionnaire_data.get("gender", questionnaire_data.get("sexo", "hombre"))
+        adapted["peso_actual_kg"] = questionnaire_data.get("weight", questionnaire_data.get("peso", questionnaire_data.get("peso_actual_kg", 70)))
+        adapted["altura_cm"] = questionnaire_data.get("height", questionnaire_data.get("altura", questionnaire_data.get("altura_cm", 170)))
+        
+        # Objetivo
+        adapted["objetivo_principal"] = questionnaire_data.get("goals", questionnaire_data.get("objetivo", "perder grasa"))
+        
+        # Experiencia
+        adapted["experiencia_entrenamiento"] = questionnaire_data.get("experience", questionnaire_data.get("experiencia", "principiante"))
+        
+        # Lesiones
+        adapted["lesiones_previas"] = questionnaire_data.get("injuries", questionnaire_data.get("lesiones", "ninguna"))
+        
+        # Disponibilidad
+        adapted["tiempo_disponible_semanal"] = questionnaire_data.get("availability", questionnaire_data.get("disponibilidad", "3 días, 60 min"))
+        adapted["dias_semana"] = questionnaire_data.get("days_per_week", questionnaire_data.get("dias_semana", 3))
+        adapted["minutos_por_sesion"] = questionnaire_data.get("minutes_per_session", questionnaire_data.get("minutos_sesion", 60))
+        adapted["horario_preferido"] = questionnaire_data.get("preferred_time", questionnaire_data.get("horario", "tarde"))
+        
+        # Equipo
+        adapted["equipo_disponible"] = questionnaire_data.get("equipment", questionnaire_data.get("equipo", "gym completo"))
+        
+        # Datos adicionales
+        adapted["nutricion_actual"] = questionnaire_data.get("current_nutrition", questionnaire_data.get("nutricion", "normal"))
+        adapted["sueno_promedio_h"] = questionnaire_data.get("sleep_hours", questionnaire_data.get("sueno", 7))
+        adapted["estres_nivel"] = questionnaire_data.get("stress_level", questionnaire_data.get("estres", "medio"))
+        
+        # Copiar el resto de campos que puedan existir
+        for key, value in questionnaire_data.items():
+            if key not in adapted:
+                adapted[key] = value
+        
+        logger.info(f"✅ Cuestionario adaptado para E.D.N.360: {list(adapted.keys())}")
+        return adapted
+        
+    except Exception as e:
+        logger.error(f"Error adaptando cuestionario: {e}")
+        # Si falla, devolver el original
+        return questionnaire_data
+
 def _format_edn360_nutrition_for_display(edn360_data: dict) -> dict:
     """
     Convierte el output de nutrición E.D.N.360 al formato que espera el frontend actual
