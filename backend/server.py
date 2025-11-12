@@ -4425,44 +4425,85 @@ def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
             else:
                 adapted["experiencia_entrenamiento"] = "principiante"
         
-        # Intentos previos como historial
+        # === HISTORIAL DE ENTRENAMIENTO ===
         intentos = questionnaire_data.get("intentos_previos", "")
-        adapted["historial_entrenamiento"] = intentos
+        constante_deporte = questionnaire_data.get("constante_deporte", "")
+        tiempo_dedicaba = questionnaire_data.get("tiempo_dedicaba", "")
         
-        # Dificultades como lesiones/limitaciones
+        historial_parts = []
+        if intentos:
+            historial_parts.append(f"Intentos previos: {intentos}")
+        if constante_deporte:
+            historial_parts.append(f"Constancia: {constante_deporte}")
+        if tiempo_dedicaba:
+            historial_parts.append(f"Tiempo dedicado: {tiempo_dedicaba}")
+        
+        adapted["historial_entrenamiento"] = ". ".join(historial_parts) if historial_parts else "sin historial previo"
+        
+        # === LESIONES Y LIMITACIONES ===
+        # Recopilar de múltiples fuentes
+        lesiones_parts = []
+        
+        # Dificultades (DiagnosisQuestionnaire)
         dificultades = questionnaire_data.get("dificultades", [])
         if isinstance(dificultades, list):
-            dificultades_str = ", ".join(dificultades)
-        else:
-            dificultades_str = str(dificultades)
+            lesiones_parts.extend(dificultades)
+        elif dificultades:
+            lesiones_parts.append(str(dificultades))
         
-        # Añadir otro si existe
         dificultades_otro = questionnaire_data.get("dificultades_otro", "")
         if dificultades_otro:
-            dificultades_str += f", {dificultades_otro}"
+            lesiones_parts.append(dificultades_otro)
         
-        adapted["lesiones_previas"] = dificultades_str or "ninguna"
-        adapted["limitaciones"] = dificultades_str or "ninguna"
+        # Campos de salud del NutritionQuestionnaire
+        problemas_musculares = questionnaire_data.get("problemas_musculares", "")
+        hernias = questionnaire_data.get("hernias_protusiones", "")
+        artrosis = questionnaire_data.get("artrosis", "")
         
-        # Disponibilidad
+        if problemas_musculares and problemas_musculares.lower() not in ["no", "ninguno"]:
+            lesiones_parts.append(f"Problemas musculares: {problemas_musculares}")
+        if hernias and hernias.lower() not in ["no", "ninguno"]:
+            lesiones_parts.append(f"Hernias/protusiones: {hernias}")
+        if artrosis and artrosis.lower() not in ["no", "ninguno"]:
+            lesiones_parts.append(f"Artrosis: {artrosis}")
+        
+        lesiones_str = ", ".join(lesiones_parts) if lesiones_parts else "ninguna"
+        adapted["lesiones_previas"] = lesiones_str
+        adapted["limitaciones"] = lesiones_str
+        
+        # === DISPONIBILIDAD ===
+        # NutritionQuestionnaire tiene campos específicos
+        dias_semana_entrenar = questionnaire_data.get("dias_semana_entrenar", "")
+        tiempo_sesion = questionnaire_data.get("tiempo_sesion", "")
         tiempo_semanal = questionnaire_data.get("tiempo_semanal", "")
-        adapted["tiempo_disponible_semanal"] = tiempo_semanal
         
-        # Extraer días y minutos del tiempo_semanal si está en formato "X días/semana, Y min/sesión"
-        try:
-            if "días" in tiempo_semanal or "dias" in tiempo_semanal:
-                import re
-                dias_match = re.search(r'(\d+)\s*d[íi]as?', tiempo_semanal, re.IGNORECASE)
-                min_match = re.search(r'(\d+)\s*min', tiempo_semanal, re.IGNORECASE)
-                
-                adapted["dias_semana"] = int(dias_match.group(1)) if dias_match else 3
-                adapted["minutos_por_sesion"] = int(min_match.group(1)) if min_match else 60
-            else:
+        # Intentar extraer de los campos específicos primero
+        import re
+        if dias_semana_entrenar:
+            try:
+                adapted["dias_semana"] = int(dias_semana_entrenar)
+            except (ValueError, TypeError):
                 adapted["dias_semana"] = 3
-                adapted["minutos_por_sesion"] = 60
-        except:
+        elif tiempo_semanal and ("días" in tiempo_semanal or "dias" in tiempo_semanal):
+            dias_match = re.search(r'(\d+)\s*d[íi]as?', tiempo_semanal, re.IGNORECASE)
+            adapted["dias_semana"] = int(dias_match.group(1)) if dias_match else 3
+        else:
             adapted["dias_semana"] = 3
+        
+        if tiempo_sesion:
+            try:
+                # Puede venir como "60" o "60 min" o "60 minutos"
+                min_match = re.search(r'(\d+)', str(tiempo_sesion))
+                adapted["minutos_por_sesion"] = int(min_match.group(1)) if min_match else 60
+            except (ValueError, TypeError):
+                adapted["minutos_por_sesion"] = 60
+        elif tiempo_semanal and "min" in tiempo_semanal:
+            min_match = re.search(r'(\d+)\s*min', tiempo_semanal, re.IGNORECASE)
+            adapted["minutos_por_sesion"] = int(min_match.group(1)) if min_match else 60
+        else:
             adapted["minutos_por_sesion"] = 60
+        
+        adapted["tiempo_disponible_semanal"] = f"{adapted['dias_semana']} días/semana, {adapted['minutos_por_sesion']} min/sesión"
         
         # Horario (no está en el cuestionario, asumimos tarde)
         adapted["horario_preferido"] = "tarde"
