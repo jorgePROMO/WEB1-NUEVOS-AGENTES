@@ -353,11 +353,23 @@ const EDN360Manager = () => {
                     </Alert>
                   )}
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
+                    <Button
+                      onClick={() => {
+                        setPlanToView(plan);
+                        setShowPlanViewer(true);
+                      }}
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Eye className="mr-2 h-4 w-4" />
+                      Ver Plan
+                    </Button>
+
                     {plan.status === 'draft' && (
                       <Button onClick={() => approvePlan(plan._id)} size="sm">
                         <CheckCircle className="mr-2 h-4 w-4" />
-                        Aprobar Plan
+                        Aprobar
                       </Button>
                     )}
                     
@@ -371,7 +383,7 @@ const EDN360Manager = () => {
                       size="sm"
                     >
                       <MessageSquare className="mr-2 h-4 w-4" />
-                      Modificar con IA
+                      Modificar
                     </Button>
 
                     {plan.status === 'approved' && (
