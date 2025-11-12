@@ -646,7 +646,16 @@ const NutritionQuestionnaire = ({ user, onComplete }) => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {currentSectionData.fields.map(renderField)}
+              {currentSectionData.fields
+                .filter(field => {
+                  // Ocultar preguntas de embarazo y menopausia si el sexo es HOMBRE
+                  if (formData.sexo === 'HOMBRE') {
+                    const genderSpecificFields = ['embarazo', 'menopausia'];
+                    return !genderSpecificFields.includes(field.name);
+                  }
+                  return true;
+                })
+                .map(renderField)}
             </div>
           )}
 
