@@ -4607,11 +4607,18 @@ def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
         # Copiar todos los campos originales también
         adapted["_original_questionnaire"] = questionnaire_data
         
+        # === LOGGING DETALLADO ===
         logger.info(f"✅ Cuestionario adaptado para E.D.N.360")
-        logger.info(f"   - Nombre: {adapted['nombre']}")
-        logger.info(f"   - Edad: {adapted['edad']}")
-        logger.info(f"   - Objetivo: {adapted['objetivo_principal']}")
-        logger.info(f"   - Disponibilidad: {adapted['dias_semana']} días x {adapted['minutos_por_sesion']} min")
+        logger.info(f"   📋 CAMPOS CRÍTICOS (requeridos por E1):")
+        logger.info(f"      - nombre: {adapted['nombre']}")
+        logger.info(f"      - edad: {adapted['edad']}")
+        logger.info(f"      - sexo: {adapted['sexo']}")
+        logger.info(f"      - peso_actual_kg: {adapted['peso_actual_kg']}")
+        logger.info(f"      - altura_cm: {adapted['altura_cm']}")
+        logger.info(f"   🎯 Objetivo: {adapted['objetivo_principal']}")
+        logger.info(f"   📅 Disponibilidad: {adapted['dias_semana']} días x {adapted['minutos_por_sesion']} min")
+        logger.info(f"   🏋️ Experiencia: {adapted['experiencia_entrenamiento'][:50]}...")
+        logger.info(f"   🏥 Lesiones: {adapted['lesiones_previas'][:50]}...")
         
         return adapted
         
