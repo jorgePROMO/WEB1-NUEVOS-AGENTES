@@ -9,7 +9,7 @@ import logging
 from typing import Dict, Any, Optional
 from datetime import datetime
 from abc import ABC, abstractmethod
-from emergentintegrations.llm.chat import LlmChat, UserMessage, SystemMessage
+from emergentintegrations.llm.chat import LlmChat
 
 logger = logging.getLogger(__name__)
 
