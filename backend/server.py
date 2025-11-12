@@ -4385,23 +4385,45 @@ def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
             adapted["altura_cm"] = 170
             logger.warning(f"⚠️ Altura inválida '{altura}', usando default 170cm")
         
-        # Objetivo
-        objetivo = questionnaire_data.get("objetivo", "")
-        if "adelgazar" in objetivo.lower() or "perder" in objetivo.lower():
+        # === OBJETIVO ===
+        # Buscar en varios campos posibles
+        objetivo = (questionnaire_data.get("objetivo_principal") or 
+                   questionnaire_data.get("objetivo") or 
+                   questionnaire_data.get("objetivos_deseados") or "")
+        
+        if "adelgazar" in objetivo.lower() or "perder" in objetivo.lower() or "bajar" in objetivo.lower():
             adapted["objetivo_principal"] = "perdida_grasa"
-        elif "ganar" in objetivo.lower() or "musculo" in objetivo.lower():
+        elif "ganar" in objetivo.lower() or "musculo" in objetivo.lower() or "volumen" in objetivo.lower():
             adapted["objetivo_principal"] = "ganancia_muscular"
+        elif "definir" in objetivo.lower() or "recomposicion" in objetivo.lower():
+            adapted["objetivo_principal"] = "recomposicion"
         else:
             adapted["objetivo_principal"] = objetivo or "mejora_general"
         
-        # Experiencia de entrenamiento
+        # === EXPERIENCIA DE ENTRENAMIENTO ===
+        # NutritionQuestionnaire tiene campos más detallados
+        entrenado_gym = questionnaire_data.get("entrenado_gimnasio", "")
+        nivel_deporte = questionnaire_data.get("nivel_deporte", "")
         entrena = questionnaire_data.get("entrena", "")
-        if "no" in entrena.lower() or "nunca" in entrena.lower():
-            adapted["experiencia_entrenamiento"] = "principiante absoluto, sin experiencia previa"
-        elif "gym" in entrena.lower() or "gimnasio" in entrena.lower():
-            adapted["experiencia_entrenamiento"] = "experiencia en gimnasio"
+        
+        # Construir experiencia desde múltiples campos
+        experiencia_parts = []
+        if entrenado_gym:
+            experiencia_parts.append(f"Gimnasio: {entrenado_gym}")
+        if nivel_deporte:
+            experiencia_parts.append(f"Nivel: {nivel_deporte}")
+        if entrena:
+            experiencia_parts.append(entrena)
+        
+        if experiencia_parts:
+            adapted["experiencia_entrenamiento"] = ". ".join(experiencia_parts)
         else:
-            adapted["experiencia_entrenamiento"] = entrena or "principiante"
+            if "no" in entrena.lower() or "nunca" in entrena.lower():
+                adapted["experiencia_entrenamiento"] = "principiante absoluto, sin experiencia previa"
+            elif "gym" in entrena.lower() or "gimnasio" in entrena.lower():
+                adapted["experiencia_entrenamiento"] = "experiencia en gimnasio"
+            else:
+                adapted["experiencia_entrenamiento"] = "principiante"
         
         # Intentos previos como historial
         intentos = questionnaire_data.get("intentos_previos", "")
