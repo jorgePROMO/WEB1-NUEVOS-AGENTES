@@ -3691,11 +3691,37 @@ async def admin_generate_nutrition_plan(user_id: str, submission_id: str, regene
         # Generar ID único para este plan
         plan_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
         
-        logger.info(f"🔄 Admin iniciando generación de plan para usuario {user_id} - submission {submission_id}")
+        logger.info(f"🍎 Admin iniciando generación de plan nutricional E.D.N.360 para usuario {user_id}")
         
-        # Generar el plan con el LLM
-        from nutrition_service import generate_nutrition_plan
-        result = await generate_nutrition_plan(questionnaire_data)
+        # Obtener plan de entrenamiento para sincronización
+        training_plan = await db.training_plans.find_one(
+            {"user_id": user_id},
+            sort=[("generated_at", -1)]
+        )
+        
+        if not training_plan:
+            logger.warning(f"⚠️ No se encontró plan de entrenamiento para usuario {user_id}. Generando plan de nutrición sin sincronización.")
+            training_bridge_data = None
+        else:
+            # Extraer datos del bridge (E9) si existen
+            training_bridge_data = training_plan.get("edn360_data", {}).get("E9", {})
+            if not training_bridge_data:
+                # Si no hay E9, crear bridge básico
+                training_bridge_data = {
+                    "tdee_estimado": questionnaire_data.get("peso", 70) * 30,  # Estimación básica
+                    "dias_amb": {},
+                    "demanda_calorica_entrenamiento": {}
+                }
+            logger.info(f"✅ Plan de entrenamiento encontrado. Sincronizando con nutrición.")
+        
+        # Generar el plan con E.D.N.360 (N0-N8)
+        from edn360.orchestrator import EDN360Orchestrator
+        orchestrator = EDN360Orchestrator()
+        
+        result = await orchestrator._execute_nutrition_initial(
+            questionnaire_data=questionnaire_data,
+            training_bridge_data=training_bridge_data
+        )
         
         if not result["success"]:
             raise HTTPException(
