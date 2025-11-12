@@ -4505,32 +4505,104 @@ def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
         
         adapted["tiempo_disponible_semanal"] = f"{adapted['dias_semana']} días/semana, {adapted['minutos_por_sesion']} min/sesión"
         
-        # Horario (no está en el cuestionario, asumimos tarde)
-        adapted["horario_preferido"] = "tarde"
+        # === HORARIO ===
+        horario_entrenar = questionnaire_data.get("entrena_manana_tarde", "")
+        if horario_entrenar:
+            if "mañana" in horario_entrenar.lower():
+                adapted["horario_preferido"] = "mañana"
+            elif "tarde" in horario_entrenar.lower():
+                adapted["horario_preferido"] = "tarde"
+            elif "noche" in horario_entrenar.lower():
+                adapted["horario_preferido"] = "noche"
+            else:
+                adapted["horario_preferido"] = horario_entrenar
+        else:
+            adapted["horario_preferido"] = "tarde"
         
-        # Equipo - inferir del campo entrena
-        if "gym" in entrena.lower() or "gimnasio" in entrena.lower():
+        # === EQUIPO DISPONIBLE ===
+        gimnasio_campo = questionnaire_data.get("gimnasio", "")
+        material_casa_campo = questionnaire_data.get("material_casa", "")
+        
+        if gimnasio_campo and gimnasio_campo.lower() not in ["no", "ninguno"]:
+            adapted["equipo_disponible"] = f"Gym: {gimnasio_campo}"
+        elif material_casa_campo and material_casa_campo.lower() not in ["no", "ninguno"]:
+            adapted["equipo_disponible"] = f"Casa con equipo: {material_casa_campo}"
+        elif "gym" in entrena.lower() or "gimnasio" in entrena.lower():
             adapted["equipo_disponible"] = "gym completo"
         elif "casa" in entrena.lower():
             adapted["equipo_disponible"] = "casa con equipo básico"
         else:
             adapted["equipo_disponible"] = "gym completo"
         
-        # Nutrición
+        # === NUTRICIÓN ACTUAL ===
         alimentacion = questionnaire_data.get("alimentacion", "")
-        adapted["nutricion_actual"] = alimentacion or "sin seguimiento específico"
+        comidas_dia = questionnaire_data.get("comidas_dia", "")
         
-        # Salud
+        nutricion_parts = []
+        if alimentacion:
+            nutricion_parts.append(alimentacion)
+        if comidas_dia:
+            nutricion_parts.append(f"Comidas al día: {comidas_dia}")
+        
+        adapted["nutricion_actual"] = ". ".join(nutricion_parts) if nutricion_parts else "sin seguimiento específico"
+        
+        # === CONDICIONES DE SALUD ===
+        # Recopilar condiciones del NutritionQuestionnaire
+        condiciones = []
+        
         salud_info = questionnaire_data.get("salud_info", "")
-        adapted["condiciones_salud"] = salud_info or "sin condiciones especiales"
+        if salud_info:
+            condiciones.append(salud_info)
         
-        # Motivación
-        adapted["motivacion"] = questionnaire_data.get("por_que_ahora", "")
-        adapted["nivel_compromiso"] = questionnaire_data.get("dispuesto_invertir", "")
+        # Campos específicos de salud
+        medicamentos = questionnaire_data.get("medicamentos", "")
+        enfermedad_cronica = questionnaire_data.get("enfermedad_cronica", "")
+        hipertension = questionnaire_data.get("hipertension", "")
+        diabetes = questionnaire_data.get("diabetes", "")
         
-        # Datos adicionales por defecto
-        adapted["sueno_promedio_h"] = 7
-        adapted["estres_nivel"] = "medio"
+        if medicamentos and medicamentos.lower() not in ["no", "ninguno"]:
+            condiciones.append(f"Medicamentos: {medicamentos}")
+        if enfermedad_cronica and enfermedad_cronica.lower() not in ["no", "ninguno"]:
+            condiciones.append(f"Enfermedad crónica: {enfermedad_cronica}")
+        if hipertension and hipertension.lower() == "sí":
+            condiciones.append("Hipertensión")
+        if diabetes and diabetes.lower() == "sí":
+            condiciones.append("Diabetes")
+        
+        adapted["condiciones_salud"] = ", ".join(condiciones) if condiciones else "sin condiciones especiales"
+        
+        # === MOTIVACIÓN ===
+        por_que_ahora = questionnaire_data.get("por_que_ahora", "")
+        objetivo_entrenamiento = questionnaire_data.get("objetivo_entrenamiento", "")
+        
+        motivacion_parts = []
+        if por_que_ahora:
+            motivacion_parts.append(por_que_ahora)
+        if objetivo_entrenamiento:
+            motivacion_parts.append(objetivo_entrenamiento)
+        
+        adapted["motivacion"] = ". ".join(motivacion_parts) if motivacion_parts else "mejorar salud y físico"
+        adapted["nivel_compromiso"] = questionnaire_data.get("dispuesto_invertir", "") or questionnaire_data.get("nivel_compromiso", "medio")
+        
+        # === DATOS ADICIONALES ===
+        # Intentar extraer de campos específicos
+        horas_sueno = questionnaire_data.get("horas_sueno", "")
+        estres = questionnaire_data.get("estres_profesion", "")
+        
+        try:
+            adapted["sueno_promedio_h"] = int(horas_sueno) if horas_sueno else 7
+        except (ValueError, TypeError):
+            adapted["sueno_promedio_h"] = 7
+        
+        if estres:
+            if "alto" in estres.lower() or "mucho" in estres.lower():
+                adapted["estres_nivel"] = "alto"
+            elif "bajo" in estres.lower() or "poco" in estres.lower():
+                adapted["estres_nivel"] = "bajo"
+            else:
+                adapted["estres_nivel"] = "medio"
+        else:
+            adapted["estres_nivel"] = "medio"
         
         # Copiar todos los campos originales también
         adapted["_original_questionnaire"] = questionnaire_data
