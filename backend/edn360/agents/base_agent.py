@@ -90,17 +90,16 @@ class BaseAgent(ABC):
             user_message = self._format_input_message(input_data)
             
             # Ejecutar LLM
+            from emergentintegrations.llm.chat import UserMessage
+            
             llm_chat = LlmChat(
                 api_key=self.llm_key,
-                model="gpt-4o",
-                temperature=0.7,
-                max_tokens=8000
-            )
+                session_id=f"{self.agent_id}_{datetime.now().timestamp()}",
+                system_message=system_prompt
+            ).with_model("openai", "gpt-4o")
             
-            response = await llm_chat.async_send_message_stream(
-                message=user_message,
-                system_prompt=system_prompt
-            )
+            user_msg = UserMessage(text=user_message)
+            response = await llm_chat.send_message(user_msg)
             
             # Procesar salida
             output_data = self.process_output(response)
