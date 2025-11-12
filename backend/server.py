@@ -8249,18 +8249,15 @@ Si requiere cambios, genera el plan modificado en formato JSON."""
 Analiza la solicitud y genera el plan modificado o responde la pregunta."""
         
         # Ejecutar LLM
-        from emergentintegrations.llm.chat import LlmChat
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
         llm = LlmChat(
             api_key=os.environ.get("EMERGENT_LLM_KEY"),
-            model="gpt-4o",
-            temperature=0.7,
-            max_tokens=8000
-        )
+            session_id=f"modify_plan_{plan_id}",
+            system_message=system_prompt
+        ).with_model("openai", "gpt-4o")
         
-        ai_response = await llm.async_send_message_stream(
-            message=full_message,
-            system_prompt=system_prompt
-        )
+        user_msg = UserMessage(text=full_message)
+        ai_response = await llm.send_message(user_msg)
         
         # Intentar detectar si hay modificaciones en la respuesta
         modifications_made = False
