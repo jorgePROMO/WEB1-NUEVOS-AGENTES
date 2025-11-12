@@ -4317,6 +4317,52 @@ _Si necesitas el plan completo, revísalo en tu panel de usuario o te lo envío 
 
 # ==================== TRAINING PLANS ENDPOINTS ====================
 
+async def _adapt_followup_for_edn360(followup_data: dict, user_id: str) -> dict:
+    """
+    Adapta el cuestionario de seguimiento combinándolo con datos iniciales del cliente
+    El followup solo tiene peso actualizado, necesitamos sexo y altura del cuestionario inicial
+    """
+    try:
+        # Obtener el cuestionario inicial del usuario para datos base
+        initial_questionnaire = await db.nutrition_questionnaire_submissions.find_one(
+            {"user_id": user_id},
+            sort=[("submitted_at", 1)]  # El más antiguo = inicial
+        )
+        
+        if not initial_questionnaire:
+            logger.warning(f"⚠️ No se encontró cuestionario inicial para usuario {user_id}")
+            # Intentar obtener del usuario directamente
+            user = await db.users.find_one({"_id": user_id})
+            initial_data = user if user else {}
+        else:
+            initial_data = initial_questionnaire.get("responses", {})
+        
+        # Combinar datos: base del inicial + actualizaciones del followup
+        combined_data = initial_data.copy()
+        
+        # Actualizar peso del seguimiento (el campo crítico que cambia)
+        if "peso" in followup_data:
+            combined_data["peso"] = followup_data["peso"]
+        
+        # Mantener otros datos del followup si existen
+        for key in ["circunferencia_cintura", "circunferencia_pecho", "grasa_corporal", "masa_muscular"]:
+            if key in followup_data:
+                combined_data[key] = followup_data[key]
+        
+        logger.info(f"✅ Follow-up combinado con datos iniciales")
+        logger.info(f"   - Peso actualizado: {combined_data.get('peso', 'N/A')} kg")
+        logger.info(f"   - Sexo (del inicial): {combined_data.get('sexo', 'N/A')}")
+        logger.info(f"   - Altura (del inicial): {combined_data.get('altura_cm', 'N/A')} cm")
+        
+        # Ahora adaptar con la función normal
+        return _adapt_questionnaire_for_edn360(combined_data)
+        
+    except Exception as e:
+        logger.error(f"❌ Error adaptando follow-up: {e}")
+        # Fallback: usar solo datos del followup
+        return _adapt_questionnaire_for_edn360(followup_data)
+
+
 def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
     """
     Adapta el formato del cuestionario actual al formato esperado por E.D.N.360
