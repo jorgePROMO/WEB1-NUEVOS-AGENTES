@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://waitlistsys.preview.emergentagent.com
+https://web-progress-1.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 
