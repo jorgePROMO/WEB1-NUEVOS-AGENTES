@@ -3714,12 +3714,15 @@ async def admin_generate_nutrition_plan(user_id: str, submission_id: str, regene
                 }
             logger.info(f"✅ Plan de entrenamiento encontrado. Sincronizando con nutrición.")
         
+        # Adaptar cuestionario al formato E.D.N.360
+        adapted_questionnaire = _adapt_questionnaire_for_edn360(questionnaire_data)
+        
         # Generar el plan con E.D.N.360 (N0-N8)
         from edn360.orchestrator import EDN360Orchestrator
         orchestrator = EDN360Orchestrator()
         
         result = await orchestrator._execute_nutrition_initial(
-            questionnaire_data=questionnaire_data,
+            questionnaire_data=adapted_questionnaire,
             training_bridge_data=training_bridge_data
         )
         
