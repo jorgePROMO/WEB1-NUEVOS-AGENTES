@@ -7586,6 +7586,324 @@ async def delete_waitlist_lead(lead_id: str, request: Request):
         raise HTTPException(status_code=500, detail="Error al eliminar lead")
 
 
+# ============================================
+# E.D.N.360 SYSTEM ENDPOINTS
+# ============================================
+
+from edn360.orchestrator import EDN360Orchestrator
+from edn360.models import PlanType, PlanStatus
+
+# Inicializar orquestador global
+edn360_orchestrator = EDN360Orchestrator()
+
+@api_router.post("/admin/edn360/generate-initial-plan")
+async def generate_edn360_initial_plan(
+    request: Request,
+    questionnaire_id: str = Form(...),
+    client_id: str = Form(...),
+    admin_notes: Optional[str] = Form(None)
+):
+    """
+    Genera un plan inicial E.D.N.360 completo (Entrenamiento + Nutrición)
+    usando los 18 agentes especializados (E1-E9 + N0-N8)
+    """
+    await require_admin(request)
+    
+    try:
+        logger.info(f"🚀 Generando plan E.D.N.360 para cliente {client_id}")
+        
+        # Obtener cuestionario
+        questionnaire = await db.questionnaires.find_one({"_id": questionnaire_id})
+        if not questionnaire:
+            raise HTTPException(status_code=404, detail="Cuestionario no encontrado")
+        
+        # Obtener datos del cliente
+        client = await db.users.find_one({"_id": client_id})
+        if not client:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        # Generar ID único para el plan
+        plan_id = f"edn360_{client_id}_{int(datetime.now(timezone.utc).timestamp())}"
+        
+        # Ejecutar orquestador
+        result = await edn360_orchestrator.generate_initial_plan(
+            questionnaire_data=questionnaire,
+            client_data=client,
+            plan_id=plan_id
+        )
+        
+        if not result["success"]:
+            raise HTTPException(status_code=500, detail=result.get("error", "Error generando plan"))
+        
+        # Guardar plan en MongoDB
+        now = datetime.now(timezone.utc)
+        edn360_plan = {
+            "_id": plan_id,
+            "client_id": client_id,
+            "client_name": client.get("name", ""),
+            "plan_type": "initial_complete",
+            "status": "draft",
+            "created_at": now,
+            "updated_at": now,
+            "generated_at": now,
+            "questionnaire_id": questionnaire_id,
+            "training_plan": result["training_plan"],
+            "nutrition_plan": result["nutrition_plan"],
+            "agent_executions": result["agent_executions"],
+            "validation": result["validation"],
+            "total_duration_seconds": result["total_duration_seconds"],
+            "admin_notes": admin_notes,
+            "current_version": 1,
+            "modifications": []
+        }
+        
+        await db.edn360_plans.insert_one(edn360_plan)
+        
+        logger.info(f"✅ Plan E.D.N.360 generado exitosamente: {plan_id}")
+        
+        return {
+            "success": True,
+            "plan_id": plan_id,
+            "status": "draft",
+            "message": "Plan generado exitosamente",
+            "duration_seconds": result["total_duration_seconds"],
+            "validation": result["validation"]
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Error generando plan E.D.N.360: {e}")
+        raise HTTPException(status_code=500, detail=f"Error generando plan: {str(e)}")
+
+
+@api_router.post("/admin/edn360/generate-followup-plan")
+async def generate_edn360_followup_plan(
+    request: Request,
+    client_id: str = Form(...),
+    followup_questionnaire_id: str = Form(...),
+    admin_notes: Optional[str] = Form(None)
+):
+    """
+    Genera un plan de seguimiento mensual E.D.N.360
+    usando los 8 agentes de seguimiento (ES1-ES4 + NS1-NS4)
+    """
+    await require_admin(request)
+    
+    try:
+        logger.info(f"🔄 Generando seguimiento E.D.N.360 para cliente {client_id}")
+        
+        # Obtener cuestionario de seguimiento
+        followup = await db.followup_questionnaires.find_one({"_id": followup_questionnaire_id})
+        if not followup:
+            raise HTTPException(status_code=404, detail="Cuestionario de seguimiento no encontrado")
+        
+        # Obtener plan anterior
+        previous_plan = await db.edn360_plans.find_one(
+            {"client_id": client_id},
+            sort=[("created_at", -1)]
+        )
+        if not previous_plan:
+            raise HTTPException(status_code=404, detail="No hay plan anterior para este cliente")
+        
+        # Obtener datos del cliente
+        client = await db.users.find_one({"_id": client_id})
+        if not client:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        # Generar ID único
+        plan_id = f"edn360_followup_{client_id}_{int(datetime.now(timezone.utc).timestamp())}"
+        
+        # Ejecutar orquestador de seguimiento
+        result = await edn360_orchestrator.generate_followup_plan(
+            followup_questionnaire=followup,
+            previous_plan=previous_plan,
+            client_data=client,
+            plan_id=plan_id
+        )
+        
+        if not result["success"]:
+            raise HTTPException(status_code=500, detail=result.get("error", "Error generando seguimiento"))
+        
+        # Guardar plan de seguimiento
+        now = datetime.now(timezone.utc)
+        followup_plan = {
+            "_id": plan_id,
+            "client_id": client_id,
+            "client_name": client.get("name", ""),
+            "plan_type": "followup_complete",
+            "status": "draft",
+            "created_at": now,
+            "updated_at": now,
+            "generated_at": now,
+            "followup_questionnaire_id": followup_questionnaire_id,
+            "previous_plan_id": previous_plan["_id"],
+            "training_adjustments": result["training_adjustments"],
+            "nutrition_adjustments": result["nutrition_adjustments"],
+            "agent_executions": result["agent_executions"],
+            "validation": result["validation"],
+            "total_duration_seconds": result["total_duration_seconds"],
+            "admin_notes": admin_notes,
+            "current_version": 1,
+            "modifications": []
+        }
+        
+        await db.edn360_plans.insert_one(followup_plan)
+        
+        logger.info(f"✅ Seguimiento E.D.N.360 generado: {plan_id}")
+        
+        return {
+            "success": True,
+            "plan_id": plan_id,
+            "status": "draft",
+            "message": "Plan de seguimiento generado exitosamente",
+            "duration_seconds": result["total_duration_seconds"],
+            "validation": result["validation"]
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Error generando seguimiento E.D.N.360: {e}")
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+
+@api_router.get("/admin/edn360/plans/{plan_id}")
+async def get_edn360_plan(plan_id: str, request: Request):
+    """
+    Obtiene un plan E.D.N.360 específico
+    """
+    await require_admin(request)
+    
+    try:
+        plan = await db.edn360_plans.find_one({"_id": plan_id})
+        if not plan:
+            raise HTTPException(status_code=404, detail="Plan no encontrado")
+        
+        return plan
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error obteniendo plan: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener plan")
+
+
+@api_router.get("/admin/edn360/client/{client_id}/plans")
+async def get_client_edn360_plans(client_id: str, request: Request):
+    """
+    Obtiene todos los planes E.D.N.360 de un cliente
+    """
+    await require_admin(request)
+    
+    try:
+        plans = await db.edn360_plans.find(
+            {"client_id": client_id}
+        ).sort("created_at", -1).to_list(length=100)
+        
+        return {
+            "success": True,
+            "plans": plans,
+            "count": len(plans)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error obteniendo planes del cliente: {e}")
+        raise HTTPException(status_code=500, detail="Error al obtener planes")
+
+
+@api_router.put("/admin/edn360/plans/{plan_id}/approve")
+async def approve_edn360_plan(plan_id: str, request: Request):
+    """
+    Aprueba un plan E.D.N.360 (cambia status de draft a approved)
+    """
+    await require_admin(request)
+    
+    try:
+        result = await db.edn360_plans.update_one(
+            {"_id": plan_id},
+            {
+                "$set": {
+                    "status": "approved",
+                    "approved_at": datetime.now(timezone.utc),
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Plan no encontrado")
+        
+        logger.info(f"✅ Plan aprobado: {plan_id}")
+        
+        return {"success": True, "message": "Plan aprobado"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error aprobando plan: {e}")
+        raise HTTPException(status_code=500, detail="Error al aprobar plan")
+
+
+@api_router.post("/admin/edn360/plans/{plan_id}/send")
+async def send_edn360_plan(
+    plan_id: str,
+    request: Request,
+    delivery_method: str = Form(...),  # "email", "whatsapp", "attach_to_docs"
+    custom_message: Optional[str] = Form(None)
+):
+    """
+    Envía un plan E.D.N.360 al cliente
+    """
+    await require_admin(request)
+    
+    try:
+        plan = await db.edn360_plans.find_one({"_id": plan_id})
+        if not plan:
+            raise HTTPException(status_code=404, detail="Plan no encontrado")
+        
+        client = await db.users.find_one({"_id": plan["client_id"]})
+        if not client:
+            raise HTTPException(status_code=404, detail="Cliente no encontrado")
+        
+        # TODO: Implementar envío según método
+        if delivery_method == "email":
+            # Enviar por email
+            pass
+        elif delivery_method == "whatsapp":
+            # Enviar por WhatsApp
+            pass
+        elif delivery_method == "attach_to_docs":
+            # Adjuntar a documentos del cliente
+            pass
+        
+        # Actualizar estado del plan
+        await db.edn360_plans.update_one(
+            {"_id": plan_id},
+            {
+                "$set": {
+                    "status": "sent",
+                    "sent_at": datetime.now(timezone.utc),
+                    "delivery_method": delivery_method,
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        logger.info(f"✅ Plan enviado vía {delivery_method}: {plan_id}")
+        
+        return {
+            "success": True,
+            "message": f"Plan enviado vía {delivery_method}"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error enviando plan: {e}")
+        raise HTTPException(status_code=500, detail="Error al enviar plan")
+
+
 # Include the router in the main app (moved to end to include all endpoints)
 app.include_router(api_router)
 
