@@ -3647,11 +3647,6 @@ const AdminDashboard = () => {
             </div>
           </TabsContent>
 
-          {/* E.D.N.360 Tab */}
-          <TabsContent value="edn360">
-            <EDN360Manager />
-          </TabsContent>
-
           {/* Templates Tab */}
           <TabsContent value="templates">
             <TemplatesManager token={token} />
