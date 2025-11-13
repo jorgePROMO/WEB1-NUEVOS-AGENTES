@@ -247,6 +247,18 @@ frontend:
           agent: "main"
           comment: "UI IMPROVEMENT: Añadido filtrado condicional de campos en NutritionQuestionnaire. Las preguntas 'embarazo' y 'menopausia' ahora se ocultan automáticamente cuando formData.sexo === 'HOMBRE'. Implementado con .filter() antes del .map() en el render de campos. Esto mejora UX evitando preguntas irrelevantes para usuarios masculinos."
 
+  - task: "E.D.N.360 Plan Viewer - React Object Rendering Fix"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "REACT ERROR FIX: Usuario reporta error al abrir plan generado: 'Objects are not valid as a React child (found: object with keys {mesociclo, semanas, sesiones_detalladas...})'. PROBLEMA: AdminDashboard líneas 4613 y 4310 intentaban renderizar modalTrainingPlan.plan_final y modalPlan.plan_verificado directamente en JSX. Cuando E.D.N.360 genera planes, estos campos contienen objetos JSON complejos, no strings. SOLUCIÓN: Añadido type check: si el contenido es object, usar JSON.stringify(content, null, 2) para convertir a string formateado antes de renderizar. Aplicado a training y nutrition plan modals."
+
   - task: "User Registration Flow"
     implemented: true
     working: true
