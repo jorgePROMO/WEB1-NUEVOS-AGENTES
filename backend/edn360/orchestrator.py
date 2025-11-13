@@ -27,8 +27,8 @@ from .agents.training_initial import (
     E7LoadAnalyst, E8TechnicalAuditor, E9NutritionBridge
 )
 from .agents.nutrition_initial import (
-    N0Triage, N1MetabolicAnalyst, N2EnergySelector,
-    N3TemplateSnap, N4AMBSynchronizer, N5TimingDistributor,
+    N0TriageAnalyst, N1MetabolicAnalyst, N2EnergySelector,
+    N3TemplateSnapper, N4AMBSynchronizer, N5TimingDistributor,
     N6MenuGenerator, N7AdherenceCoach, N8Watchdog
 )
 from .agents.training_followup import (
