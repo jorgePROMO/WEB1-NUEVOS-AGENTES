@@ -269,8 +269,13 @@ Procesa el input de E1 y emite el JSON de evaluación de capacidad."""
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
         """Valida que el input contenga el perfil de E1"""
+        # E2 recibe {e1_output: {...}, ...questionnaire_data}
+        if "e1_output" not in input_data:
+            return False
+        
+        e1_output = input_data["e1_output"]
         required_keys = ["perfil_tecnico", "experiencia", "limitaciones_clinicas", "disponibilidad"]
-        return all(key in input_data for key in required_keys)
+        return all(key in e1_output for key in required_keys)
     
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         """Procesa la salida del LLM"""
