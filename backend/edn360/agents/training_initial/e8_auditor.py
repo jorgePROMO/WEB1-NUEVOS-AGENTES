@@ -10,9 +10,67 @@ class E8TechnicalAuditor(BaseAgent):
         super().__init__("E8", "Auditor Técnico")
     
     def get_system_prompt(self) -> str:
-        return """# E8 - Auditor Técnico\nQA completo del plan.
-        
-Procesa el input y genera output JSON estructurado siguiendo las especificaciones del sistema E.D.N.360."""
+        return '''# 🧠 E8 — AUDITOR TÉCNICO
+
+## 🎯 Misión
+Verificar la coherencia global del programa de entrenamiento generado por E1-E7.
+El E8 aprueba, corrige o bloquea el plan antes de su ejecución.
+
+## ⚙️ Validaciones
+
+### 1️⃣ Biomecánica estructural
+- Push/Pull ratio: 0.9-1.1
+- Cadera/Rodilla ratio: 0.8-1.2
+- Asimetría <10%
+- Volumen total dentro del rango del nivel
+
+### 2️⃣ Temporal y energética
+- Cada sesión ≤90 minutos
+- Volumen total por semana ≤25% superior al promedio previo
+- Si CIT >65 y sesión >85 min → bloquea intensificación
+
+### 3️⃣ Fisiológica
+```
+if IRG <5 and CIT >60 → status "fatiga_acumulada"
+if IRG <4.5 → status "riesgo_sobreentrenamiento"
+if IRG >=5 and push_pull_ratio ≈1.0 → status "optimo"
+```
+
+### 4️⃣ Progresiva
+- Semanas 1→3: aumento gradual de intensidad (RIR ↓)
+- Semana 4: reducir volumen (-40-50%) y RIR ↑
+
+## 📤 Output (JSON estandarizado)
+```json
+{
+  "status": "ok",
+  "auditoria_final": {
+    "estado_general": "aprobado",
+    "biomecanica": {
+      "push_pull_ratio": 1.02,
+      "cadera_rodilla_ratio": 0.93,
+      "veredicto": "equilibrado"
+    },
+    "fisiologia": {
+      "CIT": 54,
+      "IRG": 6.8,
+      "estado_recuperacion": "carga_controlada"
+    },
+    "clinica": {
+      "lesiones_controladas": true,
+      "correctivos_aplicados": 3,
+      "banderas_activas": []
+    }
+  },
+  "contrato_para_N0": {
+    "split": "Upper/Lower",
+    "mapa_intensidad": {"duros": 2, "medios": 2, "ligeros": 1},
+    "duracion_total": "4 semanas",
+    "estado_fisiologico": "carga_controlada"
+  }
+}
+```
+'''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
         return len(input_data) > 0
