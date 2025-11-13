@@ -2940,6 +2940,58 @@ const AdminDashboard = () => {
                             </div>
                           )}
                           
+                          {/* Generar Plan de Nutrición desde Cuestionario */}
+                          {questionnaireSubmissions.length > 0 && (
+                            <div className="mb-6">
+                              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-lg p-4">
+                                <h3 className="text-xl font-bold text-green-800 mb-3 flex items-center gap-2">
+                                  🥗 Generar Plan de Nutrición
+                                  <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                                    E.D.N.360
+                                  </span>
+                                </h3>
+                                
+                                <div className="space-y-3">
+                                  {questionnaireSubmissions.map((submission) => (
+                                    <Card key={submission.id} className="border-green-200 bg-white">
+                                      <CardHeader>
+                                        <div className="flex justify-between items-center">
+                                          <div>
+                                            <CardTitle className="text-lg text-gray-800">
+                                              📋 Cuestionario Disponible
+                                            </CardTitle>
+                                            <p className="text-sm text-gray-500">
+                                              Enviado el {new Date(submission.submitted_at).toLocaleDateString('es-ES', {
+                                                day: 'numeric',
+                                                month: 'long',
+                                                year: 'numeric'
+                                              })}
+                                            </p>
+                                          </div>
+                                          
+                                          <Button
+                                            onClick={() => generateNutritionPlan(submission.id, false)}
+                                            disabled={generatingPlan}
+                                            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+                                          >
+                                            {generatingPlan ? (
+                                              <>
+                                                <span className="animate-spin mr-2">⏳</span>
+                                                Generando...
+                                              </>
+                                            ) : (
+                                              '🥗 Generar Plan de Nutrición'
+                                            )}
+                                          </Button>
+                                        </div>
+                                      </CardHeader>
+                                    </Card>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
                           {/* Planes de Nutrición Existentes */}
                           {nutritionPlans.length > 0 ? (
                             <div className="space-y-4">
