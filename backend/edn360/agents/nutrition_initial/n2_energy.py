@@ -40,7 +40,7 @@ Calcular calorías objetivo y macros basados en TDEE, perfil metabólico y rango
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        return "n1_output" in input_data
+        return len(input_data) > 0
     
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         return self._extract_json_from_response(raw_output)

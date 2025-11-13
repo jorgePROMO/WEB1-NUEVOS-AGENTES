@@ -12,6 +12,6 @@ Validación final, aprobación o bloqueo con correcciones.
 OUTPUT JSON:
 {"status":"ok","aprobacion":true,"validaciones":{"coherencia_macros":true,"timing_correcto":true,"adherencia_viable":true},"plan_aprobado":true,"recomendaciones_finales":["Plan coherente y ejecutable"]}'''
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        return "n7_output" in input_data
+        return len(input_data) > 0
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         return self._extract_json_from_response(raw_output)

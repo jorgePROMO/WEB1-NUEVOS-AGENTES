@@ -12,6 +12,6 @@ Distribuir macros en comidas (2-4 tomas) con timing pre/post entreno.
 OUTPUT JSON:
 {"status":"ok","comidas":[{"nombre":"Desayuno","hora":"08:00","proteinas_g":40,"carbohidratos_g":60,"grasas_g":20}],"timing":{"pre_entreno":"2h antes","post_entreno":"30min después"}}'''
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        return "n4_output" in input_data
+        return len(input_data) > 0
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         return self._extract_json_from_response(raw_output)

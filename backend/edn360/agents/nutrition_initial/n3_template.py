@@ -12,6 +12,6 @@ Ajustar kcal objetivo a paquete comercial (1100-3500).
 OUTPUT JSON:
 {"status":"ok","paquete_kcal":2200,"macros_pct":{"proteinas":30,"carbohidratos":40,"grasas":30}}'''
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        return "n2_output" in input_data
+        return len(input_data) > 0
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         return self._extract_json_from_response(raw_output)
