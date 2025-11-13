@@ -67,7 +67,7 @@ class EDN360Orchestrator:
             N0TriageAnalyst(),
             N1MetabolicAnalyst(),
             N2EnergySelector(),
-            N3TemplateSnap(),
+            N3TemplateSnapper(),
             N4AMBSynchronizer(),
             N5TimingDistributor(),
             N6MenuGenerator(),
