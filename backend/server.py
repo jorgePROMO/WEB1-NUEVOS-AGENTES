@@ -4719,6 +4719,145 @@ def _format_edn360_nutrition_for_display(edn360_data: dict) -> dict:
         logger.error(f"Error formateando plan nutricional E.D.N.360: {e}")
         return edn360_data
 
+def _format_edn360_plan_as_text(edn360_data: dict, user_name: str = "Cliente") -> str:
+    """
+    Convierte el plan E.D.N.360 en texto profesional y legible para enviar al cliente
+    """
+    try:
+        # Extraer datos del plan
+        e4_program = edn360_data.get("E4", {})
+        e5_sessions = edn360_data.get("E5", {})
+        
+        mesociclo = e4_program.get("mesociclo", {})
+        semanas = e4_program.get("semanas", [])
+        sesiones = e5_sessions.get("sesiones_detalladas", [])
+        volumen = e4_program.get("volumen_por_grupo", {})
+        
+        # Generar el texto del plan
+        plan_text = f"""
+╔══════════════════════════════════════════════════════════════════════════╗
+║                     PLAN DE ENTRENAMIENTO PERSONALIZADO                  ║
+║                              SISTEMA E.D.N.360                            ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+👤 CLIENTE: {user_name}
+📅 DURACIÓN: {mesociclo.get('duracion_semanas', 4)} semanas
+🎯 OBJETIVO: {mesociclo.get('objetivo', 'Mejora general').replace('_', ' ').title()}
+💪 ESTRATEGIA: {mesociclo.get('estrategia', 'Progresiva').title()}
+🏋️ SPLIT: {mesociclo.get('split', 'Full-Body').upper()}
+📊 FRECUENCIA: {mesociclo.get('frecuencia_semanal', 3)} días por semana
+
+═══════════════════════════════════════════════════════════════════════════
+
+📋 ESTRUCTURA DEL MESOCICLO
+
+"""
+        
+        # Añadir información de cada semana
+        for semana in semanas:
+            plan_text += f"""
+┌─────────────────────────────────────────────────────────────────────────┐
+│ SEMANA {semana.get('numero', 1)} - {semana.get('fase', 'Entrenamiento').upper()}
+└─────────────────────────────────────────────────────────────────────────┘
+
+🎯 Objetivo: {semana.get('notas', 'Progresión gradual')}
+📊 Volumen: {semana.get('volumen_pct', 100)}% del volumen base
+💪 Intensidad: {semana.get('intensidad', 'media').replace('_', ' ').title()}
+🎚️ RIR objetivo: {semana.get('rir_objetivo', 3)} repeticiones en reserva
+⏱️ Tiempo estimado por sesión: ~{semana.get('kpis', {}).get('tiempo_total_min', 60) // mesociclo.get('frecuencia_semanal', 3)} minutos
+
+"""
+        
+        # Añadir sesiones detalladas
+        plan_text += """
+═══════════════════════════════════════════════════════════════════════════
+
+📅 SESIONES DE ENTRENAMIENTO DETALLADAS
+
+"""
+        
+        if sesiones:
+            for sesion in sesiones:
+                plan_text += f"""
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🗓️ DÍA {sesion.get('dia', 1)} - {sesion.get('nombre', 'Sesión').upper()}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏱️ Duración estimada: {sesion.get('duracion_min', 50)} minutos
+
+EJERCICIOS:
+"""
+                
+                for idx, ejercicio in enumerate(sesion.get('ejercicios', []), 1):
+                    plan_text += f"""
+{idx}. 💪 {ejercicio.get('nombre', 'Ejercicio').upper()}
+   • Series: {ejercicio.get('series', 3)}
+   • Repeticiones: {ejercicio.get('reps', '10-12')}
+   • RIR (reserva): {ejercicio.get('rir', '3')} reps antes del fallo
+   • Descanso: {ejercicio.get('descanso', 90)} segundos
+"""
+        else:
+            plan_text += "\n⚠️ No se generaron sesiones detalladas. Contacta a tu entrenador.\n"
+        
+        # Añadir volumen por grupo muscular
+        plan_text += """
+
+═══════════════════════════════════════════════════════════════════════════
+
+📊 VOLUMEN DE ENTRENAMIENTO POR GRUPO MUSCULAR (Series/Semana)
+
+"""
+        
+        for grupo, info in volumen.items():
+            plan_text += f"• {grupo.replace('_', ' ').title()}: {info.get('series_semana', 0)} series/semana\n"
+        
+        # Añadir instrucciones finales
+        plan_text += """
+
+═══════════════════════════════════════════════════════════════════════════
+
+📝 INSTRUCCIONES IMPORTANTES
+
+✅ PROGRESIÓN:
+   - Aumenta el peso cuando puedas completar todas las series en el rango 
+     alto de repeticiones con el RIR objetivo
+   - Prioriza SIEMPRE la técnica correcta sobre el peso
+
+✅ RIR (Reps In Reserve):
+   - RIR 5 = Podrías hacer 5 repeticiones más
+   - RIR 3 = Podrías hacer 3 repeticiones más
+   - RIR 1 = Podrías hacer solo 1 repetición más
+
+✅ DESCANSOS:
+   - Respeta los tiempos de descanso indicados
+   - En ejercicios pesados (multiarticulares) puede necesitar hasta 3 min
+
+✅ RECUPERACIÓN:
+   - Duerme al menos 7-8 horas diarias
+   - Hidrátate adecuadamente (2-3 litros/día)
+   - Alimentación alineada con tu plan nutricional
+
+⚠️ SEÑALES DE ALERTA:
+   - Dolor articular persistente → PARA y consulta
+   - Fatiga excesiva → Reduce volumen/intensidad
+   - Falta de progreso 2+ semanas → Evaluar con entrenador
+
+═══════════════════════════════════════════════════════════════════════════
+
+💬 DUDAS O CONSULTAS: Contacta a tu entrenador
+
+¡ÉXITO EN TU ENTRENAMIENTO! 💪
+
+═══════════════════════════════════════════════════════════════════════════
+"""
+        
+        return plan_text
+        
+    except Exception as e:
+        logger.error(f"Error formateando plan E.D.N.360 como texto: {e}")
+        return "Error generando el plan. Contacta a tu entrenador."
+
+
 def _format_edn360_plan_for_display(edn360_data: dict) -> dict:
     """
     Convierte el output de E.D.N.360 al formato que espera el frontend actual
