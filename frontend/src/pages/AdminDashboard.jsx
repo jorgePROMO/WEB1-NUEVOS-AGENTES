@@ -4364,7 +4364,7 @@ const AdminDashboard = () => {
                           <Button
                             onClick={() => {
                               setEditingNutrition(false);
-                              setNutritionContent(modalPlan.plan_verificado);
+                              setNutritionContent(modalPlan.plan_text || modalPlan.plan_verificado);
                             }}
                             variant="outline"
                           >
