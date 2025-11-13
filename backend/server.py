@@ -4706,6 +4706,192 @@ def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
             "_original_questionnaire": questionnaire_data
         }
 
+def _format_edn360_nutrition_as_text(edn360_data: dict, user_name: str = "Cliente") -> str:
+    """
+    Convierte el plan E.D.N.360 de nutrición en texto profesional para enviar al cliente
+    """
+    try:
+        # Extraer datos de los agentes
+        n1_metabolic = edn360_data.get("N1", {})
+        n2_energy = edn360_data.get("N2", {})
+        n4_calendar = edn360_data.get("N4", {})
+        n5_timing = edn360_data.get("N5", {})
+        n6_menus = edn360_data.get("N6", {})
+        n7_adherence = edn360_data.get("N7", {})
+        
+        # Generar el texto del plan
+        plan_text = f"""
+╔══════════════════════════════════════════════════════════════════════════╗
+║                    PLAN DE NUTRICIÓN PERSONALIZADO                        ║
+║                             SISTEMA E.D.N.360                             ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+👤 CLIENTE: {user_name}
+📅 DURACIÓN: 4 semanas (sincronizado con entrenamiento)
+🎯 OBJETIVO: Plan nutricional adaptado a tu programa de entrenamiento
+
+═══════════════════════════════════════════════════════════════════════════
+
+📊 TU PERFIL METABÓLICO
+
+• Metabolismo Basal (BMR): {n1_metabolic.get('bmr_estimado', 'N/A')} kcal
+• Gasto Total Diario (TDEE): {n1_metabolic.get('tdee_estimado', 'N/A')} kcal
+• Perfil Metabólico: {n1_metabolic.get('perfil_metabolico', 'N/A').replace('_', ' ').title()}
+• Nivel de Actividad: {n1_metabolic.get('nivel_actividad', 'N/A').replace('_', ' ').title()}
+
+═══════════════════════════════════════════════════════════════════════════
+
+🍽️ CALORÍAS Y MACRONUTRIENTES
+
+"""
+        
+        # Añadir datos de macros
+        macros = n2_energy.get("macros", {})
+        if macros:
+            plan_text += f"""
+📈 CALORÍAS OBJETIVO: {n2_energy.get('kcal_objetivo', 'N/A')} kcal/día
+   Déficit aplicado: {n2_energy.get('deficit_pct', 0)}%
+
+💪 MACRONUTRIENTES DIARIOS:
+   • Proteínas: {macros.get('proteinas_g', 'N/A')}g ({macros.get('proteinas_gkg', 'N/A')}g/kg)
+   • Carbohidratos: {macros.get('carbohidratos_g', 'N/A')}g
+   • Grasas: {macros.get('grasas_g', 'N/A')}g
+
+📊 DISTRIBUCIÓN PORCENTUAL:
+"""
+            distribucion = n2_energy.get("distribucion", {})
+            if distribucion:
+                plan_text += f"""   • Proteínas: {distribucion.get('proteinas_pct', 'N/A')}%
+   • Carbohidratos: {distribucion.get('carbohidratos_pct', 'N/A')}%
+   • Grasas: {distribucion.get('grasas_pct', 'N/A')}%
+"""
+        
+        # Añadir calendario A/M/B si existe
+        calendario = n4_calendar.get("calendario", [])
+        if calendario and len(calendario) > 0:
+            plan_text += """
+
+═══════════════════════════════════════════════════════════════════════════
+
+📅 CALENDARIO NUTRICIONAL (Días Altos/Medios/Bajos)
+
+Este plan se ajusta a tus días de entrenamiento:
+• 🔥 Día A (Alto): Días de entrenamiento intenso
+• ⚖️ Día M (Medio): Días de entrenamiento moderado
+• 🌙 Día B (Bajo): Días de descanso
+
+PRIMERA SEMANA:
+"""
+            for i, dia in enumerate(calendario[:7], 1):
+                tipo = dia.get('tipo', 'M')
+                emoji = "🔥" if tipo == "A" else ("🌙" if tipo == "B" else "⚖️")
+                plan_text += f"   Día {i}: {emoji} Tipo {tipo} - {dia.get('kcal', 'N/A')} kcal\n"
+        
+        # Añadir distribución de comidas si existe
+        comidas = n5_timing.get("comidas", [])
+        if comidas:
+            plan_text += """
+
+═══════════════════════════════════════════════════════════════════════════
+
+⏰ DISTRIBUCIÓN DE COMIDAS
+
+"""
+            for comida in comidas:
+                plan_text += f"""
+📍 {comida.get('nombre', 'Comida').upper()} - {comida.get('hora', 'N/A')}
+   • Proteínas: {comida.get('proteinas_g', 'N/A')}g
+   • Carbohidratos: {comida.get('carbohidratos_g', 'N/A')}g
+   • Grasas: {comida.get('grasas_g', 'N/A')}g
+"""
+        
+        # Añadir ejemplos de menús si existen
+        menus = n6_menus.get("menus", {})
+        if menus:
+            plan_text += """
+
+═══════════════════════════════════════════════════════════════════════════
+
+🍴 EJEMPLOS DE MENÚS
+
+"""
+            for tipo, menu_list in menus.items():
+                if menu_list and len(menu_list) > 0:
+                    emoji = "🔥" if tipo == "A" else ("🌙" if tipo == "B" else "⚖️")
+                    plan_text += f"\n{emoji} DÍAS TIPO {tipo}:\n"
+                    for item in menu_list[:3]:  # Primeros 3 ejemplos
+                        comida_nombre = item.get('comida', 'Comida')
+                        alimentos = item.get('alimentos', [])
+                        plan_text += f"\n   {comida_nombre}:\n"
+                        for alimento in alimentos:
+                            plan_text += f"      • {alimento}\n"
+        
+        # Añadir protocolos de adherencia
+        protocolos = n7_adherence.get("protocolos", {})
+        recomendaciones = n7_adherence.get("recomendaciones", [])
+        
+        plan_text += """
+
+═══════════════════════════════════════════════════════════════════════════
+
+📝 PROTOCOLO DE ADHERENCIA (REGLA 80/20)
+
+"""
+        
+        if protocolos:
+            for key, value in protocolos.items():
+                plan_text += f"• {key.replace('_', ' ').title()}: {value}\n"
+        
+        if recomendaciones:
+            plan_text += "\n✅ RECOMENDACIONES:\n"
+            for rec in recomendaciones:
+                plan_text += f"   • {rec}\n"
+        
+        # Instrucciones finales
+        plan_text += """
+
+═══════════════════════════════════════════════════════════════════════════
+
+⚠️ INSTRUCCIONES IMPORTANTES
+
+✅ HIDRATACIÓN:
+   • Mínimo 2-3 litros de agua al día
+   • Aumentar en días de entrenamiento
+
+✅ TIMING:
+   • Pre-entreno: 1.5-2 horas antes
+   • Post-entreno: Dentro de 30-60 minutos
+
+✅ FLEXIBILIDAD:
+   • 80% del tiempo sigue el plan
+   • 20% permite flexibilidad (1-2 comidas libres/semana)
+
+✅ AJUSTES:
+   • Si tienes hambre excesiva → Añade +100-200 kcal
+   • Si no pierdes peso en 2 semanas → Reduce -100-200 kcal
+   • Consulta siempre con tu nutricionista antes de cambios mayores
+
+⚠️ SEÑALES DE ALERTA:
+   • Fatiga extrema → Puede necesitar más carbohidratos
+   • Pérdida de fuerza → Revisa proteína y calorías totales
+   • Hambre constante → Plan demasiado restrictivo
+
+═══════════════════════════════════════════════════════════════════════════
+
+💬 DUDAS O CONSULTAS: Contacta a tu nutricionista
+
+¡ÉXITO EN TU PLAN NUTRICIONAL! 🥗
+
+═══════════════════════════════════════════════════════════════════════════
+"""
+        
+        return plan_text
+        
+    except Exception as e:
+        logger.error(f"Error formateando plan E.D.N.360 nutrición como texto: {e}")
+        return "Error generando el plan. Contacta a tu nutricionista."
+
+
 def _format_edn360_nutrition_for_display(edn360_data: dict) -> dict:
     """
     Convierte el output de nutrición E.D.N.360 al formato que espera el frontend actual
