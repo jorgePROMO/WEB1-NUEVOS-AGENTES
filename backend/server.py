@@ -4450,14 +4450,32 @@ def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
         # NutritionQuestionnaire tiene campos más detallados
         entrenado_gym = questionnaire_data.get("entrenado_gimnasio", "")
         nivel_deporte = questionnaire_data.get("nivel_deporte", "")
+        constante_deporte = questionnaire_data.get("constante_deporte", "")
+        tiempo_dedicaba = questionnaire_data.get("tiempo_dedicaba", "")
         entrena = questionnaire_data.get("entrena", "")
         
         # Construir experiencia desde múltiples campos
         experiencia_parts = []
-        if entrenado_gym:
-            experiencia_parts.append(f"Gimnasio: {entrenado_gym}")
+        
+        # Priorizar nivel declarado
         if nivel_deporte:
             experiencia_parts.append(f"Nivel: {nivel_deporte}")
+        
+        if entrenado_gym:
+            experiencia_parts.append(f"Gimnasio: {entrenado_gym}")
+        
+        # CRÍTICO: Si tiene "tiempo_dedicaba" con volumen alto, es avanzado
+        if tiempo_dedicaba:
+            experiencia_parts.append(f"Dedicación previa: {tiempo_dedicaba}")
+            # Detectar señales de nivel avanzado/profesional
+            tiempo_lower = tiempo_dedicaba.lower()
+            if any(indicator in tiempo_lower for indicator in ["3h", "3 h", "4h", "4 h", "5 días", "6 días", "profesional", "culturista", "competición"]):
+                if not any("avanzado" in part.lower() or "profesional" in part.lower() for part in experiencia_parts):
+                    experiencia_parts.insert(0, "⚠️ NIVEL REAL: AVANZADO/PROFESIONAL (según dedicación histórica)")
+        
+        if constante_deporte:
+            experiencia_parts.append(f"Constancia: {constante_deporte}")
+        
         if entrena:
             experiencia_parts.append(entrena)
         
