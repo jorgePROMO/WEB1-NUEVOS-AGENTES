@@ -5010,6 +5010,10 @@ async def admin_generate_training_plan(
                 detail=f"Error generando plan: {result.get('error', 'Error desconocido')}"
             )
         
+        # Generar versiones del plan
+        plan_data_json = _format_edn360_plan_for_display(result["plan_data"])
+        plan_text_professional = _format_edn360_plan_as_text(result["plan_data"], user.get("nombre", "Cliente"))
+        
         # Guardar el plan en training_plans con formato E.D.N.360
         training_plan_doc = {
             "_id": plan_id,
@@ -5029,7 +5033,8 @@ async def admin_generate_training_plan(
             "agent_1_output": result["plan_data"].get("E1", {}),
             "agent_2_output": result["plan_data"].get("E2", {}),
             "agent_3_output": result["plan_data"].get("E4", {}),  # Arquitecto del programa
-            "plan_final": _format_edn360_plan_for_display(result["plan_data"]),
+            "plan_final": plan_data_json,  # JSON estructurado para el frontend
+            "plan_text": plan_text_professional,  # TEXTO PROFESIONAL para enviar al cliente
             
             "generated_at": now,
             "edited": False,
