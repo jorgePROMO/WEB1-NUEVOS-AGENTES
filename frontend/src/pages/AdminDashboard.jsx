@@ -4612,9 +4612,11 @@ const AdminDashboard = () => {
                     ) : (
                       <div className="prose max-w-none">
                         <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
-                          {typeof modalTrainingPlan.plan_final === 'object' 
-                            ? JSON.stringify(modalTrainingPlan.plan_final, null, 2)
-                            : modalTrainingPlan.plan_final}
+                          {modalTrainingPlan.plan_text 
+                            ? modalTrainingPlan.plan_text
+                            : (typeof modalTrainingPlan.plan_final === 'object' 
+                                ? JSON.stringify(modalTrainingPlan.plan_final, null, 2)
+                                : modalTrainingPlan.plan_final)}
                         </pre>
                       </div>
                     )}
