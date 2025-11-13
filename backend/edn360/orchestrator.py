@@ -276,21 +276,27 @@ class EDN360Orchestrator:
             if agent.agent_id == "E1":
                 agent_input = current_data
             elif agent.agent_id == "E2":
+                # E2 espera los campos de E1 en el root level (no envueltos)
+                e1_output = outputs.get("E1", {})
                 agent_input = {
-                    "e1_output": outputs.get("E1"),
-                    **questionnaire_data
+                    **e1_output,  # Desempaquetar E1's output al root level
+                    **questionnaire_data  # Mantener questionnaire data también
                 }
             elif agent.agent_id == "E3":
+                # E3 espera E1 y E2 outputs desempaquetados
+                e1_output = outputs.get("E1", {})
+                e2_output = outputs.get("E2", {})
                 agent_input = {
-                    "e1_output": outputs.get("E1"),
-                    "e2_output": outputs.get("E2")
+                    **e1_output,
+                    **e2_output,
+                    **questionnaire_data
                 }
             else:
-                # E4-E9 reciben outputs acumulados
-                agent_input = {
-                    f"e{i}_output": outputs.get(f"E{i}")
-                    for i in range(1, int(agent.agent_id[1:]))
-                }
+                # E4-E9 reciben todos los outputs anteriores desempaquetados
+                agent_input = questionnaire_data.copy()
+                for i in range(1, int(agent.agent_id[1:])):
+                    prev_output = outputs.get(f"E{i}", {})
+                    agent_input.update(prev_output)
             
             # Ejecutar agente
             result = await agent.execute(agent_input)
