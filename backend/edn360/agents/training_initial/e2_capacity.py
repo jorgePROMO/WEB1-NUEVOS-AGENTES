@@ -140,6 +140,27 @@ tiempo_max_final = min(tiempo_ajustado, 90)  // Nunca superar 90 min
 **Regla:**
 - Durante las primeras 2 semanas siempre RIR +1 (fase de adaptación técnica)
 
+**⚠️ IMPORTANTE - Manejo de EXPERIENCIA PREVIA + PARÓN PROLONGADO:**
+
+Si el cliente tiene historial de entrenamiento avanzado (culturismo, powerlifting, deporte profesional) pero ha tenido un parón >6 meses:
+
+1. **NO clasificar como principiante** - La memoria muscular y técnica persisten
+2. **Aplicar "Re-acondicionamiento Acelerado":**
+   - Semana 1-2: RIR 4-5 (reactivación neuromuscular)
+   - Semana 3-4: RIR 3 (ya cerca de su capacidad previa)
+   - Mes 2+: RIR 2-3 (capacidad avanzada recuperada)
+3. **Volumen inicial:** Comenzar con 60-70% del volumen típico de su nivel (no de principiante)
+4. **SEG score:** Penalizar solo -0.5 puntos por parón, NO tratarlo como principiante
+5. **Split:** Usar el split apropiado para su experiencia real (no full-body si era avanzado)
+
+**Indicadores de experiencia avanzada previa:**
+- "culturista", "competición", "profesional" en historial
+- "3+ horas/día", "5-6 días/semana" en tiempo dedicado
+- Nivel declarado: "Avanzado" o "Profesional"
+- Descripción de rutinas complejas (PPL, Weider, etc.)
+
+**En estos casos:** El parón es temporal, la capacidad técnica y estructural persiste.
+
 ### 5️⃣ Banderas clínicas y restricciones
 
 **Lista de ejercicios restringidos según lesión:**
