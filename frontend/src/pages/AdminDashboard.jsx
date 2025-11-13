@@ -4587,7 +4587,7 @@ const AdminDashboard = () => {
                           <Button
                             onClick={() => {
                               setEditingTraining(false);
-                              setTrainingContent(modalTrainingPlan.plan_final);
+                              setTrainingContent(modalTrainingPlan.plan_text || modalTrainingPlan.plan_final);
                             }}
                             variant="outline"
                           >
