@@ -64,7 +64,7 @@ class EDN360Orchestrator:
         
         # Nutrition Initial Agents (N0-N8)
         self.nutrition_initial_agents = [
-            N0Triage(),
+            N0TriageAnalyst(),
             N1MetabolicAnalyst(),
             N2EnergySelector(),
             N3TemplateSnap(),
