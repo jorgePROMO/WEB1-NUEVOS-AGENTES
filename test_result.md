@@ -139,6 +139,17 @@ backend:
           agent: "testing"
           comment: "✅ E.D.N.360 FOLLOW-UP ADAPTER VERIFIED: Follow-up data combination logic tested and working correctly. The _adapt_followup_for_edn360() function properly combines initial questionnaire data (sexo, altura_cm) with updated follow-up data (peso, circunferencias). Data preservation verified: gender and height maintained from initial questionnaire, weight correctly updated from follow-up. This resolves the issue where FollowUpQuestionnaire only contains updated weight but E.D.N.360 requires complete user profile data."
 
+  - task: "E.D.N.360 Orchestrator Fix - Agent Chain Data Flow"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/edn360/orchestrator.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "CRITICAL ARCHITECTURE FIX: Corregido el flujo de datos entre agentes en orchestrator. PROBLEMA: E2 fallaba con 'Datos de entrada inválidos' porque orchestrator envolvía la salida de E1 en 'e1_output' pero E2 esperaba los campos directamente en root level. SOLUCIÓN: Modificado _execute_training_initial() (líneas 275-298) y _execute_nutrition_initial() (líneas 338-354) para desempaquetar outputs de agentes previos usando **prev_output en lugar de envolverlos. Ahora E2 recibe {**e1_output, **questionnaire_data}, E3 recibe {**e1_output, **e2_output, **questionnaire_data}, etc. Fix aplicado a toda la cadena E1-E9 y N0-N8."
   - task: "User Registration API"
     implemented: true
     working: true
