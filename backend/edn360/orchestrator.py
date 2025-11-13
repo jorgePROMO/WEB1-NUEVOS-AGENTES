@@ -341,11 +341,14 @@ class EDN360Orchestrator:
                     "training_bridge": training_bridge_data
                 }
             else:
+                # N1-N8 reciben todos los outputs anteriores desempaquetados
                 agent_input = {
-                    f"n{i}_output": outputs.get(f"N{i}")
-                    for i in range(0, int(agent.agent_id[1:]))
+                    **questionnaire_data,
+                    "training_bridge": training_bridge_data
                 }
-                agent_input["training_bridge"] = training_bridge_data
+                for i in range(0, int(agent.agent_id[1:])):
+                    prev_output = outputs.get(f"N{i}", {})
+                    agent_input.update(prev_output)
             
             # Ejecutar agente
             result = await agent.execute(agent_input)
