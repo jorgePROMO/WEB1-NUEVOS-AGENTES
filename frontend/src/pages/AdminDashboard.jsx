@@ -2979,41 +2979,55 @@ const AdminDashboard = () => {
                                 </h3>
                                 
                                 <div className="space-y-3">
-                                  {questionnaireSubmissions.map((submission) => (
-                                    <Card key={submission.id} className="border-green-200 bg-white">
-                                      <CardHeader>
-                                        <div className="flex justify-between items-center">
-                                          <div>
-                                            <CardTitle className="text-lg text-gray-800">
-                                              📋 Cuestionario Disponible
-                                            </CardTitle>
-                                            <p className="text-sm text-gray-500">
-                                              Enviado el {new Date(submission.submitted_at).toLocaleDateString('es-ES', {
-                                                day: 'numeric',
-                                                month: 'long',
-                                                year: 'numeric'
-                                              })}
-                                            </p>
+                                  {questionnaireSubmissions.map((submission) => {
+                                    const planAlreadyExists = submission.plan_generated;
+                                    
+                                    return (
+                                      <Card key={submission.id} className="border-green-200 bg-white">
+                                        <CardHeader>
+                                          <div className="flex justify-between items-center">
+                                            <div>
+                                              <CardTitle className="text-lg text-gray-800">
+                                                📋 Cuestionario {planAlreadyExists ? '(Plan ya generado)' : 'Disponible'}
+                                              </CardTitle>
+                                              <p className="text-sm text-gray-500">
+                                                Enviado el {new Date(submission.submitted_at).toLocaleDateString('es-ES', {
+                                                  day: 'numeric',
+                                                  month: 'long',
+                                                  year: 'numeric'
+                                                })}
+                                              </p>
+                                              {planAlreadyExists && (
+                                                <p className="text-xs text-orange-600 mt-1">
+                                                  ⚠️ Ya existe un plan. Puedes regenerarlo con E.D.N.360
+                                                </p>
+                                              )}
+                                            </div>
+                                            
+                                            <Button
+                                              onClick={() => generateNutritionPlan(submission.id, planAlreadyExists)}
+                                              disabled={generatingPlan}
+                                              className={planAlreadyExists 
+                                                ? "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+                                                : "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+                                              }
+                                            >
+                                              {generatingPlan ? (
+                                                <>
+                                                  <span className="animate-spin mr-2">⏳</span>
+                                                  Generando...
+                                                </>
+                                              ) : planAlreadyExists ? (
+                                                '🔄 Regenerar con E.D.N.360'
+                                              ) : (
+                                                '🥗 Generar Plan de Nutrición'
+                                              )}
+                                            </Button>
                                           </div>
-                                          
-                                          <Button
-                                            onClick={() => generateNutritionPlan(submission.id, false)}
-                                            disabled={generatingPlan}
-                                            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
-                                          >
-                                            {generatingPlan ? (
-                                              <>
-                                                <span className="animate-spin mr-2">⏳</span>
-                                                Generando...
-                                              </>
-                                            ) : (
-                                              '🥗 Generar Plan de Nutrición'
-                                            )}
-                                          </Button>
-                                        </div>
-                                      </CardHeader>
-                                    </Card>
-                                  ))}
+                                        </CardHeader>
+                                      </Card>
+                                    );
+                                  })}
                                 </div>
                               </div>
                             </div>
