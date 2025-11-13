@@ -4389,9 +4389,11 @@ const AdminDashboard = () => {
                     ) : (
                       <div className="prose max-w-none">
                         <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
-                          {typeof modalPlan.plan_verificado === 'object'
-                            ? JSON.stringify(modalPlan.plan_verificado, null, 2)
-                            : modalPlan.plan_verificado}
+                          {modalPlan.plan_text
+                            ? modalPlan.plan_text
+                            : (typeof modalPlan.plan_verificado === 'object'
+                                ? JSON.stringify(modalPlan.plan_verificado, null, 2)
+                                : modalPlan.plan_verificado)}
                         </pre>
                       </div>
                     )}
