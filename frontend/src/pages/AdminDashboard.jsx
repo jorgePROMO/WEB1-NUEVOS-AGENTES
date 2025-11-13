@@ -2103,11 +2103,6 @@ const AdminDashboard = () => {
                 <span className="hidden sm:inline">Gestión de Clientes</span>
                 <span className="sm:hidden">Clientes</span>
               </TabsTrigger>
-              <TabsTrigger value="edn360">
-                <Dumbbell className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">E.D.N.360</span>
-                <span className="sm:hidden">E.D.N</span>
-              </TabsTrigger>
               <TabsTrigger value="templates">
                 <MessageSquare className="h-4 w-4 mr-2" />
                 Templates
