@@ -243,9 +243,36 @@ const AdminDashboard = () => {
     }
   };
 
+  const generateNutritionPlan = async (submissionId, regenerate = false) => {
+    setGeneratingPlan(true);
+    
+    try {
+      const response = await axios.post(
+        `${API}/admin/users/${selectedClient.id}/nutrition/generate`,
+        null,
+        {
+          params: {
+            submission_id: submissionId,
+            regenerate: regenerate
+          },
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      
+      alert('✅ Plan de nutrición generado exitosamente con E.D.N.360!');
+      await loadNutritionPlan(selectedClient.id);
+    } catch (error) {
+      console.error('Error generating nutrition plan:', error);
+      alert('❌ Error al generar plan: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setGeneratingPlan(false);
+    }
+  };
+
   const openTrainingPlanModal = (plan) => {
     setModalTrainingPlan(plan);
-    setTrainingContent(plan.plan_final);
+    setTrainingContent(plan.plan_text || plan.plan_final);
     setShowTrainingModal(true);
   };
 
