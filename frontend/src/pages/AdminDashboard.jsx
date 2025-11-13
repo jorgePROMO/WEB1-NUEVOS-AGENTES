@@ -4726,7 +4726,7 @@ const AdminDashboard = () => {
             setTimeout(() => setShowTrainingModal(true), 100);
           }}
           planId={modalTrainingPlan.id}
-          planContent={modalTrainingPlan.plan_final}
+          planContent={modalTrainingPlan.plan_text || modalTrainingPlan.plan_final}
           token={token}
           onPlanUpdated={(updatedPlan) => {
             // Update the modal display
