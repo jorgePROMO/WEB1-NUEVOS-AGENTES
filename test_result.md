@@ -908,8 +908,7 @@ frontend:
 
 test_plan:
   current_focus:
-    - "E.D.N.360 Data Adapter Fix"
-    - "E.D.N.360 Follow-Up Data Combination"
+    - "E.D.N.360 Orchestrator Fix - Agent Chain Data Flow"
   stuck_tasks: []
   test_all: false
   test_priority: "critical_first"
