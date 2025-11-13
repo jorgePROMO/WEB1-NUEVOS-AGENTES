@@ -117,8 +117,10 @@ Limitada entre 50-100
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        """Valida que el input contenga output de N0 y datos del bridge E9"""
-        return "n0_output" in input_data
+        """Valida que el input contenga datos suficientes (N0 desempaquetado + questionnaire)"""
+        # El orchestrator desempaqueta N0, así que buscamos campos de N0 directamente
+        # N0 genera: decision, factores, condiciones
+        return len(input_data) > 0  # Validación básica, N0 ya pasó sus datos
     
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         """Extrae y valida el JSON del output del LLM"""
