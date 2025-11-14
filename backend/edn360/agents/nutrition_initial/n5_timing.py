@@ -7,57 +7,44 @@ class N5TimingDistributor(BaseAgent):
         super().__init__("N5", "Timing Distributor")
     def get_system_prompt(self) -> str:
         return '''# N5 — TIMING & DISTRIBUCIÓN DE COMIDAS
-Distribuir macros en 4-5 comidas con timing pre/post entreno.
+Distribuir macros diarios en comidas según calendario A/M/B.
 
-INSTRUCCIONES:
-- Genera 4-5 comidas según macros totales disponibles
-- OBLIGATORIO: Desayuno, Pre-entreno, Post-entreno, Cena
-- Pre-entreno: 25-30g proteína, 60-80g carbos, 5-10g grasas (90-120min antes)
-- Post-entreno: 35-50g proteína, 70-100g carbos, 10-15g grasas (inmediato)
-- Distribución realista de horarios
-- Los macros deben sumar el total diario
+CRÍTICO - LEE EL CALENDARIO N4:
+- Consulta el campo "calendario_semanal" de N4 para saber qué días son A/M/B
+- SOLO incluye Pre/Post entreno en días A y M (entrenamiento)
+- En días B (descanso) SOLO: Desayuno, Comida, Cena (3 comidas)
 
-DEVUELVE SOLO JSON (sin texto adicional):
+DISTRIBUCIÓN POR TIPO DE DÍA:
+
+DÍAS A/M (Entrenamiento) - 4 comidas:
 {
-  "status": "ok",
+  "tipo_dia": "A" o "M",
   "numero_comidas": 4,
   "comidas": [
-    {
-      "nombre": "Desayuno",
-      "hora": "08:00",
-      "tipo": "comida_principal",
-      "proteinas_g": 40,
-      "carbohidratos_g": 60,
-      "grasas_g": 20,
-      "descripcion": "Primera comida del día"
-    },
-    {
-      "nombre": "Pre-Entreno",
-      "hora": "11:30",
-      "tipo": "pre_entreno",
-      "proteinas_g": 28,
-      "carbohidratos_g": 75,
-      "grasas_g": 8,
-      "timing_entreno": "90-120 min antes"
-    },
-    {
-      "nombre": "Post-Entreno",
-      "hora": "14:30",
-      "tipo": "post_entreno",
-      "proteinas_g": 45,
-      "carbohidratos_g": 90,
-      "grasas_g": 12,
-      "timing_entreno": "inmediato"
-    },
-    {
-      "nombre": "Cena",
-      "hora": "21:00",
-      "tipo": "comida_principal",
-      "proteinas_g": 45,
-      "carbohidratos_g": 35,
-      "grasas_g": 28
-    }
-  ],
+    {"nombre": "Desayuno", "hora": "08:00", "tipo": "comida_principal", "proteinas_g": 40, "carbohidratos_g": 50, "grasas_g": 18},
+    {"nombre": "Pre-Entreno", "hora": "11:30", "tipo": "pre_entreno", "proteinas_g": 28, "carbohidratos_g": 75, "grasas_g": 8, "timing_entreno": "90-120 min antes"},
+    {"nombre": "Post-Entreno", "hora": "14:30", "tipo": "post_entreno", "proteinas_g": 45, "carbohidratos_g": 90, "grasas_g": 12, "timing_entreno": "inmediato"},
+    {"nombre": "Cena", "hora": "21:00", "tipo": "comida_principal", "proteinas_g": 45, "carbohidratos_g": 30, "grasas_g": 28}
+  ]
+}
+
+DÍAS B (Descanso) - 3 comidas:
+{
+  "tipo_dia": "B",
+  "numero_comidas": 3,
+  "comidas": [
+    {"nombre": "Desayuno", "hora": "08:00", "tipo": "comida_principal", "proteinas_g": 55, "carbohidratos_g": 50, "grasas_g": 25},
+    {"nombre": "Comida", "hora": "14:00", "tipo": "comida_principal", "proteinas_g": 60, "carbohidratos_g": 55, "grasas_g": 22},
+    {"nombre": "Cena", "hora": "21:00", "tipo": "comida_principal", "proteinas_g": 50, "carbohidratos_g": 35, "grasas_g": 25}
+  ]
+}
+
+DEVUELVE JSON CON DISTRIBUCIONES PARA A, M y B:
+{
+  "status": "ok",
+  "distribucion_dia_A": {...},
+  "distribucion_dia_M": {...},
+  "distribucion_dia_B": {...},
   "timing_entreno": {
     "pre_entreno": "90-120 min antes",
     "post_entreno": "0-30 min después"
