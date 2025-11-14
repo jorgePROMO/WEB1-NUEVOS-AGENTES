@@ -8586,6 +8586,148 @@ async def get_user_training_plans(user_id: str, request: Request):
     return {"plans": formatted_plans}
 
 
+# ==================== FOLLOW-UP REPORT ENDPOINTS ====================
+
+@api_router.get("/admin/users/{user_id}/nutrition-plans")
+async def get_user_nutrition_plans(user_id: str, request: Request):
+    """Obtiene todos los planes de nutrición de un usuario"""
+    await require_admin(request)
+    
+    plans = await db.nutrition_plans.find(
+        {"user_id": user_id}
+    ).sort("generated_at", -1).to_list(length=None)
+    
+    formatted_plans = []
+    for i, plan in enumerate(plans):
+        # Manejar casos donde generated_at podría no existir
+        generated_at = plan.get("generated_at")
+        if generated_at:
+            date_str = generated_at.strftime('%d/%m/%Y')
+            iso_str = generated_at.isoformat()
+        else:
+            date_str = "Fecha desconocida"
+            iso_str = datetime.now(timezone.utc).isoformat()
+        
+        # Determinar label
+        if i == 0:
+            label = f"Último generado ({date_str})"
+        else:
+            label = f"Plan {len(plans) - i} ({date_str})"
+        
+        formatted_plans.append({
+            "id": plan["_id"],
+            "label": label,
+            "generated_at": iso_str,
+            "month": plan.get("month"),
+            "year": plan.get("year")
+        })
+    
+    return {"plans": formatted_plans}
+
+
+@api_router.get("/admin/users/{user_id}/follow-up-reports")
+async def get_follow_up_reports(user_id: str, request: Request):
+    """Obtiene todos los informes de seguimiento de un usuario"""
+    await require_admin(request)
+    
+    reports = await db.follow_up_reports.find(
+        {"user_id": user_id}
+    ).sort("generated_at", -1).to_list(length=None)
+    
+    return {"reports": reports}
+
+
+@api_router.post("/admin/users/{user_id}/follow-up-report/generate")
+async def generate_follow_up_report(
+    user_id: str,
+    previous_training_id: str,
+    new_training_id: str,
+    previous_nutrition_id: str = None,
+    new_nutrition_id: str = None,
+    request: Request = None
+):
+    """
+    Genera un informe de seguimiento comparando planes anteriores con nuevos
+    """
+    await require_admin(request)
+    
+    try:
+        logger.info(f"📊 Generando informe de seguimiento para usuario {user_id}")
+        
+        # Obtener planes de entrenamiento
+        prev_training = await db.training_plans.find_one({"_id": previous_training_id})
+        new_training = await db.training_plans.find_one({"_id": new_training_id})
+        
+        if not prev_training or not new_training:
+            raise HTTPException(status_code=404, detail="Planes de entrenamiento no encontrados")
+        
+        # Obtener planes de nutrición si se especificaron
+        prev_nutrition = None
+        new_nutrition = None
+        if previous_nutrition_id and new_nutrition_id:
+            prev_nutrition = await db.nutrition_plans.find_one({"_id": previous_nutrition_id})
+            new_nutrition = await db.nutrition_plans.find_one({"_id": new_nutrition_id})
+        
+        # TODO: Aquí llamar al agente S1 para generar el informe
+        # Por ahora, generar informe básico
+        report_text = f"""
+# INFORME DE SEGUIMIENTO
+
+**Cliente**: {user_id}
+**Fecha**: {datetime.now(timezone.utc).strftime('%d/%m/%Y')}
+
+## 📊 COMPARACIÓN DE PLANES
+
+### 💪 ENTRENAMIENTO
+- **Plan Anterior**: {previous_training_id}
+- **Plan Nuevo**: {new_training_id}
+
+### 🥗 NUTRICIÓN
+"""
+        if prev_nutrition and new_nutrition:
+            report_text += f"""- **Plan Anterior**: {previous_nutrition_id}
+- **Plan Nuevo**: {new_nutrition_id}
+"""
+        else:
+            report_text += "- No se especificaron planes de nutrición para comparar\n"
+        
+        report_text += """
+
+## 🎯 ADAPTACIONES REALIZADAS
+
+[El agente S1 generará aquí el análisis detallado de cambios]
+
+## 📈 OBJETIVOS PRÓXIMOS 4 SEMANAS
+
+[El agente S1 generará objetivos específicos]
+"""
+        
+        # Guardar informe
+        report_id = str(uuid.uuid4())
+        report_doc = {
+            "_id": report_id,
+            "user_id": user_id,
+            "generated_at": datetime.now(timezone.utc),
+            "previous_training_id": previous_training_id,
+            "new_training_id": new_training_id,
+            "previous_nutrition_id": previous_nutrition_id,
+            "new_nutrition_id": new_nutrition_id,
+            "report_text": report_text,
+            "training_comparison_label": f"Plan Anterior vs Plan Nuevo",
+            "nutrition_comparison_label": f"Plan Anterior vs Plan Nuevo" if prev_nutrition else None
+        }
+        
+        await db.follow_up_reports.insert_one(report_doc)
+        
+        logger.info(f"✅ Informe de seguimiento generado: {report_id}")
+        
+        return {"report_id": report_id, "message": "Informe generado exitosamente"}
+        
+    except Exception as e:
+        logger.error(f"Error generando informe de seguimiento: {e}")
+        raise HTTPException(status_code=500, detail=f"Error generando informe: {str(e)}")
+
+
 # ==================== WAITLIST ENDPOINTS ====================
 
 from waitlist_scoring import calculate_waitlist_score
