@@ -120,6 +120,15 @@ const AdminDashboard = () => {
   const [selectedQuestionnaireForNutrition, setSelectedQuestionnaireForNutrition] = useState(null);
   const [selectedTrainingPlanForNutrition, setSelectedTrainingPlanForNutrition] = useState(null);
   
+  // Follow-up Report states
+  const [selectedPreviousTrainingForReport, setSelectedPreviousTrainingForReport] = useState(null);
+  const [selectedNewTrainingForReport, setSelectedNewTrainingForReport] = useState(null);
+  const [selectedPreviousNutritionForReport, setSelectedPreviousNutritionForReport] = useState(null);
+  const [selectedNewNutritionForReport, setSelectedNewNutritionForReport] = useState(null);
+  const [availableNutritionPlans, setAvailableNutritionPlans] = useState([]);
+  const [followUpReports, setFollowUpReports] = useState([]);
+  const [generatingReport, setGeneratingReport] = useState(false);
+  
   // Follow-up states
   const [followUps, setFollowUps] = useState([]); // Array de seguimientos
   const [selectedFollowUp, setSelectedFollowUp] = useState(null); // Seguimiento seleccionado
