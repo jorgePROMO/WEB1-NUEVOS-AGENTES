@@ -3787,8 +3787,8 @@ const AdminDashboard = () => {
                                 </p>
                               </div>
                             ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              {followUps.map((followUp, index) => (
+                              <div className="grid grid-cols-1 gap-4">
+                                {followUpReports.map((report, index) => (
                                 <Card
                                   key={followUp.id}
                                   className="border-2 border-purple-200 hover:border-purple-400 transition-all cursor-pointer hover:shadow-lg"
