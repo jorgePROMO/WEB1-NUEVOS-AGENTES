@@ -8525,11 +8525,11 @@ async def get_user_questionnaires(user_id: str, request: Request):
     # Seguimientos
     followups = await db.follow_up_submissions.find(
         {"user_id": user_id}
-    ).sort("submitted_at", 1).to_list(length=None)
+    ).sort("created_at", 1).to_list(length=None)
     
     for i, followup in enumerate(followups, 1):
-        # Manejar casos donde submitted_at podría no existir
-        submitted_at = followup.get("submitted_at")
+        # Intentar varios campos posibles de fecha
+        submitted_at = followup.get("submitted_at") or followup.get("created_at") or followup.get("updated_at")
         if submitted_at:
             date_str = submitted_at.strftime('%d/%m/%Y')
             iso_str = submitted_at.isoformat()
