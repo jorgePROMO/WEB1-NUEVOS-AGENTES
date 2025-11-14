@@ -4834,11 +4834,16 @@ PRIMERA SEMANA:
 
 ⏰ DISTRIBUCIÓN DE COMIDAS POR TIPO DE DÍA
 
+⚠️ IMPORTANTE: En días de entrenamiento añadimos MERIENDA para evitar un gap de 
+8 horas entre post-entreno y cena. Esta comida es clave para mantener metabolismo 
+activo y prevenir catabolismo muscular.
+
 """
             
             # Día A
             if dist_a and dist_a.get("comidas"):
-                plan_text += "\n🔥 DÍAS A (ENTRENAMIENTO INTENSO):\n"
+                num_comidas_a = dist_a.get("numero_comidas", len(dist_a.get("comidas", [])))
+                plan_text += f"\n🔥 DÍAS A (ENTRENAMIENTO INTENSO) - {num_comidas_a} comidas:\n"
                 for comida in dist_a.get("comidas", []):
                     plan_text += f"""
 📍 {comida.get('nombre', 'Comida').upper()} - {comida.get('hora', 'N/A')}
