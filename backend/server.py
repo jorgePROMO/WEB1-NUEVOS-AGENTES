@@ -3753,7 +3753,7 @@ async def admin_generate_nutrition_plan(user_id: str, submission_id: str, regene
             
             # Compatibilidad con formato antiguo
             "plan_inicial": _format_edn360_nutrition_for_display(result["plan_data"]),
-            "plan_verificado": result["plan_data"].get("N8", {}),
+            "plan_verificado": _format_edn360_nutrition_as_text(result["plan_data"], user_name),  # TEXTO PROFESIONAL
             "plan_text": _format_edn360_nutrition_as_text(result["plan_data"], user_name),  # TEXTO PROFESIONAL para cliente
             
             "generated_at": now,
