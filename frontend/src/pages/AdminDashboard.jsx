@@ -4052,9 +4052,28 @@ const AdminDashboard = () => {
                                       </div>
                                     </div>
                                   </div>
-                                  <Button variant="outline" className="w-full">
-                                    Ver Respuestas Completas
-                                  </Button>
+                                  <div className="flex gap-2">
+                                    <Button 
+                                      variant="outline" 
+                                      className="flex-1"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSelectedHistoryItem({ type: 'followup', data: followUp });
+                                      }}
+                                    >
+                                      Ver Respuestas
+                                    </Button>
+                                    <Button 
+                                      variant="destructive"
+                                      size="icon"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteFollowUp(followUp.id);
+                                      }}
+                                    >
+                                      🗑️
+                                    </Button>
+                                  </div>
                                 </CardContent>
                               </Card>
                             ))}
