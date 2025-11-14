@@ -94,6 +94,7 @@ const AdminDashboard = () => {
   const [generatingPlan, setGeneratingPlan] = useState(false);
   const [showNutritionModal, setShowNutritionModal] = useState(false); // Control del modal
   const [modalPlan, setModalPlan] = useState(null); // Plan que se muestra en el modal
+  const [showNutritionChat, setShowNutritionChat] = useState(false); // Control del chat de nutrición
   
   // Training states
   const [trainingPlans, setTrainingPlans] = useState([]); // Array de planes de entrenamiento
