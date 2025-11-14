@@ -13,8 +13,8 @@ CRÍTICO - CONSULTA N4 Y N5:
 - N4 tiene "calendario_semanal": {"dia_1": "M", "dia_2": "B", "dia_3": "A", ...}
 - N5 tiene distribuciones diferentes para A/M/B
 - RESPETA el tipo de día y número de comidas:
-  * Días A/M: 4 comidas (Desayuno, Pre-Entreno, Post-Entreno, Cena)
-  * Días B: 3 comidas (Desayuno, Comida, Cena) - SIN pre/post entreno
+  * Días A/M: 5 comidas (Desayuno, Pre-Entreno, Post-Entreno, Merienda, Cena)
+  * Días B: 4 comidas (Desayuno, Comida, Merienda, Cena) - SIN pre/post entreno
 
 REGLAS:
 - Genera 7 días según calendario N4
