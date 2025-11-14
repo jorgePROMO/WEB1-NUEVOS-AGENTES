@@ -47,17 +47,18 @@ ESTRUCTURA JSON:
     "dia_2": {
       "tipo_dia": "M",
       "comidas": [
-        {"nombre": "Desayuno", ...},
-        {"nombre": "Pre-Entreno", ...},
-        {"nombre": "Post-Entreno", ...},
-        {"nombre": "Cena", ...}
+        {"nombre": "Desayuno", "hora": "08:00", ...},
+        {"nombre": "Pre-Entreno", "hora": "11:30", ...},
+        {"nombre": "Post-Entreno", "hora": "13:30", ...},
+        {"nombre": "Merienda", "hora": "18:00", ...},
+        {"nombre": "Cena", "hora": "21:00", ...}
       ]
     },
-    "dia_3": {"tipo_dia": "A", "comidas": [4 comidas con pre/post]},
-    "dia_4": {"tipo_dia": "B", "comidas": [3 comidas sin pre/post]},
-    "dia_5": {"tipo_dia": "M", "comidas": [4 comidas con pre/post]},
-    "dia_6": {"tipo_dia": "B", "comidas": [3 comidas sin pre/post]},
-    "dia_7": {"tipo_dia": "B", "comidas": [3 comidas sin pre/post]}
+    "dia_3": {"tipo_dia": "A", "comidas": [5 comidas con pre/post/merienda]},
+    "dia_4": {"tipo_dia": "B", "comidas": [4 comidas: desayuno/comida/merienda/cena]},
+    "dia_5": {"tipo_dia": "M", "comidas": [5 comidas con pre/post/merienda]},
+    "dia_6": {"tipo_dia": "B", "comidas": [4 comidas sin pre/post]},
+    "dia_7": {"tipo_dia": "B", "comidas": [4 comidas sin pre/post]}
   },
   "equivalencias": {
     "proteinas": {"pollo": ["pavo", "pescado"]},
