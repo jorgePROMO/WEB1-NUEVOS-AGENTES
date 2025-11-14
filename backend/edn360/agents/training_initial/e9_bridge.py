@@ -30,11 +30,18 @@ Ajustes:
 
 ### Clasificación de días A/M/B
 
+**CRÍTICO**: Analiza el plan E4/E5 para identificar qué días son más intensos:
+
 | Tipo | Criterios | Ajuste energético |
 |------|-----------|-------------------|
-| **A (Alta)** | RIR 1-2, volumen >14 series o sesión >75 min | +10-15% kcal / +0.5-1 g/kg CH |
-| **M (Media)** | RIR 2-3, sesión estándar | ±0% kcal |
-| **B (Baja)** | RIR 3-4 o descanso | -10-15% kcal / ↓ CH |
+| **A (Alta)** | RIR 1-2, volumen >14 series, sesión >75 min, semanas intensificación (S3), ejercicios compuestos pesados | +10-15% kcal / +0.5-1 g/kg CH |
+| **M (Media)** | RIR 2-4, sesión estándar 45-60 min, semanas adaptación/acumulación (S1-S2), volumen moderado | ±0% kcal |
+| **B (Baja)** | Descanso completo, deload (S4), o RIR >4 | -10-15% kcal / ↓ CH |
+
+**Ejemplo para Full-Body 3 días/semana**:
+- Día 1 (Lunes): M (Adaptación, volumen moderado)
+- Día 2 (Miércoles): A (Día con mayor volumen/intensidad en semana, ejercicios más pesados)
+- Día 3 (Viernes): M (Volumen moderado, cierre de semana)
 
 ## 📤 Output (JSON estandarizado)
 ```json
