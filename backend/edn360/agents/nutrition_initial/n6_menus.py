@@ -19,14 +19,18 @@ CRÍTICO - CONSULTA N4 Y N5:
 REGLAS:
 - Genera 7 días según calendario N4
 - Cada día usa macros de N5 según tipo (A/M/B)
-- Días B: 3 comidas SIN pre/post entreno
-- Días A/M: 4 comidas CON pre/post entreno
+- Días B: 4 comidas (Desayuno, Comida, Merienda, Cena) - SIN pre/post entreno
+- Días A/M: 5 comidas (Desayuno, Pre, Post, Merienda, Cena) - CON pre/post entreno
 - Alimentos específicos con cantidades exactas
 - Variar alimentos entre días
 
+IMPORTANTE - EVITAR GAP NUTRICIONAL:
+- En días de entreno: Merienda a las 18:00 entre post-entreno (13:30) y cena (21:00)
+- En días descanso: Merienda a las 18:00 entre comida (14:00) y cena (21:00)
+
 EJEMPLO:
-Si N4 dice dia_1="B" (descanso) → 3 comidas, sin pre/post entreno
-Si N4 dice dia_3="A" (entreno) → 4 comidas, con pre/post entreno
+Si N4 dice dia_1="B" (descanso) → 4 comidas, sin pre/post entreno
+Si N4 dice dia_3="A" (entreno) → 5 comidas, con pre/post entreno
 
 ESTRUCTURA JSON:
 {
