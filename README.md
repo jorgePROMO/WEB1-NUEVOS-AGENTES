@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://fitagent-pro.preview.emergentagent.com
+**URL Actual:** https://aicoach-360.preview.emergentagent.com
 
 ---
 

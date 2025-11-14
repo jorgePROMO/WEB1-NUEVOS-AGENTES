@@ -1,74 +1,80 @@
 <analysis>
-The trajectory documents the iterative development and debugging of a complex AI-driven fitness application. The core task was replacing a basic plan generator with E.D.N.360, a sophisticated system of 26 chained AI agents. The process was highly reactive to user feedback, revealing a layered debugging journey.
+The trajectory documents a highly iterative and user-driven development process for a sophisticated AI fitness coaching application. The core task evolved from a simple UI alignment to a fundamental re-architecture of the AI-driven plan generation logic.
 
-Initially, work focused on resolving a data mismatch between the frontend questionnaire and the backend agent inputs, which required creating a data adapter function. This led to a series of cascading failures within the agent chain (E2, E3, then N1), exposing a fundamental architectural inconsistency in how agents handled inputs (some expected raw data, others expected data wrapped in a parent key like ). The solution involved standardizing the data flow by making all agents expect wrapped inputs and fixing the validation logic in the non-compliant agents.
+Initially, the work focused on mirroring the UI/UX of the Training module onto the Nutrition module. This led to a series of bug fixes, including creating a dedicated chat component and backend endpoint for nutrition (, ) and correcting the backend logic to format agent-generated JSON into human-readable text.
 
-Subsequent user feedback highlighted functional gaps: the system produced valid but empty/incomplete plans. This was traced to placeholder prompts in the later-stage agents (E5-E9, N0-N8), which were fixed by updating the agent files with complete prompts provided by the user.
+User feedback then revealed a major flaw: the AI agents' prompts were placeholders, producing incomplete plans. The engineer updated the prompts, but the verbose instructions broke JSON validation. This was fixed by simplifying the prompts.
 
-A major UX issue was then addressed: the application was displaying raw JSON to the admin. This was resolved by creating backend functions to format the JSON into professional, client-ready text and updating the frontend to display this formatted text.
+A deeper issue was then uncovered: agents were not synchronized with each other or with the client's questionnaire data. This required significant prompt engineering across multiple agents (E9, N4, N5, N6) to ensure the nutrition plan respects the training schedule and the client's stated preferences (e.g., number of meals).
 
-The current work involves finalizing the nutrition module's UI/UX to perfectly mirror the successfully implemented training module, including adding a persistent Generate Plan button and implementing an AI chat for plan modifications.
+Finally, a major new feature was implemented: allowing the admin to select specific questionnaires and previous plans as a basis for generating new ones. This involved significant frontend () and backend () changes. The development was paused while debugging this feature, with the immediate blocker being an exhausted OpenAI API budget.
 </analysis>
 
 <product_requirements>
-The project is a web application for a professional fitness coach to manage clients. The primary function is to automate the creation of highly personalized training and nutrition programs using a proprietary AI system named E.D.N.360.
+The product is a web application for a professional fitness coach to manage clients by automating the creation of personalized training and nutrition programs. The core of the application is E.D.N.360, an orchestrated chain of 26 AI agents that process client data to build comprehensive plans.
 
-This system replaces a previous, simpler generator. E.D.N.360 is an orchestrated chain of 26 specialized AI agents (split into Initial Training, Initial Nutrition, and their respective Follow-up modules) that sequentially process client data to build comprehensive plans.
-
-**Core User Flow:**
-1.  A client fills out a detailed questionnaire.
-2.  The admin (coach) accesses the client's profile in the dashboard.
-3.  The admin generates a training plan and a nutrition plan using dedicated buttons. The system must be able to generate multiple plans.
-4.  The generated plan must be a professionally formatted, human-readable document, not a raw JSON object.
-5.  The admin can view the plan and make modifications using an integrated AI chat feature.
-6.  The admin can then send the finalized plan to the client via Email or WhatsApp.
-
-The implementation has successfully integrated the E.D.N.360 backend, but requires ongoing UI/UX refinements to match the user's desired workflow, specifically for the nutrition module.
+**Key Features & User Flow:**
+1.  **Flexible Plan Generation**: The admin must be able to generate new training and nutrition plans. Crucially, before generation, the admin can select:
+    *   Which client questionnaire to use as a data source (e.g., initial vs. a specific follow-up).
+    *   Which previous plan to use as a reference for progression or adaptation.
+2.  **AI-Assisted Modification**: Generated plans are not static. The admin can open any plan and use an integrated AI chat to request modifications (e.g., add a 5th meal on training days).
+3.  **Professional Formatting**: All generated plans must be presented as professionally formatted, human-readable text, not raw JSON.
+4.  **Comparative Reporting**: A dedicated Follow-up tab allows the admin to select two training plans and two nutrition plans to generate a comparative report, analyzing the evolution and adaptations between them.
+5.  **History Management**: A History tab provides a complete log of all client questionnaires, with the ability to delete them.
 </product_requirements>
 
 <key_technical_concepts>
-- **Full-Stack Application:** React frontend, FastAPI backend, MongoDB database.
-- **Agent-Based Architecture (E.D.N.360):** A system of 26 orchestrated AI agents that execute in a sequence to generate complex outputs.
-- **Data Orchestration:** The  module manages the flow of data, where the output of one agent becomes the input for the next, using a wrapped data pattern (e.g., ).
-- **Data Adaptation:** Backend adapter functions () translate frontend form data into the format required by the E.D.N.360 agents.
-- **Output Formatting:** Backend functions () convert the final agent's JSON output into a client-ready, readable text format.
+- **Full-Stack Monorepo**: React frontend and FastAPI backend with MongoDB.
+- **Agent-Based Architecture (E.D.N.360)**: A system of 26 sequentially orchestrated AI agents for plan generation.
+- **Dynamic Data Sourcing**: Backend and frontend logic allows dynamic selection of questionnaires and prior plans as inputs for the agent chain.
+- **Prompt Engineering**: The core logic is embedded in system prompts within each agent file. These have been iteratively refined to ensure data consistency, respect for user inputs, and valid JSON output.
+- **Data Adaptation & Formatting**: Backend functions format agent JSON outputs into readable text.
 </key_technical_concepts>
 
 <code_architecture>
-The application uses a standard monorepo structure with a React frontend and a FastAPI backend.
+The application is a monorepo with a React frontend and a FastAPI backend.
 
 
-- ****
-  - **Importance:** Main FastAPI application file. Contains all API endpoints, including the critical  and  endpoints that trigger the E.D.N.360 system.
-  - **Changes:** It has been heavily modified to: integrate the ; add data adapter functions () to map questionnaire data to agent inputs; and add text formatting functions (, ) to convert agent JSON outputs into readable plans. It also handles saving the generated plans to the database.
+- ****:
+    - **Importance**: The main FastAPI application file. It contains all API endpoints, including the critical plan generation endpoints (, ), the AI chat endpoints (, ), the new report generation endpoint (), and endpoints to list plans/questionnaires for UI selectors.
+    - **Changes**: Heavily modified to support the new flexible generation flow by accepting  and . The logic for saving plans was updated to store the formatted . The formatting functions () were repeatedly updated to render more complex agent outputs. Endpoints for deleting questionnaires were also added.
 
-- ****
-  - **Importance:** The core of the E.D.N.360 system. It instantiates and executes the 26 AI agents in the correct sequence, passing the wrapped output of one agent as the input to the next.
-  - **Changes:** It was modified to fix input/output inconsistencies between agents. It was also updated to import and instantiate the correctly named agent classes after they were updated.
+- ****:
+    - **Importance**: The single most important and complex frontend file, managing the entire admin interface.
+    - **Changes**: This file has undergone a complete overhaul.
+        1.  **Plan Generation UI**: Selectors were added to both the Training and Nutrition tabs to allow the admin to choose a base questionnaire and reference plan before generation.
+        2.  **Chat Integration**: The  was implemented, and a new  was created and integrated to provide AI-assisted plan modification.
+        3.  **Follow-up Tab Redesign**: The tab was completely repurposed into a comparative report generation tool, with its own selectors and UI to display generated reports.
+        4.  **History Tab**: Delete buttons were added to each questionnaire entry.
+        5.  State management and data-fetching logic were expanded significantly to handle loading data for all the new selectors and lists.
 
-- ****
-  - **Importance:** These ~26 files define each individual AI agent. Each contains the system prompt, input validation logic, and execution method.
-  - **Changes:** These files were the source of major bugs. Their system prompts were initially placeholders and had to be replaced with complete, detailed prompts provided by the user. The input validation logic ( method) in several agents (e.g., , , and all other nutrition agents) was fixed to correctly handle the wrapped data structure provided by the orchestrator, resolving cascading failures.
+- ****:
+    - **Importance**: These files contain the core intelligence of the application. Each Python file is a distinct AI agent with a system prompt defining its task.
+    - **Changes**: The prompts within  and , , and  were extensively rewritten. The changes force the agents to:
+        1.  Prioritize and use data from the client's questionnaire.
+        2.  Synchronize the nutrition plan with the training schedule (e.g., differentiating high/low-calorie days).
+        3.  Generate more complete and detailed outputs (e.g., weekly menus, pre/post workout meals).
 
-- ****
-  - **Importance:** The primary interface for the admin. It manages all client interactions, including displaying questionnaires, triggering plan generation, and viewing/modifying plans.
-  - **Changes:** This file has undergone extensive modifications. A temporary E.D.N.360 tab was added and then removed. Buttons to Generate Plan and Regenerate Plan for both training and nutrition were added and refined. Most importantly, the logic for displaying plans was changed from rendering raw JSON to displaying a formatted  field. It now also includes the  component for AI-assisted modifications. The current work is focused on replicating the training plan's UI/UX for the nutrition section.
+- ****:
+    - **Importance**: This file orchestrates the execution of the agent chain, passing data from one to the next.
+    - **Changes**: A critical bug fix was applied here. When the backend  was updated to pass a , the orchestrator's  method was not. This caused a crash. The temporary fix was to *remove* the  argument from the method call in , meaning the feature is not fully implemented at the agent level.
 </code_architecture>
 
 <pending_tasks>
-- **Implement Calendar Feature:** The user requested a new calendar view for the admin. It should display the web app's calendar and the admin's Google Calendar side-by-side. A button should be present to open the Google Calendar directly. Regular users should only see the web app's calendar.
+- **Implement  Logic**: The orchestrator and agents do not yet use the  for training progression. The argument was removed from the orchestrator call to prevent a crash, but the core logic needs to be implemented.
+- **Finalize Follow-up Report**: The report generation feature is scaffolded (UI, endpoint, S1 agent), but the agent prompt is likely a placeholder and functionality to email/WhatsApp the report is missing.
+- **Fix Selector Interactivity**: The user reported that some selectors were not selectable. While the date issue was fixed, a full verification of the selector  functionality is needed.
+- **Implement Calendar Feature**: An early request to add a calendar view was noted but never implemented.
 </pending_tasks>
 
 <current_work>
-The immediate task is to align the Nutrition tab's functionality and UI with the Training tab in the  file, based on the user's explicit request.
+The immediate work was focused on debugging and implementing a series of user-requested features and fixes. The last cycle involved adding delete functionality for questionnaires and correcting a crash in the training plan generation logic.
 
-The user specified two key changes:
-1.  **Always-Visible Generate Plan Button:** The Nutrition tab must always have a Generate Plan button, regardless of whether other plans already exist. This is to allow the admin to create multiple nutrition plans for a client. The previous implementation incorrectly showed a Regenerate button or no button at all.
-2.  **Chat for Modification:** When viewing a generated nutrition plan, the modal window should NOT have a Regenerate button. Instead, it must feature an AI chat interface for making modifications, exactly like the one already implemented for the training plans ().
+However, all development is currently blocked by a critical error. Upon attempting to generate a training plan, the system fails with the message: .
 
-The previous engineer had just begun this task by adding the Generate Plan section to the nutrition tab's JSX, copying the pattern from the training tab. The next logical step was to implement the chat functionality in the nutrition plan's modal.
+The previous AI engineer correctly identified that the OpenAI API key's spending limit has been reached, preventing any further calls to the AI agents. The engineer's last thought was to solve this by configuring the application to use the Emergent LLM Key, a universal key provided by the platform that should bypass this specific budget issue. The work stopped precisely at the moment of this diagnosis, before the solution could be implemented.
 </current_work>
 
 <optional_next_step>
-Replicate the training plan's chat modification feature for the nutrition plan by adding the  component to the nutrition modal in .
+I will investigate and configure the backend to use the Emergent LLM Key to resolve the API budget error. This will unblock all AI-related functionality and allow development and testing to resume.
 </optional_next_step>
