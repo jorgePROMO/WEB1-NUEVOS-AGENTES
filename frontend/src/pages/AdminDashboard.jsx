@@ -269,17 +269,30 @@ const AdminDashboard = () => {
   };
 
   const generateNutritionPlan = async (submissionId, regenerate = false) => {
+    // Validate selectors
+    if (!selectedQuestionnaireForNutrition) {
+      alert('❌ Por favor selecciona un cuestionario base');
+      return;
+    }
+    
     setGeneratingPlan(true);
     
     try {
+      const params = {
+        submission_id: selectedQuestionnaireForNutrition,  // Usar el seleccionado
+        regenerate: regenerate
+      };
+      
+      // Agregar plan de entrenamiento si está seleccionado
+      if (selectedTrainingPlanForNutrition) {
+        params.training_plan_id = selectedTrainingPlanForNutrition;
+      }
+      
       const response = await axios.post(
         `${API}/admin/users/${selectedClient.id}/nutrition/generate`,
         null,
         {
-          params: {
-            submission_id: submissionId,
-            regenerate: regenerate
-          },
+          params,
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
         }
