@@ -4856,7 +4856,8 @@ activo y prevenir catabolismo muscular.
             
             # Día M
             if dist_m and dist_m.get("comidas"):
-                plan_text += "\n⚖️ DÍAS M (ENTRENAMIENTO MODERADO):\n"
+                num_comidas_m = dist_m.get("numero_comidas", len(dist_m.get("comidas", [])))
+                plan_text += f"\n⚖️ DÍAS M (ENTRENAMIENTO MODERADO) - {num_comidas_m} comidas:\n"
                 for comida in dist_m.get("comidas", []):
                     plan_text += f"""
 📍 {comida.get('nombre', 'Comida').upper()} - {comida.get('hora', 'N/A')}
