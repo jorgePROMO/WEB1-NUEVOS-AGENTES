@@ -2975,6 +2975,10 @@ const AdminDashboard = () => {
                                 <div className="space-y-3">
                                   {questionnaireSubmissions.map((submission) => {
                                     const planAlreadyExists = submission.plan_generated;
+                                    // Verificar si el plan existente es del sistema viejo o E.D.N.360
+                                    const existingPlan = nutritionPlans.find(p => p.source_id === submission.id);
+                                    const isOldSystem = existingPlan && !existingPlan.system_version;
+                                    const isEDN360 = existingPlan && existingPlan.system_version === 'edn360_v1';
                                     
                                     return (
                                       <Card key={submission.id} className="border-green-200 bg-white">
@@ -2982,7 +2986,7 @@ const AdminDashboard = () => {
                                           <div className="flex justify-between items-center">
                                             <div>
                                               <CardTitle className="text-lg text-gray-800">
-                                                📋 Cuestionario {planAlreadyExists ? '(Plan ya generado)' : 'Disponible'}
+                                                📋 Cuestionario {isEDN360 ? '(Plan E.D.N.360 generado)' : (isOldSystem ? '(Plan sistema antiguo)' : 'Disponible')}
                                               </CardTitle>
                                               <p className="text-sm text-gray-500">
                                                 Enviado el {new Date(submission.submitted_at).toLocaleDateString('es-ES', {
@@ -2991,9 +2995,14 @@ const AdminDashboard = () => {
                                                   year: 'numeric'
                                                 })}
                                               </p>
-                                              {planAlreadyExists && (
+                                              {isOldSystem && (
                                                 <p className="text-xs text-orange-600 mt-1">
-                                                  ⚠️ Ya existe un plan. Puedes regenerarlo con E.D.N.360
+                                                  ⚠️ Existe un plan del sistema antiguo. Genera uno nuevo con E.D.N.360
+                                                </p>
+                                              )}
+                                              {isEDN360 && (
+                                                <p className="text-xs text-green-600 mt-1">
+                                                  ✅ Plan E.D.N.360 disponible. Puedes regenerarlo si lo deseas
                                                 </p>
                                               )}
                                             </div>
@@ -3001,9 +3010,12 @@ const AdminDashboard = () => {
                                             <Button
                                               onClick={() => generateNutritionPlan(submission.id, planAlreadyExists)}
                                               disabled={generatingPlan}
-                                              className={planAlreadyExists 
+                                              className={isOldSystem 
                                                 ? "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
-                                                : "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+                                                : (isEDN360
+                                                    ? "bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white"
+                                                    : "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+                                                  )
                                               }
                                             >
                                               {generatingPlan ? (
@@ -3011,8 +3023,10 @@ const AdminDashboard = () => {
                                                   <span className="animate-spin mr-2">⏳</span>
                                                   Generando...
                                                 </>
-                                              ) : planAlreadyExists ? (
-                                                '🔄 Regenerar con E.D.N.360'
+                                              ) : isOldSystem ? (
+                                                '🚀 Generar con E.D.N.360'
+                                              ) : isEDN360 ? (
+                                                '🔄 Regenerar'
                                               ) : (
                                                 '🥗 Generar Plan de Nutrición'
                                               )}
