@@ -4870,7 +4870,8 @@ activo y prevenir catabolismo muscular.
             
             # Día B
             if dist_b and dist_b.get("comidas"):
-                plan_text += "\n🌙 DÍAS B (DESCANSO - Sin Pre/Post Entreno):\n"
+                num_comidas_b = dist_b.get("numero_comidas", len(dist_b.get("comidas", [])))
+                plan_text += f"\n🌙 DÍAS B (DESCANSO) - {num_comidas_b} comidas (Sin Pre/Post Entreno):\n"
                 for comida in dist_b.get("comidas", []):
                     plan_text += f"""
 📍 {comida.get('nombre', 'Comida').upper()} - {comida.get('hora', 'N/A')}
