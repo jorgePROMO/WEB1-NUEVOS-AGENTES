@@ -4822,9 +4822,60 @@ PRIMERA SEMANA:
                 emoji = "🔥" if tipo == "A" else ("🌙" if tipo == "B" else "⚖️")
                 plan_text += f"   Día {i}: {emoji} Tipo {tipo} - {dia.get('kcal', 'N/A')} kcal\n"
         
-        # Añadir distribución de comidas si existe
-        comidas = n5_timing.get("comidas", [])
-        if comidas:
+        # Añadir distribución de comidas por tipo de día
+        dist_a = n5_timing.get("distribucion_dia_A", {})
+        dist_m = n5_timing.get("distribucion_dia_M", {})
+        dist_b = n5_timing.get("distribucion_dia_B", {})
+        
+        if dist_a or dist_m or dist_b:
+            plan_text += """
+
+═══════════════════════════════════════════════════════════════════════════
+
+⏰ DISTRIBUCIÓN DE COMIDAS POR TIPO DE DÍA
+
+"""
+            
+            # Día A
+            if dist_a and dist_a.get("comidas"):
+                plan_text += "\n🔥 DÍAS A (ENTRENAMIENTO INTENSO):\n"
+                for comida in dist_a.get("comidas", []):
+                    plan_text += f"""
+📍 {comida.get('nombre', 'Comida').upper()} - {comida.get('hora', 'N/A')}
+   • Proteínas: {comida.get('proteinas_g', 'N/A')}g
+   • Carbohidratos: {comida.get('carbohidratos_g', 'N/A')}g
+   • Grasas: {comida.get('grasas_g', 'N/A')}g
+"""
+                    if comida.get('timing_entreno'):
+                        plan_text += f"   ⏱️ Timing: {comida.get('timing_entreno')}\n"
+            
+            # Día M
+            if dist_m and dist_m.get("comidas"):
+                plan_text += "\n⚖️ DÍAS M (ENTRENAMIENTO MODERADO):\n"
+                for comida in dist_m.get("comidas", []):
+                    plan_text += f"""
+📍 {comida.get('nombre', 'Comida').upper()} - {comida.get('hora', 'N/A')}
+   • Proteínas: {comida.get('proteinas_g', 'N/A')}g
+   • Carbohidratos: {comida.get('carbohidratos_g', 'N/A')}g
+   • Grasas: {comida.get('grasas_g', 'N/A')}g
+"""
+                    if comida.get('timing_entreno'):
+                        plan_text += f"   ⏱️ Timing: {comida.get('timing_entreno')}\n"
+            
+            # Día B
+            if dist_b and dist_b.get("comidas"):
+                plan_text += "\n🌙 DÍAS B (DESCANSO - Sin Pre/Post Entreno):\n"
+                for comida in dist_b.get("comidas", []):
+                    plan_text += f"""
+📍 {comida.get('nombre', 'Comida').upper()} - {comida.get('hora', 'N/A')}
+   • Proteínas: {comida.get('proteinas_g', 'N/A')}g
+   • Carbohidratos: {comida.get('carbohidratos_g', 'N/A')}g
+   • Grasas: {comida.get('grasas_g', 'N/A')}g
+"""
+        
+        # Fallback para formato antiguo (si solo hay una distribución general)
+        elif n5_timing.get("comidas"):
+            comidas = n5_timing.get("comidas", [])
             plan_text += """
 
 ═══════════════════════════════════════════════════════════════════════════
