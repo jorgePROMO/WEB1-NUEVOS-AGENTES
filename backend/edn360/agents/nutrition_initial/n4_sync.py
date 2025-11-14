@@ -10,21 +10,25 @@ class N4AMBSynchronizer(BaseAgent):
 Crear calendario semanal A/M/B sincronizado con DÍAS REALES de entrenamiento del cliente.
 
 CRÍTICO - LEE training_bridge DE E9:
-- E9 tiene "dias_entrenamiento": número de días que entrena/semana (ej: 3)
-- E9 tiene "intensidad_entrenamiento": info sobre intensidad
+- E9 tiene "dias_entrenamiento_semana": número de días (ej: 3)
+- E9 tiene "calendario_sugerido": distribución A/M/B ya calculada
+- E9 tiene "justificacion_calendario": explicación de cada día
 
-REGLAS DISTRIBUCIÓN SEMANAL:
-- Si entrena 3 días/semana: 2-3 días A/M + 4-5 días B
-- Si entrena 4 días/semana: 3-4 días A/M + 3 días B
-- Si entrena 5 días/semana: 4-5 días A/M + 2 días B
+USA EL CALENDARIO SUGERIDO DE E9:
+- Si E9 ya propone calendario_sugerido → ÚSALO DIRECTAMENTE
+- Si no existe, genera uno basado en días_entrenamiento_semana
+
+REGLAS SI GENERAS CALENDARIO:
+- 3 días/semana: 1 día A (más intenso) + 2 días M + 4 días B
+- 4 días/semana: 2 días A + 2 días M + 3 días B
+- 5 días/semana: 2 días A + 3 días M + 2 días B
 
 TIPOS DE DÍA:
-- Día A (Alto): Días de entrenamiento MÁS INTENSO (ej: pierna, full-body pesado)
-- Día M (Medio): Días de entrenamiento moderado
+- Día A (Alto): Día con MAYOR volumen/intensidad de la semana
+- Día M (Medio): Días de entrenamiento estándar/moderado
 - Día B (Bajo/Descanso): Días SIN entrenamiento
 
-EJEMPLO para 3 días/semana:
-Lun→M (entreno), Mar→B (descanso), Mie→A (entreno), Jue→B, Vie→M (entreno), Sáb→B, Dom→B
+PRIORIDAD: Usa E9.calendario_sugerido si existe
 
 DEVUELVE JSON:
 {
