@@ -7,77 +7,58 @@ class N6MenuGenerator(BaseAgent):
         super().__init__("N6", "Menu Generator")
     def get_system_prompt(self) -> str:
         return '''# N6 — GENERADOR MENÚ SEMANAL
-Crear menú semanal (7 días) con alimentos específicos para cada comida.
+Crear menú semanal (7 días) con alimentos específicos SINCRONIZADO con calendario de entrenamiento.
+
+CRÍTICO - CONSULTA N4 Y N5:
+- N4 tiene "calendario_semanal": {"dia_1": "M", "dia_2": "B", "dia_3": "A", ...}
+- N5 tiene distribuciones diferentes para A/M/B
+- RESPETA el tipo de día y número de comidas:
+  * Días A/M: 4 comidas (Desayuno, Pre-Entreno, Post-Entreno, Cena)
+  * Días B: 3 comidas (Desayuno, Comida, Cena) - SIN pre/post entreno
 
 REGLAS:
-- 7 días completos (dia_1 a dia_7)
-- Cada día: tipo_dia (A/M/B) + todas las comidas del plan
-- Alimentos con cantidades exactas en gramos
+- Genera 7 días según calendario N4
+- Cada día usa macros de N5 según tipo (A/M/B)
+- Días B: 3 comidas SIN pre/post entreno
+- Días A/M: 4 comidas CON pre/post entreno
+- Alimentos específicos con cantidades exactas
 - Variar alimentos entre días
-- Respetar macros de N5 (±5g tolerancia)
 
-EJEMPLO (SIMPLIFICADO):
-dia_1: Tipo A, 4 comidas (desayuno: 3 huevos+80g avena+plátano, pre: arroz+pollo, post: pasta+salmón, cena: pescado+verduras)
+EJEMPLO:
+Si N4 dice dia_1="B" (descanso) → 3 comidas, sin pre/post entreno
+Si N4 dice dia_3="A" (entreno) → 4 comidas, con pre/post entreno
 
-DEVUELVE SOLO JSON VÁLIDO (sin explicaciones):
+ESTRUCTURA JSON:
 {
   "status": "ok",
   "menu_semanal": {
     "dia_1": {
-      "tipo_dia": "A",
+      "tipo_dia": "B",
       "comidas": [
-        {
-          "nombre": "Desayuno",
-          "hora": "08:00",
-          "alimentos": [
-            {"nombre": "Huevos enteros", "cantidad": "3 unidades", "cantidad_g": 180},
-            {"nombre": "Avena", "cantidad": "80g", "cantidad_g": 80},
-            {"nombre": "Plátano", "cantidad": "1 unidad", "cantidad_g": 120}
-          ],
-          "macros": {"proteinas": 40, "carbohidratos": 65, "grasas": 22},
-          "preparacion": "Huevos revueltos, avena con canela"
-        },
-        {
-          "nombre": "Pre-Entreno",
-          "hora": "11:30",
-          "alimentos": [
-            {"nombre": "Arroz blanco", "cantidad": "100g cocido", "cantidad_g": 100},
-            {"nombre": "Pechuga pollo", "cantidad": "150g", "cantidad_g": 150}
-          ],
-          "macros": {"proteinas": 35, "carbohidratos": 68, "grasas": 8}
-        },
-        {
-          "nombre": "Post-Entreno",
-          "hora": "14:30",
-          "alimentos": [
-            {"nombre": "Pasta integral", "cantidad": "150g cocida", "cantidad_g": 150},
-            {"nombre": "Salmón", "cantidad": "180g", "cantidad_g": 180}
-          ],
-          "macros": {"proteinas": 48, "carbohidratos": 82, "grasas": 18}
-        },
-        {
-          "nombre": "Cena",
-          "hora": "21:00",
-          "alimentos": [
-            {"nombre": "Merluza", "cantidad": "200g", "cantidad_g": 200},
-            {"nombre": "Boniato", "cantidad": "150g", "cantidad_g": 150},
-            {"nombre": "Almendras", "cantidad": "20g", "cantidad_g": 20}
-          ],
-          "macros": {"proteinas": 45, "carbohidratos": 42, "grasas": 24}
-        }
+        {"nombre": "Desayuno", "hora": "08:00", "alimentos": [...], "macros": {...}},
+        {"nombre": "Comida", "hora": "14:00", "alimentos": [...], "macros": {...}},
+        {"nombre": "Cena", "hora": "21:00", "alimentos": [...], "macros": {...}}
       ]
     },
-    "dia_2": {"tipo_dia": "M", "comidas": [...]},
-    "dia_3": {"tipo_dia": "A", "comidas": [...]},
-    "dia_4": {"tipo_dia": "B", "comidas": [...]},
-    "dia_5": {"tipo_dia": "M", "comidas": [...]},
-    "dia_6": {"tipo_dia": "A", "comidas": [...]},
-    "dia_7": {"tipo_dia": "B", "comidas": [...]}
+    "dia_2": {
+      "tipo_dia": "M",
+      "comidas": [
+        {"nombre": "Desayuno", ...},
+        {"nombre": "Pre-Entreno", ...},
+        {"nombre": "Post-Entreno", ...},
+        {"nombre": "Cena", ...}
+      ]
+    },
+    "dia_3": {"tipo_dia": "A", "comidas": [4 comidas con pre/post]},
+    "dia_4": {"tipo_dia": "B", "comidas": [3 comidas sin pre/post]},
+    "dia_5": {"tipo_dia": "M", "comidas": [4 comidas con pre/post]},
+    "dia_6": {"tipo_dia": "B", "comidas": [3 comidas sin pre/post]},
+    "dia_7": {"tipo_dia": "B", "comidas": [3 comidas sin pre/post]}
   },
   "equivalencias": {
-    "proteinas": {"pollo": ["pavo", "pescado blanco"], "huevos": ["claras", "proteína polvo"]},
-    "carbohidratos": {"arroz": ["pasta", "quinoa"], "avena": ["pan integral"]},
-    "grasas": {"aceite_oliva": ["aceite aguacate"], "almendras": ["nueces"]}
+    "proteinas": {"pollo": ["pavo", "pescado"]},
+    "carbohidratos": {"arroz": ["pasta", "quinoa"]},
+    "grasas": {"aceite_oliva": ["aguacate"]}
   }
 }'''
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
