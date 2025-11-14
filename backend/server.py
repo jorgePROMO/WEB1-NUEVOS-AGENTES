@@ -31,6 +31,7 @@ from models import (
     FinancialMetrics, PaymentHistoryItem,
     Exercise, ExerciseResponse, ExerciseQuery,
     TrainingPlanChatRequest, TrainingPlanChatResponse,
+    NutritionPlanChatRequest, NutritionPlanChatResponse,
     WaitlistLeadSubmit, WaitlistLeadInDB, WaitlistLeadResponse,
     WaitlistStatusUpdate, WaitlistNoteAdd,
     ManualPayment, ManualPaymentCreate
