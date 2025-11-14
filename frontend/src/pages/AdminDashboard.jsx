@@ -765,7 +765,7 @@ const AdminDashboard = () => {
   const openPlanModal = useCallback((plan) => {
     setModalPlan(plan); // Guardar plan en estado del modal
     setSelectedPlan(plan);
-    setNutritionContent(plan.plan_verificado);
+    setNutritionContent(plan.plan_text || plan.plan_verificado);  // Priorizar plan_text profesional
     setEditingNutrition(false);
     setShowNutritionModal(true);
   }, []);
