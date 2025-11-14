@@ -4781,6 +4781,30 @@ const AdminDashboard = () => {
         />
       )}
 
+      {/* Nutrition Plan Chat Dialog */}
+      {modalPlan && (
+        <TrainingPlanChatDialog
+          isOpen={showNutritionChat}
+          onClose={() => {
+            setShowNutritionChat(false);
+            // Reopen the nutrition modal after chat closes
+            setTimeout(() => setShowNutritionModal(true), 100);
+          }}
+          planId={modalPlan.id}
+          planContent={modalPlan.plan_text || modalPlan.plan_verificado}
+          token={token}
+          onPlanUpdated={(updatedPlan) => {
+            // Update the modal display
+            setModalPlan(prev => ({ ...prev, plan_verificado: updatedPlan, plan_text: updatedPlan }));
+            setNutritionContent(updatedPlan);
+            // Reload the full plan from server
+            if (selectedClient) {
+              loadNutritionPlan(selectedClient.id);
+            }
+          }}
+        />
+      )}
+
       {/* History Item Details Modal */}
       {selectedHistoryItem && (
         <Dialog open={!!selectedHistoryItem} onOpenChange={() => setSelectedHistoryItem(null)}>
