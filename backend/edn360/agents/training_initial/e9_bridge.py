@@ -30,18 +30,26 @@ Ajustes:
 
 ### Clasificación de días A/M/B
 
-**CRÍTICO**: Analiza el plan E4/E5 para identificar qué días son más intensos:
+**CRÍTICO**: Analiza el TIPO DE ENTRENAMIENTO en el plan E4/E5:
 
 | Tipo | Criterios | Ajuste energético |
 |------|-----------|-------------------|
-| **A (Alta)** | RIR 1-2, volumen >14 series, sesión >75 min, semanas intensificación (S3), ejercicios compuestos pesados | +10-15% kcal / +0.5-1 g/kg CH |
-| **M (Media)** | RIR 2-4, sesión estándar 45-60 min, semanas adaptación/acumulación (S1-S2), volumen moderado | ±0% kcal |
-| **B (Baja)** | Descanso completo, deload (S4), o RIR >4 | -10-15% kcal / ↓ CH |
+| **A (Alta)** | Días de PESAS/FUERZA/HIPERTROFIA: Sentadillas, press banca, peso muerto, máquinas, trabajo con resistencia | +10-15% kcal / +0.5-1 g/kg CH |
+| **M (Media)** | Días de CARDIO/CORE/MOVILIDAD: Cardio steady-state, HIIT, abdominales, estiramientos, yoga, trabajo funcional | ±0% kcal |
+| **B (Baja)** | Descanso completo sin actividad física programada | -10-15% kcal / ↓ CH |
 
-**Ejemplo para Full-Body 3 días/semana**:
-- Día 1 (Lunes): M (Adaptación, volumen moderado)
-- Día 2 (Miércoles): A (Día con mayor volumen/intensidad en semana, ejercicios más pesados)
-- Día 3 (Viernes): M (Volumen moderado, cierre de semana)
+**REGLA**: 
+- Si el día incluye entrenamiento de FUERZA con PESO (barras, mancuernas, máquinas) → Día A
+- Si el día es solo CARDIO, CORE, MOVILIDAD, flexibilidad → Día M
+- Si no hay entrenamiento → Día B
+
+**Ejemplo típico**:
+- Lun: Full-body con pesas → A
+- Mar: Descanso → B
+- Mié: Cardio + Core → M
+- Jue: Descanso → B
+- Vie: Full-body con pesas → A
+- Sáb/Dom: Descanso → B
 
 ## 📤 Output (JSON estandarizado)
 ```json
