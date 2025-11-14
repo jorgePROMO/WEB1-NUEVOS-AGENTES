@@ -3708,10 +3708,24 @@ async def admin_generate_nutrition_plan(
         logger.info(f"🍎 Admin iniciando generación de plan nutricional E.D.N.360 para usuario {user_id}")
         
         # Obtener plan de entrenamiento para sincronización
-        training_plan = await db.training_plans.find_one(
-            {"user_id": user_id},
-            sort=[("generated_at", -1)]
-        )
+        training_plan = None
+        if training_plan_id:
+            # Usar el plan de entrenamiento especificado
+            logger.info(f"📋 Usando plan de entrenamiento específico: {training_plan_id}")
+            training_plan = await db.training_plans.find_one({"_id": training_plan_id})
+            
+            if not training_plan:
+                raise HTTPException(status_code=404, detail=f"Plan de entrenamiento {training_plan_id} no encontrado")
+            
+            if training_plan.get("user_id") != user_id:
+                raise HTTPException(status_code=403, detail="El plan de entrenamiento no pertenece a este usuario")
+        else:
+            # Si no se especificó, usar el último generado
+            logger.info(f"📋 Buscando último plan de entrenamiento del usuario")
+            training_plan = await db.training_plans.find_one(
+                {"user_id": user_id},
+                sort=[("generated_at", -1)]
+            )
         
         if not training_plan:
             logger.warning(f"⚠️ No se encontró plan de entrenamiento para usuario {user_id}. Generando plan de nutrición sin sincronización.")
@@ -3726,7 +3740,7 @@ async def admin_generate_nutrition_plan(
                     "dias_amb": {},
                     "demanda_calorica_entrenamiento": {}
                 }
-            logger.info(f"✅ Plan de entrenamiento encontrado. Sincronizando con nutrición.")
+            logger.info(f"✅ Plan de entrenamiento encontrado ({training_plan['_id']}). Sincronizando con nutrición.")
         
         # Adaptar cuestionario al formato E.D.N.360
         adapted_questionnaire = _adapt_questionnaire_for_edn360(questionnaire_data)
