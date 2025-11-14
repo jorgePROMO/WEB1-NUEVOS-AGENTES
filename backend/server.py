@@ -8505,11 +8505,20 @@ async def get_user_questionnaires(user_id: str, request: Request):
     )
     
     if initial:
+        # Manejar casos donde submitted_at podría no existir
+        submitted_at = initial.get("submitted_at")
+        if submitted_at:
+            date_str = submitted_at.strftime('%d/%m/%Y')
+            iso_str = submitted_at.isoformat()
+        else:
+            date_str = "Fecha desconocida"
+            iso_str = datetime.now(timezone.utc).isoformat()
+        
         questionnaires.append({
             "id": initial["_id"],
             "type": "initial",
-            "label": f"Cuestionario Inicial ({initial['submitted_at'].strftime('%d/%m/%Y')})",
-            "submitted_at": initial["submitted_at"].isoformat(),
+            "label": f"Cuestionario Inicial ({date_str})",
+            "submitted_at": iso_str,
             "is_initial": True
         })
     
@@ -8519,11 +8528,20 @@ async def get_user_questionnaires(user_id: str, request: Request):
     ).sort("submitted_at", 1).to_list(length=None)
     
     for i, followup in enumerate(followups, 1):
+        # Manejar casos donde submitted_at podría no existir
+        submitted_at = followup.get("submitted_at")
+        if submitted_at:
+            date_str = submitted_at.strftime('%d/%m/%Y')
+            iso_str = submitted_at.isoformat()
+        else:
+            date_str = "Fecha desconocida"
+            iso_str = datetime.now(timezone.utc).isoformat()
+        
         questionnaires.append({
             "id": followup["_id"],
             "type": "followup",
-            "label": f"Seguimiento {i} ({followup['submitted_at'].strftime('%d/%m/%Y')})",
-            "submitted_at": followup["submitted_at"].isoformat(),
+            "label": f"Seguimiento {i} ({date_str})",
+            "submitted_at": iso_str,
             "is_initial": False
         })
     
