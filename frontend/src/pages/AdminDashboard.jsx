@@ -110,6 +110,16 @@ const AdminDashboard = () => {
   const [modalTrainingPlan, setModalTrainingPlan] = useState(null);
   const [showTrainingChat, setShowTrainingChat] = useState(false);
   
+  // Selector states - Training
+  const [availableQuestionnaires, setAvailableQuestionnaires] = useState([]);
+  const [availableTrainingPlans, setAvailableTrainingPlans] = useState([]);
+  const [selectedQuestionnaireForTraining, setSelectedQuestionnaireForTraining] = useState(null);
+  const [selectedPreviousTrainingPlan, setSelectedPreviousTrainingPlan] = useState(null);
+  
+  // Selector states - Nutrition
+  const [selectedQuestionnaireForNutrition, setSelectedQuestionnaireForNutrition] = useState(null);
+  const [selectedTrainingPlanForNutrition, setSelectedTrainingPlanForNutrition] = useState(null);
+  
   // Follow-up states
   const [followUps, setFollowUps] = useState([]); // Array de seguimientos
   const [selectedFollowUp, setSelectedFollowUp] = useState(null); // Seguimiento seleccionado
