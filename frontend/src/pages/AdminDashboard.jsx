@@ -3578,20 +3578,142 @@ const AdminDashboard = () => {
 
 
 
-                        {/* Follow-Up Tab */}
-                        <TabsContent value="followup" className="space-y-4">
-                          <h3 className="text-lg font-semibold flex items-center gap-2">
-                            📊 Seguimientos Mensuales
-                          </h3>
+                        {/* Follow-Up Tab - REDISEÑADO */}
+                        <TabsContent value="followup" className="space-y-6">
+                          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border-2 border-purple-200">
+                            <h3 className="text-xl font-bold text-purple-900 flex items-center gap-2 mb-2">
+                              📊 Informes de Seguimiento
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                              Compara planes anteriores con nuevos y genera informes profesionales explicando las adaptaciones
+                            </p>
+                          </div>
 
-                          {followUps.length === 0 ? (
-                            <div className="bg-gray-50 p-8 rounded-lg text-center">
-                              <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                              <p className="text-gray-500">
-                                Este cliente aún no ha completado ningún seguimiento mensual.
-                              </p>
-                            </div>
-                          ) : (
+                          {/* Selector de Planes para Comparar */}
+                          <Card className="border-2 border-purple-200">
+                            <CardHeader>
+                              <CardTitle className="text-lg text-purple-900">⚙️ Configuración de Comparación</CardTitle>
+                              <p className="text-sm text-gray-600">Selecciona los planes que quieres comparar</p>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                              {/* Comparación de Entrenamientos */}
+                              <div className="bg-blue-50 p-4 rounded-lg">
+                                <h4 className="font-semibold text-blue-900 mb-3">💪 Comparar Entrenamientos</h4>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                      Plan ANTERIOR
+                                    </label>
+                                    <select
+                                      value={selectedPreviousTrainingForReport || ''}
+                                      onChange={(e) => setSelectedPreviousTrainingForReport(e.target.value)}
+                                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    >
+                                      <option value="">Selecciona plan anterior...</option>
+                                      {availableTrainingPlans.map((plan) => (
+                                        <option key={plan.id} value={plan.id}>
+                                          {plan.label}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                  <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                      Plan NUEVO
+                                    </label>
+                                    <select
+                                      value={selectedNewTrainingForReport || ''}
+                                      onChange={(e) => setSelectedNewTrainingForReport(e.target.value)}
+                                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    >
+                                      <option value="">Selecciona plan nuevo...</option>
+                                      {availableTrainingPlans.map((plan) => (
+                                        <option key={plan.id} value={plan.id}>
+                                          {plan.label}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Comparación de Nutrición */}
+                              <div className="bg-green-50 p-4 rounded-lg">
+                                <h4 className="font-semibold text-green-900 mb-3">🥗 Comparar Nutrición</h4>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                      Plan ANTERIOR
+                                    </label>
+                                    <select
+                                      value={selectedPreviousNutritionForReport || ''}
+                                      onChange={(e) => setSelectedPreviousNutritionForReport(e.target.value)}
+                                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                    >
+                                      <option value="">Selecciona plan anterior...</option>
+                                      {availableNutritionPlans.map((plan) => (
+                                        <option key={plan.id} value={plan.id}>
+                                          {plan.label}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                  <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                      Plan NUEVO
+                                    </label>
+                                    <select
+                                      value={selectedNewNutritionForReport || ''}
+                                      onChange={(e) => setSelectedNewNutritionForReport(e.target.value)}
+                                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                    >
+                                      <option value="">Selecciona plan nuevo...</option>
+                                      {availableNutritionPlans.map((plan) => (
+                                        <option key={plan.id} value={plan.id}>
+                                          {plan.label}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Botón Generar Informe */}
+                              <div className="flex justify-center pt-4">
+                                <Button
+                                  onClick={generateFollowUpReport}
+                                  disabled={generatingReport || !selectedPreviousTrainingForReport || !selectedNewTrainingForReport}
+                                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-6 text-lg"
+                                >
+                                  {generatingReport ? (
+                                    <>
+                                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                                      Generando Informe...
+                                    </>
+                                  ) : (
+                                    <>
+                                      📊 Generar Informe de Seguimiento
+                                    </>
+                                  )}
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+
+                          {/* Lista de Informes Generados */}
+                          <div>
+                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                              📋 Informes Generados
+                            </h3>
+                            
+                            {followUpReports.length === 0 ? (
+                              <div className="bg-gray-50 p-8 rounded-lg text-center">
+                                <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                                <p className="text-gray-500">
+                                  Aún no has generado ningún informe de seguimiento para este cliente.
+                                </p>
+                              </div>
+                            ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               {followUps.map((followUp, index) => (
                                 <Card
