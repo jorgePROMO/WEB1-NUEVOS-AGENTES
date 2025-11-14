@@ -4482,49 +4482,6 @@ const AdminDashboard = () => {
                       </CardContent>
                     </Card>
                   </div>
-
-                  {/* Regenerate Action */}
-                  <Card className="border-2 border-purple-200 bg-purple-50">
-                    <CardContent className="pt-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-purple-900 mb-1">¿No te gusta este plan?</h4>
-                          <p className="text-xs text-gray-600">
-                            Genera un nuevo plan con IA usando los mismos datos del cuestionario
-                          </p>
-                        </div>
-                        <Button
-                          onClick={async () => {
-                            if (window.confirm('¿Regenerar el plan de nutrición con IA? El plan actual se reemplazará.')) {
-                              // Find the submission_id for this user
-                              if (questionnaireSubmissions.length > 0) {
-                                await generatePlanWithAI(questionnaireSubmissions[0].id, true);
-                                // Reload nutrition plans after regeneration
-                                await loadNutritionPlan(selectedClient.id);
-                                closePlanModal();
-                              } else {
-                                alert('No se encontró un cuestionario para regenerar el plan');
-                              }
-                            }
-                          }}
-                          disabled={generatingPlan}
-                          variant="outline"
-                          className="border-purple-300 hover:bg-purple-100"
-                        >
-                          {generatingPlan ? (
-                            <>
-                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                              Regenerando...
-                            </>
-                          ) : (
-                            <>
-                              🔄 Regenerar Plan
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
                 </div>
               </div>
 
