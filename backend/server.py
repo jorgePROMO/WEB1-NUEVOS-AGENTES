@@ -8590,6 +8590,60 @@ async def get_user_training_plans(user_id: str, request: Request):
     return {"plans": formatted_plans}
 
 
+# ==================== QUESTIONNAIRE MANAGEMENT ENDPOINTS ====================
+
+@api_router.delete("/admin/questionnaires/{submission_id}")
+async def delete_questionnaire_submission(submission_id: str, request: Request):
+    """
+    Elimina un cuestionario de diagnóstico o nutrición
+    Solo admin puede eliminar
+    """
+    await require_admin(request)
+    
+    try:
+        # Intentar eliminar de nutrition_questionnaire_submissions
+        result = await db.nutrition_questionnaire_submissions.delete_one({"_id": submission_id})
+        
+        if result.deleted_count > 0:
+            logger.info(f"✅ Cuestionario de nutrición eliminado: {submission_id}")
+            return {"message": "Cuestionario eliminado exitosamente", "type": "nutrition"}
+        
+        # Si no estaba en nutrition, intentar en diagnosis_questionnaire_submissions
+        result = await db.diagnosis_questionnaire_submissions.delete_one({"_id": submission_id})
+        
+        if result.deleted_count > 0:
+            logger.info(f"✅ Cuestionario de diagnóstico eliminado: {submission_id}")
+            return {"message": "Cuestionario eliminado exitosamente", "type": "diagnosis"}
+        
+        raise HTTPException(status_code=404, detail="Cuestionario no encontrado")
+        
+    except Exception as e:
+        logger.error(f"Error eliminando cuestionario: {e}")
+        raise HTTPException(status_code=500, detail=f"Error eliminando cuestionario: {str(e)}")
+
+
+@api_router.delete("/admin/follow-ups/{followup_id}")
+async def delete_follow_up_submission(followup_id: str, request: Request):
+    """
+    Elimina un cuestionario de seguimiento
+    Solo admin puede eliminar
+    """
+    await require_admin(request)
+    
+    try:
+        result = await db.follow_up_submissions.delete_one({"_id": followup_id})
+        
+        if result.deleted_count > 0:
+            logger.info(f"✅ Seguimiento eliminado: {followup_id}")
+            return {"message": "Seguimiento eliminado exitosamente"}
+        
+        raise HTTPException(status_code=404, detail="Seguimiento no encontrado")
+        
+    except Exception as e:
+        logger.error(f"Error eliminando seguimiento: {e}")
+        raise HTTPException(status_code=500, detail=f"Error eliminando seguimiento: {str(e)}")
+
+
 # ==================== FOLLOW-UP REPORT ENDPOINTS ====================
 
 @api_router.get("/admin/users/{user_id}/nutrition-plans")
