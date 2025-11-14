@@ -502,6 +502,54 @@ const AdminDashboard = () => {
     }
   };
 
+  // Delete questionnaire
+  const deleteQuestionnaire = async (submissionId, type) => {
+    if (!window.confirm('⚠️ ¿Estás seguro de eliminar este cuestionario? Esta acción no se puede deshacer.')) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${API}/admin/questionnaires/${submissionId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+
+      alert('✅ Cuestionario eliminado exitosamente');
+      
+      // Recargar datos
+      if (selectedClient) {
+        await loadAllClientData(selectedClient.id);
+      }
+    } catch (error) {
+      console.error('Error deleting questionnaire:', error);
+      alert('❌ Error al eliminar: ' + (error.response?.data?.detail || error.message));
+    }
+  };
+
+  // Delete follow-up
+  const deleteFollowUp = async (followupId) => {
+    if (!window.confirm('⚠️ ¿Estás seguro de eliminar este seguimiento? Esta acción no se puede deshacer.')) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${API}/admin/follow-ups/${followupId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+
+      alert('✅ Seguimiento eliminado exitosamente');
+      
+      // Recargar datos
+      if (selectedClient) {
+        await loadAllClientData(selectedClient.id);
+      }
+    } catch (error) {
+      console.error('Error deleting follow-up:', error);
+      alert('❌ Error al eliminar: ' + (error.response?.data?.detail || error.message));
+    }
+  };
+
   // Generate follow-up report
   const generateFollowUpReport = async () => {
     if (!selectedPreviousTrainingForReport || !selectedNewTrainingForReport) {
