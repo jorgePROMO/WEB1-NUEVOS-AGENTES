@@ -5340,10 +5340,17 @@ async def admin_generate_training_plan(
     user_id: str,
     source_type: str = "initial",  # "initial" or "followup"
     source_id: str = None,  # questionnaire submission ID or followup ID
+    previous_plan_id: str = None,  # NUEVO: Plan previo de referencia para progresión
     regenerate: bool = False,
     request: Request = None
 ):
-    """Admin genera el plan de entrenamiento desde cuestionario inicial o follow-up con E.D.N.360"""
+    """
+    Admin genera el plan de entrenamiento desde cuestionario inicial o follow-up con E.D.N.360
+    
+    Parámetros:
+    - source_id: ID del cuestionario (inicial o seguimiento) a usar
+    - previous_plan_id: (Opcional) ID del plan previo para progresión
+    """
     await require_admin(request)
     
     try:
