@@ -9,28 +9,48 @@ class N6MenuGenerator(BaseAgent):
         return '''# N6 — GENERADOR MENÚ SEMANAL
 Crear menú semanal (7 días) con alimentos específicos SINCRONIZADO con calendario de entrenamiento.
 
-CRÍTICO - CONSULTA N4 Y N5:
-- N4 tiene "calendario_semanal": {"dia_1": "M", "dia_2": "B", "dia_3": "A", ...}
-- N5 tiene distribuciones diferentes para A/M/B
-- RESPETA el tipo de día y número de comidas:
-  * Días A/M: 5 comidas (Desayuno, Pre-Entreno, Post-Entreno, Merienda, Cena)
-  * Días B: 4 comidas (Desayuno, Comida, Merienda, Cena) - SIN pre/post entreno
+CRÍTICO - CONSULTA N4, N5 Y CUESTIONARIO:
+- N4: calendario_semanal con días A/M/B
+- N5: distribuciones con NÚMERO DE COMIDAS y HORARIOS del cliente
+- CUESTIONARIO: Preferencias alimentarias, alergias, restricciones
+
+RESPETA EXACTAMENTE LO QUE DICE N5:
+- Si N5 dice 4 comidas → Genera 4 comidas
+- Si N5 dice 3 comidas en día B → Genera 3 comidas
+- Si desayuno = pre-entreno → NO crear dos comidas separadas
+- Horarios según lo que dice N5 (que viene del cuestionario)
 
 REGLAS:
 - Genera 7 días según calendario N4
-- Cada día usa macros de N5 según tipo (A/M/B)
-- Días B: 4 comidas (Desayuno, Comida, Merienda, Cena) - SIN pre/post entreno
-- Días A/M: 5 comidas (Desayuno, Pre, Post, Merienda, Cena) - CON pre/post entreno
+- Cada día usa EXACTAMENTE las comidas de N5 (número, horarios, macros)
 - Alimentos específicos con cantidades exactas
 - Variar alimentos entre días
+- Respetar alergias y preferencias del cuestionario
 
-IMPORTANTE - EVITAR GAP NUTRICIONAL:
-- En días de entreno: Merienda a las 18:00 entre post-entreno (13:30) y cena (21:00)
-- En días descanso: Merienda a las 18:00 entre comida (14:00) y cena (21:00)
+EJEMPLO 1 - Cliente entrena mañana, 4 comidas:
+Día A: 
+- 07:30 Desayuno/Pre-entreno
+- 10:00 Post-entreno
+- 14:00 Comida
+- 21:00 Cena
+(4 comidas TOTAL)
 
-EJEMPLO:
-Si N4 dice dia_1="B" (descanso) → 4 comidas, sin pre/post entreno
-Si N4 dice dia_3="A" (entreno) → 5 comidas, con pre/post entreno
+Día B:
+- 08:00 Desayuno
+- 14:00 Comida
+- 21:00 Cena
+(3 comidas)
+
+EJEMPLO 2 - Cliente entrena tarde, 5 comidas con merienda:
+Día A:
+- 08:00 Desayuno
+- 14:00 Comida
+- 17:00 Pre-entreno
+- 19:00 Post-entreno
+- 22:00 Cena
+(5 comidas)
+
+NO INVENTES COMIDAS QUE EL CLIENTE NO HACE
 
 ESTRUCTURA JSON:
 {
