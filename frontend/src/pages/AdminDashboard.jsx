@@ -3046,6 +3046,61 @@ const AdminDashboard = () => {
                             </div>
                           )}
                           
+                          {/* Configuration Selectors */}
+                          {questionnaireSubmissions.length > 0 && (
+                            <Card className="mb-6 border-2 border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
+                              <CardHeader>
+                                <CardTitle className="text-lg text-green-900">⚙️ Configuración de Generación</CardTitle>
+                                <p className="text-sm text-gray-600">Selecciona los datos que quieres usar para generar el plan</p>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                {/* Questionnaire Selector */}
+                                <div>
+                                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    📋 Cuestionario Base
+                                  </label>
+                                  <select
+                                    value={selectedQuestionnaireForNutrition || ''}
+                                    onChange={(e) => setSelectedQuestionnaireForNutrition(e.target.value)}
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                  >
+                                    <option value="">Selecciona un cuestionario...</option>
+                                    {availableQuestionnaires.map((q) => (
+                                      <option key={q.id} value={q.id}>
+                                        {q.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Datos del cliente (alergias, comidas diarias, horarios, etc.)
+                                  </p>
+                                </div>
+
+                                {/* Training Plan Selector */}
+                                <div>
+                                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    💪 Plan de Entrenamiento de Referencia
+                                  </label>
+                                  <select
+                                    value={selectedTrainingPlanForNutrition || ''}
+                                    onChange={(e) => setSelectedTrainingPlanForNutrition(e.target.value || null)}
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                  >
+                                    <option value="">Último generado (recomendado)</option>
+                                    {availableTrainingPlans.map((plan) => (
+                                      <option key={plan.id} value={plan.id}>
+                                        {plan.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    La nutrición se sincronizará con este entrenamiento (días A/M/B, pre/post entreno)
+                                  </p>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          )}
+                          
                           {/* Generar Plan de Nutrición desde Cuestionario - SIEMPRE VISIBLE */}
                           {questionnaireSubmissions.length > 0 && (
                             <div className="mb-6">
