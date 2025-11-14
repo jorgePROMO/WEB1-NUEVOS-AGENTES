@@ -4784,7 +4784,7 @@ const AdminDashboard = () => {
 
       {/* Nutrition Plan Chat Dialog */}
       {modalPlan && (
-        <TrainingPlanChatDialog
+        <NutritionPlanChatDialog
           isOpen={showNutritionChat}
           onClose={() => {
             setShowNutritionChat(false);
