@@ -8048,6 +8048,153 @@ Por favor:
         raise HTTPException(status_code=500, detail=f"Error procesando chat: {str(e)}")
 
 
+# ==================== NUTRITION PLAN CHAT ENDPOINT ====================
+
+@api_router.post("/nutrition-plan/chat", response_model=NutritionPlanChatResponse)
+async def chat_about_nutrition_plan(chat_request: NutritionPlanChatRequest, request: Request):
+    """
+    Chat with AI to modify an existing nutrition plan
+    """
+    current_user = await get_current_user(request)
+    
+    try:
+        # Get the nutrition plan
+        plan = await db.nutrition_plans.find_one({"_id": chat_request.plan_id})
+        
+        if not plan:
+            raise HTTPException(status_code=404, detail="Plan de nutrición no encontrado")
+        
+        # Verify user has access (admin or owner)
+        if current_user.get("role") != "admin" and plan.get("user_id") != current_user.get("_id"):
+            raise HTTPException(status_code=403, detail="No tienes permiso para modificar este plan")
+        
+        # Get chat history if exists
+        chat_history = plan.get("chat_history", [])
+        
+        # Prepare context for AI - try plan_text first, fallback to plan_verificado
+        current_plan_content = plan.get("plan_text") or plan.get("plan_verificado", "")
+        
+        # Call OpenAI to process the modification request
+        from openai import OpenAI
+        client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        
+        messages = [
+            {
+                "role": "system",
+                "content": """Eres un nutricionista profesional experto que ayuda a ajustar planes de nutrición.
+
+Tu misión es:
+1. Entender la petición del nutricionista
+2. Modificar el plan según sus indicaciones
+3. Mantener la estructura profesional del documento
+4. Explicar brevemente los cambios realizados
+
+REGLAS:
+- Ser conciso en las explicaciones
+- Mantener el formato del plan original
+- Solo modificar lo que se solicita
+- Asegurar que los cambios tengan sentido nutricional
+- Mantener equilibrio de macronutrientes cuando sea posible
+- Considerar alergias y preferencias del cliente"""
+            },
+            {
+                "role": "user",
+                "content": f"""PLAN ACTUAL:
+{current_plan_content}
+
+PETICIÓN DEL NUTRICIONISTA:
+{chat_request.user_message}
+
+Por favor:
+1. Modifica el plan según la petición
+2. Devuelve el plan COMPLETO modificado
+3. Explica brevemente qué cambiaste"""
+            }
+        ]
+        
+        # Add chat history
+        for msg in chat_history[-5:]:  # Last 5 messages for context
+            messages.append({"role": msg["role"], "content": msg["content"]})
+        
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=messages,
+            temperature=0.7,
+            max_tokens=4000
+        )
+        
+        ai_response = response.choices[0].message.content
+        
+        # Check if AI modified the plan (look for plan structure in response)
+        updated_plan = None
+        if "🥗" in ai_response or "PLAN DE NUTRICIÓN" in ai_response or "PROGRAMA NUTRICIONAL" in ai_response or "DESAYUNO" in ai_response:
+            # AI returned a modified plan
+            updated_plan = ai_response
+            
+            # Update the plan in database - update both plan_verificado and plan_text
+            await db.nutrition_plans.update_one(
+                {"_id": chat_request.plan_id},
+                {
+                    "$set": {
+                        "plan_verificado": updated_plan,
+                        "plan_text": updated_plan,
+                        "last_modified": datetime.now(timezone.utc).isoformat(),
+                        "edited": True
+                    },
+                    "$push": {
+                        "chat_history": {
+                            "$each": [
+                                {
+                                    "role": "user",
+                                    "content": chat_request.user_message,
+                                    "timestamp": datetime.now(timezone.utc).isoformat()
+                                },
+                                {
+                                    "role": "assistant",
+                                    "content": ai_response,
+                                    "timestamp": datetime.now(timezone.utc).isoformat()
+                                }
+                            ]
+                        }
+                    }
+                }
+            )
+            
+            logger.info(f"✅ Nutrition plan {chat_request.plan_id} modified via chat")
+        else:
+            # AI just answered without modifying plan
+            await db.nutrition_plans.update_one(
+                {"_id": chat_request.plan_id},
+                {
+                    "$push": {
+                        "chat_history": {
+                            "$each": [
+                                {
+                                    "role": "user",
+                                    "content": chat_request.user_message,
+                                    "timestamp": datetime.now(timezone.utc).isoformat()
+                                },
+                                {
+                                    "role": "assistant",
+                                    "content": ai_response,
+                                    "timestamp": datetime.now(timezone.utc).isoformat()
+                                }
+                            ]
+                        }
+                    }
+                }
+            )
+        
+        return NutritionPlanChatResponse(
+            assistant_message=ai_response,
+            updated_plan=updated_plan
+        )
+        
+    except Exception as e:
+        logger.error(f"Error in nutrition plan chat: {e}")
+        raise HTTPException(status_code=500, detail=f"Error procesando chat: {str(e)}")
+
+
 # ==================== WAITLIST ENDPOINTS ====================
 
 from waitlist_scoring import calculate_waitlist_score
