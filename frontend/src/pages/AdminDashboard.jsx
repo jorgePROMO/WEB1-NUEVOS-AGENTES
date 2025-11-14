@@ -3983,9 +3983,28 @@ const AdminDashboard = () => {
                                         <div className="text-xs">{data.objetivo_principal?.substring(0, 20)}...</div>
                                       </div>
                                     </div>
-                                    <Button variant="outline" className="w-full">
-                                      Ver Respuestas Completas
-                                    </Button>
+                                    <div className="flex gap-2">
+                                      <Button 
+                                        variant="outline" 
+                                        className="flex-1"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedHistoryItem({ type: 'nutrition', data: nutritionForm });
+                                        }}
+                                      >
+                                        Ver Respuestas
+                                      </Button>
+                                      <Button 
+                                        variant="destructive"
+                                        size="icon"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          deleteQuestionnaire(nutritionForm._id, 'nutrition');
+                                        }}
+                                      >
+                                        🗑️
+                                      </Button>
+                                    </div>
                                   </CardContent>
                                 </Card>
                               );
