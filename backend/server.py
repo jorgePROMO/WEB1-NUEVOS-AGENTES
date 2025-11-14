@@ -3728,8 +3728,11 @@ async def admin_generate_nutrition_plan(
             )
         
         if not training_plan:
-            logger.warning(f"⚠️ No se encontró plan de entrenamiento para usuario {user_id}. Generando plan de nutrición sin sincronización.")
-            training_bridge_data = None
+            logger.warning(f"⚠️ No se encontró plan de entrenamiento para usuario {user_id}.")
+            raise HTTPException(
+                status_code=400, 
+                detail="Debes generar primero un plan de ENTRENAMIENTO antes de generar el plan de nutrición. La nutrición necesita sincronizarse con el entrenamiento (días A/M/B, pre/post entreno, etc.)"
+            )
         else:
             # Extraer datos del bridge (E9) si existen
             training_bridge_data = training_plan.get("edn360_data", {}).get("E9", {})
