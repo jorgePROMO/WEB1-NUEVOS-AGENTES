@@ -128,6 +128,8 @@ const AdminDashboard = () => {
   const [availableNutritionPlans, setAvailableNutritionPlans] = useState([]);
   const [followUpReports, setFollowUpReports] = useState([]);
   const [generatingReport, setGeneratingReport] = useState(false);
+  const [selectedReport, setSelectedReport] = useState(null);
+  const [showReportModal, setShowReportModal] = useState(false);
   
   // Follow-up states
   const [followUps, setFollowUps] = useState([]); // Array de seguimientos
