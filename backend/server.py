@@ -8559,16 +8559,25 @@ async def get_user_training_plans(user_id: str, request: Request):
     
     formatted_plans = []
     for i, plan in enumerate(plans):
+        # Manejar casos donde generated_at podría no existir
+        generated_at = plan.get("generated_at")
+        if generated_at:
+            date_str = generated_at.strftime('%d/%m/%Y')
+            iso_str = generated_at.isoformat()
+        else:
+            date_str = "Fecha desconocida"
+            iso_str = datetime.now(timezone.utc).isoformat()
+        
         # Determinar label
         if i == 0:
-            label = f"Último generado ({plan['generated_at'].strftime('%d/%m/%Y')})"
+            label = f"Último generado ({date_str})"
         else:
-            label = f"Plan {len(plans) - i} ({plan['generated_at'].strftime('%d/%m/%Y')})"
+            label = f"Plan {len(plans) - i} ({date_str})"
         
         formatted_plans.append({
             "id": plan["_id"],
             "label": label,
-            "generated_at": plan["generated_at"].isoformat(),
+            "generated_at": iso_str,
             "month": plan.get("month"),
             "year": plan.get("year"),
             "source_type": plan.get("source_type", "initial")
