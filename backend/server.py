@@ -4811,26 +4811,113 @@ PRIMERA SEMANA:
    • Grasas: {comida.get('grasas_g', 'N/A')}g
 """
         
-        # Añadir ejemplos de menús si existen
-        menus = n6_menus.get("menus", {})
-        if menus:
+        # Añadir menú semanal completo si existe
+        menu_semanal = n6_menus.get("menu_semanal", {})
+        if menu_semanal:
             plan_text += """
 
 ═══════════════════════════════════════════════════════════════════════════
 
-🍴 EJEMPLOS DE MENÚS
+🍴 MENÚ SEMANAL COMPLETO
+
+"""
+            dias_nombres = {
+                "dia_1": "LUNES",
+                "dia_2": "MARTES", 
+                "dia_3": "MIÉRCOLES",
+                "dia_4": "JUEVES",
+                "dia_5": "VIERNES",
+                "dia_6": "SÁBADO",
+                "dia_7": "DOMINGO"
+            }
+            
+            for dia_key, dia_nombre in dias_nombres.items():
+                dia_data = menu_semanal.get(dia_key, {})
+                if dia_data:
+                    tipo_dia = dia_data.get("tipo_dia", "M")
+                    emoji = "🔥" if tipo_dia == "A" else ("🌙" if tipo_dia == "B" else "⚖️")
+                    
+                    plan_text += f"\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                    plan_text += f"{emoji} {dia_nombre} - Día Tipo {tipo_dia}\n"
+                    plan_text += f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+                    
+                    comidas = dia_data.get("comidas", [])
+                    for comida in comidas:
+                        nombre_comida = comida.get("nombre", "Comida")
+                        hora = comida.get("hora", "")
+                        alimentos = comida.get("alimentos", [])
+                        macros = comida.get("macros", {})
+                        preparacion = comida.get("preparacion", "")
+                        
+                        plan_text += f"🍽️ {nombre_comida.upper()} ({hora})\n"
+                        
+                        if alimentos:
+                            for alimento in alimentos:
+                                if isinstance(alimento, dict):
+                                    nombre_ali = alimento.get("nombre", "")
+                                    cantidad = alimento.get("cantidad", "")
+                                    plan_text += f"   • {cantidad} {nombre_ali}\n"
+                                elif isinstance(alimento, str):
+                                    plan_text += f"   • {alimento}\n"
+                        
+                        if macros:
+                            p = macros.get("proteinas", 0)
+                            c = macros.get("carbohidratos", 0)
+                            g = macros.get("grasas", 0)
+                            plan_text += f"   📊 Macros: {p}g proteína | {c}g carbos | {g}g grasas\n"
+                        
+                        if preparacion:
+                            plan_text += f"   👨‍🍳 {preparacion}\n"
+                        
+                        plan_text += "\n"
+        
+        # Si no hay menú semanal, mostrar menús por tipo de día (formato antiguo)
+        elif n6_menus.get("menus"):
+            menus = n6_menus.get("menus", {})
+            plan_text += """
+
+═══════════════════════════════════════════════════════════════════════════
+
+🍴 EJEMPLOS DE MENÚS POR TIPO DE DÍA
 
 """
             for tipo, menu_list in menus.items():
                 if menu_list and len(menu_list) > 0:
                     emoji = "🔥" if tipo == "A" else ("🌙" if tipo == "B" else "⚖️")
                     plan_text += f"\n{emoji} DÍAS TIPO {tipo}:\n"
-                    for item in menu_list[:3]:  # Primeros 3 ejemplos
+                    for item in menu_list[:5]:  # Primeros 5 ejemplos
                         comida_nombre = item.get('comida', 'Comida')
                         alimentos = item.get('alimentos', [])
                         plan_text += f"\n   {comida_nombre}:\n"
                         for alimento in alimentos:
-                            plan_text += f"      • {alimento}\n"
+                            if isinstance(alimento, dict):
+                                nombre = alimento.get("nombre", "")
+                                cantidad = alimento.get("cantidad", "")
+                                plan_text += f"      • {cantidad} {nombre}\n"
+                            else:
+                                plan_text += f"      • {alimento}\n"
+        
+        # Añadir equivalencias/swaps si existen
+        equivalencias = n6_menus.get("equivalencias", {})
+        if equivalencias:
+            plan_text += """
+
+═══════════════════════════════════════════════════════════════════════════
+
+🔄 EQUIVALENCIAS DE ALIMENTOS (OPCIONES DE REEMPLAZO)
+
+"""
+            for categoria, swaps in equivalencias.items():
+                cat_nombre = categoria.replace("_", " ").title()
+                plan_text += f"\n{cat_nombre}:\n"
+                if isinstance(swaps, dict):
+                    for alimento_orig, alternativas in swaps.items():
+                        alimento_nombre = alimento_orig.replace("_", " ").title()
+                        if isinstance(alternativas, list):
+                            alts_str = ", ".join(alternativas)
+                            plan_text += f"   • {alimento_nombre} → {alts_str}\n"
+                        else:
+                            plan_text += f"   • {alimento_nombre} → {alternativas}\n"
         
         # Añadir protocolos de adherencia
         protocolos = n7_adherence.get("protocolos", {})
