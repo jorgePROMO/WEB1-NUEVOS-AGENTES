@@ -3923,9 +3923,28 @@ const AdminDashboard = () => {
                                     <div className="text-sm text-gray-600 mb-3">
                                       Primer cuestionario completado tras el pago
                                     </div>
-                                    <Button variant="outline" className="w-full">
-                                      Ver Respuestas Completas
-                                    </Button>
+                                    <div className="flex gap-2">
+                                      <Button 
+                                        variant="outline" 
+                                        className="flex-1"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedHistoryItem({ type: 'diagnosis', data: diagnosisForm });
+                                        }}
+                                      >
+                                        Ver Respuestas
+                                      </Button>
+                                      <Button 
+                                        variant="destructive"
+                                        size="icon"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          deleteQuestionnaire(diagnosisForm._id, 'diagnosis');
+                                        }}
+                                      >
+                                        🗑️
+                                      </Button>
+                                    </div>
                                   </CardContent>
                                 </Card>
                               );
