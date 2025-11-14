@@ -671,48 +671,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // Load questionnaires for selectors
-  const loadQuestionnaires = async (userId) => {
-    try {
-      const response = await axios.get(`${API}/admin/users/${userId}/questionnaires`, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true
-      });
-      const questionnaires = response.data.questionnaires || [];
-      setAvailableQuestionnaires(questionnaires);
-      
-      // Set default to initial questionnaire
-      const initial = questionnaires.find(q => q.is_initial);
-      if (initial) {
-        setSelectedQuestionnaireForTraining(initial.id);
-        setSelectedQuestionnaireForNutrition(initial.id);
-      }
-    } catch (error) {
-      console.error('Error loading questionnaires:', error);
-      setAvailableQuestionnaires([]);
-    }
-  };
-
-  // Load training plans for selectors
-  const loadTrainingPlansForSelector = async (userId) => {
-    try {
-      const response = await axios.get(`${API}/admin/users/${userId}/training-plans`, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true
-      });
-      const plans = response.data.plans || [];
-      setAvailableTrainingPlans(plans);
-      
-      // Set default to latest plan for nutrition
-      if (plans.length > 0) {
-        setSelectedTrainingPlanForNutrition(plans[0].id);
-      }
-    } catch (error) {
-      console.error('Error loading training plans for selector:', error);
-      setAvailableTrainingPlans([]);
-    }
-  };
-
   // ALL TRAINING FUNCTIONS MOVED UP - now defined before loadAllClientData
 
 
