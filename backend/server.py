@@ -3770,6 +3770,8 @@ async def admin_generate_nutrition_plan(
             "user_id": user_id,
             "month": current_month,
             "year": current_year,
+            "submission_id": submission_id,  # NUEVO: Cuestionario usado
+            "training_plan_id": training_plan["_id"] if training_plan else None,  # NUEVO: Plan de entrenamiento referenciado
             "questionnaire_data": questionnaire_data,
             
             # Datos de E.D.N.360
