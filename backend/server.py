@@ -4919,25 +4919,89 @@ PRIMERA SEMANA:
                         else:
                             plan_text += f"   • {alimento_nombre} → {alternativas}\n"
         
-        # Añadir protocolos de adherencia
-        protocolos = n7_adherence.get("protocolos", {})
-        recomendaciones = n7_adherence.get("recomendaciones", [])
-        
+        # Añadir protocolos de adherencia completos
         plan_text += """
 
 ═══════════════════════════════════════════════════════════════════════════
 
-📝 PROTOCOLO DE ADHERENCIA (REGLA 80/20)
+📝 PROTOCOLO DE ADHERENCIA Y SOSTENIBILIDAD
 
 """
         
-        if protocolos:
-            for key, value in protocolos.items():
-                plan_text += f"• {key.replace('_', ' ').title()}: {value}\n"
+        # Regla 80/20
+        regla_80_20 = n7_adherence.get("regla_80_20", {})
+        if regla_80_20:
+            plan_text += "\n🎯 REGLA 80/20:\n"
+            concepto = regla_80_20.get("concepto", "")
+            if concepto:
+                plan_text += f"{concepto}\n\n"
+            
+            aplicacion = regla_80_20.get("aplicacion_practica", [])
+            if aplicacion:
+                plan_text += "Aplicación Práctica:\n"
+                for punto in aplicacion:
+                    plan_text += f"   • {punto}\n"
         
-        if recomendaciones:
-            plan_text += "\n✅ RECOMENDACIONES:\n"
-            for rec in recomendaciones:
+        # Comidas libres
+        comidas_libres = n7_adherence.get("comidas_libres", {})
+        if comidas_libres:
+            plan_text += "\n\n🍕 COMIDAS LIBRES:\n"
+            freq = comidas_libres.get("frecuencia", "")
+            cuando = comidas_libres.get("cuando", "")
+            if freq:
+                plan_text += f"Frecuencia: {freq}\n"
+            if cuando:
+                plan_text += f"Cuándo: {cuando}\n"
+            
+            reglas = comidas_libres.get("reglas", [])
+            if reglas:
+                plan_text += "\nReglas:\n"
+                for regla in reglas:
+                    plan_text += f"   • {regla}\n"
+        
+        # Emergencias
+        emergencias = n7_adherence.get("emergencias", {})
+        if emergencias:
+            plan_text += "\n\n🚨 PROTOCOLOS DE EMERGENCIA:\n"
+            
+            for situacion_key, situacion_data in emergencias.items():
+                if isinstance(situacion_data, dict):
+                    situacion_nombre = situacion_data.get("situacion", situacion_key.replace("_", " ").title())
+                    plan_text += f"\n{situacion_nombre}:\n"
+                    
+                    accion = situacion_data.get("accion", situacion_data.get("estrategia", []))
+                    if isinstance(accion, list):
+                        for paso in accion:
+                            plan_text += f"   ✓ {paso}\n"
+                    elif isinstance(accion, str):
+                        plan_text += f"   ✓ {accion}\n"
+        
+        # Meal prep
+        meal_prep = n7_adherence.get("meal_prep_guia", {})
+        if meal_prep:
+            plan_text += "\n\n🥡 GUÍA DE MEAL PREP:\n"
+            
+            cuando = meal_prep.get("cuando", "")
+            if cuando:
+                plan_text += f"Cuándo: {cuando}\n\n"
+            
+            que_cocinar = meal_prep.get("que_cocinar", [])
+            if que_cocinar:
+                plan_text += "Qué cocinar:\n"
+                for item in que_cocinar:
+                    plan_text += f"   • {item}\n"
+            
+            tips = meal_prep.get("tips", [])
+            if tips:
+                plan_text += "\nTips:\n"
+                for tip in tips:
+                    plan_text += f"   💡 {tip}\n"
+        
+        # Recomendaciones finales
+        recomendaciones_finales = n7_adherence.get("recomendaciones_finales", [])
+        if recomendaciones_finales:
+            plan_text += "\n\n✅ RECOMENDACIONES FINALES:\n"
+            for rec in recomendaciones_finales:
                 plan_text += f"   • {rec}\n"
         
         # Instrucciones finales
