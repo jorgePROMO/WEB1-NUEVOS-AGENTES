@@ -70,6 +70,11 @@ Ajustes:
       "dia_6": "B",
       "dia_7": "B"
     },
+    "justificacion_calendario": {
+      "dia_1": "Lunes: Entrenamiento moderado - Inicio de semana, adaptación",
+      "dia_3": "Miércoles: Entrenamiento INTENSO - Mayor volumen/carga de la semana",
+      "dia_5": "Viernes: Entrenamiento moderado - Cierre de microciclo"
+    },
     "prioridad_metabolica": "hipertrofia"
   },
   "contrato_para_N0": {
