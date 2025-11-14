@@ -43,6 +43,7 @@ Ajustes:
   "bridge_output": {
     "tdee_estimado": 2550,
     "gasto_semanal_estimado": 17800,
+    "dias_entrenamiento_semana": 3,
     "mapa_intensidad": {
       "dias_duros": 2,
       "dias_medios": 3,
@@ -53,17 +54,29 @@ Ajustes:
       "M": "0%",
       "B": "-12%"
     },
+    "calendario_sugerido": {
+      "dia_1": "M",
+      "dia_2": "B",
+      "dia_3": "A",
+      "dia_4": "B",
+      "dia_5": "M",
+      "dia_6": "B",
+      "dia_7": "B"
+    },
     "prioridad_metabolica": "hipertrofia"
   },
   "contrato_para_N0": {
     "estado_fisiologico": "carga_controlada",
     "tdee": 2550,
+    "dias_entrenamiento": 3,
     "delta_dias_A": "+12%",
     "delta_dias_B": "-12%",
     "prioridad": "hipertrofia"
   }
 }
 ```
+
+CRÍTICO: DEBES incluir "dias_entrenamiento_semana" y "calendario_sugerido" basado en el plan de entrenamiento real.
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
