@@ -8489,6 +8489,76 @@ Por favor:
         raise HTTPException(status_code=500, detail=f"Error procesando chat: {str(e)}")
 
 
+# ==================== ENDPOINTS PARA SELECTORES ====================
+
+@api_router.get("/admin/users/{user_id}/questionnaires")
+async def get_user_questionnaires(user_id: str, request: Request):
+    """Obtiene todos los cuestionarios de un usuario (inicial + seguimientos)"""
+    await require_admin(request)
+    
+    questionnaires = []
+    
+    # Cuestionario inicial
+    initial = await db.nutrition_questionnaire_submissions.find_one(
+        {"user_id": user_id},
+        sort=[("submitted_at", 1)]
+    )
+    
+    if initial:
+        questionnaires.append({
+            "id": initial["_id"],
+            "type": "initial",
+            "label": f"Cuestionario Inicial ({initial['submitted_at'].strftime('%d/%m/%Y')})",
+            "submitted_at": initial["submitted_at"].isoformat(),
+            "is_initial": True
+        })
+    
+    # Seguimientos
+    followups = await db.follow_up_submissions.find(
+        {"user_id": user_id}
+    ).sort("submitted_at", 1).to_list(length=None)
+    
+    for i, followup in enumerate(followups, 1):
+        questionnaires.append({
+            "id": followup["_id"],
+            "type": "followup",
+            "label": f"Seguimiento {i} ({followup['submitted_at'].strftime('%d/%m/%Y')})",
+            "submitted_at": followup["submitted_at"].isoformat(),
+            "is_initial": False
+        })
+    
+    return {"questionnaires": questionnaires}
+
+
+@api_router.get("/admin/users/{user_id}/training-plans")
+async def get_user_training_plans(user_id: str, request: Request):
+    """Obtiene todos los planes de entrenamiento de un usuario"""
+    await require_admin(request)
+    
+    plans = await db.training_plans.find(
+        {"user_id": user_id}
+    ).sort("generated_at", -1).to_list(length=None)
+    
+    formatted_plans = []
+    for i, plan in enumerate(plans):
+        # Determinar label
+        if i == 0:
+            label = f"Último generado ({plan['generated_at'].strftime('%d/%m/%Y')})"
+        else:
+            label = f"Plan {len(plans) - i} ({plan['generated_at'].strftime('%d/%m/%Y')})"
+        
+        formatted_plans.append({
+            "id": plan["_id"],
+            "label": label,
+            "generated_at": plan["generated_at"].isoformat(),
+            "month": plan.get("month"),
+            "year": plan.get("year"),
+            "source_type": plan.get("source_type", "initial")
+        })
+    
+    return {"plans": formatted_plans}
+
+
 # ==================== WAITLIST ENDPOINTS ====================
 
 from waitlist_scoring import calculate_waitlist_score
