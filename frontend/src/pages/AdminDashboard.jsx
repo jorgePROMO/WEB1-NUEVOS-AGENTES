@@ -3840,11 +3840,12 @@ const AdminDashboard = () => {
                                           📄 Ver Informe Completo
                                         </Button>
                                       </div>
-                                  </CardContent>
-                                </Card>
-                              ))}
-                            </div>
-                          )}
+                                    </CardContent>
+                                  </Card>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </TabsContent>
 
                         {/* History Tab - Complete Questionnaire History */}
