@@ -3789,65 +3789,55 @@ const AdminDashboard = () => {
                             ) : (
                               <div className="grid grid-cols-1 gap-4">
                                 {followUpReports.map((report, index) => (
-                                <Card
-                                  key={followUp.id}
-                                  className="border-2 border-purple-200 hover:border-purple-400 transition-all cursor-pointer hover:shadow-lg"
-                                  onClick={() => setSelectedFollowUp(followUp)}
-                                >
-                                  <CardHeader>
-                                    <div className="flex items-center justify-between">
-                                      <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold text-lg">
-                                          {followUps.length - index}
-                                        </div>
-                                        <div>
-                                          <CardTitle className="text-lg">
-                                            Seguimiento #{followUps.length - index}
-                                          </CardTitle>
-                                          <p className="text-sm text-gray-600">
-                                            {new Date(followUp.submission_date).toLocaleDateString('es-ES')} • 
-                                            Día {followUp.days_since_last_plan}
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </CardHeader>
-                                  <CardContent>
-                                    <div className="flex flex-wrap gap-2 mb-3">
-                                      {followUp.status === 'pending_analysis' && (
-                                        <Badge className="bg-yellow-100 text-yellow-800">⏳ Pendiente</Badge>
-                                      )}
-                                      {followUp.status === 'analyzed' && (
-                                        <Badge className="bg-blue-100 text-blue-800">✅ Analizado</Badge>
-                                      )}
-                                      {followUp.status === 'plan_generated' && (
-                                        <Badge className="bg-green-100 text-green-800">🎯 Plan Generado</Badge>
-                                      )}
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-2 text-sm">
-                                      <div>
-                                        <div className="font-semibold text-gray-600">Medición</div>
-                                        <div className="text-xs">
-                                          {followUp.measurement_type === 'smart_scale' && '📱 Báscula'}
-                                          {followUp.measurement_type === 'tape_measure' && '📏 Cinta'}
-                                          {followUp.measurement_type === 'none' && '❌ Ninguna'}
+                                  <Card
+                                    key={report.id}
+                                    className="border-2 border-purple-200 hover:shadow-lg transition-all"
+                                  >
+                                    <CardHeader>
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                          <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white flex items-center justify-center font-bold text-lg">
+                                            {followUpReports.length - index}
+                                          </div>
+                                          <div>
+                                            <CardTitle className="text-lg">
+                                              Informe #{followUpReports.length - index}
+                                            </CardTitle>
+                                            <p className="text-sm text-gray-600">
+                                              {new Date(report.generated_at).toLocaleDateString('es-ES', {
+                                                day: '2-digit',
+                                                month: 'long',
+                                                year: 'numeric'
+                                              })}
+                                            </p>
+                                          </div>
                                         </div>
                                       </div>
-                                      <div>
-                                        <div className="font-semibold text-gray-600">Objetivo</div>
-                                        <div className="text-xs truncate">{followUp.feedback?.objetivo_proximo_mes?.substring(0, 25)}...</div>
+                                    </CardHeader>
+                                    <CardContent>
+                                      <div className="space-y-3">
+                                        <div className="text-sm">
+                                          <div className="font-semibold text-gray-700 mb-1">📊 Comparación:</div>
+                                          <div className="text-xs text-gray-600 space-y-1">
+                                            <div>💪 Entrenamiento: {report.training_comparison_label}</div>
+                                            {report.nutrition_comparison_label && (
+                                              <div>🥗 Nutrición: {report.nutrition_comparison_label}</div>
+                                            )}
+                                          </div>
+                                        </div>
+                                        
+                                        <Button 
+                                          variant="outline" 
+                                          className="w-full"
+                                          onClick={() => {
+                                            // Abrir modal con el informe
+                                            setSelectedReport(report);
+                                            setShowReportModal(true);
+                                          }}
+                                        >
+                                          📄 Ver Informe Completo
+                                        </Button>
                                       </div>
-                                    </div>
-                                    <Button 
-                                      variant="outline" 
-                                      className="w-full mt-4"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setSelectedFollowUp(followUp);
-                                      }}
-                                    >
-                                      Ver Detalles Completos
-                                    </Button>
                                   </CardContent>
                                 </Card>
                               ))}
