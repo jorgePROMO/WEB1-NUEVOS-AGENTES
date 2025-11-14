@@ -4339,13 +4339,26 @@ const AdminDashboard = () => {
                     <CardTitle>Plan Verificado</CardTitle>
                     <div className="flex gap-2">
                       {!editingNutrition ? (
-                        <Button
-                          onClick={() => setEditingNutrition(true)}
-                          variant="outline"
-                        >
-                          <Edit className="h-4 w-4 mr-2" />
-                          Editar
-                        </Button>
+                        <>
+                          <Button
+                            onClick={() => {
+                              // Close the modal first, then open chat
+                              setShowNutritionModal(false);
+                              setTimeout(() => setShowNutritionChat(true), 100);
+                            }}
+                            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                          >
+                            <MessageSquare className="h-4 w-4 mr-2" />
+                            💬 Chat con IA
+                          </Button>
+                          <Button
+                            onClick={() => setEditingNutrition(true)}
+                            variant="outline"
+                          >
+                            <Edit className="h-4 w-4 mr-2" />
+                            Editar Manual
+                          </Button>
+                        </>
                       ) : (
                         <>
                           <Button
