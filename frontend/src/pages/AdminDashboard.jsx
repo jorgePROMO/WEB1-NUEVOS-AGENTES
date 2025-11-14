@@ -219,6 +219,12 @@ const AdminDashboard = () => {
   };
 
   const generateTrainingPlan = async (sourceType, sourceId) => {
+    // Validate selectors
+    if (!selectedQuestionnaireForTraining) {
+      alert('❌ Por favor selecciona un cuestionario base');
+      return;
+    }
+    
     // Set the appropriate loading state based on source type
     if (sourceType === 'initial') {
       setGeneratingTrainingPlan(true);
@@ -227,14 +233,21 @@ const AdminDashboard = () => {
     }
     
     try {
+      const params = {
+        source_type: sourceType,
+        source_id: selectedQuestionnaireForTraining  // Usar el seleccionado
+      };
+      
+      // Agregar plan previo si está seleccionado
+      if (selectedPreviousTrainingPlan) {
+        params.previous_plan_id = selectedPreviousTrainingPlan;
+      }
+      
       const response = await axios.post(
         `${API}/admin/users/${selectedClient.id}/training/generate`,
         null,
         {
-          params: {
-            source_type: sourceType,
-            source_id: sourceId
-          },
+          params,
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
         }
@@ -242,6 +255,7 @@ const AdminDashboard = () => {
       
       alert('✅ Plan de entrenamiento generado exitosamente!');
       await loadTrainingPlans(selectedClient.id);
+      await loadTrainingPlansForSelector(selectedClient.id); // Actualizar lista de selectores
     } catch (error) {
       console.error('Error generating training plan:', error);
       alert('❌ Error al generar plan: ' + (error.response?.data?.detail || error.message));
