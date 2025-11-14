@@ -3206,6 +3206,61 @@ const AdminDashboard = () => {
 
                         {/* Training Tab */}
                         <TabsContent value="training">
+                          {/* Configuration Selectors */}
+                          {questionnaireSubmissions.length > 0 && (
+                            <Card className="mb-6 border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50">
+                              <CardHeader>
+                                <CardTitle className="text-lg text-blue-900">⚙️ Configuración de Generación</CardTitle>
+                                <p className="text-sm text-gray-600">Selecciona los datos que quieres usar para generar el plan</p>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                {/* Questionnaire Selector */}
+                                <div>
+                                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    📋 Cuestionario Base
+                                  </label>
+                                  <select
+                                    value={selectedQuestionnaireForTraining || ''}
+                                    onChange={(e) => setSelectedQuestionnaireForTraining(e.target.value)}
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  >
+                                    <option value="">Selecciona un cuestionario...</option>
+                                    {availableQuestionnaires.map((q) => (
+                                      <option key={q.id} value={q.id}>
+                                        {q.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Datos del cliente (peso, edad, disponibilidad, etc.)
+                                  </p>
+                                </div>
+
+                                {/* Previous Plan Selector */}
+                                <div>
+                                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    📊 Plan Previo de Referencia (Opcional)
+                                  </label>
+                                  <select
+                                    value={selectedPreviousTrainingPlan || ''}
+                                    onChange={(e) => setSelectedPreviousTrainingPlan(e.target.value || null)}
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  >
+                                    <option value="">Ninguno (empezar de cero)</option>
+                                    {availableTrainingPlans.map((plan) => (
+                                      <option key={plan.id} value={plan.id}>
+                                        {plan.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Usa este plan como base para progresión (aumentar cargas, volumen, etc.)
+                                  </p>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          )}
+                          
                           {/* Pending questionnaires - can generate from nutrition questionnaire */}
                           {questionnaireSubmissions.length > 0 && (
                             <div className="mb-6">
