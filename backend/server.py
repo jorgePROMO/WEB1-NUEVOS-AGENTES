@@ -3641,8 +3641,21 @@ async def submit_nutrition_questionnaire(questionnaire: NutritionQuestionnaireSu
 
 
 @api_router.post("/admin/users/{user_id}/nutrition/generate")
-async def admin_generate_nutrition_plan(user_id: str, submission_id: str, regenerate: bool = False, request: Request = None):
-    """Admin genera el plan de nutrición desde las respuestas del cuestionario"""
+async def admin_generate_nutrition_plan(
+    user_id: str, 
+    submission_id: str,  # Cuestionario a usar
+    training_plan_id: str = None,  # NUEVO: Plan de entrenamiento de referencia
+    regenerate: bool = False, 
+    request: Request = None
+):
+    """
+    Admin genera el plan de nutrición desde las respuestas del cuestionario
+    
+    Parámetros:
+    - submission_id: ID del cuestionario (inicial o seguimiento) a usar
+    - training_plan_id: (Opcional) ID del plan de entrenamiento para sincronizar. 
+                        Si no se especifica, usa el último generado.
+    """
     await require_admin(request)
     
     try:
