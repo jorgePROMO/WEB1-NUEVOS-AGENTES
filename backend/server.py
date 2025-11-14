@@ -4772,19 +4772,48 @@ def _format_edn360_nutrition_as_text(edn360_data: dict, user_name: str = "Client
    • Grasas: {distribucion.get('grasas_pct', 'N/A')}%
 """
         
-        # Añadir calendario A/M/B si existe
-        calendario = n4_calendar.get("calendario", [])
-        if calendario and len(calendario) > 0:
+        # Añadir calendario semanal si existe (formato nuevo)
+        calendario_semanal = n4_calendar.get("calendario_semanal", {})
+        descripcion_dias = n4_calendar.get("descripcion_dias", {})
+        dias_entreno_semana = n4_calendar.get("dias_entrenamiento_semana", 0)
+        
+        if calendario_semanal:
+            plan_text += """
+
+═══════════════════════════════════════════════════════════════════════════
+
+📅 CALENDARIO NUTRICIONAL SEMANAL (Sincronizado con tu entrenamiento)
+
+Este plan se ajusta a tus días de entrenamiento:
+• 🔥 Día A (Alto): Días de entrenamiento INTENSO → Más calorías y carbohidratos
+• ⚖️ Día M (Medio): Días de entrenamiento MODERADO → Calorías moderadas
+• 🌙 Día B (Bajo/Descanso): Días SIN entrenamiento → Menos calorías, sin pre/post entreno
+
+"""
+            plan_text += f"📊 FRECUENCIA: Entrenas {dias_entreno_semana} días por semana\n\n"
+            plan_text += "TU SEMANA:\n"
+            
+            dias_nombres = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+            for i in range(1, 8):
+                dia_key = f"dia_{i}"
+                tipo = calendario_semanal.get(dia_key, "B")
+                descripcion = descripcion_dias.get(dia_key, "")
+                emoji = "🔥" if tipo == "A" else ("🌙" if tipo == "B" else "⚖️")
+                dia_nombre = dias_nombres[i-1] if i <= 7 else f"Día {i}"
+                
+                plan_text += f"   {dia_nombre}: {emoji} Tipo {tipo}"
+                if descripcion:
+                    plan_text += f" - {descripcion}"
+                plan_text += "\n"
+        
+        # Fallback para formato antiguo
+        elif n4_calendar.get("calendario"):
+            calendario = n4_calendar.get("calendario", [])
             plan_text += """
 
 ═══════════════════════════════════════════════════════════════════════════
 
 📅 CALENDARIO NUTRICIONAL (Días Altos/Medios/Bajos)
-
-Este plan se ajusta a tus días de entrenamiento:
-• 🔥 Día A (Alto): Días de entrenamiento intenso
-• ⚖️ Día M (Medio): Días de entrenamiento moderado
-• 🌙 Día B (Bajo): Días de descanso
 
 PRIMERA SEMANA:
 """
