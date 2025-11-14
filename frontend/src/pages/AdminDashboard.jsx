@@ -414,6 +414,10 @@ const AdminDashboard = () => {
       setTrainingPlans([]);
     }
     
+    // Load data for selectors
+    await loadQuestionnaires(clientId);
+    await loadTrainingPlansForSelector(clientId);
+    
     // Now load follow-ups after other data is loaded
     try {
       const response = await axios.get(`${API}/admin/users/${clientId}/follow-ups`, {
