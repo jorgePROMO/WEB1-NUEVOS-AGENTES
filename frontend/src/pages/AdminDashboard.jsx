@@ -16,6 +16,7 @@ import {
   DialogDescription 
 } from '../components/ui/dialog';
 import TrainingPlanChatDialog from '../components/TrainingPlanChatDialog';
+import NutritionPlanChatDialog from '../components/NutritionPlanChatDialog';
 import axios from 'axios';
 import { 
   Users, 
