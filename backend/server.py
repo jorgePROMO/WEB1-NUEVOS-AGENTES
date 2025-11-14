@@ -5428,19 +5428,34 @@ async def admin_generate_training_plan(
         # Adaptar cuestionario al formato E.D.N.360
         adapted_questionnaire = _adapt_questionnaire_for_edn360(questionnaire_data)
         
+        # Obtener plan previo si se especificó (para progresión)
+        previous_plan_data = None
+        if previous_plan_id:
+            logger.info(f"📋 Usando plan previo {previous_plan_id} como referencia")
+            previous_plan = await db.training_plans.find_one({"_id": previous_plan_id})
+            
+            if not previous_plan:
+                raise HTTPException(status_code=404, detail=f"Plan previo {previous_plan_id} no encontrado")
+            
+            if previous_plan.get("user_id") != user_id:
+                raise HTTPException(status_code=403, detail="El plan previo no pertenece a este usuario")
+            
+            previous_plan_data = previous_plan
+        
         # Usar el nuevo orquestador E.D.N.360
         if context_data:
             # Generar con seguimiento (ES1-ES4)
             logger.info("📊 Generando plan de seguimiento con agentes ES1-ES4")
             
-            # Obtener plan anterior
-            previous_plan = await db.training_plans.find_one(
-                {"user_id": user_id},
-                sort=[("generated_at", -1)]
-            )
-            
-            if not previous_plan:
-                raise HTTPException(status_code=404, detail="No hay plan anterior para seguimiento")
+            # Si no se especificó plan previo, usar el último generado
+            if not previous_plan_data:
+                previous_plan_data = await db.training_plans.find_one(
+                    {"user_id": user_id},
+                    sort=[("generated_at", -1)]
+                )
+                
+                if not previous_plan_data:
+                    raise HTTPException(status_code=404, detail="No hay plan anterior para seguimiento")
             
             # Ejecutar agentes de seguimiento
             from edn360.orchestrator import EDN360Orchestrator
@@ -5448,7 +5463,7 @@ async def admin_generate_training_plan(
             
             result = await orchestrator._execute_training_followup(
                 followup_data=context_data["followup_responses"],
-                previous_training_plan=previous_plan
+                previous_training_plan=previous_plan_data
             )
         else:
             # Generar desde cuestionario inicial (E1-E9)
@@ -5457,7 +5472,11 @@ async def admin_generate_training_plan(
             from edn360.orchestrator import EDN360Orchestrator
             orchestrator = EDN360Orchestrator()
             
-            result = await orchestrator._execute_training_initial(adapted_questionnaire)
+            # Pasar plan previo si existe (para progresión)
+            result = await orchestrator._execute_training_initial(
+                adapted_questionnaire,
+                previous_plan=previous_plan_data
+            )
         
         if not result["success"]:
             raise HTTPException(
