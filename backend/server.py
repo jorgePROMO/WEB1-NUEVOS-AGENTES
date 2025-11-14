@@ -5496,6 +5496,7 @@ async def admin_generate_training_plan(
             "year": current_year,
             "source_type": source_type,
             "source_id": source_id,
+            "previous_plan_id": previous_plan_id,  # NUEVO: Referencia al plan previo
             "questionnaire_data": questionnaire_data,
             
             # Datos de E.D.N.360
