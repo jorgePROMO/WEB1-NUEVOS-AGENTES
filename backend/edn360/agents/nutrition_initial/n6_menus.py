@@ -67,18 +67,17 @@ ESTRUCTURA JSON:
     "dia_2": {
       "tipo_dia": "M",
       "comidas": [
-        {"nombre": "Desayuno", "hora": "08:00", ...},
-        {"nombre": "Pre-Entreno", "hora": "11:30", ...},
-        {"nombre": "Post-Entreno", "hora": "13:30", ...},
-        {"nombre": "Merienda", "hora": "18:00", ...},
-        {"nombre": "Cena", "hora": "21:00", ...}
+        {"nombre": "Desayuno/Pre-Entreno", "hora": "07:30", "alimentos": [...], "macros": {...}},
+        {"nombre": "Post-Entreno", "hora": "10:00", "alimentos": [...], "macros": {...}},
+        {"nombre": "Comida", "hora": "14:00", "alimentos": [...], "macros": {...}},
+        {"nombre": "Cena", "hora": "21:00", "alimentos": [...], "macros": {...}}
       ]
     },
-    "dia_3": {"tipo_dia": "A", "comidas": [5 comidas con pre/post/merienda]},
-    "dia_4": {"tipo_dia": "B", "comidas": [4 comidas: desayuno/comida/merienda/cena]},
-    "dia_5": {"tipo_dia": "M", "comidas": [5 comidas con pre/post/merienda]},
-    "dia_6": {"tipo_dia": "B", "comidas": [4 comidas sin pre/post]},
-    "dia_7": {"tipo_dia": "B", "comidas": [4 comidas sin pre/post]}
+    "dia_3": {"tipo_dia": "A", "comidas": [MISMO NÚMERO Y HORARIOS QUE N5]},
+    "dia_4": {"tipo_dia": "B", "comidas": [MISMO NÚMERO QUE N5 para días B]},
+    "dia_5": {"tipo_dia": "M", "comidas": [MISMO NÚMERO Y HORARIOS QUE N5]},
+    "dia_6": {"tipo_dia": "B", "comidas": [según N5]},
+    "dia_7": {"tipo_dia": "B", "comidas": [según N5]}
   },
   "equivalencias": {
     "proteinas": {"pollo": ["pavo", "pescado"]},
