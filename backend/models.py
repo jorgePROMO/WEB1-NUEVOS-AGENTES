@@ -880,6 +880,18 @@ class TrainingPlanChatResponse(BaseModel):
     updated_plan: Optional[str] = None  # If the plan was modified
 
 
+class NutritionPlanChatRequest(BaseModel):
+    """Request to chat about a nutrition plan"""
+    plan_id: str
+    user_message: str
+
+
+class NutritionPlanChatResponse(BaseModel):
+    """Response from nutrition plan chat"""
+    assistant_message: str
+    updated_plan: Optional[str] = None  # If the plan was modified
+
+
 # ==================== WAITLIST MODELS ====================
 
 class WaitlistLeadSubmit(BaseModel):
