@@ -471,6 +471,68 @@ const AdminDashboard = () => {
     }
   };
 
+  // Load nutrition plans for selectors
+  const loadNutritionPlansForSelector = async (userId) => {
+    try {
+      const response = await axios.get(`${API}/admin/users/${userId}/nutrition-plans`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      const plans = response.data.plans || [];
+      setAvailableNutritionPlans(plans);
+    } catch (error) {
+      console.error('Error loading nutrition plans for selector:', error);
+      setAvailableNutritionPlans([]);
+    }
+  };
+
+  // Load follow-up reports
+  const loadFollowUpReports = async (userId) => {
+    try {
+      const response = await axios.get(`${API}/admin/users/${userId}/follow-up-reports`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setFollowUpReports(response.data.reports || []);
+    } catch (error) {
+      console.error('Error loading follow-up reports:', error);
+      setFollowUpReports([]);
+    }
+  };
+
+  // Generate follow-up report
+  const generateFollowUpReport = async () => {
+    if (!selectedPreviousTrainingForReport || !selectedNewTrainingForReport) {
+      alert('❌ Debes seleccionar al menos los planes de entrenamiento (anterior y nuevo)');
+      return;
+    }
+
+    setGeneratingReport(true);
+    try {
+      const response = await axios.post(
+        `${API}/admin/users/${selectedClient.id}/follow-up-report/generate`,
+        {
+          previous_training_id: selectedPreviousTrainingForReport,
+          new_training_id: selectedNewTrainingForReport,
+          previous_nutrition_id: selectedPreviousNutritionForReport || null,
+          new_nutrition_id: selectedNewNutritionForReport || null
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+
+      alert('✅ Informe de seguimiento generado exitosamente!');
+      await loadFollowUpReports(selectedClient.id);
+    } catch (error) {
+      console.error('Error generating follow-up report:', error);
+      alert('❌ Error al generar informe: ' + (error.response?.data?.detail || error.message));
+    } finally {
+      setGeneratingReport(false);
+    }
+  };
+
   // Load all client data when client is selected
   const loadAllClientData = async (clientId) => {
     setSelectedPlan(null);
