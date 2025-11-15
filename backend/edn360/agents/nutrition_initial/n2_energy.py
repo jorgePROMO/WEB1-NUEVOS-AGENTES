@@ -69,13 +69,17 @@ TDEE viene de N1, ejemplo: 2350 kcal
 **ESTRATEGIA SEGÚN OBJETIVO:**
 
 **Para PÉRDIDA DE PESO (-15% objetivo semanal):**
-- Día A: TDEE -5% (ej: 2233 kcal con TDEE 2350)
-- Día M: TDEE -10% (ej: 2115 kcal)
+- Día A: TDEE -6.4% (ej: 2200 kcal con TDEE 2350)
+- Día M: TDEE -12.8% (ej: 2050 kcal)
 - Día B: TDEE -20% (ej: 1880 kcal)
 
-Asumiendo semana 3A + 2M + 2B:
-Promedio = (2233×3 + 2115×2 + 1880×2) / 7 = 2108 kcal/día
-Déficit real = (2350 - 2108) / 2350 = **-10.3%** semanal
+**Déficit semanal real (asumiendo 3A + 0M + 4B):**
+Promedio = (2200×3 + 1880×4) / 7 = 2017 kcal/día
+Déficit real = (2350 - 2017) / 2350 = **-14.2%** semanal ✅
+
+**Déficit semanal con días M (asumiendo 3A + 2M + 2B):**
+Promedio = (2200×3 + 2050×2 + 1880×2) / 7 = 2034 kcal/día
+Déficit real = (2350 - 2034) / 2350 = **-13.4%** semanal ✅
 
 **Para RECOMPOSICIÓN (0% objetivo semanal):**
 - Día A: TDEE +5%
