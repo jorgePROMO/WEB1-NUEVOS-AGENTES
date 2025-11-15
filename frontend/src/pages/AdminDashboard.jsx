@@ -1025,35 +1025,36 @@ const AdminDashboard = () => {
   };
 
   // Send nutrition plan by WhatsApp
-  const sendNutritionByWhatsApp = async (userId) => {
-    const planToUse = modalPlan || selectedPlan;
-    if (!planToUse) {
-      alert('No hay plan seleccionado');
-      return;
-    }
-    
-    setSendingNutrition('whatsapp');
-    try {
-      const response = await axios.get(
-        `${API}/admin/users/${userId}/nutrition/whatsapp-link?plan_id=${planToUse.id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true
-        }
-      );
-      
-      if (response.data.whatsapp_link) {
-        window.open(response.data.whatsapp_link, '_blank');
-        alert('✅ Link de WhatsApp generado. Se abrirá en una nueva ventana.');
-        // Recargar el plan para actualizar los estados
-        await loadNutritionPlan(userId);
-      }
-    } catch (error) {
-      alert(`Error al generar link de WhatsApp: ${error.response?.data?.detail || error.message}`);
-    } finally {
-      setSendingNutrition(null);
-    }
-  };
+  // FUNCIÓN DESHABILITADA - WhatsApp solo para follow-up
+  // const sendNutritionByWhatsApp = async (userId) => {
+  //   const planToUse = modalPlan || selectedPlan;
+  //   if (!planToUse) {
+  //     alert('No hay plan seleccionado');
+  //     return;
+  //   }
+  //   
+  //   setSendingNutrition('whatsapp');
+  //   try {
+  //     const response = await axios.get(
+  //       `${API}/admin/users/${userId}/nutrition/whatsapp-link?plan_id=${planToUse.id}`,
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //         withCredentials: true
+  //       }
+  //     );
+  //     
+  //     if (response.data.whatsapp_link) {
+  //       window.open(response.data.whatsapp_link, '_blank');
+  //       alert('✅ Link de WhatsApp generado. Se abrirá en una nueva ventana.');
+  //       // Recargar el plan para actualizar los estados
+  //       await loadNutritionPlan(userId);
+  //     }
+  //   } catch (error) {
+  //     alert(`Error al generar link de WhatsApp: ${error.response?.data?.detail || error.message}`);
+  //   } finally {
+  //     setSendingNutrition(null);
+  //   }
+  // };
 
   const openTemplateModal = (template) => {
     if (!selectedClient) return;
