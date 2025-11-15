@@ -29,16 +29,16 @@ const LandingPage = () => {
       <Suspense fallback={<SectionLoader />}>
         <AboutSection />
       </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <MethodSection />
-      </Suspense>
-      {/* CTA Estratégico 1: Después del Método */}
+      {/* CTA Estratégico 1: Antes del Método */}
       <Suspense fallback={<SectionLoader />}>
         <DualCTA 
           variant="compact"
           title="¿Listo para dar el primer paso?"
           subtitle="Elige la opción que mejor se adapte a ti"
         />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <MethodSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <ServicesSection />
