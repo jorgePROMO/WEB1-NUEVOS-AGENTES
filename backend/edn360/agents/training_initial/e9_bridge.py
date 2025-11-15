@@ -99,7 +99,38 @@ Ajustes:
 }
 ```
 
-CRÍTICO: DEBES incluir "dias_entrenamiento_semana" y "calendario_sugerido" basado en el plan de entrenamiento real.
+## ✅ CHECKLIST OBLIGATORIO:
+
+1. **Analizar el plan de entrenamiento E4/E5:**
+   - Contar cuántos días tienen entrenamiento de FUERZA/PESAS → Días A
+   - Contar cuántos días tienen solo CARDIO/CORE → Días M
+   - Contar cuántos días son DESCANSO → Días B
+
+2. **Generar tipos_dia_presentes:**
+   ```json
+   {
+     "usa_dia_A": true/false,  // true si hay al menos 1 día A
+     "usa_dia_M": true/false,  // true si hay al menos 1 día M
+     "usa_dia_B": true/false,  // true si hay al menos 1 día B
+     "count_A": 3,  // número exacto de días A
+     "count_M": 0,  // número exacto de días M
+     "count_B": 4   // número exacto de días B
+   }
+   ```
+
+3. **Generar calendario_sugerido:**
+   - Día por día (dia_1 a dia_7)
+   - Asignar A/M/B según el tipo de entrenamiento de ese día
+   - Ejemplo: Si Lunes tiene Full Body con pesas → "dia_1": "A"
+
+4. **IMPORTANTE:** Si NO hay días M (solo pesas y descanso):
+   - usa_dia_M = false
+   - count_M = 0
+   - calendario_sugerido solo tendrá "A" y "B"
+   
+   Los agentes de nutrición usarán esto para generar SOLO los sets de macros necesarios.
+
+CRÍTICO: "tipos_dia_presentes" es la fuente de verdad para nutrición.
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
