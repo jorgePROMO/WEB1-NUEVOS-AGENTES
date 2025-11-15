@@ -987,3 +987,21 @@ agent_communication:
     - agent: "main"
       message: "✅ CARD ENTRENAMIENTO ELIMINADO + WEASYPRINT ARREGLADO: Usuario reportó 3 problemas: 1) Card '📊 Generar desde Seguimiento' aparecía incorrectamente en pestaña de Entrenamiento (debe ser solo para Nutrición), 2) Error al adjuntar PDF de entrenamiento: 'cannot load library libpangoft2-1.0-0', 3) Error al adjuntar PDF de nutrición: mismo error de librería. SOLUCIONES: 1) FRONTEND: Eliminado completamente el bloque del card de seguimientos (líneas 3550-3600) de la sección de entrenamiento en AdminDashboard.jsx, 2) BACKEND: Reinstaladas todas las dependencias del sistema para WeasyPrint (libpangoft2-1.0-0, libpangocairo-1.0-0, libgdk-pixbuf2.0-0, etc.) que se habían perdido o no cargado correctamente, 3) Backend reiniciado para cargar las nuevas librerías. VERIFICADO: Test de Python confirma que WeasyPrint funciona correctamente y genera PDFs exitosamente. Usuario debe probar: 1) Verificar que el card de seguimientos ya NO aparece en pestaña de Entrenamiento, 2) Intentar adjuntar PDF de entrenamiento, 3) Intentar adjuntar PDF de nutrición. Ambos deberían funcionar sin errores ahora."
 
+
+backend:
+  - task: "Mejorar Formato Final - Quitar Líneas Dobles y Mostrar Todos los Alimentos"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ FORMATO FINAL MEJORADO - Usuario reportó 2 problemas después de la primera humanización: 1) Entrenamiento se seguía viendo raro debido a las líneas dobles (═════), 2) Nutrición solo mostraba el PRIMER alimento de cada comida en el resumen del menú semanal, faltaban los demás. SOLUCIÓN: 1) ELIMINADAS todas las líneas dobles (═════) de encabezados y pies de página en ambas funciones (_format_edn360_nutrition_as_text y _format_edn360_plan_as_text), ahora solo tienen texto limpio sin decoraciones ASCII, 2) MODIFICADO el resumen del menú semanal (líneas 5089-5110) para mostrar TODOS los alimentos de cada comida, no solo el primero - ahora cada comida muestra lista completa con bullets indentados (• cantidad nombre). Ejemplo: '07:00 Pre-Entreno: \n    • 50g Avena\n    • 1 unidad Banana\n    • 4 unidades Claras de huevo'. Formato ahora completamente limpio y minimalista, sin líneas dobles ni caracteres ASCII complejos. Backend reiniciado exitosamente. READY FOR TESTING - usuario debe generar nuevos planes y verificar que el formato se vea limpio y profesional en emails."
+
+agent_communication:
+    - agent: "main"
+      message: "✅ FORMATO TOTALMENTE LIMPIO Y COMPLETO: Usuario reportó que después de la primera humanización: 1) El entrenamiento seguía viéndose raro con las líneas dobles (═════), 2) En el menú semanal de nutrición solo aparecía el PRIMER alimento de cada comida, faltaban todos los demás (ej: solo mostraba '50g Avena' cuando la comida completa tenía Avena + Banana + Claras). SOLUCIÓN COMPLETA: 1) ELIMINADAS todas las líneas dobles (═════) de inicio y fin en ambos documentos - ahora formato completamente limpio sin decoraciones ASCII, 2) ARREGLADO resumen del menú semanal - modificado código (líneas 5089-5110) para iterar sobre TODOS los alimentos de cada comida y mostrarlos con bullets indentados. Ahora muestra: '07:00 Pre-Entreno:\n    • 50g Avena\n    • 1 unidad Banana\n    • 4 unidades Claras de huevo'. El detalle completo más abajo sigue igual. Backend reiniciado. Usuario debe probar generando un nuevo plan y enviándolo por email para verificar que el formato sea limpio, minimalista, profesional y COMPLETO con todos los alimentos visibles en el resumen."
+
