@@ -5408,8 +5408,6 @@ SEÑALES DE ALERTA:
 Dudas o consultas: Contacta a tu nutricionista
 
 ¡Éxito en tu plan nutricional!
-
-═════════════════════════════════════════════════════════════════════════
 """
         
         return plan_text
