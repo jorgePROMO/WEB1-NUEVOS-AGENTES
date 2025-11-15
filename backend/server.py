@@ -8835,14 +8835,22 @@ async def get_user_questionnaires(user_id: str, request: Request):
 
 @api_router.get("/admin/users/{user_id}/training-plans")
 async def get_user_training_plans(user_id: str, request: Request):
-    """Obtiene todos los planes de entrenamiento de un usuario"""
+    """Obtiene todos los planes de entrenamiento de un usuario + cuestionarios de seguimiento"""
     await require_admin(request)
     
+    # Obtener planes de entrenamiento
     plans = await db.training_plans.find(
         {"user_id": user_id}
     ).sort("generated_at", -1).to_list(length=None)
     
+    # Obtener cuestionarios de seguimiento
+    followups = await db.follow_up_submissions.find(
+        {"user_id": user_id}
+    ).sort("submitted_at", -1).to_list(length=None)
+    
     formatted_plans = []
+    
+    # Agregar planes de entrenamiento
     for i, plan in enumerate(plans):
         # Manejar casos donde generated_at podría no existir
         generated_at = plan.get("generated_at")
@@ -8865,8 +8873,30 @@ async def get_user_training_plans(user_id: str, request: Request):
             "generated_at": iso_str,
             "month": plan.get("month"),
             "year": plan.get("year"),
-            "source_type": plan.get("source_type", "initial")
+            "source_type": plan.get("source_type", "initial"),
+            "type": "training_plan"
         })
+    
+    # Agregar cuestionarios de seguimiento
+    for followup in followups:
+        submitted_at = followup.get("submitted_at")
+        if submitted_at:
+            date_str = submitted_at.strftime('%d/%m/%Y')
+            iso_str = submitted_at.isoformat()
+        else:
+            date_str = "Fecha desconocida"
+            iso_str = datetime.now(timezone.utc).isoformat()
+        
+        formatted_plans.append({
+            "id": followup["_id"],
+            "label": f"📋 Seguimiento ({date_str})",
+            "generated_at": iso_str,
+            "source_type": "followup",
+            "type": "followup"
+        })
+    
+    # Ordenar por fecha (más reciente primero)
+    formatted_plans.sort(key=lambda x: x["generated_at"], reverse=True)
     
     return {"plans": formatted_plans}
 
