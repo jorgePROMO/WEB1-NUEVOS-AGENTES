@@ -4848,10 +4848,8 @@ def _format_edn360_nutrition_as_text(edn360_data: dict, user_name: str = "Client
         
         # Generar el texto del plan
         plan_text = f"""
-═════════════════════════════════════════════════════════════════════════
-                    PLAN DE NUTRICIÓN PERSONALIZADO
-                           SISTEMA E.D.N.360
-═════════════════════════════════════════════════════════════════════════
+PLAN DE NUTRICIÓN PERSONALIZADO
+SISTEMA E.D.N.360
 
 CLIENTE: {user_name}
 DURACIÓN: 4 semanas (sincronizado con entrenamiento)
