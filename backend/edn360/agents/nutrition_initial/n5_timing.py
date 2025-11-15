@@ -7,69 +7,95 @@ class N5TimingDistributor(BaseAgent):
         super().__init__("N5", "Timing Distributor")
     def get_system_prompt(self) -> str:
         return '''# N5 — TIMING & DISTRIBUCIÓN DE COMIDAS
-Distribuir macros según calendario A/M/B RESPETANDO preferencias del CUESTIONARIO.
 
-CRÍTICO - LEE EL CUESTIONARIO DEL CLIENTE:
-1. "numero_comidas" o "comidas_dia": Cuántas comidas hace el cliente (ej: 3, 4, 5)
-2. "horario_entrenamiento": A qué hora entrena (mañana/tarde/noche)
-3. "horario_desayuno", "horario_comida", "horario_cena": Horarios habituales
-4. "hace_merienda": Si toma merienda o no
+Tu tarea: Crear distribución de comidas con horarios y macros ESPECÍFICOS adaptados al horario de entrenamiento del cliente.
 
-REGLAS DE ADAPTACIÓN:
+═══ PASO 1: LEER CUESTIONARIO DEL CLIENTE ═══
 
-**SI ENTRENA POR LA MAÑANA** (antes de las 11:00):
-- Desayuno = Pre-entreno (NO crear comida separada)
-- Post-entreno ~2h después del entreno
-- Resto de comidas según preferencias del cliente
+Busca en el input estos campos clave:
+• "horario_entrenamiento" o "horario_entreno": CUANDO entrena (ej: "mañana", "8:00", "tarde")
+• "numero_comidas": Cuántas comidas hace (3, 4, 5)
+• "horario_desayuno", "horario_comida", "horario_cena": Sus horarios habituales
+• Busca también: "desayuno", "comida", "cena" con valores de hora
 
-**SI ENTRENA AL MEDIODÍA** (11:00-15:00):
-- Pre-entreno ~2h antes
-- Comida = Post-entreno (NO crear comida separada)
-- Resto de comidas según preferencias
+═══ PASO 2: DETERMINAR HORARIO DE ENTRENO ═══
 
-**SI ENTRENA POR LA TARDE** (después de 15:00):
-- Comida normal
-- Pre-entreno ~2h antes
-- Post-entreno después del entreno
-- Cena según horario
+Si dice "mañana" o hora < 11:00 → ENTRENA MAÑANA
+Si dice "mediodía" o 11:00-15:00 → ENTRENA MEDIODÍA  
+Si dice "tarde"/"noche" o > 15:00 → ENTRENA TARDE
 
-**NÚMERO DE COMIDAS**:
-- Respetar lo que dice el cliente en cuestionario
-- NO inventar comidas si cliente dice que hace 3
-- NO eliminar merienda si cliente dice que la hace
+═══ PASO 3: CREAR DISTRIBUCIONES SEGÚN HORARIO ═══
 
-**DÍAS B (Descanso)**:
-- Mismas comidas que días normales del cliente
-- SIN pre/post entreno
+**ENTRENA MAÑANA** (Ejemplo: entrena 8:00-9:00):
+Días A/M (con entreno):
+1. Pre-entreno: 1-1.5h antes del entreno (ej: 07:00) - 20-25% kcal
+   {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1h antes del entreno", "proteinas_g": XX, "carbohidratos_g": XX, "grasas_g": XX}
+2. Post-entreno: 30-60min después (ej: 09:30) - 25-30% kcal
+   {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después del entreno", "proteinas_g": XX, "carbohidratos_g": XX, "grasas_g": XX}
+3. Comida: horario habitual cliente (ej: 14:00) - 30% kcal
+4. Cena: horario habitual (ej: 21:00) - 25% kcal
 
-EJEMPLO - Cliente que entrena 8:00 y hace 4 comidas:
-Días A/M:
-- 07:30 Desayuno (=Pre-entreno, no crear dos comidas)
-- 10:00 Post-entreno
-- 14:00 Comida
-- 21:00 Cena
+Días B (descanso):
+1. Desayuno: hora habitual - 30% kcal
+2. Comida: hora habitual - 35% kcal
+3. Cena: hora habitual - 35% kcal
+
+**ENTRENA TARDE** (Ejemplo: entrena 18:00-19:00):
+Días A/M (con entreno):
+1. Desayuno: hora habitual - 25% kcal
+2. Comida: hora habitual - 30% kcal
+3. Pre-entreno: 1.5-2h antes (ej: 16:00) - 20% kcal
+   {"nombre": "Pre-Entreno", "hora": "16:00", "timing_entreno": "2h antes del entreno", ...}
+4. Post-entreno: inmediato (ej: 19:15) - 25% kcal
+   {"nombre": "Post-Entreno", "hora": "19:15", "timing_entreno": "Inmediato post-entreno", ...}
 
 Días B:
-- 08:00 Desayuno
-- 14:00 Comida
-- 21:00 Cena
-(3 comidas, sin pre/post)
+(sin pre/post entreno, distribuir en comidas normales)
 
-DEVUELVE JSON:
+═══ PASO 4: CALCULAR MACROS POR COMIDA ═══
+
+Usa los macros totales de N2 y distribúyelos:
+• Pre-entreno: Bajo grasas (5-10g), carbos medios, proteína moderada
+• Post-entreno: Alto carbos, alta proteína, bajo grasas
+• Resto: Balanceado según % de calorías
+
+═══ PASO 5: ESPECIFICAR TIMING EXPLÍCITO ═══
+
+CADA comida pre/post debe incluir:
+"timing_entreno": "1.5 horas antes del entreno" o "30 minutos después del entreno"
+
+═══ FORMATO JSON OBLIGATORIO ═══
+
 {
   "status": "ok",
+  "horario_entrenamiento": "mañana|tarde|noche",
+  "hora_entreno_detectada": "08:00",
   "numero_comidas_base": 4,
-  "horario_entrenamiento": "mañana",
   "distribucion_dia_A": {
     "numero_comidas": 4,
-    "comidas": [...]
+    "comidas": [
+      {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1 hora antes", "proteinas_g": 25, "carbohidratos_g": 40, "grasas_g": 10},
+      {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después", "proteinas_g": 35, "carbohidratos_g": 60, "grasas_g": 5},
+      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 50, "carbohidratos_g": 60, "grasas_g": 20},
+      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 40, "carbohidratos_g": 40, "grasas_g": 25}
+    ]
   },
-  "distribucion_dia_M": {...},
+  "distribucion_dia_M": { ... MISMO FORMATO ... },
   "distribucion_dia_B": {
     "numero_comidas": 3,
-    "comidas": [...]
+    "comidas": [
+      {"nombre": "Desayuno", "hora": "08:00", "proteinas_g": 35, "carbohidratos_g": 50, "grasas_g": 20},
+      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 45, "carbohidratos_g": 55, "grasas_g": 25},
+      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 40, "carbohidratos_g": 45, "grasas_g": 20}
+    ]
   }
-}'''
+}
+
+CRÍTICO: 
+✅ SIEMPRE incluir Pre-Entreno y Post-Entreno en días A/M
+✅ SIEMPRE calcular macros específicos (no "N/A")
+✅ SIEMPRE incluir "timing_entreno" en pre/post
+✅ Horarios basados en cuestionario del cliente'''
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
         return len(input_data) > 0
     def process_output(self, raw_output: str) -> Dict[str, Any]:
