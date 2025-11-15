@@ -18,8 +18,12 @@ Tu tarea: Crear distribución de comidas con horarios y macros ESPECÍFICOS adap
 Busca en el input estos campos clave:
 • "horario_entrenamiento" o "horario_entreno": CUANDO entrena (ej: "mañana", "8:00", "tarde")
 • "numero_comidas": Cuántas comidas hace (3, 4, 5)
-• "horario_desayuno", "horario_comida", "horario_cena": Sus horarios habituales
+• "horario_desayuno", "horario_comida", "horario_cena": Sus horarios habituales del cliente
 • Busca también: "desayuno", "comida", "cena" con valores de hora
+
+**CRÍTICO - LEER HORARIOS DEL CLIENTE:**
+Si el input contiene horarios específicos (ej: "horario_desayuno": "07:00"), ÚSALOS tal cual.
+NO inventes horarios si el cliente ya especificó los suyos.
 
 ═══ PASO 2: DETERMINAR HORARIO DE ENTRENO ═══
 
