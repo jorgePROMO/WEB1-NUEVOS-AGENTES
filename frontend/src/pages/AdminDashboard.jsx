@@ -286,9 +286,9 @@ const AdminDashboard = () => {
       console.error('Error generating training plan:', error);
       alert('❌ Error al generar plan: ' + (error.response?.data?.detail || error.message));
     } finally {
-      if (sourceType === 'initial') {
+      if (actualSourceType === 'initial') {
         setGeneratingTrainingPlan(false);
-      } else if (sourceType === 'followup') {
+      } else if (actualSourceType === 'followup') {
         setGeneratingFromFollowup(false);
       }
     }
