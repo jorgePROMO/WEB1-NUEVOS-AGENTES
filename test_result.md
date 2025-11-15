@@ -1120,3 +1120,21 @@ agent_communication:
     - agent: "main"
       message: "✅ CTA REPOSICIONADO ANTES DEL MÉTODO: Usuario indicó que el card '¿Listo para dar el primer paso?' debe ir encima de 'Cómo funciona el método'. CAMBIO REALIZADO: Movido el bloque DualCTA compact de DESPUÉS de MethodSection a ANTES de MethodSection en LandingPage.jsx (líneas 32-42). Nueva secuencia de secciones: Hero → AboutSection → CTA Dual Compact ('¿Listo para dar el primer paso?') → MethodSection ('Cómo funciona el método') → ServicesSection → ComparisonTable → TransformationsSection → CTA Dual Default ('¿Listo para tu transformación?') → TestimonialsSection → EDN360Section → FinalCTA → Footer. Usuario debe verificar que el CTA dual compacto con las 2 opciones (Trabaja Conmigo + Trabaja con Mi Equipo) aparezca ANTES de la sección 'Cómo funciona el método'."
 
+
+backend:
+  - task: "Fix Selector Cuestionarios de Seguimiento - Incluirlos en Listas"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ SELECTORES ARREGLADOS - Usuario reportó que en las pestañas de Entrenamiento y Nutrición, cuando intenta seleccionar un cuestionario de seguimiento como referencia en el dropdown, no le deja - lo selecciona pero se cambia solo. PROBLEMA IDENTIFICADO: Los endpoints /admin/users/{user_id}/training-plans y /admin/users/{user_id}/nutrition-plans solo devolvían planes de las colecciones training_plans y nutrition_plans, pero NO incluían los cuestionarios de seguimiento (follow_up_submissions). Por eso aunque aparecían en los cards de 'Generar desde Seguimiento', no estaban disponibles en el selector de 'Plan Previo de Referencia'. SOLUCIÓN: 1) ENDPOINT training-plans (línea 8836): Modificado para incluir cuestionarios de seguimiento - ahora consulta tanto training_plans como follow_up_submissions, formatea ambos tipos con labels distintivos ('📋 Seguimiento (fecha)' para followups), añade campo 'type' para diferenciar, ordena todo por fecha, 2) ENDPOINT nutrition-plans (línea 8960): Misma modificación - incluye nutrition_plans + follow_up_submissions, formatea con labels distintivos, ordena por fecha. Ahora los cuestionarios de seguimiento aparecen correctamente en los selectores dropdown y se pueden seleccionar sin problemas. Backend reiniciado exitosamente. READY FOR TESTING - verificar que al seleccionar un seguimiento en el dropdown de 'Plan Previo' en ambas pestañas, la selección se mantiene correctamente."
+
+agent_communication:
+    - agent: "main"
+      message: "✅ CUESTIONARIOS DE SEGUIMIENTO AHORA SELECCIONABLES: Usuario reportó bug crítico - en pestañas de Entrenamiento y Nutrición, cuando seleccionaba un cuestionario de seguimiento como referencia en el dropdown, no se mantenía la selección (se cambiaba solo). CAUSA ROOT: Los endpoints que cargan las opciones del dropdown (/admin/users/{user_id}/training-plans y /admin/users/{user_id}/nutrition-plans) solo consultaban las colecciones de planes (training_plans, nutrition_plans) pero NO incluían los cuestionarios de seguimiento (follow_up_submissions). Los seguimientos solo aparecían en los cards de 'Generar desde Seguimiento' pero no en el selector de 'Plan Previo de Referencia (Opcional)'. FIX IMPLEMENTADO: Modificados ambos endpoints para: 1) Consultar también follow_up_submissions además de los planes, 2) Formatear los seguimientos con label distintivo '📋 Seguimiento (fecha)', 3) Añadir campo 'type' para diferenciar (training_plan/nutrition_plan/followup), 4) Ordenar todos por fecha (más reciente primero). Ahora cuando el frontend carga availableTrainingPlans o availableNutritionPlans, incluye TANTO planes como seguimientos, permitiendo seleccionar cualquiera de ellos en el dropdown. Backend reiniciado. Usuario debe: 1) Ir a pestaña Entrenamiento, 2) Abrir dropdown 'Plan Previo de Referencia', 3) Verificar que aparecen los seguimientos con emoji 📋, 4) Seleccionar un seguimiento y verificar que se mantiene seleccionado, 5) Repetir en pestaña Nutrición."
+
