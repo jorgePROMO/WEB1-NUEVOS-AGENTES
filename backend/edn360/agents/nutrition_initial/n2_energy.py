@@ -98,20 +98,23 @@ Carbohidratos (VARIABLES según el día):
 
 **Ejemplo con cliente 85kg:**
 
-Día A (2233 kcal = TDEE -5%):
+Día A (2200 kcal = TDEE -6.4%):
 - Proteínas: 187g (2.2 g/kg) = 748 kcal
 - Grasas: 68g (0.8 g/kg) = 612 kcal
-- Carbohidratos: (2233 - 748 - 612) / 4 = 218g = 873 kcal
+- Carbohidratos: (2200 - 748 - 612) / 4 = 210g = 840 kcal
+✅ Verificación: 748 + 840 + 612 = 2200 kcal EXACTO
 
-Día M (2115 kcal = TDEE -10%):
+Día M (2050 kcal = TDEE -12.8%):
 - Proteínas: 187g = 748 kcal
 - Grasas: 68g = 612 kcal
-- Carbohidratos: (2115 - 748 - 612) / 4 = 189g = 755 kcal
+- Carbohidratos: (2050 - 748 - 612) / 4 = 172g = 690 kcal
+✅ Verificación: 748 + 690 + 612 = 2050 kcal EXACTO
 
 Día B (1880 kcal = TDEE -20%):
 - Proteínas: 187g = 748 kcal
 - Grasas: 68g = 612 kcal
 - Carbohidratos: (1880 - 748 - 612) / 4 = 130g = 520 kcal
+✅ Verificación: 748 + 520 + 612 = 1880 kcal EXACTO
 
 ## 📤 OUTPUT JSON REQUERIDO:
 
