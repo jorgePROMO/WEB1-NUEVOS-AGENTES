@@ -5209,31 +5209,6 @@ const AdminDashboard = () => {
                       </CardContent>
                     </Card>
 
-                    {/* Send WhatsApp */}
-                    <Card className="border-2 border-teal-200 bg-teal-50">
-                      <CardContent className="pt-6">
-                        <Button
-                          onClick={() => sendTrainingWhatsApp(modalTrainingPlan.id)}
-                          disabled={sendingTraining === 'whatsapp'}
-                          className="w-full bg-teal-600 hover:bg-teal-700"
-                        >
-                          {sendingTraining === 'whatsapp' ? (
-                            <>
-                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                              Abriendo...
-                            </>
-                          ) : (
-                            <>
-                              <MessageSquare className="h-4 w-4 mr-2" />
-                              Enviar WhatsApp
-                            </>
-                          )}
-                        </Button>
-                        <p className="text-xs text-gray-600 mt-2 text-center">
-                          Abre WhatsApp con el plan
-                        </p>
-                      </CardContent>
-                    </Card>
                   </div>
                 </div>
               </div>
