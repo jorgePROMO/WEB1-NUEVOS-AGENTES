@@ -59,10 +59,13 @@ Ajustes:
     "tdee_estimado": 2550,
     "gasto_semanal_estimado": 17800,
     "dias_entrenamiento_semana": 3,
-    "mapa_intensidad": {
-      "dias_duros": 2,
-      "dias_medios": 3,
-      "dias_ligeros": 2
+    "tipos_dia_presentes": {
+      "usa_dia_A": true,
+      "usa_dia_M": true,
+      "usa_dia_B": true,
+      "count_A": 2,
+      "count_M": 2,
+      "count_B": 3
     },
     "distribucion_energetica": {
       "A": "+12%",
