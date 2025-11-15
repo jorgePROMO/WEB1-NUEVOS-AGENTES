@@ -3225,6 +3225,28 @@ const AdminDashboard = () => {
                                     La nutrición se sincronizará con este entrenamiento (días A/M/B, pre/post entreno)
                                   </p>
                                 </div>
+
+                                {/* Previous Nutrition Plan Selector */}
+                                <div>
+                                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    🔄 Plan Nutricional Previo (Opcional)
+                                  </label>
+                                  <select
+                                    value={selectedPreviousNutritionPlan || ''}
+                                    onChange={(e) => setSelectedPreviousNutritionPlan(e.target.value || null)}
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                  >
+                                    <option value="">Sin plan previo</option>
+                                    {nutritionPlans.map((plan) => (
+                                      <option key={plan._id} value={plan._id}>
+                                        {new Date(plan.generated_at).toLocaleDateString('es-ES')} - Mes {plan.month}/{plan.year}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Para progresión/adaptación desde un plan anterior
+                                  </p>
+                                </div>
                               </CardContent>
                             </Card>
                           )}
