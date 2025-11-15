@@ -4862,13 +4862,17 @@ def _format_edn360_nutrition_as_text(edn360_data: dict, user_name: str = "Client
    • Grasas: {macros_a.get('grasas_g', 'N/A')}g
 """
         
-        if macros_m:
+        # Solo mostrar Día M si existe en el plan
+        tipos_dia_generados = n2_energy.get("tipos_dia_generados", [])
+        if macros_m and "M" in tipos_dia_generados:
             plan_text += f"""
-⚖️ DÍA M (ENTRENO MODERADO):
+⚖️ DÍA M (ENTRENO MODERADO - Cardio/Movilidad):
    • Calorías: {macros_m.get('kcal_objetivo', 'N/A')} kcal (déficit {macros_m.get('deficit_pct', 0)}%)
    • Proteínas: {macros_m.get('proteinas_g', 'N/A')}g ({macros_m.get('proteinas_gkg', 'N/A')}g/kg)
    • Carbohidratos: {macros_m.get('carbohidratos_g', 'N/A')}g (MEDIO)
    • Grasas: {macros_m.get('grasas_g', 'N/A')}g
+
+💡 Este plan incluye días de cardio/movilidad además del entrenamiento de fuerza.
 """
         
         if macros_b:
