@@ -173,6 +173,41 @@ Día B (1880 kcal = TDEE -20%):
 }
 ```
 
+**EJEMPLO 2: Plan SOLO con días A y B (sin cardio/movilidad, solo pesas + descanso)**
+
+```json
+{
+  "status": "ok",
+  "tdee": 2350,
+  "deficit_objetivo_pct": -15,
+  "deficit_semanal_promedio": -11.5,
+  "estrategia": "ciclado_calorico",
+  "tipos_dia_generados": ["A", "B"],
+  
+  "macros_dia_A": {
+    "tipo": "entreno_intenso",
+    "kcal_objetivo": 2233,
+    "deficit_pct": -5,
+    "proteinas_g": 187,
+    "proteinas_gkg": 2.2,
+    "carbohidratos_g": 218,
+    "grasas_g": 68
+  },
+  
+  "macros_dia_B": {
+    "tipo": "descanso",
+    "kcal_objetivo": 1880,
+    "deficit_pct": -20,
+    "proteinas_g": 187,
+    "proteinas_gkg": 2.2,
+    "carbohidratos_g": 130,
+    "grasas_g": 68
+  }
+}
+```
+
+**NOTA:** En este ejemplo NO se incluye macros_dia_M porque E9 indicó usa_dia_M = false
+
 ## ✅ VALIDACIÓN
 
 Verificar que:
