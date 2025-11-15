@@ -3663,13 +3663,13 @@ async def admin_generate_nutrition_plan(
     
     try:
         # Intentar buscar en cuestionarios de nutrición primero
-        submission = await db.nutrition_questionnaire_submissions.find_one({"_id": submission_id})
+        submission = await db.nutrition_questionnaire_submissions.find_one({"_id": ObjectId(submission_id) if ObjectId.is_valid(submission_id) else submission_id})
         is_followup = False
         context_data = None
         
         if not submission:
             # Si no está en cuestionarios de nutrición, buscar en follow-ups
-            submission = await db.follow_up_submissions.find_one({"_id": submission_id})
+            submission = await db.follow_up_submissions.find_one({"_id": ObjectId(submission_id) if ObjectId.is_valid(submission_id) else submission_id})
             is_followup = True
             
             if not submission:
