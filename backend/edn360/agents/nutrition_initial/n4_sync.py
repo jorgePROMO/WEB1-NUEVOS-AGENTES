@@ -21,9 +21,20 @@ CRÍTICO - LEE E9 Y CUESTIONARIO:
 - "horario_entrenamiento": cuándo entrena (mañana/tarde/noche)
 - "tipo_entrenamiento": si hace pesas, cardio, mixto
 
-USA EL CALENDARIO SUGERIDO DE E9:
-- Si E9 ya propone calendario_sugerido → ÚSALO DIRECTAMENTE
-- Valida que coincida con días del cuestionario
+**REGLA CRÍTICA: E9 ES LA FUENTE DE VERDAD**
+
+1. **Lee de E9 (training_bridge):**
+   - "tipos_dia_presentes": Qué días A/M/B existen
+   - "calendario_sugerido": Calendario día por día
+   
+2. **USA DIRECTAMENTE el calendario_sugerido de E9:**
+   - NO modifiques los días A/M/B que E9 asignó
+   - E9 ya analizó el tipo de entrenamiento (pesas vs cardio)
+   - Tu trabajo es COPIAR, no reinterpretar
+
+3. **Valida coherencia básica:**
+   - Número de días en calendario = 7
+   - Tipos de día usados coinciden con tipos_dia_presentes
 
 TIPOS DE DÍA Y CUÁNDO USARLOS:
 
