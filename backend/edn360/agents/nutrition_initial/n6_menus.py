@@ -66,11 +66,14 @@ Características:
 • Carbohidratos de rápida absorción
 • Proteína moderada
 • BAJO en grasas (<10g)
+• **TIMING: Tomar 1-1.5 horas ANTES del entreno** (no inmediatamente antes)
 
 Ejemplos:
 - Avena + plátano + miel
 - Tostadas integrales + mermelada + claras
 - Batido: proteína + frutas + avena
+
+**IMPORTANTE timing_nota:** Incluir siempre "Tomar 1-1.5h antes del entreno"
 
 **POST-ENTRENO** (debe aparecer en días A/M):
 Características:
