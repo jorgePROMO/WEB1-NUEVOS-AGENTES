@@ -5464,10 +5464,8 @@ def _format_edn360_plan_as_text(edn360_data: dict, user_name: str = "Cliente") -
         
         # Generar el texto del plan
         plan_text = f"""
-═════════════════════════════════════════════════════════════════════════
-                   PLAN DE ENTRENAMIENTO PERSONALIZADO
-                            SISTEMA E.D.N.360
-═════════════════════════════════════════════════════════════════════════
+PLAN DE ENTRENAMIENTO PERSONALIZADO
+SISTEMA E.D.N.360
 
 CLIENTE: {user_name}
 DURACIÓN: {mesociclo.get('duracion_semanas', 4)} semanas
