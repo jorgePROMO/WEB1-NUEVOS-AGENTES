@@ -6152,6 +6152,13 @@ async def send_training_email(user_id: str, plan_id: str = None, request: Reques
         import markdown
         
         plan_content = plan.get("plan_final", "")
+        
+        # FIX: Asegurar que plan_content es string
+        if isinstance(plan_content, dict):
+            plan_content = plan_content.get("text", str(plan_content))
+        elif not isinstance(plan_content, str):
+            plan_content = str(plan_content)
+        
         month = plan.get("month")
         year = plan.get("year")
         
