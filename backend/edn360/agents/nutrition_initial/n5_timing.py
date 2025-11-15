@@ -79,23 +79,57 @@ Días B:
 
 ═══ PASO 4: CALCULAR MACROS POR COMIDA ═══
 
-Usa los macros totales de N2 y distribúyelos según % de calorías por comida:
+**CRÍTICO: Lee los macros ESPECÍFICOS de N2 para cada tipo de día**
 
-**Días A/M (entreno):**
-• Pre-entreno: 18% kcal → Bajo grasas (5-10g), carbos medios, proteína moderada
-• Post-entreno: 25% kcal → Alto carbos, alta proteína, bajo grasas
-• Media Mañana: 12% kcal → Snack ligero, proteína + carbos
+N2 genera tres sets diferentes:
+- `macros_dia_A`: Para días de entreno intenso (ej: 187p, 247c, 68g = 2350 kcal)
+- `macros_dia_M`: Para días moderados (ej: 187p, 203c, 68g = 2173 kcal)
+- `macros_dia_B`: Para días descanso (ej: 187p, 159c, 68g = 1997 kcal)
+
+**Días A (usar macros_dia_A de N2):**
+Distribuir según % de calorías:
+• Pre-entreno: 18% kcal → Calcular P/C/G proporcional
+• Post-entreno: 25% kcal → Más carbos, más proteína
+• Media Mañana: 12% kcal → Snack ligero
 • Comida: 25% kcal → Balanceado
 • Merienda: 10% kcal → Snack ligero
-• Cena: 20% kcal → Proteína + verduras, bajo carbos
+• Cena: 10% kcal → Bajo carbos
 
-**Días B (descanso):**
-Distribuir equitativamente entre las comidas (sin pre/post entreno)
-Si 5 comidas: 25% + 15% + 30% + 15% + 25%
-Si 4 comidas: 30% + 20% + 25% + 25%
-Si 3 comidas: 35% + 35% + 30%
+TOTAL: 100% = macros_dia_A completos
 
-**IMPORTANTE:** La suma de todos los porcentajes DEBE ser 100%
+**Días M (usar macros_dia_M de N2):**
+Misma distribución de % pero aplicado a macros_dia_M (que tiene menos carbos que A)
+
+**Días B (usar macros_dia_B de N2):**
+Distribuir sin pre/post entreno:
+• Desayuno: 25% kcal
+• Media Mañana: 15% kcal
+• Comida: 30% kcal
+• Merienda: 15% kcal
+• Cena: 15% kcal
+
+TOTAL: 100% = macros_dia_B completos
+
+**FÓRMULA DE CÁLCULO:**
+
+Para cada comida:
+1. Calcular kcal de la comida = kcal_dia * porcentaje
+2. Distribuir macros proporcionalmente:
+   - Proteínas: proteinas_dia * porcentaje
+   - Carbohidratos: carbohidratos_dia * porcentaje
+   - Grasas: grasas_dia * porcentaje
+
+Ejemplo Día A (2350 kcal, 187p, 247c, 68g):
+Pre-entreno (18%):
+- kcal: 2350 * 0.18 = 423 kcal
+- Proteínas: 187 * 0.18 = 34g
+- Carbohidratos: 247 * 0.18 = 44g
+- Grasas: 68 * 0.18 = 12g
+
+**VALIDACIÓN CRÍTICA:**
+✅ Suma de todas las comidas Día A = macros_dia_A exactos
+✅ Suma de todas las comidas Día M = macros_dia_M exactos
+✅ Suma de todas las comidas Día B = macros_dia_B exactos
 
 ═══ PASO 5: ESPECIFICAR TIMING EXPLÍCITO ═══
 
