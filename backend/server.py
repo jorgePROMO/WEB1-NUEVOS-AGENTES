@@ -5106,17 +5106,16 @@ MENÚ SEMANAL
                 
                 plan_text += "\nNota: Ver detalle completo de alimentos y macros por día más abajo.\n"
             
-            # Mantener detalle completo por día (formato original) después de la tabla
-            plan_text += "\n📋 DETALLE COMPLETO POR DÍA:\n"
+            # Mantener detalle completo por día después del resumen
+            plan_text += "\nDETALLE COMPLETO POR DÍA:\n"
             for dia_key, dia_nombre in zip(dias_keys, dias_nombres):
                 dia_data = menu_semanal.get(dia_key, {})
                 if dia_data:
                     tipo_dia = dia_data.get("tipo_dia", "M")
                     emoji = "🔥" if tipo_dia == "A" else ("🌙" if tipo_dia == "B" else "⚖️")
                     
-                    plan_text += f"\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-                    plan_text += f"{emoji} {dia_nombre} - Día Tipo {tipo_dia}\n"
-                    plan_text += f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+                    plan_text += f"\n{emoji} {dia_nombre} - Día Tipo {tipo_dia}\n"
+                    plan_text += "─" * 70 + "\n\n"
                     
                     comidas = dia_data.get("comidas", [])
                     for comida in comidas:
@@ -5126,25 +5125,25 @@ MENÚ SEMANAL
                         macros = comida.get("macros", {})
                         timing_nota = comida.get("timing_nota", "")
                         
-                        plan_text += f"🍽️ {nombre_comida.upper()} ({hora})\n"
+                        plan_text += f"{nombre_comida.upper()} ({hora})\n"
                         
                         if timing_nota:
-                            plan_text += f"   ⏱️ {timing_nota}\n"
+                            plan_text += f"Timing: {timing_nota}\n"
                         
                         if alimentos:
                             for alimento in alimentos:
                                 if isinstance(alimento, dict):
                                     nombre_ali = alimento.get("nombre", "")
                                     cantidad = alimento.get("cantidad", "")
-                                    plan_text += f"   • {cantidad} {nombre_ali}\n"
+                                    plan_text += f"• {cantidad} {nombre_ali}\n"
                                 elif isinstance(alimento, str):
-                                    plan_text += f"   • {alimento}\n"
+                                    plan_text += f"• {alimento}\n"
                         
                         if macros:
                             p = macros.get("proteinas", 0)
                             c = macros.get("carbohidratos", 0)
                             g = macros.get("grasas", 0)
-                            plan_text += f"   📊 Macros: {p}g proteína | {c}g carbos | {g}g grasas\n"
+                            plan_text += f"Macros: {p}g proteína | {c}g carbos | {g}g grasas\n"
                         
                         plan_text += "\n"
         
