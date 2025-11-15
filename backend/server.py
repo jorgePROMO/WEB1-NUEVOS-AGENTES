@@ -4876,16 +4876,17 @@ CALORÍAS Y MACRONUTRIENTES (CICLADO CALÓRICO)
         estrategia = n2_energy.get("estrategia", "")
         
         plan_text += f"""
-📊 TU GASTO ENERGÉTICO:
-   • TDEE (Gasto Total Diario): {tdee} kcal
-   • Déficit semanal promedio: {n2_energy.get('deficit_semanal_promedio', deficit_objetivo)}%
-   • Estrategia: {estrategia.replace('_', ' ').title()}
+TU GASTO ENERGÉTICO:
+• TDEE (Gasto Total Diario): {tdee} kcal
+• Déficit semanal promedio: {n2_energy.get('deficit_semanal_promedio', deficit_objetivo)}%
+• Estrategia: {estrategia.replace('_', ' ').title()}
 
-💡 CONCEPTO DE CICLADO CALÓRICO:
-   Distribuimos las calorías según tu actividad diaria:
-   • Días de entreno: MÁS calorías y carbohidratos (mejor rendimiento)
-   • Días de descanso: MENOS calorías (donde aplicamos el déficit principal)
-   Resultado: Déficit semanal promedio alineado con tu objetivo
+CONCEPTO DE CICLADO CALÓRICO:
+Distribuimos las calorías según tu actividad diaria:
+- Días de entreno: MÁS calorías y carbohidratos (mejor rendimiento)
+- Días de descanso: MENOS calorías (donde aplicamos el déficit principal)
+
+Resultado: Déficit semanal promedio alineado con tu objetivo
 
 """
         
@@ -4896,33 +4897,33 @@ CALORÍAS Y MACRONUTRIENTES (CICLADO CALÓRICO)
         
         if macros_a:
             plan_text += f"""
-🔥 DÍA A (ENTRENO INTENSO):
-   • Calorías: {macros_a.get('kcal_objetivo', 'N/A')} kcal (déficit {macros_a.get('deficit_pct', 0)}%)
-   • Proteínas: {macros_a.get('proteinas_g', 'N/A')}g ({macros_a.get('proteinas_gkg', 'N/A')}g/kg)
-   • Carbohidratos: {macros_a.get('carbohidratos_g', 'N/A')}g (ALTO - para rendimiento)
-   • Grasas: {macros_a.get('grasas_g', 'N/A')}g
+DÍA A (ENTRENO INTENSO) 🔥
+• Calorías: {macros_a.get('kcal_objetivo', 'N/A')} kcal (déficit {macros_a.get('deficit_pct', 0)}%)
+• Proteínas: {macros_a.get('proteinas_g', 'N/A')}g ({macros_a.get('proteinas_gkg', 'N/A')}g/kg)
+• Carbohidratos: {macros_a.get('carbohidratos_g', 'N/A')}g (ALTO - para rendimiento)
+• Grasas: {macros_a.get('grasas_g', 'N/A')}g
 """
         
         # Solo mostrar Día M si existe en el plan
         tipos_dia_generados = n2_energy.get("tipos_dia_generados", [])
         if macros_m and "M" in tipos_dia_generados:
             plan_text += f"""
-⚖️ DÍA M (ENTRENO MODERADO - Cardio/Movilidad):
-   • Calorías: {macros_m.get('kcal_objetivo', 'N/A')} kcal (déficit {macros_m.get('deficit_pct', 0)}%)
-   • Proteínas: {macros_m.get('proteinas_g', 'N/A')}g ({macros_m.get('proteinas_gkg', 'N/A')}g/kg)
-   • Carbohidratos: {macros_m.get('carbohidratos_g', 'N/A')}g (MEDIO)
-   • Grasas: {macros_m.get('grasas_g', 'N/A')}g
+DÍA M (ENTRENO MODERADO - Cardio/Movilidad) ⚖️
+• Calorías: {macros_m.get('kcal_objetivo', 'N/A')} kcal (déficit {macros_m.get('deficit_pct', 0)}%)
+• Proteínas: {macros_m.get('proteinas_g', 'N/A')}g ({macros_m.get('proteinas_gkg', 'N/A')}g/kg)
+• Carbohidratos: {macros_m.get('carbohidratos_g', 'N/A')}g (MEDIO)
+• Grasas: {macros_m.get('grasas_g', 'N/A')}g
 
-💡 Este plan incluye días de cardio/movilidad además del entrenamiento de fuerza.
+Nota: Este plan incluye días de cardio/movilidad además del entrenamiento de fuerza.
 """
         
         if macros_b:
             plan_text += f"""
-🌙 DÍA B (DESCANSO):
-   • Calorías: {macros_b.get('kcal_objetivo', 'N/A')} kcal (déficit {macros_b.get('deficit_pct', 0)}%)
-   • Proteínas: {macros_b.get('proteinas_g', 'N/A')}g ({macros_b.get('proteinas_gkg', 'N/A')}g/kg)
-   • Carbohidratos: {macros_b.get('carbohidratos_g', 'N/A')}g (BAJO - déficit principal)
-   • Grasas: {macros_b.get('grasas_g', 'N/A')}g
+DÍA B (DESCANSO) 🌙
+• Calorías: {macros_b.get('kcal_objetivo', 'N/A')} kcal (déficit {macros_b.get('deficit_pct', 0)}%)
+• Proteínas: {macros_b.get('proteinas_g', 'N/A')}g ({macros_b.get('proteinas_gkg', 'N/A')}g/kg)
+• Carbohidratos: {macros_b.get('carbohidratos_g', 'N/A')}g (BAJO - déficit principal)
+• Grasas: {macros_b.get('grasas_g', 'N/A')}g
 """
         
         # Añadir calendario semanal si existe (formato nuevo)
