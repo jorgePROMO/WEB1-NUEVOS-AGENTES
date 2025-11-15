@@ -108,23 +108,37 @@ CADA comida pre/post debe incluir:
   "status": "ok",
   "horario_entrenamiento": "mañana|tarde|noche",
   "hora_entreno_detectada": "08:00",
-  "numero_comidas_base": 4,
+  "numero_comidas_base": 6,
   "distribucion_dia_A": {
-    "numero_comidas": 4,
+    "numero_comidas": 6,
     "comidas": [
-      {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1 hora antes", "proteinas_g": 25, "carbohidratos_g": 40, "grasas_g": 10},
-      {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después", "proteinas_g": 35, "carbohidratos_g": 60, "grasas_g": 5},
-      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 50, "carbohidratos_g": 60, "grasas_g": 20},
-      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 40, "carbohidratos_g": 40, "grasas_g": 25}
+      {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1 hora antes", "proteinas_g": 30, "carbohidratos_g": 45, "grasas_g": 8},
+      {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después", "proteinas_g": 40, "carbohidratos_g": 65, "grasas_g": 6},
+      {"nombre": "Media Mañana", "hora": "11:45", "proteinas_g": 20, "carbohidratos_g": 25, "grasas_g": 5},
+      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 40, "carbohidratos_g": 55, "grasas_g": 15},
+      {"nombre": "Merienda", "hora": "17:30", "proteinas_g": 18, "carbohidratos_g": 20, "grasas_g": 4},
+      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 32, "carbohidratos_g": 40, "grasas_g": 22}
     ]
   },
-  "distribucion_dia_M": { ... MISMO FORMATO ... },
-  "distribucion_dia_B": {
-    "numero_comidas": 3,
+  "distribucion_dia_M": {
+    "numero_comidas": 6,
     "comidas": [
-      {"nombre": "Desayuno", "hora": "08:00", "proteinas_g": 35, "carbohidratos_g": 50, "grasas_g": 20},
-      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 45, "carbohidratos_g": 55, "grasas_g": 25},
-      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 40, "carbohidratos_g": 45, "grasas_g": 20}
+      {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1 hora antes", "proteinas_g": 30, "carbohidratos_g": 45, "grasas_g": 8},
+      {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después", "proteinas_g": 40, "carbohidratos_g": 65, "grasas_g": 6},
+      {"nombre": "Media Mañana", "hora": "11:45", "proteinas_g": 20, "carbohidratos_g": 25, "grasas_g": 5},
+      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 40, "carbohidratos_g": 55, "grasas_g": 15},
+      {"nombre": "Merienda", "hora": "17:30", "proteinas_g": 18, "carbohidratos_g": 20, "grasas_g": 4},
+      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 32, "carbohidratos_g": 40, "grasas_g": 22}
+    ]
+  },
+  "distribucion_dia_B": {
+    "numero_comidas": 5,
+    "comidas": [
+      {"nombre": "Desayuno", "hora": "08:00", "proteinas_g": 40, "carbohidratos_g": 50, "grasas_g": 18},
+      {"nombre": "Media Mañana", "hora": "11:00", "proteinas_g": 22, "carbohidratos_g": 28, "grasas_g": 8},
+      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 45, "carbohidratos_g": 60, "grasas_g": 20},
+      {"nombre": "Merienda", "hora": "17:30", "proteinas_g": 22, "carbohidratos_g": 28, "grasas_g": 8},
+      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 41, "carbohidratos_g": 54, "grasas_g": 16}
     ]
   }
 }
