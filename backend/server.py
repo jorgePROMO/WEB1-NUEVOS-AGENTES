@@ -4318,22 +4318,53 @@ async def get_nutrition_whatsapp_link(user_id: str, plan_id: str = None, request
         
         # Contenido del plan (limitado para WhatsApp)
         plan_content = plan.get("plan_verificado", "")
+        
+        # FIX: Asegurar que plan_content es string
+        if isinstance(plan_content, dict):
+            plan_content = plan_content.get("text", str(plan_content))
+        elif not isinstance(plan_content, str):
+            plan_content = str(plan_content)
+        
         month = plan.get("month")
         year = plan.get("year")
         
         month_names = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
                        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
         
-        # Crear mensaje para WhatsApp (con límite de caracteres)
+        # Extraer secciones clave del plan para WhatsApp
+        # Buscar sección de macros y menú (más importante)
+        key_sections = []
+        
+        # Buscar sección de calorías y macros
+        if "CALORÍAS Y MACRONUTRIENTES" in plan_content:
+            start = plan_content.find("CALORÍAS Y MACRONUTRIENTES")
+            end = plan_content.find("═══════", start + 100)
+            if end > start:
+                key_sections.append(plan_content[start:end])
+        
+        # Buscar tabla semanal
+        if "MENÚ SEMANAL" in plan_content:
+            start = plan_content.find("MENÚ SEMANAL")
+            end = plan_content.find("═══════", start + 500)
+            if end > start:
+                key_sections.append(plan_content[start:end+500])
+        
+        # Si no encontramos secciones, usar el inicio del plan
+        if not key_sections:
+            preview_content = plan_content[:4500]
+        else:
+            preview_content = "\n\n".join(key_sections)[:4500]
+        
+        # Crear mensaje para WhatsApp
         message = f"""🥗 *Tu Plan de Nutrición Personalizado - {month_names[month]} {year}*
 
 Hola {user.get('name', 'Cliente')}!
 
 Te envío tu plan de nutrición personalizado:
 
-{plan_content[:3000]}...
+{preview_content}...
 
-_Si necesitas el plan completo, revísalo en tu panel de usuario o te lo envío por email._
+_💡 Plan completo disponible en tu panel o por email._
 
 *Jorge Calcerrada - Entrenador Personal*"""
         
