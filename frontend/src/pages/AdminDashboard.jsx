@@ -119,6 +119,7 @@ const AdminDashboard = () => {
   // Selector states - Nutrition
   const [selectedQuestionnaireForNutrition, setSelectedQuestionnaireForNutrition] = useState(null);
   const [selectedTrainingPlanForNutrition, setSelectedTrainingPlanForNutrition] = useState(null);
+  const [selectedPreviousNutritionPlan, setSelectedPreviousNutritionPlan] = useState(null);
   
   // Follow-up Report states
   const [selectedPreviousTrainingForReport, setSelectedPreviousTrainingForReport] = useState(null);
