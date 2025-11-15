@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://aicoach-360.preview.emergentagent.com/api"
+BACKEND_URL = "https://nutriplan-sync.preview.emergentagent.com/api"
 
 class BackendTester:
     def __init__(self):

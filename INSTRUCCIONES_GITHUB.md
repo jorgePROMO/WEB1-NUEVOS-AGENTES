@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://aicoach-360.preview.emergentagent.com
+https://nutriplan-sync.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 

@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://aicoach-360.preview.emergentagent.com
+**URL Actual:** https://nutriplan-sync.preview.emergentagent.com
 
 ---
 
