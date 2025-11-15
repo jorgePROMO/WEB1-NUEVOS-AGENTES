@@ -32,6 +32,14 @@ const LandingPage = () => {
       <Suspense fallback={<SectionLoader />}>
         <MethodSection />
       </Suspense>
+      {/* CTA Estratégico 1: Después del Método */}
+      <Suspense fallback={<SectionLoader />}>
+        <DualCTA 
+          variant="compact"
+          title="¿Listo para dar el primer paso?"
+          subtitle="Elige la opción que mejor se adapte a ti"
+        />
+      </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <ServicesSection />
       </Suspense>
@@ -40,6 +48,14 @@ const LandingPage = () => {
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <TransformationsSection />
+      </Suspense>
+      {/* CTA Estratégico 2: Después de Transformaciones */}
+      <Suspense fallback={<SectionLoader />}>
+        <DualCTA 
+          variant="default"
+          title="¿Listo para tu transformación?"
+          subtitle="Estas son tus opciones para trabajar conmigo"
+        />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <TestimonialsSection />
