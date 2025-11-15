@@ -34,18 +34,36 @@ Si dice "tarde"/"noche" o > 15:00 → ENTRENA TARDE
 ═══ PASO 3: CREAR DISTRIBUCIONES SEGÚN HORARIO ═══
 
 **ENTRENA MAÑANA** (Ejemplo: entrena 8:00-9:00):
-Días A/M (con entreno):
-1. Pre-entreno: 1-1.5h antes del entreno (ej: 07:00) - 20-25% kcal
-   {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1h antes del entreno", "proteinas_g": XX, "carbohidratos_g": XX, "grasas_g": XX}
-2. Post-entreno: 30-60min después (ej: 09:30) - 25-30% kcal
-   {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después del entreno", "proteinas_g": XX, "carbohidratos_g": XX, "grasas_g": XX}
-3. Comida: horario habitual cliente (ej: 14:00) - 30% kcal
-4. Cena: horario habitual (ej: 21:00) - 25% kcal
 
-Días B (descanso):
-1. Desayuno: hora habitual - 30% kcal
-2. Comida: hora habitual - 35% kcal
-3. Cena: hora habitual - 35% kcal
+PASO 3A: Identificar horarios del cliente del cuestionario:
+- horario_desayuno (ej: "07:00")
+- horario_comida (ej: "14:00")  
+- horario_cena (ej: "21:00")
+
+PASO 3B: Calcular GAPS entre comidas:
+- Gap1: Post-entreno (09:30) → Comida (14:00) = 4.5 horas
+- Gap2: Comida (14:00) → Cena (21:00) = 7 horas
+
+REGLA DE GAPS: Si hay un gap > 4 horas, AÑADIR comida intermedia (media mañana o merienda)
+
+Días A/M (con entreno) - EJEMPLO con gaps corregidos:
+1. Pre-Entreno: 1-1.5h antes del entreno (07:00) - 18% kcal
+   {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1h antes del entreno", "proteinas_g": XX, "carbohidratos_g": XX, "grasas_g": XX}
+2. Post-Entreno: 30-60min después (09:30) - 25% kcal
+   {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después del entreno", "proteinas_g": XX, "carbohidratos_g": XX, "grasas_g": XX}
+3. Media Mañana: mitad del gap (11:45) - 12% kcal (SOLO si gap > 4h)
+   {"nombre": "Media Mañana", "hora": "11:45", "proteinas_g": XX, "carbohidratos_g": XX, "grasas_g": XX}
+4. Comida: horario habitual cliente (14:00) - 25% kcal
+5. Merienda: mitad del gap (17:30) - 10% kcal (SOLO si gap > 4h)
+   {"nombre": "Merienda", "hora": "17:30", "proteinas_g": XX, "carbohidratos_g": XX, "grasas_g": XX}
+6. Cena: horario habitual (21:00) - 20% kcal
+
+Días B (descanso) - CON comidas intermedias si hay gaps:
+1. Desayuno: hora habitual (07:00) - 25% kcal
+2. Media Mañana: si gap > 4h (10:30) - 15% kcal
+3. Comida: hora habitual (14:00) - 30% kcal
+4. Merienda: si gap > 4h (17:30) - 15% kcal
+5. Cena: hora habitual (21:00) - 25% kcal
 
 **ENTRENA TARDE** (Ejemplo: entrena 18:00-19:00):
 Días A/M (con entreno):
