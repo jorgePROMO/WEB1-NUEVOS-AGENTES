@@ -4182,6 +4182,18 @@ async def send_nutrition_email(user_id: str, plan_id: str = None, request: Reque
         
         # Contenido del plan
         plan_content = plan.get("plan_verificado", "")
+        
+        # FIX: Verificar que no esté vacío
+        if not plan_content or len(plan_content.strip()) < 100:
+            # Intentar con plan_text
+            plan_content = plan.get("plan_text", "")
+            
+        if not plan_content or len(plan_content.strip()) < 100:
+            raise HTTPException(
+                status_code=500, 
+                detail="El plan no tiene contenido. Por favor, regenera el plan de nutrición."
+            )
+        
         month = plan.get("month")
         year = plan.get("year")
         
