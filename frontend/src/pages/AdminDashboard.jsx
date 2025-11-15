@@ -496,12 +496,20 @@ const AdminDashboard = () => {
   // Load nutrition plans for selectors
   const loadNutritionPlansForSelector = async (userId) => {
     try {
+      // Preservar selección actual ANTES de recargar
+      const currentPreviousSelection = selectedPreviousNutritionPlan;
+      
       const response = await axios.get(`${API}/admin/users/${userId}/nutrition-plans`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
       const plans = response.data.plans || [];
       setAvailableNutritionPlans(plans);
+      
+      // Restaurar selección previa si todavía existe en la nueva lista
+      if (currentPreviousSelection && plans.find(p => p.id === currentPreviousSelection)) {
+        setSelectedPreviousNutritionPlan(currentPreviousSelection);
+      }
     } catch (error) {
       console.error('Error loading nutrition plans for selector:', error);
       setAvailableNutritionPlans([]);
