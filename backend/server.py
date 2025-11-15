@@ -4748,6 +4748,8 @@ def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
         logger.info(f"      - altura_cm: {adapted['altura_cm']}")
         logger.info(f"   🎯 Objetivo: {adapted['objetivo_principal']}")
         logger.info(f"   📅 Disponibilidad: {adapted['dias_semana']} días x {adapted['minutos_por_sesion']} min")
+        logger.info(f"   ⏰ Horario entreno: {adapted['horario_entrenamiento']} ({adapted['hora_entreno']})")
+        logger.info(f"   🍽️ Comidas/día: {adapted['numero_comidas']}")
         logger.info(f"   🏋️ Experiencia: {adapted['experiencia_entrenamiento'][:50]}...")
         logger.info(f"   🏥 Lesiones: {adapted['lesiones_previas'][:50]}...")
         
