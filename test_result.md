@@ -1066,3 +1066,21 @@ agent_communication:
     - agent: "main"
       message: "✅ CTA E.D.N.360™ CORREGIDO: Usuario indicó que el botón de la sección E.D.N.360™ estaba dirigiendo a /trabaja-conmigo (lista prioritaria) cuando debería ir directamente a /register. CAMBIO REALIZADO: Modificado onClick del botón en EDN360Section.jsx de navigate('/trabaja-conmigo') a navigate('/register'). Texto del botón cambiado a 'REGÍSTRATE AHORA' para que sea más claro. Ahora al hacer click en el CTA de la sección E.D.N.360™, los usuarios van directamente a la página de registro. Usuario debe verificar que el botón funcione correctamente."
 
+
+frontend:
+  - task: "Header a Ras de Página + CTAs Estratégicos Duales"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Header.jsx, DualCTA.jsx, EDN360Section.jsx, /app/frontend/src/pages/LandingPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ HEADER A RAS + CTAs DUALES IMPLEMENTADOS - Usuario solicitó: 1) Header completamente pegado arriba sin espacios cuando hace scroll, 2) CTAs en sitios estratégicos con 2 versiones (Trabaja Conmigo vs Trabaja con Mi Equipo). SOLUCIÓN COMPLETA: 1) HEADER: Eliminado 'mt-safe' de Header.jsx línea 26 que causaba margin-top, ahora header queda completamente a ras (top-0 sin espacios), 2) COMPONENTE DualCTA CREADO: Nuevo componente reutilizable con 3 variantes (default=sección completa, compact=versión pequeña, inline=botones en fila), incluye ambas opciones con iconos, descripciones y diferenciación clara, 3) CTAs ESTRATÉGICOS AÑADIDOS: CTA compact después de MethodSection ('¿Listo para dar el primer paso?'), CTA default después de TransformationsSection ('¿Listo para tu transformación?'), 4) SECCIÓN E.D.N.360™ ACTUALIZADA: CTA simple reemplazado por versión dual con 2 cards (Trabaja Conmigo 1a1 + Trabaja con Mi Equipo), diseño con gradientes naranja/rojo y azul/verde respectivamente. READY FOR TESTING - verificar que header esté pegado arriba sin espacios y que los CTAs duales aparezcan en 3 ubicaciones estratégicas."
+
+agent_communication:
+    - agent: "main"
+      message: "✅ HEADER FIJO + CTAs ESTRATÉGICOS DUALES: Usuario pidió 2 mejoras importantes: 1) Header completamente pegado arriba (a ras) para que no se vea espacio de la web cuando hace scroll, 2) Más CTAs en sitios estratégicos con 2 versiones: 'Trabaja conmigo' (1a1, lista prioritaria /trabaja-conmigo) y 'Trabaja con mi equipo' (registro /register). IMPLEMENTACIÓN: 1) HEADER ARREGLADO: Eliminado margen superior 'mt-safe' que causaba espacio arriba, ahora está completamente pegado en top-0, 2) COMPONENTE DualCTA CREADO: Nuevo componente reutilizable con 3 variantes para diferentes usos, incluye diferenciación visual clara entre ambas opciones (Trabaja Conmigo = naranja/rojo con User icon, Trabaja con Equipo = azul/verde con Users icon), 3) UBICACIONES ESTRATÉGICAS: 3 CTAs duales añadidos en landing page: Después de Método (variant compact), Después de Transformaciones (variant default con sección completa), En sección E.D.N.360™ (versión personalizada con 2 cards), 4) Cada CTA tiene descripción clara de diferencias y beneficios de cada opción. Usuario debe verificar: 1) Header está completamente pegado arriba sin espacios, 2) Aparecen 3 CTAs duales en ubicaciones estratégicas, 3) Ambos botones funcionan correctamente (/trabaja-conmigo y /register), 4) El diseño se ve profesional y claro en las diferencias."
+
