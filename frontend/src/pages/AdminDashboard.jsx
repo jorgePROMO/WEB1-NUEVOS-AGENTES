@@ -415,27 +415,28 @@ const AdminDashboard = () => {
     }
   };
 
-  const sendTrainingWhatsApp = async (planId) => {
-    setSendingTraining('whatsapp');
-    try {
-      const response = await axios.get(
-        `${API}/admin/users/${selectedClient.id}/training/whatsapp-link`,
-        {
-          params: { plan_id: planId },
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true
-        }
-      );
-      
-      window.open(response.data.whatsapp_link, '_blank');
-      await loadTrainingPlans(selectedClient.id);
-    } catch (error) {
-      console.error('Error generating WhatsApp link:', error);
-      alert('❌ Error al generar link: ' + (error.response?.data?.detail || error.message));
-    } finally {
-      setSendingTraining(null);
-    }
-  };
+  // FUNCIÓN DESHABILITADA - WhatsApp solo para follow-up
+  // const sendTrainingWhatsApp = async (planId) => {
+  //   setSendingTraining('whatsapp');
+  //   try {
+  //     const response = await axios.get(
+  //       `${API}/admin/users/${selectedClient.id}/training/whatsapp-link`,
+  //       {
+  //         params: { plan_id: planId },
+  //         headers: { Authorization: `Bearer ${token}` },
+  //         withCredentials: true
+  //       }
+  //     );
+  //     
+  //     window.open(response.data.whatsapp_link, '_blank');
+  //     await loadTrainingPlans(selectedClient.id);
+  //   } catch (error) {
+  //     console.error('Error generating WhatsApp link:', error);
+  //     alert('❌ Error al generar link: ' + (error.response?.data?.detail || error.message));
+  //   } finally {
+  //     setSendingTraining(null);
+  //   }
+  // };
 
   // Load questionnaires for selectors
   const loadQuestionnaires = async (userId) => {
