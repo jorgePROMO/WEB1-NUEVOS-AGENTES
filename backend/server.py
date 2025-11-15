@@ -4848,27 +4848,25 @@ def _format_edn360_nutrition_as_text(edn360_data: dict, user_name: str = "Client
         
         # Generar el texto del plan
         plan_text = f"""
-╔══════════════════════════════════════════════════════════════════════════╗
-║                    PLAN DE NUTRICIÓN PERSONALIZADO                        ║
-║                             SISTEMA E.D.N.360                             ║
-╚══════════════════════════════════════════════════════════════════════════╝
+═════════════════════════════════════════════════════════════════════════
+                    PLAN DE NUTRICIÓN PERSONALIZADO
+                           SISTEMA E.D.N.360
+═════════════════════════════════════════════════════════════════════════
 
-👤 CLIENTE: {user_name}
-📅 DURACIÓN: 4 semanas (sincronizado con entrenamiento)
-🎯 OBJETIVO: Plan nutricional adaptado a tu programa de entrenamiento
+CLIENTE: {user_name}
+DURACIÓN: 4 semanas (sincronizado con entrenamiento)
+OBJETIVO: Plan nutricional adaptado a tu programa de entrenamiento
 
-═══════════════════════════════════════════════════════════════════════════
 
-📊 TU PERFIL METABÓLICO
+TU PERFIL METABÓLICO
 
 • Metabolismo Basal (BMR): {n1_metabolic.get('bmr_estimado', 'N/A')} kcal
 • Gasto Total Diario (TDEE): {n1_metabolic.get('tdee_estimado', 'N/A')} kcal
 • Perfil Metabólico: {n1_metabolic.get('perfil_metabolico', 'N/A').replace('_', ' ').title()}
 • Nivel de Actividad: {n1_metabolic.get('nivel_actividad', 'N/A').replace('_', ' ').title()}
 
-═══════════════════════════════════════════════════════════════════════════
 
-🍽️ CALORÍAS Y MACRONUTRIENTES (CICLADO CALÓRICO)
+CALORÍAS Y MACRONUTRIENTES (CICLADO CALÓRICO)
 
 """
         
