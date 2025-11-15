@@ -42,10 +42,27 @@ TDEE viene de N1, ejemplo: 2350 kcal
 - Ganancia: +10%
 
 **Paso 3: Calcular kcal para cada tipo de día**
-Ejemplo con TDEE 2350 y objetivo pérdida (-15%):
-- Día A: 2350 kcal (TDEE, 0%)
-- Día M: 2173 kcal (TDEE -7.5%)
-- Día B: 1997 kcal (TDEE -15%)
+
+**ESTRATEGIA SEGÚN OBJETIVO:**
+
+**Para PÉRDIDA DE PESO (-15% objetivo semanal):**
+- Día A: TDEE -5% (ej: 2233 kcal con TDEE 2350)
+- Día M: TDEE -10% (ej: 2115 kcal)
+- Día B: TDEE -20% (ej: 1880 kcal)
+
+Asumiendo semana 3A + 2M + 2B:
+Promedio = (2233×3 + 2115×2 + 1880×2) / 7 = 2108 kcal/día
+Déficit real = (2350 - 2108) / 2350 = **-10.3%** semanal
+
+**Para RECOMPOSICIÓN (0% objetivo semanal):**
+- Día A: TDEE +5%
+- Día M: TDEE
+- Día B: TDEE -10%
+
+**Para VOLUMEN (+10% objetivo semanal):**
+- Día A: TDEE +15%
+- Día M: TDEE +10%
+- Día B: TDEE +5%
 
 **Paso 4: Calcular macros para CADA tipo de día**
 
