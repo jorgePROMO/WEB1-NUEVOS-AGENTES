@@ -4970,31 +4970,6 @@ const AdminDashboard = () => {
                       </CardContent>
                     </Card>
 
-                    {/* Send WhatsApp */}
-                    <Card className="border-2 border-green-200 bg-green-50">
-                      <CardContent className="pt-6">
-                        <Button
-                          onClick={() => sendNutritionByWhatsApp(selectedClient.id)}
-                          disabled={sendingNutrition === 'whatsapp'}
-                          className="w-full bg-green-600 hover:bg-green-700"
-                        >
-                          {sendingNutrition === 'whatsapp' ? (
-                            <>
-                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                              Abriendo...
-                            </>
-                          ) : (
-                            <>
-                              <MessageSquare className="h-4 w-4 mr-2" />
-                              Enviar WhatsApp
-                            </>
-                          )}
-                        </Button>
-                        <p className="text-xs text-gray-600 mt-2 text-center">
-                          Abre WhatsApp con el plan
-                        </p>
-                      </CardContent>
-                    </Card>
                   </div>
                 </div>
               </div>
