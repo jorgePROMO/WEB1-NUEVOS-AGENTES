@@ -4983,72 +4983,80 @@ activo y prevenir catabolismo muscular.
 
 ═══════════════════════════════════════════════════════════════════════════
 
-🍴 MENÚ SEMANAL EN TABLA (Comidas x Días)
+🍴 MENÚ SEMANAL EN TABLA
 
 """
-            # Extraer estructura de comidas (asumiendo que todos los días tienen misma estructura)
-            dias_nombres = ["LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO", "DOMINGO"]
+            # Recopilar todas las comidas únicas de todos los días con sus horarios
+            dias_nombres = ["LUN", "MAR", "MIE", "JUE", "VIE", "SAB", "DOM"]
             dias_keys = ["dia_1", "dia_2", "dia_3", "dia_4", "dia_5", "dia_6", "dia_7"]
             
-            # Obtener lista de comidas del primer día para establecer filas
-            primer_dia = menu_semanal.get("dia_1", {})
-            comidas_estructura = []
-            if primer_dia:
-                for comida in primer_dia.get("comidas", []):
-                    comidas_estructura.append({
-                        "nombre": comida.get("nombre", "Comida"),
-                        "hora": comida.get("hora", "")
-                    })
+            # Recopilar todas las comidas y sus horarios (pueden variar entre días A/B)
+            todas_comidas = {}  # {hora: nombre_comida}
+            for dia_key in dias_keys:
+                dia_data = menu_semanal.get(dia_key, {})
+                for comida in dia_data.get("comidas", []):
+                    hora = comida.get("hora", "")
+                    nombre = comida.get("nombre", "")
+                    if hora not in todas_comidas:
+                        todas_comidas[hora] = nombre
             
-            # Crear tabla horizontal
-            if comidas_estructura:
-                # Encabezado con días de la semana
-                plan_text += "\n" + "=" * 120 + "\n"
-                plan_text += f"{'COMIDA / DÍA':<25} | "
-                plan_text += " | ".join([f"{dia:<12}" for dia in dias_nombres])
-                plan_text += "\n" + "=" * 120 + "\n"
+            # Ordenar comidas por hora
+            comidas_ordenadas = sorted(todas_comidas.items(), key=lambda x: x[0])
+            
+            if comidas_ordenadas:
+                # Crear encabezado
+                plan_text += "\n"
+                plan_text += "┌" + "─" * 20 + "┬" + "┬".join(["─" * 18] * 7) + "┐\n"
+                plan_text += "│ " + "HORARIO / COMIDA".ljust(18) + " │ "
+                plan_text += " │ ".join([dia.center(16) for dia in dias_nombres])
+                plan_text += " │\n"
+                plan_text += "├" + "─" * 20 + "┼" + "┼".join(["─" * 18] * 7) + "┤\n"
                 
-                # Por cada comida (fila)
-                for comida_info in comidas_estructura:
-                    nombre_comida = comida_info["nombre"]
-                    hora_comida = comida_info["hora"]
+                # Por cada horario de comida
+                for hora, nombre_comida in comidas_ordenadas:
+                    fila = f"│ {hora} {nombre_comida[:8]}".ljust(21) + "│ "
                     
-                    # Nombre de comida + hora en primera columna
-                    plan_text += f"{nombre_comida} ({hora_comida})"[:25].ljust(25) + " | "
-                    
-                    # Por cada día (columnas)
+                    # Por cada día de la semana
                     for dia_key in dias_keys:
                         dia_data = menu_semanal.get(dia_key, {})
                         tipo_dia = dia_data.get("tipo_dia", "M")
                         emoji = "🔥" if tipo_dia == "A" else ("🌙" if tipo_dia == "B" else "⚖️")
                         
-                        # Buscar esta comida en el día
-                        comidas_dia = dia_data.get("comidas", [])
+                        # Buscar comida en este horario
                         comida_encontrada = None
-                        for c in comidas_dia:
-                            if c.get("nombre") == nombre_comida:
+                        for c in dia_data.get("comidas", []):
+                            if c.get("hora") == hora:
                                 comida_encontrada = c
                                 break
                         
                         if comida_encontrada:
-                            # Mostrar primer alimento + emoji de día
                             alimentos = comida_encontrada.get("alimentos", [])
+                            macros = comida_encontrada.get("macros", {})
+                            
                             if alimentos and len(alimentos) > 0:
                                 primer_alimento = alimentos[0]
                                 if isinstance(primer_alimento, dict):
-                                    texto_celda = f"{emoji} {primer_alimento.get('nombre', '')[:8]}"
+                                    nombre_ali = primer_alimento.get('nombre', '')[:12]
                                 else:
-                                    texto_celda = f"{emoji} {str(primer_alimento)[:8]}"
-                                plan_text += f"{texto_celda:<12} | "
+                                    nombre_ali = str(primer_alimento)[:12]
+                                
+                                # Mostrar con macros resumidos
+                                p = macros.get("proteinas", 0)
+                                c = macros.get("carbohidratos", 0)
+                                celda = f"{emoji}{nombre_ali}"[:16].ljust(16)
                             else:
-                                plan_text += f"{emoji} Ver det.  | "
+                                celda = f"{emoji} Ver detalle".ljust(16)
                         else:
-                            plan_text += "     -       | "
+                            celda = "   -".ljust(16)
+                        
+                        fila += f" {celda} │"
                     
-                    plan_text += "\n"
+                    plan_text += fila + "\n"
                 
-                plan_text += "=" * 120 + "\n\n"
-                plan_text += "💡 Nota: Esta tabla muestra un resumen. Ver detalle completo por día más abajo.\n\n"
+                # Pie de tabla
+                plan_text += "└" + "─" * 20 + "┴" + "┴".join(["─" * 18] * 7) + "┘\n\n"
+                plan_text += "Leyenda: 🔥 Día A (Entreno Intenso) | ⚖️ Día M (Entreno Moderado) | 🌙 Día B (Descanso)\n"
+                plan_text += "💡 Ver detalle completo de alimentos y macros por día más abajo.\n\n"
             
             # Mantener detalle completo por día (formato original) después de la tabla
             plan_text += "\n📋 DETALLE COMPLETO POR DÍA:\n"
