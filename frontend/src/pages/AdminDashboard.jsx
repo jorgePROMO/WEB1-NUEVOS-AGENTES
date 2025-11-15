@@ -300,6 +300,11 @@ const AdminDashboard = () => {
         params.training_plan_id = selectedTrainingPlanForNutrition;
       }
       
+      // Agregar plan nutricional previo si está seleccionado
+      if (selectedPreviousNutritionPlan) {
+        params.previous_nutrition_plan_id = selectedPreviousNutritionPlan;
+      }
+      
       const response = await axios.post(
         `${API}/admin/users/${selectedClient.id}/nutrition/generate`,
         null,
