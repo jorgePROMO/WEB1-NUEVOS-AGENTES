@@ -5234,6 +5234,99 @@ activo y prevenir catabolismo muscular.
                 plan_text += f"   • {rec}\n"
         
         # Instrucciones finales
+        # Generar lista de compra automática del menú semanal
+        if menu_semanal:
+            plan_text += """
+
+═══════════════════════════════════════════════════════════════════════════
+
+🛒 LISTA DE LA COMPRA SEMANAL
+
+"""
+            # Recopilar todos los alimentos de la semana
+            alimentos_totales = {}  # {nombre_alimento: cantidad_total}
+            
+            for dia_key in ["dia_1", "dia_2", "dia_3", "dia_4", "dia_5", "dia_6", "dia_7"]:
+                dia_data = menu_semanal.get(dia_key, {})
+                for comida in dia_data.get("comidas", []):
+                    for alimento in comida.get("alimentos", []):
+                        if isinstance(alimento, dict):
+                            nombre = alimento.get("nombre", "").lower().strip()
+                            cantidad_str = alimento.get("cantidad", "0")
+                            
+                            # Extraer número de la cantidad
+                            import re
+                            match = re.search(r'(\d+(?:\.\d+)?)', str(cantidad_str))
+                            if match and nombre:
+                                cantidad = float(match.group(1))
+                                unidad = cantidad_str.replace(match.group(1), "").strip()
+                                
+                                # Agrupar por nombre de alimento
+                                clave = nombre
+                                if clave not in alimentos_totales:
+                                    alimentos_totales[clave] = {"cantidad": 0, "unidad": unidad}
+                                alimentos_totales[clave]["cantidad"] += cantidad
+            
+            # Categorizar alimentos
+            categorias = {
+                "Proteínas": ["pollo", "pavo", "ternera", "cerdo", "pescado", "atún", "salmón", "merluza", 
+                             "lenguado", "bacalao", "tilapia", "huevo", "clara", "batido de proteínas", 
+                             "proteína", "chuleta", "solomillo", "pechuga", "cordero", "gambas"],
+                "Lácteos": ["yogur", "leche", "queso", "requesón", "skyr"],
+                "Carbohidratos": ["arroz", "pasta", "quinoa", "avena", "pan", "tostada", "couscous", "cuscús", 
+                                 "patata", "batata", "boniato"],
+                "Frutas": ["plátano", "manzana", "fresas", "arándanos", "kiwi", "uvas", "melón", "naranja",
+                          "fruta"],
+                "Verduras": ["brócoli", "espinacas", "lechuga", "tomate", "ensalada", "verduras", "zanahoria",
+                            "calabacín", "berenjena", "judías", "espárragos", "champiñones", "alcachofa", "guisantes"],
+                "Grasas Saludables": ["aceite", "aguacate", "nueces", "almendras", "semillas"],
+                "Otros": []
+            }
+            
+            # Organizar alimentos por categoría
+            alimentos_por_categoria = {cat: [] for cat in categorias.keys()}
+            
+            for nombre_alimento, datos in sorted(alimentos_totales.items()):
+                categorizado = False
+                for categoria, palabras_clave in categorias.items():
+                    if any(palabra in nombre_alimento for palabra in palabras_clave):
+                        cantidad = datos["cantidad"]
+                        unidad = datos["unidad"]
+                        alimentos_por_categoria[categoria].append({
+                            "nombre": nombre_alimento.title(),
+                            "cantidad": cantidad,
+                            "unidad": unidad
+                        })
+                        categorizado = True
+                        break
+                
+                if not categorizado:
+                    cantidad = datos["cantidad"]
+                    unidad = datos["unidad"]
+                    alimentos_por_categoria["Otros"].append({
+                        "nombre": nombre_alimento.title(),
+                        "cantidad": cantidad,
+                        "unidad": unidad
+                    })
+            
+            # Imprimir lista organizada
+            for categoria in ["Proteínas", "Lácteos", "Carbohidratos", "Frutas", "Verduras", "Grasas Saludables", "Otros"]:
+                items = alimentos_por_categoria[categoria]
+                if items:
+                    plan_text += f"\n📦 {categoria.upper()}:\n"
+                    for item in items:
+                        cantidad_fmt = f"{item['cantidad']:.0f}" if item['cantidad'] == int(item['cantidad']) else f"{item['cantidad']:.1f}"
+                        plan_text += f"   ☑️ {item['nombre']}: {cantidad_fmt}{item['unidad']}\n"
+            
+            plan_text += """
+
+💡 CONSEJOS PARA LA COMPRA:
+   • Compra proteínas en paquetes grandes para ahorrar
+   • Congela lo que no uses en 2-3 días
+   • Lava y corta verduras el día de compra (meal prep)
+   • Opta por congelados si es más económico (brócoli, fresas, etc.)
+"""
+        
         plan_text += """
 
 ═══════════════════════════════════════════════════════════════════════════
