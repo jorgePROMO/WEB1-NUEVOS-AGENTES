@@ -4607,19 +4607,48 @@ def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
         
         adapted["tiempo_disponible_semanal"] = f"{adapted['dias_semana']} días/semana, {adapted['minutos_por_sesion']} min/sesión"
         
-        # === HORARIO ===
+        # === HORARIO DE ENTRENAMIENTO ===
         horario_entrenar = questionnaire_data.get("entrena_manana_tarde", "")
         if horario_entrenar:
             if "mañana" in horario_entrenar.lower():
                 adapted["horario_preferido"] = "mañana"
+                adapted["horario_entrenamiento"] = "mañana"  # Para agentes de nutrición
+                adapted["hora_entreno"] = "08:00"  # Horario típico mañana
             elif "tarde" in horario_entrenar.lower():
                 adapted["horario_preferido"] = "tarde"
+                adapted["horario_entrenamiento"] = "tarde"
+                adapted["hora_entreno"] = "18:00"  # Horario típico tarde
             elif "noche" in horario_entrenar.lower():
                 adapted["horario_preferido"] = "noche"
+                adapted["horario_entrenamiento"] = "noche"
+                adapted["hora_entreno"] = "20:00"  # Horario típico noche
             else:
                 adapted["horario_preferido"] = horario_entrenar
+                adapted["horario_entrenamiento"] = horario_entrenar
+                adapted["hora_entreno"] = "18:00"  # Default
         else:
             adapted["horario_preferido"] = "tarde"
+            adapted["horario_entrenamiento"] = "tarde"
+            adapted["hora_entreno"] = "18:00"
+        
+        # === HORARIOS DE COMIDAS ===
+        # Buscar horarios específicos en el cuestionario o usar defaults según horario de entreno
+        adapted["horario_desayuno"] = questionnaire_data.get("horario_desayuno", "08:00")
+        adapted["horario_comida"] = questionnaire_data.get("horario_comida", "14:00")
+        adapted["horario_cena"] = questionnaire_data.get("horario_cena", "21:00")
+        
+        # Número de comidas al día
+        num_comidas = questionnaire_data.get("comidas_dia", "") or questionnaire_data.get("numero_comidas", "")
+        try:
+            if isinstance(num_comidas, str):
+                # Extraer número de texto como "4 comidas" o "4"
+                import re
+                match = re.search(r'(\d+)', num_comidas)
+                adapted["numero_comidas"] = int(match.group(1)) if match else 4
+            else:
+                adapted["numero_comidas"] = int(num_comidas) if num_comidas else 4
+        except (ValueError, TypeError):
+            adapted["numero_comidas"] = 4
         
         # === EQUIPO DISPONIBLE ===
         gimnasio_campo = questionnaire_data.get("gimnasio", "")
