@@ -5570,8 +5570,6 @@ SEÑALES DE ALERTA:
 Dudas o consultas: Contacta a tu entrenador
 
 ¡Éxito en tu entrenamiento!
-
-═════════════════════════════════════════════════════════════════════════
 """
         
         return plan_text
