@@ -5967,7 +5967,18 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
         from weasyprint import HTML
         import io
         
-        plan_content = plan.get("plan_final", "")
+        # FIX: Usar plan_text en lugar de plan_final
+        plan_content = plan.get("plan_text", "")
+        
+        # Fallback a plan_final si no existe plan_text
+        if not plan_content:
+            plan_content = plan.get("plan_final", "")
+            if isinstance(plan_content, dict):
+                plan_content = str(plan_content)
+        
+        if not isinstance(plan_content, str):
+            plan_content = str(plan_content)
+        
         month = plan.get("month")
         year = plan.get("year")
         
