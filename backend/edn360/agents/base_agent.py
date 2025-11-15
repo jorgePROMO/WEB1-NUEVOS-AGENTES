@@ -159,7 +159,7 @@ Procesa estos datos siguiendo las instrucciones del sistema y genera la salida e
     def _extract_json_from_response(self, response: str) -> Dict[str, Any]:
         """
         Extrae JSON de la respuesta del LLM
-        Maneja casos donde el JSON está envuelto en markdown
+        Maneja casos donde el JSON está envuelto en markdown o texto adicional
         
         Args:
             response: Respuesta del LLM
@@ -167,33 +167,53 @@ Procesa estos datos siguiendo las instrucciones del sistema y genera la salida e
         Returns:
             Dict con el JSON parseado
         """
+        import re
+        
         # Intentar parsear directamente
         try:
-            return json.loads(response)
+            return json.loads(response.strip())
         except json.JSONDecodeError:
             pass
         
-        # Buscar JSON en bloques de código markdown
-        import re
+        # Buscar JSON en bloques de código markdown (```json ... ``` o ``` ... ```)
         json_pattern = r'```(?:json)?\s*(\{.*?\})\s*```'
         matches = re.findall(json_pattern, response, re.DOTALL)
         
         if matches:
-            try:
-                return json.loads(matches[0])
-            except json.JSONDecodeError:
-                pass
+            # Intentar con cada match (tomar el más largo, que suele ser el completo)
+            matches_sorted = sorted(matches, key=len, reverse=True)
+            for match in matches_sorted:
+                try:
+                    return json.loads(match)
+                except json.JSONDecodeError:
+                    continue
         
-        # Buscar JSON sin bloques de código
-        json_pattern = r'\{.*\}'
-        matches = re.findall(json_pattern, response, re.DOTALL)
+        # Buscar JSON sin bloques de código (buscar el objeto más grande y anidado)
+        # Usar una estrategia más sofisticada: encontrar { y su } correspondiente
+        stack = []
+        start_idx = -1
+        end_idx = -1
         
-        if matches:
-            try:
-                return json.loads(matches[0])
-            except json.JSONDecodeError:
-                pass
+        for i, char in enumerate(response):
+            if char == '{':
+                if not stack:
+                    start_idx = i
+                stack.append(char)
+            elif char == '}':
+                if stack:
+                    stack.pop()
+                    if not stack:  # Encontramos un JSON completo
+                        end_idx = i + 1
+                        # Intentar parsear este JSON
+                        try:
+                            json_str = response[start_idx:end_idx]
+                            return json.loads(json_str)
+                        except json.JSONDecodeError:
+                            continue
         
+        # Si nada funcionó, registrar el error con más detalle
+        logger.error(f"❌ No se pudo extraer JSON de la respuesta de {self.agent_id}")
+        logger.error(f"Respuesta completa (primeros 1000 chars): {response[:1000]}")
         raise ValueError(f"No se pudo extraer JSON válido de la respuesta del agente {self.agent_id}")
     
     def log_execution(self, input_data: Dict[str, Any], output_data: Dict[str, Any]):
