@@ -351,6 +351,25 @@ class EDN360Orchestrator:
             
             if result["success"]:
                 outputs[agent.agent_id] = result["output"]
+                
+                # VALIDACIÓN CRÍTICA: N5 debe contener distribuciones con pre/post entreno
+                if agent.agent_id == "N5":
+                    n5_output = result["output"]
+                    dist_a = n5_output.get("distribucion_dia_A", {})
+                    dist_m = n5_output.get("distribucion_dia_M", {})
+                    
+                    # Verificar que días A/M tienen comidas de entreno
+                    comidas_a = dist_a.get("comidas", [])
+                    comidas_m = dist_m.get("comidas", [])
+                    
+                    has_pre_post_a = any("pre" in str(c.get("nombre", "")).lower() for c in comidas_a)
+                    has_pre_post_m = any("pre" in str(c.get("nombre", "")).lower() for c in comidas_m)
+                    
+                    if not has_pre_post_a and not has_pre_post_m:
+                        logger.warning(f"⚠️ N5 no generó comidas Pre/Post-Entreno. Verificar horario_entrenamiento en cuestionario.")
+                    else:
+                        logger.info(f"  ✅ N5 validado: Contiene comidas Pre/Post-Entreno")
+                
                 logger.info(f"  ✅ {agent.agent_id} completado")
             else:
                 logger.error(f"  ❌ {agent.agent_id} falló")
