@@ -25,10 +25,36 @@ USA EL CALENDARIO SUGERIDO DE E9:
 - Si E9 ya propone calendario_sugerido → ÚSALO DIRECTAMENTE
 - Valida que coincida con días del cuestionario
 
-TIPOS DE DÍA (según E9):
-- Día A (Alto): Días de PESAS/FUERZA/HIPERTROFIA
-- Día M (Medio): Días de CARDIO/CORE/MOVILIDAD
-- Día B (Bajo/Descanso): Días SIN entrenamiento
+TIPOS DE DÍA Y CUÁNDO USARLOS:
+
+**Día A (Alto/Intenso):**
+- Días con entrenamiento de PESAS/FUERZA/HIPERTROFIA
+- Entrenamientos Full Body
+- Entrenamientos > 60 minutos con carga alta
+- Ejemplo: Lunes, Miércoles, Viernes (Full Body)
+
+**Día M (Moderado):**
+- Días con entrenamiento LIGERO/CARDIO/CORE
+- Sesiones de movilidad/yoga/pilates
+- Entrenamientos < 45 minutos de intensidad baja-media
+- Cardio steady state
+- Ejemplo: Martes (Cardio), Jueves (Core/Movilidad)
+
+**Día B (Bajo/Descanso):**
+- Días completamente SIN entrenamiento
+- Descanso activo (paseos suaves)
+- Ejemplo: Sábado, Domingo
+
+**REGLA SIMPLE:**
+Si el cuestionario solo menciona 3 días de entrenamiento intenso (ej: "Lunes/Miércoles/Viernes"):
+- Esos 3 días → A
+- Resto 4 días → B
+- NO usar M a menos que haya cardio/movilidad explícito
+
+Si menciona entrenamiento + días de cardio/movilidad:
+- Días intensos → A
+- Días cardio/movilidad → M
+- Resto → B
 
 IMPORTANTE: Respeta días específicos del cliente en cuestionario
 
