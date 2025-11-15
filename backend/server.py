@@ -5286,9 +5286,9 @@ PROTOCOLO DE ADHERENCIA Y SOSTENIBILIDAD
         if menu_semanal:
             plan_text += """
 
-═══════════════════════════════════════════════════════════════════════════
+─────────────────────────────────────────────────────────────────────────
 
-🛒 LISTA DE LA COMPRA SEMANAL
+LISTA DE LA COMPRA SEMANAL
 
 """
             # Recopilar todos los alimentos de la semana
