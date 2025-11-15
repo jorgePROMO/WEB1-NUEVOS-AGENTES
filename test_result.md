@@ -1005,3 +1005,46 @@ agent_communication:
     - agent: "main"
       message: "✅ FORMATO TOTALMENTE LIMPIO Y COMPLETO: Usuario reportó que después de la primera humanización: 1) El entrenamiento seguía viéndose raro con las líneas dobles (═════), 2) En el menú semanal de nutrición solo aparecía el PRIMER alimento de cada comida, faltaban todos los demás (ej: solo mostraba '50g Avena' cuando la comida completa tenía Avena + Banana + Claras). SOLUCIÓN COMPLETA: 1) ELIMINADAS todas las líneas dobles (═════) de inicio y fin en ambos documentos - ahora formato completamente limpio sin decoraciones ASCII, 2) ARREGLADO resumen del menú semanal - modificado código (líneas 5089-5110) para iterar sobre TODOS los alimentos de cada comida y mostrarlos con bullets indentados. Ahora muestra: '07:00 Pre-Entreno:\n    • 50g Avena\n    • 1 unidad Banana\n    • 4 unidades Claras de huevo'. El detalle completo más abajo sigue igual. Backend reiniciado. Usuario debe probar generando un nuevo plan y enviándolo por email para verificar que el formato sea limpio, minimalista, profesional y COMPLETO con todos los alimentos visibles en el resumen."
 
+
+frontend:
+  - task: "Logo Jorge Calcerrada - Implementación Completa"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/Header.jsx, Footer.jsx, EDN360Section.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ LOGO IMPLEMENTADO EN TODOS LOS SITIOS - Usuario compartió 2 versiones del logo (con fondo azul y sin fondo transparente). IMPLEMENTACIÓN: 1) Logos descargados y guardados en /app/frontend/public/ como logo-con-fondo.png y logo-sin-fondo.png, 2) HEADER: Reemplazado texto 'Jorge Calcerrada' por logo sin fondo (altura 12-16 según pantalla), 3) FOOTER: Reemplazado título por logo sin fondo (altura 20), 4) NUEVA SECCIÓN E.D.N.360™: Logo incluido en encabezado de la sección, 5) EMAILS: Logo añadido al header de emails de entrenamiento y nutrición (usando logo-sin-fondo.png desde servidor), 6) PDFs: Logos disponibles para implementación en PDFs. Logo sin fondo elegido para todos los sitios por mejor integración visual. READY FOR TESTING."
+
+  - task: "Sección E.D.N.360™ en Landing Page"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/EDN360Section.jsx, /app/frontend/src/pages/LandingPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ SECCIÓN E.D.N.360™ CREADA - Usuario solicitó explicar el Sistema E.D.N.360™ en la web al final, después de testimonios, con CTA que lleve a /trabaja-conmigo (mismo que 'Trabaja con mi equipo'). IMPLEMENTACIÓN COMPLETA: 1) Creado componente EDN360Section.jsx con diseño premium usando gradientes verde-azul, 2) Estructura del contenido: Logo Jorge Calcerrada en encabezado, título 'SISTEMA E.D.N.360™', problema que resuelve, explicación de NO es otro plan más, los 3 pilares (E-D-N) en cards con gradientes distintos (verde/azul/morado), sección '360™' explicando visión completa, tabla comparativa de ventajas del sistema, resultados esperados con checkmarks, frase resumen en banner destacado, CTA final 'TRABAJA CON MI EQUIPO' que navega a /trabaja-conmigo, 3) Añadida sección a LandingPage.jsx DESPUÉS de TestimonialsSection, antes de FinalCTA, 4) Lazy loading implementado para optimización. Diseño profesional con cards hover, sombras, transiciones suaves. READY FOR TESTING - verificar que la sección aparezca después de testimonios y CTA funcione correctamente."
+
+backend:
+  - task: "Logo en Emails de Planes"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ LOGO AÑADIDO A EMAILS - Modificadas funciones send_training_email() (línea 6220) y send_nutrition_email() (línea 4256) para incluir logo en el header de los emails. Logo se carga desde {request.base_url._url}logo-sin-fondo.png con altura de 80px, centrado, con margin bottom de 20px. Logo aparece ANTES del título del plan en ambos emails. Backend reiniciado exitosamente. READY FOR TESTING - enviar plan de entrenamiento y nutrición por email para verificar que el logo aparezca correctamente en el encabezado."
+
+agent_communication:
+    - agent: "main"
+      message: "✅ LOGO + SECCIÓN E.D.N.360™ IMPLEMENTADOS COMPLETAMENTE: Usuario solicitó 2 cosas: 1) Incluir logo en todos los sitios que proceda, 2) Añadir sección explicativa del Sistema E.D.N.360™ al final de la web (después de testimonios) con CTA a /trabaja-conmigo. TRABAJO REALIZADO: 1) LOGOS: Descargados ambos logos (con fondo y sin fondo) a /public/, implementado logo sin fondo en: Header de landing page (reemplazando texto), Footer de landing page, Emails de entrenamiento (en header HTML), Emails de nutrición (en header HTML), Nueva sección E.D.N.360™. 2) SECCIÓN E.D.N.360™: Creado componente completo EDN360Section.jsx con diseño premium profesional, incluye: Logo en encabezado, título destacado, explicación del problema, los 3 pilares (E-D-N) en cards con gradientes, tabla de ventajas, lista de resultados esperados, frase resumen, CTA final 'TRABAJA CON MI EQUIPO' que navega a /trabaja-conmigo. Sección añadida a LandingPage.jsx después de TestimonialsSection. Backend reiniciado. Usuario debe verificar: 1) Logo aparece en header y footer de landing page, 2) Nueva sección E.D.N.360™ aparece después de testimonios, 3) CTA de la sección lleva a /trabaja-conmigo, 4) Enviar email de entrenamiento y verificar logo en header, 5) Enviar email de nutrición y verificar logo en header."
+
