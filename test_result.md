@@ -1210,3 +1210,34 @@ agent_communication:
     - agent: "main"
       message: "✅ PROBLEMA GENERACIÓN CON SEGUIMIENTO RESUELTO: Usuario frustrado - seleccionó seguimiento como cuestionario base + plan previo, intentó generar nutrición pero error 'Cuestionario no encontrado'. Invoqué troubleshoot_agent quien identificó inmediatamente: Endpoint nutrición (línea 3643) buscaba solo en nutrition_questionnaire_submissions pero seguimientos están en follow_up_submissions. FIX: Modificado admin_generate_nutrition_plan con búsqueda dual: Primero busca en cuestionarios nutrición, si falla busca en follow_ups. Si es followup: 1) Obtiene cuestionario inicial del usuario para datos base, 2) Crea context_data con respuestas del followup y AI analysis, 3) Usa cuestionario inicial como base, 4) Merge: combina datos inicial con actualizaciones followup (merged_data = questionnaire_data.copy() + update(followup_responses)), 5) Pasa datos combinados a _adapt_questionnaire_for_edn360. Esto garantiza que E.D.N.360 reciba datos completos: base del inicial + cambios del seguimiento. Patrón copiado de endpoint entrenamiento que ya lo hacía bien. Backend reiniciado. Usuario debe probar: 1) Seleccionar seguimiento como cuestionario base, 2) Seleccionar plan previo (opcional), 3) Generar plan nutrición, 4) Verificar que genera exitosamente sin error 'Cuestionario no encontrado'."
 
+
+backend:
+  - task: "Fix DEFINITIVO ObjectId - Conversión en Ambos Endpoints"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "troubleshoot + main"
+          comment: "✅ PROBLEMA OBJECTID RESUELTO - troubleshoot_agent identificó causa raíz: MongoDB _id fields son ObjectId pero endpoints reciben string IDs del frontend y fallan en comparación directa. Los GET endpoints funcionan porque FastAPI auto-convierte ObjectId a string en response, pero POST endpoints fallan porque buscan con string en lugar de ObjectId. SOLUCIÓN IMPLEMENTADA: 1) Añadido import: from bson import ObjectId (línea 6), 2) ENDPOINT NUTRICIÓN (admin_generate_nutrition_plan línea 3643): Convertir submission_id a ObjectId en ambas búsquedas (nutrition_questionnaire_submissions línea 3666 y follow_up_submissions línea 3672), también en update_one línea 3700, 3) ENDPOINT ENTRENAMIENTO (admin_generate_training_plan línea 5642): Convertir source_id a ObjectId en ambos source_types (initial línea 5665 y followup línea 5678), 4) Usado patrón seguro: ObjectId(id) if ObjectId.is_valid(id) else id para evitar errores si id ya es ObjectId. Backend reiniciado. READY FOR TESTING - generar planes con cuestionarios de seguimiento debe funcionar sin error 'Cuestionario no encontrado'."
+
+frontend:
+  - task: "Auto-detección de Followup en generateTrainingPlan"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ AUTO-DETECCIÓN IMPLEMENTADA - Problema: Cuando usuario selecciona seguimiento del dropdown de cuestionario base y usa botón 'Generar Plan de Entrenamiento', función siempre enviaba source_type='initial' incluso para followups. SOLUCIÓN: Modificada generateTrainingPlan (línea 233) para auto-detectar tipo de cuestionario: 1) Si sourceType no se especifica o es 'initial', busca el cuestionario seleccionado en availableQuestionnaires, 2) Verifica si tiene type='followup', 3) Si es followup, cambia actualSourceType a 'followup', sino usa 'initial', 4) Envía actualSourceType correcto al backend. Variables actualSourceType y actualSourceId creadas para no modificar parámetros originales. También actualizado finally block para usar actualSourceType. Esto permite que los selectores funcionen correctamente detectando automáticamente followups. READY FOR TESTING - seleccionar seguimiento en dropdown debe enviar source_type='followup' correctamente."
+
+agent_communication:
+    - agent: "main"
+      message: "✅ SOLUCIÓN COMPLETA OBJECTID + AUTO-DETECCIÓN: Usuario reportó error 'Cuestionario no encontrado' en AMBOS endpoints (entrenamiento y nutrición) al usar seguimientos. Trabajé toda la noche en esto. troubleshoot_agent identificó: MongoDB ObjectId vs string mismatch - GET endpoints funcionan (auto-conversión) pero POST endpoints fallan al buscar con string. SOLUCIÓN BACKEND: Añadido import ObjectId, convertir todos los IDs en búsquedas de DB usando ObjectId(id) if ObjectId.is_valid(id) else id en: admin_generate_nutrition_plan (líneas 3666, 3672, 3700), admin_generate_training_plan (líneas 5665, 5678). SOLUCIÓN FRONTEND: Modificada generateTrainingPlan para auto-detectar si cuestionario seleccionado es followup mirando availableQuestionnaires array y field 'type', envía source_type correcto al backend. Backend reiniciado. Usuario debe probar AMBOS: 1) ENTRENAMIENTO: seleccionar seguimiento en dropdown cuestionario base → generar → debe funcionar, 2) NUTRICIÓN: seleccionar seguimiento en dropdown cuestionario base → generar → debe funcionar. Sin error 'Cuestionario no encontrado'."
+
