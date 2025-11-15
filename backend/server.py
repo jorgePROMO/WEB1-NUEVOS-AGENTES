@@ -5507,32 +5507,31 @@ SESIONES DE ENTRENAMIENTO DETALLADAS
         if sesiones:
             for sesion in sesiones:
                 plan_text += f"""
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🗓️ DÍA {sesion.get('dia', 1)} - {sesion.get('nombre', 'Sesión').upper()}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DÍA {sesion.get('dia', 1)} - {sesion.get('nombre', 'Sesión').upper()}
+─────────────────────────────────────────────────────────────────────────
 
-⏱️ Duración estimada: {sesion.get('duracion_min', 50)} minutos
+Duración estimada: {sesion.get('duracion_min', 50)} minutos
 
 EJERCICIOS:
 """
                 
                 for idx, ejercicio in enumerate(sesion.get('ejercicios', []), 1):
                     plan_text += f"""
-{idx}. 💪 {ejercicio.get('nombre', 'Ejercicio').upper()}
-   • Series: {ejercicio.get('series', 3)}
-   • Repeticiones: {ejercicio.get('reps', '10-12')}
-   • RIR (reserva): {ejercicio.get('rir', '3')} reps antes del fallo
-   • Descanso: {ejercicio.get('descanso', 90)} segundos
+{idx}. {ejercicio.get('nombre', 'Ejercicio').upper()}
+• Series: {ejercicio.get('series', 3)}
+• Repeticiones: {ejercicio.get('reps', '10-12')}
+• RIR (reserva): {ejercicio.get('rir', '3')} reps antes del fallo
+• Descanso: {ejercicio.get('descanso', 90)} segundos
 """
         else:
-            plan_text += "\n⚠️ No se generaron sesiones detalladas. Contacta a tu entrenador.\n"
+            plan_text += "\nNo se generaron sesiones detalladas. Contacta a tu entrenador.\n"
         
         # Añadir volumen por grupo muscular
         plan_text += """
 
-═══════════════════════════════════════════════════════════════════════════
+─────────────────────────────────────────────────────────────────────────
 
-📊 VOLUMEN DE ENTRENAMIENTO POR GRUPO MUSCULAR (Series/Semana)
+VOLUMEN DE ENTRENAMIENTO POR GRUPO MUSCULAR (Series/Semana)
 
 """
         
