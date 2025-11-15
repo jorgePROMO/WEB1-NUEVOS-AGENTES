@@ -5541,41 +5541,41 @@ VOLUMEN DE ENTRENAMIENTO POR GRUPO MUSCULAR (Series/Semana)
         # Añadir instrucciones finales
         plan_text += """
 
-═══════════════════════════════════════════════════════════════════════════
+─────────────────────────────────────────────────────────────────────────
 
-📝 INSTRUCCIONES IMPORTANTES
+INSTRUCCIONES IMPORTANTES
 
-✅ PROGRESIÓN:
-   - Aumenta el peso cuando puedas completar todas las series en el rango 
-     alto de repeticiones con el RIR objetivo
-   - Prioriza SIEMPRE la técnica correcta sobre el peso
+PROGRESIÓN:
+- Aumenta el peso cuando puedas completar todas las series en el rango 
+  alto de repeticiones con el RIR objetivo
+- Prioriza SIEMPRE la técnica correcta sobre el peso
 
-✅ RIR (Reps In Reserve):
-   - RIR 5 = Podrías hacer 5 repeticiones más
-   - RIR 3 = Podrías hacer 3 repeticiones más
-   - RIR 1 = Podrías hacer solo 1 repetición más
+RIR (Reps In Reserve):
+- RIR 5 = Podrías hacer 5 repeticiones más
+- RIR 3 = Podrías hacer 3 repeticiones más
+- RIR 1 = Podrías hacer solo 1 repetición más
 
-✅ DESCANSOS:
-   - Respeta los tiempos de descanso indicados
-   - En ejercicios pesados (multiarticulares) puede necesitar hasta 3 min
+DESCANSOS:
+- Respeta los tiempos de descanso indicados
+- En ejercicios pesados (multiarticulares) puede necesitar hasta 3 min
 
-✅ RECUPERACIÓN:
-   - Duerme al menos 7-8 horas diarias
-   - Hidrátate adecuadamente (2-3 litros/día)
-   - Alimentación alineada con tu plan nutricional
+RECUPERACIÓN:
+- Duerme al menos 7-8 horas diarias
+- Hidrátate adecuadamente (2-3 litros/día)
+- Alimentación alineada con tu plan nutricional
 
-⚠️ SEÑALES DE ALERTA:
-   - Dolor articular persistente → PARA y consulta
-   - Fatiga excesiva → Reduce volumen/intensidad
-   - Falta de progreso 2+ semanas → Evaluar con entrenador
+SEÑALES DE ALERTA:
+- Dolor articular persistente → PARA y consulta
+- Fatiga excesiva → Reduce volumen/intensidad
+- Falta de progreso 2+ semanas → Evaluar con entrenador
 
-═══════════════════════════════════════════════════════════════════════════
+─────────────────────────────────────────────────────────────────────────
 
-💬 DUDAS O CONSULTAS: Contacta a tu entrenador
+Dudas o consultas: Contacta a tu entrenador
 
-¡ÉXITO EN TU ENTRENAMIENTO! 💪
+¡Éxito en tu entrenamiento!
 
-═══════════════════════════════════════════════════════════════════════════
+═════════════════════════════════════════════════════════════════════════
 """
         
         return plan_text
