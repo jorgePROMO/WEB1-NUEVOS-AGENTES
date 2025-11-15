@@ -6312,13 +6312,16 @@ async def get_training_whatsapp_link(user_id: str, plan_id: str = None, request:
     try:
         import urllib.parse
         
-        # Contenido del plan (limitado para WhatsApp)
-        plan_content = plan.get("plan_final", "")
+        # FIX: Usar plan_text (texto profesional) en lugar de plan_final (JSON)
+        plan_content = plan.get("plan_text", "")
         
-        # FIX: Asegurar que plan_content es string
-        if isinstance(plan_content, dict):
-            plan_content = plan_content.get("text", str(plan_content))
-        elif not isinstance(plan_content, str):
+        # Fallback a plan_final si no existe plan_text (planes antiguos)
+        if not plan_content:
+            plan_content = plan.get("plan_final", "")
+            if isinstance(plan_content, dict):
+                plan_content = str(plan_content)
+        
+        if not isinstance(plan_content, str):
             plan_content = str(plan_content)
         
         month = plan.get("month")
