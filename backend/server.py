@@ -5152,35 +5152,36 @@ MENÚ SEMANAL
             menus = n6_menus.get("menus", {})
             plan_text += """
 
-═══════════════════════════════════════════════════════════════════════════
+─────────────────────────────────────────────────────────────────────────
 
-🍴 EJEMPLOS DE MENÚS POR TIPO DE DÍA
+EJEMPLOS DE MENÚS POR TIPO DE DÍA
 
 """
             for tipo, menu_list in menus.items():
                 if menu_list and len(menu_list) > 0:
                     emoji = "🔥" if tipo == "A" else ("🌙" if tipo == "B" else "⚖️")
-                    plan_text += f"\n{emoji} DÍAS TIPO {tipo}:\n"
+                    plan_text += f"\n{emoji} DÍAS TIPO {tipo}:\n\n"
                     for item in menu_list[:5]:  # Primeros 5 ejemplos
                         comida_nombre = item.get('comida', 'Comida')
                         alimentos = item.get('alimentos', [])
-                        plan_text += f"\n   {comida_nombre}:\n"
+                        plan_text += f"{comida_nombre}:\n"
                         for alimento in alimentos:
                             if isinstance(alimento, dict):
                                 nombre = alimento.get("nombre", "")
                                 cantidad = alimento.get("cantidad", "")
-                                plan_text += f"      • {cantidad} {nombre}\n"
+                                plan_text += f"  • {cantidad} {nombre}\n"
                             else:
-                                plan_text += f"      • {alimento}\n"
+                                plan_text += f"  • {alimento}\n"
+                        plan_text += "\n"
         
         # Añadir equivalencias/swaps si existen
         equivalencias = n6_menus.get("equivalencias", {})
         if equivalencias:
             plan_text += """
 
-═══════════════════════════════════════════════════════════════════════════
+─────────────────────────────────────────────────────────────────────────
 
-🔄 EQUIVALENCIAS DE ALIMENTOS (OPCIONES DE REEMPLAZO)
+EQUIVALENCIAS DE ALIMENTOS (Opciones de reemplazo)
 
 """
             for categoria, swaps in equivalencias.items():
@@ -5191,16 +5192,16 @@ MENÚ SEMANAL
                         alimento_nombre = alimento_orig.replace("_", " ").title()
                         if isinstance(alternativas, list):
                             alts_str = ", ".join(alternativas)
-                            plan_text += f"   • {alimento_nombre} → {alts_str}\n"
+                            plan_text += f"• {alimento_nombre} → {alts_str}\n"
                         else:
-                            plan_text += f"   • {alimento_nombre} → {alternativas}\n"
+                            plan_text += f"• {alimento_nombre} → {alternativas}\n"
         
         # Añadir protocolos de adherencia completos
         plan_text += """
 
-═══════════════════════════════════════════════════════════════════════════
+─────────────────────────────────────────────────────────────────────────
 
-📝 PROTOCOLO DE ADHERENCIA Y SOSTENIBILIDAD
+PROTOCOLO DE ADHERENCIA Y SOSTENIBILIDAD
 
 """
         
