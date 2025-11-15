@@ -3644,7 +3644,8 @@ async def submit_nutrition_questionnaire(questionnaire: NutritionQuestionnaireSu
 async def admin_generate_nutrition_plan(
     user_id: str, 
     submission_id: str,  # Cuestionario a usar
-    training_plan_id: str = None,  # NUEVO: Plan de entrenamiento de referencia
+    training_plan_id: str = None,  # Plan de entrenamiento de referencia
+    previous_nutrition_plan_id: str = None,  # NUEVO: Plan nutricional previo para progresión
     regenerate: bool = False, 
     request: Request = None
 ):
@@ -3655,6 +3656,7 @@ async def admin_generate_nutrition_plan(
     - submission_id: ID del cuestionario (inicial o seguimiento) a usar
     - training_plan_id: (Opcional) ID del plan de entrenamiento para sincronizar. 
                         Si no se especifica, usa el último generado.
+    - previous_nutrition_plan_id: (Opcional) ID del plan nutricional previo para progresión
     """
     await require_admin(request)
     
