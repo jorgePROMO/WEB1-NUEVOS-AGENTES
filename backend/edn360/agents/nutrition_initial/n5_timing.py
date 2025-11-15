@@ -87,15 +87,21 @@ N2 genera tres sets diferentes:
 - `macros_dia_B`: Para días descanso (ej: 187p, 159c, 68g = 1997 kcal)
 
 **Días A (usar macros_dia_A de N2):**
-Distribuir según % de calorías:
-• Pre-entreno: 18% kcal → Calcular P/C/G proporcional
-• Post-entreno: 25% kcal → Más carbos, más proteína
+Distribuir optimizando rendimiento y digestión:
+
+• Pre-entreno: 17% kcal → BAJO en grasas (<8g), medio carbos, proteína moderada
+• Post-entreno: 26% kcal → BAJO en grasas (<10g), ALTO carbos, ALTA proteína
 • Media Mañana: 12% kcal → Snack ligero
-• Comida: 25% kcal → Balanceado
-• Merienda: 10% kcal → Snack ligero
-• Cena: 10% kcal → Bajo carbos
+• Comida: 24% kcal → Balanceado
+• Merienda: 9% kcal → Snack ligero
+• Cena: 12% kcal → ALTA proteína (25-30g), bajo carbos, grasas saludables
 
 TOTAL: 100% = macros_dia_A completos
+
+**AJUSTE FINO DE GRASAS:**
+- Pre/Post: Minimizar grasas (digestión rápida)
+- Media mañana, Comida, Merienda, Cena: Compensar grasas totales
+- Priorizar grasas en comidas alejadas del entreno
 
 **Días M (usar macros_dia_M de N2):**
 Misma distribución de % pero aplicado a macros_dia_M (que tiene menos carbos que A)
