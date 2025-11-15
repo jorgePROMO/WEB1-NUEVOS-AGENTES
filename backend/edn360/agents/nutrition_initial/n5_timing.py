@@ -140,42 +140,56 @@ CADA comida pre/post debe incluir:
 
 {
   "status": "ok",
-  "horario_entrenamiento": "mañana|tarde|noche",
+  "horario_entrenamiento": "mañana",
   "hora_entreno_detectada": "08:00",
   "numero_comidas_base": 6,
+  
   "distribucion_dia_A": {
+    "tipo": "entreno_intenso",
+    "kcal_total": 2350,
     "numero_comidas": 6,
     "comidas": [
-      {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1 hora antes", "proteinas_g": 30, "carbohidratos_g": 45, "grasas_g": 8},
-      {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después", "proteinas_g": 40, "carbohidratos_g": 65, "grasas_g": 6},
-      {"nombre": "Media Mañana", "hora": "11:45", "proteinas_g": 20, "carbohidratos_g": 25, "grasas_g": 5},
-      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 40, "carbohidratos_g": 55, "grasas_g": 15},
-      {"nombre": "Merienda", "hora": "17:30", "proteinas_g": 18, "carbohidratos_g": 20, "grasas_g": 4},
-      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 32, "carbohidratos_g": 40, "grasas_g": 22}
+      {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1 hora antes", "proteinas_g": 34, "carbohidratos_g": 44, "grasas_g": 12},
+      {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después", "proteinas_g": 47, "carbohidratos_g": 62, "grasas_g": 17},
+      {"nombre": "Media Mañana", "hora": "11:45", "proteinas_g": 22, "carbohidratos_g": 30, "grasas_g": 8},
+      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 47, "carbohidratos_g": 62, "grasas_g": 17},
+      {"nombre": "Merienda", "hora": "17:30", "proteinas_g": 19, "carbohidratos_g": 25, "grasas_g": 7},
+      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 19, "carbohidratos_g": 25, "grasas_g": 7}
     ]
   },
+  
   "distribucion_dia_M": {
+    "tipo": "entreno_moderado",
+    "kcal_total": 2173,
     "numero_comidas": 6,
     "comidas": [
-      {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1 hora antes", "proteinas_g": 30, "carbohidratos_g": 45, "grasas_g": 8},
-      {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después", "proteinas_g": 40, "carbohidratos_g": 65, "grasas_g": 6},
-      {"nombre": "Media Mañana", "hora": "11:45", "proteinas_g": 20, "carbohidratos_g": 25, "grasas_g": 5},
-      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 40, "carbohidratos_g": 55, "grasas_g": 15},
-      {"nombre": "Merienda", "hora": "17:30", "proteinas_g": 18, "carbohidratos_g": 20, "grasas_g": 4},
-      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 32, "carbohidratos_g": 40, "grasas_g": 22}
+      {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1 hora antes", "proteinas_g": 34, "carbohidratos_g": 37, "grasas_g": 12},
+      {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después", "proteinas_g": 47, "carbohidratos_g": 51, "grasas_g": 17},
+      {"nombre": "Media Mañana", "hora": "11:45", "proteinas_g": 22, "carbohidratos_g": 24, "grasas_g": 8},
+      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 47, "carbohidratos_g": 51, "grasas_g": 17},
+      {"nombre": "Merienda", "hora": "17:30", "proteinas_g": 19, "carbohidratos_g": 20, "grasas_g": 7},
+      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 19, "carbohidratos_g": 20, "grasas_g": 7}
     ]
   },
+  
   "distribucion_dia_B": {
+    "tipo": "descanso",
+    "kcal_total": 1997,
     "numero_comidas": 5,
     "comidas": [
-      {"nombre": "Desayuno", "hora": "08:00", "proteinas_g": 40, "carbohidratos_g": 50, "grasas_g": 18},
-      {"nombre": "Media Mañana", "hora": "11:00", "proteinas_g": 22, "carbohidratos_g": 28, "grasas_g": 8},
-      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 45, "carbohidratos_g": 60, "grasas_g": 20},
-      {"nombre": "Merienda", "hora": "17:30", "proteinas_g": 22, "carbohidratos_g": 28, "grasas_g": 8},
-      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 41, "carbohidratos_g": 54, "grasas_g": 16}
+      {"nombre": "Desayuno", "hora": "08:00", "proteinas_g": 47, "carbohidratos_g": 40, "grasas_g": 17},
+      {"nombre": "Media Mañana", "hora": "11:00", "proteinas_g": 28, "carbohidratos_g": 24, "grasas_g": 10},
+      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 56, "carbohidratos_g": 48, "grasas_g": 20},
+      {"nombre": "Merienda", "hora": "17:30", "proteinas_g": 28, "carbohidratos_g": 24, "grasas_g": 10},
+      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 28, "carbohidratos_g": 24, "grasas_g": 11}
     ]
   }
 }
+
+**VERIFICACIÓN:**
+Día A: 34+47+22+47+19+19 = 187g prot ✅ | 44+62+30+62+25+25 = 248g carbos ✅ | 12+17+8+17+7+7 = 68g grasas ✅
+Día M: 34+47+22+47+19+19 = 187g prot ✅ | 37+51+24+51+20+20 = 203g carbos ✅ | 12+17+8+17+7+7 = 68g grasas ✅
+Día B: 47+28+56+28+28 = 187g prot ✅ | 40+24+48+24+24 = 160g carbos ✅ | 17+10+20+10+11 = 68g grasas ✅
 
 CRÍTICO: 
 ✅ SIEMPRE incluir Pre-Entreno y Post-Entreno en días A/M
