@@ -262,12 +262,23 @@ class EDN360Orchestrator:
     
     async def _execute_training_initial(
         self,
-        questionnaire_data: Dict[str, Any]
+        questionnaire_data: Dict[str, Any],
+        previous_plan: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """Ejecuta la cadena de agentes E1-E9"""
+        """Ejecuta la cadena de agentes E1-E9
+        
+        Args:
+            questionnaire_data: Datos del cuestionario del cliente
+            previous_plan: (Opcional) Plan previo para progresión/referencia
+        """
         executions = []
         current_data = questionnaire_data
         outputs = {}
+        
+        # Si hay plan previo, añadirlo al contexto para E1
+        if previous_plan:
+            logger.info(f"  📋 Plan previo incluido como contexto para progresión")
+            questionnaire_data["previous_plan"] = previous_plan
         
         for agent in self.training_initial_agents:
             logger.info(f"  ▶️ Ejecutando {agent.agent_id}...")
