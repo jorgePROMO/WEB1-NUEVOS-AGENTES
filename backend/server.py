@@ -5208,7 +5208,7 @@ PROTOCOLO DE ADHERENCIA Y SOSTENIBILIDAD
         # Regla 80/20
         regla_80_20 = n7_adherence.get("regla_80_20", {})
         if regla_80_20:
-            plan_text += "\n🎯 REGLA 80/20:\n"
+            plan_text += "\nREGLA 80/20:\n"
             concepto = regla_80_20.get("concepto", "")
             if concepto:
                 plan_text += f"{concepto}\n\n"
@@ -5217,12 +5217,12 @@ PROTOCOLO DE ADHERENCIA Y SOSTENIBILIDAD
             if aplicacion:
                 plan_text += "Aplicación Práctica:\n"
                 for punto in aplicacion:
-                    plan_text += f"   • {punto}\n"
+                    plan_text += f"• {punto}\n"
         
         # Comidas libres
         comidas_libres = n7_adherence.get("comidas_libres", {})
         if comidas_libres:
-            plan_text += "\n\n🍕 COMIDAS LIBRES:\n"
+            plan_text += "\n\nCOMIDAS LIBRES:\n"
             freq = comidas_libres.get("frecuencia", "")
             cuando = comidas_libres.get("cuando", "")
             if freq:
@@ -5234,12 +5234,12 @@ PROTOCOLO DE ADHERENCIA Y SOSTENIBILIDAD
             if reglas:
                 plan_text += "\nReglas:\n"
                 for regla in reglas:
-                    plan_text += f"   • {regla}\n"
+                    plan_text += f"• {regla}\n"
         
         # Emergencias
         emergencias = n7_adherence.get("emergencias", {})
         if emergencias:
-            plan_text += "\n\n🚨 PROTOCOLOS DE EMERGENCIA:\n"
+            plan_text += "\n\nPROTOCOLOS DE EMERGENCIA:\n"
             
             for situacion_key, situacion_data in emergencias.items():
                 if isinstance(situacion_data, dict):
@@ -5249,14 +5249,14 @@ PROTOCOLO DE ADHERENCIA Y SOSTENIBILIDAD
                     accion = situacion_data.get("accion", situacion_data.get("estrategia", []))
                     if isinstance(accion, list):
                         for paso in accion:
-                            plan_text += f"   ✓ {paso}\n"
+                            plan_text += f"✓ {paso}\n"
                     elif isinstance(accion, str):
-                        plan_text += f"   ✓ {accion}\n"
+                        plan_text += f"✓ {accion}\n"
         
         # Meal prep
         meal_prep = n7_adherence.get("meal_prep_guia", {})
         if meal_prep:
-            plan_text += "\n\n🥡 GUÍA DE MEAL PREP:\n"
+            plan_text += "\n\nGUÍA DE MEAL PREP:\n"
             
             cuando = meal_prep.get("cuando", "")
             if cuando:
@@ -5266,20 +5266,20 @@ PROTOCOLO DE ADHERENCIA Y SOSTENIBILIDAD
             if que_cocinar:
                 plan_text += "Qué cocinar:\n"
                 for item in que_cocinar:
-                    plan_text += f"   • {item}\n"
+                    plan_text += f"• {item}\n"
             
             tips = meal_prep.get("tips", [])
             if tips:
                 plan_text += "\nTips:\n"
                 for tip in tips:
-                    plan_text += f"   💡 {tip}\n"
+                    plan_text += f"• {tip}\n"
         
         # Recomendaciones finales
         recomendaciones_finales = n7_adherence.get("recomendaciones_finales", [])
         if recomendaciones_finales:
-            plan_text += "\n\n✅ RECOMENDACIONES FINALES:\n"
+            plan_text += "\n\nRECOMENDACIONES FINALES:\n"
             for rec in recomendaciones_finales:
-                plan_text += f"   • {rec}\n"
+                plan_text += f"• {rec}\n"
         
         # Instrucciones finales
         # Generar lista de compra automática del menú semanal
