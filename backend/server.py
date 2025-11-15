@@ -8959,14 +8959,22 @@ async def delete_follow_up_submission(followup_id: str, request: Request):
 
 @api_router.get("/admin/users/{user_id}/nutrition-plans")
 async def get_user_nutrition_plans(user_id: str, request: Request):
-    """Obtiene todos los planes de nutrición de un usuario"""
+    """Obtiene todos los planes de nutrición de un usuario + cuestionarios de seguimiento"""
     await require_admin(request)
     
+    # Obtener planes de nutrición
     plans = await db.nutrition_plans.find(
         {"user_id": user_id}
     ).sort("generated_at", -1).to_list(length=None)
     
+    # Obtener cuestionarios de seguimiento
+    followups = await db.follow_up_submissions.find(
+        {"user_id": user_id}
+    ).sort("submitted_at", -1).to_list(length=None)
+    
     formatted_plans = []
+    
+    # Agregar planes de nutrición
     for i, plan in enumerate(plans):
         # Manejar casos donde generated_at podría no existir
         generated_at = plan.get("generated_at")
@@ -8988,8 +8996,29 @@ async def get_user_nutrition_plans(user_id: str, request: Request):
             "label": label,
             "generated_at": iso_str,
             "month": plan.get("month"),
-            "year": plan.get("year")
+            "year": plan.get("year"),
+            "type": "nutrition_plan"
         })
+    
+    # Agregar cuestionarios de seguimiento
+    for followup in followups:
+        submitted_at = followup.get("submitted_at")
+        if submitted_at:
+            date_str = submitted_at.strftime('%d/%m/%Y')
+            iso_str = submitted_at.isoformat()
+        else:
+            date_str = "Fecha desconocida"
+            iso_str = datetime.now(timezone.utc).isoformat()
+        
+        formatted_plans.append({
+            "id": followup["_id"],
+            "label": f"📋 Seguimiento ({date_str})",
+            "generated_at": iso_str,
+            "type": "followup"
+        })
+    
+    # Ordenar por fecha (más reciente primero)
+    formatted_plans.sort(key=lambda x: x["generated_at"], reverse=True)
     
     return {"plans": formatted_plans}
 
