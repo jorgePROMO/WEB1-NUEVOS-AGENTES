@@ -218,10 +218,10 @@ const EDN360Section = () => {
             Empieza hoy con un acompañamiento profesional y un método que funciona incluso cuando tú crees que no puedes.
           </p>
           <Button
-            onClick={() => navigate('/trabaja-conmigo')}
+            onClick={() => navigate('/register')}
             className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white text-xl px-12 py-6 rounded-full font-bold shadow-2xl transform hover:scale-105 transition-all duration-300"
           >
-            👉 TRABAJA CON MI EQUIPO
+            👉 REGÍSTRATE AHORA
           </Button>
         </div>
       </div>
