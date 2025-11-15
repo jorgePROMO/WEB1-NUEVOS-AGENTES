@@ -5540,7 +5540,11 @@ async def admin_generate_training_plan(
             from edn360.orchestrator import EDN360Orchestrator
             orchestrator = EDN360Orchestrator()
             
-            result = await orchestrator._execute_training_initial(adapted_questionnaire)
+            # Pasar plan previo a los agentes si existe
+            result = await orchestrator._execute_training_initial(
+                adapted_questionnaire,
+                previous_plan=previous_plan_data
+            )
         
         if not result["success"]:
             raise HTTPException(
