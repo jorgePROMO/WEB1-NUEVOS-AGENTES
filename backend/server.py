@@ -5729,7 +5729,15 @@ async def admin_generate_training_plan(
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
         
         # Adaptar cuestionario al formato E.D.N.360
-        adapted_questionnaire = _adapt_questionnaire_for_edn360(questionnaire_data)
+        # Si es followup, mezclar datos del inicial con actualizaciones del followup
+        if source_type == "followup" and context_data:
+            # Combinar datos base del inicial con actualizaciones del followup
+            merged_data = questionnaire_data.copy()
+            merged_data.update(context_data.get("followup_responses", {}))
+            adapted_questionnaire = _adapt_questionnaire_for_edn360(merged_data)
+            logger.info(f"📋 Usando datos combinados: cuestionario inicial + actualizaciones de follow-up")
+        else:
+            adapted_questionnaire = _adapt_questionnaire_for_edn360(questionnaire_data)
         
         # Obtener plan previo si se especificó (para progresión)
         previous_plan_data = None
