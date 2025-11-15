@@ -4253,6 +4253,9 @@ async def send_nutrition_email(user_id: str, plan_id: str = None, request: Reque
         </head>
         <body>
             <div class="container">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <img src="{request.base_url._url}logo-sin-fondo.png" alt="Jorge Calcerrada" style="height: 80px; width: auto;">
+                </div>
                 <h1>🥗 Tu Plan de Nutrición Personalizado</h1>
                 <p>Hola {user.get('name', 'Cliente')},</p>
                 <p>Te enviamos tu plan de nutrición personalizado elaborado especialmente para ti.</p>
