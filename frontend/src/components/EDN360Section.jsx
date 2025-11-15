@@ -209,20 +209,39 @@ const EDN360Section = () => {
           </div>
         </div>
 
-        {/* CTA Final */}
-        <div className="text-center">
-          <h3 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-900">
+        {/* CTA Final Dual */}
+        <div className="text-center mb-8">
+          <h3 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-900">
             ¿Quieres aplicar este sistema en tu vida?
           </h3>
           <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
             Empieza hoy con un acompañamiento profesional y un método que funciona incluso cuando tú crees que no puedes.
           </p>
-          <Button
-            onClick={() => navigate('/register')}
-            className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white text-xl px-12 py-6 rounded-full font-bold shadow-2xl transform hover:scale-105 transition-all duration-300"
-          >
-            👉 REGÍSTRATE AHORA
-          </Button>
+        </div>
+
+        {/* Botones Duales */}
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl p-6 text-white shadow-xl transform hover:scale-105 transition-all duration-300">
+            <h4 className="text-xl font-bold mb-3">Trabaja Conmigo 1 a 1</h4>
+            <p className="text-orange-100 mb-4 text-sm">Acompañamiento personalizado directo. Plazas limitadas.</p>
+            <Button
+              onClick={() => navigate('/trabaja-conmigo')}
+              className="w-full bg-white text-orange-600 hover:bg-gray-100 font-bold py-3"
+            >
+              SOLICITAR PLAZA →
+            </Button>
+          </div>
+
+          <div className="bg-gradient-to-br from-blue-500 to-green-600 rounded-2xl p-6 text-white shadow-xl transform hover:scale-105 transition-all duration-300">
+            <h4 className="text-xl font-bold mb-3">Trabaja con Mi Equipo</h4>
+            <p className="text-blue-100 mb-4 text-sm">Sistema E.D.N.360™ completo. Disponible ahora.</p>
+            <Button
+              onClick={() => navigate('/register')}
+              className="w-full bg-white text-blue-600 hover:bg-gray-100 font-bold py-3"
+            >
+              EMPEZAR AHORA →
+            </Button>
+          </div>
         </div>
       </div>
     </section>
