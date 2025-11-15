@@ -97,6 +97,22 @@ CRÍTICO:
 ✅ SIEMPRE incluir "timing_entreno" en pre/post
 ✅ Horarios basados en cuestionario del cliente'''
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        return len(input_data) > 0
+        """Valida que el input contenga datos de horario de entrenamiento"""
+        if not input_data or len(input_data) == 0:
+            return False
+        
+        # Verificar que tenga al menos uno de estos campos de horario
+        has_training_schedule = any([
+            "horario_entrenamiento" in input_data,
+            "horario_preferido" in input_data,
+            "hora_entreno" in input_data,
+            "entrena_manana_tarde" in input_data
+        ])
+        
+        if not has_training_schedule:
+            logger.warning(f"⚠️ N5: Input no contiene información de horario de entrenamiento")
+        
+        # Aún así retornar True para no bloquear (usar defaults)
+        return True
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         return self._extract_json_from_response(raw_output)
