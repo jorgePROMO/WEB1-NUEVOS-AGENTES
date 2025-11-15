@@ -81,10 +81,16 @@ Días B:
 
 **CRÍTICO: Lee los macros ESPECÍFICOS de N2 para cada tipo de día**
 
-N2 genera tres sets diferentes:
-- `macros_dia_A`: Para días de entreno intenso (ej: 187p, 247c, 68g = 2350 kcal)
-- `macros_dia_M`: Para días moderados (ej: 187p, 203c, 68g = 2173 kcal)
-- `macros_dia_B`: Para días descanso (ej: 187p, 159c, 68g = 1997 kcal)
+N2 genera sets SOLO para los tipos de día que existen en el plan de entrenamiento:
+
+**Si N2 tiene macros_dia_A, macros_dia_M, macros_dia_B:**
+→ Generar distribución para los 3
+
+**Si N2 tiene SOLO macros_dia_A y macros_dia_B (sin M):**
+→ Generar distribución SOLO para A y B
+→ NO incluir distribucion_dia_M en tu output
+
+**REGLA:** Tu output debe tener distribuciones SOLO para los días presentes en N2
 
 **Días A (usar macros_dia_A de N2):**
 Distribuir optimizando rendimiento y digestión:
