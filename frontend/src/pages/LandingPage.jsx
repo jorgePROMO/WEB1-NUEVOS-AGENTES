@@ -9,6 +9,7 @@ const ServicesSection = lazy(() => import('../components/ServicesSection'));
 const ComparisonTable = lazy(() => import('../components/ComparisonTable'));
 const TransformationsSection = lazy(() => import('../components/TransformationsSection'));
 const TestimonialsSection = lazy(() => import('../components/TestimonialsSection'));
+const EDN360Section = lazy(() => import('../components/EDN360Section'));
 const FinalCTA = lazy(() => import('../components/FinalCTA'));
 const Footer = lazy(() => import('../components/Footer'));
 
