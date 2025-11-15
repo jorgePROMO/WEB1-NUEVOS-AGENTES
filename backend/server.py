@@ -3661,43 +3661,70 @@ async def admin_generate_nutrition_plan(
     await require_admin(request)
     
     try:
-        # Obtener la submission del cuestionario
+        # Intentar buscar en cuestionarios de nutrición primero
         submission = await db.nutrition_questionnaire_submissions.find_one({"_id": submission_id})
+        is_followup = False
+        context_data = None
         
         if not submission:
-            raise HTTPException(status_code=404, detail="Cuestionario no encontrado")
+            # Si no está en cuestionarios de nutrición, buscar en follow-ups
+            submission = await db.follow_up_submissions.find_one({"_id": submission_id})
+            is_followup = True
+            
+            if not submission:
+                raise HTTPException(status_code=404, detail="Cuestionario no encontrado")
         
         if submission["user_id"] != user_id:
             raise HTTPException(status_code=403, detail="El cuestionario no pertenece a este usuario")
         
-        # Si regenerate=True, eliminar planes existentes de este mes
-        if regenerate and submission.get("plan_generated"):
-            now = datetime.now(timezone.utc)
-            current_month = now.month
-            current_year = now.year
-            
-            logger.info(f"🔄 Regenerando plan - eliminando plan existente del mes {current_month}/{current_year}")
-            
-            # Eliminar el plan existente de este mes
-            delete_result = await db.nutrition_plans.delete_many({
-                "user_id": user_id,
-                "month": current_month,
-                "year": current_year
-            })
-            
-            logger.info(f"✅ Eliminados {delete_result.deleted_count} planes del mes actual")
-            
-            # Resetear flag en submission
-            await db.nutrition_questionnaire_submissions.update_one(
-                {"_id": submission_id},
-                {"$set": {"plan_generated": False}}
+        # Si es un followup, obtener el cuestionario inicial para contexto base
+        if is_followup:
+            logger.info(f"📋 Generando desde follow-up, obteniendo cuestionario inicial para contexto")
+            initial_submission = await db.nutrition_questionnaire_submissions.find_one(
+                {"user_id": user_id},
+                sort=[("submitted_at", 1)]
             )
-        
-        if submission.get("plan_generated") and not regenerate:
-            raise HTTPException(status_code=400, detail="Ya existe un plan generado para este cuestionario")
-        
-        # Obtener datos del cuestionario
-        questionnaire_data = submission["responses"]
+            
+            if not initial_submission:
+                raise HTTPException(
+                    status_code=404,
+                    detail="No se encontró cuestionario inicial para contexto"
+                )
+            
+            questionnaire_data = initial_submission["responses"]
+            context_data = {
+                "followup_responses": submission.get("responses", {}),
+                "ai_analysis": submission.get("ai_analysis", "")
+            }
+        else:
+            # Si regenerate=True, eliminar planes existentes de este mes
+            if regenerate and submission.get("plan_generated"):
+                now = datetime.now(timezone.utc)
+                current_month = now.month
+                current_year = now.year
+                
+                logger.info(f"🔄 Regenerando plan - eliminando plan existente del mes {current_month}/{current_year}")
+                
+                # Eliminar el plan existente de este mes
+                delete_result = await db.nutrition_plans.delete_many({
+                    "user_id": user_id,
+                    "month": current_month,
+                    "year": current_year
+                })
+                
+                logger.info(f"✅ Eliminados {delete_result.deleted_count} planes del mes actual")
+                
+                # Resetear flag en submission
+                await db.nutrition_questionnaire_submissions.update_one(
+                    {"_id": submission_id},
+                    {"$set": {"plan_generated": False}}
+                )
+            
+            if submission.get("plan_generated") and not regenerate:
+                raise HTTPException(status_code=400, detail="Ya existe un plan generado para este cuestionario")
+            
+            # Obtener datos del cuestionario
+            questionnaire_data = submission["responses"]
         
         # Obtener mes y año actual
         now = datetime.now(timezone.utc)
