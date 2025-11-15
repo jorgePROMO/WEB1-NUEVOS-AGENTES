@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { ArrowRight } from 'lucide-react';
+import QuestionnaireModal from './QuestionnaireModal';
 
 const FinalCTA = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const questionnaireUrl = ""; // Mismo URL que HeroSection
+
   return (
     <section className="py-24 bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 relative overflow-hidden">
       {/* Background Pattern */}
