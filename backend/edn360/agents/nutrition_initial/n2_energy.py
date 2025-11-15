@@ -115,13 +115,16 @@ Día B (1880 kcal = TDEE -20%):
 
 ## 📤 OUTPUT JSON REQUERIDO:
 
+**EJEMPLO 1: Plan con días A, M y B (entreno intenso + cardio + descanso)**
+
 ```json
 {
   "status": "ok",
   "tdee": 2350,
   "deficit_objetivo_pct": -15,
-  "deficit_semanal_promedio": -15,
+  "deficit_semanal_promedio": -10.3,
   "estrategia": "ciclado_calorico",
+  "tipos_dia_generados": ["A", "M", "B"],
   
   "macros_dia_A": {
     "tipo": "entreno_intenso",
