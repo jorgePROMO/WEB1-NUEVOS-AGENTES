@@ -28,10 +28,12 @@ const Header = () => {
         <div className="flex items-center justify-between h-20 sm:h-24 md:h-20 py-2 sm:py-4 md:py-0">
           {/* Logo */}
           <div className="flex items-center flex-1 mr-2">
-            <a href="#" className="text-lg sm:text-xl md:text-2xl font-bold">
-              <span className="text-gray-900 transition-colors duration-300 whitespace-nowrap">
-                Jorge Calcerrada
-              </span>
+            <a href="#" className="flex items-center">
+              <img 
+                src="/logo-sin-fondo.png" 
+                alt="Jorge Calcerrada" 
+                className="h-12 sm:h-14 md:h-16 w-auto object-contain"
+              />
             </a>
           </div>
 
