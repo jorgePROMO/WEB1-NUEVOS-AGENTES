@@ -44,6 +44,9 @@ const LandingPage = () => {
         <TestimonialsSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
+        <EDN360Section />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
         <FinalCTA />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
