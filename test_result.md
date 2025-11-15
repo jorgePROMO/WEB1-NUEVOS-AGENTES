@@ -1048,3 +1048,21 @@ agent_communication:
     - agent: "main"
       message: "✅ LOGO + SECCIÓN E.D.N.360™ IMPLEMENTADOS COMPLETAMENTE: Usuario solicitó 2 cosas: 1) Incluir logo en todos los sitios que proceda, 2) Añadir sección explicativa del Sistema E.D.N.360™ al final de la web (después de testimonios) con CTA a /trabaja-conmigo. TRABAJO REALIZADO: 1) LOGOS: Descargados ambos logos (con fondo y sin fondo) a /public/, implementado logo sin fondo en: Header de landing page (reemplazando texto), Footer de landing page, Emails de entrenamiento (en header HTML), Emails de nutrición (en header HTML), Nueva sección E.D.N.360™. 2) SECCIÓN E.D.N.360™: Creado componente completo EDN360Section.jsx con diseño premium profesional, incluye: Logo en encabezado, título destacado, explicación del problema, los 3 pilares (E-D-N) en cards con gradientes, tabla de ventajas, lista de resultados esperados, frase resumen, CTA final 'TRABAJA CON MI EQUIPO' que navega a /trabaja-conmigo. Sección añadida a LandingPage.jsx después de TestimonialsSection. Backend reiniciado. Usuario debe verificar: 1) Logo aparece en header y footer de landing page, 2) Nueva sección E.D.N.360™ aparece después de testimonios, 3) CTA de la sección lleva a /trabaja-conmigo, 4) Enviar email de entrenamiento y verificar logo en header, 5) Enviar email de nutrición y verificar logo en header."
 
+
+frontend:
+  - task: "Fix CTA Sección E.D.N.360™ - Cambiar a Registro"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/EDN360Section.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ CTA CORREGIDO - Usuario reportó que el botón del Sistema E.D.N.360™ llevaba a /trabaja-conmigo (lista prioritaria) pero debe ir directamente a registro. SOLUCIÓN: Modificada línea 221 de EDN360Section.jsx - navigate('/trabaja-conmigo') cambiado a navigate('/register'). Texto del botón también actualizado de 'TRABAJA CON MI EQUIPO' a 'REGÍSTRATE AHORA' para mayor claridad. Ahora el botón lleva directamente a la página de registro como solicitado. READY FOR TESTING."
+
+agent_communication:
+    - agent: "main"
+      message: "✅ CTA E.D.N.360™ CORREGIDO: Usuario indicó que el botón de la sección E.D.N.360™ estaba dirigiendo a /trabaja-conmigo (lista prioritaria) cuando debería ir directamente a /register. CAMBIO REALIZADO: Modificado onClick del botón en EDN360Section.jsx de navigate('/trabaja-conmigo') a navigate('/register'). Texto del botón cambiado a 'REGÍSTRATE AHORA' para que sea más claro. Ahora al hacer click en el CTA de la sección E.D.N.360™, los usuarios van directamente a la página de registro. Usuario debe verificar que el botón funcione correctamente."
+
