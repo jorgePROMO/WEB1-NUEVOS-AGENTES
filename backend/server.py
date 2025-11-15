@@ -6218,6 +6218,7 @@ async def send_training_email(user_id: str, plan_id: str = None, request: Reques
         </head>
         <body>
             <div class="header">
+                <img src="{request.base_url._url}logo-sin-fondo.png" alt="Jorge Calcerrada" style="height: 80px; width: auto; margin: 0 auto 20px;">
                 <h1>🏋️ Tu Plan de Entrenamiento Personalizado</h1>
                 <p><strong>{month_names[month]} {year}</strong></p>
             </div>
