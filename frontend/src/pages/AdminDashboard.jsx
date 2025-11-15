@@ -3546,58 +3546,6 @@ const AdminDashboard = () => {
                               </div>
                             </div>
                           )}
-
-                          {/* Follow-ups available for training plan generation */}
-                          {followUps.length > 0 && (
-                            <div className="mb-6">
-                              <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-300 rounded-lg p-4">
-                                <h3 className="text-xl font-bold text-purple-800 mb-3 flex items-center gap-2">
-                                  📊 Generar desde Seguimiento
-                                  <span className="bg-purple-500 text-white text-xs px-2 py-1 rounded-full">
-                                    {followUps.length}
-                                  </span>
-                                </h3>
-                                
-                                <div className="space-y-3">
-                                  {followUps.map((followup) => (
-                                    <Card key={followup.id} className="border-purple-200 bg-white">
-                                      <CardHeader>
-                                        <div className="flex justify-between items-center">
-                                          <div>
-                                            <CardTitle className="text-lg text-gray-800">
-                                              📋 Seguimiento Mensual
-                                            </CardTitle>
-                                            <p className="text-sm text-gray-500">
-                                              Enviado el {new Date(followup.submitted_at).toLocaleDateString('es-ES', {
-                                                day: 'numeric',
-                                                month: 'long',
-                                                year: 'numeric'
-                                              })}
-                                            </p>
-                                          </div>
-                                          
-                                          <Button
-                                            onClick={() => generateTrainingPlan('followup', followup.id)}
-                                            disabled={generatingTrainingPlan || generatingFromFollowup}
-                                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
-                                          >
-                                            {generatingFromFollowup ? (
-                                              <>
-                                                <span className="animate-spin mr-2">⏳</span>
-                                                Generando...
-                                              </>
-                                            ) : (
-                                              '💪 Generar desde Seguimiento'
-                                            )}
-                                          </Button>
-                                        </div>
-                                      </CardHeader>
-                                    </Card>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          )}
                           
                           {/* Existing Training Plans */}
                           {trainingPlans.length > 0 ? (
