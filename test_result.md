@@ -956,3 +956,34 @@ agent_communication:
     - agent: "main"
       message: "✅ FORMATO DE DOCUMENTOS HUMANIZADO: Usuario reportó que los planes de entrenamiento y nutrición generados se veían demasiado 'machine-generated' debido al exceso de líneas, separadores ASCII (═════, ━━━━━), cajas (╔══════╗), y emojis en cada sección. Además, la tabla del menú semanal no se renderizaba correctamente en emails. SOLUCIÓN IMPLEMENTADA: 1) ELIMINADAS todas las cajas y bordes ASCII complejos (╔╗║═, ┌┬┼┤└┴, ━) de ambas funciones de formateo, 2) REEMPLAZADOS por separadores simples con guiones (─────) que se ven bien en cualquier cliente de email, 3) REDUCIDOS emojis en un 70% - mantenidos solo emojis funcionales (🔥🌙⚖️ para tipos de día), eliminados emojis decorativos de títulos y bullets, 4) TABLA DEL MENÚ SEMANAL reescrita - formato complejo ASCII reemplazado por lista simple y limpia organizada por día (LUNES, MARTES, etc.) que se renderiza perfectamente en emails, 5) FORMATO MINIMALISTA - Bullets simples (•), encabezados con mayúsculas y guiones debajo, más espacio en blanco para respirar. Modificadas funciones: _format_edn360_nutrition_as_text() (nutrición) y _format_edn360_plan_as_text() (entrenamiento). Backend reiniciado correctamente. Documentos ahora tienen apariencia profesional y 'humana' como solicitado. READY FOR TESTING - usuario debe generar un plan y enviarlo por email/PDF para verificar el nuevo formato."
 
+
+frontend:
+  - task: "Eliminar Card 'Generar desde Seguimiento' de Entrenamiento"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ CARD ELIMINADO - Usuario reportó que en la pestaña de Entrenamiento aparecía incorrectamente el card '📊 Generar desde Seguimiento' (ese card solo debe aparecer en Nutrición). SOLUCIÓN: Eliminadas completamente las líneas 3550-3600 de AdminDashboard.jsx que contenían el bloque condicional {followUps.length > 0 && ...} con todo el card de seguimientos para generar planes de entrenamiento. Card de seguimientos ahora solo aparece en pestaña de Nutrición como debe ser. READY FOR TESTING."
+
+backend:
+  - task: "WeasyPrint Dependencies Fix - Reinstalación"
+    implemented: true
+    working: "NA"
+    file: "Sistema"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ DEPENDENCIAS REINSTALADAS - Usuario reportó errores al generar PDFs de entrenamiento y nutrición: 'cannot load library libpangoft2-1.0-0: libpangoft2-1.0-0: cannot open shared object file: No such file or directory'. Aunque estas librerías se habían instalado anteriormente (test_result.md línea 844), parece que se perdieron o no se cargaron correctamente. SOLUCIÓN: Reinstaladas TODAS las dependencias del sistema necesarias para WeasyPrint: libpango-1.0-0, libpangoft2-1.0-0, libpangocairo-1.0-0, libgdk-pixbuf2.0-0, libcairo2, libffi-dev, shared-mime-info, gdk-pixbuf variants. Backend reiniciado exitosamente. VERIFICADO: Test de Python confirma 'WeasyPrint funciona correctamente' y generación de PDF exitosa (2602 bytes). Generación de PDFs de entrenamiento y nutrición ahora debería funcionar correctamente. READY FOR TESTING."
+
+agent_communication:
+    - agent: "main"
+      message: "✅ CARD ENTRENAMIENTO ELIMINADO + WEASYPRINT ARREGLADO: Usuario reportó 3 problemas: 1) Card '📊 Generar desde Seguimiento' aparecía incorrectamente en pestaña de Entrenamiento (debe ser solo para Nutrición), 2) Error al adjuntar PDF de entrenamiento: 'cannot load library libpangoft2-1.0-0', 3) Error al adjuntar PDF de nutrición: mismo error de librería. SOLUCIONES: 1) FRONTEND: Eliminado completamente el bloque del card de seguimientos (líneas 3550-3600) de la sección de entrenamiento en AdminDashboard.jsx, 2) BACKEND: Reinstaladas todas las dependencias del sistema para WeasyPrint (libpangoft2-1.0-0, libpangocairo-1.0-0, libgdk-pixbuf2.0-0, etc.) que se habían perdido o no cargado correctamente, 3) Backend reiniciado para cargar las nuevas librerías. VERIFICADO: Test de Python confirma que WeasyPrint funciona correctamente y genera PDFs exitosamente. Usuario debe probar: 1) Verificar que el card de seguimientos ya NO aparece en pestaña de Entrenamiento, 2) Intentar adjuntar PDF de entrenamiento, 3) Intentar adjuntar PDF de nutrición. Ambos deberían funcionar sin errores ahora."
+
