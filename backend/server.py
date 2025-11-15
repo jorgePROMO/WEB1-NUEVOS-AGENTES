@@ -4837,7 +4837,7 @@ def _format_edn360_nutrition_as_text(edn360_data: dict, user_name: str = "Client
         plan_text += f"""
 📊 TU GASTO ENERGÉTICO:
    • TDEE (Gasto Total Diario): {tdee} kcal
-   • Objetivo de déficit: {deficit_objetivo}%
+   • Déficit semanal promedio: {n2_energy.get('deficit_semanal_promedio', deficit_objetivo)}%
    • Estrategia: {estrategia.replace('_', ' ').title()}
 
 💡 CONCEPTO DE CICLADO CALÓRICO:
