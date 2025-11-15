@@ -5466,44 +5466,41 @@ def _format_edn360_plan_as_text(edn360_data: dict, user_name: str = "Cliente") -
         
         # Generar el texto del plan
         plan_text = f"""
-╔══════════════════════════════════════════════════════════════════════════╗
-║                     PLAN DE ENTRENAMIENTO PERSONALIZADO                  ║
-║                              SISTEMA E.D.N.360                            ║
-╚══════════════════════════════════════════════════════════════════════════╝
+═════════════════════════════════════════════════════════════════════════
+                   PLAN DE ENTRENAMIENTO PERSONALIZADO
+                            SISTEMA E.D.N.360
+═════════════════════════════════════════════════════════════════════════
 
-👤 CLIENTE: {user_name}
-📅 DURACIÓN: {mesociclo.get('duracion_semanas', 4)} semanas
-🎯 OBJETIVO: {mesociclo.get('objetivo', 'Mejora general').replace('_', ' ').title()}
-💪 ESTRATEGIA: {mesociclo.get('estrategia', 'Progresiva').title()}
-🏋️ SPLIT: {mesociclo.get('split', 'Full-Body').upper()}
-📊 FRECUENCIA: {mesociclo.get('frecuencia_semanal', 3)} días por semana
+CLIENTE: {user_name}
+DURACIÓN: {mesociclo.get('duracion_semanas', 4)} semanas
+OBJETIVO: {mesociclo.get('objetivo', 'Mejora general').replace('_', ' ').title()}
+ESTRATEGIA: {mesociclo.get('estrategia', 'Progresiva').title()}
+SPLIT: {mesociclo.get('split', 'Full-Body').upper()}
+FRECUENCIA: {mesociclo.get('frecuencia_semanal', 3)} días por semana
 
-═══════════════════════════════════════════════════════════════════════════
 
-📋 ESTRUCTURA DEL MESOCICLO
+ESTRUCTURA DEL MESOCICLO
 
 """
         
         # Añadir información de cada semana
         for semana in semanas:
             plan_text += f"""
-┌─────────────────────────────────────────────────────────────────────────┐
-│ SEMANA {semana.get('numero', 1)} - {semana.get('fase', 'Entrenamiento').upper()}
-└─────────────────────────────────────────────────────────────────────────┘
+SEMANA {semana.get('numero', 1)} - {semana.get('fase', 'Entrenamiento').upper()}
 
-🎯 Objetivo: {semana.get('notas', 'Progresión gradual')}
-📊 Volumen: {semana.get('volumen_pct', 100)}% del volumen base
-💪 Intensidad: {semana.get('intensidad', 'media').replace('_', ' ').title()}
-🎚️ RIR objetivo: {semana.get('rir_objetivo', 3)} repeticiones en reserva
-⏱️ Tiempo estimado por sesión: ~{semana.get('kpis', {}).get('tiempo_total_min', 60) // mesociclo.get('frecuencia_semanal', 3)} minutos
+Objetivo: {semana.get('notas', 'Progresión gradual')}
+Volumen: {semana.get('volumen_pct', 100)}% del volumen base
+Intensidad: {semana.get('intensidad', 'media').replace('_', ' ').title()}
+RIR objetivo: {semana.get('rir_objetivo', 3)} repeticiones en reserva
+Tiempo estimado por sesión: ~{semana.get('kpis', {}).get('tiempo_total_min', 60) // mesociclo.get('frecuencia_semanal', 3)} minutos
 
 """
         
         # Añadir sesiones detalladas
         plan_text += """
-═══════════════════════════════════════════════════════════════════════════
+─────────────────────────────────────────────────────────────────────────
 
-📅 SESIONES DE ENTRENAMIENTO DETALLADAS
+SESIONES DE ENTRENAMIENTO DETALLADAS
 
 """
         
