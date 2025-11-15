@@ -237,17 +237,31 @@ const AdminDashboard = () => {
       return;
     }
     
+    // Auto-detect source type si no se especifica
+    let actualSourceType = sourceType;
+    let actualSourceId = sourceId || selectedQuestionnaireForTraining;
+    
+    // Si sourceType no se especificó (llamada desde selector), detectar automáticamente
+    if (!sourceType || sourceType === 'initial') {
+      const selectedQ = availableQuestionnaires.find(q => q.id === actualSourceId);
+      if (selectedQ && selectedQ.type === 'followup') {
+        actualSourceType = 'followup';
+      } else {
+        actualSourceType = 'initial';
+      }
+    }
+    
     // Set the appropriate loading state based on source type
-    if (sourceType === 'initial') {
+    if (actualSourceType === 'initial') {
       setGeneratingTrainingPlan(true);
-    } else if (sourceType === 'followup') {
+    } else if (actualSourceType === 'followup') {
       setGeneratingFromFollowup(true);
     }
     
     try {
       const params = {
-        source_type: sourceType,
-        source_id: selectedQuestionnaireForTraining  // Usar el seleccionado
+        source_type: actualSourceType,
+        source_id: actualSourceId
       };
       
       // Agregar plan previo si está seleccionado
