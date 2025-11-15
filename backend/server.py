@@ -4934,17 +4934,17 @@ DÍA B (DESCANSO) 🌙
         if calendario_semanal:
             plan_text += """
 
-═══════════════════════════════════════════════════════════════════════════
+─────────────────────────────────────────────────────────────────────────
 
-📅 CALENDARIO NUTRICIONAL SEMANAL (Sincronizado con tu entrenamiento)
+CALENDARIO NUTRICIONAL SEMANAL (Sincronizado con tu entrenamiento)
 
 Este plan se ajusta a tus días de entrenamiento:
-• 🔥 Día A (Alto): Días de entrenamiento INTENSO → Más calorías y carbohidratos
-• ⚖️ Día M (Medio): Días de entrenamiento MODERADO → Calorías moderadas
-• 🌙 Día B (Bajo/Descanso): Días SIN entrenamiento → Menos calorías, sin pre/post entreno
+• Día A (Alto): Días de entrenamiento INTENSO → Más calorías y carbohidratos
+• Día M (Medio): Días de entrenamiento MODERADO → Calorías moderadas
+• Día B (Bajo/Descanso): Días SIN entrenamiento → Menos calorías, sin pre/post entreno
 
 """
-            plan_text += f"📊 FRECUENCIA: Entrenas {dias_entreno_semana} días por semana\n\n"
+            plan_text += f"Frecuencia: Entrenas {dias_entreno_semana} días por semana\n\n"
             plan_text += "TU SEMANA:\n"
             
             dias_nombres = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
@@ -4965,9 +4965,9 @@ Este plan se ajusta a tus días de entrenamiento:
             calendario = n4_calendar.get("calendario", [])
             plan_text += """
 
-═══════════════════════════════════════════════════════════════════════════
+─────────────────────────────────────────────────────────────────────────
 
-📅 CALENDARIO NUTRICIONAL (Días Altos/Medios/Bajos)
+CALENDARIO NUTRICIONAL (Días Altos/Medios/Bajos)
 
 PRIMERA SEMANA:
 """
