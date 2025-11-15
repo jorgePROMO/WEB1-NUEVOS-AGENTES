@@ -5091,16 +5091,18 @@ MENÚ SEMANAL
                         hora = comida.get("hora", "")
                         alimentos = comida.get("alimentos", [])
                         
+                        plan_text += f"  {hora} {nombre_comida}:\n"
+                        
                         if alimentos and len(alimentos) > 0:
-                            primer_alimento = alimentos[0]
-                            if isinstance(primer_alimento, dict):
-                                nombre_ali = primer_alimento.get('nombre', '')
-                                cantidad = primer_alimento.get('cantidad', '')
-                                plan_text += f"  {hora} {nombre_comida}: {cantidad} {nombre_ali}\n"
-                            else:
-                                plan_text += f"  {hora} {nombre_comida}: {primer_alimento}\n"
+                            for alimento in alimentos:
+                                if isinstance(alimento, dict):
+                                    nombre_ali = alimento.get('nombre', '')
+                                    cantidad = alimento.get('cantidad', '')
+                                    plan_text += f"    • {cantidad} {nombre_ali}\n"
+                                else:
+                                    plan_text += f"    • {alimento}\n"
                         else:
-                            plan_text += f"  {hora} {nombre_comida}\n"
+                            plan_text += f"    • (Ver detalle completo)\n"
                 
                 plan_text += "\nNota: Ver detalle completo de alimentos y macros por día más abajo.\n"
             
