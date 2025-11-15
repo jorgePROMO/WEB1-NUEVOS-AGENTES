@@ -5361,55 +5361,55 @@ LISTA DE LA COMPRA SEMANAL
             for categoria in ["Proteínas", "Lácteos", "Carbohidratos", "Frutas", "Verduras", "Grasas Saludables", "Otros"]:
                 items = alimentos_por_categoria[categoria]
                 if items:
-                    plan_text += f"\n📦 {categoria.upper()}:\n"
+                    plan_text += f"\n{categoria.upper()}:\n"
                     for item in items:
                         cantidad_fmt = f"{item['cantidad']:.0f}" if item['cantidad'] == int(item['cantidad']) else f"{item['cantidad']:.1f}"
-                        plan_text += f"   ☑️ {item['nombre']}: {cantidad_fmt}{item['unidad']}\n"
+                        plan_text += f"☑ {item['nombre']}: {cantidad_fmt}{item['unidad']}\n"
             
             plan_text += """
 
-💡 CONSEJOS PARA LA COMPRA:
-   • Compra proteínas en paquetes grandes para ahorrar
-   • Congela lo que no uses en 2-3 días
-   • Lava y corta verduras el día de compra (meal prep)
-   • Opta por congelados si es más económico (brócoli, fresas, etc.)
+CONSEJOS PARA LA COMPRA:
+• Compra proteínas en paquetes grandes para ahorrar
+• Congela lo que no uses en 2-3 días
+• Lava y corta verduras el día de compra (meal prep)
+• Opta por congelados si es más económico (brócoli, fresas, etc.)
 """
         
         plan_text += """
 
-═══════════════════════════════════════════════════════════════════════════
+─────────────────────────────────────────────────────────────────────────
 
-⚠️ INSTRUCCIONES IMPORTANTES
+INSTRUCCIONES IMPORTANTES
 
-✅ HIDRATACIÓN:
-   • Mínimo 2-3 litros de agua al día
-   • Aumentar en días de entrenamiento
+HIDRATACIÓN:
+• Mínimo 2-3 litros de agua al día
+• Aumentar en días de entrenamiento
 
-✅ TIMING:
-   • Pre-entreno: 1.5-2 horas antes
-   • Post-entreno: Dentro de 30-60 minutos
+TIMING:
+• Pre-entreno: 1.5-2 horas antes
+• Post-entreno: Dentro de 30-60 minutos
 
-✅ FLEXIBILIDAD:
-   • 80% del tiempo sigue el plan
-   • 20% permite flexibilidad (1-2 comidas libres/semana)
+FLEXIBILIDAD:
+• 80% del tiempo sigue el plan
+• 20% permite flexibilidad (1-2 comidas libres/semana)
 
-✅ AJUSTES:
-   • Si tienes hambre excesiva → Añade +100-200 kcal
-   • Si no pierdes peso en 2 semanas → Reduce -100-200 kcal
-   • Consulta siempre con tu nutricionista antes de cambios mayores
+AJUSTES:
+• Si tienes hambre excesiva → Añade +100-200 kcal
+• Si no pierdes peso en 2 semanas → Reduce -100-200 kcal
+• Consulta siempre con tu nutricionista antes de cambios mayores
 
-⚠️ SEÑALES DE ALERTA:
-   • Fatiga extrema → Puede necesitar más carbohidratos
-   • Pérdida de fuerza → Revisa proteína y calorías totales
-   • Hambre constante → Plan demasiado restrictivo
+SEÑALES DE ALERTA:
+• Fatiga extrema → Puede necesitar más carbohidratos
+• Pérdida de fuerza → Revisa proteína y calorías totales
+• Hambre constante → Plan demasiado restrictivo
 
-═══════════════════════════════════════════════════════════════════════════
+─────────────────────────────────────────────────────────────────────────
 
-💬 DUDAS O CONSULTAS: Contacta a tu nutricionista
+Dudas o consultas: Contacta a tu nutricionista
 
-¡ÉXITO EN TU PLAN NUTRICIONAL! 🥗
+¡Éxito en tu plan nutricional!
 
-═══════════════════════════════════════════════════════════════════════════
+═════════════════════════════════════════════════════════════════════════
 """
         
         return plan_text
