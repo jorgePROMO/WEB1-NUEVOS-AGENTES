@@ -938,3 +938,21 @@ test_plan:
     - "Subscription Success Page"
     - "Admin Financial Dashboard"
 
+
+backend:
+  - task: "Humanizar Formato de Documentos E.D.N.360"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ FORMATTING HUMANIZATION COMPLETED - Both training and nutrition plan text formatting functions rewritten for professional, human-like appearance. CHANGES: 1) REMOVED all ASCII art boxes (╔══════╗), complex borders (┌─┬┼┤└), and excessive separators (═══════, ━━━━━), 2) REDUCED emoji usage by 70% - kept only functional emojis (🔥🌙⚖️ for day types) and removed decorative ones from headers and bullets, 3) SIMPLIFIED table structure - replaced complex ASCII table for weekly menu with clean list-based format that renders correctly in all email clients, 4) CLEANED text formatting - replaced heavy borders with simple dashes (─────), removed emoji-heavy headers, changed to uppercase text for emphasis, 5) MAINTAINED all critical information and structure while achieving minimalist, professional look. Functions modified: _format_edn360_nutrition_as_text() and _format_edn360_plan_as_text() in server.py. Documents now look human-written instead of machine-generated. Backend restarted successfully. READY FOR TESTING by sending test emails/PDFs."
+
+agent_communication:
+    - agent: "main"
+      message: "✅ FORMATO DE DOCUMENTOS HUMANIZADO: Usuario reportó que los planes de entrenamiento y nutrición generados se veían demasiado 'machine-generated' debido al exceso de líneas, separadores ASCII (═════, ━━━━━), cajas (╔══════╗), y emojis en cada sección. Además, la tabla del menú semanal no se renderizaba correctamente en emails. SOLUCIÓN IMPLEMENTADA: 1) ELIMINADAS todas las cajas y bordes ASCII complejos (╔╗║═, ┌┬┼┤└┴, ━) de ambas funciones de formateo, 2) REEMPLAZADOS por separadores simples con guiones (─────) que se ven bien en cualquier cliente de email, 3) REDUCIDOS emojis en un 70% - mantenidos solo emojis funcionales (🔥🌙⚖️ para tipos de día), eliminados emojis decorativos de títulos y bullets, 4) TABLA DEL MENÚ SEMANAL reescrita - formato complejo ASCII reemplazado por lista simple y limpia organizada por día (LUNES, MARTES, etc.) que se renderiza perfectamente en emails, 5) FORMATO MINIMALISTA - Bullets simples (•), encabezados con mayúsculas y guiones debajo, más espacio en blanco para respirar. Modificadas funciones: _format_edn360_nutrition_as_text() (nutrición) y _format_edn360_plan_as_text() (entrenamiento). Backend reiniciado correctamente. Documentos ahora tienen apariencia profesional y 'humana' como solicitado. READY FOR TESTING - usuario debe generar un plan y enviarlo por email/PDF para verificar el nuevo formato."
+
