@@ -463,6 +463,10 @@ const AdminDashboard = () => {
   // Load training plans for selectors
   const loadTrainingPlansForSelector = async (userId) => {
     try {
+      // Preservar selecciones actuales ANTES de recargar
+      const currentPreviousSelection = selectedPreviousTrainingPlan;
+      const currentNutritionSelection = selectedTrainingPlanForNutrition;
+      
       const response = await axios.get(`${API}/admin/users/${userId}/training-plans`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
@@ -470,9 +474,18 @@ const AdminDashboard = () => {
       const plans = response.data.plans || [];
       setAvailableTrainingPlans(plans);
       
-      // Set default to latest plan for nutrition
+      // Restaurar selección previa si todavía existe en la nueva lista
+      if (currentPreviousSelection && plans.find(p => p.id === currentPreviousSelection)) {
+        setSelectedPreviousTrainingPlan(currentPreviousSelection);
+      }
+      
+      // Set default to latest plan for nutrition solo si no había selección previa
       if (plans.length > 0) {
-        setSelectedTrainingPlanForNutrition(plans[0].id);
+        if (currentNutritionSelection && plans.find(p => p.id === currentNutritionSelection)) {
+          setSelectedTrainingPlanForNutrition(currentNutritionSelection);
+        } else {
+          setSelectedTrainingPlanForNutrition(plans[0].id);
+        }
       }
     } catch (error) {
       console.error('Error loading training plans for selector:', error);
