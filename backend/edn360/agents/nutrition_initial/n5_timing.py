@@ -79,10 +79,23 @@ Días B:
 
 ═══ PASO 4: CALCULAR MACROS POR COMIDA ═══
 
-Usa los macros totales de N2 y distribúyelos:
-• Pre-entreno: Bajo grasas (5-10g), carbos medios, proteína moderada
-• Post-entreno: Alto carbos, alta proteína, bajo grasas
-• Resto: Balanceado según % de calorías
+Usa los macros totales de N2 y distribúyelos según % de calorías por comida:
+
+**Días A/M (entreno):**
+• Pre-entreno: 18% kcal → Bajo grasas (5-10g), carbos medios, proteína moderada
+• Post-entreno: 25% kcal → Alto carbos, alta proteína, bajo grasas
+• Media Mañana: 12% kcal → Snack ligero, proteína + carbos
+• Comida: 25% kcal → Balanceado
+• Merienda: 10% kcal → Snack ligero
+• Cena: 20% kcal → Proteína + verduras, bajo carbos
+
+**Días B (descanso):**
+Distribuir equitativamente entre las comidas (sin pre/post entreno)
+Si 5 comidas: 25% + 15% + 30% + 15% + 25%
+Si 4 comidas: 30% + 20% + 25% + 25%
+Si 3 comidas: 35% + 35% + 30%
+
+**IMPORTANTE:** La suma de todos los porcentajes DEBE ser 100%
 
 ═══ PASO 5: ESPECIFICAR TIMING EXPLÍCITO ═══
 
