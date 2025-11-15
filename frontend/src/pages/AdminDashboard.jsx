@@ -441,10 +441,6 @@ const AdminDashboard = () => {
   // Load questionnaires for selectors
   const loadQuestionnaires = async (userId) => {
     try {
-      // Preservar selecciones actuales ANTES de recargar
-      const currentTrainingSelection = selectedQuestionnaireForTraining;
-      const currentNutritionSelection = selectedQuestionnaireForNutrition;
-      
       const response = await axios.get(`${API}/admin/users/${userId}/questionnaires`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
@@ -452,21 +448,13 @@ const AdminDashboard = () => {
       const questionnaires = response.data.questionnaires || [];
       setAvailableQuestionnaires(questionnaires);
       
-      // Set default to initial questionnaire SOLO si no hay selección previa
-      const initial = questionnaires.find(q => q.is_initial);
-      
-      // Para entrenamiento: restaurar selección previa si existe, sino usar inicial
-      if (currentTrainingSelection && questionnaires.find(q => q.id === currentTrainingSelection)) {
-        setSelectedQuestionnaireForTraining(currentTrainingSelection);
-      } else if (initial) {
-        setSelectedQuestionnaireForTraining(initial.id);
-      }
-      
-      // Para nutrición: restaurar selección previa si existe, sino usar inicial
-      if (currentNutritionSelection && questionnaires.find(q => q.id === currentNutritionSelection)) {
-        setSelectedQuestionnaireForNutrition(currentNutritionSelection);
-      } else if (initial) {
-        setSelectedQuestionnaireForNutrition(initial.id);
+      // Set default to initial questionnaire only if nothing selected
+      if (!selectedQuestionnaireForTraining && !selectedQuestionnaireForNutrition) {
+        const initial = questionnaires.find(q => q.is_initial);
+        if (initial) {
+          setSelectedQuestionnaireForTraining(initial.id);
+          setSelectedQuestionnaireForNutrition(initial.id);
+        }
       }
     } catch (error) {
       console.error('Error loading questionnaires:', error);
