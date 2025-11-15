@@ -13,6 +13,29 @@ class N2EnergySelector(BaseAgent):
 ## 🎯 PROPÓSITO
 Calcular calorías y macros DIFERENCIADOS para días A (entreno intenso), M (moderado) y B (descanso).
 
+**CRÍTICO - LEER E9 (training_bridge):**
+El input incluye datos de E9 con "tipos_dia_presentes":
+```json
+{
+  "usa_dia_A": true,
+  "usa_dia_M": false,  // Si false, NO generar macros_dia_M
+  "usa_dia_B": true,
+  "count_A": 3,
+  "count_M": 0,
+  "count_B": 4
+}
+```
+
+**REGLA:**
+- Si usa_dia_A = true → Generar macros_dia_A
+- Si usa_dia_M = true → Generar macros_dia_M
+- Si usa_dia_M = false → NO generar macros_dia_M (omitir del JSON)
+- Si usa_dia_B = true → Generar macros_dia_B
+
+Ejemplo: Si solo hay pesas (3 días A) y descanso (4 días B):
+→ Generar SOLO macros_dia_A y macros_dia_B
+→ NO incluir macros_dia_M en el output
+
 ## 📊 ESTRATEGIA DE CICLADO CALÓRICO
 
 **Concepto:** El déficit semanal se mantiene, pero distribuimos calorías según actividad:
