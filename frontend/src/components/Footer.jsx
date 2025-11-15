@@ -8,7 +8,11 @@ const Footer = () => {
         <div className="grid md:grid-cols-3 gap-12">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl font-bold text-white mb-4">Jorge Calcerrada</h3>
+            <img 
+              src="/logo-sin-fondo.png" 
+              alt="Jorge Calcerrada" 
+              className="h-20 w-auto mb-4"
+            />
             <p className="text-gray-400 leading-relaxed">
               Método profesional de entrenamiento, nutrición y mentalidad. Construyendo sistemas que transforman personas.
             </p>
