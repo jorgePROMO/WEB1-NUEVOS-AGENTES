@@ -9392,162 +9392,103 @@ PLAN DE NUTRICIÓN NUEVO (Mes {new_nutrition.get('month')}/{new_nutrition.get('y
 - Grasas: {new_macros_a.get('grasas_g', 'N/A')}g
 """
             
-            report_text += f"""
-## 🥗 COMPARACIÓN DE PLANES DE NUTRICIÓN
+        
+        # 2.4 Datos estructurados de entrenamiento para LLM
+        training_data_text = f"""
+PLAN DE ENTRENAMIENTO ANTERIOR (Mes {prev_training.get('month')}/{prev_training.get('year')}):
+- Frecuencia semanal: {prev_mesociclo.get('frecuencia_semanal', 'N/A')} días
+- Duración: {prev_mesociclo.get('duracion_semanas', 'N/A')} semanas  
+- Objetivo: {prev_mesociclo.get('objetivo', 'N/A').replace('_', ' ').title()}
+- Split: {prev_mesociclo.get('split', 'N/A').upper()}
+- Estrategia: {prev_mesociclo.get('estrategia', 'N/A').title()}
 
-### Plan Anterior (Mes {prev_nutrition.get('month', 'N/A')}/{prev_nutrition.get('year', 'N/A')})
-- **TDEE**: {prev_n1.get('tdee_estimado', prev_n2.get('tdee', 'N/A'))} kcal/día
-- **Calorías (Día Entreno)**: {prev_macros_a.get('kcal_objetivo', 'N/A')} kcal
-- **Proteínas**: {prev_macros_a.get('proteinas_g', 'N/A')}g ({prev_macros_a.get('proteinas_gkg', 'N/A')}g/kg)
-- **Carbohidratos**: {prev_macros_a.get('carbohidratos_g', 'N/A')}g
-- **Grasas**: {prev_macros_a.get('grasas_g', 'N/A')}g
-
-### Plan Nuevo (Mes {new_nutrition.get('month', 'N/A')}/{new_nutrition.get('year', 'N/A')})
-- **TDEE**: {new_n1.get('tdee_estimado', new_n2.get('tdee', 'N/A'))} kcal/día
-- **Calorías (Día Entreno)**: {new_macros_a.get('kcal_objetivo', 'N/A')} kcal
-- **Proteínas**: {new_macros_a.get('proteinas_g', 'N/A')}g ({new_macros_a.get('proteinas_gkg', 'N/A')}g/kg)
-- **Carbohidratos**: {new_macros_a.get('carbohidratos_g', 'N/A')}g
-- **Grasas**: {new_macros_a.get('grasas_g', 'N/A')}g
-
+PLAN DE ENTRENAMIENTO NUEVO (Mes {new_training.get('month')}/{new_training.get('year')}):
+- Frecuencia semanal: {new_mesociclo.get('frecuencia_semanal', 'N/A')} días
+- Duración: {new_mesociclo.get('duracion_semanas', 'N/A')} semanas
+- Objetivo: {new_mesociclo.get('objetivo', 'N/A').replace('_', ' ').title()}
+- Split: {new_mesociclo.get('split', 'N/A').upper()}
+- Estrategia: {new_mesociclo.get('estrategia', 'N/A').title()}
 """
         
-        # ANÁLISIS DE ADAPTACIONES
-        report_text += """
+        # FASE 3: Generar informe inteligente con LLM
+        
+        from openai import OpenAI
+        
+        # Usar Emergent LLM key
+        client = OpenAI(api_key="sk-emergent-d326cF1Ec43AeDb194")
+        
+        # Prompt del sistema basado en tu documento
+        system_prompt = f"""Eres un entrenador profesional y nutricionista experto generando un informe de seguimiento personalizado.
 
-## 🎯 ANÁLISIS DE ADAPTACIONES Y CAMBIOS
+Tu tarea: Analizar el cuestionario de seguimiento del cliente, comparar planes anteriores con nuevos, y generar un informe estructurado.
 
+ESTRUCTURA DEL INFORME (OBLIGATORIA):
+
+1️⃣ Lo que hemos visto en tu seguimiento
+- Objetivo actual del cliente
+- Puntos clave del cuestionario (adherencia, cambios físicos, molestias, disponibilidad, estrés, feedback)
+- Resumen diagnóstico breve
+
+2️⃣ Cambios en tu entrenamiento
+- ANTES (frecuencia, estructura, volumen, enfoque)
+- AHORA (frecuencia, estructura, volumen, enfoque)
+- Cambios clave: Explica QUÉ cambió y POR QUÉ basándote en el cuestionario
+- Qué necesito de ti: Instrucciones específicas para el cliente
+
+3️⃣ Cambios en tu nutrición (si aplica)
+- ANTES (calorías, macros, comidas/día, estrategia)
+- AHORA (calorías, macros, comidas/día, estrategia)
+- Cambios clave: Explica QUÉ cambió y POR QUÉ basándote en el cuestionario
+- Qué necesito de ti: Instrucciones específicas
+
+4️⃣ Dónde tienes tus nuevos programas
+- Indica que están disponibles en su panel
+- Link: {os.environ.get("FRONTEND_URL", "https://tu-dominio.emergent.host")}
+
+5️⃣ Mensaje final
+- En qué debe enfocarse este mes
+- Mensaje motivacional personalizado
+
+REGLAS IMPORTANTES:
+- Conecta TODOS los cambios con lo que el cliente escribió en el cuestionario
+- Sé específico: "aumentamos 100 kcal" NO "ajustamos calorías"
+- Usa lenguaje cercano (tú/tu) pero profesional
+- Si algo NO cambió, explica por qué (ej: "parámetros funcionando bien")
+- Analiza como un entrenador real: interpretar feedback, proponer soluciones
+- El informe se envía por email junto con los nuevos planes
+
+Cliente: {user_name}
+Fecha: {datetime.now(timezone.utc).strftime('%d/%m/%Y')}
 """
         
-        # Analizar cambios en entrenamiento
-        training_changes = []
-        
-        # Cambio de frecuencia
-        prev_freq = prev_mesociclo.get('frecuencia_semanal', 0)
-        new_freq = new_mesociclo.get('frecuencia_semanal', 0)
-        if new_freq > prev_freq:
-            training_changes.append(f"✅ **Aumento de frecuencia de entrenamiento** ({prev_freq} → {new_freq} días/semana): Tu capacidad de recuperación ha mejorado y podemos aumentar el volumen de entrenamiento para optimizar resultados.")
-        elif new_freq < prev_freq:
-            training_changes.append(f"⚡ **Optimización de frecuencia** ({prev_freq} → {new_freq} días/semana): Ajustamos la frecuencia para mejorar la calidad de cada sesión y la recuperación.")
-        
-        # Cambio de objetivo
-        prev_obj = prev_mesociclo.get('objetivo', '').replace('_', ' ').title()
-        new_obj = new_mesociclo.get('objetivo', '').replace('_', ' ').title()
-        if prev_obj != new_obj and new_obj != 'N/A':
-            training_changes.append(f"🎯 **Cambio de enfoque**: De {prev_obj} a {new_obj}. Esta progresión lógica te ayudará a seguir avanzando hacia tus metas.")
-        
-        # Cambio de split
-        prev_split = prev_mesociclo.get('split', '')
-        new_split = new_mesociclo.get('split', '')
-        if prev_split != new_split and new_split:
-            training_changes.append(f"💪 **Nuevo tipo de split**: Pasamos de {prev_split} a {new_split}. Este cambio permite trabajar cada grupo muscular con mayor especificidad.")
-        
-        # Cambio de estrategia
-        prev_strat = prev_mesociclo.get('estrategia', '').title()
-        new_strat = new_mesociclo.get('estrategia', '').title()
-        if prev_strat != new_strat and 'Conservadora' in prev_strat and 'Progresiva' in new_strat:
-            training_changes.append(f"📈 **Incremento de intensidad**: Tu cuerpo ha respondido bien al programa anterior, por lo que aumentamos la exigencia con una estrategia {new_strat.lower()}.")
-        
-        if training_changes:
-            report_text += "### 💪 Entrenamiento\n\n"
-            for change in training_changes:
-                report_text += f"{change}\n\n"
-        else:
-            report_text += "### 💪 Entrenamiento\n\n"
-            report_text += "✅ **Mantenimiento del programa**: Los parámetros actuales están funcionando bien. Continuamos con la misma estructura optimizando ejercicios y progresiones.\n\n"
-        
-        # Analizar cambios en nutrición (si aplica)
-        if prev_nutrition and new_nutrition:
-            nutrition_changes = []
-            
-            prev_n1 = prev_nutrition.get("edn360_data", {}).get("N1", {})
-            new_n1 = new_nutrition.get("edn360_data", {}).get("N1", {})
-            prev_n2 = prev_nutrition.get("edn360_data", {}).get("N2", {})
-            new_n2 = new_nutrition.get("edn360_data", {}).get("N2", {})
-            
-            prev_macros_a = prev_n2.get("macros_dia_A", {})
-            new_macros_a = new_n2.get("macros_dia_A", {})
-            
-            # Cambio de TDEE
-            prev_tdee = prev_n1.get('tdee_estimado', prev_n2.get('tdee', 0))
-            new_tdee = new_n1.get('tdee_estimado', new_n2.get('tdee', 0))
-            if isinstance(prev_tdee, (int, float)) and isinstance(new_tdee, (int, float)):
-                tdee_diff = new_tdee - prev_tdee
-                if abs(tdee_diff) >= 50:
-                    if tdee_diff > 0:
-                        nutrition_changes.append(f"⚡ **Metabolismo más activo**: Tu TDEE aumentó de {prev_tdee:.0f} a {new_tdee:.0f} kcal (+{tdee_diff:.0f} kcal). Esto refleja una mejora en tu composición corporal y nivel de actividad.")
-                    else:
-                        nutrition_changes.append(f"📊 **Ajuste metabólico**: TDEE actualizado de {prev_tdee:.0f} a {new_tdee:.0f} kcal ({tdee_diff:.0f} kcal). Refinamos las calorías para optimizar resultados.")
-            
-            # Cambio de calorías
-            prev_cals = prev_macros_a.get('kcal_objetivo', 0)
-            new_cals = new_macros_a.get('kcal_objetivo', 0)
-            if isinstance(prev_cals, (int, float)) and isinstance(new_cals, (int, float)):
-                cal_diff = new_cals - prev_cals
-                if abs(cal_diff) >= 50:
-                    if cal_diff > 0:
-                        nutrition_changes.append(f"📈 **Aumento de calorías**: De {prev_cals:.0f} a {new_cals:.0f} kcal en días de entrenamiento (+{cal_diff:.0f} kcal). Esto te dará más energía para los entrenamientos y apoyará la recuperación muscular.")
-                    else:
-                        nutrition_changes.append(f"🎯 **Ajuste calórico**: De {prev_cals:.0f} a {new_cals:.0f} kcal en días de entrenamiento ({cal_diff:.0f} kcal). Optimizamos para mantener la progresión hacia tu objetivo.")
-            
-            # Cambio de proteínas
-            prev_prot = prev_macros_a.get('proteinas_g', 0)
-            new_prot = new_macros_a.get('proteinas_g', 0)
-            if isinstance(prev_prot, (int, float)) and isinstance(new_prot, (int, float)):
-                prot_diff = new_prot - prev_prot
-                if abs(prot_diff) >= 10:
-                    if prot_diff > 0:
-                        nutrition_changes.append(f"🥩 **Más proteína**: Aumentamos de {prev_prot:.0f}g a {new_prot:.0f}g (+{prot_diff:.0f}g). Esto apoyará la recuperación muscular con el nuevo volumen de entrenamiento.")
-                    else:
-                        nutrition_changes.append(f"⚖️ **Ajuste de proteína**: De {prev_prot:.0f}g a {new_prot:.0f}g. Optimizamos la distribución de macros manteniendo una ingesta adecuada.")
-            
-            # Cambio de carbohidratos
-            prev_carbs = prev_macros_a.get('carbohidratos_g', 0)
-            new_carbs = new_macros_a.get('carbohidratos_g', 0)
-            if isinstance(prev_carbs, (int, float)) and isinstance(new_carbs, (int, float)):
-                carb_diff = new_carbs - prev_carbs
-                if abs(carb_diff) >= 15:
-                    if carb_diff > 0:
-                        nutrition_changes.append(f"🍚 **Más carbohidratos**: De {prev_carbs:.0f}g a {new_carbs:.0f}g (+{carb_diff:.0f}g). Esto te dará más energía para entrenamientos intensos y mejor rendimiento.")
-                    else:
-                        nutrition_changes.append(f"🎯 **Reducción de carbos**: De {prev_carbs:.0f}g a {new_carbs:.0f}g. Ajuste estratégico para optimizar la composición corporal.")
-            
-            if nutrition_changes:
-                report_text += "### 🥗 Nutrición\n\n"
-                for change in nutrition_changes:
-                    report_text += f"{change}\n\n"
-            else:
-                report_text += "### 🥗 Nutrición\n\n"
-                report_text += "✅ **Plan nutricional mantenido**: Los macros actuales están funcionando perfectamente. Continuamos con la misma estructura con posibles ajustes en el menú para mayor variedad.\n\n"
-        
-        # Objetivos para las próximas 4 semanas
-        report_text += """
+        user_prompt = f"""
+{questionnaire_text}
 
-## 📈 TUS OBJETIVOS PARA LAS PRÓXIMAS 4 SEMANAS
+{training_data_text}
 
-1. **Adherencia al programa**: Completa todas las sesiones de entrenamiento programadas y sigue el plan nutricional con consistencia.
+{nutrition_data_text if nutrition_data_text else "NO HAY PLAN DE NUTRICIÓN"}
 
-2. **Progresión de cargas**: Busca aumentar el peso o las repeticiones en los ejercicios principales semana a semana, siempre manteniendo técnica correcta.
-
-3. **Recuperación óptima**: Prioriza 7-8 horas de sueño por noche y mantén una buena hidratación (mínimo 2-3L de agua al día).
-
-4. **Monitoreo de progreso**: Registra tu peso y medidas semanalmente para evaluar la respuesta al programa.
-
----
-
-## 📱 PRÓXIMOS PASOS
-
-✅ **Tus nuevos planes ya están disponibles** en tu panel de usuario.
-
-🔗 Accede a tu panel: {os.environ.get("FRONTEND_URL", "https://tu-dominio.emergent.host")}
-
-📧 Si tienes alguna duda sobre el nuevo programa, no dudes en contactarme.
-
-💪 ¡Vamos a por estos nuevos objetivos!
-
----
-
-*Informe generado automáticamente por E.D.N.360 - Sistema de Entrenamiento Digital de Nueva Generación*
+Genera el informe de seguimiento completo siguiendo la estructura obligatoria.
 """
+        
+        try:
+            logger.info("🤖 Generando informe con LLM...")
+            response = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.7,
+                max_tokens=3000
+            )
+            
+            report_text = response.choices[0].message.content
+            logger.info("✅ Informe inteligente generado exitosamente")
+            
+        except Exception as e:
+            logger.error(f"Error generando informe con LLM: {e}")
+            report_text = f"# INFORME DE SEGUIMIENTO\n\nError generando informe: {str(e)}"
         
         # Guardar informe
         report_id = str(uuid.uuid4())
