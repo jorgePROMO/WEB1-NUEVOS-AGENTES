@@ -9109,8 +9109,8 @@ async def generate_follow_up_report(
         logger.info(f"📊 Generando informe de seguimiento para usuario {user_id}")
         
         # Obtener planes de entrenamiento
-        prev_training = await db.training_plans.find_one({"_id": previous_training_id})
-        new_training = await db.training_plans.find_one({"_id": new_training_id})
+        prev_training = await db.training_plans.find_one({"_id": ObjectId(previous_training_id) if ObjectId.is_valid(previous_training_id) else previous_training_id})
+        new_training = await db.training_plans.find_one({"_id": ObjectId(new_training_id) if ObjectId.is_valid(new_training_id) else new_training_id})
         
         if not prev_training or not new_training:
             raise HTTPException(status_code=404, detail="Planes de entrenamiento no encontrados")
