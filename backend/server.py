@@ -9360,34 +9360,8 @@ Respuestas del cliente:
         prev_mesociclo = prev_e4.get("mesociclo", {})
         new_mesociclo = new_e4.get("mesociclo", {})
         
-        report_text = f"""# INFORME DE SEGUIMIENTO
-
-**Cliente**: {user_name}
-**Fecha**: {datetime.now(timezone.utc).strftime('%d/%m/%Y %H:%M')}
-
----
-
-## 📊 COMPARACIÓN DE PLANES DE ENTRENAMIENTO
-
-### Plan Anterior (Mes {prev_training.get('month', 'N/A')}/{prev_training.get('year', 'N/A')})
-- **Frecuencia semanal**: {prev_mesociclo.get('frecuencia_semanal', 'N/A')} días
-- **Duración**: {prev_mesociclo.get('duracion_semanas', 'N/A')} semanas
-- **Objetivo**: {prev_mesociclo.get('objetivo', 'N/A').replace('_', ' ').title()}
-- **Split**: {prev_mesociclo.get('split', 'N/A').upper()}
-- **Estrategia**: {prev_mesociclo.get('estrategia', 'N/A').title()}
-- **Generado**: {_format_date_safe(prev_training.get('generated_at'))}
-
-### Plan Nuevo (Mes {new_training.get('month', 'N/A')}/{new_training.get('year', 'N/A')})
-- **Frecuencia semanal**: {new_mesociclo.get('frecuencia_semanal', 'N/A')} días
-- **Duración**: {new_mesociclo.get('duracion_semanas', 'N/A')} semanas
-- **Objetivo**: {new_mesociclo.get('objetivo', 'N/A').replace('_', ' ').title()}
-- **Split**: {new_mesociclo.get('split', 'N/A').upper()}
-- **Estrategia**: {new_mesociclo.get('estrategia', 'N/A').title()}
-- **Generado**: {_format_date_safe(new_training.get('generated_at'))}
-
-"""
-        
-        # Añadir información de nutrición si está disponible
+        # 2.3 Datos estructurados de nutrición
+        nutrition_data_text = ""
         if prev_nutrition and new_nutrition:
             prev_nutrition_data = prev_nutrition.get("edn360_data", {})
             new_nutrition_data = new_nutrition.get("edn360_data", {})
