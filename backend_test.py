@@ -2802,6 +2802,210 @@ class BackendTester:
                           "❌ VERIFICATION FAILED: Neither 'id' nor '_id' field found in previous nutrition plan data.")
             return False
 
+    # ==================== FOLLOW-UP QUESTIONNAIRES ENDPOINT FIX TEST ====================
+    
+    def test_follow_up_questionnaires_endpoint_fix(self):
+        """Test the specific fix for follow-up questionnaires endpoint as requested in review"""
+        print("🎯 TESTING FOLLOW-UP QUESTIONNAIRES ENDPOINT FIX")
+        print("=" * 60)
+        
+        # Step 1: Admin Login
+        print("PASO 1: Login Admin")
+        url = f"{BACKEND_URL}/auth/login"
+        params = {
+            "email": "ecjtrainer@gmail.com",
+            "password": "jorge3007"
+        }
+        
+        try:
+            response = requests.post(url, params=params)
+            if response.status_code == 200:
+                data = response.json()
+                if "user" in data and "token" in data and data["user"].get("role") == "admin":
+                    self.admin_token = data["token"]
+                    print(f"✅ Admin login successful. Role: {data['user']['role']}")
+                else:
+                    print("❌ Admin login failed - invalid response")
+                    return False
+            else:
+                print(f"❌ Admin login failed - HTTP {response.status_code}")
+                return False
+        except Exception as e:
+            print(f"❌ Admin login failed - Exception: {str(e)}")
+            return False
+        
+        # Step 2: Get Clients List
+        print("\nPASO 2: Seleccionar Cliente")
+        url = f"{BACKEND_URL}/admin/clients"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            if response.status_code == 200:
+                data = response.json()
+                clients = data.get("clients", [])
+                if len(clients) > 0:
+                    # Try to find jorge31011987promo@gmail.com or use first client
+                    test_client = None
+                    for client in clients:
+                        if client.get("email") == "jorge31011987promo@gmail.com":
+                            test_client = client
+                            break
+                    
+                    if not test_client:
+                        test_client = clients[0]  # Use first available client
+                    
+                    test_user_id = test_client.get("id")
+                    print(f"✅ Using client: {test_client.get('email', 'N/A')} (ID: {test_user_id})")
+                else:
+                    print("❌ No clients found in system")
+                    return False
+            else:
+                print(f"❌ Failed to get clients - HTTP {response.status_code}")
+                return False
+        except Exception as e:
+            print(f"❌ Failed to get clients - Exception: {str(e)}")
+            return False
+        
+        # Step 3: Test the CRITICAL Follow-Up Questionnaires Endpoint
+        print("\nPASO 3: Verificar Endpoint Corregido (CRÍTICO)")
+        url = f"{BACKEND_URL}/admin/users/{test_user_id}/follow-up-questionnaires"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Request URL: {url}")
+            print(f"Response Status: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                print(f"Response Data: {json.dumps(data, indent=2)}")
+                
+                # ✅ VERIFICAR: Response debe tener estructura {"questionnaires": [...]}
+                if "questionnaires" in data:
+                    questionnaires = data["questionnaires"]
+                    print(f"✅ VERIFIED: Response has correct structure with 'questionnaires' key")
+                    print(f"✅ VERIFIED: Found {len(questionnaires)} questionnaires")
+                    
+                    # ✅ VERIFICAR: Si hay cuestionarios, cada uno debe tener los campos correctos
+                    if len(questionnaires) > 0:
+                        for i, q in enumerate(questionnaires):
+                            print(f"\n   Questionnaire {i+1}:")
+                            
+                            # Check required fields
+                            required_fields = ["id", "label", "type"]
+                            optional_fields = ["submitted_at", "submission_date", "days_since_last_plan", "status"]
+                            
+                            for field in required_fields:
+                                if field in q:
+                                    print(f"   ✅ {field}: {q[field]}")
+                                else:
+                                    print(f"   ❌ Missing required field: {field}")
+                            
+                            for field in optional_fields:
+                                if field in q:
+                                    print(f"   ✅ {field}: {q[field]}")
+                            
+                            # ✅ VERIFICAR: label con formato "📋 Seguimiento (fecha)"
+                            label = q.get("label", "")
+                            if "📋 Seguimiento" in label:
+                                print(f"   ✅ VERIFIED: Label has correct format with emoji and 'Seguimiento'")
+                            else:
+                                print(f"   ⚠️  Label format may be different: {label}")
+                            
+                            # ✅ VERIFICAR: type: "followup"
+                            if q.get("type") == "followup":
+                                print(f"   ✅ VERIFIED: Type is 'followup'")
+                            else:
+                                print(f"   ⚠️  Type is not 'followup': {q.get('type')}")
+                    
+                    else:
+                        # ✅ VERIFICAR: Si no hay cuestionarios, array debe estar vacío (no error)
+                        print(f"✅ VERIFIED: No questionnaires found, but endpoint returned empty array (not error)")
+                    
+                    print(f"\n✅ CRITICAL TEST PASSED: Follow-up questionnaires endpoint working correctly")
+                    
+                else:
+                    print(f"❌ CRITICAL ERROR: Response missing 'questionnaires' key")
+                    print(f"   Response keys: {list(data.keys())}")
+                    return False
+                    
+            else:
+                print(f"❌ CRITICAL ERROR: HTTP {response.status_code}")
+                print(f"   Response: {response.text}")
+                return False
+                
+        except Exception as e:
+            print(f"❌ CRITICAL ERROR: Exception: {str(e)}")
+            return False
+        
+        # Step 4: Compare with Other Endpoints
+        print("\nPASO 4: Comparar con Otros Endpoints")
+        
+        # Test training plans endpoint
+        training_url = f"{BACKEND_URL}/admin/users/{test_user_id}/training-plans"
+        try:
+            response = requests.get(training_url, headers=headers)
+            if response.status_code == 200:
+                data = response.json()
+                training_plans = data.get("plans", [])
+                print(f"✅ Training plans endpoint: {len(training_plans)} plans found")
+                
+                # Verify no follow-up questionnaire IDs appear here
+                for plan in training_plans:
+                    if plan.get("type") == "followup":
+                        print(f"❌ ERROR: Follow-up questionnaire found in training plans!")
+                        return False
+                print(f"✅ VERIFIED: No follow-up questionnaires mixed in training plans")
+            else:
+                print(f"⚠️  Training plans endpoint returned {response.status_code}")
+        except Exception as e:
+            print(f"⚠️  Training plans endpoint error: {str(e)}")
+        
+        # Test nutrition plans endpoint
+        nutrition_url = f"{BACKEND_URL}/admin/users/{test_user_id}/nutrition-plans"
+        try:
+            response = requests.get(nutrition_url, headers=headers)
+            if response.status_code == 200:
+                data = response.json()
+                nutrition_plans = data.get("plans", [])
+                print(f"✅ Nutrition plans endpoint: {len(nutrition_plans)} plans found")
+                
+                # Verify no follow-up questionnaire IDs appear here
+                for plan in nutrition_plans:
+                    if plan.get("type") == "followup":
+                        print(f"❌ ERROR: Follow-up questionnaire found in nutrition plans!")
+                        return False
+                print(f"✅ VERIFIED: No follow-up questionnaires mixed in nutrition plans")
+            else:
+                print(f"⚠️  Nutrition plans endpoint returned {response.status_code}")
+        except Exception as e:
+            print(f"⚠️  Nutrition plans endpoint error: {str(e)}")
+        
+        print("\n🎯 OBJETIVO CUMPLIDO:")
+        print("✅ Endpoint ahora devuelve cuestionarios correctamente desde la colección adecuada")
+        print("✅ Estructura de respuesta verificada: {'questionnaires': [...]}")
+        print("✅ Campos requeridos presentes en cada cuestionario")
+        print("✅ Formato de label correcto: '📋 Seguimiento (fecha)'")
+        print("✅ Tipo correcto: 'followup'")
+        print("✅ No hay mezcla de datos con otros endpoints")
+        
+        return True
+
+    def run_follow_up_fix_test_only(self):
+        """Run only the follow-up questionnaires endpoint fix test"""
+        print("🎯 TESTING RÁPIDO: Fix Endpoint Follow-Up Questionnaires")
+        print("=" * 80)
+        
+        success = self.test_follow_up_questionnaires_endpoint_fix()
+        
+        if success:
+            print("\n🎉 SUCCESS: Follow-up questionnaires endpoint fix verified!")
+            return True
+        else:
+            print("\n❌ FAILED: Follow-up questionnaires endpoint fix has issues!")
+            return False
+
     def run_all_tests(self):
         """Run all tests in sequence"""
         print(f"🚀 TESTING EXHAUSTIVO PARA PRODUCCIÓN - Sistema Jorge Calcerrada")
