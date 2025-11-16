@@ -3258,7 +3258,7 @@ const AdminDashboard = () => {
                                   >
                                     <option value="">Sin plan previo</option>
                                     {nutritionPlans.map((plan) => (
-                                      <option key={plan._id} value={plan._id}>
+                                      <option key={plan.id} value={plan.id}>
                                         {new Date(plan.generated_at).toLocaleDateString('es-ES')} - Mes {plan.month}/{plan.year}
                                       </option>
                                     ))}
