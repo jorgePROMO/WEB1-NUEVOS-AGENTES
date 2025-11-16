@@ -9421,14 +9421,13 @@ PLAN DE ENTRENAMIENTO NUEVO (Mes {new_training.get('month')}/{new_training.get('
         
         # FASE 3: Generar informe inteligente con LLM
         
-        from emergentintegrations import OpenAI
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
         
         # Usar Emergent LLM key
         emergent_key = os.environ.get("EMERGENT_LLM_KEY", "sk-emergent-d326cF1Ec43AeDb194")
-        client = OpenAI(api_key=emergent_key)
         
         # Prompt del sistema basado en tu documento
-        system_prompt = f"""Eres un entrenador profesional y nutricionista experto generando un informe de seguimiento personalizado.
+        system_message = f"""Eres un entrenador profesional y nutricionista experto generando un informe de seguimiento personalizado.
 
 Tu tarea: Analizar el cuestionario de seguimiento del cliente, comparar planes anteriores con nuevos, y generar un informe estructurado.
 
@@ -9471,7 +9470,7 @@ Cliente: {user_name}
 Fecha: {datetime.now(timezone.utc).strftime('%d/%m/%Y')}
 """
         
-        user_prompt = f"""
+        user_prompt_text = f"""
 {questionnaire_text}
 
 {training_data_text}
@@ -9483,17 +9482,19 @@ Genera el informe de seguimiento completo siguiendo la estructura obligatoria.
         
         try:
             logger.info("🤖 Generando informe con LLM...")
-            response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                temperature=0.7,
-                max_tokens=3000
-            )
             
-            report_text = response.choices[0].message.content
+            # Inicializar chat con emergentintegrations
+            chat = LlmChat(
+                api_key=emergent_key,
+                session_id=f"followup_report_{user_id}_{datetime.now(timezone.utc).timestamp()}",
+                system_message=system_message
+            ).with_model("openai", "gpt-4o")
+            
+            # Crear mensaje de usuario
+            user_message = UserMessage(text=user_prompt_text)
+            
+            # Enviar mensaje y obtener respuesta
+            report_text = await chat.send_message(user_message)
             logger.info("✅ Informe inteligente generado exitosamente")
             
         except Exception as e:
