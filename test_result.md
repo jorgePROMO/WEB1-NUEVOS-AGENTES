@@ -1259,3 +1259,21 @@ agent_communication:
     - agent: "main"
       message: "✅ ERROR SERIALIZACIÓN DATETIME RESUELTO: Después de fix ObjectId, usuario intentó generar plan y recibió nuevo error: 'E1 falló: Object of type datetime is not JSON serializable'. Invoqué troubleshoot_agent quien identificó: MongoDB devuelve datetime objects en campos como submitted_at, updated_at. Cuando estos datos (previous_plan, followup) se pasan a agentes E.D.N.360, intentan JSON serialize y fallan porque datetime no es JSON serializable. SOLUCIÓN COMPLETA: Creada función _serialize_datetime_fields() que recursivamente convierte datetime → ISO string en ANY data structure (dicts, lists, nested). Aplicada en 4 lugares críticos: 1) orchestrator.py _execute_training_initial: serializa previous_plan antes de añadir, 2) orchestrator.py _execute_nutrition_initial: serializa previous_nutrition_plan, 3) server.py admin_generate_training_plan: serializa followup antes de crear context_data, 4) server.py admin_generate_nutrition_plan: serializa submission followup. Backend reiniciado. Usuario debe: 1) Seleccionar seguimiento como cuestionario base, 2) Generar plan entrenamiento, 3) Verificar que E1 ejecuta sin error 'not JSON serializable', 4) Plan debe generarse exitosamente, 5) Repetir para nutrición."
 
+
+backend:
+  - task: "Fix ObjectId Planes Previos - Training y Nutrition"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ OBJECTID PLANES PREVIOS ARREGLADO - Usuario reportó error al intentar generar plan de nutrición con plan previo seleccionado: 'Plan nutricional previo 15/11/2025 - Mes 11/2025 no encontrado'. Mismo problema de ObjectId pero ahora en búsquedas de planes previos. SOLUCIÓN: Aplicada conversión ObjectId en TODAS las búsquedas de planes previos: 1) admin_generate_nutrition_plan línea 3803: previous_nutrition_plan búsqueda en nutrition_plans, 2) admin_generate_training_plan línea 5767: previous_plan búsqueda en training_plans, 3) admin_generate_followup_report líneas 9112-9113: prev_training y new_training búsquedas, 4) admin_generate_followup_report líneas 9122-9123: prev_nutrition y new_nutrition búsquedas. Todas usan patrón: ObjectId(id) if ObjectId.is_valid(id) else id. Backend reiniciado. READY FOR TESTING - seleccionar plan previo en dropdown y generar debe funcionar sin error 'no encontrado'."
+
+agent_communication:
+    - agent: "main"
+      message: "✅ FIX COMPLETO OBJECTID - TODOS LOS ENDPOINTS: Usuario reportó nuevo error después de fixes anteriores: 'Plan nutricional previo no encontrado' al intentar generar con plan previo seleccionado. Era el MISMO problema de ObjectId pero en búsquedas de planes previos (no cuestionarios). ANÁLISIS: Ya arreglamos submission_id y source_id (cuestionarios), pero faltaban previous_plan_id y previous_nutrition_plan_id. SOLUCIÓN EXHAUSTIVA: Aplicada conversión ObjectId en 6 búsquedas de planes: admin_generate_nutrition_plan (previous_nutrition_plan), admin_generate_training_plan (previous_plan), admin_generate_followup_report (prev_training, new_training, prev_nutrition, new_nutrition). Todas las búsquedas de DB en estos endpoints ahora convierten IDs correctamente. Backend reiniciado. AHORA COMPLETO: Conversión ObjectId aplicada en: submission_id, source_id, previous_plan_id, previous_nutrition_plan_id, previous_training_id, new_training_id, new_nutrition_id. Usuario debe: 1) Generar nutrición con plan previo seleccionado → debe funcionar, 2) Generar entrenamiento con plan previo seleccionado → debe funcionar, 3) Generar cualquier combinación con seguimientos → debe funcionar."
+
