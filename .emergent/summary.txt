@@ -1,86 +1,85 @@
 <analysis>
-The trajectory documents an intensely iterative development process driven by expert user feedback. The initial task was to resolve an OpenAI API budget error, which was handled by first attempting to use a universal key, and then reverting to the user's personal key after they increased its limit. This unblocked a cascade of deeper issues.
+The trajectory documents a complex and iterative development process, starting with cosmetic improvements and escalating into a deep, multi-layered debugging session. The initial task was to humanize the text format of AI-generated training and nutrition plans by editing formatting functions in . This was followed by a series of user-requested fixes and features: removing a UI element, fixing PDF generation dependencies (), adding a company logo, and creating a new marketing section and various CTAs on the frontend landing page.
 
-The core of the work involved refining the E.D.N.360 agent-based architecture. A series of user-identified problems led to significant refactoring:
-1.  **JSON Validity:** Initial agent outputs were not valid JSON, requiring more robust parsing logic in .
-2.  **Logical Inconsistencies:** The nutrition plans had major flaws (e.g., incorrect meal timing, missing pre/post-workout meals, large gaps between meals, mathematically incorrect macro calculations). This was addressed through extensive prompt engineering in agents N2, N4, N5, and N6.
-3.  **Architectural Flaw:** A key insight from the user (validated by ChatGPT analysis) revealed that the training agent (E9) was not communicating the required day types (Intense/A, Moderate/M, Rest/B) to the nutrition agents. This caused nutrition plans to be generated with unused M day templates. The fix was a major architectural change, making E9 the source of truth for the weekly schedule and modifying the nutrition agents to dynamically generate plans based on this input.
-4.  **Sharing & Formatting:** Multiple bugs in the PDF/Email functionality were fixed, and the final user request was to improve the human-likeness of the generated documents, which currently look too robotic.
+The core of the work, and the current unresolved issue, revolves around a critical bug: the inability to generate new plans using a follow-up questionnaire or a previous plan as a reference. This triggered an extensive and painful debugging cycle. The AI engineer, with frequent help from a , cycled through several incorrect hypotheses and fixes: frontend state management loops, flawed  conversions (which were later discovered to be entirely unnecessary as the app uses string-based IDs), and finally, a failure to update the UI with newly generated plans. The final state is one of active debugging, with the engineer having just added logging to the backend to trace the exact ID mismatch causing the persistent Plan... no encontrado error.
 
-The user's primary language is Spanish. The next agent MUST respond in Spanish.
+The user's primary language is Spanish. The next agent **MUST** respond in Spanish.
 </analysis>
 
 <product_requirements>
-The application is a sophisticated AI coaching tool for fitness professionals to create and manage personalized training and nutrition plans for their clients.
+The application, E.D.N.360, is an AI-powered platform for fitness professionals to create highly personalized training and nutrition plans for clients.
 
-The core system, E.D.N.360, is an orchestrated chain of AI agents that generates these plans. Development has focused on ensuring the generated plans are not just templates, but are logically sound, mathematically precise, and highly personalized based on client data.
+**Core Functionality:**
+-   **AI-Driven Plan Generation:** An orchestrated system of AI agents generates plans based on client data.
+-   **Progressive Overload:** The system is intended to use previous plans and client feedback from follow-up questionnaires to generate new, logically progressing plans.
+-   **Dynamic Nutrition:** Nutrition plans adapt to training schedules (Intense vs. Rest days).
+-   **Professional Output:** Plans are formatted and can be shared via Email and PDF.
+-   **Branding & Marketing:** The web interface includes company branding (logo) and marketing content explaining the E.D.N.360 system.
 
-**Key Requirements Implemented:**
-- **Flexible Plan Generation:** Admins can generate plans based on specific client questionnaires and previous plans to ensure progression.
-- **Data-Driven AI:** The AI agents must strictly adhere to client data from questionnaires (e.g., training schedule, meal preferences).
-- **Training-Nutrition Synchronization:** Nutrition plans must dynamically adapt to the training schedule, differentiating between intense training days (Type A), moderate days (Type M), and rest days (Type B).
-- **Intelligent Meal Timing:** The system must automatically detect large gaps between meals and insert intermediate snacks (e.g., Media Mañana, Merienda) to ensure proper nutrient timing and prevent catabolism.
-- **Automated Shopping List:** A weekly shopping list is automatically generated by aggregating all ingredients and quantities from the nutrition plan.
-- **Professional Formatting & Sharing:** Plans must be formatted into clean, human-readable text for sharing via PDF and email.
+**Recent Work & Current State:**
+Development has focused on fixing a critical bug preventing the progressive overload feature from working. When an admin selects a follow-up questionnaire or a previous plan as a reference, the system fails with a not found error. This bug has been persistent despite numerous fixes, indicating a deep-seated issue in how the frontend and backend handle data fetching and ID management. The user is blocked from using a key feature of the application.
 </product_requirements>
 
 <key_technical_concepts>
-- **Monorepo Architecture:** React (frontend) and FastAPI (backend).
-- **Agent-Based System (E.D.N.360):** A chain of specialized Python AI agents that sequentially build the training and nutrition plans.
-- **Prompt Engineering:** The core application logic resides in the system prompts of each agent. These have been heavily refined for accuracy, data adherence, and structured JSON output.
-- **Dynamic Data Sourcing:** Backend logic dynamically selects and passes client questionnaires and previous plans as context to the agent chain.
-- **Server-Side Formatting:** Python functions in  are responsible for converting the final agent JSON output into professionally formatted, human-readable text for display and sharing.
+- **Monorepo Architecture:** React frontend and FastAPI backend.
+- **Agent-Based System (E.D.N.360):** A chain of Python AI agents using prompt engineering.
+- **Database ID Schema:** The application uses **string-based IDs** for database records (derived from timestamps), **not** MongoDB's . This was a critical and late discovery.
+- **Frontend State Management:** The core bug involves complex interactions within React's  and  in .
+- **Backend API:** FastAPI endpoints handle all logic, including plan generation, data fetching, and PDF generation with WeasyPrint.
 </key_technical_concepts>
 
 <code_architecture>
-The application follows a standard monorepo structure with a frontend and backend directory.
+The application is a standard monorepo with separate  and  directories.
 
 
-- ****:
-    - **Importance**: The central FastAPI application. It defines all API endpoints, including plan generation, sharing (PDF/Email), and crucially, contains the formatting functions (, ) that convert raw agent JSON into the final, user-facing documents. It's also where the automated shopping list is generated.
-    - **Changes**: This file was heavily modified to:
-        - Implement the logic for sharing plans via Email and PDF, including fixing bugs where raw JSON was being sent instead of formatted text.
-        - Add a function to generate a weekly shopping list by processing the generated menu.
-        - Repeatedly update the text formatting functions to improve the layout, fix mathematical inconsistencies in displayed macros, and add/remove sections based on user feedback (e.g., adding a multi-day macro summary, creating a weekly menu table).
-        - Pass  to the orchestrator.
+-   ****:
+    -   **Importance**: This is the application's nerve center. It contains all FastAPI endpoints, including the buggy ones for plan generation (, ) and listing (, ). It's where database lookups () have been repeatedly and incorrectly modified.
+    -   **Summary of Changes**: This file has been in a constant state of flux. Changes include:
+        -   Refactoring text formatting functions ().
+        -   Fixing  PDF generation dependencies.
+        -   Adding and then completely removing  conversion logic across multiple endpoints, which was a major red herring.
+        -   Ensuring  fields are converted to strings in GET endpoints.
+        -   Most recently, adding  calls to debug the Plan not found error.
 
-- ****:
-    - **Importance**: This is the final agent in the training chain. It was elevated to be the source of truth for the weekly training schedule structure.
-    - **Changes**: The prompt was significantly rewritten to force the agent to output an explicit summary of the week's structure (e.g., ). This output now dictates how the entire nutrition plan is generated, ensuring perfect synchronization.
+-   ****:
+    -   **Importance**: This file contains the entire UI and state management logic for the admin's main workspace. The core bug originates here, in the complex interplay of data fetching (), state updates (), and API calls ().
+    -   **Summary of Changes**:
+        -   UI element removal.
+        -   Multiple attempts to fix state management, including one that caused an infinite loop and was reverted.
+        -   Logic was added to automatically detect if a selected questionnaire is an initial or followup type to pass the correct  to the backend.
+        -   A fix was added to re-fetch the list of available plans after a new one is generated, to ensure dropdowns are up-to-date.
 
-- ** & **:
-    - **Importance**: N2 calculates the caloric and macronutrient targets. N5 distributes these macros across meals throughout the day.
-    - **Changes**: These agents underwent a major overhaul to fix critical mathematical and logical flaws.
-        - **N2:** The prompt was changed to generate separate, distinct macro targets for each day type (A, M, B) provided by agent E9, ensuring the ciclido (cycling) is correctly calculated.
-        - **N5:** The prompt was enhanced to intelligently detect large time gaps between meals and automatically insert intermediate meals (Media Mañana, Merienda). It was also updated to correctly use the distinct macro sets from N2 for each day type.
+-   ** & **:
+    -   **Importance**: These files control the public-facing website.
+    -   **Summary of Changes**:
+        -   The logo was added to  and .
+        -   A new component, , was created and added to  to display marketing text.
+        -   A new reusable component, , was created and placed in multiple strategic locations on the .
 
-- ****:
-    - **Importance**: The primary interface for the admin user.
-    - **Changes**: Minor but important UI changes were made based on user requests.
-        - Buttons for sharing training and nutrition plans via WhatsApp were removed to simplify the UI, as the user decided to only use this feature for follow-up reports. The corresponding handler functions (, ) were commented out.
-
-- ****:
-    - **Importance**: The parent class for all AI agents, containing shared logic for executing agent calls and processing responses.
-    - **Changes**: The  method was made more robust to handle cases where the LLM returns JSON wrapped in markdown or other text, preventing parsing errors.
+-   ****:
+    -   **Importance**: This file orchestrates the sequence of AI agent calls.
+    -   **Summary of Changes**: A helper function was added to serialize  objects to prevent JSON serialization errors when passing previous plan data to the agents.
 </code_architecture>
 
 <pending_tasks>
-- **Improve Document Formatting:** The user's primary pending task is to make the final output of both the training and nutrition plans look less machine-generated. This involves reducing excessive lines, borders, and emojis to create a cleaner, more professional, and human-like appearance.
+- **Primary Task:** Resolve the Plan/Cuestionario no encontrado error that occurs when generating a new plan using a previous plan or a follow-up questionnaire as a reference. This is the main blocker.
+- **Secondary Task:** Implement the user's requested naming convention for saved plans to improve clarity (e.g., PLAN NUTRICION 1 - [Fecha]).
 </pending_tasks>
 
 <current_work>
-The most recent work was a direct response to user feedback on the visual presentation of the generated plans. After fixing all the functional issues with plan generation and sharing, the user received an email with a training plan and a nutrition plan.
+The last cycle of work was an intense, multi-attempt effort to debug a critical error: Plan nutricional previo no encontrado. This error occurs when a user tries to generate a new plan referencing a previous one.
 
-The user's feedback was that both documents, while functionally correct, looked machine-generated due to an overabundance of lines, separators (like ), and emojis. For the nutrition plan, the weekly menu table was also not rendering correctly in the email, appearing broken.
+The previous AI engineer went through a painful process of elimination, guided by a :
+1.  Incorrectly identified the issue as a missing  conversion and implemented fixes across .
+2.  Discovered this was wrong, as the application uses string-based IDs (derived from timestamps), not s.
+3.  Reverted all  changes.
+4.  Identified that the frontend dropdowns were not refreshing after a new plan was generated, and added the necessary re-fetching logic in .
 
-The AI engineer acknowledged this and was about to begin the task of humanizing the output. This involves editing the server-side formatting functions ( and  in ) to produce a cleaner, more minimalist, and professional text layout. The work was paused just before these file edits were made.
+Despite these fixes, the error persists. The user suggested that editing a plan might be saving it as a new entity, thus invalidating the old ID. The engineer verified the  endpoint and confirmed it correctly updates in place.
+
+The final action taken was to accept that the root cause is still unknown and to add detailed logging inside the  function in . The goal is to log the exact  received from the frontend and compare it with the IDs being queried from the database to find the source of the mismatch. The work was paused just after adding this logging code.
 </current_work>
 
 <optional_next_step>
-I will start by editing the formatting functions in  to produce a cleaner, more professional, and human-like output for the training and nutrition plans, as requested by the user.
+Trigger the Plan nutricional previo no encontrado error again, then immediately inspect the backend logs to analyze the newly added log output and pinpoint the exact ID mismatch.
 </optional_next_step>
-
-<direct_quotes>
-DEMASIADAS LINES Y EMOGIS...SE VE QUE LO HA HECHO UNA MÁQUINA Y TODO DEBE PARECER HUMANO, QUE LO HE HECHO MI EQUIPO Y LO HE REVISADO YO
-Y CON LA NUTRICION IGUAL...NI SIQUIERA SE VE LA TABLA DEL MENU COMPLETA
-</direct_quotes>

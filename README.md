@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://nutriplan-sync.preview.emergentagent.com
+**URL Actual:** https://edn360-fitness.preview.emergentagent.com
 
 ---
 

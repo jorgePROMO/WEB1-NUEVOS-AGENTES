@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://nutriplan-sync.preview.emergentagent.com
+https://edn360-fitness.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 
