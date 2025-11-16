@@ -1453,6 +1453,9 @@ backend:
         - working: "NA"
           agent: "main"
           comment: "FIX SECUNDARIO: Usuario confirmó que data mixing se resolvió pero dropdown de cuestionarios quedó vacío. PROBLEMA: Endpoint /follow-up-questionnaires buscaba en colección incorrecta (questionnaire_responses en lugar de follow_up_submissions). SOLUCIÓN: Corregido endpoint líneas 9205-9232 para buscar en follow_up_submissions con campo submission_date, formato mejorado con label descriptivo y type='followup'. Backend reiniciado. READY FOR RE-TESTING."
+        - working: true
+          agent: "testing"
+          comment: "✅ FOLLOW-UP QUESTIONNAIRES ENDPOINT FIX VERIFIED COMPLETELY: Comprehensive testing completed as requested in review. TESTED FLOW: 1) Admin login with ecjtrainer@gmail.com/jorge3007 ✅, 2) Client selection (jorge31011987promo@gmail.com) ✅, 3) CRITICAL ENDPOINT TEST: GET /api/admin/users/{user_id}/follow-up-questionnaires ✅ - Response has correct structure {'questionnaires': [...]}, Found 1 questionnaire with all required fields (id, label, type), Label format correct '📋 Seguimiento (15/11/2025)', Type correct 'followup', All optional fields present (submitted_at, submission_date, days_since_last_plan, status), 4) COMPARISON WITH OTHER ENDPOINTS ✅ - Training plans endpoint returns only training plans (no follow-up data mixed), Nutrition plans endpoint returns only nutrition plans (no follow-up data mixed). OBJETIVO CUMPLIDO: Endpoint now correctly returns questionnaires from the proper collection (follow_up_submissions), uses correct field (submission_date), returns improved format with descriptive labels, no data mixing between endpoints. The fix is working perfectly."
 
 
 
