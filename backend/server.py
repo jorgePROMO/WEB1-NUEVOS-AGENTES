@@ -12,6 +12,7 @@ import shutil
 import httpx
 import socketio
 import uuid
+import json
 
 from models import (
     UserCreate, UserResponse, UserInDB, Subscription,
