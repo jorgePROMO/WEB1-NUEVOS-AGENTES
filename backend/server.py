@@ -8136,7 +8136,12 @@ async def get_financial_overview(
             "total_transactions": total_transactions,
             "successful_payments": successful_count,
             "failed_payments": failed_payments,
-            "mrr": round(mrr, 2)
+            "mrr": round(mrr, 2),
+            # Nuevas métricas para pagos manuales
+            "manual_payments_count": len(manual_payments),
+            "manual_payments_total": round(total_manual_revenue, 2),
+            "manual_payments_monthly": round(monthly_manual_revenue, 2),
+            "manual_payments_annual": round(annual_manual_revenue, 2)
         }
         
         return metrics
