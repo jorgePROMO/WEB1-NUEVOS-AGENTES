@@ -9190,38 +9190,74 @@ async def generate_follow_up_report(
             prev_nutrition = await db.nutrition_plans.find_one({"_id": previous_nutrition_id})
             new_nutrition = await db.nutrition_plans.find_one({"_id": new_nutrition_id})
         
-        # TODO: Aquí llamar al agente S1 para generar el informe
-        # Por ahora, generar informe básico
-        report_text = f"""
-# INFORME DE SEGUIMIENTO
+        # Obtener información del usuario
+        user = await db.users.find_one({"_id": user_id})
+        user_name = user.get("name", user.get("username", "Cliente")) if user else "Cliente"
+        
+        # Generar informe con contenido útil
+        prev_training_data = prev_training.get("edn360_data", {})
+        new_training_data = new_training.get("edn360_data", {})
+        
+        # Extraer información de entrenamiento
+        prev_mesociclo = prev_training_data.get("e2_mesociclo", {})
+        new_mesociclo = new_training_data.get("e2_mesociclo", {})
+        
+        report_text = f"""# INFORME DE SEGUIMIENTO
 
-**Cliente**: {user_id}
-**Fecha**: {datetime.now(timezone.utc).strftime('%d/%m/%Y')}
+**Cliente**: {user_name}
+**Fecha**: {datetime.now(timezone.utc).strftime('%d/%m/%Y %H:%M')}
 
-## 📊 COMPARACIÓN DE PLANES
+---
 
-### 💪 ENTRENAMIENTO
-- **Plan Anterior**: {previous_training_id}
-- **Plan Nuevo**: {new_training_id}
+## 📊 COMPARACIÓN DE PLANES DE ENTRENAMIENTO
 
-### 🥗 NUTRICIÓN
+### Plan Anterior (Mes {prev_training.get('month', 'N/A')}/{prev_training.get('year', 'N/A')})
+- **Frecuencia semanal**: {prev_mesociclo.get('frecuencia_semanal', 'N/A')} días
+- **Duración sesión**: {prev_mesociclo.get('duracion_sesion', 'N/A')} minutos
+- **Tipo**: {prev_mesociclo.get('tipo_entrenamiento', 'N/A')}
+- **Generado**: {datetime.fromisoformat(prev_training.get('generated_at')).strftime('%d/%m/%Y') if prev_training.get('generated_at') else 'N/A'}
+
+### Plan Nuevo (Mes {new_training.get('month', 'N/A')}/{new_training.get('year', 'N/A')})
+- **Frecuencia semanal**: {new_mesociclo.get('frecuencia_semanal', 'N/A')} días
+- **Duración sesión**: {new_mesociclo.get('duracion_sesion', 'N/A')} minutos
+- **Tipo**: {new_mesociclo.get('tipo_entrenamiento', 'N/A')}
+- **Generado**: {datetime.fromisoformat(new_training.get('generated_at')).strftime('%d/%m/%Y') if new_training.get('generated_at') else 'N/A'}
+
 """
+        
+        # Añadir información de nutrición si está disponible
         if prev_nutrition and new_nutrition:
-            report_text += f"""- **Plan Anterior**: {previous_nutrition_id}
-- **Plan Nuevo**: {new_nutrition_id}
+            prev_nutrition_data = prev_nutrition.get("edn360_data", {})
+            new_nutrition_data = new_nutrition.get("edn360_data", {})
+            
+            prev_macros = prev_nutrition_data.get("n4_macros", {})
+            new_macros = new_nutrition_data.get("n4_macros", {})
+            
+            report_text += f"""
+## 🥗 COMPARACIÓN DE PLANES DE NUTRICIÓN
+
+### Plan Anterior (Mes {prev_nutrition.get('month', 'N/A')}/{prev_nutrition.get('year', 'N/A')})
+- **Calorías**: {prev_macros.get('calorias_totales', 'N/A')} kcal/día
+- **Proteínas**: {prev_macros.get('proteinas_totales', 'N/A')}g
+- **Carbohidratos**: {prev_macros.get('carbohidratos_totales', 'N/A')}g
+- **Grasas**: {prev_macros.get('grasas_totales', 'N/A')}g
+
+### Plan Nuevo (Mes {new_nutrition.get('month', 'N/A')}/{new_nutrition.get('year', 'N/A')})
+- **Calorías**: {new_macros.get('calorias_totales', 'N/A')} kcal/día
+- **Proteínas**: {new_macros.get('proteinas_totales', 'N/A')}g
+- **Carbohidratos**: {new_macros.get('carbohidratos_totales', 'N/A')}g
+- **Grasas**: {new_macros.get('grasas_totales', 'N/A')}g
+
 """
-        else:
-            report_text += "- No se especificaron planes de nutrición para comparar\n"
         
         report_text += """
+## 📝 NOTAS
 
-## 🎯 ADAPTACIONES REALIZADAS
+Este es un informe comparativo básico. Para un análisis más detallado de progresión, adaptaciones específicas y objetivos personalizados para las próximas 4 semanas, considera implementar el agente de seguimiento S1.
 
-[El agente S1 generará aquí el análisis detallado de cambios]
+---
 
-## 📈 OBJETIVOS PRÓXIMOS 4 SEMANAS
-
-[El agente S1 generará objetivos específicos]
+*Informe generado automáticamente por E.D.N.360*
 """
         
         # Guardar informe
