@@ -9331,14 +9331,33 @@ async def generate_follow_up_report(
         # FASE 2: Extraer y estructurar datos para el LLM
         
         # 2.1 Datos del cuestionario de seguimiento
-        questionnaire_responses = followup_questionnaire.get("responses", {})
+        # En follow_up_submissions los datos están en campos estructurados
+        adherence = followup_questionnaire.get("adherence", {})
+        wellbeing = followup_questionnaire.get("wellbeing", {})
+        changes_perceived = followup_questionnaire.get("changes_perceived", {})
+        feedback = followup_questionnaire.get("feedback", {})
+        measurements = followup_questionnaire.get("measurements", {})
+        
         questionnaire_text = f"""
 CUESTIONARIO DE SEGUIMIENTO DEL CLIENTE:
 
-Fecha: {_format_date_safe(followup_questionnaire.get('submitted_at'))}
+Fecha: {_format_date_safe(followup_questionnaire.get('submission_date'))}
+Días desde último plan: {followup_questionnaire.get('days_since_last_plan', 'N/A')}
 
-Respuestas del cliente:
-{json.dumps(questionnaire_responses, indent=2, ensure_ascii=False)}
+ADHERENCIA:
+{json.dumps(adherence, indent=2, ensure_ascii=False)}
+
+BIENESTAR:
+{json.dumps(wellbeing, indent=2, ensure_ascii=False)}
+
+CAMBIOS PERCIBIDOS:
+{json.dumps(changes_perceived, indent=2, ensure_ascii=False)}
+
+FEEDBACK:
+{json.dumps(feedback, indent=2, ensure_ascii=False)}
+
+MEDICIONES:
+{json.dumps(measurements, indent=2, ensure_ascii=False)}
 """
         
         # 2.2 Extraer datos estructurados de entrenamiento
