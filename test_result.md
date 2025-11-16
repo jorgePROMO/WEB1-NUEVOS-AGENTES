@@ -1387,6 +1387,10 @@ agent_communication:
       message: "🐛 BUG REPORTADO - Error al generar informe seguimiento: 'Field required' para previous_training_id y new_training_id en query. Usuario recibe error Pydantic que indica que el endpoint espera parámetros en query pero frontend los envía en body."
     - agent: "main"
       message: "✅ FIX ENDPOINT INFORME SEGUIMIENTO: server.py generate_follow_up_report() - Endpoint cambiado para recibir parámetros en body en lugar de query string. Ahora lee datos con await request.json() y obtiene previous_training_id, new_training_id, previous_nutrition_id, new_nutrition_id del body. Validación añadida para parámetros requeridos. Backend reiniciado. Error de 'Field required' eliminado."
+    - agent: "main"
+      message: "🐛 BUG REPORTADO - Informe generado está vacío y no abre: Usuario reporta que informe tarda 1 segundo (muy rápido), no abre modal, y quiere poder borrar/editar informes."
+    - agent: "main"
+      message: "✅ INFORME SEGUIMIENTO COMPLETO IMPLEMENTADO: 1) Backend server.py - Mejorado contenido del informe con datos reales de planes (frecuencia, duración, tipo entrenamiento, macros nutrición, calorías), eliminado placeholder '[El agente S1...]'. 2) Creados endpoints DELETE y PATCH para /admin/users/{user_id}/follow-up-reports/{report_id} para borrar y editar informes. 3) Frontend AdminDashboard.jsx - Creadas funciones deleteFollowUpReport() y updateFollowUpReport(). 4) Creado modal completo para visualizar informe con botones Editar y Eliminar. Modal muestra contenido formateado con pre-wrap. Backend reiniciado. Modal ahora abre correctamente y muestra contenido útil."
 
 backend:
   - task: "Convención de Nombres para Planes Guardados"
