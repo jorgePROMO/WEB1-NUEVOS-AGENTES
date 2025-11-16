@@ -8943,7 +8943,7 @@ async def get_user_training_plans(user_id: str, request: Request):
             iso_str = datetime.now(timezone.utc).isoformat()
         
         formatted_plans.append({
-            "id": followup["_id"],
+            "id": str(followup["_id"]),
             "label": f"📋 Seguimiento ({date_str})",
             "generated_at": iso_str,
             "source_type": "followup",
