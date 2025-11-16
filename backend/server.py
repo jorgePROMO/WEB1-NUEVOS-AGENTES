@@ -5677,14 +5677,9 @@ async def admin_generate_training_plan(
     
     try:
         # Obtener datos del cuestionario según el tipo de fuente
-        try:
-            source_oid = ObjectId(source_id)
-        except:
-            raise HTTPException(status_code=400, detail="ID de cuestionario inválido")
-        
         if source_type == "initial":
             # Generar desde cuestionario inicial de nutrición
-            submission = await db.nutrition_questionnaire_submissions.find_one({"_id": source_oid})
+            submission = await db.nutrition_questionnaire_submissions.find_one({"_id": source_id})
             
             if not submission:
                 raise HTTPException(status_code=404, detail="Cuestionario no encontrado")
@@ -5697,7 +5692,7 @@ async def admin_generate_training_plan(
             
         elif source_type == "followup":
             # Generar desde follow-up
-            followup = await db.follow_up_submissions.find_one({"_id": source_oid})
+            followup = await db.follow_up_submissions.find_one({"_id": source_id})
             
             if not followup:
                 raise HTTPException(status_code=404, detail="Follow-up no encontrado")
