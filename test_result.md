@@ -1391,6 +1391,10 @@ agent_communication:
       message: "🐛 BUG REPORTADO - Informe generado está vacío y no abre: Usuario reporta que informe tarda 1 segundo (muy rápido), no abre modal, y quiere poder borrar/editar informes."
     - agent: "main"
       message: "✅ INFORME SEGUIMIENTO COMPLETO IMPLEMENTADO: 1) Backend server.py - Mejorado contenido del informe con datos reales de planes (frecuencia, duración, tipo entrenamiento, macros nutrición, calorías), eliminado placeholder '[El agente S1...]'. 2) Creados endpoints DELETE y PATCH para /admin/users/{user_id}/follow-up-reports/{report_id} para borrar y editar informes. 3) Frontend AdminDashboard.jsx - Creadas funciones deleteFollowUpReport() y updateFollowUpReport(). 4) Creado modal completo para visualizar informe con botones Editar y Eliminar. Modal muestra contenido formateado con pre-wrap. Backend reiniciado. Modal ahora abre correctamente y muestra contenido útil."
+    - agent: "deployment"
+      message: "❌ DEPLOYMENT HEALTH CHECK FAILED - Blockers críticos identificados: 1) .env files verificados - EXISTEN correctamente, 2) Hardcoded Stripe webhook URLs en líneas 7815 y 7930 - BLOCKER para deployment, 3) Queries DB no optimizadas (to_list(length=None)) - WARN performance. Findings positivos: CORS correcto, MongoDB único DB, Supervisor config válido, Frontend/Backend usan env vars correctamente."
+    - agent: "main"
+      message: "✅ DEPLOYMENT BLOCKERS RESUELTOS: server.py líneas 7815 y 7930 - Cambiado hardcoded webhook_url a dinámico usando os.environ.get('FRONTEND_URL'). Ahora webhook_url = f'{frontend_url}/api/webhook/stripe'. Fallback a preview domain si FRONTEND_URL no está seteado. Backend reiniciado. BLOCKER crítico eliminado. Queries DB no optimizadas quedan como WARN (no blocker). App lista para deployment."
 
 backend:
   - task: "Convención de Nombres para Planes Guardados"
