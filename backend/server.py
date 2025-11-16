@@ -9251,7 +9251,14 @@ async def get_follow_up_reports(user_id: str, request: Request):
     
     reports = await db.follow_up_reports.find(
         {"user_id": user_id}
-    ).sort("generated_at", -1).to_list(length=None)
+    ).sort("generated_at", -1).to_list(length=100)  # Limit to last 100 reports
+    
+    # Convert _id to string for JSON serialization
+    for report in reports:
+        report["_id"] = str(report["_id"])
+        # Also convert generated_at datetime to ISO string if it's a datetime object
+        if isinstance(report.get("generated_at"), datetime):
+            report["generated_at"] = report["generated_at"].isoformat()
     
     return {"reports": reports}
 
