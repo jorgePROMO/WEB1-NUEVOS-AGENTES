@@ -9358,23 +9358,32 @@ async def generate_follow_up_report(
             prev_nutrition_data = prev_nutrition.get("edn360_data", {})
             new_nutrition_data = new_nutrition.get("edn360_data", {})
             
-            prev_macros = prev_nutrition_data.get("n4_macros", {})
-            new_macros = new_nutrition_data.get("n4_macros", {})
+            # Estructura correcta: N1 para metabólico, N2 para energy/macros
+            prev_n1 = prev_nutrition_data.get("N1", {})
+            new_n1 = new_nutrition_data.get("N1", {})
+            prev_n2 = prev_nutrition_data.get("N2", {})
+            new_n2 = new_nutrition_data.get("N2", {})
+            
+            # Obtener macros del día A (días de entrenamiento)
+            prev_macros_a = prev_n2.get("macros_dia_A", {})
+            new_macros_a = new_n2.get("macros_dia_A", {})
             
             report_text += f"""
 ## 🥗 COMPARACIÓN DE PLANES DE NUTRICIÓN
 
 ### Plan Anterior (Mes {prev_nutrition.get('month', 'N/A')}/{prev_nutrition.get('year', 'N/A')})
-- **Calorías**: {prev_macros.get('calorias_totales', 'N/A')} kcal/día
-- **Proteínas**: {prev_macros.get('proteinas_totales', 'N/A')}g
-- **Carbohidratos**: {prev_macros.get('carbohidratos_totales', 'N/A')}g
-- **Grasas**: {prev_macros.get('grasas_totales', 'N/A')}g
+- **TDEE**: {prev_n1.get('tdee_estimado', prev_n2.get('tdee', 'N/A'))} kcal/día
+- **Calorías (Día Entreno)**: {prev_macros_a.get('kcal_objetivo', 'N/A')} kcal
+- **Proteínas**: {prev_macros_a.get('proteinas_g', 'N/A')}g ({prev_macros_a.get('proteinas_gkg', 'N/A')}g/kg)
+- **Carbohidratos**: {prev_macros_a.get('carbohidratos_g', 'N/A')}g
+- **Grasas**: {prev_macros_a.get('grasas_g', 'N/A')}g
 
 ### Plan Nuevo (Mes {new_nutrition.get('month', 'N/A')}/{new_nutrition.get('year', 'N/A')})
-- **Calorías**: {new_macros.get('calorias_totales', 'N/A')} kcal/día
-- **Proteínas**: {new_macros.get('proteinas_totales', 'N/A')}g
-- **Carbohidratos**: {new_macros.get('carbohidratos_totales', 'N/A')}g
-- **Grasas**: {new_macros.get('grasas_totales', 'N/A')}g
+- **TDEE**: {new_n1.get('tdee_estimado', new_n2.get('tdee', 'N/A'))} kcal/día
+- **Calorías (Día Entreno)**: {new_macros_a.get('kcal_objetivo', 'N/A')} kcal
+- **Proteínas**: {new_macros_a.get('proteinas_g', 'N/A')}g ({new_macros_a.get('proteinas_gkg', 'N/A')}g/kg)
+- **Carbohidratos**: {new_macros_a.get('carbohidratos_g', 'N/A')}g
+- **Grasas**: {new_macros_a.get('grasas_g', 'N/A')}g
 
 """
         
