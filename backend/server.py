@@ -9248,6 +9248,30 @@ async def update_follow_up_report(
         raise HTTPException(status_code=500, detail=f"Error actualizando informe: {str(e)}")
 
 
+@api_router.get("/admin/users/{user_id}/follow-up-questionnaires")
+async def get_follow_up_questionnaires(user_id: str, request: Request):
+    """Obtiene todos los cuestionarios de seguimiento de un usuario"""
+    await require_admin(request)
+    
+    # Obtener cuestionarios de seguimiento (source_type = 'followup')
+    questionnaires = await db.questionnaire_responses.find({
+        "user_id": user_id,
+        "source_type": "followup"
+    }).sort("submitted_at", -1).to_list(length=100)
+    
+    # Formatear respuesta
+    formatted = []
+    for q in questionnaires:
+        formatted.append({
+            "id": str(q["_id"]),
+            "submitted_at": q.get("submitted_at").isoformat() if q.get("submitted_at") else None,
+            "source_type": q.get("source_type", "followup"),
+            "responses": q.get("responses", {})
+        })
+    
+    return {"questionnaires": formatted}
+
+
 @api_router.get("/admin/users/{user_id}/follow-up-reports")
 async def get_follow_up_reports(user_id: str, request: Request):
     """Obtiene todos los informes de seguimiento de un usuario"""
