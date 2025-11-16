@@ -9328,22 +9328,33 @@ async def generate_follow_up_report(
         if not prev_training or not new_training:
             raise HTTPException(status_code=404, detail="Planes de entrenamiento no encontrados")
         
-        # Obtener planes de nutrición si se especificaron
+        # 1.3 Planes de nutrición
         prev_nutrition = None
         new_nutrition = None
         if previous_nutrition_id and new_nutrition_id:
             prev_nutrition = await db.nutrition_plans.find_one({"_id": previous_nutrition_id})
             new_nutrition = await db.nutrition_plans.find_one({"_id": new_nutrition_id})
         
-        # Obtener información del usuario
+        # 1.4 Información del usuario
         user = await db.users.find_one({"_id": user_id})
         user_name = user.get("name", user.get("username", "Cliente")) if user else "Cliente"
         
-        # Generar informe con contenido útil
+        # FASE 2: Extraer y estructurar datos para el LLM
+        
+        # 2.1 Datos del cuestionario de seguimiento
+        questionnaire_responses = followup_questionnaire.get("responses", {})
+        questionnaire_text = f"""
+CUESTIONARIO DE SEGUIMIENTO DEL CLIENTE:
+
+Fecha: {_format_date_safe(followup_questionnaire.get('submitted_at'))}
+
+Respuestas del cliente:
+{json.dumps(questionnaire_responses, indent=2, ensure_ascii=False)}
+"""
+        
+        # 2.2 Extraer datos estructurados de entrenamiento
         prev_training_data = prev_training.get("edn360_data", {})
         new_training_data = new_training.get("edn360_data", {})
-        
-        # Extraer información de entrenamiento (estructura correcta con E4)
         prev_e4 = prev_training_data.get("E4", {})
         new_e4 = new_training_data.get("E4", {})
         prev_mesociclo = prev_e4.get("mesociclo", {})
