@@ -5764,10 +5764,10 @@ async def admin_generate_training_plan(
         previous_plan_data = None
         if previous_plan_id:
             logger.info(f"📋 Usando plan previo {previous_plan_id} como referencia")
-            previous_plan = await db.training_plans.find_one({"_id": previous_plan_id})
+            previous_plan = await db.training_plans.find_one({"_id": ObjectId(previous_plan_id) if ObjectId.is_valid(previous_plan_id) else previous_plan_id})
             
             if not previous_plan:
-                raise HTTPException(status_code=404, detail=f"Plan previo {previous_plan_id} no encontrado")
+                raise HTTPException(status_code=404, detail=f"Plan previo no encontrado")
             
             if previous_plan.get("user_id") != user_id:
                 raise HTTPException(status_code=403, detail="El plan previo no pertenece a este usuario")
