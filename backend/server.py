@@ -7812,7 +7812,8 @@ async def get_checkout_status(
         
         # Inicializar Stripe Checkout
         api_key = os.environ.get("STRIPE_API_KEY")
-        webhook_url = "https://edn360-fitness.preview.emergentagent.com/api/webhook/stripe"
+        frontend_url = os.environ.get("FRONTEND_URL", "https://edn360-fitness.preview.emergentagent.com")
+        webhook_url = f"{frontend_url}/api/webhook/stripe"
         stripe_checkout = StripeCheckout(api_key=api_key, webhook_url=webhook_url)
         
         # Obtener estado del checkout
