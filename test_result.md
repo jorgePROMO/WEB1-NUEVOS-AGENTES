@@ -1407,6 +1407,10 @@ agent_communication:
       message: "🐛 USUARIO REPORTA: Informe generado muestra todo como 'N/A' - no extrae datos reales de los planes."
     - agent: "main"
       message: "✅ ESTRUCTURA DE DATOS CORREGIDA EN INFORME: Problema - código usaba estructura incorrecta (e2_mesociclo, n4_macros) que no existe. Estructura REAL: edn360_data.E4.mesociclo (entrenamiento), edn360_data.N1 (metabólico), edn360_data.N2 (macros). CORRECCIONES: 1) Entrenamiento - ahora extrae de E4.mesociclo con campos: frecuencia_semanal, duracion_semanas, objetivo, split, estrategia. 2) Nutrición - ahora extrae de N1 (TDEE) y N2.macros_dia_A con: kcal_objetivo, proteinas_g, proteinas_gkg, carbohidratos_g, grasas_g. Backend reiniciado. Informe ahora muestra datos reales comparativos."
+    - agent: "main"
+      message: "🐛 USUARIO REPORTA: Informe muestra datos pero no hay análisis real de adaptaciones. Solo comparación de números. Usuario necesita análisis narrativo explicando cambios y por qué se hicieron. Este informe acompañará email con nuevos planes."
+    - agent: "main"
+      message: "✅ ANÁLISIS INTELIGENTE DE SEGUIMIENTO IMPLEMENTADO: generate_follow_up_report() ahora incluye sistema completo de análisis basado en reglas. ANÁLISIS DE ENTRENAMIENTO: Detecta y explica cambios en frecuencia (aumento/reducción), cambio de objetivo (hipertrofia→fuerza), cambio de split (full-body→upper-lower), cambio de estrategia (conservadora→progresiva). ANÁLISIS DE NUTRICIÓN: Detecta cambios de TDEE (±50 kcal), calorías (±50 kcal), proteínas (±10g), carbohidratos (±15g), genera explicación contextual del por qué. OBJETIVOS 4 SEMANAS: Adherencia, progresión cargas, recuperación, monitoreo. PRÓXIMOS PASOS: Link al panel, contacto, motivación. Informe ahora es narrativo, profesional y listo para envío por email. Backend reiniciado."
 
 backend:
   - task: "Convención de Nombres para Planes Guardados"
