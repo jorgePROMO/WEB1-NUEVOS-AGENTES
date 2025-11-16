@@ -1343,4 +1343,19 @@ agent_communication:
       message: "✅ PROBLEMA REAL: DROPDOWN NO SE ACTUALIZABA: Usuario indicó que problema ocurría después de EDITAR plan. Investigué endpoint PATCH /nutrition/{plan_id} - funciona bien, usa update_one (no crea nuevo). Entonces busqué el VERDADERO problema: Después de generateNutritionPlan exitoso, código llamaba loadNutritionPlan() (para mostrar plan en vista) pero OLVIDABA llamar loadNutritionPlansForSelector() (para actualizar dropdown). Resultado: Nuevo plan generado existía en DB pero NO aparecía en dropdown 'Plan Previo de Referencia'. Usuario veía lista desactualizada, seleccionaba plan viejo → error. FIX: Añadida recarga de selector después de generar. Comparado con entrenamiento que YA lo hacía bien (línea 284). Ahora ambos funcionan igual. Usuario debe: 1) Generar plan nutrición, 2) Verificar que nuevo plan aparece INMEDIATAMENTE en dropdown 'Plan Previo', 3) Seleccionarlo y generar otro plan, 4) Debe funcionar sin error 'no encontrado'."
     - agent: "main"
       message: "🎯 CAUSA RAÍZ REAL ENCONTRADA después de análisis profundo: El fix anterior del dropdown (recargar datos) NO era suficiente. El VERDADERO problema era más sutil: El dropdown usaba plan._id pero los objetos formateados del backend tienen el campo como 'id' (no '_id'). Evidencia: backend server.py línea 3922 devuelve {'id': plan['_id'], ...}, pero AdminDashboard.jsx línea 3261 intentaba leer plan._id. Esto causaba que el dropdown enviara 'undefined' al backend → error 'Plan no encontrado'. Fix aplicado: Cambiar dropdown de value={plan._id} a value={plan.id}. Este es el fix definitivo que resolverá el error reportado por el usuario."
+    - agent: "main"
+      message: "✅ MEJORA CONVENCIÓN DE NOMBRES COMPLETADA: Implementada convención de nombres mejorada para planes guardados. CAMBIOS: 1) Backend server.py líneas 9049-9064 (nutrition-plans endpoint) - label ahora usa formato 'PLAN NUTRICION {número} - {fecha}' en lugar de 'Último generado' o 'Plan {n}', 2) Backend server.py líneas 8925-8939 (training-plans endpoint) - label ahora usa formato 'PLAN ENTRENAMIENTO {número} - {fecha}'. RESULTADO: Los dropdowns de selección de planes previos ahora muestran nombres más claros y descriptivos como 'PLAN NUTRICION 1 - 16/11/2025', 'PLAN ENTRENAMIENTO 2 - 15/11/2025', etc. Esto mejora significativamente la UX al seleccionar planes de referencia."
+
+backend:
+  - task: "Convención de Nombres para Planes Guardados"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "MEJORA UX: Implementada convención de nombres más clara para planes guardados. Antes: 'Último generado (16/11/2025)' o 'Plan 2 (15/11/2025)'. Ahora: 'PLAN NUTRICION 1 - 16/11/2025', 'PLAN ENTRENAMIENTO 2 - 15/11/2025'. Aplicado en: 1) GET /api/admin/users/{user_id}/nutrition-plans (líneas 9049-9064), 2) GET /api/admin/users/{user_id}/training-plans (líneas 8925-8939). Los números se asignan en orden descendente (plan más reciente = número más alto). Formato consistente y profesional que facilita identificar planes al seleccionarlos como referencia."
 
