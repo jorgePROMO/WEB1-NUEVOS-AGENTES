@@ -1399,6 +1399,10 @@ agent_communication:
       message: "⚠️ USUARIO DEMANDA RESOLUCIÓN COMPLETA: Usuario rechaza warnings y exige que se resuelvan TODOS los problemas sin excepciones. 5 queries DB sin límites deben optimizarse."
     - agent: "main"
       message: "✅ TODOS LOS WARNINGS RESUELTOS - QUERIES DB OPTIMIZADAS: 1) Línea 3207-3214: get_all_tags() reescrito con aggregation pipeline + proyección limitada (limit 1000), elimina carga de todos los templates y tags. 2) Línea 8242-8280: get_financial_overview() completamente reescrito - TODOS los queries ahora usan aggregation pipelines para calcular server-side. Total revenue, monthly, annual, manual payments, y MRR calculados con $group sin cargar documentos en memoria. 3) Eliminados successful_payments.to_list(), manual_payments.to_list(), active_subs.to_list(). 4) Todas las operaciones ahora escalables sin degradación de performance. Backend reiniciado y testeado. CERO warnings restantes."
+    - agent: "main"
+      message: "🐛 USUARIO REPORTA 2 NUEVOS BUGS: 1) Error al generar informe: 'fromisoformat: argument must be str' - generated_at puede ser datetime object no string, 2) No puede borrar informes viejos de seguimiento."
+    - agent: "main"
+      message: "✅ BUGS INFORMES RESUELTOS: 1) Creada función helper _format_date_safe() que maneja tanto datetime objects como strings, previene error fromisoformat. 2) get_follow_up_reports endpoint - Agregado str(_id) conversion para serialización JSON, agregado limit=100 (otro query sin límite encontrado!), agregada conversión de generated_at datetime a ISO string. 3) Botón eliminar ahora funciona porque _id se serializa correctamente como string. Backend reiniciado. Total queries sin límite resueltos: 8 (no 7)."
 
 backend:
   - task: "Convención de Nombres para Planes Guardados"
