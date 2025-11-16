@@ -241,7 +241,9 @@ async def register(user_data: UserCreate):
     # Enviar email de verificación
     try:
         from email_utils import send_email
-        frontend_url = os.environ.get('FRONTEND_URL', 'https://edn360-fitness.preview.emergentagent.com')
+        frontend_url = os.environ.get('FRONTEND_URL')
+        if not frontend_url:
+            raise HTTPException(status_code=500, detail="FRONTEND_URL environment variable is required")
         verification_link = f"{frontend_url}/verify-email?token={verification_token}"
         
         email_html = f"""
@@ -464,7 +466,9 @@ async def resend_verification_email(email: str):
         # Enviar nuevo email
         try:
             from email_utils import send_email
-            frontend_url = os.environ.get('FRONTEND_URL', 'https://edn360-fitness.preview.emergentagent.com')
+            frontend_url = os.environ.get('FRONTEND_URL')
+        if not frontend_url:
+            raise HTTPException(status_code=500, detail="FRONTEND_URL environment variable is required")
             verification_link = f"{frontend_url}/verify-email?token={verification_token}"
             
             email_html = f"""
