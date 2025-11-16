@@ -1383,6 +1383,10 @@ agent_communication:
       message: "✅ ROOT CAUSE IDENTIFICADO - PARPADEO INFINITO: Los checks de race condition `if (selectedClient?.id !== currentClientId) return` estaban comparando contra `selectedClient` que se actualiza DURANTE loadAllClientData() por loadClientDetails(). Esto causaba que la función se cancelara antes del finally, dejando loadingClientData=true permanentemente → useEffect se ejecuta de nuevo → loop infinito. SOLUCIÓN: 1) Eliminar todos los checks de race condition problemáticos, 2) Simplificar loadAllClientData() sin early returns, 3) Cambiar useEffect dependency de [selectedClient] a [selectedClient?.id] para que solo se ejecute cuando cambie el ID, no el objeto completo."
     - agent: "main"
       message: "✅ FIX CRÍTICO PARPADEO IMPLEMENTADO: AdminDashboard.jsx loadAllClientData() - Eliminados todos los checks problemáticos de race condition que comparaban selectedClient?.id !== currentClientId. Función simplificada sin early returns. useEffect ahora depende de [selectedClient?.id] en lugar de [selectedClient] para evitar re-ejecuciones cuando el objeto cambia pero el ID no. loadingClientData se limpia correctamente en finally. Parpadeo eliminado."
+    - agent: "main"
+      message: "🐛 BUG REPORTADO - Error al generar informe seguimiento: 'Field required' para previous_training_id y new_training_id en query. Usuario recibe error Pydantic que indica que el endpoint espera parámetros en query pero frontend los envía en body."
+    - agent: "main"
+      message: "✅ FIX ENDPOINT INFORME SEGUIMIENTO: server.py generate_follow_up_report() - Endpoint cambiado para recibir parámetros en body en lugar de query string. Ahora lee datos con await request.json() y obtiene previous_training_id, new_training_id, previous_nutrition_id, new_nutrition_id del body. Validación añadida para parámetros requeridos. Backend reiniciado. Error de 'Field required' eliminado."
 
 backend:
   - task: "Convención de Nombres para Planes Guardados"
