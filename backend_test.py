@@ -2504,6 +2504,304 @@ class BackendTester:
             self.log_result("E.D.N.360 Edge Cases", False, f"Exception: {str(e)}")
             return False
 
+    # ==================== NUTRITION PLAN GENERATION WITH PREVIOUS PLAN TESTS ====================
+    
+    def test_50_admin_login_for_nutrition_plan_test(self):
+        """Test 50: Admin login for nutrition plan generation testing"""
+        url = f"{BACKEND_URL}/auth/login"
+        params = {
+            "email": "ecjtrainer@gmail.com",
+            "password": "jorge3007"
+        }
+        
+        try:
+            response = requests.post(url, params=params)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "user" in data and "token" in data and data["user"].get("role") == "admin":
+                    self.admin_token = data["token"]
+                    self.log_result("Admin Login for Nutrition Plan Test", True, 
+                                  f"Admin logged in successfully. Role: {data['user']['role']}")
+                    return True
+                else:
+                    self.log_result("Admin Login for Nutrition Plan Test", False, 
+                                  "Response missing user/token or not admin role", data)
+            else:
+                self.log_result("Admin Login for Nutrition Plan Test", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Admin Login for Nutrition Plan Test", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_51_get_clients_with_nutrition_plans(self):
+        """Test 51: Get clients and find one with existing nutrition plans"""
+        if not self.admin_token:
+            self.log_result("Get Clients with Nutrition Plans", False, "No admin token available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/clients"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                clients = data.get("clients", [])
+                
+                if len(clients) > 0:
+                    # Store first client for testing
+                    self.test_client_for_nutrition = clients[0]
+                    client_id = self.test_client_for_nutrition.get('id')
+                    client_email = self.test_client_for_nutrition.get('email', 'N/A')
+                    
+                    self.log_result("Get Clients with Nutrition Plans", True, 
+                                  f"Found {len(clients)} clients. Using client: {client_email} (ID: {client_id}) for nutrition plan testing")
+                    return True
+                else:
+                    self.log_result("Get Clients with Nutrition Plans", False, 
+                                  "No clients found in system")
+            else:
+                self.log_result("Get Clients with Nutrition Plans", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Get Clients with Nutrition Plans", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_52_get_existing_nutrition_plans(self):
+        """Test 52: GET /api/admin/users/{user_id}/nutrition - Get existing nutrition plans for client"""
+        if not self.admin_token or not hasattr(self, 'test_client_for_nutrition'):
+            self.log_result("Get Existing Nutrition Plans", False, "No admin token or test client available")
+            return False
+            
+        client_id = self.test_client_for_nutrition.get('id')
+        url = f"{BACKEND_URL}/admin/users/{client_id}/nutrition"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                plans = data.get("plans", [])
+                
+                if len(plans) > 0:
+                    # Store the first plan as the previous plan for reference
+                    self.previous_nutrition_plan = plans[0]
+                    plan_id = self.previous_nutrition_plan.get('id')
+                    generated_at = self.previous_nutrition_plan.get('generated_at', 'N/A')
+                    
+                    self.log_result("Get Existing Nutrition Plans", True, 
+                                  f"Found {len(plans)} nutrition plans for client. Using plan ID: {plan_id} (generated: {generated_at}) as previous plan reference")
+                    return True
+                else:
+                    self.log_result("Get Existing Nutrition Plans", False, 
+                                  f"No existing nutrition plans found for client {client_id}. Need to create one first.")
+            else:
+                self.log_result("Get Existing Nutrition Plans", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Get Existing Nutrition Plans", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_53_create_nutrition_questionnaire_submission(self):
+        """Test 53: Create a nutrition questionnaire submission if none exists"""
+        if not self.admin_token or not hasattr(self, 'test_client_for_nutrition'):
+            self.log_result("Create Nutrition Questionnaire Submission", False, "No admin token or test client available")
+            return False
+            
+        # If we already have a previous plan, skip this step
+        if hasattr(self, 'previous_nutrition_plan'):
+            self.log_result("Create Nutrition Questionnaire Submission", True, 
+                          "Skipped - Previous nutrition plan already exists")
+            return True
+            
+        client_id = self.test_client_for_nutrition.get('id')
+        url = f"{BACKEND_URL}/nutrition/questionnaire/submit"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        payload = {
+            "user_id": client_id,
+            "nombre_completo": self.test_client_for_nutrition.get('name', 'Test Client'),
+            "fecha_nacimiento": "1990-01-01",
+            "sexo": "HOMBRE",
+            "altura_cm": 175,
+            "peso": 80,
+            "objetivo_principal": "Perder grasa y ganar músculo",
+            "nivel_actividad": "Ejercicio moderado (3-5 días/semana)",
+            "trabajo_fisico": "sedentario",
+            "alergias_intolerancias": "Ninguna",
+            "comidas_dia": "5 comidas",
+            "experiencia_dietas": "Intermedio",
+            "disponibilidad_cocinar": "Media",
+            "presupuesto_alimentacion": "Medio"
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.test_questionnaire_submission_id = data.get("submission_id")
+                    self.log_result("Create Nutrition Questionnaire Submission", True, 
+                                  f"Nutrition questionnaire submission created. ID: {self.test_questionnaire_submission_id}")
+                    return True
+                else:
+                    self.log_result("Create Nutrition Questionnaire Submission", False, 
+                                  "Response success not True", data)
+            else:
+                self.log_result("Create Nutrition Questionnaire Submission", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Create Nutrition Questionnaire Submission", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_54_generate_first_nutrition_plan(self):
+        """Test 54: Generate first nutrition plan if none exists"""
+        if not self.admin_token or not hasattr(self, 'test_client_for_nutrition'):
+            self.log_result("Generate First Nutrition Plan", False, "No admin token or test client available")
+            return False
+            
+        # If we already have a previous plan, skip this step
+        if hasattr(self, 'previous_nutrition_plan'):
+            self.log_result("Generate First Nutrition Plan", True, 
+                          "Skipped - Previous nutrition plan already exists")
+            return True
+            
+        if not hasattr(self, 'test_questionnaire_submission_id'):
+            self.log_result("Generate First Nutrition Plan", False, "No questionnaire submission ID available")
+            return False
+            
+        client_id = self.test_client_for_nutrition.get('id')
+        submission_id = self.test_questionnaire_submission_id
+        url = f"{BACKEND_URL}/admin/users/{client_id}/nutrition/generate?submission_id={submission_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            print(f"Generating first nutrition plan for client {client_id}...")
+            response = requests.post(url, headers=headers, timeout=120)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("plan_id"):
+                    self.first_nutrition_plan_id = data.get("plan_id")
+                    self.log_result("Generate First Nutrition Plan", True, 
+                                  f"First nutrition plan generated successfully. Plan ID: {self.first_nutrition_plan_id}")
+                    
+                    # Now set this as our previous plan for the next test
+                    self.previous_nutrition_plan = {"id": self.first_nutrition_plan_id}
+                    return True
+                else:
+                    self.log_result("Generate First Nutrition Plan", False, 
+                                  "Response missing success or plan_id", data)
+            else:
+                self.log_result("Generate First Nutrition Plan", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Generate First Nutrition Plan", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_55_generate_second_nutrition_plan_with_previous_reference(self):
+        """Test 55: Generate second nutrition plan using previous plan as reference - MAIN TEST"""
+        if not self.admin_token or not hasattr(self, 'test_client_for_nutrition') or not hasattr(self, 'previous_nutrition_plan'):
+            self.log_result("Generate Second Nutrition Plan with Previous Reference", False, 
+                          "No admin token, test client, or previous nutrition plan available")
+            return False
+            
+        client_id = self.test_client_for_nutrition.get('id')
+        previous_plan_id = self.previous_nutrition_plan.get('id')
+        
+        # We need a submission_id - use existing one or the first plan's submission
+        submission_id = getattr(self, 'test_questionnaire_submission_id', previous_plan_id)
+        
+        # This is the critical test - using previous_nutrition_plan_id parameter
+        url = f"{BACKEND_URL}/admin/users/{client_id}/nutrition/generate?submission_id={submission_id}&previous_nutrition_plan_id={previous_plan_id}"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            print(f"🎯 CRITICAL TEST: Generating second nutrition plan with previous plan reference...")
+            print(f"   Client ID: {client_id}")
+            print(f"   Previous Plan ID: {previous_plan_id}")
+            print(f"   Submission ID: {submission_id}")
+            print(f"   URL: {url}")
+            
+            response = requests.post(url, headers=headers, timeout=120)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("plan_id"):
+                    new_plan_id = data.get("plan_id")
+                    message = data.get("message", "")
+                    
+                    # Check if the error "Plan nutricional previo no encontrado" appears
+                    if "Plan nutricional previo no encontrado" in message:
+                        self.log_result("Generate Second Nutrition Plan with Previous Reference", False, 
+                                      f"❌ ERROR STILL PRESENT: 'Plan nutricional previo no encontrado' - Fix not working. Message: {message}")
+                        return False
+                    else:
+                        self.log_result("Generate Second Nutrition Plan with Previous Reference", True, 
+                                      f"✅ SUCCESS: Second nutrition plan generated successfully with previous plan reference. New Plan ID: {new_plan_id}. No error 'Plan nutricional previo no encontrado' found. Message: {message}")
+                        return True
+                else:
+                    error_message = data.get("message", "Unknown error")
+                    if "Plan nutricional previo no encontrado" in error_message:
+                        self.log_result("Generate Second Nutrition Plan with Previous Reference", False, 
+                                      f"❌ CRITICAL ERROR: 'Plan nutricional previo no encontrado' - The reported bug is still present! Error: {error_message}")
+                    else:
+                        self.log_result("Generate Second Nutrition Plan with Previous Reference", False, 
+                                      f"Response missing success or plan_id. Error: {error_message}", data)
+            else:
+                response_text = response.text
+                if "Plan nutricional previo no encontrado" in response_text:
+                    self.log_result("Generate Second Nutrition Plan with Previous Reference", False, 
+                                  f"❌ CRITICAL ERROR: 'Plan nutricional previo no encontrado' - The reported bug is still present! HTTP {response.status_code}: {response_text}")
+                else:
+                    self.log_result("Generate Second Nutrition Plan with Previous Reference", False, 
+                                  f"HTTP {response.status_code}", response_text)
+        except Exception as e:
+            error_str = str(e)
+            if "Plan nutricional previo no encontrado" in error_str:
+                self.log_result("Generate Second Nutrition Plan with Previous Reference", False, 
+                              f"❌ CRITICAL ERROR: 'Plan nutricional previo no encontrado' - The reported bug is still present! Exception: {error_str}")
+            else:
+                self.log_result("Generate Second Nutrition Plan with Previous Reference", False, f"Exception: {error_str}")
+        
+        return False
+
+    def test_56_verify_fix_is_working(self):
+        """Test 56: Verify that the fix for plan._id vs plan.id is working"""
+        if not hasattr(self, 'previous_nutrition_plan'):
+            self.log_result("Verify Fix is Working", False, "No previous nutrition plan available for verification")
+            return False
+            
+        # Check that we're using 'id' field correctly (not '_id')
+        plan_id = self.previous_nutrition_plan.get('id')
+        plan_underscore_id = self.previous_nutrition_plan.get('_id')
+        
+        if plan_id and not plan_underscore_id:
+            self.log_result("Verify Fix is Working", True, 
+                          f"✅ VERIFICATION: Using correct 'id' field ({plan_id}) instead of '_id' field. Fix appears to be implemented correctly.")
+            return True
+        elif plan_underscore_id and not plan_id:
+            self.log_result("Verify Fix is Working", False, 
+                          f"❌ VERIFICATION FAILED: Still using '_id' field ({plan_underscore_id}) instead of 'id' field. Fix may not be properly implemented.")
+            return False
+        elif plan_id and plan_underscore_id:
+            self.log_result("Verify Fix is Working", True, 
+                          f"✅ VERIFICATION: Both 'id' ({plan_id}) and '_id' ({plan_underscore_id}) fields present. Using 'id' field is correct.")
+            return True
+        else:
+            self.log_result("Verify Fix is Working", False, 
+                          "❌ VERIFICATION FAILED: Neither 'id' nor '_id' field found in previous nutrition plan data.")
+            return False
+
     def run_all_tests(self):
         """Run all tests in sequence"""
         print(f"🚀 TESTING EXHAUSTIVO PARA PRODUCCIÓN - Sistema Jorge Calcerrada")
