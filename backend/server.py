@@ -8996,7 +8996,7 @@ async def get_user_questionnaires(user_id: str, request: Request):
 
 @api_router.get("/admin/users/{user_id}/training-plans")
 async def get_user_training_plans(user_id: str, request: Request):
-    """Obtiene todos los planes de entrenamiento de un usuario + cuestionarios de seguimiento"""
+    """Obtiene todos los planes de entrenamiento de un usuario (SOLO planes, sin cuestionarios)"""
     await require_admin(request)
     
     # Obtener planes de entrenamiento
@@ -9004,14 +9004,9 @@ async def get_user_training_plans(user_id: str, request: Request):
         {"user_id": user_id}
     ).sort("generated_at", -1).to_list(length=1000)
     
-    # Obtener cuestionarios de seguimiento
-    followups = await db.follow_up_submissions.find(
-        {"user_id": user_id}
-    ).sort("submitted_at", -1).to_list(length=1000)
-    
     formatted_plans = []
     
-    # Agregar planes de entrenamiento
+    # Agregar planes de entrenamiento (sin cuestionarios)
     for i, plan in enumerate(plans):
         # Manejar casos donde generated_at podría no existir
         generated_at = plan.get("generated_at")
