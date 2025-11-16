@@ -8316,7 +8316,6 @@ async def get_financial_overview(
         
         # Total transacciones
         total_transactions = await db.payment_transactions.count_documents({})
-        successful_count = len(successful_payments)
         failed_payments = await db.payment_transactions.count_documents({"payment_status": "failed"})
         
         metrics = {
@@ -8330,7 +8329,7 @@ async def get_financial_overview(
             "failed_payments": failed_payments,
             "mrr": round(mrr, 2),
             # Nuevas métricas para pagos manuales
-            "manual_payments_count": len(manual_payments),
+            "manual_payments_count": manual_payments_count,
             "manual_payments_total": round(total_manual_revenue, 2),
             "manual_payments_monthly": round(monthly_manual_revenue, 2),
             "manual_payments_annual": round(annual_manual_revenue, 2)
