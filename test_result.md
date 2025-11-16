@@ -1309,7 +1309,21 @@ frontend:
           agent: "main"
           comment: "✅ DROPDOWN ACTUALIZACIÓN ARREGLADA - Usuario reportó que después de generar plan y editarlo, al intentar usarlo como referencia decía 'Plan no encontrado'. Investigación mostró: El endpoint PATCH de update funciona correctamente (no crea nuevo documento, actualiza existente). El VERDADERO problema: Después de generar plan de nutrición (línea 333), solo se llamaba loadNutritionPlan() pero NO loadNutritionPlansForSelector(). Entonces el nuevo plan NO aparecía en dropdown de 'Plan Previo de Referencia'. Usuario seleccionaba plan viejo del dropdown → error 'no encontrado'. SOLUCIÓN: Añadida línea 335 'await loadNutritionPlansForSelector(selectedClient.id)' después de generar plan. Ahora dropdown se actualiza inmediatamente con el nuevo plan. VERIFICADO: Entrenamiento (línea 284) ya tenía este reload - funcionaba correctamente. READY FOR TESTING - generar plan nutrición, dropdown debe mostrar nuevo plan inmediatamente."
 
+  - task: "Fix Dropdown Plan Previo - Usar plan.id en lugar de plan._id"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminDashboard.jsx"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "🔥 CAUSA RAÍZ IDENTIFICADA - Error 'Plan nutricional previo no encontrado': Después de análisis exhaustivo, encontré el VERDADERO problema. PROBLEMA: Dropdown de 'Plan Nutricional Previo' (línea 3261) usaba plan._id cuando debería usar plan.id. El backend endpoint /admin/users/{user_id}/nutrition devuelve objetos con formato {id: plan['_id'], month: ..., year: ...} pero el dropdown intentaba leer plan._id (que no existe en el objeto formateado). Resultado: value={plan._id} = undefined → backend recibe previous_nutrition_plan_id: 'undefined' → error 'no encontrado'. SOLUCIÓN: Cambié línea 3261 de <option key={plan._id} value={plan._id}> a <option key={plan.id} value={plan.id}>. Ahora el dropdown envía el ID correcto. READY FOR TESTING: 1) Generar plan nutrición inicial, 2) Generar segundo plan seleccionando el primero como 'Plan Previo', 3) NO debe haber error 'no encontrado', plan debe generarse correctamente."
+
 agent_communication:
     - agent: "main"
       message: "✅ PROBLEMA REAL: DROPDOWN NO SE ACTUALIZABA: Usuario indicó que problema ocurría después de EDITAR plan. Investigué endpoint PATCH /nutrition/{plan_id} - funciona bien, usa update_one (no crea nuevo). Entonces busqué el VERDADERO problema: Después de generateNutritionPlan exitoso, código llamaba loadNutritionPlan() (para mostrar plan en vista) pero OLVIDABA llamar loadNutritionPlansForSelector() (para actualizar dropdown). Resultado: Nuevo plan generado existía en DB pero NO aparecía en dropdown 'Plan Previo de Referencia'. Usuario veía lista desactualizada, seleccionaba plan viejo → error. FIX: Añadida recarga de selector después de generar. Comparado con entrenamiento que YA lo hacía bien (línea 284). Ahora ambos funcionan igual. Usuario debe: 1) Generar plan nutrición, 2) Verificar que nuevo plan aparece INMEDIATAMENTE en dropdown 'Plan Previo', 3) Seleccionarlo y generar otro plan, 4) Debe funcionar sin error 'no encontrado'."
+    - agent: "main"
+      message: "🎯 CAUSA RAÍZ REAL ENCONTRADA después de análisis profundo: El fix anterior del dropdown (recargar datos) NO era suficiente. El VERDADERO problema era más sutil: El dropdown usaba plan._id pero los objetos formateados del backend tienen el campo como 'id' (no '_id'). Evidencia: backend server.py línea 3922 devuelve {'id': plan['_id'], ...}, pero AdminDashboard.jsx línea 3261 intentaba leer plan._id. Esto causaba que el dropdown enviara 'undefined' al backend → error 'Plan no encontrado'. Fix aplicado: Cambiar dropdown de value={plan._id} a value={plan.id}. Este es el fix definitivo que resolverá el error reportado por el usuario."
 
