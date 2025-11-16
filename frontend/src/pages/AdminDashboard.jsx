@@ -3906,12 +3906,17 @@ const AdminDashboard = () => {
                                   className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                                 >
                                   <option value="">Selecciona cuestionario de seguimiento...</option>
-                                  {questionnaireSubmissions.filter(q => q.source_type === 'followup' || q.type === 'followup').map((q) => (
+                                  {questionnaireSubmissions.map((q) => (
                                     <option key={q.id} value={q.id}>
-                                      {new Date(q.submitted_at).toLocaleDateString('es-ES')} - Seguimiento
+                                      {new Date(q.submitted_at).toLocaleDateString('es-ES')} - {q.source_type || q.type || 'Sin tipo'}
                                     </option>
                                   ))}
                                 </select>
+                                {questionnaireSubmissions.length === 0 && (
+                                  <p className="text-sm text-red-600 mt-2">
+                                    ⚠️ No se encontraron cuestionarios. Verifica que el cliente haya completado un cuestionario de seguimiento.
+                                  </p>
+                                )}
                               </div>
 
                               {/* Botón Generar Informe */}
