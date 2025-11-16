@@ -5711,9 +5711,11 @@ async def admin_generate_training_plan(
                 )
             
             questionnaire_data = initial_submission["responses"]
+            # Serializar datetime fields del followup antes de usar
+            followup_serialized = _serialize_datetime_fields(followup)
             context_data = {
-                "followup_responses": followup.get("responses", {}),
-                "ai_analysis": followup.get("ai_analysis", "")
+                "followup_responses": followup_serialized.get("responses", {}),
+                "ai_analysis": followup_serialized.get("ai_analysis", "")
             }
         else:
             raise HTTPException(status_code=400, detail="source_type debe ser 'initial' o 'followup'")
