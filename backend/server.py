@@ -9256,6 +9256,21 @@ async def get_follow_up_reports(user_id: str, request: Request):
     return {"reports": reports}
 
 
+def _format_date_safe(date_value):
+    """Helper function to safely format dates that could be string or datetime objects"""
+    if not date_value:
+        return 'N/A'
+    try:
+        if isinstance(date_value, datetime):
+            return date_value.strftime('%d/%m/%Y')
+        elif isinstance(date_value, str):
+            return datetime.fromisoformat(date_value).strftime('%d/%m/%Y')
+        else:
+            return 'N/A'
+    except:
+        return 'N/A'
+
+
 @api_router.post("/admin/users/{user_id}/follow-up-report/generate")
 async def generate_follow_up_report(
     user_id: str,
