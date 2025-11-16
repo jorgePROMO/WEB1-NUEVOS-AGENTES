@@ -9308,9 +9308,20 @@ async def generate_follow_up_report(
         raise HTTPException(status_code=400, detail="followup_questionnaire_id es requerido para análisis inteligente")
     
     try:
-        logger.info(f"📊 Generando informe de seguimiento para usuario {user_id}")
+        logger.info(f"📊 Generando informe de seguimiento INTELIGENTE para usuario {user_id}")
         
-        # Obtener planes de entrenamiento
+        # FASE 1: Obtener TODOS los datos necesarios
+        
+        # 1.1 Cuestionario de seguimiento (CRÍTICO)
+        followup_questionnaire = await db.questionnaire_responses.find_one({
+            "_id": followup_questionnaire_id,
+            "user_id": user_id
+        })
+        
+        if not followup_questionnaire:
+            raise HTTPException(status_code=404, detail="Cuestionario de seguimiento no encontrado")
+        
+        # 1.2 Planes de entrenamiento
         prev_training = await db.training_plans.find_one({"_id": previous_training_id})
         new_training = await db.training_plans.find_one({"_id": new_training_id})
         
