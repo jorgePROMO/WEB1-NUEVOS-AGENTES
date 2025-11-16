@@ -9119,8 +9119,8 @@ async def generate_follow_up_report(
         prev_nutrition = None
         new_nutrition = None
         if previous_nutrition_id and new_nutrition_id:
-            prev_nutrition = await db.nutrition_plans.find_one({"_id": previous_nutrition_id})
-            new_nutrition = await db.nutrition_plans.find_one({"_id": new_nutrition_id})
+            prev_nutrition = await db.nutrition_plans.find_one({"_id": ObjectId(previous_nutrition_id) if ObjectId.is_valid(previous_nutrition_id) else previous_nutrition_id})
+            new_nutrition = await db.nutrition_plans.find_one({"_id": ObjectId(new_nutrition_id) if ObjectId.is_valid(new_nutrition_id) else new_nutrition_id})
         
         # TODO: Aquí llamar al agente S1 para generar el informe
         # Por ahora, generar informe básico
