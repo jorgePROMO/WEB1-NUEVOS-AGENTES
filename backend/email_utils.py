@@ -65,7 +65,9 @@ def send_session_created_email(user_email: str, user_name: str, session_date: da
     formatted_date = session_date.strftime("%d de %B de %Y a las %H:%M")
     
     # Get frontend URL from environment
-    frontend_url = os.environ.get('FRONTEND_URL', 'https://edn360-fitness.preview.emergentagent.com')
+    frontend_url = os.environ.get('FRONTEND_URL')
+    if not frontend_url:
+        raise ValueError("FRONTEND_URL environment variable is required")
     dashboard_url = f"{frontend_url}/dashboard"
     
     html_body = f"""
@@ -149,7 +151,9 @@ def send_session_rescheduled_email(user_email: str, user_name: str, new_date: da
     formatted_date = new_date.strftime("%d de %B de %Y a las %H:%M")
     
     # Get frontend URL from environment
-    frontend_url = os.environ.get('FRONTEND_URL', 'https://edn360-fitness.preview.emergentagent.com')
+    frontend_url = os.environ.get('FRONTEND_URL')
+    if not frontend_url:
+        raise ValueError("FRONTEND_URL environment variable is required")
     dashboard_url = f"{frontend_url}/dashboard"
     
     html_body = f"""
@@ -433,7 +437,9 @@ def send_password_reset_email(user_email: str, user_name: str, reset_token: str)
     subject = "Recupera tu Contraseña - Jorge Calcerrada"
     
     # Get frontend URL from environment
-    frontend_url = os.environ.get('FRONTEND_URL', 'https://edn360-fitness.preview.emergentagent.com')
+    frontend_url = os.environ.get('FRONTEND_URL')
+    if not frontend_url:
+        raise ValueError("FRONTEND_URL environment variable is required")
     reset_url = f"{frontend_url}/reset-password?token={reset_token}"
     
     html_body = f"""
