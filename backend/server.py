@@ -3203,15 +3203,17 @@ async def get_all_tags(request: Request):
     await require_admin(request)
     
     try:
-        # Get tags from templates
-        templates = await db.message_templates.find({}).to_list(length=None)
-        template_tags = set()
-        for template in templates:
-            if template.get("tags"):
-                template_tags.update(template["tags"])
+        # Get tags from templates using aggregation (more efficient)
+        template_tags_pipeline = [
+            {"$match": {"tags": {"$exists": True, "$ne": []}}},
+            {"$unwind": "$tags"},
+            {"$group": {"_id": "$tags"}}
+        ]
+        template_tags_result = await db.message_templates.aggregate(template_tags_pipeline).to_list(length=1000)
+        template_tags = set(doc["_id"] for doc in template_tags_result)
         
-        # Get tags from global_tags collection
-        global_tags_docs = await db.global_tags.find({}).to_list(length=None)
+        # Get tags from global_tags collection (only _id field needed)
+        global_tags_docs = await db.global_tags.find({}, {"_id": 1}).to_list(length=1000)
         global_tags = set(tag["_id"] for tag in global_tags_docs)
         
         # Combine both sets
