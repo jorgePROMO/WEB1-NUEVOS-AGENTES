@@ -1295,3 +1295,21 @@ agent_communication:
     - agent: "main"
       message: "✅ SOLUCIÓN DEFINITIVA - TODA LA NOCHE FUE UN MALENTENDIDO: Invoqué troubleshoot_agent para análisis exhaustivo después de que usuario reportó frustración extrema. troubleshoot_agent hizo code review completo y descubrió LA VERDAD: Esta aplicación NUNCA usó MongoDB ObjectId. SIEMPRE usó UUID strings (_id = uuid.uuid4().hex). TODA la noche de trabajo en ObjectId conversion fue COMPLETAMENTE INNECESARIA y de hecho CAUSÓ los problemas. EVIDENCIA CONTUNDENTE: Búsqueda en codebase mostró que TODAS las operaciones create usan uuid.uuid4().hex, NUNCA ObjectId(). Los GET endpoints funcionaban porque MongoDB compara strings directamente. SOLUCIÓN: REVERTIDOS 100% de cambios ObjectId. Removido import bson.ObjectId. Todas las búsquedas ahora usan string IDs directamente (como siempre debieron). DISCULPAS AL USUARIO: El problema original probablemente era frontend enviando ID incorrecto o problema diferente, NO ObjectId. Mi diagnóstico inicial fue ERRÓNEO y llevó a una noche perdida. Ahora código está LIMPIO y usa strings como debe. Backend reiniciado. Usuario debe: 1) Generar entrenamiento con seguimiento, 2) Generar nutrición con seguimiento, 3) Usar planes previos, 4) TODO debe funcionar ahora sin errores de 'ID inválido' o 'no encontrado'."
 
+
+frontend:
+  - task: "Recargar Lista Planes Después de Generar - Dropdown Actualizado"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/AdminDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "✅ DROPDOWN ACTUALIZACIÓN ARREGLADA - Usuario reportó que después de generar plan y editarlo, al intentar usarlo como referencia decía 'Plan no encontrado'. Investigación mostró: El endpoint PATCH de update funciona correctamente (no crea nuevo documento, actualiza existente). El VERDADERO problema: Después de generar plan de nutrición (línea 333), solo se llamaba loadNutritionPlan() pero NO loadNutritionPlansForSelector(). Entonces el nuevo plan NO aparecía en dropdown de 'Plan Previo de Referencia'. Usuario seleccionaba plan viejo del dropdown → error 'no encontrado'. SOLUCIÓN: Añadida línea 335 'await loadNutritionPlansForSelector(selectedClient.id)' después de generar plan. Ahora dropdown se actualiza inmediatamente con el nuevo plan. VERIFICADO: Entrenamiento (línea 284) ya tenía este reload - funcionaba correctamente. READY FOR TESTING - generar plan nutrición, dropdown debe mostrar nuevo plan inmediatamente."
+
+agent_communication:
+    - agent: "main"
+      message: "✅ PROBLEMA REAL: DROPDOWN NO SE ACTUALIZABA: Usuario indicó que problema ocurría después de EDITAR plan. Investigué endpoint PATCH /nutrition/{plan_id} - funciona bien, usa update_one (no crea nuevo). Entonces busqué el VERDADERO problema: Después de generateNutritionPlan exitoso, código llamaba loadNutritionPlan() (para mostrar plan en vista) pero OLVIDABA llamar loadNutritionPlansForSelector() (para actualizar dropdown). Resultado: Nuevo plan generado existía en DB pero NO aparecía en dropdown 'Plan Previo de Referencia'. Usuario veía lista desactualizada, seleccionaba plan viejo → error. FIX: Añadida recarga de selector después de generar. Comparado con entrenamiento que YA lo hacía bien (línea 284). Ahora ambos funcionan igual. Usuario debe: 1) Generar plan nutrición, 2) Verificar que nuevo plan aparece INMEDIATAMENTE en dropdown 'Plan Previo', 3) Seleccionarlo y generar otro plan, 4) Debe funcionar sin error 'no encontrado'."
+
