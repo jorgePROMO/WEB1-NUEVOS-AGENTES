@@ -667,6 +667,7 @@ const AdminDashboard = () => {
       await loadTrainingPlansForSelector(clientId);
       await loadNutritionPlansForSelector(clientId);
       await loadFollowUpReports(clientId);
+      await loadFollowUpQuestionnaires(clientId);
       
       // Now load follow-ups after other data is loaded
       try {
