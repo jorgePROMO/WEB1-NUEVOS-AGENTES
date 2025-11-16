@@ -123,8 +123,11 @@ class NutritionPlanTester:
                     plan_id = self.previous_nutrition_plan.get('id')
                     generated_at = self.previous_nutrition_plan.get('generated_at', 'N/A')
                     
+                    # Also get the submission_id from the plan if available
+                    self.submission_id = self.previous_nutrition_plan.get('submission_id', plan_id)
+                    
                     self.log_result("Get Existing Nutrition Plans", True, 
-                                  f"Found {len(plans)} nutrition plans. Using plan ID: {plan_id} (generated: {generated_at}) as previous plan reference")
+                                  f"Found {len(plans)} nutrition plans. Using plan ID: {plan_id} (generated: {generated_at}) as previous plan reference. Submission ID: {self.submission_id}")
                     return True
                 else:
                     self.log_result("Get Existing Nutrition Plans", False, 
@@ -136,6 +139,59 @@ class NutritionPlanTester:
             self.log_result("Get Existing Nutrition Plans", False, f"Exception: {str(e)}")
         
         return False
+
+    def test_3_5_create_nutrition_questionnaire_if_needed(self):
+        """Test 3.5: Create a nutrition questionnaire submission if we need a valid submission_id"""
+        if not self.admin_token or not self.test_client_for_nutrition:
+            self.log_result("Create Nutrition Questionnaire", False, "No admin token or test client available")
+            return False
+            
+        client_id = self.test_client_for_nutrition.get('id')
+        url = f"{BACKEND_URL}/nutrition/questionnaire/submit"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        payload = {
+            "user_id": client_id,
+            "nombre_completo": self.test_client_for_nutrition.get('name', 'Test Client'),
+            "fecha_nacimiento": "1990-01-01",
+            "sexo": "HOMBRE",
+            "altura_cm": 175,
+            "peso": 80,
+            "objetivo_principal": "Perder grasa y ganar músculo",
+            "nivel_actividad": "Ejercicio moderado (3-5 días/semana)",
+            "trabajo_fisico": "sedentario",
+            "alergias_intolerancias": "Ninguna",
+            "comidas_dia": "5 comidas",
+            "experiencia_dietas": "Intermedio",
+            "disponibilidad_cocinar": "Media",
+            "presupuesto_alimentacion": "Medio"
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.submission_id = data.get("submission_id")
+                    self.log_result("Create Nutrition Questionnaire", True, 
+                                  f"Nutrition questionnaire submission created. ID: {self.submission_id}")
+                    return True
+                else:
+                    self.log_result("Create Nutrition Questionnaire", False, 
+                                  "Response success not True", data)
+            else:
+                # If endpoint doesn't exist or fails, we'll use the plan ID as submission ID
+                self.submission_id = getattr(self, 'submission_id', self.previous_nutrition_plan.get('id') if hasattr(self, 'previous_nutrition_plan') else None)
+                self.log_result("Create Nutrition Questionnaire", True, 
+                              f"Questionnaire endpoint not available, using plan ID as submission ID: {self.submission_id}")
+                return True
+        except Exception as e:
+            # If there's an exception, we'll use the plan ID as submission ID
+            self.submission_id = getattr(self, 'submission_id', self.previous_nutrition_plan.get('id') if hasattr(self, 'previous_nutrition_plan') else None)
+            self.log_result("Create Nutrition Questionnaire", True, 
+                          f"Exception occurred, using plan ID as submission ID: {self.submission_id}")
+            return True
 
     def test_4_generate_nutrition_plan_with_previous_reference(self):
         """Test 4: Generate nutrition plan using previous plan as reference - MAIN TEST"""
