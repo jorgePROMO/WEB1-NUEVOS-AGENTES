@@ -8239,37 +8239,68 @@ async def get_financial_overview(
         if not user or user.get("role") != "admin":
             raise HTTPException(status_code=403, detail="Acceso denegado")
         
-        # Total revenue (todos los pagos exitosos)
-        successful_payments = await db.payment_transactions.find({"payment_status": "succeeded"}).to_list(length=None)
-        total_revenue = sum(payment["amount"] for payment in successful_payments)
-        
-        # INCLUIR PAGOS MANUALES (Caja A y B) en las métricas
-        manual_payments = await db.manual_payments.find().to_list(length=None)
-        total_manual_revenue = sum(payment["amount"] for payment in manual_payments)
-        total_revenue += total_manual_revenue
-        
-        # Revenue del mes actual
+        # Calcular fechas de referencia
         now = datetime.now(timezone.utc)
         start_of_month = datetime(now.year, now.month, 1, tzinfo=timezone.utc)
+        start_of_year = datetime(now.year, 1, 1, tzinfo=timezone.utc)
         
-        # Pagos de transacciones del mes
-        monthly_payments = [p for p in successful_payments if p["created_at"] >= start_of_month.isoformat()]
-        monthly_revenue = sum(payment["amount"] for payment in monthly_payments)
+        # OPTIMIZED: Use aggregation pipelines to calculate server-side (no loading all data into memory)
         
-        # Pagos manuales del mes
-        monthly_manual_payments = [p for p in manual_payments if p.get("fecha") and p["fecha"] >= start_of_month]
-        monthly_manual_revenue = sum(payment["amount"] for payment in monthly_manual_payments)
+        # Total revenue from payment_transactions (succeeded only)
+        total_revenue_pipeline = [
+            {"$match": {"payment_status": "succeeded"}},
+            {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+        ]
+        total_revenue_result = await db.payment_transactions.aggregate(total_revenue_pipeline).to_list(length=1)
+        total_revenue = total_revenue_result[0]["total"] if total_revenue_result else 0
+        
+        # Count successful payments
+        successful_count = await db.payment_transactions.count_documents({"payment_status": "succeeded"})
+        
+        # Monthly revenue from payment_transactions
+        monthly_revenue_pipeline = [
+            {"$match": {"payment_status": "succeeded", "created_at": {"$gte": start_of_month.isoformat()}}},
+            {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+        ]
+        monthly_revenue_result = await db.payment_transactions.aggregate(monthly_revenue_pipeline).to_list(length=1)
+        monthly_revenue = monthly_revenue_result[0]["total"] if monthly_revenue_result else 0
+        
+        # Annual revenue from payment_transactions
+        annual_revenue_pipeline = [
+            {"$match": {"payment_status": "succeeded", "created_at": {"$gte": start_of_year.isoformat()}}},
+            {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+        ]
+        annual_revenue_result = await db.payment_transactions.aggregate(annual_revenue_pipeline).to_list(length=1)
+        annual_revenue = annual_revenue_result[0]["total"] if annual_revenue_result else 0
+        
+        # MANUAL PAYMENTS - Total revenue
+        manual_total_pipeline = [
+            {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+        ]
+        manual_total_result = await db.manual_payments.aggregate(manual_total_pipeline).to_list(length=1)
+        total_manual_revenue = manual_total_result[0]["total"] if manual_total_result else 0
+        total_revenue += total_manual_revenue
+        
+        # MANUAL PAYMENTS - Monthly revenue
+        manual_monthly_pipeline = [
+            {"$match": {"fecha": {"$gte": start_of_month}}},
+            {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+        ]
+        manual_monthly_result = await db.manual_payments.aggregate(manual_monthly_pipeline).to_list(length=1)
+        monthly_manual_revenue = manual_monthly_result[0]["total"] if manual_monthly_result else 0
         monthly_revenue += monthly_manual_revenue
         
-        # Revenue del año actual
-        start_of_year = datetime(now.year, 1, 1, tzinfo=timezone.utc)
-        annual_payments = [p for p in successful_payments if p["created_at"] >= start_of_year.isoformat()]
-        annual_revenue = sum(payment["amount"] for payment in annual_payments)
-        
-        # Pagos manuales del año
-        annual_manual_payments = [p for p in manual_payments if p.get("fecha") and p["fecha"] >= start_of_year]
-        annual_manual_revenue = sum(payment["amount"] for payment in annual_manual_payments)
+        # MANUAL PAYMENTS - Annual revenue
+        manual_annual_pipeline = [
+            {"$match": {"fecha": {"$gte": start_of_year}}},
+            {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+        ]
+        manual_annual_result = await db.manual_payments.aggregate(manual_annual_pipeline).to_list(length=1)
+        annual_manual_revenue = manual_annual_result[0]["total"] if manual_annual_result else 0
         annual_revenue += annual_manual_revenue
+        
+        # Count manual payments
+        manual_payments_count = await db.manual_payments.count_documents({})
         
         # Suscripciones activas y canceladas
         active_subscriptions = await db.user_subscriptions.count_documents({"status": "active"})
