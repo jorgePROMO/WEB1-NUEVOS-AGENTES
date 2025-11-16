@@ -610,40 +610,74 @@ const AdminDashboard = () => {
 
   // Load all client data when client is selected
   const loadAllClientData = async (clientId) => {
-    setSelectedPlan(null);
-    await loadClientDetails(clientId);
-    await loadNutritionPlan(clientId);
+    // Prevent race conditions: cancel if client changes during loading
+    const currentClientId = clientId;
     
-    // Load training plans
+    // Set loading state to prevent UI flickering
+    setLoadingClientData(true);
+    
     try {
-      const trainingResponse = await axios.get(`${API}/admin/users/${clientId}/training`, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true
-      });
-      setTrainingPlans(trainingResponse.data.plans || []);
-    } catch (error) {
-      if (error.response?.status !== 404) {
-        console.error('Error loading training plans:', error);
+      // Don't clear selectedPlan immediately - causes content to disappear
+      // setSelectedPlan(null); // REMOVED - causes flickering
+      
+      await loadClientDetails(clientId);
+      
+      // Check if client changed during loading
+      if (selectedClient?.id !== currentClientId) return;
+      
+      await loadNutritionPlan(clientId);
+      
+      // Check again
+      if (selectedClient?.id !== currentClientId) return;
+      
+      // Load training plans
+      try {
+        const trainingResponse = await axios.get(`${API}/admin/users/${clientId}/training`, {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        });
+        if (selectedClient?.id !== currentClientId) return;
+        setTrainingPlans(trainingResponse.data.plans || []);
+      } catch (error) {
+        if (error.response?.status !== 404) {
+          console.error('Error loading training plans:', error);
+        }
+        setTrainingPlans([]);
       }
-      setTrainingPlans([]);
-    }
-    
-    // Load data for selectors
-    await loadQuestionnaires(clientId);
-    await loadTrainingPlansForSelector(clientId);
-    await loadNutritionPlansForSelector(clientId);
-    await loadFollowUpReports(clientId);
-    
-    // Now load follow-ups after other data is loaded
-    try {
-      const response = await axios.get(`${API}/admin/users/${clientId}/follow-ups`, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true
-      });
-      setFollowUps(response.data.follow_ups || []);
-    } catch (error) {
-      console.error('Error loading follow-ups:', error);
-      setFollowUps([]);
+      
+      // Check again before loading selectors
+      if (selectedClient?.id !== currentClientId) return;
+      
+      // Load data for selectors
+      await loadQuestionnaires(clientId);
+      if (selectedClient?.id !== currentClientId) return;
+      
+      await loadTrainingPlansForSelector(clientId);
+      if (selectedClient?.id !== currentClientId) return;
+      
+      await loadNutritionPlansForSelector(clientId);
+      if (selectedClient?.id !== currentClientId) return;
+      
+      await loadFollowUpReports(clientId);
+      if (selectedClient?.id !== currentClientId) return;
+      
+      // Now load follow-ups after other data is loaded
+      try {
+        const response = await axios.get(`${API}/admin/users/${clientId}/follow-ups`, {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        });
+        if (selectedClient?.id !== currentClientId) return;
+        setFollowUps(response.data.follow_ups || []);
+      } catch (error) {
+        console.error('Error loading follow-ups:', error);
+        setFollowUps([]);
+      }
+    } finally {
+      // Only clear loading state if we're still on the same client
+      if (selectedClient?.id === currentClientId) {
+        setLoadingClientData(false);
+      }
     }
   };
 
