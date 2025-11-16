@@ -9341,14 +9341,18 @@ async def generate_follow_up_report(
 
 ### Plan Anterior (Mes {prev_training.get('month', 'N/A')}/{prev_training.get('year', 'N/A')})
 - **Frecuencia semanal**: {prev_mesociclo.get('frecuencia_semanal', 'N/A')} días
-- **Duración sesión**: {prev_mesociclo.get('duracion_sesion', 'N/A')} minutos
-- **Tipo**: {prev_mesociclo.get('tipo_entrenamiento', 'N/A')}
+- **Duración**: {prev_mesociclo.get('duracion_semanas', 'N/A')} semanas
+- **Objetivo**: {prev_mesociclo.get('objetivo', 'N/A').replace('_', ' ').title()}
+- **Split**: {prev_mesociclo.get('split', 'N/A').upper()}
+- **Estrategia**: {prev_mesociclo.get('estrategia', 'N/A').title()}
 - **Generado**: {_format_date_safe(prev_training.get('generated_at'))}
 
 ### Plan Nuevo (Mes {new_training.get('month', 'N/A')}/{new_training.get('year', 'N/A')})
 - **Frecuencia semanal**: {new_mesociclo.get('frecuencia_semanal', 'N/A')} días
-- **Duración sesión**: {new_mesociclo.get('duracion_sesion', 'N/A')} minutos
-- **Tipo**: {new_mesociclo.get('tipo_entrenamiento', 'N/A')}
+- **Duración**: {new_mesociclo.get('duracion_semanas', 'N/A')} semanas
+- **Objetivo**: {new_mesociclo.get('objetivo', 'N/A').replace('_', ' ').title()}
+- **Split**: {new_mesociclo.get('split', 'N/A').upper()}
+- **Estrategia**: {new_mesociclo.get('estrategia', 'N/A').title()}
 - **Generado**: {_format_date_safe(new_training.get('generated_at'))}
 
 """
