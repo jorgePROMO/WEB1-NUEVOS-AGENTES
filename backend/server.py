@@ -8065,6 +8065,63 @@ async def cancel_user_subscription(
         raise HTTPException(status_code=500, detail=f"Error al cancelar suscripción: {str(e)}")
 
 
+@api_router.post("/admin/cancel-subscription/{user_id}")
+async def admin_cancel_user_subscription(
+    user_id: str,
+    request: Request = None
+):
+    """
+    Admin cancela la suscripción de un cliente específico
+    """
+    await require_admin(request)
+    
+    try:
+        # Buscar suscripción activa del cliente
+        subscription = await db.user_subscriptions.find_one({
+            "user_id": user_id,
+            "status": "active"
+        })
+        
+        if not subscription:
+            raise HTTPException(status_code=404, detail="Este cliente no tiene una suscripción activa")
+        
+        # Actualizar suscripción a cancelada
+        await db.user_subscriptions.update_one(
+            {"subscription_id": subscription["subscription_id"]},
+            {
+                "$set": {
+                    "status": "cancelled",
+                    "cancelled_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": datetime.now(timezone.utc).isoformat()
+                }
+            }
+        )
+        
+        # Actualizar usuario
+        await db.users.update_one(
+            {"_id": user_id},
+            {
+                "$set": {
+                    "subscription.status": "cancelled",
+                    "updated_at": datetime.now(timezone.utc).isoformat()
+                }
+            }
+        )
+        
+        logger.info(f"Admin cancelled subscription for user {user_id}")
+        
+        return {
+            "success": True,
+            "message": "Suscripción del cliente cancelada exitosamente",
+            "user_id": user_id,
+            "cancelled_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error cancelling subscription for user {user_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al cancelar suscripción: {str(e)}")
+
+
 # ============================================
 # ADMIN - FINANCIAL OVERVIEW ENDPOINTS
 # ============================================
