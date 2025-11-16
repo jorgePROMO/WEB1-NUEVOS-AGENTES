@@ -1433,3 +1433,15 @@ backend:
           agent: "main"
           comment: "MEJORA UX: Implementada convención de nombres más clara para planes guardados. Antes: 'Último generado (16/11/2025)' o 'Plan 2 (15/11/2025)'. Ahora: 'PLAN NUTRICION 1 - 16/11/2025', 'PLAN ENTRENAMIENTO 2 - 15/11/2025'. Aplicado en: 1) GET /api/admin/users/{user_id}/nutrition-plans (líneas 9049-9064), 2) GET /api/admin/users/{user_id}/training-plans (líneas 8925-8939). Los números se asignan en orden descendente (plan más reciente = número más alto). Formato consistente y profesional que facilita identificar planes al seleccionarlos como referencia."
 
+  - task: "Fix Dropdown Data Mixing - Seguimiento Tab"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "BUG CRÍTICO: En AdminDashboard pestaña 'Seguimiento', los dropdowns de planes (training/nutrition) mostraban cuestionarios de seguimiento en lugar de planes reales. El dropdown específico de cuestionarios estaba vacío. CAUSA RAÍZ: Endpoints de backend mezclaban datos de diferentes colecciones. SOLUCIÓN IMPLEMENTADA: 1) GET /api/admin/users/{user_id}/training-plans - Ya corregido anteriormente, eliminada lógica de questionnaire_responses, 2) GET /api/admin/users/{user_id}/nutrition-plans - Eliminada lógica que agregaba follow_up_submissions (líneas 9106-9153), endpoint ahora devuelve SOLO planes de nutrición. Existe endpoint dedicado /api/admin/users/{user_id}/follow-up-questionnaires para obtener cuestionarios. Backend reiniciado. NECESITA TESTING COMPLETO para verificar que todos los dropdowns muestren el tipo de dato correcto."
+
