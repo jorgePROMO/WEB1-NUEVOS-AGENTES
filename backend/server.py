@@ -7738,7 +7738,7 @@ async def create_subscription_session(
         plan = SUBSCRIPTION_PLANS[subscription_data.plan_type]
         
         # Obtener host URL desde el frontend
-        origin_url = str(request.headers.get("origin", "https://edn360-fitness.preview.emergentagent.com"))
+        origin_url = str(request.headers.get("origin", os.environ.get("FRONTEND_URL", "")))
         
         # Construir URLs de éxito y cancelación
         # Usar {CHECKOUT_SESSION_ID} sin las dobles llaves para que Stripe lo reemplace correctamente
