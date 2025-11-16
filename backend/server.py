@@ -3709,9 +3709,11 @@ async def admin_generate_nutrition_plan(
                 )
             
             questionnaire_data = initial_submission["responses"]
+            # Serializar datetime fields del followup antes de usar
+            submission_serialized = _serialize_datetime_fields(submission)
             context_data = {
-                "followup_responses": submission.get("responses", {}),
-                "ai_analysis": submission.get("ai_analysis", "")
+                "followup_responses": submission_serialized.get("responses", {}),
+                "ai_analysis": submission_serialized.get("ai_analysis", "")
             }
         else:
             # Si regenerate=True, eliminar planes existentes de este mes
