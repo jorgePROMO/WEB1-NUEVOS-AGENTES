@@ -3735,7 +3735,7 @@ async def admin_generate_nutrition_plan(
                 
                 # Resetear flag en submission
                 await db.nutrition_questionnaire_submissions.update_one(
-                    {"_id": submission_oid},
+                    {"_id": submission_id},
                     {"$set": {"plan_generated": False}}
                 )
             
