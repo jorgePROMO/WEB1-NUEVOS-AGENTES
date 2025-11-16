@@ -1441,11 +1441,11 @@ backend:
 
   - task: "Fix Dropdown Data Mixing - Seguimiento Tab"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
