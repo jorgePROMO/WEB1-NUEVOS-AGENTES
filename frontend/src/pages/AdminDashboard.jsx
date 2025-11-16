@@ -584,6 +584,11 @@ const AdminDashboard = () => {
       return;
     }
 
+    if (!selectedFollowUpQuestionnaireForReport) {
+      alert('❌ Debes seleccionar el cuestionario de seguimiento para análisis inteligente');
+      return;
+    }
+
     setGeneratingReport(true);
     try {
       const response = await axios.post(
@@ -592,7 +597,8 @@ const AdminDashboard = () => {
           previous_training_id: selectedPreviousTrainingForReport,
           new_training_id: selectedNewTrainingForReport,
           previous_nutrition_id: selectedPreviousNutritionForReport || null,
-          new_nutrition_id: selectedNewNutritionForReport || null
+          new_nutrition_id: selectedNewNutritionForReport || null,
+          followup_questionnaire_id: selectedFollowUpQuestionnaireForReport
         },
         {
           headers: { Authorization: `Bearer ${token}` },
