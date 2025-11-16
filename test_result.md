@@ -1395,6 +1395,10 @@ agent_communication:
       message: "❌ DEPLOYMENT HEALTH CHECK FAILED - Blockers críticos identificados: 1) .env files verificados - EXISTEN correctamente, 2) Hardcoded Stripe webhook URLs en líneas 7815 y 7930 - BLOCKER para deployment, 3) Queries DB no optimizadas (to_list(length=None)) - WARN performance. Findings positivos: CORS correcto, MongoDB único DB, Supervisor config válido, Frontend/Backend usan env vars correctamente."
     - agent: "main"
       message: "✅ DEPLOYMENT BLOCKERS RESUELTOS: server.py líneas 7815 y 7930 - Cambiado hardcoded webhook_url a dinámico usando os.environ.get('FRONTEND_URL'). Ahora webhook_url = f'{frontend_url}/api/webhook/stripe'. Fallback a preview domain si FRONTEND_URL no está seteado. Backend reiniciado. BLOCKER crítico eliminado. Queries DB no optimizadas quedan como WARN (no blocker). App lista para deployment."
+    - agent: "main"
+      message: "⚠️ USUARIO DEMANDA RESOLUCIÓN COMPLETA: Usuario rechaza warnings y exige que se resuelvan TODOS los problemas sin excepciones. 5 queries DB sin límites deben optimizarse."
+    - agent: "main"
+      message: "✅ TODOS LOS WARNINGS RESUELTOS - QUERIES DB OPTIMIZADAS: 1) Línea 3207-3214: get_all_tags() reescrito con aggregation pipeline + proyección limitada (limit 1000), elimina carga de todos los templates y tags. 2) Línea 8242-8280: get_financial_overview() completamente reescrito - TODOS los queries ahora usan aggregation pipelines para calcular server-side. Total revenue, monthly, annual, manual payments, y MRR calculados con $group sin cargar documentos en memoria. 3) Eliminados successful_payments.to_list(), manual_payments.to_list(), active_subs.to_list(). 4) Todas las operaciones ahora escalables sin degradación de performance. Backend reiniciado y testeado. CERO warnings restantes."
 
 backend:
   - task: "Convención de Nombres para Planes Guardados"
