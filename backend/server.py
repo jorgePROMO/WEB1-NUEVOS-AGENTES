@@ -9319,13 +9319,13 @@ async def generate_follow_up_report(
 - **Frecuencia semanal**: {prev_mesociclo.get('frecuencia_semanal', 'N/A')} días
 - **Duración sesión**: {prev_mesociclo.get('duracion_sesion', 'N/A')} minutos
 - **Tipo**: {prev_mesociclo.get('tipo_entrenamiento', 'N/A')}
-- **Generado**: {datetime.fromisoformat(prev_training.get('generated_at')).strftime('%d/%m/%Y') if prev_training.get('generated_at') else 'N/A'}
+- **Generado**: {_format_date_safe(prev_training.get('generated_at'))}
 
 ### Plan Nuevo (Mes {new_training.get('month', 'N/A')}/{new_training.get('year', 'N/A')})
 - **Frecuencia semanal**: {new_mesociclo.get('frecuencia_semanal', 'N/A')} días
 - **Duración sesión**: {new_mesociclo.get('duracion_sesion', 'N/A')} minutos
 - **Tipo**: {new_mesociclo.get('tipo_entrenamiento', 'N/A')}
-- **Generado**: {datetime.fromisoformat(new_training.get('generated_at')).strftime('%d/%m/%Y') if new_training.get('generated_at') else 'N/A'}
+- **Generado**: {_format_date_safe(new_training.get('generated_at'))}
 
 """
         
