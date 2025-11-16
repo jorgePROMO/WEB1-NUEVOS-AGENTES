@@ -3891,7 +3891,7 @@ const AdminDashboard = () => {
                                   className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                                 >
                                   <option value="">Selecciona cuestionario de seguimiento...</option>
-                                  {followUpReports.filter(q => q.type === 'followup').map((q) => (
+                                  {questionnaireSubmissions.filter(q => q.source_type === 'followup' || q.type === 'followup').map((q) => (
                                     <option key={q.id} value={q.id}>
                                       {new Date(q.submitted_at).toLocaleDateString('es-ES')} - Seguimiento
                                     </option>
