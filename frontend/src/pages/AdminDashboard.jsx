@@ -667,8 +667,11 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (selectedClient) {
       loadAllClientData(selectedClient.id);
+    } else {
+      // Clear loading state if no client selected
+      setLoadingClientData(false);
     }
-  }, [selectedClient]);
+  }, [selectedClient?.id]); // Only re-run when the client ID changes, not the whole object
 
   // Manual Payments Functions (MUST be before useEffect)
   const loadManualPayments = async () => {
