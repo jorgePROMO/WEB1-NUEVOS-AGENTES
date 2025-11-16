@@ -673,6 +673,54 @@ const AdminDashboard = () => {
     }
   }, [selectedClient?.id]); // Only re-run when the client ID changes, not the whole object
 
+  // Delete follow-up report
+  const deleteFollowUpReport = async (reportId) => {
+    if (!window.confirm('¿Estás seguro de que quieres eliminar este informe?')) {
+      return;
+    }
+
+    try {
+      await axios.delete(
+        `${API}/admin/users/${selectedClient.id}/follow-up-reports/${reportId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+
+      alert('✅ Informe eliminado exitosamente');
+      await loadFollowUpReports(selectedClient.id);
+      setShowReportModal(false);
+      setSelectedReport(null);
+    } catch (error) {
+      console.error('Error deleting report:', error);
+      alert('❌ Error al eliminar informe: ' + (error.response?.data?.detail || error.message));
+    }
+  };
+
+  // Update follow-up report
+  const updateFollowUpReport = async (reportId, reportText) => {
+    try {
+      await axios.patch(
+        `${API}/admin/users/${selectedClient.id}/follow-up-reports/${reportId}`,
+        { report_text: reportText },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+
+      alert('✅ Informe actualizado exitosamente');
+      await loadFollowUpReports(selectedClient.id);
+      
+      // Actualizar el report seleccionado
+      setSelectedReport({ ...selectedReport, report_text: reportText });
+    } catch (error) {
+      console.error('Error updating report:', error);
+      alert('❌ Error al actualizar informe: ' + (error.response?.data?.detail || error.message));
+    }
+  };
+
   // Manual Payments Functions (MUST be before useEffect)
   const loadManualPayments = async () => {
     try {
