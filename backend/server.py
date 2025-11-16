@@ -9140,6 +9140,72 @@ async def get_user_nutrition_plans(user_id: str, request: Request):
     return {"plans": formatted_plans}
 
 
+@api_router.delete("/admin/users/{user_id}/follow-up-reports/{report_id}")
+async def delete_follow_up_report(
+    user_id: str,
+    report_id: str,
+    request: Request = None
+):
+    """
+    Admin elimina un informe de seguimiento
+    """
+    await require_admin(request)
+    
+    try:
+        result = await db.follow_up_reports.delete_one({"_id": report_id, "user_id": user_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Informe no encontrado")
+        
+        logger.info(f"✅ Informe de seguimiento eliminado: {report_id}")
+        
+        return {"success": True, "message": "Informe eliminado exitosamente"}
+        
+    except Exception as e:
+        logger.error(f"Error eliminando informe: {e}")
+        raise HTTPException(status_code=500, detail=f"Error eliminando informe: {str(e)}")
+
+
+@api_router.patch("/admin/users/{user_id}/follow-up-reports/{report_id}")
+async def update_follow_up_report(
+    user_id: str,
+    report_id: str,
+    request: Request
+):
+    """
+    Admin edita el contenido de un informe de seguimiento
+    """
+    await require_admin(request)
+    
+    try:
+        body = await request.json()
+        report_text = body.get("report_text")
+        
+        if not report_text:
+            raise HTTPException(status_code=400, detail="report_text es requerido")
+        
+        result = await db.follow_up_reports.update_one(
+            {"_id": report_id, "user_id": user_id},
+            {
+                "$set": {
+                    "report_text": report_text,
+                    "updated_at": datetime.now(timezone.utc).isoformat()
+                }
+            }
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Informe no encontrado")
+        
+        logger.info(f"✅ Informe de seguimiento actualizado: {report_id}")
+        
+        return {"success": True, "message": "Informe actualizado exitosamente"}
+        
+    except Exception as e:
+        logger.error(f"Error actualizando informe: {e}")
+        raise HTTPException(status_code=500, detail=f"Error actualizando informe: {str(e)}")
+
+
 @api_router.get("/admin/users/{user_id}/follow-up-reports")
 async def get_follow_up_reports(user_id: str, request: Request):
     """Obtiene todos los informes de seguimiento de un usuario"""
