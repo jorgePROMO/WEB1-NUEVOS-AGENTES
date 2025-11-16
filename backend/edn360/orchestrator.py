@@ -43,6 +43,20 @@ from .agents.nutrition_followup import (
 logger = logging.getLogger(__name__)
 
 
+def _serialize_datetime_fields(data: Any) -> Any:
+    """
+    Recursively convert datetime objects to ISO format strings for JSON serialization
+    """
+    if isinstance(data, datetime):
+        return data.isoformat()
+    elif isinstance(data, dict):
+        return {key: _serialize_datetime_fields(value) for key, value in data.items()}
+    elif isinstance(data, list):
+        return [_serialize_datetime_fields(item) for item in data]
+    else:
+        return data
+
+
 class EDN360Orchestrator:
     """Orquestador principal que ejecuta la cadena de agentes"""
     
