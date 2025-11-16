@@ -1724,7 +1724,7 @@ async def get_prospect_detail(prospect_id: str, request: Request):
             raise HTTPException(status_code=404, detail="Prospecto no encontrado")
         
         # Get notes for this prospect
-        notes = await db.prospect_notes.find({"prospect_id": prospect_id}).sort("created_at", -1).to_list(length=None)
+        notes = await db.prospect_notes.find({"prospect_id": prospect_id}).sort("created_at", -1).to_list(length=100)
         for note in notes:
             note["id"] = note["_id"]
         
