@@ -9324,9 +9324,11 @@ async def generate_follow_up_report(
         prev_training_data = prev_training.get("edn360_data", {})
         new_training_data = new_training.get("edn360_data", {})
         
-        # Extraer información de entrenamiento
-        prev_mesociclo = prev_training_data.get("e2_mesociclo", {})
-        new_mesociclo = new_training_data.get("e2_mesociclo", {})
+        # Extraer información de entrenamiento (estructura correcta con E4)
+        prev_e4 = prev_training_data.get("E4", {})
+        new_e4 = new_training_data.get("E4", {})
+        prev_mesociclo = prev_e4.get("mesociclo", {})
+        new_mesociclo = new_e4.get("mesociclo", {})
         
         report_text = f"""# INFORME DE SEGUIMIENTO
 
