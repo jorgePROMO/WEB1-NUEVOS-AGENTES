@@ -9094,18 +9094,13 @@ async def delete_follow_up_submission(followup_id: str, request: Request):
 
 @api_router.get("/admin/users/{user_id}/nutrition-plans")
 async def get_user_nutrition_plans(user_id: str, request: Request):
-    """Obtiene todos los planes de nutrición de un usuario + cuestionarios de seguimiento"""
+    """Obtiene todos los planes de nutrición de un usuario (solo planes, sin cuestionarios)"""
     await require_admin(request)
     
     # Obtener planes de nutrición
     plans = await db.nutrition_plans.find(
         {"user_id": user_id}
     ).sort("generated_at", -1).to_list(length=1000)
-    
-    # Obtener cuestionarios de seguimiento
-    followups = await db.follow_up_submissions.find(
-        {"user_id": user_id}
-    ).sort("submitted_at", -1).to_list(length=1000)
     
     formatted_plans = []
     
@@ -9133,23 +9128,6 @@ async def get_user_nutrition_plans(user_id: str, request: Request):
             "month": plan.get("month"),
             "year": plan.get("year"),
             "type": "nutrition_plan"
-        })
-    
-    # Agregar cuestionarios de seguimiento
-    for followup in followups:
-        submitted_at = followup.get("submitted_at")
-        if submitted_at:
-            date_str = submitted_at.strftime('%d/%m/%Y')
-            iso_str = submitted_at.isoformat()
-        else:
-            date_str = "Fecha desconocida"
-            iso_str = datetime.now(timezone.utc).isoformat()
-        
-        formatted_plans.append({
-            "id": str(followup["_id"]),
-            "label": f"📋 Seguimiento ({date_str})",
-            "generated_at": iso_str,
-            "type": "followup"
         })
     
     # Ordenar por fecha (más reciente primero)
