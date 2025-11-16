@@ -9288,7 +9288,7 @@ async def generate_follow_up_report(
     request: Request
 ):
     """
-    Genera un informe de seguimiento comparando planes anteriores con nuevos
+    Genera un informe de seguimiento inteligente analizando cuestionario y planes
     """
     await require_admin(request)
     
@@ -9298,10 +9298,14 @@ async def generate_follow_up_report(
     new_training_id = body.get("new_training_id")
     previous_nutrition_id = body.get("previous_nutrition_id")
     new_nutrition_id = body.get("new_nutrition_id")
+    followup_questionnaire_id = body.get("followup_questionnaire_id")
     
     # Validar parámetros requeridos
     if not previous_training_id or not new_training_id:
         raise HTTPException(status_code=400, detail="previous_training_id y new_training_id son requeridos")
+    
+    if not followup_questionnaire_id:
+        raise HTTPException(status_code=400, detail="followup_questionnaire_id es requerido para análisis inteligente")
     
     try:
         logger.info(f"📊 Generando informe de seguimiento para usuario {user_id}")
