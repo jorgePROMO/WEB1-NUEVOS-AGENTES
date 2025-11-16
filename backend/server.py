@@ -9119,14 +9119,8 @@ async def generate_follow_up_report(
         prev_nutrition = None
         new_nutrition = None
         if previous_nutrition_id and new_nutrition_id:
-            try:
-                prev_nutrition_oid = ObjectId(previous_nutrition_id)
-                new_nutrition_oid = ObjectId(new_nutrition_id)
-            except:
-                raise HTTPException(status_code=400, detail="IDs de planes de nutrición inválidos")
-            
-            prev_nutrition = await db.nutrition_plans.find_one({"_id": prev_nutrition_oid})
-            new_nutrition = await db.nutrition_plans.find_one({"_id": new_nutrition_oid})
+            prev_nutrition = await db.nutrition_plans.find_one({"_id": previous_nutrition_id})
+            new_nutrition = await db.nutrition_plans.find_one({"_id": new_nutrition_id})
         
         # TODO: Aquí llamar al agente S1 para generar el informe
         # Por ahora, generar informe básico
