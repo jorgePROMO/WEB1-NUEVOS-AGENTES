@@ -3908,7 +3908,7 @@ const AdminDashboard = () => {
                                   <option value="">Selecciona cuestionario de seguimiento...</option>
                                   {questionnaireSubmissions.map((q) => (
                                     <option key={q.id} value={q.id}>
-                                      {new Date(q.submitted_at).toLocaleDateString('es-ES')} - {q.source_type || q.type || 'Sin tipo'}
+                                      {q.label || `📋 Seguimiento (${new Date(q.submitted_at || q.submission_date).toLocaleDateString('es-ES')})`}
                                     </option>
                                   ))}
                                 </select>
