@@ -1450,6 +1450,9 @@ backend:
         - working: "NA"
           agent: "main"
           comment: "BUG CRÍTICO: En AdminDashboard pestaña 'Seguimiento', los dropdowns de planes (training/nutrition) mostraban cuestionarios de seguimiento en lugar de planes reales. El dropdown específico de cuestionarios estaba vacío. CAUSA RAÍZ: Endpoints de backend mezclaban datos de diferentes colecciones. SOLUCIÓN IMPLEMENTADA: 1) GET /api/admin/users/{user_id}/training-plans - Ya corregido anteriormente, eliminada lógica de questionnaire_responses, 2) GET /api/admin/users/{user_id}/nutrition-plans - Eliminada lógica que agregaba follow_up_submissions (líneas 9106-9153), endpoint ahora devuelve SOLO planes de nutrición. Existe endpoint dedicado /api/admin/users/{user_id}/follow-up-questionnaires para obtener cuestionarios. Backend reiniciado. NECESITA TESTING COMPLETO para verificar que todos los dropdowns muestren el tipo de dato correcto."
+        - working: "NA"
+          agent: "main"
+          comment: "FIX SECUNDARIO: Usuario confirmó que data mixing se resolvió pero dropdown de cuestionarios quedó vacío. PROBLEMA: Endpoint /follow-up-questionnaires buscaba en colección incorrecta (questionnaire_responses en lugar de follow_up_submissions). SOLUCIÓN: Corregido endpoint líneas 9205-9232 para buscar en follow_up_submissions con campo submission_date, formato mejorado con label descriptivo y type='followup'. Backend reiniciado. READY FOR RE-TESTING."
 
 
 
