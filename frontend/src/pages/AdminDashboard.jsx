@@ -603,7 +603,16 @@ const AdminDashboard = () => {
       await loadFollowUpReports(selectedClient.id);
     } catch (error) {
       console.error('Error generating follow-up report:', error);
-      alert('❌ Error al generar informe: ' + (error.response?.data?.detail || error.message));
+      // Better error handling - show actual error message
+      let errorMsg = 'Error desconocido';
+      if (error.response?.data?.detail) {
+        errorMsg = typeof error.response.data.detail === 'string' 
+          ? error.response.data.detail 
+          : JSON.stringify(error.response.data.detail);
+      } else if (error.message) {
+        errorMsg = error.message;
+      }
+      alert('❌ Error al generar informe: ' + errorMsg);
     } finally {
       setGeneratingReport(false);
     }
