@@ -9207,20 +9207,31 @@ async def get_follow_up_questionnaires(user_id: str, request: Request):
     """Obtiene todos los cuestionarios de seguimiento de un usuario"""
     await require_admin(request)
     
-    # Obtener cuestionarios de seguimiento (source_type = 'followup')
-    questionnaires = await db.questionnaire_responses.find({
-        "user_id": user_id,
-        "source_type": "followup"
-    }).sort("submitted_at", -1).to_list(length=100)
+    # Obtener cuestionarios de seguimiento de la colección correcta
+    questionnaires = await db.follow_up_submissions.find({
+        "user_id": user_id
+    }).sort("submission_date", -1).to_list(length=100)
     
     # Formatear respuesta
     formatted = []
     for q in questionnaires:
+        # Usar submission_date en lugar de submitted_at
+        submission_date = q.get("submission_date")
+        if submission_date:
+            date_str = submission_date.strftime('%d/%m/%Y')
+            iso_str = submission_date.isoformat()
+        else:
+            date_str = "Fecha desconocida"
+            iso_str = datetime.now(timezone.utc).isoformat()
+        
         formatted.append({
             "id": str(q["_id"]),
-            "submitted_at": q.get("submitted_at").isoformat() if q.get("submitted_at") else None,
-            "source_type": q.get("source_type", "followup"),
-            "responses": q.get("responses", {})
+            "label": f"📋 Seguimiento ({date_str})",
+            "submitted_at": iso_str,
+            "submission_date": iso_str,
+            "days_since_last_plan": q.get("days_since_last_plan"),
+            "status": q.get("status", "pending_analysis"),
+            "type": "followup"
         })
     
     return {"questionnaires": formatted}
