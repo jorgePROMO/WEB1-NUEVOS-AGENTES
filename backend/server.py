@@ -9522,7 +9522,7 @@ async def generate_follow_up_report(
 
 ✅ **Tus nuevos planes ya están disponibles** en tu panel de usuario.
 
-🔗 Accede a tu panel: https://edn360-fitness.preview.emergentagent.com
+🔗 Accede a tu panel: {os.environ.get("FRONTEND_URL", "https://tu-dominio.emergent.host")}
 
 📧 Si tienes alguna duda sobre el nuevo programa, no dudes en contactarme.
 
