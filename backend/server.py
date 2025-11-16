@@ -2385,7 +2385,7 @@ async def get_team_clients(request: Request, status: Optional[str] = None):
         users = await db.users.find({
             "role": "user",
             "subscription.plan": "team"
-        }).to_list(length=None)
+        }).to_list(length=1000)
         
         # Formatear lista
         clients_list = []
@@ -2431,7 +2431,7 @@ async def get_team_client_detail(client_id: str, request: Request):
         
         if prospect:
             # Get notes for this client
-            notes = await db.team_client_notes.find({"client_id": client_id}).sort("created_at", -1).to_list(length=None)
+            notes = await db.team_client_notes.find({"client_id": client_id}).sort("created_at", -1).to_list(length=1000)
             for note in notes:
                 note["id"] = note["_id"]
             
@@ -2456,7 +2456,7 @@ async def get_team_client_detail(client_id: str, request: Request):
         # Try to find in regular users
         user = await db.users.find_one({"_id": client_id})
         if user:
-            notes = await db.team_client_notes.find({"client_id": client_id}).sort("created_at", -1).to_list(length=None)
+            notes = await db.team_client_notes.find({"client_id": client_id}).sort("created_at", -1).to_list(length=1000)
             for note in notes:
                 note["id"] = note["_id"]
             
@@ -2654,7 +2654,7 @@ async def get_external_clients(request: Request, status: Optional[str] = None):
         if status:
             query["status"] = status
         
-        clients = await db.external_clients.find(query).sort("created_at", -1).to_list(length=None)
+        clients = await db.external_clients.find(query).sort("created_at", -1).to_list(length=1000)
         
         clients_list = []
         for client in clients:
@@ -3302,7 +3302,7 @@ async def get_templates(request: Request, type: Optional[str] = None, tags: Opti
             tag_list = [t.strip() for t in tags.split(',')]
             query["tags"] = {"$in": tag_list}
         
-        templates = await db.message_templates.find(query).to_list(length=None)
+        templates = await db.message_templates.find(query).to_list(length=1000)
         
         return {
             "templates": [
@@ -3465,7 +3465,7 @@ async def get_clients_at_risk(request: Request):
         clients = await db.users.find({
             "role": "user",
             "subscription.archived": {"$ne": True}
-        }).to_list(length=None)
+        }).to_list(length=1000)
         
         at_risk_clients = []
         now = datetime.now(timezone.utc)
@@ -3506,7 +3506,7 @@ async def get_clients_at_risk(request: Request):
             pending_forms = await db.forms.find({
                 "user_id": client["_id"],
                 "completed": False
-            }).to_list(length=None)
+            }).to_list(length=1000)
             
             for form in pending_forms:
                 days_pending = (now - form["sent_date"]).days
@@ -3914,12 +3914,12 @@ async def get_user_nutrition_plans(user_id: str, request: Request):
     # Obtener todos los planes ordenados por fecha (más reciente primero)
     plans = await db.nutrition_plans.find(
         {"user_id": user_id}
-    ).sort("generated_at", -1).to_list(length=None)
+    ).sort("generated_at", -1).to_list(length=1000)
     
     # Obtener submissions del cuestionario (respuestas sin plan generado)
     submissions = await db.nutrition_questionnaire_submissions.find(
         {"user_id": user_id}
-    ).sort("submitted_at", -1).to_list(length=None)
+    ).sort("submitted_at", -1).to_list(length=1000)
     
     # Formatear planes para respuesta
     formatted_plans = []
@@ -5783,7 +5783,7 @@ async def get_user_training_plans(user_id: str, request: Request):
     # Obtener planes de entrenamiento ordenados por fecha
     plans = await db.training_plans.find(
         {"user_id": user_id}
-    ).sort("generated_at", -1).to_list(length=None)
+    ).sort("generated_at", -1).to_list(length=1000)
     
     # Obtener información de PDFs asociados y convertir _id a id
     for plan in plans:
@@ -8529,7 +8529,7 @@ async def get_all_exercises(request: Request):
     await get_current_user(request)
     
     try:
-        exercises = await db.exercises.find().to_list(length=None)
+        exercises = await db.exercises.find().to_list(length=1000)
         
         for exercise in exercises:
             exercise["id"] = exercise["_id"]
@@ -8571,7 +8571,7 @@ async def query_exercises(query: ExerciseQuery, request: Request):
             if material_conditions:
                 mongo_query["$or"] = material_conditions
         
-        exercises = await db.exercises.find(mongo_query).to_list(length=None)
+        exercises = await db.exercises.find(mongo_query).to_list(length=1000)
         
         for exercise in exercises:
             exercise["id"] = exercise["_id"]
@@ -8596,7 +8596,7 @@ async def get_exercises_by_muscle_group(muscle_group: str, request: Request):
                 {"grupo_muscular_principal": {"$regex": muscle_group, "$options": "i"}},
                 {"grupo_muscular_secundario": {"$regex": muscle_group, "$options": "i"}}
             ]
-        }).to_list(length=None)
+        }).to_list(length=1000)
         
         for exercise in exercises:
             exercise["id"] = exercise["_id"]
@@ -8626,7 +8626,7 @@ async def get_exercise_stats(request: Request):
             {"$group": {"_id": "$grupo_muscular_principal"}},
             {"$sort": {"_id": 1}}
         ]
-        muscle_groups = await db.exercises.aggregate(muscle_groups_pipeline).to_list(length=None)
+        muscle_groups = await db.exercises.aggregate(muscle_groups_pipeline).to_list(length=1000)
         unique_muscle_groups = [mg["_id"] for mg in muscle_groups if mg["_id"]]
         
         return {
@@ -8971,7 +8971,7 @@ async def get_user_questionnaires(user_id: str, request: Request):
     # Seguimientos
     followups = await db.follow_up_submissions.find(
         {"user_id": user_id}
-    ).sort("created_at", 1).to_list(length=None)
+    ).sort("created_at", 1).to_list(length=1000)
     
     for i, followup in enumerate(followups, 1):
         # Intentar varios campos posibles de fecha
@@ -9002,12 +9002,12 @@ async def get_user_training_plans(user_id: str, request: Request):
     # Obtener planes de entrenamiento
     plans = await db.training_plans.find(
         {"user_id": user_id}
-    ).sort("generated_at", -1).to_list(length=None)
+    ).sort("generated_at", -1).to_list(length=1000)
     
     # Obtener cuestionarios de seguimiento
     followups = await db.follow_up_submissions.find(
         {"user_id": user_id}
-    ).sort("submitted_at", -1).to_list(length=None)
+    ).sort("submitted_at", -1).to_list(length=1000)
     
     formatted_plans = []
     
@@ -9124,12 +9124,12 @@ async def get_user_nutrition_plans(user_id: str, request: Request):
     # Obtener planes de nutrición
     plans = await db.nutrition_plans.find(
         {"user_id": user_id}
-    ).sort("generated_at", -1).to_list(length=None)
+    ).sort("generated_at", -1).to_list(length=1000)
     
     # Obtener cuestionarios de seguimiento
     followups = await db.follow_up_submissions.find(
         {"user_id": user_id}
-    ).sort("submitted_at", -1).to_list(length=None)
+    ).sort("submitted_at", -1).to_list(length=1000)
     
     formatted_plans = []
     
@@ -9644,7 +9644,7 @@ async def get_all_waitlist_leads(request: Request):
         raise HTTPException(status_code=403, detail="No autorizado")
     
     try:
-        leads = await db.waitlist_leads.find().sort("submitted_at", -1).to_list(length=None)
+        leads = await db.waitlist_leads.find().sort("submitted_at", -1).to_list(length=1000)
         
         # Formatear para respuesta
         leads_response = []
@@ -9782,7 +9782,7 @@ async def get_manual_payments(request: Request):
         raise HTTPException(status_code=403, detail="No autorizado")
     
     try:
-        payments = await db.manual_payments.find().sort("fecha", -1).to_list(length=None)
+        payments = await db.manual_payments.find().sort("fecha", -1).to_list(length=1000)
         return {"success": True, "payments": payments}
     except Exception as e:
         logger.error(f"Error fetching manual payments: {e}")
