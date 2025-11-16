@@ -9047,7 +9047,7 @@ async def get_user_nutrition_plans(user_id: str, request: Request):
             label = f"Plan {len(plans) - i} ({date_str})"
         
         formatted_plans.append({
-            "id": plan["_id"],
+            "id": str(plan["_id"]),
             "label": label,
             "generated_at": iso_str,
             "month": plan.get("month"),
