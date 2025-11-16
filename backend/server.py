@@ -8122,6 +8122,102 @@ async def admin_cancel_user_subscription(
         raise HTTPException(status_code=500, detail=f"Error al cancelar suscripción: {str(e)}")
 
 
+@api_router.post("/admin/refund-payment/{payment_id}")
+async def admin_refund_payment(
+    payment_id: str,
+    request: Request = None
+):
+    """
+    Admin marca un pago como devuelto (refund)
+    """
+    await require_admin(request)
+    
+    try:
+        # Buscar el pago
+        payment = await db.payment_transactions.find_one({"_id": payment_id})
+        
+        if not payment:
+            raise HTTPException(status_code=404, detail="Pago no encontrado")
+        
+        # Marcar como devuelto
+        await db.payment_transactions.update_one(
+            {"_id": payment_id},
+            {
+                "$set": {
+                    "payment_status": "refunded",
+                    "refunded_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": datetime.now(timezone.utc).isoformat()
+                }
+            }
+        )
+        
+        logger.info(f"Admin refunded payment {payment_id}")
+        
+        return {
+            "success": True,
+            "message": "Pago marcado como devuelto",
+            "payment_id": payment_id,
+            "refunded_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error refunding payment {payment_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al devolver pago: {str(e)}")
+
+
+@api_router.get("/admin/generate-invoice/{payment_id}")
+async def admin_generate_invoice(
+    payment_id: str,
+    request: Request = None
+):
+    """
+    Admin genera una factura para un pago específico
+    """
+    await require_admin(request)
+    
+    try:
+        # Buscar el pago
+        payment = await db.payment_transactions.find_one({"_id": payment_id})
+        
+        if not payment:
+            raise HTTPException(status_code=404, detail="Pago no encontrado")
+        
+        # Buscar información del usuario
+        user = await db.users.find_one({"_id": payment.get("user_id")})
+        
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Generar número de factura único
+        invoice_number = f"INV-{datetime.now(timezone.utc).strftime('%Y%m%d')}-{payment_id[:8].upper()}"
+        
+        # Crear documento de factura
+        invoice_data = {
+            "invoice_number": invoice_number,
+            "payment_id": payment_id,
+            "user_id": payment.get("user_id"),
+            "user_name": user.get("name", user.get("username", "Cliente")),
+            "user_email": user.get("email"),
+            "amount": payment.get("amount", 0),
+            "payment_date": payment.get("created_at"),
+            "payment_method": payment.get("payment_method", "Stripe"),
+            "concept": payment.get("concept", "Suscripción E.D.N.360"),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "status": "paid"
+        }
+        
+        logger.info(f"Invoice generated for payment {payment_id}: {invoice_number}")
+        
+        return {
+            "success": True,
+            "invoice": invoice_data
+        }
+        
+    except Exception as e:
+        logger.error(f"Error generating invoice for payment {payment_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al generar factura: {str(e)}")
+
+
 # ============================================
 # ADMIN - FINANCIAL OVERVIEW ENDPOINTS
 # ============================================
