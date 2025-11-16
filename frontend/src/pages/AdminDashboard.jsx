@@ -331,6 +331,8 @@ const AdminDashboard = () => {
       
       alert('✅ Plan de nutrición generado exitosamente con E.D.N.360!');
       await loadNutritionPlan(selectedClient.id);
+      // Recargar lista de planes para que el nuevo plan aparezca en dropdown de "Plan Previo"
+      await loadNutritionPlansForSelector(selectedClient.id);
     } catch (error) {
       console.error('Error generating nutrition plan:', error);
       alert('❌ Error al generar plan: ' + (error.response?.data?.detail || error.message));
