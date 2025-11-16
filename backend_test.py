@@ -3144,15 +3144,21 @@ class BackendTester:
 def main():
     """Main function"""
     tester = BackendTester()
-    success = tester.run_all_tests()
     
-    # Save results to file
-    with open("/app/backend_test_results.json", "w") as f:
-        json.dump(tester.results, f, indent=2)
-    
-    print(f"\n📄 Detailed results saved to: /app/backend_test_results.json")
-    
-    return 0 if success else 1
+    # Check if we should run only the follow-up fix test
+    if len(sys.argv) > 1 and sys.argv[1] == "--follow-up-fix":
+        success = tester.run_follow_up_fix_test_only()
+        return 0 if success else 1
+    else:
+        success = tester.run_all_tests()
+        
+        # Save results to file
+        with open("/app/backend_test_results.json", "w") as f:
+            json.dump(tester.results, f, indent=2)
+        
+        print(f"\n📄 Detailed results saved to: /app/backend_test_results.json")
+        
+        return 0 if success else 1
 
 if __name__ == "__main__":
     sys.exit(main())
