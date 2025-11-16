@@ -3820,15 +3820,38 @@ async def admin_generate_nutrition_plan(
             if previous_nutrition_plan.get("user_id") != user_id:
                 raise HTTPException(status_code=403, detail="El plan nutricional previo no pertenece a este usuario")
         
-        # Generar el plan con E.D.N.360 (N0-N8)
+        # Generar el plan con E.D.N.360
         from edn360.orchestrator import EDN360Orchestrator
         orchestrator = EDN360Orchestrator()
         
-        result = await orchestrator._execute_nutrition_initial(
-            questionnaire_data=adapted_questionnaire,
-            training_bridge_data=training_bridge_data,
-            previous_plan=previous_nutrition_plan
-        )
+        if context_data:
+            # Generar con seguimiento (NS1-NS4)
+            logger.info("📊 Generando plan de seguimiento de NUTRICIÓN con agentes NS1-NS4")
+            
+            # Si no se especificó plan previo, usar el último generado
+            if not previous_nutrition_plan:
+                previous_nutrition_plan = await db.nutrition_plans.find_one(
+                    {"user_id": user_id},
+                    sort=[("generated_at", -1)]
+                )
+                
+                if not previous_nutrition_plan:
+                    raise HTTPException(status_code=404, detail="No hay plan de nutrición anterior para seguimiento")
+            
+            # Ejecutar agentes de seguimiento de nutrición
+            result = await orchestrator._execute_nutrition_followup(
+                followup_data=context_data["followup_responses"],
+                previous_nutrition_plan=previous_nutrition_plan
+            )
+        else:
+            # Generar desde cuestionario inicial (N0-N8)
+            logger.info("🚀 Generando plan inicial de NUTRICIÓN con agentes N0-N8")
+            
+            result = await orchestrator._execute_nutrition_initial(
+                questionnaire_data=adapted_questionnaire,
+                training_bridge_data=training_bridge_data,
+                previous_plan=previous_nutrition_plan
+            )
         
         if not result["success"]:
             raise HTTPException(
