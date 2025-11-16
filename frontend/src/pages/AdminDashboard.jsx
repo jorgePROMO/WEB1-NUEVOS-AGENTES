@@ -71,6 +71,7 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showChat, setShowChat] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadingClientData, setLoadingClientData] = useState(false); // NEW: Prevent flickering during client data load
   const [showArchived, setShowArchived] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
