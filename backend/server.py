@@ -8922,11 +8922,9 @@ async def get_user_training_plans(user_id: str, request: Request):
             date_str = "Fecha desconocida"
             iso_str = datetime.now(timezone.utc).isoformat()
         
-        # Determinar label
-        if i == 0:
-            label = f"Último generado ({date_str})"
-        else:
-            label = f"Plan {len(plans) - i} ({date_str})"
+        # Determinar label con convención de nombres mejorada
+        plan_number = len(plans) - i
+        label = f"PLAN ENTRENAMIENTO {plan_number} - {date_str}"
         
         formatted_plans.append({
             "id": str(plan["_id"]),
