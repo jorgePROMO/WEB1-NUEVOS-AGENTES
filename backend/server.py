@@ -467,8 +467,8 @@ async def resend_verification_email(email: str):
         try:
             from email_utils import send_email
             frontend_url = os.environ.get('FRONTEND_URL')
-        if not frontend_url:
-            raise HTTPException(status_code=500, detail="FRONTEND_URL environment variable is required")
+            if not frontend_url:
+                raise HTTPException(status_code=500, detail="FRONTEND_URL environment variable is required")
             verification_link = f"{frontend_url}/verify-email?token={verification_token}"
             
             email_html = f"""
