@@ -3879,11 +3879,31 @@ const AdminDashboard = () => {
                                 </div>
                               </div>
 
+                              {/* NUEVO: Cuestionario de Seguimiento */}
+                              <div className="bg-blue-50 p-4 rounded-lg border-2 border-blue-200">
+                                <h4 className="font-semibold text-gray-800 mb-3">📝 Cuestionario de Seguimiento (REQUERIDO)</h4>
+                                <p className="text-sm text-gray-600 mb-3">
+                                  El cuestionario permite al sistema generar un análisis inteligente del progreso del cliente
+                                </p>
+                                <select
+                                  value={selectedFollowUpQuestionnaireForReport || ''}
+                                  onChange={(e) => setSelectedFollowUpQuestionnaireForReport(e.target.value)}
+                                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                >
+                                  <option value="">Selecciona cuestionario de seguimiento...</option>
+                                  {followUpReports.filter(q => q.type === 'followup').map((q) => (
+                                    <option key={q.id} value={q.id}>
+                                      {new Date(q.submitted_at).toLocaleDateString('es-ES')} - Seguimiento
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+
                               {/* Botón Generar Informe */}
                               <div className="flex justify-center pt-4">
                                 <Button
                                   onClick={generateFollowUpReport}
-                                  disabled={generatingReport || !selectedPreviousTrainingForReport || !selectedNewTrainingForReport}
+                                  disabled={generatingReport || !selectedPreviousTrainingForReport || !selectedNewTrainingForReport || !selectedFollowUpQuestionnaireForReport}
                                   className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-6 text-lg"
                                 >
                                   {generatingReport ? (
