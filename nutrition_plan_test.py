@@ -297,6 +297,7 @@ class NutritionPlanTester:
             self.test_1_admin_login,
             self.test_2_get_clients,
             self.test_3_get_existing_nutrition_plans,
+            self.test_3_5_create_nutrition_questionnaire_if_needed,
             self.test_4_generate_nutrition_plan_with_previous_reference,
             self.test_5_verify_fix_implementation,
         ]
