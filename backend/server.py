@@ -3831,7 +3831,7 @@ async def admin_generate_nutrition_plan(
         
         # Obtener datos del usuario para el plan
         user = await db.users.find_one({"_id": user_id})
-        user_name = user.get("nombre", "Cliente") if user else "Cliente"
+        user_name = user.get("name", user.get("username", "Cliente")) if user else "Cliente"
         
         # Guardar el plan en nutrition_plans con formato E.D.N.360
         nutrition_plan_doc = {
