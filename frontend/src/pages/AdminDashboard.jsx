@@ -127,6 +127,7 @@ const AdminDashboard = () => {
   const [selectedNewTrainingForReport, setSelectedNewTrainingForReport] = useState(null);
   const [selectedPreviousNutritionForReport, setSelectedPreviousNutritionForReport] = useState(null);
   const [selectedNewNutritionForReport, setSelectedNewNutritionForReport] = useState(null);
+  const [selectedFollowUpQuestionnaireForReport, setSelectedFollowUpQuestionnaireForReport] = useState(null);
   const [availableNutritionPlans, setAvailableNutritionPlans] = useState([]);
   const [followUpReports, setFollowUpReports] = useState([]);
   const [generatingReport, setGeneratingReport] = useState(false);
