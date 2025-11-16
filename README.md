@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://edn360-fitness.preview.emergentagent.com
+**URL Actual:** https://nutrition-coach-39.preview.emergentagent.com
 
 ---
 

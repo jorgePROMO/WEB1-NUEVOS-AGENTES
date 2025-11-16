@@ -7818,7 +7818,7 @@ async def get_checkout_status(
         
         # Inicializar Stripe Checkout
         api_key = os.environ.get("STRIPE_API_KEY")
-        frontend_url = os.environ.get("FRONTEND_URL", "https://edn360-fitness.preview.emergentagent.com")
+        frontend_url = os.environ.get("FRONTEND_URL", "https://nutrition-coach-39.preview.emergentagent.com")
         webhook_url = f"{frontend_url}/api/webhook/stripe"
         stripe_checkout = StripeCheckout(api_key=api_key, webhook_url=webhook_url)
         
@@ -7934,7 +7934,7 @@ async def stripe_webhook(request: Request):
         
         # Inicializar Stripe Checkout
         api_key = os.environ.get("STRIPE_API_KEY")
-        frontend_url = os.environ.get("FRONTEND_URL", "https://edn360-fitness.preview.emergentagent.com")
+        frontend_url = os.environ.get("FRONTEND_URL", "https://nutrition-coach-39.preview.emergentagent.com")
         webhook_url = f"{frontend_url}/api/webhook/stripe"
         stripe_checkout = StripeCheckout(api_key=api_key, webhook_url=webhook_url)
         
