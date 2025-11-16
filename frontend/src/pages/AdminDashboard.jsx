@@ -2477,7 +2477,14 @@ const AdminDashboard = () => {
 
               {/* Client Management */}
               <Card className="lg:col-span-2">
-                {selectedClient ? (
+                {loadingClientData ? (
+                  <CardContent className="pt-20 pb-20 text-center">
+                    <div className="flex flex-col items-center justify-center gap-4">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                      <p className="text-gray-600">Cargando datos del cliente...</p>
+                    </div>
+                  </CardContent>
+                ) : selectedClient ? (
                   <>
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
