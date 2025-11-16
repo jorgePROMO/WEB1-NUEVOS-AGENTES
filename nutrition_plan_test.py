@@ -140,43 +140,51 @@ class NutritionPlanTester:
         
         return False
 
-    def test_3_5_find_nutrition_form_submission_id(self):
-        """Test 3.5: Find existing nutrition form submission ID"""
+    def test_3_5_create_new_nutrition_questionnaire(self):
+        """Test 3.5: Create a new nutrition questionnaire submission for testing"""
         if not self.admin_token or not self.test_client_for_nutrition:
-            self.log_result("Find Nutrition Form Submission ID", False, "No admin token or test client available")
+            self.log_result("Create New Nutrition Questionnaire", False, "No admin token or test client available")
             return False
             
         client_id = self.test_client_for_nutrition.get('id')
-        url = f"{BACKEND_URL}/admin/clients/{client_id}"
+        url = f"{BACKEND_URL}/nutrition/questionnaire/submit"
         headers = {"Authorization": f"Bearer {self.admin_token}"}
         
+        payload = {
+            "user_id": client_id,
+            "nombre_completo": self.test_client_for_nutrition.get('name', 'Test Client'),
+            "fecha_nacimiento": "1990-01-01",
+            "sexo": "HOMBRE",
+            "altura_cm": 175,
+            "peso": 82,  # Slightly different weight for new questionnaire
+            "objetivo_principal": "Ganar músculo y definir",  # Different goal
+            "nivel_actividad": "Ejercicio intenso (5-6 días/semana)",  # Different activity level
+            "trabajo_fisico": "sedentario",
+            "alergias_intolerancias": "Ninguna",
+            "comidas_dia": "4 comidas",  # Different meal frequency
+            "experiencia_dietas": "Avanzado",  # Different experience level
+            "disponibilidad_cocinar": "Alta",  # Different cooking availability
+            "presupuesto_alimentacion": "Alto"  # Different budget
+        }
+        
         try:
-            response = requests.get(url, headers=headers)
+            response = requests.post(url, json=payload, headers=headers)
             
             if response.status_code == 200:
                 data = response.json()
-                forms = data.get("forms", [])
-                
-                # Look for nutrition forms
-                nutrition_forms = [form for form in forms if form.get('type') == 'nutrition']
-                
-                if nutrition_forms:
-                    # Use the first nutrition form ID as submission_id
-                    self.submission_id = nutrition_forms[0].get('id')
-                    self.log_result("Find Nutrition Form Submission ID", True, 
-                                  f"Found nutrition form submission ID: {self.submission_id}")
+                if data.get("success"):
+                    self.submission_id = data.get("submission_id")
+                    self.log_result("Create New Nutrition Questionnaire", True, 
+                                  f"New nutrition questionnaire submission created. ID: {self.submission_id}")
                     return True
                 else:
-                    # Fallback to plan ID
-                    self.submission_id = self.previous_nutrition_plan.get('id') if hasattr(self, 'previous_nutrition_plan') else None
-                    self.log_result("Find Nutrition Form Submission ID", True, 
-                                  f"No nutrition forms found, using plan ID as submission ID: {self.submission_id}")
-                    return True
+                    self.log_result("Create New Nutrition Questionnaire", False, 
+                                  "Response success not True", data)
             else:
-                self.log_result("Find Nutrition Form Submission ID", False, 
+                self.log_result("Create New Nutrition Questionnaire", False, 
                               f"HTTP {response.status_code}", response.text)
         except Exception as e:
-            self.log_result("Find Nutrition Form Submission ID", False, f"Exception: {str(e)}")
+            self.log_result("Create New Nutrition Questionnaire", False, f"Exception: {str(e)}")
         
         return False
 
