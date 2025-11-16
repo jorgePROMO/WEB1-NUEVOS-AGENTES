@@ -435,14 +435,17 @@ export const TeamClientsCRM = ({ token }) => {
                       <Phone className="h-5 w-5 text-green-600" />
                       <div>
                         <p className="text-sm text-gray-600">WhatsApp</p>
-                        <p className="font-medium">{selectedClient.whatsapp || 'No disponible'}</p>
+                        <p className="font-medium">{selectedClient.phone || selectedClient.whatsapp || 'No disponible'}</p>
                       </div>
                     </div>
-                    {selectedClient.whatsapp && (
+                    {(selectedClient.phone || selectedClient.whatsapp) && (
                       <Button
                         size="sm"
                         className="bg-green-600 hover:bg-green-700"
-                        onClick={() => window.open(`https://wa.me/${selectedClient.whatsapp.replace(/[^0-9]/g, '')}`, '_blank')}
+                        onClick={() => {
+                          const phoneNumber = (selectedClient.phone || selectedClient.whatsapp).replace(/[^0-9]/g, '');
+                          window.open(`https://wa.me/${phoneNumber}`, '_blank');
+                        }}
                       >
                         <Phone className="h-4 w-4 mr-2" />
                         Abrir Chat
