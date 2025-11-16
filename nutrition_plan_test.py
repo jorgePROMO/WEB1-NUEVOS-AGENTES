@@ -203,8 +203,8 @@ class NutritionPlanTester:
         client_id = self.test_client_for_nutrition.get('id')
         previous_plan_id = self.previous_nutrition_plan.get('id')
         
-        # We need a submission_id - use the previous plan's ID as a fallback
-        submission_id = previous_plan_id
+        # Use the submission_id we found or created
+        submission_id = getattr(self, 'submission_id', previous_plan_id)
         
         # This is the critical test - using previous_nutrition_plan_id parameter
         url = f"{BACKEND_URL}/admin/users/{client_id}/nutrition/generate?submission_id={submission_id}&previous_nutrition_plan_id={previous_plan_id}"
