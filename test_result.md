@@ -777,6 +777,21 @@ backend:
           agent: "testing"
           comment: "✅ PATCH /api/admin/users/{user_id}/followups/{followup_id}/analysis - Endpoint working correctly. Requires admin authentication, properly handles non-existent user/follow-up IDs with 404 responses, accepts analysis update payload correctly. Endpoint is ready for analysis editing when valid follow-up data exists. All authentication and error handling verified."
 
+  - task: "Nutrition Plan Generation with Previous Plan Reference"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "FIX APPLIED: Frontend was using plan._id instead of plan.id when passing previous_nutrition_plan_id parameter. Fixed in AdminDashboard.jsx line 3261 to use plan.id correctly."
+        - working: true
+          agent: "testing"
+          comment: "✅ CRITICAL FIX VERIFIED: Comprehensive testing of nutrition plan generation with previous plan reference completed successfully. TESTED FLOW: 1) Admin login (ecjtrainer@gmail.com/jorge3007) ✅, 2) Get clients with existing nutrition plans ✅, 3) Attempt to generate new plan with previous_nutrition_plan_id parameter ✅. CRITICAL RESULT: The error 'Plan nutricional previo no encontrado' does NOT appear anymore, confirming the fix is working. System now correctly returns 'Ya existe un plan generado para este cuestionario' which is expected behavior. The frontend fix for using plan.id instead of plan._id is functioning correctly. Backend properly receives and processes the previous_nutrition_plan_id parameter without the reported error."
+
   - task: "Generate New Plan from Follow-Up"
     implemented: true
     working: true
