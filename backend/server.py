@@ -1698,7 +1698,7 @@ async def get_prospects(request: Request, stage: Optional[str] = None):
             query["stage_name"] = stage
         
         # Get all prospects
-        prospects = await db.questionnaire_responses.find(query).sort("submitted_at", -1).to_list(length=None)
+        prospects = await db.questionnaire_responses.find(query).sort("submitted_at", -1).to_list(length=1000)
         
         # Convert to response format
         prospects_list = []
