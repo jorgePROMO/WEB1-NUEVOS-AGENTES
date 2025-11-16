@@ -9301,8 +9301,8 @@ async def generate_follow_up_report(
         
         # FASE 1: Obtener TODOS los datos necesarios
         
-        # 1.1 Cuestionario de seguimiento (CRÍTICO)
-        followup_questionnaire = await db.questionnaire_responses.find_one({
+        # 1.1 Cuestionario de seguimiento (CRÍTICO) - Buscar en la colección correcta
+        followup_questionnaire = await db.follow_up_submissions.find_one({
             "_id": followup_questionnaire_id,
             "user_id": user_id
         })
