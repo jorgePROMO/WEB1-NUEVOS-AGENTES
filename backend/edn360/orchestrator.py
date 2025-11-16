@@ -364,7 +364,9 @@ class EDN360Orchestrator:
         # Si hay plan previo, añadirlo al contexto
         if previous_plan:
             logger.info(f"  📋 Plan nutricional previo incluido como contexto")
-            questionnaire_data["previous_nutrition_plan"] = previous_plan
+            # Serializar datetime objects a strings para JSON compatibility
+            serialized_plan = _serialize_datetime_fields(previous_plan)
+            questionnaire_data["previous_nutrition_plan"] = serialized_plan
         
         for agent in self.nutrition_initial_agents:
             logger.info(f"  ▶️ Ejecutando {agent.agent_id}...")
