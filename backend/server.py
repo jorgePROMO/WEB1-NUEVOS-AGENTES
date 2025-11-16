@@ -8306,9 +8306,13 @@ async def get_financial_overview(
         active_subscriptions = await db.user_subscriptions.count_documents({"status": "active"})
         cancelled_subscriptions = await db.user_subscriptions.count_documents({"status": "cancelled"})
         
-        # MRR (Monthly Recurring Revenue) - suma de todas las suscripciones activas
-        active_subs = await db.user_subscriptions.find({"status": "active"}).to_list(length=None)
-        mrr = sum(sub["amount"] for sub in active_subs)
+        # MRR (Monthly Recurring Revenue) - suma de todas las suscripciones activas usando aggregation
+        mrr_pipeline = [
+            {"$match": {"status": "active"}},
+            {"$group": {"_id": None, "total": {"$sum": "$amount"}}}
+        ]
+        mrr_result = await db.user_subscriptions.aggregate(mrr_pipeline).to_list(length=1)
+        mrr = mrr_result[0]["total"] if mrr_result else 0
         
         # Total transacciones
         total_transactions = await db.payment_transactions.count_documents({})
