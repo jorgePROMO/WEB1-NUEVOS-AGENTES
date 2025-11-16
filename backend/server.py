@@ -9155,16 +9155,23 @@ async def get_follow_up_reports(user_id: str, request: Request):
 @api_router.post("/admin/users/{user_id}/follow-up-report/generate")
 async def generate_follow_up_report(
     user_id: str,
-    previous_training_id: str,
-    new_training_id: str,
-    previous_nutrition_id: str = None,
-    new_nutrition_id: str = None,
-    request: Request = None
+    request: Request
 ):
     """
     Genera un informe de seguimiento comparando planes anteriores con nuevos
     """
     await require_admin(request)
+    
+    # Obtener datos del body
+    body = await request.json()
+    previous_training_id = body.get("previous_training_id")
+    new_training_id = body.get("new_training_id")
+    previous_nutrition_id = body.get("previous_nutrition_id")
+    new_nutrition_id = body.get("new_nutrition_id")
+    
+    # Validar parámetros requeridos
+    if not previous_training_id or not new_training_id:
+        raise HTTPException(status_code=400, detail="previous_training_id y new_training_id son requeridos")
     
     try:
         logger.info(f"📊 Generando informe de seguimiento para usuario {user_id}")
