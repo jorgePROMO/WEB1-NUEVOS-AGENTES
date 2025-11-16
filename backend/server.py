@@ -8086,16 +8086,33 @@ async def get_financial_overview(
         successful_payments = await db.payment_transactions.find({"payment_status": "succeeded"}).to_list(length=None)
         total_revenue = sum(payment["amount"] for payment in successful_payments)
         
+        # INCLUIR PAGOS MANUALES (Caja A y B) en las métricas
+        manual_payments = await db.manual_payments.find().to_list(length=None)
+        total_manual_revenue = sum(payment["amount"] for payment in manual_payments)
+        total_revenue += total_manual_revenue
+        
         # Revenue del mes actual
         now = datetime.now(timezone.utc)
-        start_of_month = datetime(now.year, now.month, 1, tzinfo=timezone.utc).isoformat()
-        monthly_payments = [p for p in successful_payments if p["created_at"] >= start_of_month]
+        start_of_month = datetime(now.year, now.month, 1, tzinfo=timezone.utc)
+        
+        # Pagos de transacciones del mes
+        monthly_payments = [p for p in successful_payments if p["created_at"] >= start_of_month.isoformat()]
         monthly_revenue = sum(payment["amount"] for payment in monthly_payments)
         
+        # Pagos manuales del mes
+        monthly_manual_payments = [p for p in manual_payments if p.get("fecha") and p["fecha"] >= start_of_month]
+        monthly_manual_revenue = sum(payment["amount"] for payment in monthly_manual_payments)
+        monthly_revenue += monthly_manual_revenue
+        
         # Revenue del año actual
-        start_of_year = datetime(now.year, 1, 1, tzinfo=timezone.utc).isoformat()
-        annual_payments = [p for p in successful_payments if p["created_at"] >= start_of_year]
+        start_of_year = datetime(now.year, 1, 1, tzinfo=timezone.utc)
+        annual_payments = [p for p in successful_payments if p["created_at"] >= start_of_year.isoformat()]
         annual_revenue = sum(payment["amount"] for payment in annual_payments)
+        
+        # Pagos manuales del año
+        annual_manual_payments = [p for p in manual_payments if p.get("fecha") and p["fecha"] >= start_of_year]
+        annual_manual_revenue = sum(payment["amount"] for payment in annual_manual_payments)
+        annual_revenue += annual_manual_revenue
         
         # Suscripciones activas y canceladas
         active_subscriptions = await db.user_subscriptions.count_documents({"status": "active"})
