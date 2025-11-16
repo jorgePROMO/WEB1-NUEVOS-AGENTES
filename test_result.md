@@ -1460,8 +1460,7 @@ backend:
 
 
 test_plan:
-  current_focus:
-    - "Fix Dropdown Data Mixing - Seguimiento Tab"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
