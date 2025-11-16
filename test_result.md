@@ -1462,6 +1462,9 @@ backend:
         - working: true
           agent: "testing"
           comment: "✅ FOLLOW-UP QUESTIONNAIRES ENDPOINT FIX VERIFIED COMPLETELY: Comprehensive testing completed as requested in review. TESTED FLOW: 1) Admin login with ecjtrainer@gmail.com/jorge3007 ✅, 2) Client selection (jorge31011987promo@gmail.com) ✅, 3) CRITICAL ENDPOINT TEST: GET /api/admin/users/{user_id}/follow-up-questionnaires ✅ - Response has correct structure {'questionnaires': [...]}, Found 1 questionnaire with all required fields (id, label, type), Label format correct '📋 Seguimiento (15/11/2025)', Type correct 'followup', All optional fields present (submitted_at, submission_date, days_since_last_plan, status), 4) COMPARISON WITH OTHER ENDPOINTS ✅ - Training plans endpoint returns only training plans (no follow-up data mixed), Nutrition plans endpoint returns only nutrition plans (no follow-up data mixed). OBJETIVO CUMPLIDO: Endpoint now correctly returns questionnaires from the proper collection (follow_up_submissions), uses correct field (submission_date), returns improved format with descriptive labels, no data mixing between endpoints. The fix is working perfectly."
+        - working: "NA"
+          agent: "main"
+          comment: "BUGS SECUNDARIOS IDENTIFICADOS Y CORREGIDOS: Usuario reportó: 1) Dropdown mostraba '15/11/25-followup' (formato incorrecto), 2) Error 404 al generar informe. CORRECCIONES: 1) Backend generate_follow_up_report línea 9305 - Cambiado a buscar en follow_up_submissions (colección correcta), ajustada extracción de datos del cuestionario (adherence, wellbeing, changes_perceived, feedback, measurements), 2) Frontend AdminDashboard.jsx línea 3911 - Dropdown usa q.label del backend directamente. Ambos servicios reiniciados. NEEDS RE-TESTING: Verificar formato dropdown y generación exitosa de informe."
 
 
 
