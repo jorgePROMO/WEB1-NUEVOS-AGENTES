@@ -1403,6 +1403,10 @@ agent_communication:
       message: "🐛 USUARIO REPORTA 2 NUEVOS BUGS: 1) Error al generar informe: 'fromisoformat: argument must be str' - generated_at puede ser datetime object no string, 2) No puede borrar informes viejos de seguimiento."
     - agent: "main"
       message: "✅ BUGS INFORMES RESUELTOS: 1) Creada función helper _format_date_safe() que maneja tanto datetime objects como strings, previene error fromisoformat. 2) get_follow_up_reports endpoint - Agregado str(_id) conversion para serialización JSON, agregado limit=100 (otro query sin límite encontrado!), agregada conversión de generated_at datetime a ISO string. 3) Botón eliminar ahora funciona porque _id se serializa correctamente como string. Backend reiniciado. Total queries sin límite resueltos: 8 (no 7)."
+    - agent: "main"
+      message: "🐛 USUARIO REPORTA: Informe generado muestra todo como 'N/A' - no extrae datos reales de los planes."
+    - agent: "main"
+      message: "✅ ESTRUCTURA DE DATOS CORREGIDA EN INFORME: Problema - código usaba estructura incorrecta (e2_mesociclo, n4_macros) que no existe. Estructura REAL: edn360_data.E4.mesociclo (entrenamiento), edn360_data.N1 (metabólico), edn360_data.N2 (macros). CORRECCIONES: 1) Entrenamiento - ahora extrae de E4.mesociclo con campos: frecuencia_semanal, duracion_semanas, objetivo, split, estrategia. 2) Nutrición - ahora extrae de N1 (TDEE) y N2.macros_dia_A con: kcal_objetivo, proteinas_g, proteinas_gkg, carbohidratos_g, grasas_g. Backend reiniciado. Informe ahora muestra datos reales comparativos."
 
 backend:
   - task: "Convención de Nombres para Planes Guardados"
