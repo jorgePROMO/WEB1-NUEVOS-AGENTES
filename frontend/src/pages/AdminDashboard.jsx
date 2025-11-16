@@ -6027,6 +6027,63 @@ const AdminDashboard = () => {
         </div>
       )}
 
+      {/* Modal para ver/editar informe de seguimiento */}
+      {showReportModal && selectedReport && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-2xl font-bold">📊 Informe de Seguimiento</h2>
+              <button
+                onClick={() => setShowReportModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+              <div className="mb-4 flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const newText = prompt('Editar contenido del informe:', selectedReport.report_text);
+                    if (newText && newText !== selectedReport.report_text) {
+                      updateFollowUpReport(selectedReport._id, newText);
+                    }
+                  }}
+                >
+                  ✏️ Editar
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-red-600 hover:text-red-700"
+                  onClick={() => deleteFollowUpReport(selectedReport._id)}
+                >
+                  🗑️ Eliminar
+                </Button>
+              </div>
+              
+              <div className="prose max-w-none">
+                <pre className="whitespace-pre-wrap font-sans text-sm bg-gray-50 p-4 rounded">
+                  {selectedReport.report_text}
+                </pre>
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-2 p-6 border-t">
+              <Button
+                variant="outline"
+                onClick={() => setShowReportModal(false)}
+              >
+                Cerrar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
