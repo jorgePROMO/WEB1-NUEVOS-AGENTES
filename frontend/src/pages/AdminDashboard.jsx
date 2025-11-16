@@ -529,6 +529,20 @@ const AdminDashboard = () => {
     }
   };
 
+  // Load follow-up questionnaires
+  const loadFollowUpQuestionnaires = async (userId) => {
+    try {
+      const response = await axios.get(`${API}/admin/users/${userId}/follow-up-questionnaires`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setQuestionnaireSubmissions(response.data.questionnaires || []);
+    } catch (error) {
+      console.error('Error loading follow-up questionnaires:', error);
+      setQuestionnaireSubmissions([]);
+    }
+  };
+
   // Delete questionnaire
   const deleteQuestionnaire = async (submissionId, type) => {
     if (!window.confirm('⚠️ ¿Estás seguro de eliminar este cuestionario? Esta acción no se puede deshacer.')) {
