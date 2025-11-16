@@ -2869,7 +2869,16 @@ class BackendTester:
             self.test_46_deactivate_followup_for_user,
             self.test_47_verify_status_changed_back_after_deactivation,
             self.test_48_test_404_for_nonexistent_user_activate,
-            self.test_49_test_404_for_nonexistent_user_deactivate
+            self.test_49_test_404_for_nonexistent_user_deactivate,
+            
+            # 🎯 CRITICAL: Nutrition Plan Generation with Previous Plan Reference Tests
+            self.test_50_admin_login_for_nutrition_plan_test,
+            self.test_51_get_clients_with_nutrition_plans,
+            self.test_52_get_existing_nutrition_plans,
+            self.test_53_create_nutrition_questionnaire_submission,
+            self.test_54_generate_first_nutrition_plan,
+            self.test_55_generate_second_nutrition_plan_with_previous_reference,
+            self.test_56_verify_fix_is_working
         ]
         
         for test in tests:
