@@ -620,25 +620,12 @@ const AdminDashboard = () => {
 
   // Load all client data when client is selected
   const loadAllClientData = async (clientId) => {
-    // Prevent race conditions: cancel if client changes during loading
-    const currentClientId = clientId;
-    
     // Set loading state to prevent UI flickering
     setLoadingClientData(true);
     
     try {
-      // Don't clear selectedPlan immediately - causes content to disappear
-      // setSelectedPlan(null); // REMOVED - causes flickering
-      
       await loadClientDetails(clientId);
-      
-      // Check if client changed during loading
-      if (selectedClient?.id !== currentClientId) return;
-      
       await loadNutritionPlan(clientId);
-      
-      // Check again
-      if (selectedClient?.id !== currentClientId) return;
       
       // Load training plans
       try {
@@ -646,7 +633,6 @@ const AdminDashboard = () => {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
         });
-        if (selectedClient?.id !== currentClientId) return;
         setTrainingPlans(trainingResponse.data.plans || []);
       } catch (error) {
         if (error.response?.status !== 404) {
@@ -655,21 +641,11 @@ const AdminDashboard = () => {
         setTrainingPlans([]);
       }
       
-      // Check again before loading selectors
-      if (selectedClient?.id !== currentClientId) return;
-      
       // Load data for selectors
       await loadQuestionnaires(clientId);
-      if (selectedClient?.id !== currentClientId) return;
-      
       await loadTrainingPlansForSelector(clientId);
-      if (selectedClient?.id !== currentClientId) return;
-      
       await loadNutritionPlansForSelector(clientId);
-      if (selectedClient?.id !== currentClientId) return;
-      
       await loadFollowUpReports(clientId);
-      if (selectedClient?.id !== currentClientId) return;
       
       // Now load follow-ups after other data is loaded
       try {
@@ -677,17 +653,14 @@ const AdminDashboard = () => {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
         });
-        if (selectedClient?.id !== currentClientId) return;
         setFollowUps(response.data.follow_ups || []);
       } catch (error) {
         console.error('Error loading follow-ups:', error);
         setFollowUps([]);
       }
     } finally {
-      // Only clear loading state if we're still on the same client
-      if (selectedClient?.id === currentClientId) {
-        setLoadingClientData(false);
-      }
+      // Clear loading state
+      setLoadingClientData(false);
     }
   };
 
