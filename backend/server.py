@@ -5711,7 +5711,7 @@ async def admin_generate_training_plan(
         
         # Generar versiones del plan
         plan_data_json = _format_edn360_plan_for_display(result["plan_data"])
-        plan_text_professional = _format_edn360_plan_as_text(result["plan_data"], user.get("nombre", "Cliente"))
+        plan_text_professional = _format_edn360_plan_as_text(result["plan_data"], user.get("name", user.get("username", "Cliente")))
         
         # Guardar el plan en training_plans con formato E.D.N.360
         training_plan_doc = {
