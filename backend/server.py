@@ -2178,7 +2178,7 @@ async def get_prospect_stages(request: Request):
     await require_admin(request)
     
     try:
-        stages = await db.prospect_stages.find().sort("order", 1).to_list(length=None)
+        stages = await db.prospect_stages.find().sort("order", 1).to_list(length=50)
         for stage in stages:
             stage["id"] = stage["_id"]
         
