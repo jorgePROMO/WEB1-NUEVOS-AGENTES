@@ -3798,10 +3798,16 @@ async def admin_generate_nutrition_plan(
         # Obtener plan nutricional previo si se especificó (para progresión)
         previous_nutrition_plan = None
         if previous_nutrition_plan_id:
-            logger.info(f"📋 Usando plan nutricional previo {previous_nutrition_plan_id} como referencia")
+            logger.info(f"🔍 POST recibe previous_nutrition_plan_id: '{previous_nutrition_plan_id}' (tipo: {type(previous_nutrition_plan_id)})")
+            logger.info(f"📋 Buscando plan nutricional previo con _id: '{previous_nutrition_plan_id}'")
             previous_nutrition_plan = await db.nutrition_plans.find_one({"_id": previous_nutrition_plan_id})
             
             if not previous_nutrition_plan:
+                # Log extra para debugging
+                logger.error(f"❌ Plan con _id '{previous_nutrition_plan_id}' NO encontrado en DB")
+                # Intentar buscar todos los planes del usuario para ver qué IDs existen
+                all_plans = await db.nutrition_plans.find({"user_id": user_id}).to_list(length=10)
+                logger.error(f"📊 Planes existentes para user {user_id}: {[p['_id'] for p in all_plans]}")
                 raise HTTPException(status_code=404, detail=f"Plan nutricional previo no encontrado")
             
             if previous_nutrition_plan.get("user_id") != user_id:
