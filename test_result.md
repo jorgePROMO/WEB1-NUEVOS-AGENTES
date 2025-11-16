@@ -1241,3 +1241,21 @@ agent_communication:
     - agent: "main"
       message: "✅ SOLUCIÓN COMPLETA OBJECTID + AUTO-DETECCIÓN: Usuario reportó error 'Cuestionario no encontrado' en AMBOS endpoints (entrenamiento y nutrición) al usar seguimientos. Trabajé toda la noche en esto. troubleshoot_agent identificó: MongoDB ObjectId vs string mismatch - GET endpoints funcionan (auto-conversión) pero POST endpoints fallan al buscar con string. SOLUCIÓN BACKEND: Añadido import ObjectId, convertir todos los IDs en búsquedas de DB usando ObjectId(id) if ObjectId.is_valid(id) else id en: admin_generate_nutrition_plan (líneas 3666, 3672, 3700), admin_generate_training_plan (líneas 5665, 5678). SOLUCIÓN FRONTEND: Modificada generateTrainingPlan para auto-detectar si cuestionario seleccionado es followup mirando availableQuestionnaires array y field 'type', envía source_type correcto al backend. Backend reiniciado. Usuario debe probar AMBOS: 1) ENTRENAMIENTO: seleccionar seguimiento en dropdown cuestionario base → generar → debe funcionar, 2) NUTRICIÓN: seleccionar seguimiento en dropdown cuestionario base → generar → debe funcionar. Sin error 'Cuestionario no encontrado'."
 
+
+backend:
+  - task: "Fix Serialización Datetime - E1 JSON Serializable"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/edn360/orchestrator.py, /app/backend/server.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "troubleshoot + main"
+          comment: "✅ SERIALIZACIÓN DATETIME ARREGLADA - Usuario reportó error al generar plan con seguimiento: 'E1 falló: Object of type datetime is not JSON serializable'. troubleshoot_agent identificó: Cuando previous_plan o followup data (de MongoDB) se pasa a agentes E.D.N.360, contiene campos datetime (submitted_at, updated_at, generated_at) que no son JSON serializable. Los agentes procesan datos en JSON y fallan al encontrar datetime objects de Python. SOLUCIÓN IMPLEMENTADA: 1) Creada función helper _serialize_datetime_fields() que recursivamente convierte datetime a ISO strings en dicts, lists, y valores simples, 2) ORCHESTRATOR.PY: Añadida función helper (línea 46), aplicada en _execute_training_initial línea 298 (serializa previous_plan antes de añadir a questionnaire_data), aplicada en _execute_nutrition_initial línea 369 (serializa previous_nutrition_plan), 3) SERVER.PY: Añadida función helper (línea 64), aplicada en admin_generate_training_plan línea 5700 (serializa followup antes de crear context_data), aplicada en admin_generate_nutrition_plan línea 3714 (serializa submission followup). Ahora todos los datetime se convierten a ISO strings antes de pasar a agentes. Backend reiniciado. READY FOR TESTING - generar plan con seguimiento debe ejecutar E1 exitosamente sin error de serialización."
+
+agent_communication:
+    - agent: "main"
+      message: "✅ ERROR SERIALIZACIÓN DATETIME RESUELTO: Después de fix ObjectId, usuario intentó generar plan y recibió nuevo error: 'E1 falló: Object of type datetime is not JSON serializable'. Invoqué troubleshoot_agent quien identificó: MongoDB devuelve datetime objects en campos como submitted_at, updated_at. Cuando estos datos (previous_plan, followup) se pasan a agentes E.D.N.360, intentan JSON serialize y fallan porque datetime no es JSON serializable. SOLUCIÓN COMPLETA: Creada función _serialize_datetime_fields() que recursivamente convierte datetime → ISO string en ANY data structure (dicts, lists, nested). Aplicada en 4 lugares críticos: 1) orchestrator.py _execute_training_initial: serializa previous_plan antes de añadir, 2) orchestrator.py _execute_nutrition_initial: serializa previous_nutrition_plan, 3) server.py admin_generate_training_plan: serializa followup antes de crear context_data, 4) server.py admin_generate_nutrition_plan: serializa submission followup. Backend reiniciado. Usuario debe: 1) Seleccionar seguimiento como cuestionario base, 2) Generar plan entrenamiento, 3) Verificar que E1 ejecuta sin error 'not JSON serializable', 4) Plan debe generarse exitosamente, 5) Repetir para nutrición."
+
