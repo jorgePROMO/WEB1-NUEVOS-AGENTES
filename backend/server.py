@@ -5032,64 +5032,19 @@ PRIMERA SEMANA:
         # Usuario solicitó eliminar el detalle verbose de DÍAS A/M/B
         # Esta información ahora solo aparecerá en formato limpio en el menú semanal
         
-        # Añadir menú semanal completo si existe
+        # Añadir menú semanal en formato limpio
         menu_semanal = n6_menus.get("menu_semanal", {})
         if menu_semanal:
             plan_text += """
 
 ─────────────────────────────────────────────────────────────────────────
 
-MENÚ SEMANAL
+DETALLE COMPLETO POR DÍA:
 
 """
-            # Recopilar todas las comidas únicas de todos los días con sus horarios
             dias_nombres = ["LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO", "DOMINGO"]
             dias_keys = ["dia_1", "dia_2", "dia_3", "dia_4", "dia_5", "dia_6", "dia_7"]
             
-            # Recopilar todas las comidas y sus horarios (pueden variar entre días A/B)
-            todas_comidas = {}  # {hora: nombre_comida}
-            for dia_key in dias_keys:
-                dia_data = menu_semanal.get(dia_key, {})
-                for comida in dia_data.get("comidas", []):
-                    hora = comida.get("hora", "")
-                    nombre = comida.get("nombre", "")
-                    if hora not in todas_comidas:
-                        todas_comidas[hora] = nombre
-            
-            # Ordenar comidas por hora
-            comidas_ordenadas = sorted(todas_comidas.items(), key=lambda x: x[0])
-            
-            if comidas_ordenadas:
-                # Formato simple de lista por día
-                for i, dia_key in enumerate(dias_keys):
-                    dia_data = menu_semanal.get(dia_key, {})
-                    tipo_dia = dia_data.get("tipo_dia", "M")
-                    emoji = "🔥" if tipo_dia == "A" else ("🌙" if tipo_dia == "B" else "⚖️")
-                    
-                    plan_text += f"\n{dias_nombres[i]} {emoji} (Día Tipo {tipo_dia}):\n"
-                    
-                    for comida in dia_data.get("comidas", []):
-                        nombre_comida = comida.get("nombre", "")
-                        hora = comida.get("hora", "")
-                        alimentos = comida.get("alimentos", [])
-                        
-                        plan_text += f"  {hora} {nombre_comida}:\n"
-                        
-                        if alimentos and len(alimentos) > 0:
-                            for alimento in alimentos:
-                                if isinstance(alimento, dict):
-                                    nombre_ali = alimento.get('nombre', '')
-                                    cantidad = alimento.get('cantidad', '')
-                                    plan_text += f"    • {cantidad} {nombre_ali}\n"
-                                else:
-                                    plan_text += f"    • {alimento}\n"
-                        else:
-                            plan_text += f"    • (Ver detalle completo)\n"
-                
-                plan_text += "\nNota: Ver detalle completo de alimentos y macros por día más abajo.\n"
-            
-            # Mantener detalle completo por día después del resumen
-            plan_text += "\nDETALLE COMPLETO POR DÍA:\n"
             for dia_key, dia_nombre in zip(dias_keys, dias_nombres):
                 dia_data = menu_semanal.get(dia_key, {})
                 if dia_data:
