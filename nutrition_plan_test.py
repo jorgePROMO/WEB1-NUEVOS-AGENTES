@@ -292,7 +292,7 @@ class NutritionPlanTester:
             self.test_1_admin_login,
             self.test_2_get_clients,
             self.test_3_get_existing_nutrition_plans,
-            self.test_3_5_find_nutrition_form_submission_id,
+            self.test_3_5_create_new_nutrition_questionnaire,
             self.test_4_generate_nutrition_plan_with_previous_reference,
             self.test_5_verify_fix_implementation,
         ]
