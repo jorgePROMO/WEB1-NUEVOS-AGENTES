@@ -9376,6 +9376,22 @@ Respuestas del cliente:
             prev_macros_a = prev_n2.get("macros_dia_A", {})
             new_macros_a = new_n2.get("macros_dia_A", {})
             
+            nutrition_data_text = f"""
+PLAN DE NUTRICIÓN ANTERIOR (Mes {prev_nutrition.get('month')}/{prev_nutrition.get('year')}):
+- TDEE: {prev_n1.get('tdee_estimado', prev_n2.get('tdee', 'N/A'))} kcal/día
+- Calorías (Día Entreno): {prev_macros_a.get('kcal_objetivo', 'N/A')} kcal
+- Proteínas: {prev_macros_a.get('proteinas_g', 'N/A')}g ({prev_macros_a.get('proteinas_gkg', 'N/A')}g/kg)
+- Carbohidratos: {prev_macros_a.get('carbohidratos_g', 'N/A')}g
+- Grasas: {prev_macros_a.get('grasas_g', 'N/A')}g
+
+PLAN DE NUTRICIÓN NUEVO (Mes {new_nutrition.get('month')}/{new_nutrition.get('year')}):
+- TDEE: {new_n1.get('tdee_estimado', new_n2.get('tdee', 'N/A'))} kcal/día
+- Calorías (Día Entreno): {new_macros_a.get('kcal_objetivo', 'N/A')} kcal
+- Proteínas: {new_macros_a.get('proteinas_g', 'N/A')}g ({new_macros_a.get('proteinas_gkg', 'N/A')}g/kg)
+- Carbohidratos: {new_macros_a.get('carbohidratos_g', 'N/A')}g
+- Grasas: {new_macros_a.get('grasas_g', 'N/A')}g
+"""
+            
             report_text += f"""
 ## 🥗 COMPARACIÓN DE PLANES DE NUTRICIÓN
 
