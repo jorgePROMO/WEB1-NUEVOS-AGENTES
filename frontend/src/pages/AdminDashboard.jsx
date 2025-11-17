@@ -3579,7 +3579,7 @@ const AdminDashboard = () => {
                                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                   >
                                     <option value="">Selecciona un cuestionario...</option>
-                                    {availableQuestionnaires.map((q) => (
+                                    {availableQuestionnaires.filter(q => q.type !== 'followup' && !q.label.includes('Seguimiento')).map((q) => (
                                       <option key={q.id} value={q.id}>
                                         {q.label}
                                       </option>
