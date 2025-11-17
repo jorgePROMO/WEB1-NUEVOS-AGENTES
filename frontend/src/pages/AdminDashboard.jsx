@@ -3302,7 +3302,7 @@ const AdminDashboard = () => {
                           )}
                           
                           {/* Configuration Selectors */}
-                          {questionnaireSubmissions.length > 0 && (
+                          {availableQuestionnaires.length > 0 && (
                             <Card className="mb-6 border-2 border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
                               <CardHeader>
                                 <CardTitle className="text-lg text-green-900">⚙️ Configuración de Generación</CardTitle>
