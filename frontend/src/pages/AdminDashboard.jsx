@@ -3566,7 +3566,7 @@ const AdminDashboard = () => {
                         {/* Training Tab */}
                         <TabsContent value="training">
                           {/* Configuration Selectors */}
-                          {questionnaireSubmissions.length > 0 && (
+                          {availableQuestionnaires.length > 0 && (
                             <Card className="mb-6 border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50">
                               <CardHeader>
                                 <CardTitle className="text-lg text-blue-900">⚙️ Configuración de Generación</CardTitle>
