@@ -464,23 +464,28 @@ const AdminDashboard = () => {
   // Load questionnaires for selectors
   const loadQuestionnaires = async (userId) => {
     try {
+      console.log('🔍 Loading questionnaires for user:', userId);
       const response = await axios.get(`${API}/admin/users/${userId}/questionnaires`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
       const questionnaires = response.data.questionnaires || [];
+      console.log('📋 Raw questionnaires received:', questionnaires);
+      console.log('📋 Questionnaires count:', questionnaires.length);
       setAvailableQuestionnaires(questionnaires);
       
       // Set default to initial questionnaire only if nothing selected
       if (!selectedQuestionnaireForTraining && !selectedQuestionnaireForNutrition) {
         const initial = questionnaires.find(q => q.is_initial);
+        console.log('🎯 Initial questionnaire found:', initial);
         if (initial) {
           setSelectedQuestionnaireForTraining(initial.id);
           setSelectedQuestionnaireForNutrition(initial.id);
         }
       }
     } catch (error) {
-      console.error('Error loading questionnaires:', error);
+      console.error('❌ Error loading questionnaires:', error);
+      console.error('❌ Error details:', error.response?.data);
       setAvailableQuestionnaires([]);
     }
   };
