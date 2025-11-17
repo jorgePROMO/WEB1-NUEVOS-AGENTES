@@ -247,7 +247,7 @@ const AdminDashboard = () => {
     // Los agentes de seguimiento REQUIEREN plan previo para funcionar
     if (!selectedPreviousTrainingPlan || selectedPreviousTrainingPlan === '') {
       actualSourceType = 'initial';
-      logger.info('🔧 No hay plan previo seleccionado → Forzando source_type=initial');
+      console.log('🔧 No hay plan previo seleccionado → Forzando source_type=initial');
     } else if (!sourceType || sourceType === 'initial') {
       // Solo auto-detectar si hay plan previo seleccionado
       const selectedQ = availableQuestionnaires.find(q => q.id === actualSourceId);
