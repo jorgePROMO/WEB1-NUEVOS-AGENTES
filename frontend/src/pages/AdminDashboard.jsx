@@ -239,22 +239,20 @@ const AdminDashboard = () => {
       return;
     }
     
-    // Auto-detect source type si no se especifica
+    // Auto-detect source type basándose en el cuestionario seleccionado
     let actualSourceType = sourceType;
     let actualSourceId = sourceId || selectedQuestionnaireForTraining;
     
-    // CRITICAL FIX: Si no hay plan previo seleccionado, SIEMPRE es initial
-    // Los agentes de seguimiento REQUIEREN plan previo para funcionar
-    if (!selectedPreviousTrainingPlan || selectedPreviousTrainingPlan === '') {
-      actualSourceType = 'initial';
-      console.log('🔧 No hay plan previo seleccionado → Forzando source_type=initial');
-    } else if (!sourceType || sourceType === 'initial') {
-      // Solo auto-detectar si hay plan previo seleccionado
+    // Detectar tipo basándose en el cuestionario, NO en si hay plan previo
+    if (!sourceType || sourceType === 'initial') {
       const selectedQ = availableQuestionnaires.find(q => q.id === actualSourceId);
+      console.log('🔍 Cuestionario seleccionado:', selectedQ);
       if (selectedQ && selectedQ.type === 'followup') {
         actualSourceType = 'followup';
+        console.log('✅ Detectado como followup');
       } else {
         actualSourceType = 'initial';
+        console.log('✅ Detectado como initial');
       }
     }
     
