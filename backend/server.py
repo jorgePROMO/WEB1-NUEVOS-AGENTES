@@ -3820,57 +3820,21 @@ async def admin_generate_nutrition_plan(
             if previous_nutrition_plan.get("user_id") != user_id:
                 raise HTTPException(status_code=403, detail="El plan nutricional previo no pertenece a este usuario")
         
-        # Generar el plan con E.D.N.360
+        # Generar el plan con E.D.N.360 - SIEMPRE agentes N0-N8
         from edn360.orchestrator import EDN360Orchestrator
         orchestrator = EDN360Orchestrator()
         
-        # SOLO usar agentes de seguimiento si hay context_data Y plan previo
-        if context_data and previous_nutrition_plan:
-            # Generar con seguimiento (NS1-NS4)
-            logger.info("📊 Generando plan de seguimiento de NUTRICIÓN con agentes NS1-NS4")
-            
-            # Ejecutar agentes de seguimiento de nutrición
-            # Serializar datetime fields antes de pasar a agentes
-            serialized_plan = _serialize_datetime_fields(previous_nutrition_plan)
-            
-            result = await orchestrator._execute_nutrition_followup(
-                followup_data=context_data["followup_responses"],
-                previous_nutrition_plan=serialized_plan,
-                training_handoff=training_bridge_data
-            )
-        elif context_data and not previous_nutrition_plan:
-            # Si hay follow-up pero NO hay plan previo, buscar el último plan
-            logger.info("🔍 Follow-up detectado sin plan previo especificado, buscando último plan...")
-            previous_nutrition_plan = await db.nutrition_plans.find_one(
-                {"user_id": user_id},
-                sort=[("generated_at", -1)]
-            )
-            
-            if previous_nutrition_plan:
-                logger.info("✅ Plan previo encontrado, usando agentes de seguimiento NS1-NS4")
-                
-                # Serializar datetime fields antes de pasar a agentes
-                serialized_plan = _serialize_datetime_fields(previous_nutrition_plan)
-                
-                result = await orchestrator._execute_nutrition_followup(
-                    followup_data=context_data["followup_responses"],
-                    previous_nutrition_plan=serialized_plan,
-                    training_handoff=training_bridge_data
-                )
-            else:
-                # No hay plan previo, generar como inicial
-                logger.warning("⚠️ Follow-up sin plan previo, generando como PLAN INICIAL con agentes N0-N8")
-                context_data = None  # Forzar modo inicial
+        logger.info("🚀 Generando plan de NUTRICIÓN con agentes N0-N8")
         
-        if not context_data:
-            # Generar desde cuestionario inicial (N0-N8)
-            logger.info("🚀 Generando plan inicial de NUTRICIÓN con agentes N0-N8")
-            
-            result = await orchestrator._execute_nutrition_initial(
-                questionnaire_data=adapted_questionnaire,
-                training_bridge_data=training_bridge_data,
-                previous_plan=previous_nutrition_plan
-            )
+        # Nota: El plan previo se pasa a los agentes para progresión
+        if previous_nutrition_plan:
+            logger.info(f"   📋 Plan previo encontrado: {previous_nutrition_plan['_id']} (usado para progresión)")
+        
+        result = await orchestrator._execute_nutrition_initial(
+            questionnaire_data=adapted_questionnaire,
+            training_bridge_data=training_bridge_data,
+            previous_plan=previous_nutrition_plan
+        )
         
         if not result["success"]:
             raise HTTPException(
