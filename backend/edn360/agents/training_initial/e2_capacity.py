@@ -181,6 +181,114 @@ Si el cliente tiene historial de entrenamiento avanzado (culturismo, powerliftin
 
 ---
 
+## 🔄 MODO SEGUIMIENTO (NUEVO - ANÁLISIS DE PROGRESO)
+
+Si E1 indica que estás en modo seguimiento y proporciona `analisis_progreso`, debes:
+
+### 1️⃣ EVALUAR EFECTIVIDAD DEL PLAN PREVIO
+
+**Recibir de E1:**
+```json
+"analisis_progreso": {
+  "efectividad_plan_previo": "buena | media | baja | mixta",
+  "cambios_reportados": {
+    "delta_peso_kg": +5,
+    "delta_grasa_pct": +3,
+    "musculo_delta_kg": +2
+  }
+}
+```
+
+### 2️⃣ ANALIZAR RESULTADOS Y AJUSTAR ESTRATEGIA
+
+**CASO 1: Músculo ↑ + Grasa ↓** (Progreso óptimo)
+```
+Efectividad: BUENA
+Acción: Mantener volumen o aumentar 10%
+Recomendación E4: "mantener_estructura"
+```
+
+**CASO 2: Músculo ↑ + Grasa ↑** (Progreso mixto)
+```
+Efectividad: MIXTA
+Problema: Exceso calórico
+Acción: Mantener volumen entrenamiento
+Recomendación adicional: "añadir_cardio_moderado" (2-3x/semana, 20-30 min)
+Nota para E3: "Cliente ganó músculo pero también grasa. Sugerir cardio de baja intensidad."
+```
+
+**CASO 3: Músculo = + Grasa =** (Estancamiento)
+```
+Efectividad: BAJA
+Problema: Falta estímulo o falta superávit
+Acción: Aumentar volumen 15-20%
+Recomendación E4: "incrementar_volumen"
+Nota: "Cliente estancado. Necesita mayor carga de entrenamiento."
+```
+
+**CASO 4: Músculo ↓** (Regresión)
+```
+Efectividad: BAJA
+Problema: Sobreentrenamiento o déficit extremo
+Acción: REDUCIR volumen 20-30%
+Recomendación E4: "reducir_volumen"
+Alerta: "Posible sobreentrenamiento o déficit calórico excesivo. Revisar nutrición y recuperación."
+```
+
+### 3️⃣ AJUSTAR SEG Y PARÁMETROS
+
+**Si hubo progreso positivo:**
+```
+SEG_nuevo = SEG_previo + 0.5  (mejoró capacidad)
+RIR_objetivo = RIR_previo - 0.5  (puede tolerar más intensidad)
+```
+
+**Si hubo estancamiento:**
+```
+SEG_nuevo = SEG_previo  (mantener)
+Volumen = Volumen_previo × 1.15  (aumentar carga de trabajo)
+```
+
+**Si hubo regresión:**
+```
+SEG_nuevo = SEG_previo - 1  (reducir exigencia)
+Volumen = Volumen_previo × 0.75  (descargar)
+RIR_objetivo = RIR_previo + 1  (más conservador)
+```
+
+### 4️⃣ CAMPO NUEVO EN OUTPUT (solo si seguimiento)
+
+```json
+"analisis_progresion": {
+  "modo": "seguimiento",
+  "evaluacion_plan_previo": {
+    "efectividad": "mixta",
+    "diagnostico": "Cliente ganó 2kg músculo (positivo) pero también 3% grasa (negativo). Indica exceso calórico.",
+    "volumen_previo_series_semana": 48,
+    "volumen_actual_recomendado": 48,
+    "cambio_volumen_pct": 0,
+    "razon_cambio": "Mantener volumen entrenamiento. Problema es nutricional, no de entrenamiento."
+  },
+  "ajustes_requeridos": {
+    "seg_ajuste": 0,
+    "rir_ajuste": 0,
+    "recomendacion_adicional": "añadir_cardio_moderado",
+    "cardio_sugerido": {
+      "frecuencia": "2-3x/semana",
+      "duracion_min": 20,
+      "intensidad": "baja_moderada_60_70_FCmax",
+      "objetivo": "Crear déficit calórico adicional sin interferir con ganancia muscular"
+    }
+  },
+  "contrato_para_E3": {
+    "estrategia": "mantener_estructura_añadir_cardio",
+    "justificacion": "Plan de fuerza está funcionando para hipertrofia. Ajuste necesario es cardiovascular/nutricional."
+  }
+}
+```
+
+---
+
 ## 📤 Output (JSON estructurado)
 
 ```json
