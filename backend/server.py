@@ -4903,32 +4903,15 @@ def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
 def _format_edn360_nutrition_as_text(edn360_data: dict, user_name: str = "Cliente") -> str:
     """
     Convierte el plan E.D.N.360 de nutrición en texto profesional para enviar al cliente
-    Soporta tanto agentes iniciales (N1-N8) como seguimiento (NS1-NS4)
     """
     try:
-        # Detectar si son datos de seguimiento o iniciales
-        is_followup = "NS1" in edn360_data or "NS2" in edn360_data
-        
-        if is_followup:
-            # Para seguimiento, extraer datos del NS4 que consolida todo
-            ns4_data = edn360_data.get("NS4", {})
-            final_plan = ns4_data.get("final_plan_review", ns4_data.get("adjusted_plan", ns4_data))
-            
-            # Mapear estructura de NS4 al formato esperado
-            n1_metabolic = final_plan.get("metabolic_profile", {})
-            n2_energy = final_plan.get("energy_targets", final_plan.get("caloric_distribution", {}))
-            n4_calendar = final_plan.get("calendar", final_plan.get("distribution", {}))
-            n5_timing = final_plan.get("timing", {})
-            n6_menus = final_plan.get("menus", final_plan.get("menu_suggestions", {}))
-            n7_adherence = final_plan.get("adherence", final_plan.get("recommendations", {}))
-        else:
-            # Extraer datos de los agentes iniciales
-            n1_metabolic = edn360_data.get("N1", {})
-            n2_energy = edn360_data.get("N2", {})
-            n4_calendar = edn360_data.get("N4", {})
-            n5_timing = edn360_data.get("N5", {})
-            n6_menus = edn360_data.get("N6", {})
-            n7_adherence = edn360_data.get("N7", {})
+        # Extraer datos de los agentes N0-N8
+        n1_metabolic = edn360_data.get("N1", {})
+        n2_energy = edn360_data.get("N2", {})
+        n4_calendar = edn360_data.get("N4", {})
+        n5_timing = edn360_data.get("N5", {})
+        n6_menus = edn360_data.get("N6", {})
+        n7_adherence = edn360_data.get("N7", {})
         
         # Generar el texto del plan
         plan_text = f"""
