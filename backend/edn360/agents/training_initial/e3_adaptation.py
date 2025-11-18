@@ -359,8 +359,9 @@ Procesa el input de E1 y E2, calcula IA y estrategia de progresión, emite el JS
         try:
             output = self._extract_json_from_response(raw_output)
             
-            if "status" not in output or output["status"] != "ok":
-                raise ValueError("Output no contiene status 'ok'")
+            # Permitir status "ok" o "advertencia" (advertencia cuando hay lesiones/limitaciones severas)
+            if "status" not in output or output["status"] not in ["ok", "advertencia"]:
+                raise ValueError(f"Output status inválido: {output.get('status')}. Debe ser 'ok' o 'advertencia'")
             
             if "ia_score" not in output:
                 raise ValueError("Output no contiene ia_score")
