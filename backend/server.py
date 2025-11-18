@@ -3847,9 +3847,13 @@ async def admin_generate_nutrition_plan(
             
             if previous_nutrition_plan:
                 logger.info("✅ Plan previo encontrado, usando agentes de seguimiento NS1-NS4")
+                
+                # Serializar datetime fields antes de pasar a agentes
+                serialized_plan = _serialize_datetime_fields(previous_nutrition_plan)
+                
                 result = await orchestrator._execute_nutrition_followup(
                     followup_data=context_data["followup_responses"],
-                    previous_nutrition_plan=previous_nutrition_plan
+                    previous_nutrition_plan=serialized_plan
                 )
             else:
                 # No hay plan previo, generar como inicial
