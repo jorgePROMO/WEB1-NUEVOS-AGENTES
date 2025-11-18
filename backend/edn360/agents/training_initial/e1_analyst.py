@@ -194,13 +194,201 @@ Escribe 2–4 frases que resuman:
 
 ---
 
+## 🔄 MODO SEGUIMIENTO (NUEVO - CRÍTICO)
+
+Si recibes estos campos adicionales:
+- `"cuestionario_seguimiento"`: Datos actualizados del mes actual
+- `"plan_previo"`: Plan del mes anterior
+
+Entonces estás en **MODO SEGUIMIENTO**. Debes:
+
+### 1. Identificar CAMBIOS entre inicial y seguimiento:
+
+**Cambios físicos:**
+- Peso (kg): inicial vs actual
+- Grasa corporal (%): inicial vs actual  
+- Músculo (kg): inicial vs actual
+- Medidas corporales si existen
+
+**Cambios de horarios:**
+- Horario trabajo: ¿cambió turno?
+- Horario entrenamiento: ¿cambió de mañana a tarde o viceversa?
+- Horas de sueño: ¿mejoró o empeoró?
+
+**Cambios en molestias/lesiones:**
+- ¿Lesiones previas mejoraron?
+- ¿Aparecieron nuevas molestias?
+- ¿Dolor aumentó o disminuyó?
+
+**Cambios en objetivos:**
+- Objetivo inicial vs objetivo actual
+- Ejemplo: "perder_grasa" → "ganar_musculo_sin_grasa"
+
+**Adherencia:**
+- % adherencia entrenamiento
+- % adherencia nutrición
+- Comentarios del cliente
+
+### 2. Analizar efectividad del plan previo:
+
+**Progreso positivo:**
+- Músculo ↑ + Grasa ↓ → Plan funcionó perfecto
+- Músculo ↑ + Grasa = → Plan funcionó bien
+
+**Progreso mixto:**
+- Músculo ↑ + Grasa ↑ → Plan funcionó PERO exceso calórico → Añadir cardio/NEAT
+- Músculo = + Grasa ↓ → Déficit correcto pero falta estímulo → Aumentar volumen
+
+**Sin progreso:**
+- Músculo = + Grasa = → Estancamiento → Aumentar volumen 15-20%
+
+**Regresión:**
+- Músculo ↓ → Sobreentrenamiento o déficit extremo → Reducir volumen
+
+### 3. Campo nuevo: `"analisis_progreso"` (solo en seguimiento)
+
+```json
+"analisis_progreso": {
+  "modo": "seguimiento",
+  "efectividad_plan_previo": "buena | media | baja | mixta",
+  "cambios_reportados": {
+    "peso_inicial_kg": 68,
+    "peso_actual_kg": 73,
+    "delta_peso_kg": +5,
+    "grasa_inicial_pct": 18,
+    "grasa_actual_pct": 21,
+    "delta_grasa_pct": +3,
+    "musculo_delta_kg": +2,
+    "horario_previo": "mañana_08:00",
+    "horario_nuevo": "tarde_18:00",
+    "objetivo_previo": "perder_grasa",
+    "objetivo_actualizado": "ganar_musculo_sin_grasa"
+  },
+  "diagnostico": "Plan generó ganancia muscular (+2kg) pero también grasa (+3%). Cliente cambió turno trabajo, ahora entrena 18h en lugar de 08h.",
+  "cambios_requeridos": [
+    "ajustar_timing_entreno_18h",
+    "añadir_cardio_moderado",
+    "revisar_deficit_calorico"
+  ],
+  "adherencia_previa": {
+    "entrenamiento_pct": 90,
+    "nutricion_pct": 90,
+    "calificacion": "alta"
+  }
+}
+```
+
+---
+
+## 🚨 RESTRICCIONES CRÍTICAS (NUEVO - OBLIGATORIO)
+
+### Crear campo `"restricciones_criticas"` con listas explícitas:
+
+**Para cada lesión/limitación, definir:**
+
+1. **Ejercicios PROHIBIDOS** (el cliente NO puede hacerlos):
+
+```json
+"restricciones_criticas": {
+  "lesiones_activas": [
+    {
+      "lesion": "manguito_rotador_bilateral",
+      "ejercicios_prohibidos": [
+        "press_militar",
+        "press_banca_plano",
+        "press_inclinado_barra",
+        "fondos_paralelas",
+        "dominadas_pronas_agarre_ancho",
+        "elevaciones_laterales_pesadas"
+      ],
+      "ejercicios_obligatorios_preventivos": [
+        "face_pull",
+        "rotacion_externa_mancuernas",
+        "YTW_en_banco",
+        "remo_horizontal_neutro"
+      ],
+      "notas": "Manguito rotador comprometido en ambos hombros. Evitar abducción >90° con carga y rotación interna bajo tensión."
+    },
+    {
+      "lesion": "hernia_discal_L4_L5",
+      "ejercicios_prohibidos": [
+        "peso_muerto_convencional",
+        "sentadilla_profunda_barra",
+        "buenos_dias",
+        "peso_muerto_sumo",
+        "hiperextensiones_lastradas"
+      ],
+      "ejercicios_obligatorios_preventivos": [
+        "plancha_frontal",
+        "bird_dog",
+        "dead_bug",
+        "pallof_press"
+      ],
+      "notas": "Hernia L4-L5. Evitar flexión lumbar bajo carga y compresión axial excesiva. Priorizar variantes con mancuernas y ROM controlado."
+    }
+  ],
+  "alergias_alimentarias": ["lactosa"],
+  "intolerancias": [],
+  "alimentos_no_soportados": ["patata", "coliflor", "cerdo"],
+  "restricciones_medicas": ["hipotiroidismo_medicado_eutirox_75"]
+}
+```
+
+**Reglas de mapeo lesión → ejercicios prohibidos:**
+
+- **Manguito rotador:** press militar, press banca plano, fondos, dominadas anchas
+- **Hernia lumbar L4-L5:** peso muerto convencional, sentadilla profunda, buenos días
+- **Tendinitis rodilla:** sentadilla profunda, zancadas largas, prensa >90°
+- **Epicondilitis (codo):** dominadas supinas, curl pesado, press cerrado
+- **Lumbalgia crónica:** peso muerto, buenos días, hiperextensiones lastradas
+
+---
+
+## ⏰ HORARIO DE ENTRENAMIENTO (NUEVO - CRÍTICO PARA NUTRICIÓN)
+
+### Extraer y especificar hora exacta:
+
+Del campo `"entrena_manana_tarde"` o similar, deducir hora específica:
+
+```json
+"horario_entrenamiento": {
+  "momento_dia": "tarde",
+  "hora_especifica": "18:00",  // ← NUEVO: HORA EXACTA
+  "origen": "extraido_de_cuestionario | deducido_de_momento_dia",
+  "flexibilidad": "fija | flexible_1h | flexible_2h"
+}
+```
+
+**Reglas de deducción si no hay hora exacta:**
+- "Mañana" → 08:00
+- "Mediodía" → 13:00
+- "Tarde" → 18:00
+- "Noche" → 20:00
+
+**Si hay cambio de horario en seguimiento:**
+```json
+"cambio_horario": {
+  "previo": "mañana_08:00",
+  "actual": "tarde_18:00",
+  "razon": "cambio_turno_trabajo",
+  "impacto": "Requiere ajustar timing pre/post entreno y distribución calórica"
+}
+```
+
+---
+
 ## ✅ Criterios de éxito
 
 - Todos los campos críticos limpios y normalizados
 - Lesiones clasificadas con zona, gravedad y estado
+- **NUEVO:** Restricciones críticas con ejercicios prohibidos explícitos
+- **NUEVO:** Ejercicios preventivos obligatorios identificados
+- **NUEVO:** Hora exacta de entrenamiento especificada
+- **NUEVO:** Alimentos no soportados extraídos y listados
 - IMC y métricas base calculadas correctamente
 - Nivel de experiencia asignado coherentemente
 - Banderas de alerta identificadas si existen
+- **NUEVO:** Si modo seguimiento → análisis_progreso completo
 - Notas interpretativas claras y accionables para E2
 
 ---
