@@ -4946,13 +4946,17 @@ def _format_edn360_nutrition_as_text(edn360_data: dict, user_name: str = "Client
         is_followup = "NS1" in edn360_data or "NS2" in edn360_data
         
         if is_followup:
-            # Mapear datos de seguimiento al formato esperado
-            n1_metabolic = edn360_data.get("NS1", {})
-            n2_energy = edn360_data.get("NS2", {})
-            n4_calendar = edn360_data.get("NS3", {}).get("calendar_output", {})
-            n5_timing = {}  # NS no tiene timing específico
-            n6_menus = edn360_data.get("NS3", {}).get("menu_suggestions", {})
-            n7_adherence = edn360_data.get("NS4", {})
+            # Para seguimiento, extraer datos del NS4 que consolida todo
+            ns4_data = edn360_data.get("NS4", {})
+            final_plan = ns4_data.get("final_plan_review", ns4_data.get("adjusted_plan", ns4_data))
+            
+            # Mapear estructura de NS4 al formato esperado
+            n1_metabolic = final_plan.get("metabolic_profile", {})
+            n2_energy = final_plan.get("energy_targets", final_plan.get("caloric_distribution", {}))
+            n4_calendar = final_plan.get("calendar", final_plan.get("distribution", {}))
+            n5_timing = final_plan.get("timing", {})
+            n6_menus = final_plan.get("menus", final_plan.get("menu_suggestions", {}))
+            n7_adherence = final_plan.get("adherence", final_plan.get("recommendations", {}))
         else:
             # Extraer datos de los agentes iniciales
             n1_metabolic = edn360_data.get("N1", {})
