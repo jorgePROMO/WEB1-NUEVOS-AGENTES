@@ -472,14 +472,13 @@ const AdminDashboard = () => {
       console.log('📋 Questionnaires count:', questionnaires.length);
       setAvailableQuestionnaires(questionnaires);
       
-      // Set default to initial questionnaire only if nothing selected
-      if (!selectedQuestionnaireForTraining && !selectedQuestionnaireForNutrition) {
-        const initial = questionnaires.find(q => q.is_initial);
-        console.log('🎯 Initial questionnaire found:', initial);
-        if (initial) {
-          setSelectedQuestionnaireForTraining(initial.id);
-          setSelectedQuestionnaireForNutrition(initial.id);
-        }
+      // SIEMPRE establecer el cuestionario inicial por defecto
+      const initial = questionnaires.find(q => q.is_initial);
+      console.log('🎯 Initial questionnaire found:', initial);
+      if (initial) {
+        console.log('✅ Auto-seleccionando cuestionario inicial:', initial.id);
+        setSelectedQuestionnaireForTraining(initial.id);
+        setSelectedQuestionnaireForNutrition(initial.id);
       }
     } catch (error) {
       console.error('❌ Error loading questionnaires:', error);
