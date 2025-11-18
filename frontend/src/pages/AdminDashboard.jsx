@@ -3319,7 +3319,7 @@ const AdminDashboard = () => {
                                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                                   >
                                     <option value="">Selecciona un cuestionario...</option>
-                                    {availableQuestionnaires.filter(q => q.is_initial === true).map((q) => (
+                                    {availableQuestionnaires.map((q) => (
                                       <option key={q.id} value={q.id}>
                                         {q.label}
                                       </option>
@@ -3583,7 +3583,7 @@ const AdminDashboard = () => {
                                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                   >
                                     <option value="">Selecciona un cuestionario...</option>
-                                    {availableQuestionnaires.filter(q => q.is_initial === true).map((q) => (
+                                    {availableQuestionnaires.map((q) => (
                                       <option key={q.id} value={q.id}>
                                         {q.label}
                                       </option>
