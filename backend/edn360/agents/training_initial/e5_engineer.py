@@ -58,6 +58,91 @@ El E5 divide el volumen total en sesiones específicas basadas en el split y la 
 - **Upper/Lower (4d):** Alternancia push/pull y rodilla/cadera (UL—desc—UL—desc)
 - **PPL (5-6d):** Patrón puro (Push / Pull / Legs / Upper / Lower / Core opcional)
 
+---
+
+## 🚨 VARIACIÓN OBLIGATORIA ENTRE DÍAS (CRÍTICO)
+
+**REGLA ABSOLUTA:** En planes Full-Body (o cualquier frecuencia >2), cada día DEBE tener ejercicios DIFERENTES para el mismo patrón.
+
+### ❌ INCORRECTO (NO HACER):
+```
+Día A: Press mancuernas 45° + Remo horizontal + Sentadilla goblet + RDL
+Día B: Press mancuernas 45° + Remo horizontal + Sentadilla goblet + RDL
+Día C: Press mancuernas 45° + Remo horizontal + Sentadilla goblet + RDL
+```
+
+### ✅ CORRECTO (HACER):
+```
+Día A (Push dominante):
+  - Press mancuernas 45° (empuje horizontal)
+  - Remo horizontal neutro (tirón horizontal)
+  - Sentadilla goblet (rodilla)
+  - RDL mancuernas (cadera)
+  - Face pull + Plancha
+
+Día B (Pull dominante):
+  - Flexiones inclinadas o Press suelo (empuje horizontal variante)
+  - Dominadas asistidas o Jalón neutro (tirón vertical)
+  - Zancadas búlgaro (rodilla unilateral)
+  - Hip thrust mancuernas (cadera aislada)
+  - Rotación externa + Bird-dog
+
+Día C (Lower focus):
+  - Press mancuernas neutro 30° (empuje horizontal ángulo diferente)
+  - Remo mancuernas inclinado (tirón horizontal ángulo diferente)
+  - Sentadilla sumo o Step-ups (rodilla variante)
+  - RDL unilateral o Good morning ligero (cadera variante)
+  - YTW + Dead bug
+```
+
+### 📋 TABLA DE VARIACIONES OBLIGATORIAS
+
+**EMPUJE HORIZONTAL:**
+- Día A: Press mancuernas 45°
+- Día B: Flexiones inclinadas / Press suelo mancuernas
+- Día C: Press mancuernas 30° neutro
+
+**TIRÓN HORIZONTAL:**
+- Día A: Remo horizontal neutro
+- Día B: Remo mancuernas inclinado / Remo invertido
+- Día C: Remo unilateral mancuernas
+
+**TIRÓN VERTICAL (si incluido):**
+- Día A: Jalón agarre neutro
+- Día B: Dominadas asistidas / Jalón prono
+- Día C: Pullover mancuernas / Jalón unilateral
+
+**EMPUJE VERTICAL (si incluido):**
+- Día A: Landmine press (seguro para hombros)
+- Día B: Press mancuernas sentado neutro
+- Día C: Elevaciones laterales cable bajo
+
+**RODILLA DOMINANTE:**
+- Día A: Sentadilla goblet
+- Día B: Zancadas búlgaro / Split squat
+- Día C: Step-ups / Sentadilla sumo
+
+**CADERA DOMINANTE:**
+- Día A: RDL mancuernas bilateral
+- Día B: Hip thrust mancuernas
+- Día C: RDL unilateral / Buenos días ligero
+
+### 🎯 RAZONES PARA VARIAR:
+
+1. **Prevención de lesiones:** Evita estrés repetitivo en mismas estructuras
+2. **Adherencia:** Reduce monotonía y aburrimiento
+3. **Desarrollo completo:** Trabaja músculo desde diferentes ángulos
+4. **Recuperación:** Permite que zonas específicas se recuperen mientras trabajas variantes
+5. **Progresión:** Múltiples vías para progresar (peso, ángulo, ROM, estabilidad)
+
+### ⚠️ EXCEPCIONES (CUANDO SÍ PUEDES REPETIR):
+
+- **Ejercicios preventivos:** Face pull, plancha, rotaciones pueden repetirse todos los días
+- **Core/movilidad:** Bird-dog, dead bug, etc. pueden repetirse
+- **Si solo 2 días/semana:** Repetir algunos ejercicios está bien para mantener frecuencia
+
+**PERO EN FULL-BODY 3 DÍAS → VARIACIÓN OBLIGATORIA**
+
 ### 2️⃣ Generación de sesiones base
 
 Cada sesión se estructura con 4-6 ejercicios en orden lógico:
