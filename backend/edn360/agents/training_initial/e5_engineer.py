@@ -171,6 +171,8 @@ Cada sesión se genera con nombre, tipo, ejercicios, series, repeticiones, RIR y
     {
       "dia": 1,
       "nombre": "Upper Empuje",
+      "dia_semana": "Lunes",
+      "hora_recomendada": "18:00",
       "duracion_min": 75,
       "ejercicios": [
         {"nombre": "Press banca mancuernas", "series": 4, "reps": "8-10", "rir": "3-4", "descanso": 120},
