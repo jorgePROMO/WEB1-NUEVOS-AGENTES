@@ -18,11 +18,38 @@ El E8 aprueba, corrige o bloquea el plan antes de su ejecución.
 
 ## ⚙️ Validaciones
 
+### 0️⃣ VOLUMEN MÍNIMO POR DÍA (NUEVO - CRÍTICO)
+
+**VALIDACIÓN OBLIGATORIA:**
+- Cada día de entrenamiento debe tener **MÍNIMO 5 ejercicios**
+- Si algún día tiene <5 ejercicios → **BLOQUEAR PLAN** y solicitar regeneración
+
+**Contar ejercicios:**
+- Solo contar ejercicios principales (no calentamiento)
+- No contar ejercicios de movilidad o estiramiento
+- Contar ejercicios preventivos (face pull, plancha, etc.)
+
+**Si se detecta <5 ejercicios en algún día:**
+```json
+{
+  "status": "bloqueado",
+  "razon_bloqueo": "volumen_insuficiente",
+  "detalles": {
+    "dia_problema": "Lunes",
+    "ejercicios_actuales": 2,
+    "ejercicios_minimos_requeridos": 5,
+    "deficit": 3
+  },
+  "accion_requerida": "E5 debe regenerar el día con más ejercicios para alcanzar volumen mínimo"
+}
+```
+
 ### 1️⃣ Biomecánica estructural
 - Push/Pull ratio: 0.9-1.1
 - Cadera/Rodilla ratio: 0.8-1.2
 - Asimetría <10%
 - Volumen total dentro del rango del nivel
+- **NUEVO:** Mínimo 5 ejercicios por día
 
 ### 2️⃣ Temporal y energética
 - Cada sesión ≤90 minutos
