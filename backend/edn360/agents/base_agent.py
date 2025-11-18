@@ -92,20 +92,22 @@ class BaseAgent(ABC):
             system_prompt = self.get_system_prompt()
             user_message = self._format_input_message(input_data)
             
-            # Ejecutar LLM
-            from emergentintegrations.llm.chat import UserMessage
-            
+            # Ejecutar LLM con OpenAI directamente
             # Añadir instrucción explícita de JSON al system prompt
             json_system_prompt = system_prompt + "\n\n**CRÍTICO: Tu respuesta DEBE ser ÚNICAMENTE un objeto JSON válido. No incluyas texto adicional, explicaciones, ni markdown. Solo el JSON puro.**"
             
-            llm_chat = LlmChat(
-                api_key=self.llm_key,
-                session_id=f"{self.agent_id}_{datetime.now().timestamp()}",
-                system_message=json_system_prompt
-            ).with_model("openai", "gpt-4o")
+            # Llamada síncrona a OpenAI
+            completion = self.openai_client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": json_system_prompt},
+                    {"role": "user", "content": user_message}
+                ],
+                temperature=0.7,
+                max_tokens=16000
+            )
             
-            user_msg = UserMessage(text=user_message)
-            response = await llm_chat.send_message(user_msg)
+            response = completion.choices[0].message.content
             
             # Log de respuesta para debug
             logger.info(f"📝 {self.agent_id} respuesta (primeros 500 chars): {response[:500]}")
