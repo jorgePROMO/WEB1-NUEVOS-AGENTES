@@ -9364,12 +9364,19 @@ async def generate_follow_up_report(
         # FASE 1: Obtener TODOS los datos necesarios
         
         # 1.1 Cuestionario de seguimiento (CRÍTICO) - Buscar en la colección correcta
+        logger.info(f"🔍 Buscando cuestionario de seguimiento con _id: '{followup_questionnaire_id}' (tipo: {type(followup_questionnaire_id)})")
         followup_questionnaire = await db.follow_up_submissions.find_one({
             "_id": followup_questionnaire_id,
             "user_id": user_id
         })
         
         if not followup_questionnaire:
+            # Intentar buscar sin user_id para debug
+            any_with_id = await db.follow_up_submissions.find_one({"_id": followup_questionnaire_id})
+            if any_with_id:
+                logger.error(f"❌ Cuestionario existe pero user_id no coincide. Esperado: {user_id}, Encontrado: {any_with_id.get('user_id')}")
+            else:
+                logger.error(f"❌ No existe ningún cuestionario con _id: '{followup_questionnaire_id}'")
             raise HTTPException(status_code=404, detail="Cuestionario de seguimiento no encontrado")
         
         # 1.2 Planes de entrenamiento
