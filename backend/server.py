@@ -5704,9 +5704,13 @@ async def admin_generate_training_plan(
                 detail=f"Error generando plan: {result.get('error', 'Error desconocido')}"
             )
         
+        # Determinar número de mes (contar planes previos del usuario)
+        planes_previos_count = await db.training_plans.count_documents({"user_id": user_id})
+        numero_mes = planes_previos_count + 1
+        
         # Generar versiones del plan
         plan_data_json = _format_edn360_plan_for_display(result["plan_data"])
-        plan_text_professional = _format_edn360_plan_as_text(result["plan_data"], user.get("name", user.get("username", "Cliente")))
+        plan_text_professional = _format_edn360_plan_as_text(result["plan_data"], user.get("name", user.get("username", "Cliente")), numero_mes)
         
         # Guardar el plan en training_plans con formato E.D.N.360
         training_plan_doc = {
