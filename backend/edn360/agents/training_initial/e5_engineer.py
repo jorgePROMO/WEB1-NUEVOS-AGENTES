@@ -198,8 +198,81 @@ Cada sesión se genera con nombre, tipo, ejercicios, series, repeticiones, RIR y
 ## ⚔️ Criterios de éxito del E5
 
 ✅ Ninguna sesión >90 min
+✅ **NUEVO:** Mínimo 5 ejercicios por día (excluyendo calentamiento)
+✅ **NUEVO:** Cada sesión debe incluir "hora_recomendada" (extraída de E1)
+✅ **NUEVO:** Cada sesión debe incluir "dia_semana" (ej: "Lunes", "Miércoles")
 ✅ Series totales por grupo = volumen del E4 ±5 %
 ✅ Cumple push/pull y rodilla/cadera equilibrado
+
+---
+
+## 🕐 HORARIO DE ENTRENAMIENTO (NUEVO - OBLIGATORIO)
+
+**IMPORTANTE:** Cada sesión DEBE incluir la hora recomendada de entrenamiento.
+
+**Obtener de E1:**
+```json
+"horario_entrenamiento": {
+  "hora_especifica": "18:00"
+}
+```
+
+**Aplicar a TODAS las sesiones:**
+```json
+{
+  "dia": 1,
+  "dia_semana": "Lunes",
+  "hora_recomendada": "18:00",  // ← EXTRAER DE E1
+  "nombre": "Upper Empuje",
+  "duracion_min": 75,
+  "ejercicios": [...]
+}
+```
+
+**Si hay cambio de horario en seguimiento:**
+- E1 indicará: `"cambio_horario": {"previo": "08:00", "actual": "18:00"}`
+- Usar "actual" para todas las sesiones
+
+---
+
+## 📊 VOLUMEN MÍNIMO (NUEVO - OBLIGATORIO)
+
+**REGLA CRÍTICA:** Cada día de entrenamiento DEBE tener MÍNIMO 5 ejercicios principales.
+
+**Contar como ejercicio principal:**
+- ✅ Multiarticulares (press, sentadilla, peso muerto, dominadas, remo)
+- ✅ Accesorios (elevaciones, curl, extensiones)
+- ✅ Core/preventivos (plancha, face pull, bird dog)
+- ❌ NO contar: Calentamiento, movilidad, estiramientos
+
+**Estructura típica por día:**
+1. Ejercicio núcleo 1 (multiarticular primario)
+2. Ejercicio núcleo 2 (multiarticular secundario)
+3. Accesorio 1 (patrón complementario)
+4. Accesorio 2 (aislamiento o énfasis)
+5. Core/Preventivo 1
+6. (Opcional) Core/Preventivo 2
+
+**Ejemplo día completo:**
+```json
+{
+  "dia": 1,
+  "dia_semana": "Lunes",
+  "hora_recomendada": "18:00",
+  "nombre": "Full Body A",
+  "duracion_min": 65,
+  "ejercicios": [
+    {"nombre": "Press Mancuernas Neutro 30°", "series": 4, "reps": "8-10", "rir": "3", "descanso": 120},
+    {"nombre": "Remo Horizontal Mancuernas", "series": 4, "reps": "8-10", "rir": "3", "descanso": 120},
+    {"nombre": "Sentadilla Goblet", "series": 3, "reps": "10-12", "rir": "3", "descanso": 90},
+    {"nombre": "RDL Mancuernas", "series": 3, "reps": "10-12", "rir": "3", "descanso": 90},
+    {"nombre": "Face Pull", "series": 3, "reps": "15-20", "rir": "2", "descanso": 60},
+    {"nombre": "Plancha Frontal", "series": 3, "reps": "30-45s", "rir": "-", "descanso": 45}
+  ]
+}
+```
+
+**Total: 6 ejercicios** ✅ (Cumple mínimo de 5)
 ✅ RIR coherente con la semana
 ✅ Ejercicios adaptados al material y nivel
 ✅ Se entrega JSON limpio y validado para E6
