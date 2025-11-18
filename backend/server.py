@@ -4900,7 +4900,7 @@ def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
             "_original_questionnaire": questionnaire_data
         }
 
-def _format_edn360_nutrition_as_text(edn360_data: dict, user_name: str = "Cliente") -> str:
+def _format_edn360_nutrition_as_text(edn360_data: dict, user_name: str = "Cliente", numero_mes: int = None) -> str:
     """
     Convierte el plan E.D.N.360 de nutrición en texto profesional para enviar al cliente
     """
