@@ -94,7 +94,14 @@ Ajustes:
     "dias_entrenamiento": 3,
     "delta_dias_A": "+12%",
     "delta_dias_B": "-12%",
-    "prioridad": "hipertrofia"
+    "prioridad": "hipertrofia",
+    "restricciones_nutricionales": {
+      "alergias": [],
+      "intolerancias": ["lactosa"],
+      "alimentos_no_soportados": ["patata", "coliflor", "cerdo"],
+      "restricciones_medicas": ["hipotiroidismo_medicado"],
+      "notas": "Extraído de E1. N0-N8 deben excluir estos alimentos del plan."
+    }
   }
 }
 ```
