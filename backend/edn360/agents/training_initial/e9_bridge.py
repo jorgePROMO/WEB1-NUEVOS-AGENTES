@@ -108,12 +108,20 @@ Ajustes:
 
 ## ✅ CHECKLIST OBLIGATORIO:
 
-1. **Analizar el plan de entrenamiento E4/E5:**
+1. **Extraer restricciones nutricionales de E1:**
+   - Alergias alimentarias
+   - Intolerancias (lactosa, gluten, etc.)
+   - Alimentos que el cliente no soporta/no quiere comer
+   - Restricciones médicas (hipotiroidismo, diabetes, etc.)
+   
+   **IMPORTANTE:** Estas restricciones DEBEN pasarse a N0 para que los agentes de nutrición NO incluyan esos alimentos en el plan.
+
+2. **Analizar el plan de entrenamiento E4/E5:**
    - Contar cuántos días tienen entrenamiento de FUERZA/PESAS → Días A
    - Contar cuántos días tienen solo CARDIO/CORE → Días M
    - Contar cuántos días son DESCANSO → Días B
 
-2. **Generar tipos_dia_presentes:**
+3. **Generar tipos_dia_presentes:**
    ```json
    {
      "usa_dia_A": true/false,  // true si hay al menos 1 día A
