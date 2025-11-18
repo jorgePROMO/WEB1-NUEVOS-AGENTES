@@ -4914,8 +4914,11 @@ def _format_edn360_nutrition_as_text(edn360_data: dict, user_name: str = "Client
         n7_adherence = edn360_data.get("N7", {})
         
         # Generar el texto del plan
+        # NOTA: numero_mes se pasa desde el caller si está disponible
+        mes_texto = ""
+        
         plan_text = f"""
-PLAN DE NUTRICIÓN PERSONALIZADO
+PLAN DE NUTRICIÓN PERSONALIZADO{mes_texto}
 SISTEMA E.D.N.360
 
 CLIENTE: {user_name}
