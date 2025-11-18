@@ -4939,15 +4939,28 @@ def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
 def _format_edn360_nutrition_as_text(edn360_data: dict, user_name: str = "Cliente") -> str:
     """
     Convierte el plan E.D.N.360 de nutrición en texto profesional para enviar al cliente
+    Soporta tanto agentes iniciales (N1-N8) como seguimiento (NS1-NS4)
     """
     try:
-        # Extraer datos de los agentes
-        n1_metabolic = edn360_data.get("N1", {})
-        n2_energy = edn360_data.get("N2", {})
-        n4_calendar = edn360_data.get("N4", {})
-        n5_timing = edn360_data.get("N5", {})
-        n6_menus = edn360_data.get("N6", {})
-        n7_adherence = edn360_data.get("N7", {})
+        # Detectar si son datos de seguimiento o iniciales
+        is_followup = "NS1" in edn360_data or "NS2" in edn360_data
+        
+        if is_followup:
+            # Mapear datos de seguimiento al formato esperado
+            n1_metabolic = edn360_data.get("NS1", {})
+            n2_energy = edn360_data.get("NS2", {})
+            n4_calendar = edn360_data.get("NS3", {}).get("calendar_output", {})
+            n5_timing = {}  # NS no tiene timing específico
+            n6_menus = edn360_data.get("NS3", {}).get("menu_suggestions", {})
+            n7_adherence = edn360_data.get("NS4", {})
+        else:
+            # Extraer datos de los agentes iniciales
+            n1_metabolic = edn360_data.get("N1", {})
+            n2_energy = edn360_data.get("N2", {})
+            n4_calendar = edn360_data.get("N4", {})
+            n5_timing = edn360_data.get("N5", {})
+            n6_menus = edn360_data.get("N6", {})
+            n7_adherence = edn360_data.get("N7", {})
         
         # Generar el texto del plan
         plan_text = f"""
