@@ -9,7 +9,7 @@ import logging
 from typing import Dict, Any, Optional
 from datetime import datetime
 from abc import ABC, abstractmethod
-from emergentintegrations.llm.chat import LlmChat
+from openai import OpenAI
 
 logger = logging.getLogger(__name__)
 
@@ -27,10 +27,13 @@ class BaseAgent(ABC):
         """
         self.agent_id = agent_id
         self.agent_name = agent_name
-        self.llm_key = os.getenv("EMERGENT_LLM_KEY")
+        self.llm_key = os.getenv("OPENAI_API_KEY")
         
         if not self.llm_key:
-            raise ValueError("EMERGENT_LLM_KEY no configurada en el entorno")
+            raise ValueError("OPENAI_API_KEY no configurada en el entorno")
+        
+        # Inicializar cliente de OpenAI
+        self.openai_client = OpenAI(api_key=self.llm_key)
     
     @abstractmethod
     def get_system_prompt(self) -> str:
