@@ -3846,6 +3846,10 @@ async def admin_generate_nutrition_plan(
         user = await db.users.find_one({"_id": user_id})
         user_name = user.get("name", user.get("username", "Cliente")) if user else "Cliente"
         
+        # Determinar número de mes (contar planes previos)
+        planes_nutri_previos_count = await db.nutrition_plans.count_documents({"user_id": user_id})
+        numero_mes_nutri = planes_nutri_previos_count + 1
+        
         # Guardar el plan en nutrition_plans con formato E.D.N.360
         nutrition_plan_doc = {
             "_id": plan_id,
@@ -3861,10 +3865,6 @@ async def admin_generate_nutrition_plan(
             "agent_executions": result.get("executions", []),
             "system_version": "edn360_v1",
             "training_synchronized": training_plan is not None,
-            
-            # Determinar número de mes (contar planes previos)
-            planes_nutri_previos_count = await db.nutrition_plans.count_documents({"user_id": user_id})
-            numero_mes_nutri = planes_nutri_previos_count + 1
             
             # Compatibilidad con formato antiguo
             "plan_inicial": _format_edn360_nutrition_for_display(result["plan_data"]),
