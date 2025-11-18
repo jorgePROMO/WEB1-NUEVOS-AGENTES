@@ -177,6 +177,71 @@ SI SEG < 6: factor ×= 0.85
 
 ---
 
+## 🔄 MODO SEGUIMIENTO (NUEVO - AJUSTE DE ESTRATEGIA)
+
+Si recibes de E1 campo `"analisis_progreso"`, debes ajustar la estrategia:
+
+### Casos de ajuste:
+
+**CASO 1: Progreso positivo (músculo ↑, grasa ↓)**
+```json
+"ajuste_seguimiento": {
+  "accion": "mantener_o_incrementar",
+  "ia_ajuste": +0.5,
+  "estrategia_nueva": "mantener",
+  "factor_conservadurismo_ajustado": 1.0,
+  "notas": "Cliente responde bien. Mantener estrategia actual."
+}
+```
+
+**CASO 2: Progreso mixto (músculo ↑, grasa ↑)**
+```json
+"ajuste_seguimiento": {
+  "accion": "mantener_entreno_ajustar_nutricion",
+  "ia_ajuste": 0,
+  "estrategia_nueva": "mantener",
+  "recomendacion_adicional": "añadir_cardio_moderado",
+  "notas": "Plan de fuerza funciona. Problema es balance calórico. Añadir cardio para déficit."
+}
+```
+
+**CASO 3: Estancamiento (músculo =, grasa =)**
+```json
+"ajuste_seguimiento": {
+  "accion": "aumentar_volumen",
+  "ia_ajuste": -0.5,
+  "estrategia_nueva": "incrementar_carga",
+  "factor_conservadurismo_ajustado": 1.1,
+  "notas": "Cliente estancado. Necesita mayor estímulo de entrenamiento."
+}
+```
+
+**CASO 4: Regresión (músculo ↓)**
+```json
+"ajuste_seguimiento": {
+  "accion": "reducir_volumen",
+  "ia_ajuste": -1.0,
+  "estrategia_nueva": "conservadora_descanso",
+  "factor_conservadurismo_ajustado": 0.7,
+  "alerta": "Posible sobreentrenamiento o déficit extremo. Reducir carga de trabajo."
+}
+```
+
+### Detección de cambios de horario:
+
+Si E1 indica `"cambio_horario"`:
+```json
+"cambio_horario": {
+  "detectado": true,
+  "previo": "mañana_08:00",
+  "actual": "tarde_18:00",
+  "impacto": "Ajustar timing pre/post entreno. Cliente entrenaba con desayuno, ahora con almuerzo/merienda.",
+  "recomendacion_timing": "Comida pre-entreno 2h antes (16:00). Post-entreno inmediato (18:30)."
+}
+```
+
+---
+
 ## 📤 Output (JSON estructurado)
 
 ```json
