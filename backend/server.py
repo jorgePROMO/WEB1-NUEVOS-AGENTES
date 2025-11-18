@@ -5693,19 +5693,10 @@ async def admin_generate_training_plan(
             previous_plan_data = previous_plan
         
         # Usar el nuevo orquestador E.D.N.360
-        if context_data:
+        # SOLO usar agentes de seguimiento si hay context_data Y plan previo
+        if context_data and previous_plan_data:
             # Generar con seguimiento (ES1-ES4)
             logger.info("📊 Generando plan de seguimiento con agentes ES1-ES4")
-            
-            # Si no se especificó plan previo, usar el último generado
-            if not previous_plan_data:
-                previous_plan_data = await db.training_plans.find_one(
-                    {"user_id": user_id},
-                    sort=[("generated_at", -1)]
-                )
-                
-                if not previous_plan_data:
-                    raise HTTPException(status_code=404, detail="No hay plan anterior para seguimiento")
             
             # Ejecutar agentes de seguimiento
             from edn360.orchestrator import EDN360Orchestrator
@@ -5715,7 +5706,29 @@ async def admin_generate_training_plan(
                 followup_data=context_data["followup_responses"],
                 previous_training_plan=previous_plan_data
             )
-        else:
+        elif context_data and not previous_plan_data:
+            # Si hay follow-up pero NO hay plan previo, buscar el último plan
+            logger.info("🔍 Follow-up detectado sin plan previo especificado, buscando último plan...")
+            previous_plan_data = await db.training_plans.find_one(
+                {"user_id": user_id},
+                sort=[("generated_at", -1)]
+            )
+            
+            if previous_plan_data:
+                logger.info("✅ Plan previo encontrado, usando agentes de seguimiento ES1-ES4")
+                from edn360.orchestrator import EDN360Orchestrator
+                orchestrator = EDN360Orchestrator()
+                
+                result = await orchestrator._execute_training_followup(
+                    followup_data=context_data["followup_responses"],
+                    previous_training_plan=previous_plan_data
+                )
+            else:
+                # No hay plan previo, generar como inicial
+                logger.warning("⚠️ Follow-up sin plan previo, generando como PLAN INICIAL con agentes E1-E9")
+                context_data = None  # Forzar modo inicial
+        
+        if not context_data:
             # Generar desde cuestionario inicial (E1-E9)
             logger.info("🚀 Generando plan inicial con agentes E1-E9")
             
