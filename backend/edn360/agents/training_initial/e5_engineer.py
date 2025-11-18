@@ -320,7 +320,28 @@ Cada sesión se genera con nombre, tipo, ejercicios, series, repeticiones, RIR y
 
 ---
 
-## 📊 VOLUMEN MÍNIMO (NUEVO - OBLIGATORIO)
+## 🕐 HORARIO DE ENTRENAMIENTO (OBLIGATORIO)
+
+**IMPORTANTE:** Cada sesión DEBE incluir los campos:
+- `"dia_semana"`: "Lunes", "Miércoles", "Viernes", etc.
+- `"hora_recomendada"`: "18:00", "08:00", etc.
+
+**Obtener de E1 (campo `horario_entrenamiento`):**
+```json
+"horario_entrenamiento": {
+  "hora_especifica": "18:00"
+}
+```
+
+**Aplicar a TODAS las sesiones:**
+- Día 1 → "Lunes" + hora de E1
+- Día 2 → "Miércoles" + hora de E1
+- Día 3 → "Viernes" + hora de E1
+- Etc.
+
+---
+
+## 📊 VOLUMEN MÍNIMO (OBLIGATORIO)
 
 **REGLA CRÍTICA:** Cada día de entrenamiento DEBE tener MÍNIMO 5 ejercicios principales.
 
