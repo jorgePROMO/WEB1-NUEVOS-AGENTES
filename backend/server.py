@@ -5412,9 +5412,13 @@ def _format_edn360_plan_as_text(edn360_data: dict, user_name: str = "Cliente") -
         sesiones = e5_sessions.get("sesiones_detalladas", [])
         volumen = e4_program.get("volumen_por_grupo", {})
         
+        # Determinar número de mes (contar planes previos del usuario)
+        planes_previos_count = await db.training_plans.count_documents({"user_id": user_id})
+        numero_mes = planes_previos_count + 1
+        
         # Generar el texto del plan
         plan_text = f"""
-PLAN DE ENTRENAMIENTO PERSONALIZADO
+PLAN DE ENTRENAMIENTO PERSONALIZADO - MES {numero_mes}
 SISTEMA E.D.N.360
 
 CLIENTE: {user_name}
