@@ -5729,21 +5729,20 @@ async def admin_generate_training_plan(
             previous_plan_data = previous_plan
         
         # Usar el orquestador E.D.N.360 - SIEMPRE agentes E1-E9
-        logger.info("🚀 Generando plan con agentes E1-E9 (inicial)")
-            
-            # Nota: El plan previo se guarda en BD pero los agentes E1-E9 no lo usan activamente
-            # en la generación inicial. Los agentes de seguimiento (ES1-ES4) sí lo usan.
-            if previous_plan_data:
-                logger.info(f"   📋 Plan previo registrado: {previous_plan_data['_id']} (para referencia futura)")
-            
-            from edn360.orchestrator import EDN360Orchestrator
-            orchestrator = EDN360Orchestrator()
-            
-            # Pasar plan previo a los agentes si existe
-            result = await orchestrator._execute_training_initial(
-                adapted_questionnaire,
-                previous_plan=previous_plan_data
-            )
+        logger.info("🚀 Generando plan con agentes E1-E9")
+        
+        # Nota: El plan previo se pasa a los agentes para progresión
+        if previous_plan_data:
+            logger.info(f"   📋 Plan previo encontrado: {previous_plan_data['_id']} (usado para progresión)")
+        
+        from edn360.orchestrator import EDN360Orchestrator
+        orchestrator = EDN360Orchestrator()
+        
+        # Pasar plan previo a los agentes si existe
+        result = await orchestrator._execute_training_initial(
+            adapted_questionnaire,
+            previous_plan=previous_plan_data
+        )
         
         if not result["success"]:
             raise HTTPException(
