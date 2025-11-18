@@ -5404,7 +5404,7 @@ def _format_edn360_nutrition_for_display(edn360_data: dict) -> dict:
         logger.error(f"Error formateando plan nutricional E.D.N.360: {e}")
         return edn360_data
 
-def _format_edn360_plan_as_text(edn360_data: dict, user_name: str = "Cliente") -> str:
+def _format_edn360_plan_as_text(edn360_data: dict, user_name: str = "Cliente", numero_mes: int = None) -> str:
     """
     Convierte el plan E.D.N.360 en texto profesional y legible para enviar al cliente
     """
@@ -5418,13 +5418,10 @@ def _format_edn360_plan_as_text(edn360_data: dict, user_name: str = "Cliente") -
         sesiones = e5_sessions.get("sesiones_detalladas", [])
         volumen = e4_program.get("volumen_por_grupo", {})
         
-        # Determinar número de mes (contar planes previos del usuario)
-        planes_previos_count = await db.training_plans.count_documents({"user_id": user_id})
-        numero_mes = planes_previos_count + 1
-        
         # Generar el texto del plan
+        mes_texto = f" - MES {numero_mes}" if numero_mes else ""
         plan_text = f"""
-PLAN DE ENTRENAMIENTO PERSONALIZADO - MES {numero_mes}
+PLAN DE ENTRENAMIENTO PERSONALIZADO{mes_texto}
 SISTEMA E.D.N.360
 
 CLIENTE: {user_name}
