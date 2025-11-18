@@ -5712,9 +5712,12 @@ async def admin_generate_training_plan(
             from edn360.orchestrator import EDN360Orchestrator
             orchestrator = EDN360Orchestrator()
             
+            # Serializar datetime fields antes de pasar a agentes
+            serialized_plan = _serialize_datetime_fields(previous_plan_data)
+            
             result = await orchestrator._execute_training_followup(
                 followup_data=context_data["followup_responses"],
-                previous_training_plan=previous_plan_data
+                previous_training_plan=serialized_plan
             )
         elif context_data and not previous_plan_data:
             # Si hay follow-up pero NO hay plan previo, buscar el último plan
