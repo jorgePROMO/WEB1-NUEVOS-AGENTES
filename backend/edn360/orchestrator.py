@@ -388,8 +388,57 @@ class EDN360Orchestrator:
                     }
             
             # EJECUTAR AGENTE con client_context + KB
+            # Distinguir entre agentes refactorizados y legacy
+            refactored_agents = ["E1", "E5", "E8"]
+            
+            if agent.agent_id in refactored_agents:
+                # Agente refactorizado: pasar client_context completo
+                agent_input = client_context_to_dict(client_context)
+            else:
+                # Agente legacy: pasar formato antiguo (e1_output, e2_output, etc.)
+                logger.info(f"    ⚠️ Preparando input legacy para {agent.agent_id}")
+                
+                # Construir outputs en formato legacy
+                legacy_outputs = {}
+                for i in range(1, 10):
+                    agent_num = f"E{i}"
+                    field_map = {
+                        "E1": "profile",  # Simplificado, E1 llena varios campos
+                        "E2": "capacity",
+                        "E3": "adaptation",
+                        "E4": "mesocycle",
+                        "E5": "sessions",
+                        "E6": "safe_sessions",
+                        "E7": "formatted_plan",
+                        "E8": "audit",
+                        "E9": "bridge_for_nutrition"
+                    }
+                    field = field_map.get(agent_num)
+                    if field and getattr(client_context.training, field, None):
+                        legacy_outputs[agent_num] = getattr(client_context.training, field)
+                
+                # Preparar input según el agente legacy
+                if agent.agent_id == "E2":
+                    agent_input = {
+                        "e1_output": legacy_outputs.get("E1"),
+                        **questionnaire_data
+                    }
+                elif agent.agent_id == "E3":
+                    agent_input = {
+                        "e1_output": legacy_outputs.get("E1"),
+                        "e2_output": legacy_outputs.get("E2")
+                    }
+                elif agent.agent_id in ["E4", "E6", "E7", "E9"]:
+                    # E4-E9 reciben outputs acumulados
+                    agent_input = {
+                        f"e{i}_output": legacy_outputs.get(f"E{i}")
+                        for i in range(1, int(agent.agent_id[1:]))
+                    }
+                else:
+                    agent_input = legacy_outputs
+            
             result = await agent.execute(
-                client_context_to_dict(client_context),  # Pasar como dict
+                agent_input,
                 knowledge_base=self.knowledge_bases.get("training", "")
             )
             
