@@ -265,7 +265,11 @@ Devuelve el `client_context` COMPLETO con tu campo lleno:
       "formatted_plan": { ... },
       // TU CAMPO - el único que debes llenar
       "audit": {
-        "status": "aprobado | con_warnings | bloqueado",
+**IMPORTANTE**: El formato de audit DEBE seguir esta estructura:
+
+```json
+{
+  "status": "aprobado" | "con_warnings" | "bloqueado",
         "checks": { ... },
         "warnings": [ ... ],
         "recomendaciones": [ ... ]
