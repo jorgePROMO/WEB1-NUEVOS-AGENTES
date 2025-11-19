@@ -178,12 +178,12 @@ async def test_e8(client_context: ClientContext):
     }
     logger.info("✅ Datos dummy añadidos para E8 (capacity, safe_sessions)")
     
-    # Ejecutar E8
-    kb = load_training_kb()
+    # Ejecutar E8 SIN KB (optimización de contexto)
     e8 = E8TechnicalAuditor()
     
     logger.info("\n▶️ Ejecutando E8...")
-    result = await e8.execute(client_context_to_dict(client_context), knowledge_base=kb)
+    logger.info("   ℹ️ E8 NO recibe KB (optimización de contexto)")
+    result = await e8.execute(client_context_to_dict(client_context), knowledge_base="")
     
     if not result["success"]:
         logger.error(f"❌ E8 falló: {result.get('error')}")
