@@ -323,56 +323,78 @@ class EDN360Orchestrator:
         questionnaire_data: Dict[str, Any],
         previous_plan: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """Ejecuta la cadena de agentes E1-E9
+        """
+        Ejecuta la cadena de agentes E1-E9 usando client_context unificado
+        
+        ARQUITECTURA NUEVA (Fase 2):
+        - Inicializa client_context con meta + raw_inputs
+        - Pasa el MISMO client_context a TODOS los agentes
+        - Cada agente modifica SOLO su campo en training
+        - Valida contratos antes y después de cada agente
         
         Args:
             questionnaire_data: Datos del cuestionario del cliente
             previous_plan: (Opcional) Plan previo para progresión/referencia
         """
         executions = []
-        current_data = questionnaire_data
-        outputs = {}
         
-        # Si hay plan previo, añadirlo al contexto para E1
+        # PASO 1: Inicializar client_context
+        logger.info("  🔧 Inicializando client_context...")
+        
+        # Determinar si es seguimiento o inicial
+        is_followup = previous_plan is not None
+        version = questionnaire_data.get("version", 1) if not is_followup else (previous_plan.get("meta", {}).get("version", 1) + 1)
+        
+        # Serializar plan previo si existe
+        previous_training = None
         if previous_plan:
             logger.info("  📋 Plan previo incluido como contexto para progresión")
-            # Serializar datetime objects a strings para JSON compatibility
-            serialized_plan = _serialize_datetime_fields(previous_plan)
-            questionnaire_data["previous_plan"] = serialized_plan
+            previous_training = _serialize_datetime_fields(previous_plan)
         
+        # Inicializar el client_context
+        client_context = initialize_client_context(
+            client_id=questionnaire_data.get("client_id", "unknown"),
+            version=version,
+            cuestionario_data=questionnaire_data,
+            previous_training=previous_training,
+            is_followup=is_followup
+        )
+        
+        logger.info(f"  ✅ client_context inicializado: v{version}, snapshot_id={client_context.meta.snapshot_id}")
+        
+        # PASO 2: Ejecutar cada agente secuencialmente
         for agent in self.training_initial_agents:
-            logger.info(f"  ▶️ Ejecutando {agent.agent_id}...")
+            logger.info(f"  ▶️ Ejecutando {agent.agent_id} ({agent.agent_name})...")
             
-            # Preparar input según el agente
-            if agent.agent_id == "E1":
-                agent_input = current_data
-            elif agent.agent_id == "E2":
-                # E2 espera el output de E1 envuelto en "e1_output"
-                agent_input = {
-                    "e1_output": outputs.get("E1"),
-                    **questionnaire_data
-                }
-            elif agent.agent_id == "E3":
-                # E3 espera outputs de E1 y E2 envueltos
-                agent_input = {
-                    "e1_output": outputs.get("E1"),
-                    "e2_output": outputs.get("E2")
-                }
-            else:
-                # E4-E9 reciben outputs acumulados envueltos
-                agent_input = {
-                    f"e{i}_output": outputs.get(f"E{i}")
-                    for i in range(1, int(agent.agent_id[1:]))
-                }
+            # Guardar snapshot antes de ejecutar (para validación)
+            client_context_before = ClientContext.model_validate(client_context.model_dump())
             
-            # Ejecutar agente con la KB de entrenamiento
-            result = await agent.execute(agent_input, knowledge_base=self.knowledge_bases.get("training", ""))
+            # VALIDACIÓN PRE-EJECUCIÓN: ¿Tiene los inputs requeridos?
+            requirements = get_agent_requirements(agent.agent_id)
+            if requirements["requires"]:
+                logger.info(f"    🔍 Validando inputs requeridos: {requirements['requires']}")
+                from .client_context_utils import validate_agent_input
+                valid_input, error_msg = validate_agent_input(
+                    agent.agent_id,
+                    client_context,
+                    requirements["requires"]
+                )
+                if not valid_input:
+                    logger.error(f"  ❌ {agent.agent_id} - Validación de input falló: {error_msg}")
+                    return {
+                        "success": False,
+                        "error": error_msg,
+                        "executions": executions
+                    }
             
-            # Guardar resultado
-            if result["success"]:
-                outputs[agent.agent_id] = result["output"]
-                logger.info(f"  ✅ {agent.agent_id} completado")
-            else:
+            # EJECUTAR AGENTE con client_context + KB
+            result = await agent.execute(
+                client_context_to_dict(client_context),  # Pasar como dict
+                knowledge_base=self.knowledge_bases.get("training", "")
+            )
+            
+            # Verificar éxito de ejecución
+            if not result["success"]:
                 logger.error(f"  ❌ {agent.agent_id} falló: {result.get('error')}")
                 return {
                     "success": False,
@@ -380,12 +402,45 @@ class EDN360Orchestrator:
                     "executions": executions
                 }
             
+            # Actualizar client_context con el output del agente
+            # El agente debe devolver el client_context completo actualizado
+            if "client_context" in result.get("output", {}):
+                client_context = ClientContext.model_validate(result["output"]["client_context"])
+            else:
+                # Compatibilidad: si el agente no devuelve client_context completo,
+                # asumimos que devolvió solo su campo
+                logger.warning(f"  ⚠️ {agent.agent_id} no devolvió client_context completo, usando formato legacy")
+                # Esto es temporal para los agentes que aún no están refactorizados
+            
+            # VALIDACIÓN POST-EJECUCIÓN: ¿Llenó sus campos? ¿No modificó otros?
+            logger.info(f"    🔍 Validando contrato de {agent.agent_id}...")
+            valid_contract, errors = validate_agent_contract(
+                agent.agent_id,
+                client_context_before,
+                client_context
+            )
+            
+            if not valid_contract:
+                logger.error(f"  ❌ {agent.agent_id} - Violación de contrato:")
+                for error in errors:
+                    logger.error(f"      • {error}")
+                return {
+                    "success": False,
+                    "error": f"{agent.agent_id} violó su contrato: {'; '.join(errors)}",
+                    "executions": executions
+                }
+            
+            logger.info(f"  ✅ {agent.agent_id} completado y validado")
             executions.append(result)
+        
+        # PASO 3: Retornar resultado con client_context completo
+        logger.info("  🎉 Cadena de agentes E1-E9 completada exitosamente")
         
         return {
             "success": True,
-            "plan_data": outputs,
-            "bridge_data": outputs.get("E9"),  # Para pasar a nutrición
+            "client_context": client_context_to_dict(client_context),
+            "plan_data": client_context.training.model_dump(),  # Para compatibilidad con código existente
+            "bridge_data": client_context.training.bridge_for_nutrition,  # Para N0
             "executions": executions
         }
     
