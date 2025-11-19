@@ -69,12 +69,13 @@ class BaseAgent(ABC):
         """
         pass
     
-    async def execute(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def execute(self, input_data: Dict[str, Any], knowledge_base: str = "") -> Dict[str, Any]:
         """
-        Ejecuta el agente con los datos de entrada
+        Ejecuta el agente con los datos de entrada y opcionalmente una base de conocimiento
         
         Args:
-            input_data: Datos de entrada para el agente
+            input_data: Datos de entrada para el agente (client_context)
+            knowledge_base: (Opcional) Base de conocimiento global como referencia
             
         Returns:
             Dict con el resultado de la ejecución
@@ -88,8 +89,35 @@ class BaseAgent(ABC):
             
             logger.info(f"🤖 {self.agent_id} ({self.agent_name}) - Iniciando ejecución")
             
-            # Preparar prompt
+            # Preparar prompt del sistema con instrucciones de jerarquía de datos
             system_prompt = self.get_system_prompt()
+            
+            # Si se proporciona una base de conocimiento, añadirla al sistema con instrucciones claras
+            if knowledge_base:
+                kb_instructions = """
+
+# BASES DE CONOCIMIENTO GLOBAL (REFERENCIA)
+
+A continuación tienes acceso a una base de conocimiento global que sirve como **MANUAL DE REFERENCIA TEÓRICO**. 
+
+⚠️ **JERARQUÍA CRÍTICA DE INFORMACIÓN**:
+1. **PRIORIDAD ABSOLUTA**: Los datos específicos del cliente en el CLIENT_CONTEXT (cuestionarios, planes previos, datos personales)
+2. **PRIORIDAD SECUNDARIA**: Esta base de conocimiento sirve como guía teórica general
+
+**REGLAS OBLIGATORIAS**:
+- SIEMPRE adapta la teoría de la KB a la realidad específica del cliente
+- Si hay conflicto entre los datos del cliente y la teoría general → el cliente tiene prioridad absoluta
+- La KB NO debe ser almacenada ni mezclada con los datos del cliente
+- Usa la KB como referencia para fundamentar decisiones, pero personaliza siempre según el cliente
+
+---
+
+## KNOWLEDGE BASE:
+
+"""
+                system_prompt = system_prompt + kb_instructions + knowledge_base
+                logger.info(f"📚 {self.agent_id} usando KB de {len(knowledge_base)} caracteres")
+            
             user_message = self._format_input_message(input_data)
             
             # Ejecutar LLM con OpenAI directamente
