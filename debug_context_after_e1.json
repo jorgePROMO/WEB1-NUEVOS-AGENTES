@@ -1,7 +1,7 @@
 {
   "meta": {
     "client_id": "client_juan_test",
-    "snapshot_id": "snapshot_client_juan_test_1_34bc50be",
+    "snapshot_id": "snapshot_client_juan_test_1_a90cb839",
     "version": 1,
     "selected_inputs": {
       "cuestionario": "unknown",
@@ -28,24 +28,24 @@
       },
       "experiencia": {
         "nivel": "intermedio",
-        "a\u00f1os_entrenamiento": "dato_no_proporcionado",
-        "constancia": "dato_no_proporcionado",
+        "a\u00f1os_entrenamiento": 2,
+        "constancia": "moderada",
         "deportes_previos": [],
-        "notas": "Experiencia de nivel intermedio sin detalles adicionales proporcionados."
+        "notas": "Experiencia de entrenamiento intermedia."
       },
       "objetivo": {
         "principal": "hipertrofia",
         "secundarios": [],
-        "plazo": "dato_no_proporcionado"
+        "plazo": "6_meses"
       },
       "limitaciones_clinicas": {
         "lesiones": [
           {
             "zona": "lumbar",
-            "tipo": "lesion",
+            "tipo": "dolor",
             "gravedad": "leve",
             "estado": "activa",
-            "notas": "Dolor lumbar leve. Precauci\u00f3n recomendada en ejercicios que impliquen carga axial."
+            "notas": "Dolor lumbar leve, requiere precauci\u00f3n."
           }
         ],
         "restricciones_medicas": [],
@@ -60,11 +60,7 @@
       },
       "equipo": {
         "tipo": "gym_completo",
-        "equipamiento_especifico": [
-          "mancuernas",
-          "barra",
-          "maquinas"
-        ],
+        "equipamiento_especifico": [],
         "limitaciones": []
       },
       "datos_adicionales": {
@@ -74,17 +70,20 @@
         "adherencia_historica": "dato_no_proporcionado"
       },
       "notas_interpretativas": [
-        "Cliente con nivel intermedio de entrenamiento, enfocado en hipertrofia.",
-        "Presenta dolor lumbar leve activo, se recomienda precauci\u00f3n en ejercicios con carga axial.",
-        "Disponibilidad de 4 d\u00edas a la semana en horario tarde a las 18:00, con acceso a gimnasio completo."
+        "Cliente con nivel intermedio enfocado en hipertrofia.",
+        "Disponibilidad de tiempo adecuada (4x60') con acceso a equipo completo.",
+        "Dolor lumbar leve presente, se sugiere precauci\u00f3n con ejercicios de carga axial.",
+        "IMC indica sobrepeso, aunque el enfoque principal es hipertrofia."
       ],
       "contrato_para_E2": {
         "prioridades": [
-          "Dise\u00f1ar plan de hipertrofia con \u00e9nfasis en seguridad lumbar.",
-          "Incluir ejercicios de fortalecimiento de core para prevenir agravamiento de lesi\u00f3n lumbar."
+          "Enfocar en t\u00e9cnica y evitar sobrecarga lumbar.",
+          "Utilizar ejercicios de hipertrofia con control de la forma.",
+          "Incluir trabajo de core para soporte lumbar."
         ],
         "restricciones": [
-          "Evitar ejercicios que impliquen carga axial excesiva hasta evaluar t\u00e9cnica y respuesta lumbar."
+          "Evitar ejercicios con carga axial elevada sin t\u00e9cnica adecuada.",
+          "Considerar variaciones de ejercicios para minimizar el riesgo lumbar."
         ]
       }
     },
@@ -103,7 +102,7 @@
               "bird_dog",
               "pallof_press"
             ],
-            "notas": "Dolor lumbar activo. Evitar carga axial excesiva. Priorizar fortalecimiento del core."
+            "notas": "Evitar flexi\u00f3n lumbar bajo carga y compresi\u00f3n axial excesiva."
           }
         ],
         "alergias_alimentarias": [],
@@ -121,8 +120,8 @@
             "bird_dog",
             "pallof_press"
           ],
-          "frecuencia": "3 veces por semana",
-          "notas": "Ejercicios preventivos para fortalecer el core y evitar agravamiento del dolor lumbar."
+          "frecuencia": "3x/semana",
+          "notas_adicionales": "Enfocar en fortalecimiento de core y estabilidad lumbar."
         }
       ]
     },
