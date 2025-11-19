@@ -1,0 +1,97 @@
+INFO - 
+🚀 TESTS DE E8 - CASOS NEGATIVOS
+INFO - Verificando que E8 detecta problemas en planes mal diseñados
+
+INFO - 
+================================================================================
+INFO - 🧪 CASO 1: VOLUMEN EXCESIVO
+INFO - ================================================================================
+INFO - 🤖 E8 (Auditor Técnico) - Iniciando ejecución
+INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO - 📝 E8 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "test_negative",
+      "snapshot_id": "snapshot_test_negative_1_c5c3fd4d",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"test_negative\",\n  \"nombre\": \"Test User\",\n  \"edad\": 30,\n  \"sexo\": \"M\",\n  \"peso_actual_kg\": 75,\n  \"altura_cm\": 175,\n  \"objetivo_princip
+INFO - ✅ E8 completado en 21.10s
+INFO - 
+📊 Resultado Auditoría:
+INFO -    Status: bloqueado
+INFO -    Warnings: 0
+INFO -    Recomendaciones: 2
+WARNING -    ⚠️ E8 NO detectó volumen excesivo
+INFO -    Warnings: []
+INFO - 
+================================================================================
+INFO - 🧪 CASO 2: PATRÓN MUSCULAR FALTANTE
+INFO - ================================================================================
+INFO - 🤖 E8 (Auditor Técnico) - Iniciando ejecución
+INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO - 📝 E8 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "test_negative",
+      "snapshot_id": "snapshot_test_negative_1_c79bbf99",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"test_negative\",\n  \"nombre\": \"Test User\",\n  \"edad\": 30,\n  \"sexo\": \"M\",\n  \"peso_actual_kg\": 75,\n  \"altura_cm\": 175,\n  \"objetivo_princip
+INFO - ✅ E8 completado en 16.54s
+INFO - 
+📊 Resultado Auditoría:
+INFO -    Status: bloqueado
+INFO -    Warnings: 0
+WARNING -    ⚠️ E8 NO detectó desequilibrio
+INFO -    Warnings: []
+INFO - 
+================================================================================
+INFO - 🧪 CASO 3: EJERCICIOS PROHIBIDOS NO RESPETADOS
+INFO - ================================================================================
+INFO - 🤖 E8 (Auditor Técnico) - Iniciando ejecución
+INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+INFO - 📝 E8 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "test_negative",
+      "snapshot_id": "snapshot_test_negative_1_a5332f1b",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"test_negative\",\n  \"nombre\": \"Test User\",\n  \"edad\": 30,\n  \"sexo\": \"M\",\n  \"peso_actual_kg\": 75,\n  \"altura_cm\": 175,\n  \"objetivo_princip
+INFO - ✅ E8 completado en 10.94s
+INFO - 
+📊 Resultado Auditoría:
+INFO -    Status: bloqueado
+INFO -    Warnings: 0
+INFO -    ✅ E8 DETECTÓ ejercicios prohibidos
+INFO - 
+================================================================================
+INFO - 📊 RESUMEN DE TESTS
+INFO - ================================================================================
+INFO -    ❌ FAIL: volumen_excesivo
+INFO -    ❌ FAIL: patron_faltante
+INFO -    ✅ PASS: ejercicios_prohibidos
+INFO - 
+   Total: 1/3 tests pasados
+WARNING - 
+⚠️ 2 tests fallaron
+WARNING - E8 necesita mejorar detección de problemas
