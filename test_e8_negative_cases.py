@@ -87,40 +87,48 @@ async def test_caso_1_volumen_excesivo():
     context = create_base_context()
     
     # Crear sessions con VOLUMEN EXCESIVO para pecho
+    # Cliente es INTERMEDIO, recomendación: 14-20 series/semana
+    # Vamos a darle 35 series/semana de pecho (75% por encima del máximo)
     context.training.sessions = {
         "semana_1": {
             "dia_1_upper": {
+                "grupo_principal": "pecho_espalda",
                 "ejercicios": [
-                    {"nombre": "Press Banca", "series": 6, "grupo": "pecho"},
-                    {"nombre": "Press Inclinado", "series": 6, "grupo": "pecho"},
-                    {"nombre": "Aperturas", "series": 5, "grupo": "pecho"},
-                    {"nombre": "Fondos", "series": 5, "grupo": "pecho"},
-                    # TOTAL: 22 series de pecho en un solo día
-                    {"nombre": "Remo", "series": 4, "grupo": "espalda"}
+                    # PECHO: 7 ejercicios x 5 series = 35 series en la semana
+                    {"nombre": "Press Banca", "series": 5, "reps": "8-10", "grupo_muscular": "pecho"},
+                    {"nombre": "Press Inclinado Mancuernas", "series": 5, "reps": "8-10", "grupo_muscular": "pecho"},
+                    {"nombre": "Aperturas con Mancuernas", "series": 5, "reps": "10-12", "grupo_muscular": "pecho"},
+                    {"nombre": "Fondos en Paralelas", "series": 4, "reps": "8-10", "grupo_muscular": "pecho"},
+                    {"nombre": "Press Banca Declinado", "series": 4, "reps": "8-10", "grupo_muscular": "pecho"},
+                    {"nombre": "Cruces en Polea Alta", "series": 4, "reps": "12-15", "grupo_muscular": "pecho"},
+                    {"nombre": "Pullover con Mancuerna", "series": 3, "reps": "10-12", "grupo_muscular": "pecho"},
+                    # Espalda mínima
+                    {"nombre": "Remo con Barra", "series": 3, "reps": "8-10", "grupo_muscular": "espalda"}
                 ]
             },
             "dia_2_lower": {
                 "ejercicios": [
-                    {"nombre": "Sentadilla", "series": 4, "grupo": "cuadriceps"},
-                    {"nombre": "Prensa", "series": 4, "grupo": "cuadriceps"}
+                    {"nombre": "Sentadilla", "series": 4, "grupo_muscular": "cuadriceps"},
+                    {"nombre": "Prensa", "series": 4, "grupo_muscular": "cuadriceps"}
                 ]
             },
             "dia_3_upper": {
                 "ejercicios": [
-                    {"nombre": "Press Banca", "series": 5, "grupo": "pecho"},
-                    {"nombre": "Cruces", "series": 5, "grupo": "pecho"},
-                    # Otros 10 series de pecho
-                    {"nombre": "Dominadas", "series": 4, "grupo": "espalda"}
+                    # Más pecho (ya no hace falta, pero para enfatizar)
+                    {"nombre": "Press Banca", "series": 5, "grupo_muscular": "pecho"},
+                    {"nombre": "Dominadas", "series": 3, "grupo_muscular": "espalda"}
                 ]
             },
             "dia_4_lower": {
                 "ejercicios": [
-                    {"nombre": "Peso Muerto", "series": 4, "grupo": "femoral"}
+                    {"nombre": "Peso Muerto", "series": 4, "grupo_muscular": "femoral"}
                 ]
             }
         }
     }
-    # TOTAL PECHO: 32 series/semana (EXCESIVO para intermedio)
+    # TOTAL PECHO: 30+5 = 35 series/semana
+    # Para INTERMEDIO, máximo recomendado: 20 series
+    # Exceso: +75% → CLARAMENTE EXCESIVO
     
     context.training.safe_sessions = context.training.sessions
     
