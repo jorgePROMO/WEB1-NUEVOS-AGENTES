@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://fitplan-genius-5.preview.emergentagent.com
+**URL Actual:** https://edn360-kb.preview.emergentagent.com
 
 ---
 

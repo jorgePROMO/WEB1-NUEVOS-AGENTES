@@ -1,103 +1,71 @@
 <analysis>
-The trajectory details an extensive and arduous debugging and refactoring process for the E.D.N.360 fitness application. The work began by fixing UI and data integrity bugs in the , specifically data mixing in dropdowns, which required multiple backend fixes in . This was followed by a long series of cascading failures while attempting to generate follow-up reports, including incorrect database collection queries, missing Python imports, and multiple API key-related issues (hardcoded keys, incorrect integration library usage, and exhausted budget).
+The trajectory details a collaborative refinement of the application's architecture. The initial task was a major refactor to introduce a shared  object for the AI agents, addressing a core flaw of them operating in isolation. The user then introduced a new, critical requirement: integrating two Knowledge Bases (KBs), one for training and one for nutrition, provided as  files.
 
-A significant pivot occurred when the user, frustrated with the poor quality and logical inconsistencies of the AI-generated plans, requested a radical simplification. The separate follow-up agents (ES1-ES4, NS1-NS4) were completely removed. The core initial agents (E1-E9, N0-N8) were then heavily refactored via prompt engineering to handle both initial plan generation and follow-up progressions by analyzing previous plans and questionnaires.
+The AI engineer's first proposal was to embed these KBs within the . The user immediately and firmly rejected this, explaining it was conceptually wrong. The user clarified that KBs are global, static, read-only reference guides, whereas  is the dynamic, client-specific state. The KBs should not be duplicated for each client or persisted in the database.
 
-This major refactor introduced its own bugs, including Python syntax errors and logic flaws, which were subsequently fixed. The final problem identified by the user was a fundamental architectural flaw: the agents operate in isolation without a shared context. The trajectory concludes with the AI engineer having understood this core issue after the user provided an explanatory document, and is now awaiting detailed specifications to refactor the entire agent system to use a unified  object.
+Following this crucial correction, the AI engineer formulated a new, approved plan. This plan involves storing the KBs as versioned text files on the filesystem, loading them once in the , and passing the relevant KB to each agent as a separate context from the . The agent prompts will be engineered to prioritize the client's data over the KB's general guidance. The work concluded with the AI engineer having a clear, user-approved implementation plan and awaiting the go-ahead.
 
 The user's primary language is Spanish. The next agent **MUST** respond in Spanish.
 </analysis>
+
 <product_requirements>
-The E.D.N.360 application is an AI-powered platform for fitness professionals to generate personalized, progressive training and nutrition plans for their clients.
+The E.D.N.360 application is an AI-powered platform for generating personalized, progressive training and nutrition plans.
 
 **Core Functional Requirements:**
-1.  **AI-Powered Plan Generation:** The system must generate comprehensive training (E-agents) and nutrition (N-agents) plans based on a detailed initial client questionnaire.
-2.  **Intelligent Progression:** The system must handle follow-ups by analyzing a previous plan and a follow-up questionnaire to generate a new, adapted plan. This adaptation must be logical (e.g., increase difficulty if progress is good, adjust for reported injuries or schedule changes).
-3.  **Stable Admin Interface:** A React-based  allows the professional to manage clients, select questionnaires and previous plans, and trigger plan generation. This interface must be stable and display data correctly.
-
-**Implementation Journey:**
-The application evolved from a buggy state with non-functional UI elements and flawed AI logic to a simplified, more robust architecture. The initial dual-system of initial vs. follow-up agents proved unmaintainable and was consolidated into a single, more powerful set of agents (E1-E9, N0-N8) responsible for all generation tasks. The current focus is on a major architectural refactor to ensure data consistency and logical coherence across the agent chain by implementing a shared context object.
+1.  **AI-Powered Plan Generation:** The system uses a chain of specialized AI agents (E-agents for training, N-agents for nutrition) to create comprehensive plans.
+2.  **Shared Agent Context:** All agents must operate on a single, shared  object. This object contains all client-specific data, questionnaires, previous plans, and the outputs of preceding agents, ensuring data consistency throughout the generation process.
+3.  **Global Knowledge Base Integration:** The system must utilize two global, read-only knowledge bases (one for training, one for nutrition) stored as versioned  files. These KBs serve as a reference manual for the agents.
+4.  **Data Prioritization:** There is a strict hierarchy of information. The agent's decision-making must always prioritize the specific client data in  over the general guidelines in the knowledge base. The system must adapt theory to the client's reality, not the other way around. The KBs must not be persisted in the database with client data.
 </product_requirements>
+
 <key_technical_concepts>
-- **Monorepo Architecture:** React frontend and Python FastAPI backend.
-- **Agent-Based AI System:** An orchestrated chain of specialized LLM-powered agents () responsible for different stages of plan creation. This system was significantly refactored from a dual initial/follow-up model to a single, unified agent chain.
-- **Prompt Engineering:** The core of the AI logic. Agent prompts were heavily modified to handle follow-up scenarios, enforce safety constraints (e.g., exercise substitutions for injuries), and improve output quality.
-- **Shared Context Architecture (Planned):** The next major task is to refactor the agent system to use a single, unified  object that is passed between and enriched by each agent.
+- **Agent-Based AI System:** An orchestrated chain of specialized LLM agents for plan generation.
+- **Shared Context Architecture:** A mandatory refactor to use a single, unified  object passed between agents.
+- **Global Knowledge Base (KB) Integration:** A new requirement to load static, versioned  files (, ) once and pass them to agents as a separate, read-only reference context, distinct from the .
+- **Prompt Engineering:** Critical for instructing agents on the strict data hierarchy:  has absolute priority over the KB.
 </key_technical_concepts>
+
 <code_architecture>
-The application follows a monorepo structure with a frontend and backend.
+The application uses a monorepo structure with a React frontend and a Python/FastAPI backend. The core logic resides in a chain of AI agents orchestrated by the backend.
 
 
-- ****:
-    - **Importance**: The main FastAPI application file. It defines all API endpoints, handles database interactions (MongoDB), and orchestrates the AI agent execution. It contains the logic for generating both training and nutrition plans.
-    - **Summary of Changes**: This file has been drastically altered. Initially, it contained separate logic for initial and follow-up plans. This was refactored to remove the follow-up agent calls and now always invokes the same initial agent chain (E1-E9, N0-N8), passing previous plan data and follow-up questionnaires as context. Functions for formatting plan text (, ) were also modified to handle plan numbering (MES 1, MES 2, etc.). It was the source of numerous bugs related to data mixing, incorrect DB queries, and syntax errors.
 
-- ****:
-    - **Importance**: Provides the base class for all AI agents, containing the core  method that interacts with the LLM.
-    - **Summary of Changes**: This file was modified to switch from using the  library to using the standard usage: openai [-h] [-v] [-b API_BASE] [-k API_KEY] [-p PROXY [PROXY ...]]
-              [-o ORGANIZATION] [-t {openai,azure}]
-              [--api-version API_VERSION] [--azure-endpoint AZURE_ENDPOINT]
-              [--azure-ad-token AZURE_AD_TOKEN] [-V]
-              {api,tools,migrate,grit} ...
-
-positional arguments:
-  {api,tools,migrate,grit}
-    api                 Direct API calls
-    tools               Client side tools for convenience
-
-options:
-  -h, --help            show this help message and exit
-  -v, --verbose         Set verbosity.
-  -b API_BASE, --api-base API_BASE
-                        What API base url to use.
-  -k API_KEY, --api-key API_KEY
-                        What API key to use.
-  -p PROXY [PROXY ...], --proxy PROXY [PROXY ...]
-                        What proxy to use.
-  -o ORGANIZATION, --organization ORGANIZATION
-                        Which organization to run as (will use your default
-                        organization if not specified)
-  -t {openai,azure}, --api-type {openai,azure}
-                        The backend API to call, must be `openai` or `azure`
-  --api-version API_VERSION
-                        The Azure API version, e.g.
-                        'https://learn.microsoft.com/en-us/azure/ai-
-                        services/openai/reference#rest-api-versioning'
-  --azure-endpoint AZURE_ENDPOINT
-                        The Azure endpoint, e.g.
-                        'https://endpoint.openai.azure.com'
-  --azure-ad-token AZURE_AD_TOKEN
-                        A token from Azure Active Directory,
-                        https://www.microsoft.com/en-
-                        us/security/business/identity-access/microsoft-entra-
-                        id
-  -V, --version         show program's version number and exit library directly, taking the API key from the  environment variable.
-
-- ** (E1-E9)**:
-    - **Importance**: These files contain the prompts and logic for each specialized training agent.
-    - **Summary of Changes**: These agents, particularly , , , , , and , underwent a massive prompt engineering effort. Their prompts were expanded to include a follow-up mode, enabling them to analyze previous plans, identify progress or stagnation, and make logical adjustments. Critical safety and quality features were added, such as enforcing exercise variation and substituting exercises based on reported injuries.
+- ** (New Directory)**:
+  - **Importance**: This new directory will house the global, static knowledge bases for training and nutrition, as per the user's explicit instructions. This keeps reference data separate from application code.
+  - **Planned Files**: , .
 
 - ****:
-    - **Importance**: The primary and highly complex component for the admin user interface. It manages state for client selection, questionnaire selection, and triggering API calls for plan generation.
-    - **Summary of Changes**: This file was the subject of intense debugging to fix numerous bugs, including dropdowns showing incorrect data, components disappearing, and incorrect parameters being sent to the backend. Filters were added and removed, state management was adjusted to reset selections, and logic for determining  was refactored multiple times to fix generation errors.
+  - **Importance**: This file manages the overall flow of the agent chain.
+  - **Planned Changes**: It will be modified to load the content of the KB text files into memory once at the start of a generation process. It will then be responsible for passing the appropriate KB content (training or nutrition) to each agent call, alongside the .
+
+- ****:
+  - **Importance**: This is the parent class for all AI agents, containing the core LLM interaction logic.
+  - **Planned Changes**: The  method will be refactored to accept two distinct arguments: the  (client-specific data) and the  (global reference text). The system prompt construction logic within this file will be updated to include clear instructions on the data hierarchy, ensuring agents prioritize  over the .
+
 </code_architecture>
+
 <pending_tasks>
-- **Primary Task**: Implement the architectural refactor proposed by the user. This involves creating a single, shared  object.
-- **Sub-Task 1**: Modify the  to manage this  object.
-- **Sub-Task 2**: Refactor every agent (E1-E9 and N0-N8) to:
-    1.  Receive the entire  object.
-    2.  Read the necessary information from it.
-    3.  Add its own output back into the same object.
-    4.  Return the enriched  object for the next agent.
+- **Primary Task**: Implement the architectural refactor for Knowledge Base integration.
+  - **Sub-Task 1**: Create the  directory and save the two provided  files with versioning.
+  - **Sub-Task 2**: Modify  to load these files into memory at the start of the process.
+  - **Sub-Task 3**: Modify  and agent prompts to accept and use the KB as a separate, lower-priority context.
+- **On Hold**: Fully implement the  refactor pending the user providing the detailed input/output JSON specifications for each agent (E1-E9, N0-N8).
 </pending_tasks>
+
 <current_work>
-The previous engineer was working on a fundamental architectural refactoring of the AI agent system, as requested by the user. The user, after numerous frustrating bugs stemming from data inconsistencies, correctly identified a conceptual flaw: the AI agents (E1-E9, N0-N8) were operating in silos, each with its own isolated input and output, rather than contributing to a unified, evolving state object.
+The immediate work is focused on implementing the user-approved architecture for integrating global knowledge bases (KBs). The previous discussion clarified a critical architectural point: the KBs are **global, static, read-only references** and must be handled separately from the **dynamic, client-specific **.
 
-The user provided a document () explaining this issue. The last action of the previous engineer was reading and understanding this document. They confirmed their understanding with the user: the system needs a single, shared  object that is passed through the entire agent chain, with each agent reading from and enriching it.
+The agreed-upon plan is:
+1.  **Storage**: Create a new directory  and store the user-provided  and  as versioned files (e.g., ).
+2.  **Loading**: The  will load these files from the disk into memory **once** when a plan generation is initiated.
+3.  **Passing Context**: For each agent call, the orchestrator will pass two separate pieces of context:
+    *   The  object (containing only client-specific data).
+    *   The relevant KB string ( for E-agents,  for N-agents).
+4.  **Prompting**: Prompts will be explicitly engineered to instruct the LLM that the  has absolute priority and the KB is merely a reference guide.
 
-The work concluded with the engineer acknowledging this as the correct path forward and is now waiting for the user to provide the detailed input/output JSON specifications for each agent, which will define the structure of this new shared  object. No code has been written for this refactor yet; the project is at the planning/specification-gathering stage for this major task.
+The work is at the very beginning of this implementation phase. The plan is confirmed, and the next step is to start writing the code to create the directory and modify the orchestrator.
 </current_work>
-<optional_next_step>
-Wait for the user to provide the detailed input and output JSON specifications for each agent (E1-E9 and N0-N8) that will define the structure of the new shared  object.
-</optional_next_step>
 
+<optional_next_step>
+Proceed with Step 1 of the implementation plan: Create the  directory and save the versioned KB files.
+</optional_next_step>

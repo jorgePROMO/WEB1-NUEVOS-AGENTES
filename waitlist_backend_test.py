@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://fitplan-genius-5.preview.emergentagent.com/api"
+BACKEND_URL = "https://edn360-kb.preview.emergentagent.com/api"
 
 class WaitlistTester:
     def __init__(self):
