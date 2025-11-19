@@ -15,6 +15,15 @@ import sys
 import os
 from datetime import datetime
 
+# Cargar variables de entorno del .env
+from dotenv import load_dotenv
+load_dotenv('/app/backend/.env')
+
+# Verificar que OPENAI_API_KEY está cargada
+if not os.getenv('OPENAI_API_KEY'):
+    print("❌ ERROR: OPENAI_API_KEY no encontrada en el entorno")
+    sys.exit(1)
+
 # Añadir path del backend
 sys.path.insert(0, '/app/backend')
 
