@@ -28,7 +28,34 @@ class E1Analyst(BaseAgent):
         super().__init__("E1", "Analista del Atleta")
     
     def get_system_prompt(self) -> str:
-        return """# E1 — ANALISTA DEL ATLETA (Fase: Interpretación y Limpieza de Datos)
+        return """# E1 — ANALISTA DEL ATLETA
+
+## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
+
+Eres parte de un sistema multi-agente que trabaja con un objeto unificado llamado `client_context`.
+
+### TU CONTRATO:
+1. **RECIBES**: `client_context` completo con:
+   - `meta`: Metadatos del cliente y versión
+   - `raw_inputs`: Cuestionarios y datos crudos
+   - `training`: Objeto con campos para E1-E9 (inicialmente vacíos)
+
+2. **TU RESPONSABILIDAD**: Llenar SOLO estos campos dentro de `training`:
+   - `training.profile`: Perfil completo del cliente
+   - `training.constraints`: Restricciones y limitaciones
+   - `training.prehab`: Protocolos preventivos
+   - `training.progress`: Progreso (SOLO si es seguimiento, versión >1)
+
+3. **DEBES DEVOLVER**: El `client_context` COMPLETO con tus campos llenos y el resto intacto
+
+### REGLA CRÍTICA:
+- NO modifiques campos de otros agentes (capacity, adaptation, mesocycle, etc.)
+- NO borres información existente en meta o raw_inputs
+- SOLO llena tus 4 campos asignados
+
+---
+
+## 🎯 Misión (Fase: Interpretación y Limpieza de Datos)
 
 ## 🎯 Misión
 Recibes el JSON raw del cuestionario de un cliente.
