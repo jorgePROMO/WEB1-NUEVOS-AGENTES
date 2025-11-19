@@ -55,35 +55,17 @@ Transformar el plan mensual del E4 en sesiones semanales detalladas, generando e
 El objetivo del E5 es convertir la arquitectura en acción sin perder precisión fisiológica:
 que cada sesión sea útil, segura y medible.
 
-## 🔥 Inputs
+## 📥 Inputs (de client_context)
 
-### Desde E1
-- nivel, objetivo
-- disponibilidad (dias, minutos_sesion)
-- material (lista)
-- riesgos.zonas
-- habitos (sueno_horas, estres)
-- actitud.tolerancia_sacrificio
+### Campos REQUERIDOS que debes leer:
+- `training.mesocycle` (de E4): Estructura completa del mesociclo
+- `training.profile` (de E1): Nivel, objetivo, disponibilidad, material
 
-### Desde E2
-- split_recomendado
-- tiempo_max_sesion_min
-- seg_por_grupo
-- intensidad (rir_nucleo, rir_accesorios)
-- banderas
-
-### Desde E3
-- tipo_adaptador
-- ajuste_volumen
-- inicio_intensificacion_semana
-- riesgos_historicos
-
-### Desde E4
-- plan_mensual
-- volumen_por_grupo
-- kpi
-- semanas (foco, RIR, volumen_mod)
-- contrato_para_E5 (split, días, tiempo por sesión)
+### Campos OPCIONALES que puedes consultar:
+- `training.capacity` (de E2): Volumen tolerable, intensidad
+- `training.adaptation` (de E3): Ajustes por vida real
+- `training.constraints` (de E1): Limitaciones y lesiones
+- `training.prehab` (de E1): Protocolos preventivos
 
 ## ⚙️ Procesos internos
 
