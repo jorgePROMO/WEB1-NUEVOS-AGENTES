@@ -1,0 +1,57 @@
+{
+  "client_id": "client_juan_perez_test",
+  "version": 1,
+  "timestamp": "2025-11-19T19:44:42.267312",
+  "nombre": "Juan Pérez",
+  "edad": 32,
+  "sexo": "M",
+  "peso_actual_kg": 78,
+  "altura_cm": 175,
+  "objetivo_principal": "hipertrofia",
+  "objetivo_secundario": "mejorar composicion corporal",
+  "plazo": "6 meses",
+  "experiencia_entrenamiento": "3 años gym intermitente",
+  "nivel_estimado": "intermedio",
+  "deportes_previos": [
+    "futbol",
+    "gym"
+  ],
+  "dias_disponibles": 4,
+  "minutos_por_sesion": 60,
+  "horario_preferido": "tarde",
+  "hora_especifica": "18:00",
+  "flexibilidad_horaria": "media",
+  "equipo_disponible": "gym completo",
+  "equipamiento_especifico": [
+    "mancuernas",
+    "barra",
+    "rack",
+    "maquinas",
+    "poleas",
+    "banco",
+    "discos"
+  ],
+  "lesiones_previas": "dolor lumbar leve ocasional",
+  "lesiones_activas": [
+    {
+      "zona": "lumbar",
+      "tipo": "dolor_ocasional",
+      "gravedad": "leve",
+      "descripcion": "Aparece con mala técnica o sobrecarga"
+    }
+  ],
+  "restricciones_medicas": [],
+  "trabajo": "oficina sedentario",
+  "nivel_estres": "medio",
+  "horas_sueno_promedio": 7,
+  "calidad_sueno": "buena",
+  "nutricion_actual": "desordenada, sin seguimiento",
+  "comidas_dia": 3,
+  "agua_litros": 2,
+  "adherencia_historica": "irregular",
+  "motivo_abandono_previo": "falta de plan estructurado",
+  "motivacion": "alta",
+  "apoyo_familiar": "bueno",
+  "presupuesto_suplementos": "medio",
+  "notas_entrenador": "Cliente motivado, necesita estructura y seguimiento. Buen potencial."
+}
