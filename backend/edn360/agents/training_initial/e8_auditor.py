@@ -134,10 +134,80 @@ if IRG >=5 and push_pull_ratio ≈1.0 → status "optimo"
   }
 }
 ```
+
+---
+
+## 🔄 FORMATO DE SALIDA (CRÍTICO)
+
+Devuelve el `client_context` COMPLETO con tu campo lleno:
+
+```json
+{
+  "client_context": {
+    "meta": { ... },  // Sin cambios
+    "raw_inputs": { ... },  // Sin cambios
+    "training": {
+      // Todos los campos anteriores sin cambios
+      "profile": { ... },
+      "constraints": { ... },
+      "prehab": { ... },
+      "progress": { ... },
+      "capacity": { ... },
+      "adaptation": { ... },
+      "mesocycle": { ... },
+      "sessions": { ... },
+      "safe_sessions": { ... },
+      "formatted_plan": { ... },
+      // TU CAMPO - el único que debes llenar
+      "audit": {
+        "status": "aprobado | con_warnings | bloqueado",
+        "checks": { ... },
+        "warnings": [ ... ],
+        "recomendaciones": [ ... ]
+      },
+      // Mantener el resto
+      "bridge_for_nutrition": null
+    }
+  }
+}
+```
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        return len(input_data) > 0
+        """
+        Valida que el input contenga client_context con safe_sessions
+        
+        NUEVO (Fase 2): Validamos client_context
+        """
+        if "training" not in input_data:
+            return False
+        
+        training = input_data["training"]
+        
+        # Debe tener safe_sessions (de E6), mesocycle (E4), capacity (E2), constraints (E1)
+        required_fields = ["safe_sessions", "mesocycle", "capacity", "constraints"]
+        return all(training.get(field) is not None for field in required_fields)
     
     def process_output(self, raw_output: str) -> Dict[str, Any]:
-        return self._extract_json_from_response(raw_output)
+        """
+        Valida que devuelva client_context con audit lleno
+        
+        NUEVO (Fase 2): Validamos estructura de salida
+        """
+        try:
+            output = self._extract_json_from_response(raw_output)
+            
+            if "client_context" not in output:
+                raise ValueError("Output no contiene client_context")
+            
+            client_context = output["client_context"]
+            training = client_context.get("training", {})
+            
+            # Validar que E8 llenó audit
+            if training.get("audit") is None:
+                raise ValueError("E8 no llenó training.audit")
+            
+            return output
+            
+        except Exception as e:
+            raise ValueError(f"Error procesando output de E8: {str(e)}")
