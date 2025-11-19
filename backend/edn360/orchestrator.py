@@ -358,8 +358,8 @@ class EDN360Orchestrator:
                     for i in range(1, int(agent.agent_id[1:]))
                 }
             
-            # Ejecutar agente
-            result = await agent.execute(agent_input)
+            # Ejecutar agente con la KB de entrenamiento
+            result = await agent.execute(agent_input, knowledge_base=self.knowledge_bases.get("training", ""))
             
             # Guardar resultado
             if result["success"]:
