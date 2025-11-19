@@ -19,6 +19,13 @@ from .models import (
     FollowUpPlan
 )
 from .validators import EDN360Validator, log_validation_results
+from .client_context_models import ClientContext
+from .client_context_utils import (
+    initialize_client_context,
+    validate_agent_contract,
+    get_agent_requirements,
+    client_context_to_dict
+)
 
 # Import agents
 from .agents.training_initial import (
