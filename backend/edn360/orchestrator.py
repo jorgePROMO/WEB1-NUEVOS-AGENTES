@@ -424,8 +424,8 @@ class EDN360Orchestrator:
                     prev_output = outputs.get(f"N{i}", {})
                     agent_input.update(prev_output)
             
-            # Ejecutar agente
-            result = await agent.execute(agent_input)
+            # Ejecutar agente con la KB de nutrición
+            result = await agent.execute(agent_input, knowledge_base=self.knowledge_bases.get("nutrition", ""))
             
             if result["success"]:
                 outputs[agent.agent_id] = result["output"]
