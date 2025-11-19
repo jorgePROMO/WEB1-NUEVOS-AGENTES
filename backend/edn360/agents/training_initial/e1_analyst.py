@@ -147,12 +147,21 @@ Escribe 2–4 frases que resuman:
 
 ---
 
-## 📤 Output (JSON estructurado)
+## 📤 Output (client_context actualizado)
+
+**IMPORTANTE**: Debes devolver el `client_context` COMPLETO que recibiste, con SOLO tus campos llenos.
+
+### Estructura de respuesta:
 
 ```json
 {
-  "status": "ok",
-  "perfil_tecnico": {
+  "client_context": {
+    "meta": { ... },  // Mantener igual que input
+    "raw_inputs": { ... },  // Mantener igual que input
+    "training": {
+      // TUS CAMPOS (los únicos que debes llenar):
+      "profile": {
+        "perfil_tecnico": {
     "id_cliente": "generado o recibido",
     "nombre": "Ana López",
     "edad": 32,
