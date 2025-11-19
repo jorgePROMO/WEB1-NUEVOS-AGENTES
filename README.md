@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://nutrition-coach-39.preview.emergentagent.com
+**URL Actual:** https://fitplan-genius-5.preview.emergentagent.com
 
 ---
 

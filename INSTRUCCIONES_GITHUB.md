@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://nutrition-coach-39.preview.emergentagent.com
+https://fitplan-genius-5.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 

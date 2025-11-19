@@ -93,7 +93,7 @@ curl -X PUT "http://localhost:8001/api/admin/edn360/plans/$PLAN_ID/approve" \
 
 ### Test 1: Acceso al Dashboard Admin
 
-1. Abre: https://nutrition-coach-39.preview.emergentagent.com/admin
+1. Abre: https://fitplan-genius-5.preview.emergentagent.com/admin
 2. Login con credenciales de admin
 3. Verifica que veas el tab **"E.D.N.360"** en el dashboard
 

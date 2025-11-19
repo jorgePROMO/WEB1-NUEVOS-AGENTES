@@ -13,7 +13,7 @@ import os
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://nutrition-coach-39.preview.emergentagent.com/api"
+BACKEND_URL = "https://fitplan-genius-5.preview.emergentagent.com/api"
 
 class NutritionPlanFixesTester:
     def __init__(self):

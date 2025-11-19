@@ -7,7 +7,7 @@ import requests
 import json
 
 # Backend URL
-BACKEND_URL = "https://nutrition-coach-39.preview.emergentagent.com/api"
+BACKEND_URL = "https://fitplan-genius-5.preview.emergentagent.com/api"
 
 # Admin login
 login_response = requests.post(f"{BACKEND_URL}/auth/login", params={
