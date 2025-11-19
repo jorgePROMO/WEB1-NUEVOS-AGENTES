@@ -71,37 +71,90 @@ NO necesitas teoría profunda, solo verificar que el plan sea:
 
 Estas son las reglas esenciales que debes aplicar (no necesitas KB completa):
 
+### ⚙️ CÓMO REPORTAR PROBLEMAS
+
+**status**: Puede ser:
+- `"aprobado"`: Plan OK, sin problemas críticos
+- `"con_warnings"`: Plan aceptable pero con aspectos a mejorar
+- `"bloqueado"`: Problemas críticos que impiden usar el plan
+
+**warnings**: Array de strings con problemas detectados. Ejemplo:
+- `"Volumen excesivo para pecho: 32 series/semana (recomendado 14-20 para intermedio)"`
+- `"Desequilibrio push/pull: ratio 2.5 (recomendado 0.8-1.2)"`
+- `"Frecuencia subóptima para espalda: solo 1x por semana"`
+
+**recomendaciones**: Array de acciones concretas. Ejemplo:
+- `"Reducir volumen de pecho a 18-20 series semanales"`
+- `"Añadir 2-3 series de trabajo de espalda en día 1 y día 3"`
+
+---
+
 ### 1️⃣ Volumen Semanal Razonable
-- **Principiante**: 10-14 series por grupo muscular/semana
-- **Intermedio**: 14-20 series por grupo muscular/semana
-- **Avanzado**: 18-25 series por grupo muscular/semana
-- **WARNING**: Si excede +30% del rango → advertir sobreentrenamiento
+
+**PASO 1**: Cuenta cuántas series TOTALES hay por grupo muscular en UNA SEMANA
+- Recorre todos los días de entrenamiento
+- Suma series de ejercicios del mismo grupo (pecho, espalda, piernas, hombros, etc.)
+
+**PASO 2**: Compara con rangos según nivel:
+- **Principiante**: 10-14 series/semana por grupo
+- **Intermedio**: 14-20 series/semana por grupo
+- **Avanzado**: 18-25 series/semana por grupo
+
+**PASO 3**: Genera WARNING si:
+- Volumen < mínimo del rango → "Volumen insuficiente"
+- Volumen > máximo + 30% → "Volumen excesivo, riesgo sobreentrenamiento"
+
+**Ejemplo**: Si nivel intermedio y pecho tiene 32 series/semana:
+```
+WARNING: "Volumen excesivo para pecho: 32 series/semana (recomendado 14-20 para intermedio)"
+RECOMENDACIÓN: "Reducir volumen de pecho a 18-20 series semanales"
+```
 
 ### 2️⃣ Frecuencia por Grupo Muscular
-- **Mínimo**: 2x por semana por grupo (excepto casos especiales)
-- **Óptimo**: 2-3x por semana
-- **WARNING**: Si 1x semana → advertir frecuencia subóptima
 
-### 3️⃣ Intensidad (RIR)
-- **Fase acumulación**: RIR 2-4
-- **Fase intensificación**: RIR 0-2
-- **Deload**: RIR 4-6
-- **WARNING**: Si RIR inconsistente con fase → advertir
+**PASO 1**: Cuenta en cuántos DÍAS DIFERENTES se entrena cada grupo
 
-### 4️⃣ Respeto de Constraints
-- **CRÍTICO**: Verificar que NO haya ejercicios prohibidos
-- Verificar que ejercicios preventivos estén incluidos
-- **BLOQUEAR** si hay ejercicios en lista de prohibidos
+**PASO 2**: Genera WARNING si:
+- Frecuencia = 1x/semana → "Frecuencia subóptima (recomendado 2x mínimo)"
+- Grupo importante sin trabajo → "Grupo muscular sin estímulo"
 
-### 5️⃣ Progresión del Mesociclo
-- Semana 1-2: Volumen estable o creciente
-- Semana 3: Intensificación (volumen puede bajar 5-10%)
-- Semana 4: Deload (volumen -40% típicamente)
-- **WARNING**: Si progresión no sigue patrón lógico
+### 3️⃣ Equilibrio Push/Pull
 
-### 6️⃣ Equilibrio Push/Pull
-- Ratio Push:Pull debe ser 0.8 - 1.2
-- **WARNING**: Si >1.3 o <0.7 → desequilibrio
+**PASO 1**: Cuenta series totales de:
+- **PUSH**: pecho + hombros + tríceps
+- **PULL**: espalda + bíceps
+
+**PASO 2**: Calcula ratio = PUSH / PULL
+
+**PASO 3**: Genera WARNING si:
+- Ratio > 1.3 → "Exceso de push vs pull"
+- Ratio < 0.7 → "Falta trabajo de push"
+- Si PULL = 0 → "CRÍTICO: Sin trabajo de espalda"
+
+**Ejemplo**: Si PUSH=28 series y PULL=8 series:
+```
+WARNING: "Desequilibrio push/pull: ratio 3.5 (recomendado 0.8-1.2). Falta trabajo de espalda"
+RECOMENDACIÓN: "Añadir 12-15 series de trabajo de espalda distribuidas en la semana"
+```
+
+### 4️⃣ Respeto de Constraints (CRÍTICO)
+
+**PASO 1**: Lee `constraints.lesiones` → busca `ejercicios_prohibidos`
+
+**PASO 2**: Recorre TODAS las sesiones y verifica que NO aparezcan esos ejercicios
+
+**PASO 3**: Si encuentras ejercicio prohibido:
+```
+STATUS: "bloqueado"
+WARNING: "Ejercicio prohibido detectado: Press Militar (lesión hombro)"
+RECOMENDACIÓN: "Sustituir Press Militar por Press Arnold sentado o elevaciones laterales"
+```
+
+### 5️⃣ Intensidad (RIR)
+
+**PASO 4**: Verifica que RIR es consistente con fase del mesocycle
+- Si RIR muy bajo en acumulación → WARNING
+- Si RIR muy alto en intensificación → WARNING
 
 ---
 
