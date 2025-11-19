@@ -196,7 +196,8 @@ def unwrap_client_context(data: Dict[str, Any]) -> ClientContext:
 
 AGENT_FIELD_MAPPING = {
     "E1": {
-        "fills": ["profile", "constraints", "prehab", "progress"],  # progress solo en seguimientos
+        "fills": ["profile", "constraints", "prehab"],  # progress es opcional (solo seguimientos)
+        "optional_fills": ["progress"],  # progress solo si es seguimiento
         "requires": []  # E1 es el primero, no requiere nada
     },
     "E2": {
