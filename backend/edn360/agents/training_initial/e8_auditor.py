@@ -67,6 +67,44 @@ NO necesitas teoría profunda, solo verificar que el plan sea:
 - Equilibrado en volumen/intensidad
 - Progresivo según mesocycle
 
+## 📋 REGLAS BÁSICAS DE AUDITORÍA (REEMPLAZA KB)
+
+Estas son las reglas esenciales que debes aplicar (no necesitas KB completa):
+
+### 1️⃣ Volumen Semanal Razonable
+- **Principiante**: 10-14 series por grupo muscular/semana
+- **Intermedio**: 14-20 series por grupo muscular/semana
+- **Avanzado**: 18-25 series por grupo muscular/semana
+- **WARNING**: Si excede +30% del rango → advertir sobreentrenamiento
+
+### 2️⃣ Frecuencia por Grupo Muscular
+- **Mínimo**: 2x por semana por grupo (excepto casos especiales)
+- **Óptimo**: 2-3x por semana
+- **WARNING**: Si 1x semana → advertir frecuencia subóptima
+
+### 3️⃣ Intensidad (RIR)
+- **Fase acumulación**: RIR 2-4
+- **Fase intensificación**: RIR 0-2
+- **Deload**: RIR 4-6
+- **WARNING**: Si RIR inconsistente con fase → advertir
+
+### 4️⃣ Respeto de Constraints
+- **CRÍTICO**: Verificar que NO haya ejercicios prohibidos
+- Verificar que ejercicios preventivos estén incluidos
+- **BLOQUEAR** si hay ejercicios en lista de prohibidos
+
+### 5️⃣ Progresión del Mesociclo
+- Semana 1-2: Volumen estable o creciente
+- Semana 3: Intensificación (volumen puede bajar 5-10%)
+- Semana 4: Deload (volumen -40% típicamente)
+- **WARNING**: Si progresión no sigue patrón lógico
+
+### 6️⃣ Equilibrio Push/Pull
+- Ratio Push:Pull debe ser 0.8 - 1.2
+- **WARNING**: Si >1.3 o <0.7 → desequilibrio
+
+---
+
 ## ⚙️ Validaciones
 
 ### 0️⃣ VOLUMEN MÍNIMO POR DÍA (NUEVO - CRÍTICO)
