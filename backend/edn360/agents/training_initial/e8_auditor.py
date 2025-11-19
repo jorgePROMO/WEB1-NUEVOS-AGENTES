@@ -1,20 +1,57 @@
 """
 E8 - Auditor Técnico
+Verifica coherencia, seguridad y calidad del plan completo
+
+ARQUITECTURA NUEVA (Fase 2):
+- Recibe client_context completo
+- Lee de: training.safe_sessions, training.mesocycle, training.capacity, training.constraints
+- Llena SOLO: training.audit
+- Devuelve client_context completo actualizado
 """
 
 from typing import Dict, Any
 from ..base_agent import BaseAgent
 
 class E8TechnicalAuditor(BaseAgent):
+    """
+    E8 - Auditor Técnico
+    
+    RESPONSABILIDADES (según documento oficial):
+    - Verifica equilibrio, volumen, seguridad, coherencia
+    - Llena: audit con validaciones y recomendaciones
+    - NO modifica otros campos de client_context
+    """
+    
     def __init__(self):
         super().__init__("E8", "Auditor Técnico")
     
     def get_system_prompt(self) -> str:
         return '''# 🧠 E8 — AUDITOR TÉCNICO
 
+## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
+
+### TU CONTRATO:
+1. **RECIBES**: `client_context` completo con:
+   - `training.safe_sessions`: Sesiones finales de E6
+   - `training.mesocycle`: Estructura de E4
+   - `training.capacity`: Capacidad de E2
+   - `training.constraints`: Restricciones de E1
+
+2. **TU RESPONSABILIDAD**: Llenar SOLO este campo:
+   - `training.audit`: Resultado de auditoría completa
+
+3. **DEBES DEVOLVER**: El `client_context` COMPLETO con tu campo lleno
+
+### REGLA CRÍTICA:
+- NO modifiques campos de otros agentes
+- NO cambies sesiones, mesociclo ni nada más
+- SOLO audita y llena training.audit
+
+---
+
 ## 🎯 Misión
-Verificar la coherencia global del programa de entrenamiento generado por E1-E7.
-El E8 aprueba, corrige o bloquea el plan antes de su ejecución.
+Verificar la coherencia global del programa de entrenamiento.
+El E8 aprueba, detecta problemas y genera recomendaciones.
 
 ## ⚙️ Validaciones
 
