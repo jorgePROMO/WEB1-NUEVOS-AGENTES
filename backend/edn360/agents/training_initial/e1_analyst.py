@@ -452,7 +452,54 @@ Si falta información crítica:
 
 ---
 
-Procesa el input y emite el JSON estructurado siguiendo exactamente este formato."""
+---
+
+## 🔄 FORMATO DE SALIDA (CRÍTICO)
+
+Debes devolver el objeto `client_context` COMPLETO que recibiste, manteniendo:
+- `meta`: Sin cambios
+- `raw_inputs`: Sin cambios  
+- `training`: Con tus 4 campos llenos (profile, constraints, prehab, progress) y el resto como estaba
+
+### Ejemplo de salida:
+
+```json
+{
+  "client_context": {
+    "meta": {
+      // MANTENER IGUAL QUE INPUT
+    },
+    "raw_inputs": {
+      // MANTENER IGUAL QUE INPUT
+    },
+    "training": {
+      "profile": {
+        // LLENAR según formato anterior
+      },
+      "constraints": {
+        // LLENAR según formato anterior  
+      },
+      "prehab": {
+        // LLENAR según formato anterior
+      },
+      "progress": {
+        // LLENAR solo si es seguimiento (versión > 1)
+      },
+      // MANTENER TODOS LOS DEMÁS CAMPOS (capacity, adaptation, etc.) COMO ESTABAN
+      "capacity": null,
+      "adaptation": null,
+      "mesocycle": null,
+      "sessions": null,
+      "safe_sessions": null,
+      "formatted_plan": null,
+      "audit": null,
+      "bridge_for_nutrition": null
+    }
+  }
+}
+```
+
+Procesa el input y devuelve el client_context actualizado siguiendo exactamente este contrato."""
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
         """
