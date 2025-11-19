@@ -399,23 +399,34 @@ class EDN360Orchestrator:
                 logger.info(f"    ⚠️ Preparando input legacy para {agent.agent_id}")
                 
                 # Construir outputs en formato legacy
+                # E1 llena múltiples campos, así que consolidamos todo
                 legacy_outputs = {}
-                for i in range(1, 10):
-                    agent_num = f"E{i}"
-                    field_map = {
-                        "E1": "profile",  # Simplificado, E1 llena varios campos
-                        "E2": "capacity",
-                        "E3": "adaptation",
-                        "E4": "mesocycle",
-                        "E5": "sessions",
-                        "E6": "safe_sessions",
-                        "E7": "formatted_plan",
-                        "E8": "audit",
-                        "E9": "bridge_for_nutrition"
+                
+                # E1 output: consolidar profile, constraints, prehab, progress
+                if client_context.training.profile:
+                    legacy_outputs["E1"] = {
+                        "profile": client_context.training.profile,
+                        "constraints": client_context.training.constraints,
+                        "prehab": client_context.training.prehab,
+                        "progress": client_context.training.progress
                     }
-                    field = field_map.get(agent_num)
-                    if field and getattr(client_context.training, field, None):
-                        legacy_outputs[agent_num] = getattr(client_context.training, field)
+                
+                # E2-E9: mapeo directo
+                field_map = {
+                    "E2": "capacity",
+                    "E3": "adaptation",
+                    "E4": "mesocycle",
+                    "E5": "sessions",
+                    "E6": "safe_sessions",
+                    "E7": "formatted_plan",
+                    "E8": "audit",
+                    "E9": "bridge_for_nutrition"
+                }
+                
+                for agent_num, field in field_map.items():
+                    value = getattr(client_context.training, field, None)
+                    if value:
+                        legacy_outputs[agent_num] = value
                 
                 # Preparar input según el agente legacy
                 if agent.agent_id == "E2":
