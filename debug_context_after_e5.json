@@ -1,0 +1,880 @@
+{
+  "meta": {
+    "client_id": "client_juan_test",
+    "snapshot_id": "snapshot_client_juan_test_1_da9046a5",
+    "version": 1,
+    "selected_inputs": {
+      "cuestionario": "unknown",
+      "entrenamiento_base": null
+    }
+  },
+  "raw_inputs": {
+    "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_test\",\n  \"version\": 1,\n  \"nombre\": \"Juan P\u00e9rez\",\n  \"edad\": 32,\n  \"sexo\": \"M\",\n  \"peso_actual_kg\": 78,\n  \"altura_cm\": 175,\n  \"objetivo_principal\": \"hipertrofia\",\n  \"experiencia_entrenamiento\": \"intermedio\",\n  \"dias_disponibles\": 4,\n  \"minutos_por_sesion\": 60,\n  \"horario_preferido\": \"tarde\",\n  \"hora_especifica\": \"18:00\",\n  \"equipo_disponible\": \"gym completo\",\n  \"lesiones_activas\": [\n    {\n      \"zona\": \"lumbar\",\n      \"gravedad\": \"leve\"\n    }\n  ],\n  \"nivel_estres\": \"medio\",\n  \"horas_sueno_promedio\": 7\n}",
+    "cuestionario_seguimiento": null,
+    "entrenamiento_base": null,
+    "notas_entrenador": null
+  },
+  "training": {
+    "profile": {
+      "perfil_tecnico": {
+        "id_cliente": "client_juan_test",
+        "nombre": "Juan P\u00e9rez",
+        "edad": 32,
+        "sexo": "M",
+        "peso_kg": 78,
+        "altura_cm": 175,
+        "imc": 25.5,
+        "clasificacion_imc": "sobrepeso"
+      },
+      "experiencia": {
+        "nivel": "intermedio",
+        "a\u00f1os_entrenamiento": 2,
+        "constancia": "media",
+        "deportes_previos": [],
+        "notas": "Experiencia intermedia con enfoque en hipertrofia y constancia moderada."
+      },
+      "objetivo": {
+        "principal": "hipertrofia",
+        "secundarios": [],
+        "plazo": "6_meses"
+      },
+      "limitaciones_clinicas": {
+        "lesiones": [
+          {
+            "zona": "lumbar",
+            "tipo": "dolor",
+            "gravedad": "leve",
+            "estado": "activa",
+            "notas": "Dolor leve que requiere atenci\u00f3n en t\u00e9cnica y carga."
+          }
+        ],
+        "restricciones_medicas": [],
+        "banderas_alerta": []
+      },
+      "disponibilidad": {
+        "dias_semana": 4,
+        "minutos_por_sesion": 60,
+        "carga_semanal_horas": 4.0,
+        "horario_preferido": "tarde",
+        "flexibilidad": "fija"
+      },
+      "equipo": {
+        "tipo": "gym_completo",
+        "equipamiento_especifico": [],
+        "limitaciones": []
+      },
+      "datos_adicionales": {
+        "nutricion_actual": "dato_no_proporcionado",
+        "sueno_promedio_h": 7,
+        "estres_nivel": "medio",
+        "adherencia_historica": "dato_no_proporcionado"
+      },
+      "notas_interpretativas": [
+        "Cliente intermedio con enfoque en hipertrofia y constancia moderada.",
+        "Objetivo principal es hipertrofia con un plan estructurado de 4 d\u00edas a la semana.",
+        "Lesi\u00f3n lumbar leve requiere atenci\u00f3n a la t\u00e9cnica y carga en ejercicios espec\u00edficos.",
+        "Disponibilidad adecuada (4\u00d760') y equipo completo en gimnasio para un programa de hipertrofia efectivo."
+      ],
+      "contrato_para_E2": {
+        "prioridades": [
+          "Optimizar el plan de hipertrofia para un progreso constante.",
+          "Incluir ejercicios que minimicen el riesgo de lesi\u00f3n lumbar.",
+          "Desarrollar un enfoque t\u00e9cnico s\u00f3lido para prevenir agravamiento de la lesi\u00f3n."
+        ],
+        "restricciones": [
+          "Evitar ejercicios que sobrecarguen la zona lumbar sin soporte adecuado.",
+          "Incorporar ejercicios de fortalecimiento del core y t\u00e9cnica de levantamiento."
+        ]
+      }
+    },
+    "constraints": {
+      "restricciones_criticas": {
+        "lesiones_activas": [
+          {
+            "lesion": "dolor_lumbar",
+            "ejercicios_prohibidos": [
+              "peso_muerto_convencional",
+              "sentadilla_profunda_barra",
+              "buenos_dias"
+            ],
+            "ejercicios_obligatorios_preventivos": [
+              "plancha_frontal",
+              "bird_dog",
+              "dead_bug",
+              "pallof_press"
+            ],
+            "notas": "Dolor lumbar requiere evitar cargas axiales sin soporte y reforzar core."
+          }
+        ],
+        "alergias_alimentarias": [],
+        "intolerancias": [],
+        "alimentos_no_soportados": [],
+        "restricciones_medicas": []
+      }
+    },
+    "prehab": {
+      "protocolos_preventivos": [
+        {
+          "zona": "lumbar",
+          "ejercicios_recomendados": [
+            "plancha_frontal",
+            "bird_dog",
+            "dead_bug",
+            "pallof_press"
+          ],
+          "frecuencia": "2-3 veces por semana",
+          "notas": "Implementar ejercicios de core para soporte lumbar y prevenir agravamiento del dolor."
+        }
+      ]
+    },
+    "progress": null,
+    "capacity": null,
+    "adaptation": null,
+    "mesocycle": {
+      "duracion_semanas": 4,
+      "split": "upper/lower",
+      "fases": {
+        "semana_1": {
+          "intensidad": "acumulacion",
+          "volumen": "100%"
+        },
+        "semana_2": {
+          "intensidad": "acumulacion",
+          "volumen": "105%"
+        },
+        "semana_3": {
+          "intensidad": "intensificacion",
+          "volumen": "95%"
+        },
+        "semana_4": {
+          "intensidad": "deload",
+          "volumen": "60%"
+        }
+      },
+      "volumen_por_grupo": {
+        "pecho": 16,
+        "espalda": 16,
+        "piernas": 16,
+        "hombros": 12
+      }
+    },
+    "sessions": {
+      "semana_1": [
+        {
+          "dia": 1,
+          "dia_semana": "Lunes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper Empuje",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Press banca con mancuernas",
+              "series": 4,
+              "reps": "8-10",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Press inclinado con mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Fondos en paralelas asistidos",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevaciones laterales con mancuernas",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Plancha frontal",
+              "series": 3,
+              "reps": "30s",
+              "rir": "-",
+              "descanso": 45
+            }
+          ]
+        },
+        {
+          "dia": 2,
+          "dia_semana": "Mi\u00e9rcoles",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower Fuerza",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Prensa de piernas",
+              "series": 4,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 120
+            },
+            {
+              "nombre": "Sentadilla goblet",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevaci\u00f3n de talones en m\u00e1quina",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Bird-dog",
+              "series": 3,
+              "reps": "10",
+              "rir": "-",
+              "descanso": 45
+            },
+            {
+              "nombre": "Pallof press",
+              "series": 3,
+              "reps": "12",
+              "rir": "2",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 3,
+          "dia_semana": "Viernes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper Pull",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Remo con barra T",
+              "series": 4,
+              "reps": "8-10",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Jal\u00f3n al pecho",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Face pull",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Curl b\u00edceps alterno",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Dead bug",
+              "series": 3,
+              "reps": "10",
+              "rir": "-",
+              "descanso": 45
+            }
+          ]
+        },
+        {
+          "dia": 4,
+          "dia_semana": "S\u00e1bado",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower T\u00e9cnica",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Peso muerto rumano con mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Zancadas caminando",
+              "series": 3,
+              "reps": "12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Puente de gl\u00fateos",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Elevaci\u00f3n de talones sentado",
+              "series": 3,
+              "reps": "15-20",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Plancha lateral",
+              "series": 3,
+              "reps": "30s",
+              "rir": "-",
+              "descanso": 45
+            }
+          ]
+        }
+      ],
+      "semana_2": [
+        {
+          "dia": 1,
+          "dia_semana": "Lunes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper Empuje",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Press banca con mancuernas",
+              "series": 4,
+              "reps": "8-10",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Press inclinado con mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Fondos en paralelas asistidos",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevaciones laterales con mancuernas",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Plancha frontal",
+              "series": 3,
+              "reps": "30s",
+              "rir": "-",
+              "descanso": 45
+            }
+          ]
+        },
+        {
+          "dia": 2,
+          "dia_semana": "Mi\u00e9rcoles",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower Fuerza",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Prensa de piernas",
+              "series": 4,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 120
+            },
+            {
+              "nombre": "Sentadilla goblet",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevaci\u00f3n de talones en m\u00e1quina",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Bird-dog",
+              "series": 3,
+              "reps": "10",
+              "rir": "-",
+              "descanso": 45
+            },
+            {
+              "nombre": "Pallof press",
+              "series": 3,
+              "reps": "12",
+              "rir": "2",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 3,
+          "dia_semana": "Viernes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper Pull",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Remo con barra T",
+              "series": 4,
+              "reps": "8-10",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Jal\u00f3n al pecho",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Face pull",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Curl b\u00edceps alterno",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Dead bug",
+              "series": 3,
+              "reps": "10",
+              "rir": "-",
+              "descanso": 45
+            }
+          ]
+        },
+        {
+          "dia": 4,
+          "dia_semana": "S\u00e1bado",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower T\u00e9cnica",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Peso muerto rumano con mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Zancadas caminando",
+              "series": 3,
+              "reps": "12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Puente de gl\u00fateos",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Elevaci\u00f3n de talones sentado",
+              "series": 3,
+              "reps": "15-20",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Plancha lateral",
+              "series": 3,
+              "reps": "30s",
+              "rir": "-",
+              "descanso": 45
+            }
+          ]
+        }
+      ],
+      "semana_3": [
+        {
+          "dia": 1,
+          "dia_semana": "Lunes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper Empuje",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Press banca con mancuernas",
+              "series": 4,
+              "reps": "8-10",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Press inclinado con mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Fondos en paralelas asistidos",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevaciones laterales con mancuernas",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Plancha frontal",
+              "series": 3,
+              "reps": "30s",
+              "rir": "-",
+              "descanso": 45
+            }
+          ]
+        },
+        {
+          "dia": 2,
+          "dia_semana": "Mi\u00e9rcoles",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower Fuerza",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Prensa de piernas",
+              "series": 4,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 120
+            },
+            {
+              "nombre": "Sentadilla goblet",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevaci\u00f3n de talones en m\u00e1quina",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Bird-dog",
+              "series": 3,
+              "reps": "10",
+              "rir": "-",
+              "descanso": 45
+            },
+            {
+              "nombre": "Pallof press",
+              "series": 3,
+              "reps": "12",
+              "rir": "2",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 3,
+          "dia_semana": "Viernes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper Pull",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Remo con barra T",
+              "series": 4,
+              "reps": "8-10",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Jal\u00f3n al pecho",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Face pull",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Curl b\u00edceps alterno",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Dead bug",
+              "series": 3,
+              "reps": "10",
+              "rir": "-",
+              "descanso": 45
+            }
+          ]
+        },
+        {
+          "dia": 4,
+          "dia_semana": "S\u00e1bado",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower T\u00e9cnica",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Peso muerto rumano con mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Zancadas caminando",
+              "series": 3,
+              "reps": "12",
+              "rir": "2",
+              "descanso": 90
+            },
+            {
+              "nombre": "Puente de gl\u00fateos",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Elevaci\u00f3n de talones sentado",
+              "series": 3,
+              "reps": "15-20",
+              "rir": "2",
+              "descanso": 60
+            },
+            {
+              "nombre": "Plancha lateral",
+              "series": 3,
+              "reps": "30s",
+              "rir": "-",
+              "descanso": 45
+            }
+          ]
+        }
+      ],
+      "semana_4": [
+        {
+          "dia": 1,
+          "dia_semana": "Lunes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper Empuje",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Press banca con mancuernas",
+              "series": 4,
+              "reps": "8-10",
+              "rir": "3",
+              "descanso": 90
+            },
+            {
+              "nombre": "Press inclinado con mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "3",
+              "descanso": 90
+            },
+            {
+              "nombre": "Fondos en paralelas asistidos",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "3",
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevaciones laterales con mancuernas",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "3",
+              "descanso": 60
+            },
+            {
+              "nombre": "Plancha frontal",
+              "series": 3,
+              "reps": "30s",
+              "rir": "-",
+              "descanso": 45
+            }
+          ]
+        },
+        {
+          "dia": 2,
+          "dia_semana": "Mi\u00e9rcoles",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower Fuerza",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Prensa de piernas",
+              "series": 4,
+              "reps": "10-12",
+              "rir": "3",
+              "descanso": 120
+            },
+            {
+              "nombre": "Sentadilla goblet",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "3",
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevaci\u00f3n de talones en m\u00e1quina",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "3",
+              "descanso": 60
+            },
+            {
+              "nombre": "Bird-dog",
+              "series": 3,
+              "reps": "10",
+              "rir": "-",
+              "descanso": 45
+            },
+            {
+              "nombre": "Pallof press",
+              "series": 3,
+              "reps": "12",
+              "rir": "3",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 3,
+          "dia_semana": "Viernes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper Pull",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Remo con barra T",
+              "series": 4,
+              "reps": "8-10",
+              "rir": "3",
+              "descanso": 90
+            },
+            {
+              "nombre": "Jal\u00f3n al pecho",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "3",
+              "descanso": 90
+            },
+            {
+              "nombre": "Face pull",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "3",
+              "descanso": 60
+            },
+            {
+              "nombre": "Curl b\u00edceps alterno",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "3",
+              "descanso": 60
+            },
+            {
+              "nombre": "Dead bug",
+              "series": 3,
+              "reps": "10",
+              "rir": "-",
+              "descanso": 45
+            }
+          ]
+        },
+        {
+          "dia": 4,
+          "dia_semana": "S\u00e1bado",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower T\u00e9cnica",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Peso muerto rumano con mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "3",
+              "descanso": 90
+            },
+            {
+              "nombre": "Zancadas caminando",
+              "series": 3,
+              "reps": "12",
+              "rir": "3",
+              "descanso": 90
+            },
+            {
+              "nombre": "Puente de gl\u00fateos",
+              "series": 3,
+              "reps": "12-15",
+              "rir": "3",
+              "descanso": 60
+            },
+            {
+              "nombre": "Elevaci\u00f3n de talones sentado",
+              "series": 3,
+              "reps": "15-20",
+              "rir": "3",
+              "descanso": 60
+            },
+            {
+              "nombre": "Plancha lateral",
+              "series": 3,
+              "reps": "30s",
+              "rir": "-",
+              "descanso": 45
+            }
+          ]
+        }
+      ]
+    },
+    "safe_sessions": null,
+    "formatted_plan": null,
+    "audit": null,
+    "bridge_for_nutrition": null
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "client_id": "client_juan_test",
+    "snapshot_id": "snapshot_client_juan_test_1_da9046a5",
+    "version": 1,
+    "selected_inputs": {
+      "cuestionario": "unknown",
+      "entrenamiento_base": null
+    }
+  },
+  "raw_inputs": {
+    "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_test\",\n  \"version\": 1,\n  \"nombre\": \"Juan P\u00e9rez\",\n  \"edad\": 32,\n  \"sexo\": \"M\",\n  \"peso_actual_kg\": 78,\n  \"altura_cm\": 175,\n  \"objetivo_principal\": \"hipertrofia\",\n  \"experiencia_entrenamiento\": \"intermedio\",\n  \"dias_disponibles\": 4,\n  \"minutos_por_sesion\": 60,\n  \"horario_preferido\": \"tarde\",\n  \"hora_especifica\": \"18:00\",\n  \"equipo_disponible\": \"gym completo\",\n  \"lesiones_activas\": [\n    {\n      \"zona\": \"lumbar\",\n      \"gravedad\": \"leve\"\n    }\n  ],\n  \"nivel_estres\": \"medio\",\n  \"horas_sueno_promedio\": 7\n}",
+    "cuestionario_seguimiento": null,
+    "entrenamiento_base": null,
+    "notas_entrenador": null
+  },
+  "training": {
+    "profile": null,
+    "constraints": null,
+    "prehab": null,
+    "progress": null,
+    "capacity": null,
+    "adaptation": null,
+    "mesocycle": null,
+    "sessions": null,
+    "safe_sessions": null,
+    "formatted_plan": null,
+    "audit": null,
+    "bridge_for_nutrition": null
+  }
+}
