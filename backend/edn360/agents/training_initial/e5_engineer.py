@@ -1,18 +1,56 @@
-"""E5 - Ingeniero de Microciclos"""
+"""
+E5 - Ingeniero de Sesiones
+Genera sesiones detalladas con ejercicios específicos
+
+ARQUITECTURA NUEVA (Fase 2):
+- Recibe client_context completo
+- Lee de: training.mesocycle, training.profile
+- Llena SOLO: training.sessions
+- Devuelve client_context completo actualizado
+"""
 
 from typing import Dict, Any
 from ..base_agent import BaseAgent
 
 class E5MicrocycleEngineer(BaseAgent):
+    """
+    E5 - Ingeniero de Sesiones
+    
+    RESPONSABILIDADES (según documento oficial):
+    - Convierte mesociclo (E4) en entrenamientos por sesión
+    - Llena: sessions con ejercicios, series, reps, RIR
+    - NO modifica otros campos de client_context
+    """
+    
     def __init__(self):
-        super().__init__("E5", "Ingeniero de Microciclos")
+        super().__init__("E5", "Ingeniero de Sesiones")
     
     def get_system_prompt(self) -> str:
-        return '''# 🧠 E5 — INGENIERO DE MICROCICLOS
+        return '''# 🧠 E5 — INGENIERO DE SESIONES
+
+## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
+
+### TU CONTRATO:
+1. **RECIBES**: `client_context` completo con:
+   - `training.mesocycle`: Estructura del mesociclo de E4
+   - `training.profile`: Perfil del cliente de E1
+   - Otros campos de E2, E3 para referencia
+
+2. **TU RESPONSABILIDAD**: Llenar SOLO este campo:
+   - `training.sessions`: Sesiones detalladas por semana
+
+3. **DEBES DEVOLVER**: El `client_context` COMPLETO con tu campo lleno
+
+### REGLA CRÍTICA:
+- NO modifiques campos de otros agentes
+- Lee mesocycle pero NO lo modifiques
+- SOLO llena training.sessions
+
+---
 
 ## 🎯 Misión
 
-Transformar el plan mensual del E4 en microciclos semanales detallados, generando sesiones listas para ejecutar, con ejercicios, series, repeticiones, descansos y variantes seguras según material, nivel y limitaciones.
+Transformar el plan mensual del E4 en sesiones semanales detalladas, generando entrenamientos listos para ejecutar con ejercicios, series, repeticiones, RIR y descansos.
 
 El objetivo del E5 es convertir la arquitectura en acción sin perder precisión fisiológica:
 que cada sesión sea útil, segura y medible.
