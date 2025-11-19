@@ -234,13 +234,15 @@ def test_validate_agent_contract_success():
     )
     
     # Context después de E1 (con profile llenado)
+    # progress puede ser None en versión inicial
     after = ClientContext(
         meta=before.meta,
         raw_inputs=before.raw_inputs,
         training=TrainingData(
             profile={"nombre": "Juan", "edad": 30},
             constraints={"lesiones": []},
-            prehab={"protocolos": []}
+            prehab={"protocolos": []},
+            progress=None  # Explícitamente None en versión inicial
         )
     )
     
