@@ -13,4 +13,2072 @@ Cada punto debe contener definiciones, rangos, principios, protocolos, evidencia
 1.4 Patrones de movimiento
 1.5 Sistemas energéticos y bioenergética
 
-[... el resto del contenido]
+🔹 2. Fisiología del ejercicio
+
+2.1 Tipos de fibras y adaptación muscular
+2.2 Control neural y coordinación
+2.3 Sistema hormonal y entorno interno
+2.4 Fatiga y recuperación (muscular, neural, autonómica)
+2.5 Homeostasis, estrés y adaptación (modelo GAS)
+
+🔹 3. Biomecánica aplicada
+
+3.1 Palancas, planos y torque
+3.2 Perfil de fuerza y resistencia
+3.3 Biomecánica por articulación (hombro, cadera, rodilla, columna, etc.)
+3.4 Análisis técnico y cues de ejecución
+3.5 Variaciones por tipo de equipo (barra, polea, máquina, peso corporal)
+
+🔹 4. Programación y periodización
+
+4.1 Conceptos básicos (micro, meso, macro)
+4.2 Modelos de periodización (lineal, ondulante, bloques, conjugada, ATR)
+4.3 Gestión de volumen, intensidad y frecuencia
+4.4 Deloads y tapering
+4.5 Autorregulación (RPE, RIR, velocidad, readiness)
+
+🔹 5. Objetivos de entrenamiento
+
+5.1 Pérdida de grasa (principios, volumen mínimo efectivo, cardio concurrente)
+5.2 Hipertrofia (mecánica y sarcoplasmática, volumen efectivo, frecuencia óptima)
+5.3 Fuerza (rangos de %1RM, progresiones, bloque neural)
+5.4 Potencia y rendimiento (sprints, pliometría, contrastes, velocidad)
+5.5 Resistencia aeróbica (Zonas 1–5, polarización 80/20, VO₂ máx)
+5.6 Recomposición corporal (alternancia de bloques, control calórico)
+5.7 Movilidad y salud articular (isometrías, excéntricos, PNF)
+5.8 Condicionamiento metabólico (AMRAP, EMOM, intervalos)
+5.9 Entrenamiento femenino (fase menstrual, postparto, hormonas)
+5.10 Entrenamiento en mayores de 45 años (recuperación, control de carga)
+
+🔹 6. Evaluación y diagnóstico
+
+6.1 Screening inicial y cuestionario físico
+6.2 Medición de composición corporal y rendimiento
+6.3 Tests de fuerza, movilidad y resistencia
+6.4 Clasificación por nivel y riesgo
+6.5 Monitoreo de fatiga (HRV, sRPE, cuestionarios, etc.)
+
+🔹 7. Ejercicios y ejecución
+
+7.1 Catálogo por patrón (empuje, tirón, bisagra, sentadilla, zancada, core)
+7.2 Guía técnica y cues visuales
+7.3 Regresiones y progresiones
+7.4 Ejercicios correctivos y complementarios
+7.5 Errores comunes y cómo corregirlos
+
+🔹 8. Progresión y control de carga
+
+8.1 Esquemas de progresión (lineal, doble, escalonada, ondulante)
+8.2 Variables manipulables (series, reps, RIR, densidad, TUT)
+8.3 Uso del fallo y proximidad al fallo
+8.4 Estrategias de deload y descarga
+8.5 Adaptación a estancamientos y plateaus
+
+🔹 9. Recuperación y estilo de vida
+
+9.1 Sueño y rendimiento
+9.2 Estrés y sistema nervioso
+9.3 Estrategias de recuperación activa
+9.4 Monitoreo de señales fisiológicas
+9.5 Interacción entre nutrición y recuperación
+
+🔹 10. Poblaciones especiales
+
+10.1 Mujeres (ciclo, embarazo, postparto)
+10.2 Mayores de 45 años
+10.3 Principiantes
+10.4 Sobrepeso/obesidad
+10.5 Lesiones o dolor persistente
+10.6 Condiciones clínicas leves (HTA, DM2, dislipemias)
+
+🔹 11. Tecnología y analítica
+
+11.1 Dispositivos de seguimiento (relojes, VBT, apps)
+11.2 Variables de carga interna y externa
+11.3 Tablas y dashboards
+11.4 Automatización de registro y progresión
+11.5 Integración con agentes (cómo consultar y devolver datos)
+
+🔹 12. Coaching y adherencia
+
+12.1 Psicología del cambio
+12.2 Comunicación efectiva (cues internos vs externos)
+12.3 Motivación y diseño de hábitos
+12.4 Estrategias de adherencia en déficit o alto volumen
+12.5 Feedback y reportes semanales
+
+🔹 13. Evidencia científica y revisión
+
+13.1 Cómo leer estudios y detectar sesgos
+13.2 Mitos frecuentes vs evidencia
+13.3 Revisión trimestral de papers clave
+13.4 Protocolos de actualización de K1
+
+K1 · Fundamentos del Entrenamiento (Bloque 1 del Knowledge Hub)
+1) Principios universales del entrenamiento (aplicados)
+
+Objetivo: que cualquier bloque (fuerza, hipertrofia, recomposición…) pueda “enchufar” estos principios sin contradicciones.
+
+Principio	Qué significa en la práctica	Indicadores operativos	Errores típicos	Cómo se conecta con otros bloques
+Sobrecarga progresiva	El estímulo debe aumentar con el tiempo para seguir generando adaptación.	+Carga, +Reps, +Series, +TUT, +RPE/−RIR, +Densidad, +Rango de movimiento.	Subir todo a la vez; progresar sin técnica; no periodizar deloads.	Fuerza: progresión de carga. Hipertrofia: progresión de volumen/reps/TUT. Recomp: progresión moderada con control del NEAT y déficit calórico.
+Especificidad	Adaptas lo que entrenas.	Selección de patrones, rangos de reps, tempos y métodos que imitan la meta.	“Entrenar de todo” sin prioridades; usar cardio para mejorar 1RM.	Fuerza: bajas reps/altas intensidades. Hipertrofia: 6–20 reps con esfuerzo alto. Potencia: altas velocidades.
+Individualización	Ajuste a nivel, historia lesional, preferencias, recuperación y recursos.	Test inicial + RIR/RPE objetivo, tolerancia a volumen, disponibilidad semanal.	Copiar rutinas ajenas; ignorar feedback de fatiga; dietas/horarios no viables.	Todos los bloques: perfiles de respuesta (volumen tolerado, frecuencia óptima).
+Variación (periodización)	Cambios planificados para mantener el estímulo eficaz sin estancarse.	Mesociclos con énfasis distinto (volumen vs intensidad), rotación de ejercicios equivalentes.	Variar por aburrimiento; cambiar el 80% del plan cada semana.	Fuerza: bloques “volumen → intensificación → peaking”. Hipertrofia: rotar rangos 6–10/10–14/14–20.
+Reversibilidad	Si quitas el estímulo, la adaptación se pierde.	Mantener dosis mínima efectiva (MED) en vacaciones/lesión.	Parones totales innecesarios; volver al 100% tras parón.	Estrategias de mantenimiento (1–3 series/semana por grupo) en fases de recomposición o viajes.
+
+Plantilla de progresión simple (ejemplo hipertrofia):
+
+Semana 1–2: 3×8–10 @2–3 RIR
+
+Semana 3–4: 3–4×8–12 @1–2 RIR
+
+Semana 5: 4×10–12 @0–1 RIR ejercicios seguros (máquinas); compuestos se quedan en 1 RIR
+
+Semana 6: Deload 50–60% del volumen, 3–4 RIR
+
+2) Adaptaciones agudas vs crónicas
+Horizonte	Qué cambia	Señales	Decisiones
+Agudas (sesión–48h)	Fatiga periférica, depleción de sustratos, daño muscular; elevación aguda de neurotransmisores/hormonas.	Caída temporal del rendimiento, agujetas (no necesarias), HRV más baja, sueño alterado.	Dosificar densidad; no perseguir agujetas; priorizar sueño y nutrición post.
+Subagudas (semana–mes)	Mejora de coordinación intra/intermuscular, eficiencia técnica, aumento de volumen tolerado.	Subida de cargas a mismo RPE; más repeticiones a igual carga; mejor estabilidad.	Progresar por repeticiones antes que por carga si la técnica es límite.
+Crónicas (meses–años)	Hipertrofia, aumentos estables de fuerza, cambios en arquitectura muscular y tendinosa; eficiencia energética.	Cambios en perímetros/DEXA, 1RM/5RM estables, mejor economía.	Periodizar bloques, introducir bloques de mantenimiento para consolidar.
+
+Regla operativa: planifica el estímulo por mesociclos (4–8 semanas) y calibra por señales agudas (RPE/RIR, desempeño) sin perseguir sensaciones engañosas (dolor ≠ progreso).
+
+3) Terminología técnica (con parámetros accionables)
+Término	Definición operativa	Rango recomendado según objetivo
+Serie	Conjunto continuo de repeticiones de un ejercicio.	Hipertrofia: 10–20 series/semana por grupo (ajustar por tolerancia). Fuerza: 6–12 series efectivas por patrón clave.
+Repetición (rep)	Una ejecución completa del movimiento.	Fuerza: 1–6; Hipertrofia: 6–20 (a igual esfuerzo). Resistencia: 15–30+.
+TUT (Time Under Tension)	Tiempo total de tensión en una serie (tempo).	Hipertrofia: 30–60 s/serie suele ser eficaz. Potencia: tiempos cortos con fase concéntrica explosiva.
+RPE (Rate of Perceived Exertion)	Esfuerzo percibido de 1–10 (10 = fallo).	Hipertrofia: 7–9 (≈ 3–0 RIR). Fuerza: 7–9 con más días en 7–8. Técnica/skill: 6–7.
+RIR (Reps In Reserve)	Reps “en recámara” al final.	Hipertrofia: 2→0 RIR a lo largo del meso; Fuerza: 3–1 RIR; Potencia: 4–2 RIR.
+Volumen	Reps totales × series (o “series duras” por grupo).	Calibrar por respuesta: subir +2–4 series/semana si progreso estancado y recuperación OK.
+Intensidad	%1RM o cercanía al fallo.	Fuerza: 70–90% 1RM predominante. Hipertrofia: 30–85% 1RM funciona si RIR bajo.
+Frecuencia	Veces/semana que se entrena un patrón/grupo.	Hipertrofia: 2–3×/sem; Fuerza: 2–4×/sem en patrones clave; Novato: 3× full-body.
+Densidad	Trabajo por unidad de tiempo (series/minuto).	Útil para “apretar” sesiones; subir densidad sin descuidar técnica.
+Tonelaje	Carga total (kg × reps × series).	Métrica macro para fuerza/volumen, correlaciona con fatiga global.
+
+Guía de esfuerzo por ejercicio (seguridad/beneficio):
+
+Máquinas/aislados: toleran 0–1 RIR.
+
+Compuestos libres pesados (sentadilla, peso muerto): mejor 1–3 RIR de media; reservar 0–1 RIR para fases puntuales.
+
+4) Patrones de movimiento y clasificación funcional
+
+Patrones base (útiles para programar sin “listas infinitas de ejercicios”):
+
+Patrón	Objetivo	Ejemplos	Indicaciones de selección
+Squat (rodilla dominante)	Cuádriceps, glúteo; capacidad de extensión de rodilla.	Sentadilla trasera/frontal, prensa, step-ups.	Antropometría: femur largo → variantes frontales o prensa.
+Hinge (cadera dominante)	Isquios, glúteo; extensión de cadera.	Peso muerto rumano, hip thrust, buenos días.	Dolor lumbar → prioriza hip thrust/rumano con control.
+Empuje horizontal	Pectoral, deltoides anterior, tríceps.	Press banca, mancuernas, máquinas convergentes.	Hombro sensible → declinado/smith/máquina convergente.
+Empuje vertical	Deltoides, trapecio sup., tríceps.	Press militar, landmine press.	Movilidad limitada → landmine/arnold press.
+Tracción horizontal	Dorsal medio, romboides.	Remo con barra, polea baja, chest-supported row.	Evitar sobrecarga lumbar → chest-supported.
+Tracción vertical	Dorsal ancho, bíceps.	Dominadas, jalones.	Codifica agarres para cubrir perfiles de fuerza.
+Core (anti-movimiento)	Transferencia y estabilidad.	Anti-extensión/rotación (dead bug, pallof).	Meter 2–4 “sets de calidad”/sesión.
+Aceleración/locomoción	Potencia/sprint, saltos.	Sprints, saltos, prowler.	Según meta; introducción gradual por impacto.
+
+Cómo programar sobre patrones (ejemplo full-body 3×/sem para recomposición):
+
+Día A: Squat pesado (1–3 RIR), Empuje horiz. moderado, Tracción vertical ligera + Core
+
+Día B: Hinge moderado, Empuje vertical ligero, Tracción horiz. pesado + Aislados
+
+Día C: Squat ligero + Hinge ligero (técnico), Empuje horiz. pesado, Remo moderado + Sprints/Trineo
+
+5) Bioenergética aplicada (ATP-PC, glucólisis, oxidativo)
+Sistema	Potencia / Capacidad	Duración típica	Ejemplos de uso	Implicación práctica
+ATP-PC (fosfágenos)	Muy alta / muy baja	0–10 s	1–5 reps pesadas, sprints cortos	Descansos largos (2–5 min) para fuerza/potencia; enfocar velocidad de ejecución.
+Glucólisis (anaeróbica)	Alta / media	~10–60 s	Series de 8–20 reps, intervalos HIIT	Gestionar lactato; útil en hipertrofia y acondicionamiento.
+Oxidativo (aeróbico)	Baja / muy alta	>60 s	Cardio continuo, series largas, recuperación entre series	Mejora recuperación entre series y volumen tolerado; útil en recomposición.
+
+Aplicación al diseño de programas:
+
+Fuerza/Peaking: foco ATP-PC → series cortas, descansos completos, baja fatiga metabólica.
+
+Hipertrofia: mezcla ATP-PC + glucólisis → 6–20 reps, 60–120 s descanso (más si compuestos).
+
+Recomposición/Salud: base oxidativa (2–3×/sem cardio Z2) para mejorar recuperación y adherencia; meter intervalos breves si hay tiempo limitado.
+
+Ejemplos prácticos listos para usar
+A) Novato (3 días full-body, objetivo: base de fuerza + hipertrofia)
+
+Semana tipo (RIR objetivo 2→1):
+
+A) Sentadilla 3×6–8, Press banca 3×6–8, Remo 3×8–10, RDL 2×8–10, Curl 2×10–12, Core 2×12–15
+
+B) Prensa 3×10–12, Press militar 3×6–8, Jalón 3×8–10, Hip thrust 2×8–10, Extensión tríceps 2×10–12, Core
+
+C) Sentadilla goblet 3×10–12, Press manc. inclinado 3×8–10, Remo polea 3×10–12, Rumano 2×10–12, Laterales 2×12–15
+
+Progresión: cuando completes el rango alto de reps con RIR ≤1, sube ~2,5–5 kg (superiores) / 5–10 kg (inferiores).
+
+B) Intermedio hipertrofia (UL/UL, 4 días)
+
+Upper 1: Press banca 4×6–8 @1–2 RIR, Remo pecho 4×8–10, Press inclinado 3×8–10, Jalón 3×10–12, Laterales 3×12–15, Curl + Ext tríceps 2×12–15.
+
+Lower 1: Sentadilla 4×5–7, RDL 3×6–8, Prensa 2×10–12, Curl femoral 2×10–12, Gemelos 3×12–20.
+
+Upper 2: Press militar 4×5–7, Remo barra 4×6–8, Mancuernas 3×10–12, Jalón agarre estrecho 3×8–10, Aislados brazos.
+
+Lower 2: Hip thrust 4×6–8, Peso muerto rumano 3×8–10, Zancadas 3×10–12, Extensiones 2×12–15, Core.
+
+Mesociclo: 4–6 semanas + deload 1.
+
+C) Fuerza (sentadilla/press banca/peso muerto centrado, 3–4 días)
+
+Semanas 1–3: volumen (5×5 @70–77%), accesorios 2–3×10–12.
+
+Semanas 4–5: intensificación (4×3 @80–87%).
+
+Semana 6: peaking (singles @90–92% RPE 7–8) + deload.
+
+Accesorios: elegir por patrón débil (p. ej., cuádriceps → sentadilla frontal/pausada).
+
+Reglas operativas (checklist rápido)
+
+Técnica antes que carga.
+
+Progresar 1 variable cada vez.
+
+Medir respuesta semanal: si rendimiento ↓ y fatiga ↑ → deload o bajar volumen.
+
+Dosis mínima efectiva para mantener; en viajes, 1–3 series/sem por grupo.
+
+Cardio Z2 (20–40’/2–3×) mejora recuperación y adherencia.
+
+Sueño/nutrición son parte del programa, no “extras”.
+
+Riesgos, sesgos y daños colaterales a vigilar
+
+Sesgo de confirmación: “más volumen = más ganancias” (ignora señales de sobreuso) o “fallo siempre” (ignora fatiga acumulada).
+
+Daños colaterales: subir densidad/carga sin adaptar tendón → tendinopatías; exceso de HIIT en déficit → estancamiento de fuerza/masa.
+
+Riesgo de variación excesiva: cambiar ejercicios antes de agotar progresión → no hay métrica fiable.
+
+Riesgo de especificidad mal entendida: eliminar accesorios que soportan la meta (p. ej., dorsal en banca).
+
+Conexiones con otros bloques
+
+K2 · Fuerza: aplica sobrecarga vía %1RM, control de RPE y bloques de intensificación/peaking.
+
+K3 · Hipertrofia: prioriza volumen efectivo (series duras), 6–20 reps, 0–2 RIR, elección de ejercicios por perfil de resistencia.
+
+K4 · Recomp/Definición: conserva masa con MED (6–10 series/grupo), esfuerzos altos, cardio Z2 para gasto energético sin destruir rendimiento.
+
+K5 · Potencia/Velocidad: énfasis ATP-PC, barras/implementos ligeros movidos rápido, RIR altos (2–4).
+
+K6 · Prevención/Readaptación: variación dosificada, control de TUT y progresiones por tejido (tendón necesita >8–12 semanas).
+
+Mini-tablas de referencia rápida
+
+Rangos por objetivo (asumiendo técnica sólida):
+
+Objetivo	Reps/serie	RIR medio	Descanso	Frecuencia patrón
+Fuerza	1–6	3–1	2–5’	2–4×/sem
+Hipertrofia	6–20	2–0	60–180’’	2–3×/sem
+Potencia	1–5 (carga ligera–media)	4–2	2–5’	2–3×/sem
+Resistencia	15–30+	3–1	30–90’’	2–4×/sem
+
+Dosis mínima de mantenimiento (aprox.):
+
+Fuerza: 1–3 series/sem por patrón @ ~80% 1RM.
+
+Masa: 1/3–1/2 del volumen que la generó (6–8 series/sem por grupo suelen mantener).
+
+🧠 BLOQUE 2 — FISIOLOGÍA DEL EJERCICIO
+1️⃣ FIBRAS MUSCULARES Y ADAPTACIONES
+Tipo	Nombre	Características	Función predominante	Adaptaciones al entrenamiento
+I	Lentas (oxidativas)	Alta resistencia, metabolismo aeróbico, contracción lenta, baja fuerza	Actividades de larga duración y baja intensidad	↑ Capilarización, ↑ mitocondrias, ↑ enzimas oxidativas
+IIa	Intermedias (oxidativo-glucolíticas)	Buena fuerza, resistencia moderada, metabolismo mixto	Actividades mixtas (circuitos, entrenamientos funcionales)	↑ Capacidad oxidativa si se entrena la resistencia / ↑ potencia si se entrena fuerza
+IIx	Rápidas (glucolíticas)	Alta fuerza, baja resistencia, contracción explosiva	Esfuerzos máximos (sprints, levantamientos pesados)	Transición hacia IIa con entrenamiento frecuente o volumen alto
+
+Transiciones:
+
+El entrenamiento nunca convierte fibras I ↔ II completamente, pero modula su perfil funcional.
+
+Entrenamientos de fuerza → IIx → IIa (más resistentes).
+
+Desentrenamiento → IIa → IIx (más explosivas pero menos eficientes).
+
+Reclutamiento (principio de Henneman):
+
+Se activan primero las fibras lentas y progresivamente las rápidas según la demanda de fuerza y velocidad.
+
+Implica que la intensidad determina el tipo de fibra implicada.
+
+Aplicación práctica:
+
+Fuerza máxima o potencia: baja duración, alta intensidad, largos descansos (2–5 min).
+
+Hipertrofia: intensidades medias-altas, repeticiones moderadas (6–12), descanso 60–90 s → mezcla de IIx e IIa.
+
+Resistencia muscular: cargas ligeras, muchas repeticiones, descanso corto → predominio fibras tipo I.
+
+Alternar fases permite optimizar todas las fibras y evitar estancamientos.
+
+2️⃣ CONTROL NEURAL Y COORDINACIÓN
+Componente	Descripción	Adaptación
+Unidad motora	Motoneurona + fibras que inerva	Aumenta su eficiencia con el entrenamiento (mejor reclutamiento y sincronía).
+Tasa de disparo (rate coding)	Frecuencia de impulsos nerviosos enviados a las fibras	Entrenamientos explosivos y pesados ↑ frecuencia → mayor tensión.
+Sincronización	Activación simultánea de unidades motoras	Mejora con cargas altas y trabajo balístico.
+Coordinación intramuscular	Capacidad de varios músculos de trabajar juntos en un patrón eficiente	Mejora con ejercicios compuestos y patrones funcionales.
+
+Aplicación práctica:
+
+Fase inicial de fuerza: las ganancias vienen del sistema nervioso, no del tamaño muscular.
+
+Entrenamientos neuronales (1–5 repeticiones, alta carga, velocidad controlada) mejoran la eficiencia sin fatigar en exceso.
+
+La fatiga neural excesiva requiere descansos mayores (48–72 h por grupo muscular) y un volumen controlado.
+
+3️⃣ SISTEMA HORMONAL Y RESPUESTA ANABÓLICA / CATABÓLICA
+Hormona	Naturaleza	Estímulo principal	Efecto
+Testosterona	Anabólica	Alta intensidad, gran masa muscular implicada	↑ Síntesis proteica, ↑ fuerza, ↓ degradación
+GH (hormona del crecimiento)	Anabólica / lipolítica	Entrenamientos de alta densidad y estrés metabólico	↑ Lipólisis, ↑ regeneración tisular
+IGF-1	Anabólica	Estimulada por GH	↑ Crecimiento muscular y reparación
+Cortisol	Catabólica	Estrés prolongado, sobreentrenamiento	↑ Degradación proteica, ↓ síntesis proteica
+Adrenalina/Noradrenalina	Aguda, activadora	Alta intensidad, estrés	↑ Disponibilidad energética, ↑ FC y flujo sanguíneo
+
+Aplicación práctica:
+
+Entrenamientos muy largos o con déficit calórico prolongado → ↑ cortisol → menor ganancia muscular.
+
+Para favorecer el entorno anabólico:
+
+Sesiones ≤ 60 min intensas.
+
+Dormir suficiente (7–9 h).
+
+Ingesta adecuada de proteínas y carbohidratos.
+
+El equilibrio hormonal se regula a través de la carga total (entrenamiento + nutrición + descanso).
+
+4️⃣ FATIGA Y RECUPERACIÓN
+Tipo de fatiga	Causa principal	Indicadores	Estrategias de recuperación
+Muscular periférica	Acumulación de H⁺, depleción de glucógeno, daño estructural	Dolor local, pérdida de fuerza específica	Reposición de CHO, descanso 24–48 h, masaje, sueño
+Neural (central)	Agotamiento del SNC, exceso de intensidad	Lentitud, apatía, insomnio, bajada de rendimiento global	Descanso activo, sueño profundo, días de descarga, reducción de volumen
+Autonómica	Desequilibrio simpático/parasimpático	Variabilidad de FC alterada, estrés, sueño irregular	Estrategias de relajación, control de estrés, reducción de frecuencia semanal
+
+Aplicación práctica:
+
+Fatiga muscular alta: reduce volumen o repeticiones, mantiene intensidad.
+
+Fatiga neural: baja intensidad, aumenta descanso y sueño.
+
+Fatiga autonómica: semanas de descarga o cambio de foco (cardio suave, movilidad).
+
+👉 El control de la variabilidad de la frecuencia cardíaca (HRV) o del rendimiento en ejercicios base puede guiar la programación de descansos.
+
+5️⃣ MODELO GAS Y HOMEOSTASIS
+
+GAS (General Adaptation Syndrome) – Hans Selye:
+
+Fase	Descripción	Riesgo	Objetivo de programación
+Alarma	Nuevo estímulo → estrés → ruptura de la homeostasis	Fatiga aguda	Producir un estímulo suficiente para iniciar adaptación
+Resistencia (adaptación)	El cuerpo se adapta al estímulo	Ninguno si la carga es progresiva	Consolidar nuevas adaptaciones
+Agotamiento	Estímulo excesivo o sin recuperación	Sobreentrenamiento, lesión	Evitar mediante periodización
+
+Homeostasis y sobrecarga progresiva:
+
+El cuerpo busca equilibrio.
+
+El entrenamiento eficaz rompe temporalmente la homeostasis → el cuerpo “reconstruye” más fuerte (supercompensación).
+
+Si no hay recuperación → sin adaptación; si hay demasiada → regresión.
+
+Aplicación práctica:
+
+Aumentar solo una variable cada vez (volumen, intensidad o frecuencia).
+
+Programar microciclos de descarga cada 3–6 semanas.
+
+Ajustar según biofeedback: sueño, apetito, motivación, rendimiento.
+
+Evitar estímulos idénticos semana tras semana → sin disrupción = sin progreso.
+
+🧩 CONEXIONES CON OTROS BLOQUES
+Bloque	Relación
+Bloque 1 – Fundamentos del entrenamiento	Los principios (sobrecarga, variación, individualización) dependen de estas bases fisiológicas.
+Bloque 3 – Adaptaciones de fuerza, hipertrofia y rendimiento	Explica cómo las respuestas fisiológicas se traducen en adaptaciones funcionales.
+Bloque 4 – Nutrición y recuperación	Relaciona la disponibilidad de energía y nutrientes con la respuesta hormonal y la recuperación.
+
+🧩 BLOQUE 3 · BIOMECÁNICA APLICADA
+1. Palancas, planos y torque
+📚 Conceptos clave
+Concepto	Definición	Aplicación práctica
+Palanca	Sistema rígido que gira sobre un punto de apoyo (fulcro) para mover una resistencia mediante una fuerza.	El cuerpo actúa como un sistema de palancas: huesos = barras, articulaciones = fulcros, músculos = fuerzas.
+Torque (momento de fuerza)	Fuerza × distancia perpendicular desde el eje de rotación.	A mayor brazo de palanca, mayor torque → más demanda muscular.
+Planos anatómicos	Sagital (flexión/extensión), frontal (abducción/adducción), transversal (rotaciones).	Permiten planificar movimientos multiangulares y equilibrar cargas.
+💡 Ejemplo práctico
+
+En un curl de bíceps con mancuerna, el torque máximo se da cuando el antebrazo está paralelo al suelo (90°).
+
+Si se quiere enfatizar el pico de contracción, usar polea o banco Scott para cambiar el perfil de resistencia.
+
+📊 Esquema conceptual (descripción)
+
+Imagina una figura con:
+
+Un brazo como palanca de 3er grado (fulcro = codo, fuerza = bíceps, resistencia = mancuerna).
+
+Flecha de torque que varía según el ángulo.
+→ Representa cómo el cambio de ángulo modifica la carga efectiva del músculo.
+
+2. Perfiles de fuerza y resistencia
+⚙️ Concepto
+
+Cada ejercicio tiene un perfil de fuerza (dónde el músculo puede generar más fuerza) y un perfil de resistencia (dónde el implemento ofrece más oposición).
+
+Tipo	Descripción	Ejemplo	Ajuste práctico
+Perfil ascendente	Más difícil al final del recorrido.	Sentadilla, press de banca.	Útil para mejorar fuerza en extensión.
+Perfil descendente	Más difícil al inicio.	Dominadas, remo.	Ideal para trabajo explosivo o control excéntrico.
+Perfil constante	Resistencia estable durante todo el rango.	Poleas, máquinas bien diseñadas.	Facilita control y tensión continua.
+⚖️ Aplicación
+
+Si el perfil de fuerza y el de resistencia no coinciden, hay zonas sin estímulo eficaz.
+
+Por eso, combinar ejercicios con distintos perfiles optimiza el desarrollo completo del músculo.
+
+🔧 Recomendación
+
+Nivel básico: priorizar ejercicios de perfil constante (poleas, máquinas).
+
+Nivel intermedio: mezclar con libres.
+
+Nivel avanzado: manipular perfiles (bandas, cadenas, ángulos).
+
+3. Biomecánica por articulación
+🦵 CADERA
+
+Movimientos principales: flexión, extensión, abducción, rotación.
+
+Puntos clave: glúteo mayor y femorales actúan como extensores potentes; mantener columna neutra en cargas altas.
+
+Error común: excesiva retroversión pélvica al final de la extensión → pérdida de tensión.
+
+🦿 RODILLA
+
+Movimiento: flexo-extensión.
+
+Clave: la rodilla sigue la línea del segundo dedo del pie.
+
+Ejemplo: en sentadilla, mayor torque en cuádriceps cuanto más adelantada la rodilla respecto al pie (pero más estrés articular).
+
+Compensación: aumentar inclinación del tronco o usar taloneras para equilibrar distribución.
+
+🦶 TOBILLO
+
+Movimientos: dorsiflexión y flexión plantar.
+
+Limitación común: rigidez en dorsiflexión → altera sentadilla y zancadas.
+
+Ejercicio correctivo: trabajo excéntrico con peso en gemelos y movilidad de tobillo.
+
+💪 HOMBRO
+
+Alta movilidad, baja estabilidad.
+
+Clave: control escapular (retracción y depresión).
+
+Errores comunes: elevación de hombros en presses y tirones.
+
+Cue: “Hombros lejos de las orejas”.
+
+🧍‍♂️ COLUMNA
+
+Eje de transmisión de fuerzas.
+
+Neutralidad lumbar = prioridad.
+
+Evitar flexión lumbar bajo carga (peso muerto, remo).
+
+Cue: “Costillas abajo, abdomen firme”.
+
+4. Cues técnicos y control motor
+Tipo de cue	Ejemplo	Objetivo
+Interno	“Aprieta el glúteo”, “siente el dorsal”.	Aumenta conexión mente-músculo, útil para aprendizaje.
+Externo	“Empuja el suelo”, “acerca el pecho a la barra”.	Mejora rendimiento y coordinación global.
+Proprioceptivo	“Mantén el peso sobre el mediopié”.	Alinea percepción corporal con acción real.
+🧠 Control motor
+
+La eficiencia biomecánica depende de la variabilidad controlada: repetir patrones óptimos, no idénticos.
+
+Errores técnicos persistentes → mayor carga en estructuras pasivas (tendones, discos, ligamentos).
+
+🎯 Recomendaciones por nivel
+Nivel	Objetivo	Enfoque
+Básico	Aprendizaje técnico	Cues internos, ejecución lenta.
+Intermedio	Transferencia motora	Cues externos, progresión de carga.
+Avanzado	Optimización neuromecánica	Integrar velocidad + control + tensión.
+5. Diferencias entre barra libre, máquinas, poleas y peso corporal
+Herramienta	Características biomecánicas	Ventajas	Limitaciones	Nivel recomendado
+Barra libre	Perfil de resistencia dependiente del ángulo y la gravedad.	Carga máxima, estabilidad global.	Alta demanda técnica.	Intermedio-avanzado.
+Máquinas	Perfil modificado con levas o poleas internas.	Tensión constante, seguridad.	Menor implicación estabilizadora.	Todos.
+Poleas	Tensión continua con trayectoria ajustable.	Ideal para alineación individual.	Limitadas por tracción.	Todos.
+Peso corporal	Resistencia relativa variable.	Transferencia funcional y control corporal.	Difícil progresión de carga precisa.	Todos.
+⚙️ Ejemplo comparativo
+
+Press banca (barra): gran implicación de sinergistas, torque máximo medio.
+
+Press máquina convergente: resistencia constante, rango seguro.
+
+Flexiones: perfil descendente, ideal para trabajo técnico o estabilizador.
+
+🧩 Síntesis general (para el programador / visual)
+
+Esquema conceptual sugerido para interfaz o presentación visual:
+
+Entradas:
+→ Articulación / Ejercicio / Nivel
+
+Procesos:
+→ Análisis de torque + perfil de fuerza + estabilidad requerida
+
+Salidas:
+→ Recomendación de herramienta + cue principal + rango óptimo + riesgo potencial
+
+🔍 En la práctica (ejemplo aplicado)
+
+Ejercicio: Sentadilla trasera
+
+Plano: sagital.
+
+Palanca: 3er grado (fulcro = rodilla).
+
+Torque máximo: 90° de flexión.
+
+Perfil: ascendente.
+
+Cue: “Empuja el suelo y abre las rodillas”.
+
+Riesgo: flexión lumbar bajo carga → fortalecer core y mejorar dorsiflexión.
+
+🧩 BLOQUE 4 · PROGRAMACIÓN Y PERIODIZACIÓN
+1. ESTRUCTURA JERÁRQUICA
+Nivel	Duración	Enfoque	Objetivo principal	Ejemplo
+Microciclo	5–10 días	Corto plazo	Aplicar una carga y observar respuesta	Semana de entrenamiento
+Mesociclo	3–6 semanas	Medio plazo	Desarrollar una capacidad específica	Bloque de fuerza o hipertrofia
+Macrociclo	3–12 meses	Largo plazo	Plan global hacia el objetivo final	Preparación anual o transformación corporal
+
+Relación práctica:
+
+Cada mesociclo está compuesto por varios microciclos.
+
+Cada macrociclo se divide en mesociclos con fases de desarrollo, estabilización y recuperación.
+
+Ejemplo estructural (6 meses – recomposición):
+
+Mesociclo 1: Adaptación anatómica (4 sem)
+
+Mesociclo 2: Hipertrofia base (6 sem)
+
+Mesociclo 3: Fuerza funcional (6 sem)
+
+Mesociclo 4: Definición / mantenimiento (4 sem)
+
+Mesociclo 5: Recuperación activa y deload (2 sem)
+
+2. MODELOS DE PERIODIZACIÓN
+Modelo	Características	Ventajas	Limitaciones	Aplicación ideal
+Lineal clásica	Incremento progresivo de carga y reducción de volumen	Simplicidad, ideal para principiantes	Rápida meseta, poca variabilidad	Iniciación, recomposición básica
+Ondulante (diaria/semanal)	Fluctúa volumen e intensidad frecuentemente	Alta variabilidad, evita estancamiento	Requiere control técnico	Intermedios, mantenimiento
+Por bloques (Issurin)	Cada bloque desarrolla una capacidad dominante (acumulación, transformación, realización)	Eficaz para rendimiento	Riesgo de pérdida de capacidades no entrenadas	Atletas intermedios/avanzados
+Conjugada (Westside)	Se trabajan varias capacidades simultáneamente (fuerza máxima, potencia, accesorios)	Transferencia y potencia	Alta demanda neural	Fuerza y powerlifting
+ATR (Acumulación-Transformación-Realización)	Evolución secuencial de bloques (volumen → intensidad → pico)	Optimiza el rendimiento final	Planificación compleja	Competencias, test o sesiones clave
+3. GESTIÓN DE VOLUMEN, INTENSIDAD Y FRECUENCIA
+▸ Volumen
+
+Unidad práctica: series efectivas / grupo muscular / semana
+
+Principiante: 10–12
+
+Intermedio: 12–18
+
+Avanzado: 16–25
+
+Ajuste según tolerancia y recuperación.
+
+Señal de exceso: caída de rendimiento, congestión sin progreso, sueño alterado.
+
+▸ Intensidad
+
+Se mide por % de 1RM o RPE/RIR.
+
+Reglas:
+
+Fuerza: 80–95 % 1RM (RPE 8–9)
+
+Hipertrofia: 65–80 % 1RM (RPE 7–9)
+
+Resistencia: 40–65 % 1RM (RPE 5–7)
+
+Clave: no siempre más pesado = más progreso, sino mejor relación estímulo/fatiga.
+
+▸ Frecuencia
+
+Principiante: 2x/sem por grupo muscular.
+
+Intermedio: 2–3x/sem.
+
+Avanzado: 3–4x/sem (con gestión de volumen por sesión).
+
+Ejemplo práctico (Hipertrofia intermedia):
+
+Grupo	Series/sem	Sesiones/sem	Series/sesión
+Pecho	16	2	8
+Espalda	18	3	6
+Piernas	20	3	7
+Hombros	12	2	6
+Brazos	10	2	5
+4. DELOADS, TAPERING Y PICOS DE RENDIMIENTO
+▸ Deload
+
+Reducción planificada de carga para facilitar supercompensación.
+
+Frecuencia: cada 4–8 semanas.
+
+Reducción:
+
+Volumen: –30 a –50 %
+
+Intensidad: –10 a –20 %
+
+Indicadores de necesidad: bajo rendimiento, molestias, falta de motivación.
+
+Ejemplo:
+Semana 5: mantener frecuencia, reducir volumen a la mitad, carga al 70 %.
+
+▸ Tapering
+
+Disminución estratégica de volumen antes de una fase de test o competencia.
+
+Dura 1–3 semanas.
+
+Volumen ↓ 40–60 %, intensidad se mantiene o aumenta ligeramente.
+
+Objetivo: maximizar rendimiento, minimizar fatiga.
+
+▸ Pico de rendimiento
+
+Sinergia entre volumen mínimo y máxima frescura neural.
+
+Suele alcanzarse 7–10 días tras tapering.
+
+5. AUTORREGULACIÓN
+
+Método para ajustar la carga diaria según la respuesta individual.
+
+Sistema	Descripción	Aplicación	Ejemplo
+RPE (Rate of Perceived Exertion)	Escala subjetiva 1–10	Control de esfuerzo y fatiga	RPE 8 → 2 reps en recámara
+RIR (Reps in Reserve)	Cuántas repeticiones quedan “en tanque”	Más intuitivo para fuerza/hipertrofia	RIR 1–2 → cerca del fallo controlado
+Velocidad (m/s)	Medición objetiva con encoder	Entrenamientos de potencia y fuerza pura	<0.30 m/s indica fatiga neural
+Readiness	Estado de preparación diaria (HRV, sueño, percepción)	Decide si aumentar, mantener o reducir carga	Si HRV bajo + sueño deficiente → bajar volumen 20 %
+
+Ejemplo práctico de autorregulación (RIR):
+
+Día	Plan	Real	Ajuste
+Press banca 4×8 @RIR2	100 kg	100 kg → RIR3	+2,5 kg próxima sesión
+Sentadilla 4×6 @RIR1	120 kg	RIR0 (fallo)	–5 % próxima sesión
+🔁 REGLAS DE PROGRESIÓN
+
+Principio de carga progresiva:
+Incrementar una variable a la vez (peso, repeticiones, series o densidad).
+
+Microprogresión semanal:
+Ejemplo: +1 rep o +1–2 % de carga por semana.
+
+Mesociclo adaptativo:
+
+Semana 1–2: carga moderada (RIR 3–2)
+
+Semana 3–4: carga alta (RIR 1–0)
+
+Semana 5: deload
+
+Revisión intermesociclo:
+Si el rendimiento se mantiene o mejora + sensación de recuperación = seguir.
+Si rendimiento cae = ajustar volumen o frecuencia.
+
+🎯 EJEMPLOS DE PLANIFICACIÓN POR OBJETIVO
+▸ Pérdida de grasa (12 semanas)
+
+Modelo: Ondulante semanal
+
+Foco: mantenimiento de masa magra y gasto calórico
+
+Estructura:
+
+Semana	Enfoque	Volumen	Intensidad	Frecuencia
+1–4	Adaptación metabólica	Medio	Media	4–5d
+5–8	Fuerza + gasto	Medio-Alto	Media-Alta	5d
+9–11	Definición final	Alto	Media	5–6d
+12	Deload activo	Bajo	Baja	3–4d
+▸ Hipertrofia (16 semanas)
+
+Modelo: Por bloques (Acumulación → Intensificación → Realización → Deload)
+
+Progresión: aumentar volumen y densidad, luego reducir para consolidar ganancias.
+
+Bloque	Duración	Enfoque	Notas
+Acumulación	6 sem	Volumen alto (15–20 series/sem)	RIR 2–3
+Intensificación	5 sem	Volumen medio, intensidad alta	RIR 1–2
+Realización	3 sem	Intensidad máxima, bajo volumen	RIR 0–1
+Deload	2 sem	Recuperación	–
+▸ Fuerza (12 semanas)
+
+Modelo: ATR
+
+Estructura:
+
+Acumulación: volumen medio, intensidad moderada
+
+Transformación: volumen bajo, intensidad alta
+
+Realización: volumen mínimo, pico de carga
+
+Fase	Duración	%1RM	Objetivo
+Acumulación	4 sem	65–75 %	Técnica y base
+Transformación	4 sem	80–90 %	Fuerza máxima
+Realización	3 sem + test	90–95 %	Pico de rendimiento
+🔧 CONCLUSIÓN OPERATIVA
+
+Define el macro (objetivo y duración).
+
+Divide en mesos (capacidades y bloques).
+
+Ajusta micros según feedback y autorregulación.
+
+Aplica deloads estratégicos cada 4–6 sem.
+
+Usa readiness y RIR para adaptar día a día.
+
+🧩 BLOQUE 5 – OBJETIVOS DE ENTRENAMIENTO
+
+Propósito: integrar las bases fisiológicas, los parámetros de carga y las estrategias prácticas para cada objetivo de entrenamiento dentro del sistema E.D.N.360.
+Cada subapartado conecta con los bloques previos (Fundamentos, Fisiología, Biomecánica y Programación) para garantizar coherencia en diseño y progresión.
+
+1. PÉRDIDA DE GRASA
+
+Mecanismos fisiológicos:
+
+Déficit energético sostenido → movilización de triglicéridos por lipólisis.
+
+Aumento de catecolaminas y AMPK → oxidación de ácidos grasos.
+
+Mejora de la sensibilidad a la insulina y eficiencia mitocondrial.
+
+Preservar masa magra para mantener metabolismo basal.
+
+Parámetros:
+
+Variable	Rango ideal
+Volumen	Moderado-alto (10–20 series/semana por grupo)
+Intensidad	60–75 % 1RM; RPE 6–8
+Frecuencia	3–6 sesiones/semana
+Tempo	Controlado, 2–1–2; foco en tensión y control motor
+
+Protocolos recomendados:
+
+Combinar fuerza metabólica + cardio (LISS + HIIT).
+
+Priorizar multiarticulares y superseries para elevar EPOC.
+
+Añadir NEAT (actividad diaria no estructurada).
+
+Errores comunes:
+
+Déficit excesivo → pérdida de masa muscular.
+
+Cardio en exceso sin estímulo de fuerza.
+
+Falta de periodización (mesetas metabólicas).
+
+Conexión con otros bloques:
+
+Fisiología: preservar señal anabólica.
+
+Programación: alternar fases de déficit con mantenimiento.
+
+Recuperación: sueño y gestión del estrés son críticos.
+
+2. HIPERTROFIA
+
+Mecanismos fisiológicos:
+
+Tensión mecánica → activación mTOR.
+
+Daño muscular controlado → remodelado de miofibrillas.
+
+Estrés metabólico → señalización anabólica secundaria.
+
+Parámetros:
+
+Variable	Rango ideal
+Volumen	12–20 series/semana/músculo
+Intensidad	65–85 % 1RM (RIR 0–3)
+Frecuencia	2–3 veces/semana por grupo
+Tempo	3–1–2 (énfasis excéntrico y controlado)
+
+Protocolos recomendados:
+
+Ciclos de 6–12 semanas con deload cada 4–6.
+
+Métodos: pirámides, rest-pause, drop sets, myo-reps.
+
+Progresión: añadir carga o repeticiones manteniendo RIR.
+
+Errores comunes:
+
+Entrenar al fallo constante.
+
+No controlar volumen acumulado.
+
+Ignorar fases de mantenimiento o deload.
+
+Conexión con otros bloques:
+
+Fisiología: predominio fibras IIa/IIx.
+
+Biomecánica: maximizar torque en rango medio.
+
+Periodización: bloques ondulantes o lineales por volumen.
+
+3. FUERZA
+
+Mecanismos fisiológicos:
+
+Mejora de la coordinación intermuscular e intramuscular.
+
+Aumento de reclutamiento y sincronización de unidades motoras.
+
+Adaptaciones neurales y aumento del drive cortical.
+
+Parámetros:
+
+Variable	Rango ideal
+Volumen	Bajo-moderado (6–12 series/músculo)
+Intensidad	80–95 % 1RM (RPE 8–9)
+Frecuencia	2–4 sesiones/semana
+Tempo	Explosivo en concéntrica (X–0–2)
+
+Protocolos recomendados:
+
+Ondulaciones de carga (p. ej. 5x5, 3x3, 5/3/1).
+
+Uso de ejercicios básicos multiarticulares.
+
+Tapering previo a test de fuerza o competición.
+
+Errores comunes:
+
+Sobrecarga neural sin deload.
+
+Falta de volumen base.
+
+No respetar técnica bajo fatiga.
+
+Conexión con otros bloques:
+
+Programación: modelos conjugados o por bloques.
+
+Recuperación: mayor estrés neural → más días de descanso.
+
+4. POTENCIA
+
+Mecanismos fisiológicos:
+
+Reclutamiento rápido de fibras tipo IIx.
+
+Optimización del ciclo estiramiento-acortamiento.
+
+Mejora de la velocidad de conducción nerviosa y elasticidad muscular.
+
+Parámetros:
+
+Variable	Rango ideal
+Volumen	Bajo (4–8 series/ejercicio)
+Intensidad	30–70 % 1RM o cargas ligeras de alta velocidad
+Frecuencia	2–3 sesiones/semana
+Tempo	Explosivo total (X–0–X)
+
+Protocolos recomendados:
+
+Saltos pliométricos, levantamientos olímpicos, lanzamientos.
+
+Contrast training (pesado + rápido).
+
+Progresión: aumentar velocidad o reducir tiempo bajo carga.
+
+Errores comunes:
+
+Confundir potencia con fuerza máxima.
+
+No priorizar calidad de ejecución.
+
+Exceso de volumen.
+
+Conexión con otros bloques:
+
+Biomecánica: optimizar rango elástico.
+
+Programación: picos de potencia en fases finales de mesociclos.
+
+5. RESISTENCIA
+
+Mecanismos fisiológicos:
+
+Aumento de capilarización, mitocondrias y VO₂max.
+
+Mayor eficiencia oxidativa y uso de grasas como sustrato.
+
+Adaptaciones cardíacas (aumento volumen sistólico).
+
+Parámetros:
+
+Variable	Rango ideal
+Volumen	Alto (3–8 h/semana)
+Intensidad	50–75 % FCmáx (Z2 predominante)
+Frecuencia	4–6 sesiones/semana
+Tempo	Continuo o intervalado largo
+
+Protocolos recomendados:
+
+Polarización (80 % baja intensidad + 20 % alta).
+
+HIIT para mejorar VO₂máx.
+
+Progresión: duración y densidad de trabajo.
+
+Errores comunes:
+
+Exceso de volumen sin recuperación.
+
+No incluir fuerza complementaria.
+
+Ignorar nutrición y balance energético.
+
+Conexión con otros bloques:
+
+Fisiología: adaptaciones mitocondriales.
+
+Programación: ciclos ATR o periodización inversa.
+
+6. RECOMPOSICIÓN CORPORAL
+
+Mecanismos fisiológicos:
+
+Coexistencia de anabolismo muscular y catabolismo graso.
+
+Equilibrio entre disponibilidad energética, síntesis proteica y sensibilidad a la insulina.
+
+Parámetros:
+
+Variable	Rango ideal
+Volumen	Medio-alto (10–16 series/músculo)
+Intensidad	65–85 % 1RM
+Frecuencia	4–5 sesiones/semana
+Tempo	Controlado, énfasis en tensión continua
+
+Protocolos recomendados:
+
+Entrenamientos híbridos fuerza + cardio controlado.
+
+Manipular déficit y superávit en días distintos (carb cycling).
+
+Revisiones quincenales de progreso.
+
+Errores comunes:
+
+Déficit o superávit excesivo.
+
+Falta de consistencia en registro de progreso.
+
+Conexión con otros bloques:
+
+Fisiología: balance hormonal y nutricional.
+
+Programación: microciclos híbridos con ajustes dinámicos.
+
+7. MOVILIDAD Y SALUD ARTICULAR
+
+Mecanismos fisiológicos:
+
+Aumento del rango articular activo.
+
+Mejora de control neuromuscular y densidad sinovial.
+
+Prevención de desequilibrios musculares.
+
+Parámetros:
+
+Variable	Rango ideal
+Volumen	Diario (10–30 min)
+Intensidad	Baja, pero progresiva
+Frecuencia	5–7 días/semana
+Tempo	Lento y consciente
+
+Protocolos recomendados:
+
+Combinación de movilidad dinámica, isometrías activas y PNF.
+
+Integrar en calentamiento o como bloque aparte.
+
+Test y retest de movilidad funcional (FMS, Overhead Squat).
+
+Errores comunes:
+
+Confundir flexibilidad pasiva con movilidad activa.
+
+No integrar en el trabajo de fuerza.
+
+Conexión con otros bloques:
+
+Biomecánica: optimización del patrón de movimiento.
+
+Recuperación: mejora del flujo sinovial postentreno.
+
+8. CONDICIONAMIENTO METABÓLICO
+
+Mecanismos fisiológicos:
+
+Aumento de la capacidad de resíntesis de ATP bajo estrés.
+
+Tolerancia al lactato y eficiencia del sistema glucolítico.
+
+Adaptación cardiovascular mixta (anaeróbica + aeróbica).
+
+Parámetros:
+
+Variable	Rango ideal
+Volumen	Moderado (20–40 min)
+Intensidad	Alta (70–90 % FCmáx o RPE 8–9)
+Frecuencia	2–4 sesiones/semana
+Tempo	Interválico o por rondas cronometradas
+
+Protocolos recomendados:
+
+Circuitos tipo EMOM, AMRAP, Tabata, o intervalos por potencia.
+
+Progresar por densidad (más trabajo en menos tiempo).
+
+Alternar sistemas energéticos (mixto ATP-PC y glucólisis).
+
+Errores comunes:
+
+Falta de control de recuperación entre rondas.
+
+No equilibrar con fases de fuerza o movilidad.
+
+Conexión con otros bloques:
+
+Bioenergética: equilibrio entre vías oxidativas y anaeróbicas.
+
+Programación: incluir en bloques de transición o definición.
+
+9. ENTRENAMIENTO FEMENINO
+
+Mecanismos fisiológicos:
+
+Influencia hormonal cíclica (estrógenos, progesterona).
+
+Mayor eficiencia oxidativa y recuperación muscular.
+
+Diferencias en distribución de fibras y respuesta al estrés.
+
+Parámetros:
+
+Variable	Rango ideal
+Volumen	Alto (15–25 series/músculo)
+Intensidad	60–80 % 1RM (RIR 1–2)
+Frecuencia	4–6 días/semana
+Tempo	Controlado y enfocado en técnica
+
+Protocolos recomendados:
+
+Ajustar fases según ciclo menstrual:
+
+Folicular: cargas altas, volumen bajo.
+
+Lútea: reducir intensidad, priorizar técnica y recuperación.
+
+Énfasis en glúteos, core y estabilidad pélvica.
+
+Errores comunes:
+
+Aplicar plantillas masculinas.
+
+Ignorar variabilidad hormonal o estrés crónico.
+
+Conexión con otros bloques:
+
+Fisiología: respuesta hormonal diferenciada.
+
+Programación: microciclos adaptados al ciclo menstrual.
+
+10. ENTRENAMIENTO EN MAYORES DE 45 AÑOS
+
+Mecanismos fisiológicos:
+
+Sarcopenia, menor densidad ósea y sensibilidad anabólica reducida.
+
+Disminución de testosterona, GH y recuperación neural.
+
+Necesidad de estímulo mecánico y movilidad controlada.
+
+Parámetros:
+
+Variable	Rango ideal
+Volumen	Bajo-medio (8–14 series/músculo)
+Intensidad	60–75 % 1RM, ocasionalmente picos al 85 %
+Frecuencia	3–4 sesiones/semana
+Tempo	Lento, énfasis técnico (3–1–2)
+
+Protocolos recomendados:
+
+Entrenamiento de fuerza funcional y equilibrio.
+
+Incluir trabajo excéntrico controlado y estabilidad articular.
+
+Cardio moderado + trabajo de movilidad diaria.
+
+Errores comunes:
+
+Evitar cargas por miedo a lesión.
+
+Falta de individualización según historial.
+
+Conexión con otros bloques:
+
+Fisiología: mitigar pérdida de masa magra.
+
+Programación: priorizar sostenibilidad y recuperación ampliada.
+
+🧩 BLOQUE 6 – EVALUACIÓN Y DIAGNÓSTICO
+
+Rol dentro del Knowledge Hub (K1): establecer los protocolos, herramientas y criterios de interpretación para clasificar, monitorizar y derivar correctamente a cada usuario dentro del sistema.
+El objetivo: medir antes de prescribir, y reevaluar antes de ajustar.
+
+1. SCREENING INICIAL
+🎯 Objetivo:
+
+Detectar limitaciones, antecedentes, riesgos y expectativas antes de iniciar cualquier programa.
+
+🔍 Componentes:
+Tipo	Herramienta / Indicador	Interpretación / Aplicación
+Historial médico-deportivo	Cuestionario PAR-Q+, ficha de antecedentes médicos y quirúrgicos, historial de lesiones, experiencia de entrenamiento	Determina si el cliente puede iniciar ejercicio sin supervisión médica. Si hay banderas rojas → derivar a revisión médica.
+Hábitos y estilo de vida	Cuestionario de sueño, estrés, horas laborales, alimentación, consumo de alcohol/tabaco	Define contexto de recuperación y adherencia esperada.
+Motivación y expectativas	Escala de motivación (0-10), objetivos personales (grasa, fuerza, estética, rendimiento)	Determina foco inicial y agente prioritario (pérdida de grasa, rendimiento, etc.)
+Autopercepción física	Imágenes o autodescripción corporal	Refuerza diagnóstico visual y detección de asimetrías.
+
+Decisión de derivación inicial:
+
+Si hay lesiones o limitaciones → derivar a Agente de movilidad/salud articular.
+
+Si hay sobrepeso alto o patologías metabólicas → derivar a Agente de pérdida de grasa / salud.
+
+Si hay experiencia alta y sin lesiones → derivar a Agente de rendimiento / fuerza.
+
+2. PRUEBAS DE COMPOSICIÓN CORPORAL
+🎯 Objetivo:
+
+Cuantificar masa grasa, masa muscular y distribución corporal.
+
+Método	Fiabilidad	Uso recomendado	Aplicación práctica
+Bioimpedancia (BIA)	Media	Screening inicial y seguimiento mensual	Detectar tendencia de masa magra y grasa, no valores absolutos.
+Pliegues cutáneos (7 puntos o 3 sitios)	Alta si lo realiza personal entrenado	Evaluaciones presenciales cada 6–8 semanas	Comparar evolución regional y total.
+Circunferencias (cintura, cadera, muslo, brazo)	Alta	Método casero y reproducible	Seguimiento semanal en low-ticket.
+Peso corporal y fotos comparativas	Alta	Control general	Análisis visual y correlación con rendimiento.
+
+Interpretación:
+
+>25% grasa (hombres) o >32% (mujeres) → prioridad: déficit y salud metabólica.
+
+>5% pérdida de masa magra en 8 semanas → revisar volumen y proteína.
+
+Estancamiento con peso estable pero medidas mejorando → recomposición positiva.
+
+3. TEST DE FUERZA, POTENCIA Y MOVILIDAD
+🎯 Objetivo:
+
+Definir el nivel neuromuscular y riesgo de lesión.
+Debe adaptarse al tipo de atleta y entorno (gimnasio, casa, online).
+
+Área	Prueba	Descripción / Criterio	Interpretación / Umbral
+Fuerza máxima (nivel base)	Test 5RM → cálculo de 1RM	Sentadilla, press banca, peso muerto	Clasificación N1–N3 según % del peso corporal levantado
+Potencia	Jump Test (CMJ) o Test Bosco simplificado	Mide capacidad de generar fuerza rápida	Pérdidas >10% entre sesiones = fatiga neuromuscular
+Resistencia muscular	Máx reps con 70% 1RM o test de flexiones/dominadas	Mide capacidad de sostener tensión	Útil en objetivos de recomposición
+Movilidad articular	Overhead squat test, FMS (Functional Movement Screen) simplificado	Identifica compensaciones	FMS <14/21 o dolor = derivar a movilidad
+Estabilidad central (core)	Plank test + Bird-dog control	Valor base de control motor	Si <45s o compensaciones → priorizar estabilidad antes de carga
+
+Clasificación neuromuscular (ejemplo por sexo y peso corporal):
+
+Nivel	Sentadilla / Peso corporal	Press banca / Peso corporal
+N1 (básico)	<1x	<0.7x
+N2 (intermedio)	1–1.5x	0.7–1x
+N3 (avanzado)	>1.5x	>1x
+4. CLASIFICACIÓN POR NIVEL Y RIESGO
+⚙️ Niveles (N1–N3)
+Nivel	Criterio principal	Foco del agente asignado
+N1	<6 meses de experiencia, técnica pobre, baja carga relativa	Agente de adaptación / fundamentos
+N2	6–24 meses, control técnico moderado, progresión estable	Agente de rendimiento intermedio
+N3	>2 años, buena técnica y autorregulación	Agente de optimización / alto rendimiento
+⚠️ Riesgo (R0–R3)
+Código	Descripción	Ejemplo	Acción
+R0	Sin limitaciones ni antecedentes	Deportista sano	Entrenamiento completo
+R1	Lesión previa sin secuelas o molestias leves	Dolor leve al cargar	Control preventivo y movilidad
+R2	Lesión activa o limitante parcial	Tendinopatía, lumbalgia leve	Modificar ejercicios, derivar a movilidad
+R3	Riesgo alto o contraindicación médica	Hernia, patología cardiovascular	No entrenar sin autorización médica
+5. MONITOREO DE FATIGA Y RECUPERACIÓN
+🎯 Objetivo:
+
+Detectar desadaptación o exceso de carga para ajustar volumen e intensidad.
+
+Indicador	Método	Frecuencia	Interpretación
+HRV (variabilidad de la frecuencia cardíaca)	Medida con app (EliteHRV, Whoop, Oura)	Diario	↓ HRV = estrés o mala recuperación; ↑ HRV = buena recuperación
+RPE (Rate of Perceived Exertion)	Escala 1–10 por serie o sesión	Cada sesión	RPE >9 sostenido = riesgo de sobreentrenamiento
+sRPE (RPE × duración)	Escala subjetiva del esfuerzo total	Semanal	>20% aumento semanal = exceso de carga
+Cuestionario de bienestar	Sueño, apetito, humor, energía, DOMS	3x por semana	<70% puntuación media = reducir volumen
+Biofeedback simple	Ritmo matutino, libido, apetito	Diario	Desviaciones = revisar recuperación y nutrición
+
+Integración en flujo automatizado (E.D.N.360):
+Los valores de HRV, RPE y cuestionarios se envían al Agente de Seguimiento (ES1 y ES2) → éste detecta patrones de fatiga y deriva al Agente de Programación (EPx) o Nutrición (Nx) según el origen (neural, metabólico o nutricional).
+
+🧠 APLICACIÓN GLOBAL DEL BLOQUE
+
+Ruta general del proceso diagnóstico:
+
+Screening inicial → filtra riesgos (R) y define objetivos → asigna categoría base.
+
+Pruebas de composición y rendimiento → clasifican nivel (N).
+
+Resultados → derivación al agente principal:
+
+N1R0–R1: Agente de adaptación.
+
+N2R0–R1: Agente de fuerza o hipertrofia.
+
+N3R0: Agente de rendimiento o potencia.
+
+R2–R3: Agente de movilidad / salud articular.
+
+Seguimiento continuo (fatiga + rendimiento) → retroalimentación al sistema.
+
+🧩 BLOQUE 7 – EJERCICIOS Y EJECUCIÓN
+
+Rol: Biblioteca técnica del sistema EDN.360
+Objetivo: Estandarizar la ejecución, selección y progresión de todos los ejercicios del sistema, optimizando transferencia, seguridad y adaptación.
+
+1️⃣ CATÁLOGO POR PATRÓN DE MOVIMIENTO
+Patrón	Articulaciones principales	Músculos protagonistas	Ejemplo base	Objetivo principal
+Empuje (Push)	Hombro, codo	Pectoral, deltoides, tríceps	Press de banca, press militar	Fuerza y volumen del tren superior anterior
+Tirón (Pull)	Escápulas, hombro, codo	Dorsal, romboides, bíceps	Dominadas, remo con barra	Desarrollo dorsal, control escapular
+Sentadilla (Squat)	Cadera, rodilla, tobillo	Cuádriceps, glúteo, erectores espinales	Sentadilla trasera	Producción de fuerza global
+Bisagra (Hinge)	Cadera, columna lumbar	Isquios, glúteos, erectores	Peso muerto	Desarrollo posterior, control lumbopélvico
+Zancada (Lunge)	Cadera, rodilla, tobillo	Glúteo, cuádriceps, aductores	Zancada frontal, split squat	Estabilidad unilateral y simetría
+Core / Antirrotacional	Columna, pelvis	Recto abdominal, oblicuos, transverso	Plancha, Pallof press	Estabilidad y transferencia
+2️⃣ VARIANTES + PROGRESIONES / REGRESIONES
+Patrón	Nivel 1 (Regresión)	Nivel 2 (Base)	Nivel 3 (Avanzado)	Observaciones
+Empuje horizontal	Flexión en pared → flexión inclinada	Flexión estándar / press con mancuernas	Press con barra, flexión con lastre	Aumentar resistencia, no rango articular
+Empuje vertical	Press con mancuerna sentado	Press militar	Push press / handstand push-up	Progresar de estabilidad a potencia
+Tirón vertical	Jalón asistido	Dominada pronada	Dominada lastrada / muscle-up	Control escapular antes de carga
+Tirón horizontal	Remo TRX	Remo con barra	Remo Pendlay / remo unil. con lastre	Control escapular y neutro lumbar
+Sentadilla	Sentadilla a caja	Sentadilla goblet	Back/front squat	Cadera neutra, profundidad controlada
+Bisagra	Peso muerto rumano con mancuerna	Peso muerto convencional	Peso muerto sumo / con déficit	Evitar flexión lumbar final
+Zancada	Split estático	Zancada caminando	Bulgarian split squat / déficit	Controlar valgo y equilibrio
+Core	Plancha rodillas	Plancha codos	Plancha con desplazamiento / ab wheel	Priorizar respiración diafragmática
+3️⃣ CUES TÉCNICOS Y ERRORES FRECUENTES
+Patrón	Cues clave	Errores comunes	Corrección inmediata
+Empuje	“Empuja el suelo con los pies”, “Pecho arriba”, “Controla la fase excéntrica”	Codos muy abiertos, arqueo lumbar	Acortar rango, usar soporte o inclinación
+Tirón	“Tira con los codos”, “Aprieta escápulas”	Hombros elevados, movimiento desde bíceps	Enseñar retracción y depresión escapular
+Sentadilla	“Rodillas siguen pies”, “Cadera abajo entre talones”	Valgo, talones levantados, flexión lumbar	Ajustar movilidad, taloneras, control excéntrico
+Bisagra	“Rompe la cadera atrás”, “Espalda firme”	Redondeo lumbar, flexión de rodillas excesiva	Tocar cadera con un palo, feedback visual
+Zancada	“Baja vertical”, “Presiona con el talón delantero”	Inestabilidad, torso inclinado	Reducir rango, soporte lateral
+Core	“Costillas hacia abajo”, “Respira con el diafragma”	Hiperextensión lumbar	Retroversión pélvica y bracing activo
+4️⃣ EJERCICIOS CORRECTIVOS Y AUXILIARES
+Zona / Patrón	Objetivo	Ejercicio	Aplicación
+Hombro / empuje	Mejorar control escapular	Y-T-W con banda	Pre-activación antes de empujes
+Dorsal / tirón	Activar estabilizadores	Pullover con banda	Preparación para jalones
+Cadera / bisagra	Control glúteo y cadera	Hip thrust / puente glúteo	Complemento o pre-fatiga
+Rodilla / sentadilla	Estabilidad	Step-up lateral, terminal knee ext.	Prevención valgo
+Core	Antirrotación	Pallof press, carry unilateral	Estabilidad funcional
+Columna	Movilidad controlada	Cat-cow, bird-dog	Recuperación / activación neural
+5️⃣ DIFERENCIAS SEGÚN EQUIPO
+Tipo de equipo	Ventajas	Limitaciones	Ideal para
+Barra libre	Alta carga, progresión clara, trabajo bilateral	Mayor exigencia técnica y riesgo	Fase de fuerza o potencia
+Mancuernas	Mayor libertad articular y simetría	Limitado por agarre	Etapa intermedia o correctiva
+Máquinas	Aislamiento y seguridad	Menor activación estabilizadora	Fases de volumen o rehabilitación
+Poleas	Tensión constante, versatilidad	Dificultad para medir carga exacta	Fases de control o hipertrofia localizada
+Peso corporal	Accesibilidad y propiocepción	Dificultad progresiva sin lastre	Iniciación o mantenimiento
+🔁 CONEXIÓN CON OTROS BLOQUES
+Relación	Descripción
+B2 – Fisiología del ejercicio	Determina qué tipo de contracción y fibra se prioriza en cada patrón.
+B3 – Biomecánica aplicada	Define los vectores de fuerza, palancas y torque en cada ejecución.
+B4 – Programación y periodización	Establece cuándo y cómo usar cada variante según fase del ciclo.
+B5 – Objetivos de entrenamiento	Ajusta el tipo de ejercicio, tempo y rango según la meta (fuerza, hipertrofia, recomposición).
+B6 – Evaluación y diagnóstico	Selecciona ejercicios según limitaciones detectadas y nivel de riesgo.
+
+🧠 BLOQUE 8 — PROGRESIÓN Y CONTROL DE CARGA
+1️⃣ Modelos de progresión
+Modelo	Descripción	Ideal para	Aplicación práctica	Riesgos o límites
+Lineal simple	Aumenta gradualmente la carga (peso o volumen) sesión a sesión o semana a semana.	Novatos y fases iniciales.	+2,5–5 % semanal o +1 rep cada 1–2 semanas.	Rápido estancamiento si no hay descarga.
+Doble progresión	Mantiene rango de reps fijo; aumenta carga cuando se alcanzan todas las repeticiones del rango.	Hipertrofia general, intermedios.	8–12 reps → cuando llegas a 12 con buena técnica, subes peso.	Puede estancarse si no se gestiona el volumen.
+Escalonada	Incrementos de carga durante 2–3 semanas seguidas + 1 semana de descarga.	Fuerza y powerbuilding.	3 sem + 1 sem deload (80–85 %→90 %→95 %→70 %).	Riesgo de fatiga acumulada.
+Ondulante (DUP)	Variación de intensidad y volumen dentro de la semana.	Intermedios y avanzados.	Lunes fuerza (5x5), miércoles volumen (4x10), viernes potencia (6x3).	Complejidad en control de recuperación.
+Autorregulada (RPE/RIR/Velocity)	Ajuste diario según sensación o rendimiento.	Avanzados o en fatiga variable.	RPE 7–9 o velocidad objetivo (0.6–0.8 m/s).	Requiere experiencia y honestidad del atleta.
+2️⃣ Variables manipulables
+Variable	Qué controla	Cómo manipularla	Ejemplo de ajuste
+Series	Volumen total	+1–2 series en bloque de 4 sem si recuperación es buena.	3x8 → 4x8.
+Repeticiones	Fatiga metabólica y TUT	Aumentar reps dentro del rango antes de subir peso.	8–10 reps → subir a 12 antes de más carga.
+RIR (Reps in Reserve)	Control de esfuerzo	RIR 2–3 en volumen, 1–2 en fuerza, 0 en picos o tests.	Mantener RIR 2 hasta semana final del bloque.
+Descanso	Recuperación neural y local	Menos descanso → más densidad; más descanso → más fuerza.	60–90 s hipertrofia, 2–4 min fuerza.
+TUT (Time Under Tension)	Estímulo muscular	Manipular tempo: 3-0-1-0 o 2-0-2-0 según fase.	Aumentar TUT si hay poca conexión muscular.
+Densidad	Carga por tiempo total	Mantener volumen reduciendo descansos o agrupando ejercicios.	Superseries, EMOM, circuitos.
+3️⃣ Uso del fallo muscular
+Tipo de fallo	Cuándo usarlo	Objetivo	Recomendación
+Fallo técnico	Frecuente (última serie)	Máximo estímulo con mínima fatiga neural.	1–2 series por grupo muscular a la semana.
+Fallo muscular real	Ocasional	Reclutamiento total de fibras.	Fase de intensificación o final de mesociclo.
+Fallo absoluto (neural)	Raramente	Tests o evaluación de progresión.	Solo en ejercicios seguros o máquinas.
+
+⚠️ Evitar fallo constante en ejercicios multiarticulares pesados → aumenta riesgo lesional y retrasa recuperación.
+
+4️⃣ Estrategias de Deload
+
+Objetivo: permitir supercompensación reduciendo carga acumulada sin perder adaptación.
+
+Estrategia	Duración	Reducción	Método	Cuándo aplicarla
+Volumen reducido	1 semana	30–50 % menos series	Mantener intensidad	Si se percibe fatiga local.
+Intensidad reducida	1 semana	10–20 % menos carga	Mantener volumen	Si hay fatiga neural.
+Mixta (volumen + intensidad)	1 semana	40–60 % total	Ej. pasar de 5x5 @80 % → 3x3 @70 %	Tras bloque de 4–6 semanas intensas.
+Activa (deload dinámico)	4–5 días	Mantiene movimiento, baja carga	Actividades ligeras, movilidad, técnica	En fases de transición o viajes.
+5️⃣ Adaptaciones ante estancamientos
+Causa probable	Solución	Ejemplo
+Fatiga acumulada	Deload o reducción de volumen	Semana ligera → 50 % volumen.
+Falta de sobrecarga	Incremento sistemático de carga o densidad	+2,5–5 % peso, +1 serie o −15 s descanso.
+Monotonía de estímulo	Cambiar patrón o rango de repeticiones	Pasar de 4x10 a 5x5 o 3x15.
+Déficit nutricional o sueño	Ajustar calorías/proteínas o descanso	+200 kcal y 8 h sueño mínimo.
+Fallo técnico limitante	Reeducación motora, trabajo correctivo	Reentrenar el patrón con menos carga.
+🔢 Rangos recomendados por nivel
+Nivel	Volumen efectivo (series/semana/músculo)	RIR medio	Frecuencia	Descanso	Estrategia preferente
+N1 – Principiante	8–12	2–3	2	60–90 s	Progresión lineal, evitar fallo.
+N2 – Intermedio	12–18	1–2	2–3	90–120 s	Doble progresión o ondulante ligera.
+N3 – Avanzado	15–22	0–1	3–5	2–4 min	Ondulante o autorregulada (RPE).
+💡 Ejemplo de progresión por objetivo
+▪️ Hipertrofia
+
+Modelo: doble progresión.
+
+Rango: 6–12 reps, RIR 1–2.
+
+Progresión: aumentar reps hasta rango superior → subir carga.
+
+Deload: cada 5 semanas reduciendo 40 % volumen.
+
+▪️ Fuerza
+
+Modelo: escalonada o ondulante.
+
+Rango: 3–6 reps, RIR 1–0.
+
+Progresión: +2,5–5 % peso cada 2 semanas.
+
+Deload: cada 4 semanas con reducción de intensidad.
+
+▪️ Pérdida de grasa / mantenimiento
+
+Modelo: densidad o autorregulado.
+
+Rango: 10–15 reps, RIR 2–3.
+
+Progresión: reducir descansos o aumentar TUT.
+
+Deload: según biofeedback (fatiga, sueño, apetito).
+
+⚙️ Protocolo de control semanal (aplicable al sistema K1)
+
+Registro diario: peso, RPE, sueño, energía, rendimiento.
+
+Evaluación semanal:
+
+Si RPE promedio ↑ > 1 punto → reducir volumen 20 %.
+
+Si rendimiento ↓ > 2 sesiones → aplicar descarga parcial.
+
+Si RIR promedio < 1 en más de 50 % de ejercicios → fatiga acumulada.
+
+Retroalimentación al bloque 6 (Evaluación) y 7 (Ejecución): ajuste dinámico.
+
+🧩 BLOQUE 9 — RECUPERACIÓN Y ESTILO DE VIDA
+(Knowledge Hub – K1)
+
+1. Importancia del sueño y su impacto fisiológico
+
+El sueño es el pilar más infravalorado de la recuperación. Afecta directamente al rendimiento, la síntesis proteica, el equilibrio hormonal y la función cognitiva.
+
+🔬 Procesos fisiológicos durante el sueño:
+Fase	Función principal	Efecto en el entrenamiento
+NREM (sueño profundo)	Liberación de GH y restauración tisular	Crecimiento muscular, reparación de tejidos
+REM (sueño paradójico)	Consolidación de memoria motora y aprendizaje	Mejora coordinación y ejecución técnica
+Sueño total	Regulación del eje HPA (hipotálamo-hipófisis-adrenal)	Disminuye cortisol, mejora sensibilidad a la insulina
+📊 Recomendaciones:
+
+Horas ideales: 7–9 h para la mayoría de adultos; atletas pueden requerir hasta 9–10 h.
+
+Calidad > cantidad: buscar continuidad, oscuridad total, temperatura 18–20 °C.
+
+Señales de déficit: menor fuerza, aumento RPE, irritabilidad, hambre aumentada, estancamiento.
+
+Estrategias: siesta < 30 min, suplementación con magnesio, glicina o melatonina (uso puntual).
+
+2. Estrés y sistema nervioso (simpático vs parasimpático)
+
+El sistema nervioso autónomo regula el equilibrio entre activación y recuperación:
+
+Rama	Función	Ejemplos	Indicadores
+Simpático	“Lucha o huida”	Entrenamiento, trabajo intenso, estrés mental	↑FC, ↑cortisol, ↓HRV
+Parasimpático	“Descanso y digestión”	Sueño, meditación, respiración diafragmática	↓FC, ↑HRV, sensación de calma
+
+El rendimiento óptimo surge de alternar picos de estrés (entrenamiento) con activación parasimpática (recuperación).
+📈 Exceso simpático = sobreentrenamiento funcional o burnout.
+
+🧘‍♂️ Estrategias para favorecer el tono parasimpático:
+
+Respiración 4-7-8 o coherencia cardíaca (5s inhalar / 5s exhalar).
+
+Exposición al sol y caminatas lentas post-entrenamiento.
+
+Meditación guiada 10 min/día.
+
+Evitar pantallas 1h antes de dormir.
+
+3. Estrategias de recuperación activa
+
+La recuperación no es “no hacer nada”, sino promover homeostasis activa.
+
+Método	Aplicación	Frecuencia	Beneficio
+Movilidad y estiramientos dinámicos	Postentreno o días de descanso	10–15 min	Mejora circulación y rango articular
+Masaje / Foam roller	Entre sesiones exigentes	2–3x/sem	Disminuye tono muscular, acelera retorno venoso
+Exposición al frío (inmersión 10–15°C)	Postentreno o días de carga alta	1–3x/sem	Reduce inflamación aguda y DOMS
+Sauna o calor pasivo	Tras días de alto volumen o estrés	1–2x/sem	Aumenta flujo sanguíneo y síntesis mitocondrial
+Actividad aeróbica ligera (LISS)	20–30 min a 60–65 % FCmax	1–2x/sem	Acelera eliminación de metabolitos y HRV
+
+💡 Elige la herramienta según el tipo de fatiga:
+
+Neural → calor, respiración, sueño.
+
+Muscular local → frío, movilidad.
+
+Sistémica (estrés acumulado) → días off activos + sueño + alimentación rica en micronutrientes.
+
+4. Monitoreo de señales (HRV, sueño, RPE, estado de ánimo)
+
+El seguimiento del estado interno permite ajustar la carga antes de que aparezca la fatiga excesiva.
+
+Indicador	Qué mide	Herramienta	Interpretación práctica
+HRV (variabilidad de la frecuencia cardíaca)	Equilibrio simpático/parasimpático	Oura, Whoop, apps HRV4Training	↓HRV = estrés o sobrecarga; ↑HRV = recuperación
+Sueño	Duración y calidad	Apps o reloj inteligente	<7h = reducir volumen 20–30 %
+RPE / sRPE	Esfuerzo percibido global	Escala Borg 1–10	>8 varias sesiones = posible fatiga acumulada
+Estado de ánimo / motivación	Factor psicológico	Cuestionario breve diario	↓motivación + ↓rendimiento = posible sobreentrenamiento
+
+📏 Regla general de ajuste semanal:
+
+2 o más señales negativas = mantener carga.
+
+3 o más señales negativas = reducir volumen/intensidad 25–40 % o introducir deload.
+
+5. Interacción entre nutrición y recuperación
+
+La recuperación no se completa sin un entorno nutricional adecuado.
+
+Área	Nutriente / Estrategia	Efecto fisiológico
+Reparación muscular	Proteína 1.6–2.2 g/kg/día	Estimula MPS y reduce daño
+Reposición energética	Carbohidratos 3–7 g/kg/día según carga	Rellena glucógeno y reduce cortisol
+Inflamación controlada	Omega-3, frutas rojas, cúrcuma	Regula IL-6 y TNF-α
+Sistema nervioso	Magnesio, B6, glicina	Favorece relajación y sueño
+Timing postentreno	Comida completa en 1 h post sesión	Optimiza recuperación aguda
+
+📊 Ejemplo de ajuste según señales:
+
+Señal detectada	Intervención nutricional	Ajuste entrenamiento
+↓HRV + ↑RPE	Aumentar hidratos + incluir fruta antes de dormir	Deload 20 %
+Sueño <6h	Añadir cena rica en triptófano y magnesio	Sustituir sesión de fuerza por movilidad
+Dolor muscular alto	Añadir omega-3 + recovery shake post	Mantener técnica, reducir volumen
+🔁 Aplicación práctica: Ajuste dinámico de carga y descanso
+Situación	Estrategia	Acción
+HRV bajo 2 días seguidos + sueño <7h	Recuperación activa	Día de movilidad + siesta + alimentación alta en CH
+RPE alto + estado anímico bajo	Deload parcial	Reducir volumen 40 %, mantener intensidad
+Fatiga muscular localizada	Recuperación segmentada	Sesión de flujo articular + masaje o calor local
+Estrés psicológico alto	Recuperación neural	Meditación + descanso total de estímulos 24h
+🧭 Conclusión
+
+El entrenamiento no crea la adaptación; la recuperación la permite.
+La gestión del sueño, el estrés y la nutrición determina si una carga se asimila o se acumula como fatiga.
+El objetivo no es “entrenar más”, sino entrenar mejor, recuperarse mejor y rendir más tiempo.
+
+🧩 BLOQUE 10 · POBLACIONES ESPECIALES
+
+Adaptación del entrenamiento según características individuales.
+El objetivo es maximizar beneficios y minimizar riesgos ajustando volumen, intensidad y tipo de estímulo en función del perfil fisiológico y contexto del sujeto.
+
+1. Mujeres
+🩸 Fase menstrual
+Fase	Estado hormonal	Recomendaciones
+Folicular temprana (días 1–7)	Estrógenos y progesterona bajos	Reducir volumen e intensidad si hay síntomas; priorizar técnica y movilidad.
+Folicular media–tardía (días 8–14)	Estrógenos altos, energía elevada	Fase ideal para fuerza y alta intensidad. Incrementar cargas progresivamente.
+Ovulación (~día 14)	Pico de estrógenos y LH	Máximo rendimiento, pero mayor riesgo de lesiones de rodilla (ligamento cruzado anterior). Enfatizar control técnico.
+Lútea (días 15–28)	Progesterona alta, mayor fatiga y retención	Reducir intensidad, favorecer trabajo de base y recuperación activa.
+
+Pautas generales:
+
+Priorizar autorregulación (RPE/RIR).
+
+Evitar reducciones extremas de grasa corporal (<18%) por riesgo hormonal.
+
+Potenciar fuerza y masa muscular como base del control metabólico.
+
+🤰 Embarazo
+Trimestre	Enfoque	Recomendaciones
+1º	Adaptación	Evitar picos de temperatura y ejercicios en decúbito prono prolongado. Priorizar estabilidad y respiración.
+2º	Mantenimiento	Fortalecer suelo pélvico, espalda y glúteos. Evitar saltos y cargas inestables.
+3º	Preparación al parto	Movilidad, control postural, respiración diafragmática, y circuitos de baja intensidad.
+
+Precauciones:
+
+Frecuencia cardíaca <140 lpm (referencia general).
+
+Evitar maniobra de Valsalva y ejercicios con impacto.
+
+Hidratación y ventilación adecuadas.
+
+👶 Postparto
+
+Esperar 4–6 semanas (parto vaginal) o 8–12 semanas (cesárea) antes de entrenamiento estructurado.
+
+Reentrenar suelo pélvico y core profundo (transverso, diafragma).
+
+Evitar abdominales tradicionales y saltos hasta recuperar control.
+
+Progresar de movilidad → fuerza básica → cargas progresivas.
+
+2. Mayores de 45 años
+Riesgos y adaptaciones fisiológicas:
+
+Disminución de masa magra, densidad ósea y sensibilidad anabólica.
+
+Mayor rigidez articular y menor recuperación.
+
+Enfoque:
+
+Objetivo principal: preservar masa muscular y función metabólica.
+
+Volumen: moderado (8–12 series por grupo/semana).
+
+Intensidad: 60–80% 1RM, énfasis en técnica y rango completo.
+
+Frecuencia: 3–4 sesiones/semana (división fuerza + movilidad).
+
+Incluir:
+
+Ejercicios multiarticulares controlados.
+
+Entrenamiento de potencia (velocidad moderada, cargas ligeras).
+
+Trabajo de equilibrio y propiocepción.
+
+Claves: recuperación extendida, sueño, y micronutrición (vitamina D, calcio, omega-3).
+
+3. Principiantes
+Características:
+
+Baja coordinación, escaso control motor y desconocimiento corporal.
+
+Riesgo por mala técnica > carga o volumen.
+
+Estrategia:
+
+Fase 1 (0–4 semanas):
+
+Movilidad, control motor, patrones básicos (bisagra, empuje, tirón, sentadilla, zancada).
+
+Frecuencia alta, baja intensidad.
+
+Fase 2 (5–12 semanas):
+
+Introducir cargas progresivas (60–70% 1RM).
+
+Educación en RPE/RIR.
+
+Fase 3 (>12 semanas):
+
+Consolidar progresión lineal y autorregulación.
+
+Introducir ejercicios accesorios y variabilidad.
+
+Objetivo realista: adherencia, técnica, y consistencia > rendimiento.
+
+4. Personas con sobrepeso u obesidad
+Riesgos:
+
+Estrés articular, hipertensión, apnea, baja tolerancia al esfuerzo.
+
+Enfoque:
+
+Prioridad: seguridad y adherencia.
+
+Modalidad: combinada fuerza + aeróbico moderado.
+
+Fuerza: 2–3 días/semana, 10–15 rep., 60–70% 1RM.
+
+Cardio: 3–5 días/semana, 30–45 min, RPE 5–6/10 (caminar, bicicleta, natación).
+
+Progresión: aumentar densidad antes que carga.
+
+Objetivo: déficit calórico sostenible + mejora funcional.
+
+Claves: control del entorno (alimentación, sueño, estrés) y educación conductual.
+
+5. Lesiones o dolor persistente
+Principios:
+
+No entrenar sobre dolor agudo (≥5/10).
+
+Mantener estímulo sistémico con variantes seguras.
+
+Aplicar progresión de carga y tolerancia al tejido.
+
+Protocolo base:
+
+Fase 1: analgesia y movilidad sin dolor.
+
+Fase 2: activación y reeducación motora (isométricos, control excéntrico).
+
+Fase 3: retorno progresivo a patrones globales con control de carga (tempo, rango, volumen).
+
+Herramientas útiles:
+
+Escala de dolor 0–10.
+
+RPE adaptado.
+
+Ejercicios unilaterales o asistidos.
+
+Objetivo: mantener condición física general y recuperar función, no aislar el segmento.
+
+6. Condiciones clínicas leves
+a) Hipertensión
+
+Evitar maniobra de Valsalva.
+
+Series cortas (10–15 rep), descanso amplio.
+
+Intensidad <80% 1RM, progresión lenta.
+
+Aeróbico moderado (30–45 min, 5 d/semana).
+
+Control de tensión pre y post sesión.
+
+b) Diabetes tipo 2
+
+Frecuencia mínima 3–4 d/semana.
+
+Combinación de fuerza + aeróbico mejora sensibilidad a la insulina.
+
+Entrenar 1–2 h post comida para evitar hipoglucemia.
+
+Control glucemia capilar si es insulinodependiente.
+
+c) Dislipemias
+
+Actividad aeróbica continua y de volumen alto (2000–3000 kcal/semana).
+
+Priorizar intensidad moderada sostenida y fuerza complementaria.
+
+Objetivo: mejora del perfil HDL/LDL y composición corporal.
+
+📊 Resumen comparativo
+Población	Riesgos principales	Clave de ajuste	Objetivo central
+Mujeres	Variaciones hormonales, laxitud	Ajuste cíclico de carga	Rendimiento sin impacto hormonal
+Embarazo	Presión abdominal, hipertermia	Seguridad y estabilidad	Bienestar materno-fetal
+Postparto	Debilidad pélvica	Reeducación progresiva	Recuperación funcional
+>45 años	Sarcopenia, rigidez	Enfasis en fuerza y movilidad	Funcionalidad y masa magra
+Principiantes	Técnica deficiente	Educación motora	Adherencia y hábito
+Obesidad	Estrés articular	Baja intensidad, alta frecuencia	Reducción grasa y movilidad
+Lesión	Dolor, compensaciones	Variar estímulo sin dolor	Mantener capacidad global
+HTA / DM2 / Dislipemias	Riesgo cardiovascular	Control de intensidad	Salud metabólica
+
+🧩 BLOQUE 11 – TECNOLOGÍA Y ANALÍTICA
+
+Rol: Integrar herramientas digitales, sensores y sistemas de análisis para optimizar el proceso de entrenamiento, personalizar decisiones y automatizar ajustes en tiempo real.
+
+1. HERRAMIENTAS Y WEARABLES
+Tipo	Ejemplo	Variable medida	Aplicación práctica
+VBT (Velocity-Based Training)	GymAware, Vitruve, PUSH Band	Velocidad de ejecución (m/s), potencia, pérdida de velocidad	Ajustar carga según fatiga; autorregular intensidad en fuerza e hipertrofia.
+HRV (Variabilidad de la Frecuencia Cardíaca)	Oura Ring, Polar H10, Whoop	Estado del sistema nervioso autónomo	Determinar readiness, planificar días de carga o descarga.
+Relojes y pulseras inteligentes	Garmin, Apple Watch, Fitbit	FC, calorías, sueño, pasos, SpO₂	Monitorizar recuperación, gasto energético, adherencia diaria.
+Apps de tracking	MyFitnessPal, Harbiz, EliteHRV, Strava	Nutrición, rendimiento, HRV, volumen semanal	Centralizar datos de hábitos y rendimiento.
+Plataformas de análisis	Google Sheets, Power BI, n8n, TrainingPeaks	Agregación de datos	Visualizar progresión, detectar patrones, automatizar decisiones.
+2. VARIABLES DE CARGA INTERNA Y EXTERNA
+
+Carga externa: cuantifica el trabajo físico realizado.
+Carga interna: mide la respuesta fisiológica al estímulo.
+
+Tipo de carga	Ejemplos	Herramientas	Interpretación
+Externa	Volumen (kg totales), intensidad (kg/RM), velocidad (m/s), potencia (W), distancia, repeticiones	VBT, apps de entrenamiento	Mide el input del entrenamiento.
+Interna	FC, HRV, RPE, lactato, cortisol, sueño, percepción de fatiga	HRV apps, wearables	Evalúa el impacto fisiológico del estímulo.
+
+🔁 Relación ideal: la carga externa debe ajustarse según la carga interna para mantener el estímulo efectivo sin sobrepasar la capacidad adaptativa.
+
+3. INTERPRETACIÓN DE MÉTRICAS CLAVE
+a) Velocidad de ejecución (VBT)
+
+Alta velocidad (>1.0 m/s): potencia, explosividad.
+
+Media (0.6–0.9 m/s): hipertrofia funcional.
+
+Baja (<0.5 m/s): fuerza máxima.
+
+Pérdida de velocidad >20%: indica fatiga neuromuscular → posible reducción de volumen o fin de serie.
+
+Ejemplo:
+En sentadilla con 100 kg, si la velocidad pasa de 0.8 m/s a 0.6 m/s → pérdida del 25% → detener serie.
+
+b) HRV (Heart Rate Variability)
+
+Alta HRV: buen estado parasimpático → se puede aumentar carga.
+
+Baja HRV: fatiga o estrés → aplicar deload o recuperación activa.
+
+Tendencia descendente de 3–4 días: indicador de sobreentrenamiento inminente.
+
+Ejemplo:
+Promedio HRV semanal cae un 15% → reducir volumen en 20% durante 3 días.
+
+c) RPE / sRPE (Percepción del esfuerzo)
+
+Escala 1–10.
+
+sRPE = RPE × duración (min) → carga interna global.
+
+Correlacionar sRPE semanal con volumen y rendimiento para ajustar mesociclos.
+
+Ejemplo:
+Entrenamiento de 60 min con RPE 8 → 480 UA (Unidades Arbitrarias).
+Si el promedio semanal supera 3000 UA → riesgo de fatiga acumulada.
+
+d) Tasa de progreso
+
+Velocidad promedio de mejora (%/semana):
+
+2% → óptimo.
+
+<0.5% → revisar recuperación, sueño o nutrición.
+
+Analizar junto con peso corporal, HRV y RPE.
+
+4. TABLAS Y DASHBOARDS DE SEGUIMIENTO
+
+Estructura base de control (ejemplo en Google Sheets o Power BI):
+
+Semana	Peso corporal	Volumen (kg)	RPE medio	HRV	Sueño (h)	Carga total (UA)	Tendencia	Acción sugerida
+1	78.2	42 000	7	78	7.5	2800	↑	Mantener
+2	78.1	44 500	8	75	7.2	3200	↑	Revisar recuperación
+3	78.0	45 000	9	70	6.8	3600	↓	Aplicar deload
+
+Automatización posible:
+
+Si HRV ↓ >10% y RPE >8 → activar aviso: “Recomendar deload”.
+
+Si HRV ↑ y rendimiento estable → “Aumentar volumen 5%”.
+
+Si peso estable + rendimiento ↑ → “Recomendar mini-bulk controlado”.
+
+5. AUTOMATIZACIÓN Y CONEXIÓN CON AGENTES
+Agente	Entrada desde tecnología	Acción automatizada	Output
+E6 – Evaluador de Diagnóstico	HRV, sueño, RPE	Calcula readiness diario	Nivel de fatiga (R0–R3)
+E8 – Progresión y carga	Datos VBT y rendimiento semanal	Ajusta volumen y carga	Nueva estructura de microciclo
+ES1 – Intérprete de Seguimiento	Cuestionario + métricas HRV	Detecta desviaciones	Recomendación a NS1
+NS1 – Agente Nutricional	Peso y HRV	Ajuste automático de calorías	Nuevo plan con +/-5 % kcal
+NS3 – Agente de Estrategia	Dashboards de Power BI / Sheets	Analiza tendencias globales	Informe mensual para Jorge
+
+Ejemplo de flujo automatizado (n8n o Harbiz API):
+
+El cliente sincroniza su Oura Ring.
+
+HRV < 70 → n8n dispara evento → “Reducir carga 15% y enviar mensaje motivacional”.
+
+E8 actualiza plan en Google Sheets y notifica por WhatsApp: “Hoy prioriza movilidad y descanso activo”.
+
+6. EJEMPLOS PRÁCTICOS DE APLICACIÓN
+📊 Caso 1: Control de fuerza máxima
+
+Se mide velocidad con Vitruve cada sesión de press banca.
+
+Si la velocidad con 100 kg pasa de 0.55 m/s a 0.50 m/s → fatiga → mantener carga.
+
+Cuando la velocidad vuelve a 0.55 m/s o mayor → posible mejora de 1RM.
+
+🧠 Caso 2: Prevención de sobreentrenamiento
+
+HRV baja 3 días + RPE alto + sueño <6.5 h → E8 aplica “micro-deload” automático.
+
+NS1 reduce carbohidratos intraentrenamiento → evitar picos de fatiga.
+
+🔁 Caso 3: Ajuste dinámico de volumen
+
+Power BI detecta aumento del 10% en volumen con igual rendimiento.
+
+Sistema propone +1 serie en patrones principales.
+
+Si RPE medio sube >1 punto → revertir ajuste.
+
+7. CONCLUSIÓN
+
+La tecnología no sustituye la intuición del entrenador, la amplifica.
+Su función es medir, integrar y automatizar decisiones para que cada sesión se base en datos, no en suposiciones.
+
+Principios operativos del bloque:
+
+Mide → 2. Interpreta → 3. Ajusta → 4. Automatiza → 5. Evalúa.
+El agente tecnológico actúa como un sistema nervioso digital del ecosistema E.D.N.360, permitiendo decisiones más precisas, escalables y objetivas.
+
+🧠 BLOQUE 12 · COACHING Y ADHERENCIA
+
+Misión: integrar principios psicológicos y comunicativos para maximizar la constancia y el compromiso del cliente en el tiempo.
+Meta final: que el sistema no dependa de la motivación del cliente, sino de estructuras, hábitos y feedback que garanticen continuidad.
+
+1. PSICOLOGÍA DEL CAMBIO Y DISEÑO DE HÁBITOS
+Etapa	Descripción	Estrategia práctica
+1. Precontemplación	El cliente no reconoce el problema.	Feedback no confrontativo, preguntas abiertas (“¿Qué te gustaría mejorar si pudieras?”).
+2. Contemplación	Reconoce la necesidad pero duda.	Ejemplos reales, mostrar beneficios tangibles, reducir fricción inicial.
+3. Preparación	Decide cambiar.	Microcompromisos (p. ej. "solo tres entrenos esta semana"), contrato de compromiso.
+4. Acción	Inicia el cambio.	Refuerzo positivo diario, feedback inmediato, visibilidad del progreso.
+5. Mantenimiento	El hábito ya existe, pero aún es frágil.	Revisión semanal + recordatorio de propósito, variar estímulos, evitar rutina monótona.
+6. Recaída	Parte natural del proceso.	Normalizar, analizar causa y redirigir sin juicio.
+
+Claves de diseño de hábitos:
+
+Asociar nueva conducta a un trigger (contexto o emoción, no a motivación).
+
+Mantener fricción baja (automatización, planificación visual).
+
+Reforzar la identidad (“soy una persona que entrena aunque no tenga ganas”).
+
+Usar recompensas intrínsecas (sensación de control, autoconfianza) más que extrínsecas (número en la báscula).
+
+2. COMUNICACIÓN EFECTIVA
+Cues internos vs externos
+Tipo de cue	Descripción	Ejemplo de aplicación
+Interno	Reforzar la conciencia corporal o emocional.	“Escucha tu respiración entre series”, “nota cómo cambia tu energía al comer bien”.
+Externo	Señales visuales o auditivas que guían la conducta.	Temporizador de comidas, checklist diaria, mensaje automatizado de recordatorio.
+
+Lenguaje eficaz:
+
+Evitar órdenes (“debes”, “tienes que”).
+
+Usar dirección (“prueba”, “elige”, “ajusta”).
+
+Enfocar en progreso, no perfección.
+
+Feedback descriptivo, no evaluativo (“has entrenado 3 veces esta semana, ¿qué ayudó a lograrlo?”).
+
+Regla 3C: Clara, Concisa, Constructiva.
+
+3. MOTIVACIÓN Y GESTIÓN DE EXPECTATIVAS
+Tipos de motivación (Teoría de la Autodeterminación)
+Tipo	Fuente	Riesgo	Estrategia
+Extrínseca	Resultado externo (peso, estética, aprobación).	Frágil, desaparece si no hay refuerzo.	Convertir en motivación identificada: “quiero estar en forma porque me hace sentir capaz”.
+Intrínseca	Placer por la acción misma.	Menos frecuente en principiantes.	Asociar la acción con disfrute o dominio (mejorar técnica, superarse).
+Expectativas realistas
+
+Educación desde el inicio: explicar la velocidad fisiológica de los cambios.
+
+Mostrar datos visuales: progreso en fuerza, fotos comparativas, métricas simples.
+
+Reforzar la narrativa: “Esto no va de perder 10 kg, va de aprender a no recuperarlos.”
+
+4. ESTRATEGIAS DE ADHERENCIA EN DÉFICIT O VOLUMEN
+Contexto	Riesgo psicológico	Estrategia de coaching
+Déficit calórico	Fatiga, hambre, irritabilidad, autoexigencia.	Anticipar bajones (“esta semana te sentirás más lento, es normal”), incluir “meals de recarga” planificados, usar refuerzo visual (check semanal).
+Volumen	Falta de recompensa visual, sensación de “engordar”.	Reenfocar en performance (“mira cómo suben tus cargas”), controlar el entorno (espejos, ropa ajustada), mantener identidad atlética.
+Mantenimiento	Falta de propósito o “meta clara”.	Replantear objetivos: técnica, rendimiento, consistencia. Reforzar sensación de control.
+
+Microhábitos clave:
+
+Registrar aunque no apetezca.
+
+Ritual post-entrenamiento (foto, frase, rutina breve).
+
+Semana “sin objetivo” programada cada 8–10 semanas para liberar presión mental.
+
+5. SISTEMAS DE FEEDBACK Y REPORTES SEMANALES
+
+Objetivo: convertir la revisión en un proceso de autorreflexión, no de rendición de cuentas.
+
+Elemento	Descripción	Ejemplo
+Cuestionario semanal	Evalúa energía, hambre, descanso, adherencia.	Escalas 1–5 + comentario libre.
+Dashboard visual	Muestra tendencias, no cifras aisladas.	Gráficos de peso, cargas, fotos.
+Feedback automático	Respuestas según patrones (e.g. bajo HRV → mensaje de recuperación).	Integrado con bloque tecnológico.
+Reunión o mensaje resumen	Refuerzo conductual y emocional.	“Tu constancia esta semana fue 90%. Ajustemos sueño y seguimos igual.”
+
+Fórmula de retroalimentación efectiva:
+
+Reconocer el esfuerzo (“veo que esta semana dormiste mejor”).
+
+Reencuadrar el fallo (“que te hayas saltado una comida no borra el progreso”).
+
+Redirigir el foco a la acción siguiente (“esta semana centrémonos en la rutina matutina”).
+
+🧩 Integración con el sistema general
+Relación	Descripción
+Con Bloque 1 (Fundamentos)	El coaching traduce la teoría en acción sostenible.
+Con Bloque 5 (Objetivos)	Adapta la comunicación al tipo de meta (fuerza, pérdida de grasa…).
+Con Bloque 9 (Recuperación)	Ajusta carga y descanso según feedback psicológico.
+Con Bloque 11 (Tecnología)	Usa datos de wearables y cuestionarios para personalizar el mensaje motivacional.
+🔧 Ejemplo de flujo semanal automatizado
+Día	Acción	Tipo de intervención
+Lunes	Mensaje motivacional + recordatorio de objetivo semanal.	Preventivo.
+Miércoles	Mini check de energía (“Del 1 al 5, ¿cómo te sientes hoy?”).	Monitorización temprana.
+Viernes	Feedback del agente de seguimiento.	Refuerzo conductual.
+Domingo	Cuestionario semanal + resumen visual.	Evaluativo / reflexivo.
+🎯 Conclusión
+
+El coaching y la adherencia son el puente entre la ciencia y la acción.
+El objetivo no es que el cliente dependa del entrenador, sino que internalice el sistema y lo mantenga incluso sin supervisión.
+
+“La motivación inicia el cambio.
+La estructura lo sostiene.
+La identidad lo consolida.”
+
+🧠 BLOQUE 13 del Knowledge Hub (K1): EVIDENCIA CIENTÍFICA Y REVISIÓN
+Propósito: Mantener la integridad científica del sistema y asegurar que cada bloque del K1 se apoye en información verificada, actual y libre de sesgos.
+
+1. Interpretación de estudios y detección de sesgos
+
+A. Lectura crítica de un paper:
+
+Título y abstract: Identificar si el estudio responde una pregunta práctica o solo exploratoria.
+
+Introducción: Valorar si el problema está bien justificado y contextualizado.
+
+Métodos: El corazón del estudio. Analiza:
+
+Tamaño muestral (n ≥ 30 por grupo idealmente).
+
+Criterios de inclusión/exclusión.
+
+Control de variables (dieta, sueño, experiencia previa).
+
+Duración y aplicabilidad al mundo real.
+
+Resultados: Revisa efectos absolutos, no solo significancia estadística (p < 0.05 no siempre = relevante).
+
+Discusión: Busca interpretaciones prudentes, no extrapolaciones exageradas.
+
+Conflictos de interés y financiación: Fuente de sesgo más común.
+
+B. Tipos de sesgos frecuentes:
+
+Tipo de sesgo	Descripción	Ejemplo
+Selección	Muestra no representativa	Estudio de suplementos hecho solo con novatos
+Confirmación	Se interpretan resultados que refuerzan creencias previas	“El ayuno mejora la quema de grasa” sin controlar calorías
+Publicación	Solo se publican resultados positivos	Efectos inflados en metaanálisis
+Confusión (confounding)	Variable no controlada altera el resultado	Diferente ingesta proteica entre grupos
+Placebo/nocebo	Expectativas modifican el rendimiento	“Entreno mejor con cafeína” sin diferencia real
+2. Tipos de evidencia científica
+
+Jerarquía de evidencia (de menor a mayor calidad):
+
+Opinión o experiencia personal → No fiable como base de decisión.
+
+Estudios observacionales → Detectan correlaciones, no causalidad.
+
+Ensayos controlados aleatorizados (RCTs) → Evalúan causa-efecto con control de variables.
+
+Revisiones sistemáticas → Sintetizan múltiples RCTs con criterios estrictos.
+
+Metaanálisis → Integra estadísticamente los resultados de varios estudios; máximo nivel de evidencia.
+
+Claves de interpretación:
+
+Heterogeneidad (I²): mide la variabilidad entre estudios en un metaanálisis (cuanto menor, mejor).
+
+Tamaño del efecto (ES o Cohen’s d): indica relevancia práctica.
+
+Intervalo de confianza (CI95%): más útil que el p-valor.
+
+Calidad metodológica (escala PEDro, Cochrane): determina si los resultados son fiables.
+
+3. Mitos comunes y falsos paradigmas en fitness
+Mito	Evidencia actual
+“Entrenar en ayunas quema más grasa”	A corto plazo sí, pero no influye en grasa corporal si las calorías son iguales.
+“Las mujeres deben entrenar diferente”	Las diferencias hormonales influyen, pero los principios de sobrecarga y volumen son los mismos.
+“Más sudor = más grasa quemada”	El sudor regula temperatura, no quema grasa.
+“Las pesas te hacen grande, el cardio te define”	La definición depende del déficit calórico, no del tipo de entrenamiento.
+“Hay que cambiar el entrenamiento cada semana”	La variabilidad es útil, pero la consistencia en progresión es lo que genera adaptación.
+“El fallo muscular siempre es necesario”	No; depende del objetivo y la fase. Puede ser contraproducente en volumen alto.
+“Comer cada 3 h acelera el metabolismo”	El total calórico y proteico diario es lo relevante, no la frecuencia.
+4. Sistema de actualización trimestral del K1
+
+Objetivo: mantener cada bloque alineado con la evidencia más reciente.
+
+Fase	Descripción	Responsable
+1. Detección	Revisión mensual de nuevas publicaciones relevantes (PubMed Alerts, MASS, Strength & Conditioning Journal).	Bloque 13
+2. Evaluación	Lectura crítica y puntuación metodológica (escala 1–5).	Equipo técnico
+3. Integración	Actualización de resúmenes aplicables a bloques afectados (fisiología, programación, nutrición, etc.).	Coordinador del K1
+4. Difusión	Generación de informe trimestral “Actualización Científica del K1”.	Bloque 13
+5. Validación	Revisión cruzada con 2 agentes expertos antes de incorporar cambios.	Panel científico interno
+
+Ejemplo de flujo:
+Nuevo metaanálisis → se resume → se evalúa su impacto → si cambia prácticas → se edita el bloque correspondiente y se archiva la versión anterior.
+
+5. Repositorio de referencias
+
+Estructura del repositorio (formato interno del K1):
+
+Código	Tema	Fuente	Año	Relevancia práctica (1–5)	Resumen
+E-001	Hipertrofia y volumen óptimo	Schoenfeld et al., J Strength Cond Res	2019	5	>10 series/semana óptimas para crecimiento
+E-002	Entrenamiento en mujeres	Hackett & Coburn, Sports Med	2021	4	Diferencias en recuperación y tolerancia al volumen
+E-003	Pérdida de grasa y ayuno intermitente	Tinsley & La Bounty, Nutrients	2015	3	No superior al déficit calórico tradicional
+E-004	RPE y autoregulación	Helms et al., J Strength Cond Res	2017	5	Alta correlación entre RPE y %1RM
+E-005	Periodización vs no periodización	Grgic et al., Eur J Sport Sci	2018	4	La periodización mejora rendimiento a largo plazo
+6. Recursos y bases de datos recomendadas
+
+Bases de datos científicas:
+
+PubMed
+ — Base de datos principal en ciencias de la salud.
+
+ScienceDirect
+ — Acceso a artículos de Elsevier.
+
+Google Scholar
+ — Revisión general rápida.
+
+Cochrane Library
+ — Revisiones sistemáticas de alta calidad.
+
+ResearchGate
+ — Contacto con autores y preprints.
+
+Fuentes de divulgación y síntesis práctica:
+
+Examine.com
+ — Resúmenes de evidencia nutricional.
+
+MASS Research Review
+ — Revisiones mensuales de entrenamiento y nutrición.
+
+Strength and Conditioning Journal (NSCA)
+ — Aplicaciones prácticas.
+
+Alan Aragon’s Research Review (AARR)
+ — Evidencia mensual interpretada.
+
+Sports Medicine Open
+ — Open access y actualizaciones recientes.
+
+Precision Nutrition Research Library
+ — Filtros por objetivo o población.
+
+📘 Conclusión:
+El Bloque 13 es el filtro científico del sistema. Su función es proteger la credibilidad del K1, eliminar dogmas y mantener todos los agentes actualizados bajo un protocolo de revisión transparente y replicable. Cada recomendación dentro del ecosistema debe poder trazarse hasta una fuente primaria o revisión sólida.
