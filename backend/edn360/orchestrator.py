@@ -61,7 +61,7 @@ class EDN360Orchestrator:
     """Orquestador principal que ejecuta la cadena de agentes"""
     
     def __init__(self):
-        """Inicializa el orquestador con todos los agentes"""
+        """Inicializa el orquestador con todos los agentes y carga las bases de conocimiento"""
         
         # Training Initial Agents (E1-E9)
         self.training_initial_agents = [
@@ -106,6 +106,43 @@ class EDN360Orchestrator:
         ]
         
         self.validator = EDN360Validator()
+        
+        # Cargar las bases de conocimiento en memoria
+        self.knowledge_bases = self._load_knowledge_bases()
+        logger.info(f"✅ Bases de conocimiento cargadas: Training KB ({len(self.knowledge_bases['training'])} chars), Nutrition KB ({len(self.knowledge_bases['nutrition'])} chars)")
+    
+    def _load_knowledge_bases(self) -> Dict[str, str]:
+        """
+        Carga las bases de conocimiento desde el sistema de archivos
+        
+        Returns:
+            Dict con las bases de conocimiento de training y nutrition
+        """
+        import os
+        
+        kb_dir = os.path.join(os.path.dirname(__file__), "knowledge_bases")
+        
+        training_kb_path = os.path.join(kb_dir, "training_knowledge_base_v1.0.txt")
+        nutrition_kb_path = os.path.join(kb_dir, "nutrition_knowledge_base_v1.0.txt")
+        
+        try:
+            with open(training_kb_path, 'r', encoding='utf-8') as f:
+                training_kb = f.read()
+            
+            with open(nutrition_kb_path, 'r', encoding='utf-8') as f:
+                nutrition_kb = f.read()
+            
+            return {
+                "training": training_kb,
+                "nutrition": nutrition_kb
+            }
+        except Exception as e:
+            logger.error(f"❌ Error cargando bases de conocimiento: {str(e)}")
+            # Retornar diccionario vacío si hay error
+            return {
+                "training": "",
+                "nutrition": ""
+            }
     
     async def generate_initial_plan(
         self,
