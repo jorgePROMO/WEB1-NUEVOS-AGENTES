@@ -264,12 +264,9 @@ Devuelve el `client_context` COMPLETO con tu campo lleno:
       "safe_sessions": { ... },
       "formatted_plan": { ... },
       // TU CAMPO - el único que debes llenar
+      // **IMPORTANTE**: El formato de audit DEBE seguir esta estructura:
       "audit": {
-**IMPORTANTE**: El formato de audit DEBE seguir esta estructura:
-
-```json
-{
-  "status": "aprobado" | "con_warnings" | "bloqueado",
+        "status": "aprobado" | "con_warnings" | "bloqueado",
         "checks": { ... },
         "warnings": [ ... ],
         "recomendaciones": [ ... ]
