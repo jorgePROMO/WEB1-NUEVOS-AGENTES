@@ -483,7 +483,7 @@ class EDN360Orchestrator:
                 **{f"es{i}_output": outputs.get(f"ES{i}") for i in range(1, int(agent.agent_id[2:]))}
             }
             
-            result = await agent.execute(agent_input)
+            result = await agent.execute(agent_input, knowledge_base=self.knowledge_bases.get("training", ""))
             
             if result["success"]:
                 outputs[agent.agent_id] = result["output"]
