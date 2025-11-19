@@ -328,7 +328,7 @@ class EDN360Orchestrator:
         
         # Si hay plan previo, añadirlo al contexto para E1
         if previous_plan:
-            logger.info(f"  📋 Plan previo incluido como contexto para progresión")
+            logger.info("  📋 Plan previo incluido como contexto para progresión")
             # Serializar datetime objects a strings para JSON compatibility
             serialized_plan = _serialize_datetime_fields(previous_plan)
             questionnaire_data["previous_plan"] = serialized_plan
@@ -400,7 +400,7 @@ class EDN360Orchestrator:
         
         # Si hay plan previo, añadirlo al contexto
         if previous_plan:
-            logger.info(f"  📋 Plan nutricional previo incluido como contexto")
+            logger.info("  📋 Plan nutricional previo incluido como contexto")
             # Serializar datetime objects a strings para JSON compatibility
             serialized_plan = _serialize_datetime_fields(previous_plan)
             questionnaire_data["previous_nutrition_plan"] = serialized_plan
@@ -444,9 +444,9 @@ class EDN360Orchestrator:
                     has_pre_post_m = any("pre" in str(c.get("nombre", "")).lower() for c in comidas_m)
                     
                     if not has_pre_post_a and not has_pre_post_m:
-                        logger.warning(f"⚠️ N5 no generó comidas Pre/Post-Entreno. Verificar horario_entrenamiento en cuestionario.")
+                        logger.warning("⚠️ N5 no generó comidas Pre/Post-Entreno. Verificar horario_entrenamiento en cuestionario.")
                     else:
-                        logger.info(f"  ✅ N5 validado: Contiene comidas Pre/Post-Entreno")
+                        logger.info("  ✅ N5 validado: Contiene comidas Pre/Post-Entreno")
                 
                 logger.info(f"  ✅ {agent.agent_id} completado")
             else:
