@@ -455,21 +455,55 @@ Si falta información crítica:
 Procesa el input y emite el JSON estructurado siguiendo exactamente este formato."""
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        """Valida que el input contenga campos mínimos requeridos"""
-        required_fields = ["nombre", "edad", "sexo", "peso_actual_kg", "altura_cm"]
-        return all(field in input_data for field in required_fields)
+        """
+        Valida que el input contenga client_context con raw_inputs
+        
+        NUEVO (Fase 2): Validamos estructura de client_context
+        """
+        # Debe tener la estructura de client_context
+        if "meta" not in input_data:
+            return False
+        if "raw_inputs" not in input_data:
+            return False
+        if "training" not in input_data:
+            return False
+        
+        # raw_inputs debe tener al menos un cuestionario
+        raw_inputs = input_data["raw_inputs"]
+        has_questionnaire = (
+            raw_inputs.get("cuestionario_inicial") is not None or
+            raw_inputs.get("cuestionario_seguimiento") is not None
+        )
+        
+        return has_questionnaire
     
     def process_output(self, raw_output: str) -> Dict[str, Any]:
-        """Procesa la salida del LLM y extrae el JSON"""
+        """
+        Procesa la salida del LLM y valida que devuelva client_context completo
+        
+        NUEVO (Fase 2): Validamos que devolvió client_context con sus campos llenos
+        """
         try:
             output = self._extract_json_from_response(raw_output)
             
-            # Validaciones básicas
-            if "status" not in output or output["status"] != "ok":
-                raise ValueError("Output no contiene status 'ok'")
+            # Debe contener client_context
+            if "client_context" not in output:
+                raise ValueError("Output no contiene client_context")
             
-            if "perfil_tecnico" not in output:
-                raise ValueError("Output no contiene perfil_tecnico")
+            client_context = output["client_context"]
+            
+            # Validar que training existe
+            if "training" not in client_context:
+                raise ValueError("client_context no contiene training")
+            
+            training = client_context["training"]
+            
+            # Validar que E1 llenó sus campos
+            required_fields = ["profile", "constraints", "prehab"]
+            missing_fields = [f for f in required_fields if training.get(f) is None]
+            
+            if missing_fields:
+                raise ValueError(f"E1 no llenó campos requeridos: {missing_fields}")
             
             return output
             
