@@ -267,9 +267,22 @@ Devuelve el `client_context` COMPLETO con tu campo lleno:
       // **IMPORTANTE**: El formato de audit DEBE seguir esta estructura:
       "audit": {
         "status": "aprobado" | "con_warnings" | "bloqueado",
-        "checks": { ... },
-        "warnings": [ ... ],
-        "recomendaciones": [ ... ]
+        "checks": {
+          "volumen_semanal": "aprobado" | "warning" | "fallido",
+          "frecuencia_por_grupo": "aprobado" | "warning",
+          "equilibrio_push_pull": "aprobado" | "warning",
+          "restricciones": "aprobado" | "bloqueado"
+        },
+        "warnings": [
+          // Array de strings describiendo problemas
+          "Volumen excesivo para pecho: 32 series/semana (recomendado 14-20)",
+          "Desequilibrio push/pull: ratio 3.5 (recomendado 0.8-1.2)"
+        ],
+        "recomendaciones": [
+          // Array de acciones concretas
+          "Reducir volumen de pecho a 18-20 series semanales",
+          "Añadir 12-15 series de trabajo de espalda"
+        ]
       },
       // Mantener el resto
       "bridge_for_nutrition": null
@@ -277,6 +290,67 @@ Devuelve el `client_context` COMPLETO con tu campo lleno:
   }
 }
 ```
+
+## 📝 EJEMPLOS DE AUDITORÍA
+
+### Ejemplo 1: Plan OK
+```json
+"audit": {
+  "status": "aprobado",
+  "checks": {
+    "volumen_semanal": "aprobado",
+    "frecuencia_por_grupo": "aprobado",
+    "equilibrio_push_pull": "aprobado",
+    "restricciones": "aprobado"
+  },
+  "warnings": [],
+  "recomendaciones": []
+}
+```
+
+### Ejemplo 2: Plan con Warnings
+```json
+"audit": {
+  "status": "con_warnings",
+  "checks": {
+    "volumen_semanal": "warning",
+    "frecuencia_por_grupo": "aprobado",
+    "equilibrio_push_pull": "warning",
+    "restricciones": "aprobado"
+  },
+  "warnings": [
+    "Volumen excesivo para pecho: 32 series/semana (recomendado 14-20 para intermedio)",
+    "Desequilibrio push/pull: ratio 2.8 (recomendado 0.8-1.2)"
+  ],
+  "recomendaciones": [
+    "Reducir volumen de pecho a 18-20 series semanales eliminando 1-2 ejercicios",
+    "Añadir 8-10 series de trabajo de espalda en días upper"
+  ]
+}
+```
+
+### Ejemplo 3: Plan Bloqueado
+```json
+"audit": {
+  "status": "bloqueado",
+  "checks": {
+    "volumen_semanal": "aprobado",
+    "frecuencia_por_grupo": "aprobado",
+    "equilibrio_push_pull": "aprobado",
+    "restricciones": "bloqueado"
+  },
+  "warnings": [
+    "Ejercicio prohibido detectado: Press Militar (cliente tiene lesión de hombro derecho)",
+    "Ejercicio prohibido detectado: Press Banca Plano (en lista de ejercicios prohibidos)"
+  ],
+  "recomendaciones": [
+    "Sustituir Press Militar por Press Arnold sentado o elevaciones laterales",
+    "Sustituir Press Banca Plano por Press Inclinado con mancuernas"
+  ]
+}
+```
+
+**CRÍTICO**: Siempre cuenta las series manualmente recorriendo las sesiones. NO asumas que el plan es correcto.
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
