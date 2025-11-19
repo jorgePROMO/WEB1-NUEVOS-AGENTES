@@ -1,6 +1,12 @@
 """
 E1 - Analista del Atleta
-Limpia y estructura datos del cuestionario inicial
+Procesa cuestionario y llena: profile, constraints, prehab, progress (si seguimiento)
+
+ARQUITECTURA NUEVA (Fase 2):
+- Recibe client_context completo
+- Lee de: raw_inputs.cuestionario_inicial o raw_inputs.cuestionario_seguimiento
+- Llena SOLO: training.profile, training.constraints, training.prehab, training.progress
+- Devuelve client_context completo actualizado
 """
 
 import json
@@ -9,7 +15,14 @@ from ..base_agent import BaseAgent
 
 
 class E1Analyst(BaseAgent):
-    """E1 - Analista del Atleta: Limpia y estructura cuestionario inicial"""
+    """
+    E1 - Analista del Atleta
+    
+    RESPONSABILIDADES (según documento oficial):
+    - Transforma cuestionario raw en perfil estructurado
+    - Llena: profile, constraints, prehab, progress (solo seguimientos)
+    - NO modifica otros campos de client_context
+    """
     
     def __init__(self):
         super().__init__("E1", "Analista del Atleta")
