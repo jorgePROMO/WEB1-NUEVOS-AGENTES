@@ -403,13 +403,77 @@ Cada sesión se genera con nombre, tipo, ejercicios, series, repeticiones, RIR y
 ✅ Ejercicios adaptados al material y nivel
 ✅ Se entrega JSON limpio y validado para E6
 
-**CRÍTICO:** El campo "sesiones_detalladas" DEBE ser un array con todas las sesiones del microciclo.
+---
+
+## 🔄 FORMATO DE SALIDA (CRÍTICO)
+
+Devuelve el `client_context` COMPLETO con tu campo lleno:
+
+```json
+{
+  "client_context": {
+    "meta": { ... },  // Sin cambios
+    "raw_inputs": { ... },  // Sin cambios
+    "training": {
+      "profile": { ... },  // Sin cambios
+      "constraints": { ... },  // Sin cambios
+      "prehab": { ... },  // Sin cambios
+      "progress": { ... },  // Sin cambios
+      "capacity": { ... },  // Sin cambios
+      "adaptation": { ... },  // Sin cambios
+      "mesocycle": { ... },  // Sin cambios
+      "sessions": {
+        // TU CAMPO - el único que debes llenar
+        "semana_1": [...],
+        "semana_2": [...],
+        "semana_3": [...],
+        "semana_4": [...]
+      },
+      // Mantener el resto como estaba
+      "safe_sessions": null,
+      "formatted_plan": null,
+      "audit": null,
+      "bridge_for_nutrition": null
+    }
+  }
+}
+```
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        """Valida que el input contenga el output de E4"""
-        return "e4_output" in input_data
+        """
+        Valida que el input contenga client_context con mesocycle y profile
+        
+        NUEVO (Fase 2): Validamos client_context
+        """
+        if "training" not in input_data:
+            return False
+        
+        training = input_data["training"]
+        
+        # Debe tener mesocycle (de E4) y profile (de E1)
+        return training.get("mesocycle") is not None and training.get("profile") is not None
     
     def process_output(self, raw_output: str) -> Dict[str, Any]:
-        """Extrae y valida el JSON del output del LLM"""
-        return self._extract_json_from_response(raw_output)
+        """
+        Valida que devuelva client_context con sessions lleno
+        
+        NUEVO (Fase 2): Validamos estructura de salida
+        """
+        try:
+            output = self._extract_json_from_response(raw_output)
+            
+            if "client_context" not in output:
+                raise ValueError("Output no contiene client_context")
+            
+            client_context = output["client_context"]
+            training = client_context.get("training", {})
+            
+            # Validar que E5 llenó sessions
+            if training.get("sessions") is None:
+                raise ValueError("E5 no llenó training.sessions")
+            
+            return output
+            
+        except Exception as e:
+            raise ValueError(f"Error procesando output de E5: {str(e)}")
