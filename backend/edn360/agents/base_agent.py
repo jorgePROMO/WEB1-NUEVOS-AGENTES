@@ -140,8 +140,19 @@ A continuación tienes acceso a una base de conocimiento global que sirve como *
             # Log de respuesta para debug
             logger.info(f"📝 {self.agent_id} respuesta (primeros 500 chars): {response[:500]}")
             
+            # Guardar respuesta completa para debugging (solo en caso de error posterior)
+            _full_response = response
+            
             # Procesar salida
-            output_data = self.process_output(response)
+            try:
+                output_data = self.process_output(response)
+            except Exception as parse_error:
+                # Si falla el parseo, guardar la respuesta completa para debugging
+                debug_file = f"/app/debug_response_{self.agent_id}.txt"
+                with open(debug_file, 'w') as f:
+                    f.write(_full_response)
+                logger.error(f"❌ Error parseando respuesta de {self.agent_id}. Respuesta completa guardada en {debug_file}")
+                raise
             
             # Calcular duración
             duration = (datetime.now() - start_time).total_seconds()
