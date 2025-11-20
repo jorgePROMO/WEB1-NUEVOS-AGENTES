@@ -137,3 +137,19 @@ Si se necesita mejor detección de volumen:
 4. Considerar pre-processing del volumen antes de E8
 
 **Nota**: Estas mejoras son opcionales y no bloquean el avance del refactor.
+
+---
+
+## 📌 DEUDA TÉCNICA DOCUMENTADA
+
+**Estado**: ACEPTADO COMO NO BLOQUEANTE para Fase 2
+
+**Decisión del usuario** (19 Nov 2024):
+> "Acepto el estado actual de E8 como suficientemente bueno para esta fase. 
+> La lógica de volumen de E8 es una limitación conocida y queda marcada como mejora futura (no bloqueante para el refactor del resto de agentes)."
+
+**Registrado en**:
+- Código: `/app/backend/edn360/agents/training_initial/e8_auditor.py` (docstring de clase)
+- Documentación: Este archivo
+
+**Prioridad**: Media (post-refactor completo de E1-E9)
