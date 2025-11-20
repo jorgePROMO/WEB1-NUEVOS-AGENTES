@@ -323,6 +323,48 @@ const AdminDashboard = () => {
     }
   };
 
+  // Callbacks para GenerationProgressModal
+  const handleGenerationComplete = async (result) => {
+    console.log('✅ Generación completada:', result);
+    
+    // Cerrar modal de progreso
+    setShowGenerationProgress(false);
+    setCurrentJobId(null);
+    
+    // Recargar datos según lo que se generó
+    if (result.training_plan_id) {
+      await loadTrainingPlans(selectedClient.id);
+      await loadTrainingPlansForSelector(selectedClient.id);
+    }
+    
+    if (result.nutrition_plan_id) {
+      await loadNutritionPlan(selectedClient.id);
+      await loadNutritionPlansForSelector(selectedClient.id);
+    }
+    
+    // Mostrar mensaje de éxito
+    const messages = [];
+    if (result.training_plan_id) messages.push('Plan de Entrenamiento');
+    if (result.nutrition_plan_id) messages.push('Plan de Nutrición');
+    
+    alert(`✅ ${messages.join(' y ')} generado exitosamente!`);
+  };
+
+  const handleGenerationError = (error) => {
+    console.error('❌ Error en generación:', error);
+    
+    setShowGenerationProgress(false);
+    setCurrentJobId(null);
+    
+    alert(`❌ Error al generar plan: ${error}`);
+  };
+
+  const handleGenerationClose = () => {
+    setShowGenerationProgress(false);
+    setCurrentJobId(null);
+  };
+
+
   const openTrainingPlanModal = (plan) => {
     setModalTrainingPlan(plan);
     setTrainingContent(plan.plan_text || plan.plan_final);
