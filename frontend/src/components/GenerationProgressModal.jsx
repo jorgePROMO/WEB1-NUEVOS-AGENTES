@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const API = import.meta.env.VITE_BACKEND_URL || process.env.REACT_APP_BACKEND_URL;
+const API = process.env.REACT_APP_BACKEND_URL;
 
 const GenerationProgressModal = ({ jobId, onComplete, onError, onClose }) => {
   const [jobStatus, setJobStatus] = useState(null);
