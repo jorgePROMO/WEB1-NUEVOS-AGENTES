@@ -89,19 +89,22 @@ def validate_agent_output(
     Valida que un agente completó sus campos requeridos.
     
     Args:
-        agent_id: ID del agente (E1, E2, etc.)
+        agent_id: ID del agente (E1, E2, N0, etc.)
         client_context: Objeto client_context después de la ejecución del agente
         required_fields: Lista de campos que el agente debe haber llenado
         
     Returns:
         (valid, error_message): True si válido, False con mensaje de error si no
     """
-    training = client_context.training
+    # Determinar si es agente E o N
+    is_nutrition_agent = agent_id.startswith("N")
+    data_section = client_context.nutrition if is_nutrition_agent else client_context.training
+    section_name = "nutrition" if is_nutrition_agent else "training"
     
     for field in required_fields:
-        value = getattr(training, field, None)
+        value = getattr(data_section, field, None)
         if value is None:
-            return False, f"{agent_id} failed to populate required field: training.{field}"
+            return False, f"{agent_id} did not fill required field: {section_name}.{field}"
     
     return True, None
 
