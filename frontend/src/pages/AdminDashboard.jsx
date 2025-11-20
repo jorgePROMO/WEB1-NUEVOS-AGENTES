@@ -261,46 +261,30 @@ const AdminDashboard = () => {
       }
     }
     
-    // Set the appropriate loading state based on source type
-    if (actualSourceType === 'initial') {
-      setGeneratingTrainingPlan(true);
-    } else if (actualSourceType === 'followup') {
-      setGeneratingFromFollowup(true);
-    }
-    
     try {
-      const params = {
-        source_type: actualSourceType,
-        source_id: actualSourceId
+      // Preparar payload para generación asíncrona
+      const payload = {
+        submission_id: actualSourceId,
+        mode: 'training',
+        previous_training_plan_id: selectedPreviousTrainingPlan || null
       };
       
-      // Agregar plan previo si está seleccionado
-      if (selectedPreviousTrainingPlan) {
-        params.previous_plan_id = selectedPreviousTrainingPlan;
-      }
-      
       const response = await axios.post(
-        `${API}/admin/users/${selectedClient.id}/training/generate`,
-        null,
+        `${API}/admin/users/${selectedClient.id}/plans/generate_async`,
+        payload,
         {
-          params,
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
         }
       );
       
-      alert('✅ Plan de entrenamiento generado exitosamente!');
-      await loadTrainingPlans(selectedClient.id);
-      await loadTrainingPlansForSelector(selectedClient.id); // Actualizar lista de selectores
+      const { job_id } = response.data;
+      setCurrentJobId(job_id);
+      setShowGenerationProgress(true);
+      
     } catch (error) {
-      console.error('Error generating training plan:', error);
-      alert('❌ Error al generar plan: ' + (error.response?.data?.detail || error.message));
-    } finally {
-      if (actualSourceType === 'initial') {
-        setGeneratingTrainingPlan(false);
-      } else if (actualSourceType === 'followup') {
-        setGeneratingFromFollowup(false);
-      }
+      console.error('Error starting training plan generation:', error);
+      alert('❌ Error al iniciar generación: ' + (error.response?.data?.detail || error.message));
     }
   };
 
