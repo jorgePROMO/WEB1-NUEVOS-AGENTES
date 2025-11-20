@@ -23,6 +23,7 @@ from .client_context_models import ClientContext
 from .client_context_utils import (
     initialize_client_context,
     validate_agent_contract,
+    validate_agent_input,
     get_agent_requirements,
     client_context_to_dict
 )
