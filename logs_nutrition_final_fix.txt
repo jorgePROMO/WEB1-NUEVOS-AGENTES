@@ -1,32 +1,32 @@
-2025-11-20 15:49:31,756 - __main__ - INFO - ====================================================================================================
-2025-11-20 15:49:31,756 - __main__ - INFO - 🚀 TEST END-TO-END - NUTRICIÓN INICIAL (N0-N8)
-2025-11-20 15:49:31,756 - __main__ - INFO - ====================================================================================================
-2025-11-20 15:49:31,756 - __main__ - INFO - 
-2025-11-20 15:49:31,756 - __main__ - INFO - 📋 PASO 1: Cargando client_context con training completo...
-2025-11-20 15:49:31,757 - __main__ - INFO - ✅ client_context cargado correctamente
-2025-11-20 15:49:31,757 - __main__ - INFO -    - Cliente: client_juan_perez_e2e
-2025-11-20 15:49:31,757 - __main__ - INFO -    - Snapshot: snapshot_client_juan_perez_e2e_1_f5e4abe8
-2025-11-20 15:49:31,757 - __main__ - INFO -    - Versión: 1
-2025-11-20 15:49:31,757 - __main__ - INFO - ✅ training.bridge_for_nutrition detectado
-2025-11-20 15:49:31,757 - __main__ - INFO - 
-2025-11-20 15:49:31,757 - __main__ - INFO - 🔧 PASO 2: Inicializando orchestrator...
-2025-11-20 15:49:32,273 - edn360.orchestrator - INFO - ✅ Bases de conocimiento cargadas: Training KB (86468 chars), Nutrition KB (83355 chars)
-2025-11-20 15:49:32,273 - __main__ - INFO - ✅ Orchestrator inicializado correctamente
-2025-11-20 15:49:32,273 - __main__ - INFO -    - KB Nutrition: 83355 caracteres
-2025-11-20 15:49:32,273 - __main__ - INFO - 
-2025-11-20 15:49:32,274 - __main__ - INFO - ⚙️ PASO 3: Ejecutando flujo completo N0 → N1 → N2 → N3 → N4 → N5 → N6 → N7 → N8...
-2025-11-20 15:49:32,274 - __main__ - INFO -    (Este proceso puede tomar varios minutos)
-2025-11-20 15:49:32,274 - __main__ - INFO - 
-2025-11-20 15:49:32,274 - edn360.orchestrator - INFO - 🥗 EJECUTANDO PIPELINE DE NUTRICIÓN INDEPENDIENTE
-2025-11-20 15:49:32,274 - edn360.orchestrator - INFO -    Client: client_juan_perez_e2e, Snapshot: snapshot_client_juan_perez_e2e_1_f5e4abe8
-2025-11-20 15:49:32,274 - edn360.orchestrator - INFO -   🥗 INICIANDO PIPELINE DE NUTRICIÓN (N0-N8)
-2025-11-20 15:49:32,274 - edn360.orchestrator - INFO -   ═══════════════════════════════════════════
-2025-11-20 15:49:32,274 - edn360.orchestrator - INFO -   ✅ training.bridge_for_nutrition detectado
-2025-11-20 15:49:32,274 - edn360.orchestrator - INFO -   ▶️ Ejecutando N0 (Analista de Triaje Nutricional)...
-2025-11-20 15:49:32,275 - edn360.orchestrator - INFO -     ℹ️ N0 no recibe KB (optimización de contexto)
-2025-11-20 15:49:32,275 - edn360.agents.base_agent - INFO - 🤖 N0 (Analista de Triaje Nutricional) - Iniciando ejecución
-2025-11-20 15:52:15,972 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-2025-11-20 15:52:15,976 - edn360.agents.base_agent - INFO - 📝 N0 respuesta (primeros 500 chars): ```json
+2025-11-20 15:52:30,695 - __main__ - INFO - ====================================================================================================
+2025-11-20 15:52:30,695 - __main__ - INFO - 🚀 TEST END-TO-END - NUTRICIÓN INICIAL (N0-N8)
+2025-11-20 15:52:30,695 - __main__ - INFO - ====================================================================================================
+2025-11-20 15:52:30,695 - __main__ - INFO - 
+2025-11-20 15:52:30,695 - __main__ - INFO - 📋 PASO 1: Cargando client_context con training completo...
+2025-11-20 15:52:30,696 - __main__ - INFO - ✅ client_context cargado correctamente
+2025-11-20 15:52:30,696 - __main__ - INFO -    - Cliente: client_juan_perez_e2e
+2025-11-20 15:52:30,696 - __main__ - INFO -    - Snapshot: snapshot_client_juan_perez_e2e_1_f5e4abe8
+2025-11-20 15:52:30,696 - __main__ - INFO -    - Versión: 1
+2025-11-20 15:52:30,696 - __main__ - INFO - ✅ training.bridge_for_nutrition detectado
+2025-11-20 15:52:30,696 - __main__ - INFO - 
+2025-11-20 15:52:30,696 - __main__ - INFO - 🔧 PASO 2: Inicializando orchestrator...
+2025-11-20 15:52:31,215 - edn360.orchestrator - INFO - ✅ Bases de conocimiento cargadas: Training KB (86468 chars), Nutrition KB (83355 chars)
+2025-11-20 15:52:31,215 - __main__ - INFO - ✅ Orchestrator inicializado correctamente
+2025-11-20 15:52:31,215 - __main__ - INFO -    - KB Nutrition: 83355 caracteres
+2025-11-20 15:52:31,215 - __main__ - INFO - 
+2025-11-20 15:52:31,215 - __main__ - INFO - ⚙️ PASO 3: Ejecutando flujo completo N0 → N1 → N2 → N3 → N4 → N5 → N6 → N7 → N8...
+2025-11-20 15:52:31,215 - __main__ - INFO -    (Este proceso puede tomar varios minutos)
+2025-11-20 15:52:31,215 - __main__ - INFO - 
+2025-11-20 15:52:31,215 - edn360.orchestrator - INFO - 🥗 EJECUTANDO PIPELINE DE NUTRICIÓN INDEPENDIENTE
+2025-11-20 15:52:31,215 - edn360.orchestrator - INFO -    Client: client_juan_perez_e2e, Snapshot: snapshot_client_juan_perez_e2e_1_f5e4abe8
+2025-11-20 15:52:31,215 - edn360.orchestrator - INFO -   🥗 INICIANDO PIPELINE DE NUTRICIÓN (N0-N8)
+2025-11-20 15:52:31,215 - edn360.orchestrator - INFO -   ═══════════════════════════════════════════
+2025-11-20 15:52:31,215 - edn360.orchestrator - INFO -   ✅ training.bridge_for_nutrition detectado
+2025-11-20 15:52:31,215 - edn360.orchestrator - INFO -   ▶️ Ejecutando N0 (Analista de Triaje Nutricional)...
+2025-11-20 15:52:31,217 - edn360.orchestrator - INFO -     ℹ️ N0 no recibe KB (optimización de contexto)
+2025-11-20 15:52:31,217 - edn360.agents.base_agent - INFO - 🤖 N0 (Analista de Triaje Nutricional) - Iniciando ejecución
+2025-11-20 15:53:24,184 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 15:53:24,201 - edn360.agents.base_agent - INFO - 📝 N0 respuesta (primeros 500 chars): ```json
 {
   "client_context": {
     "meta": {
@@ -40,7 +40,7 @@
     },
     "raw_inputs": {
       "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
-2025-11-20 15:52:15,977 - edn360.agents.base_agent - INFO - ✅ N0 completado en 163.70s
-2025-11-20 15:52:15,977 - edn360.orchestrator - ERROR -   ❌ N0 - Error actualizando nutrition: name 'logger' is not defined
-2025-11-20 15:52:15,977 - __main__ - ERROR - ❌ Flujo falló: N0 update error: name 'logger' is not defined
-2025-11-20 15:52:15,977 - __main__ - ERROR -    Revisa los logs arriba para identificar en qué agente falló
+2025-11-20 15:53:24,201 - edn360.agents.base_agent - INFO - ✅ N0 completado en 52.98s
+2025-11-20 15:53:24,201 - edn360.orchestrator - ERROR -   ❌ N0 - Error actualizando nutrition: name 'logger' is not defined
+2025-11-20 15:53:24,201 - __main__ - ERROR - ❌ Flujo falló: N0 update error: name 'logger' is not defined
+2025-11-20 15:53:24,201 - __main__ - ERROR -    Revisa los logs arriba para identificar en qué agente falló
