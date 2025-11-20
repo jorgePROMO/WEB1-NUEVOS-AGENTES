@@ -10748,36 +10748,57 @@ async def process_generation_job(job_id: str):
             if job.get("previous_nutrition_plan_id"):
                 previous_nutrition_plan = await db.nutrition_plans.find_one({"_id": job["previous_nutrition_plan_id"]})
             
-            # Ejecutar pipeline de nutrition
-            nutrition_result = await orchestrator._execute_nutrition_initial(
-                adapted_questionnaire,
-                training_plan=training_plan_for_sync,
-                previous_plan=previous_nutrition_plan
-            )
+            await add_job_log(job_id, "nutrition_started", "Iniciando pipeline N0-N8")
+            
+            # EJECUTAR PIPELINE CON RETRY
+            async def run_nutrition_pipeline():
+                return await orchestrator._execute_nutrition_initial(
+                    adapted_questionnaire,
+                    training_plan=training_plan_for_sync,
+                    previous_plan=previous_nutrition_plan
+                )
+            
+            nutrition_result, nutrition_retry_count = await execute_with_retry(run_nutrition_pipeline)
             
             if not nutrition_result["success"]:
                 raise Exception(f"Error en pipeline de nutrition: {nutrition_result.get('error', 'Error desconocido')}")
             
-            # Actualizar progreso después de cada agente
+            # ACTUALIZAR PROGRESO REAL BASADO EN EXECUTIONS
+            executions_nutrition = nutrition_result.get("executions", [])
             base_steps = 9 if job_type == "full" else 0
-            for i in range(9):
-                agent_name = f"N{i}"
-                completed = base_steps + i + 1
-                total = 18 if job_type == "full" else 9
-                percentage = int((completed / total) * 100)
-                
-                await db.generation_jobs.update_one(
-                    {"_id": job_id},
-                    {
-                        "$set": {
-                            "progress.current_agent": agent_name,
-                            "progress.completed_steps": completed,
-                            "progress.total_steps": total,
-                            "progress.percentage": percentage,
-                            "progress.message": f"Procesando agente {agent_name}"
-                        }
-                    }
-                )
+            total_steps = 18 if job_type == "full" else 9
+            
+            if executions_nutrition:
+                for idx, execution in enumerate(executions_nutrition):
+                    agent_id = execution.get("agent_id", f"N{idx}")
+                    completed = base_steps + idx + 1
+                    
+                    await update_job_progress(
+                        job_id,
+                        "nutrition",
+                        agent_id,
+                        completed,
+                        total_steps,
+                        f"Agente {agent_id} completado"
+                    )
+                    await add_job_log(job_id, "agent_completed", f"{agent_id} ejecutado exitosamente")
+            else:
+                # Fallback
+                for i in range(9):
+                    agent_name = f"N{i}"
+                    completed = base_steps + i + 1
+                    
+                    await update_job_progress(
+                        job_id,
+                        "nutrition",
+                        agent_name,
+                        completed,
+                        total_steps,
+                        f"Agente {agent_name} completado"
+                    )
+            
+            if nutrition_retry_count > 0:
+                await add_job_log(job_id, "retry_success", f"Pipeline nutrition completado después de {nutrition_retry_count} reintento(s)")
             
             # Guardar plan de nutrición
             nutrition_planes_count = await db.nutrition_plans.count_documents({"user_id": user_id})
