@@ -81,3 +81,62 @@
 2025-11-20 13:32:50,685 - openai._base_client - INFO - Retrying request to /chat/completions in 17.268000 seconds
 2025-11-20 13:33:08,109 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
 2025-11-20 13:33:08,109 - openai._base_client - INFO - Retrying request to /chat/completions in 10.070000 seconds
+2025-11-20 13:33:56,360 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:33:56,396 - edn360.agents.base_agent - INFO - 📝 E3 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_1d06852e",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:31:01.939593\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:33:56,397 - edn360.agents.base_agent - INFO - ✅ E3 completado en 65.95s
+2025-11-20 13:33:56,397 - edn360.orchestrator - INFO -   ✅ E3 devolvió client_context actualizado
+2025-11-20 13:33:56,397 - edn360.orchestrator - INFO -     🔍 Validando contrato de E3...
+2025-11-20 13:33:56,397 - edn360.orchestrator - INFO -   ✅ E3 completado y validado
+2025-11-20 13:33:56,397 - edn360.orchestrator - INFO -   ▶️ Ejecutando E4 (Arquitecto del Mesociclo)...
+2025-11-20 13:33:56,397 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['capacity', 'adaptation', 'profile']
+2025-11-20 13:33:56,397 - edn360.agents.base_agent - INFO - 🤖 E4 (Arquitecto del Mesociclo) - Iniciando ejecución
+2025-11-20 13:33:56,397 - edn360.agents.base_agent - INFO - 📚 E4 usando KB de 86468 caracteres
+2025-11-20 13:33:56,561 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:33:56,561 - openai._base_client - INFO - Retrying request to /chat/completions in 17.760000 seconds
+2025-11-20 13:34:14,488 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:34:14,489 - openai._base_client - INFO - Retrying request to /chat/completions in 11.452000 seconds
+2025-11-20 13:35:16,439 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:35:16,440 - edn360.agents.base_agent - INFO - 📝 E4 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_1d06852e",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:31:01.939593\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:35:16,440 - edn360.agents.base_agent - INFO - ✅ E4 completado en 80.04s
+2025-11-20 13:35:16,440 - edn360.orchestrator - INFO -   ✅ E4 devolvió client_context actualizado
+2025-11-20 13:35:16,440 - edn360.orchestrator - INFO -     🔍 Validando contrato de E4...
+2025-11-20 13:35:16,440 - edn360.orchestrator - INFO -   ✅ E4 completado y validado
+2025-11-20 13:35:16,440 - edn360.orchestrator - INFO -   ▶️ Ejecutando E5 (Ingeniero de Sesiones)...
+2025-11-20 13:35:16,440 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['mesocycle', 'profile']
+2025-11-20 13:35:16,440 - edn360.agents.base_agent - INFO - 🤖 E5 (Ingeniero de Sesiones) - Iniciando ejecución
+2025-11-20 13:35:16,441 - edn360.agents.base_agent - INFO - 📚 E5 usando KB de 86468 caracteres
+2025-11-20 13:35:16,611 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:35:16,611 - openai._base_client - INFO - Retrying request to /chat/completions in 0.392143 seconds
+2025-11-20 13:35:17,106 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:35:17,106 - openai._base_client - INFO - Retrying request to /chat/completions in 0.836029 seconds
+2025-11-20 13:35:18,050 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:35:18,051 - edn360.agents.base_agent - ERROR - ❌ E5 falló: Error code: 429 - {'error': {'message': 'Request too large for gpt-4o in organization org-EWRMz9dCMT0ktVNDPdFoICct on tokens per min (TPM): Limit 30000, Requested 30530. The input or output tokens must be reduced in order to run successfully. Visit https://platform.openai.com/account/rate-limits to learn more.', 'type': 'tokens', 'param': None, 'code': 'rate_limit_exceeded'}}
+2025-11-20 13:35:18,051 - edn360.orchestrator - ERROR -   ❌ E5 falló: Error code: 429 - {'error': {'message': 'Request too large for gpt-4o in organization org-EWRMz9dCMT0ktVNDPdFoICct on tokens per min (TPM): Limit 30000, Requested 30530. The input or output tokens must be reduced in order to run successfully. Visit https://platform.openai.com/account/rate-limits to learn more.', 'type': 'tokens', 'param': None, 'code': 'rate_limit_exceeded'}}
+2025-11-20 13:35:18,051 - __main__ - ERROR - ❌ Flujo falló: E5 falló: Error code: 429 - {'error': {'message': 'Request too large for gpt-4o in organization org-EWRMz9dCMT0ktVNDPdFoICct on tokens per min (TPM): Limit 30000, Requested 30530. The input or output tokens must be reduced in order to run successfully. Visit https://platform.openai.com/account/rate-limits to learn more.', 'type': 'tokens', 'param': None, 'code': 'rate_limit_exceeded'}}
+2025-11-20 13:35:18,051 - __main__ - ERROR -    Revisa los logs arriba para identificar en qué agente falló
