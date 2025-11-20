@@ -209,7 +209,8 @@ Procesa estos datos siguiendo las instrucciones del sistema y genera la salida e
             pass
         
         # Buscar JSON en bloques de código markdown (```json ... ``` o ``` ... ```)
-        json_pattern = r'```(?:json)?\s*(\{.*?\})\s*```'
+        # Usar patrón no-greedy pero que capture todo hasta las últimas comillas de cierre
+        json_pattern = r'```(?:json)?\s*(\{[\s\S]*\})\s*```'
         matches = re.findall(json_pattern, response, re.DOTALL)
         
         if matches:
