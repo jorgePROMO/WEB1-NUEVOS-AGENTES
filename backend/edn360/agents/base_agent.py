@@ -246,9 +246,17 @@ A continuación tienes acceso a una base de conocimiento global que sirve como *
             # Guardar respuesta completa para debugging (solo en caso de error posterior)
             _full_response = response
             
-            # Procesar salida
+            # Procesar salida con post-procesador de normalización
             try:
-                output_data = self.process_output(response)
+                # 1. Extraer JSON de la respuesta
+                parsed_json = self._extract_json_from_response(response)
+                
+                # 2. Normalizar formato (convierte formato antiguo a nuevo si es necesario)
+                normalized_json = self.normalize_agent_output(parsed_json, input_data)
+                
+                # 3. Validar con process_output (validaciones específicas del agente)
+                output_data = self.process_output(json.dumps(normalized_json))
+                
             except Exception as parse_error:
                 # Si falla el parseo, guardar la respuesta completa para debugging
                 debug_file = f"/app/debug_response_{self.agent_id}.txt"
