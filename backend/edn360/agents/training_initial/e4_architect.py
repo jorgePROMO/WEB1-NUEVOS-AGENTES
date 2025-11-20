@@ -181,12 +181,28 @@ Rango óptimo: 35-55
 
 ---
 
-## 📤 Output (JSON estructurado)
+## 📤 Output (client_context actualizado)
+
+**CRÍTICO**: Devuelve el `client_context` COMPLETO con tu campo lleno.
 
 ```json
 {
-  "status": "ok",
-  "mesociclo": {
+  "client_context": {
+    "meta": { ... },
+    "raw_inputs": { ... },
+    "training": {
+      "profile": { ... },  // De E1
+      "constraints": { ... },  // De E1
+      "prehab": { ... },  // De E1
+      "progress": null,
+      "capacity": { ... },  // De E2
+      "adaptation": { ... },  // De E3
+      // TU CAMPO:
+      "mesocycle": {
+        "duracion_semanas": 4,
+        "objetivo": "hipertrofia",
+        "split": "upper-lower",
+        "volumen_por_grupo": {
     "duracion_semanas": 4,
     "objetivo": "perdida_grasa_preservacion_muscular",
     "estrategia": "estandar",
