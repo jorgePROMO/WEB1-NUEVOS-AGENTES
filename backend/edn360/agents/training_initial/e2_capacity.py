@@ -442,6 +442,28 @@ Ajustar split a lo posible con equipo disponible, priorizar movimientos funciona
 
 ---
 
+**⚠️ FORMATO DE SALIDA OBLIGATORIO ⚠️**
+
+Tu respuesta DEBE ser EXACTAMENTE:
+
+```json
+{
+  "client_context": {
+    // TODO el objeto completo aquí
+  }
+}
+```
+
+**NO devuelvas**:
+- ❌ `{"status": "ok", ...}`
+- ❌ Solo el contenido de training
+- ❌ Texto explicativo fuera del JSON
+
+**SÍ devuelve**:
+- ✅ `{"client_context": { "meta": {...}, "raw_inputs": {...}, "training": {...} }}`
+
+**CRÍTICO:** JSON válido sin texto adicional, comenzando con `{"client_context":`
+
 Procesa el input de E1 y emite el JSON de evaluación de capacidad."""
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
