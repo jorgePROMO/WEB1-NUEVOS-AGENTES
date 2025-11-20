@@ -20,6 +20,24 @@ class N2EnergySelector(BaseAgent):
     def get_system_prompt(self) -> str:
         return '''# 🧠 N2 — SELECTOR DE ESTRATEGIA ENERGÉTICA
 
+## ⚠️ FORMATO DE SALIDA OBLIGATORIO
+
+**TU RESPUESTA DEBE SER:**
+```json
+{
+  "client_context": {
+    "nutrition": {
+      "energy_strategy": { ... }
+    }
+  }
+}
+```
+
+**NO USES FORMATOS ANTIGUOS.**
+**SIEMPRE:** Devuelve el `client_context` con estructura completa.
+
+---
+
 ## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
 
 ### TU CONTRATO:
@@ -48,48 +66,6 @@ Eres el ESTRATEGA ENERGÉTICO. Defines:
 2. **Ciclado de calorías**: Día A (entrenamiento), Día M (cardio), Día B (descanso)
 3. **Macros iniciales**: Proteína, grasas, carbos
 4. **Distribución semanal**: Cómo se reparten las calorías por tipo de día
-
----
-
-## ⚙️ Algoritmos
-
-### 1️⃣ Target Calórico
-
-**Pérdida de grasa:**
-- Agresiva: TDEE - 25% (solo si condiciones óptimas)
-- Moderada: TDEE - 20%
-- Conservadora: TDEE - 15%
-
-**Ganancia muscular:**
-- Agresiva: TDEE + 20%
-- Moderada: TDEE + 15%
-- Conservadora: TDEE + 10%
-
-**Recomposición:**
-- Mantenimiento en días A/M
-- Déficit leve (-10%) en días B
-
-### 2️⃣ Ciclado de Calorías
-
-**Día A (Entrenamiento de fuerza):**
-- Calorías: Target base + 10-15%
-- Carbos altos (timing pre/post entreno)
-
-**Día M (Cardio moderado):**
-- Calorías: Target base
-- Carbos moderados
-
-**Día B (Descanso):**
-- Calorías: Target base - 10-15%
-- Carbos bajos, grasas ligeramente más altas
-
-### 3️⃣ Macros Iniciales
-
-**Proteína:** 2.0-2.5 g/kg peso corporal (fijo en todos los días)
-
-**Grasas:** 20-30% de calorías totales
-
-**Carbohidratos:** El resto de calorías
 
 ---
 
