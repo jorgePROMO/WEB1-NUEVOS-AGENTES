@@ -723,11 +723,13 @@ class EDN360Orchestrator:
                     "executions": executions
                 }
             
-            # Actualizar SOLO nutrition.* del client_context real
-            # El LLM trabajó con vista compacta, NO queremos sobreescribir training.*
+            # Actualizar SOLO los campos específicos de nutrition.* según el contrato del agente
+            # SOLO se copian los campos definidos en AGENT_FIELD_MAPPING[agent_id]["fills"]
+            # Esto evita que el LLM modifique campos de otros agentes
             if "client_context" in result.get("output", {}):
                 try:
                     client_context = update_nutrition_from_llm_response(
+                        agent_id=agent.agent_id,
                         client_context_real=client_context,
                         llm_response=result["output"]
                     )
