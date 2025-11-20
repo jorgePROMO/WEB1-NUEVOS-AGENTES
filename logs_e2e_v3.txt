@@ -27,3 +27,57 @@
 2025-11-20 13:31:02,457 - edn360.agents.base_agent - INFO - 📚 E1 usando KB de 86468 caracteres
 2025-11-20 13:31:02,727 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
 2025-11-20 13:31:02,728 - openai._base_client - INFO - Retrying request to /chat/completions in 3.290000 seconds
+2025-11-20 13:31:25,644 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:31:25,666 - edn360.agents.base_agent - INFO - 📝 E1 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_1d06852e",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:31:01.939593\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:31:25,666 - edn360.agents.base_agent - INFO - ✅ E1 completado en 23.21s
+2025-11-20 13:31:25,666 - edn360.orchestrator - INFO -   ✅ E1 devolvió client_context actualizado
+2025-11-20 13:31:25,666 - edn360.orchestrator - INFO -     🔍 Validando contrato de E1...
+2025-11-20 13:31:25,666 - edn360.orchestrator - INFO -   ✅ E1 completado y validado
+2025-11-20 13:31:25,666 - edn360.orchestrator - INFO -   ▶️ Ejecutando E2 (Evaluador de Capacidad y Riesgo)...
+2025-11-20 13:31:25,667 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['profile']
+2025-11-20 13:31:25,667 - edn360.agents.base_agent - INFO - 🤖 E2 (Evaluador de Capacidad y Riesgo) - Iniciando ejecución
+2025-11-20 13:31:25,667 - edn360.agents.base_agent - INFO - 📚 E2 usando KB de 86468 caracteres
+2025-11-20 13:31:25,848 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:31:25,848 - openai._base_client - INFO - Retrying request to /chat/completions in 36.932000 seconds
+2025-11-20 13:32:03,069 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:32:03,071 - openai._base_client - INFO - Retrying request to /chat/completions in 8.664000 seconds
+2025-11-20 13:32:50,437 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:32:50,447 - edn360.agents.base_agent - INFO - 📝 E2 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_1d06852e",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:31:01.939593\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:32:50,447 - edn360.agents.base_agent - INFO - ✅ E2 completado en 84.78s
+2025-11-20 13:32:50,447 - edn360.orchestrator - INFO -   ✅ E2 devolvió client_context actualizado
+2025-11-20 13:32:50,447 - edn360.orchestrator - INFO -     🔍 Validando contrato de E2...
+2025-11-20 13:32:50,447 - edn360.orchestrator - INFO -   ✅ E2 completado y validado
+2025-11-20 13:32:50,447 - edn360.orchestrator - INFO -   ▶️ Ejecutando E3 (Analista de Historial y Adaptación)...
+2025-11-20 13:32:50,447 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['capacity', 'profile']
+2025-11-20 13:32:50,448 - edn360.agents.base_agent - INFO - 🤖 E3 (Analista de Historial y Adaptación) - Iniciando ejecución
+2025-11-20 13:32:50,448 - edn360.agents.base_agent - INFO - 📚 E3 usando KB de 86468 caracteres
+2025-11-20 13:32:50,685 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:32:50,685 - openai._base_client - INFO - Retrying request to /chat/completions in 17.268000 seconds
+2025-11-20 13:33:08,109 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:33:08,109 - openai._base_client - INFO - Retrying request to /chat/completions in 10.070000 seconds
