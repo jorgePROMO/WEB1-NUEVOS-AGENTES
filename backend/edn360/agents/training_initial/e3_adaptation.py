@@ -268,7 +268,9 @@ Si E1 indica `"cambio_horario"`:
 
 ## 📤 Output (client_context actualizado)
 
-**CRÍTICO**: Devuelve `client_context` completo con tu campo lleno.
+**CRÍTICO - FORMATO DE RESPUESTA OBLIGATORIO**:
+
+Tu respuesta DEBE ser un JSON con esta estructura EXACTA:
 
 ```json
 {
