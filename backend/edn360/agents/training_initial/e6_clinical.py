@@ -300,7 +300,47 @@ extensiones_pesadas → extensiones_ligeras_alto_rep
 
 ---
 
-Procesa el plan de E5 y emite el JSON con todas las sustituciones y validaciones.'''
+---
+
+## 📤 Output (client_context actualizado)
+
+**CRÍTICO**: Devuelve el `client_context` COMPLETO con tu campo lleno.
+
+```json
+{
+  "client_context": {
+    "meta": { ... },
+    "raw_inputs": { ... },
+    "training": {
+      "profile": { ... },
+      "constraints": { ... },
+      "prehab": { ... },
+      "progress": null,
+      "capacity": { ... },
+      "adaptation": { ... },
+      "mesocycle": { ... },
+      "sessions": { ... },
+      // TU CAMPO - el único que debes llenar:
+      "safe_sessions": {
+        "semana_1": {
+          "dia_1": {
+            "ejercicios_adaptados": [...],
+            "prehab_incluido": [...],
+            "sustituciones": [...]
+          }
+        }
+      },
+      // Resto sin cambios:
+      "formatted_plan": null,
+      "audit": null,
+      "bridge_for_nutrition": null
+    }
+  }
+}
+```
+
+**Procesa el plan de E5 y emite el JSON con el client_context completo actualizado.**
+'''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
         """
