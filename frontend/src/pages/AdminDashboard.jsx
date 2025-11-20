@@ -6159,6 +6159,16 @@ const AdminDashboard = () => {
         </div>
       )}
 
+      {/* Generation Progress Modal */}
+      {showGenerationProgress && currentJobId && (
+        <GenerationProgressModal
+          jobId={currentJobId}
+          onComplete={handleGenerationComplete}
+          onError={handleGenerationError}
+          onClose={handleGenerationClose}
+        />
+      )}
+
     </div>
   );
 };
