@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://edn-unified.preview.emergentagent.com/api"
+BACKEND_URL = "https://agent-pipeline-5.preview.emergentagent.com/api"
 
 class FollowUpTester:
     def __init__(self):
