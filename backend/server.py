@@ -10878,6 +10878,17 @@ async def process_generation_job(job_id: str):
         await db.generation_jobs.update_one(
             {"_id": job_id},
             {
+                "$set": {
+                    "status": "failed",
+                    "error_message": str(e),
+                    "error_reason": error_type,
+                    "completed_at": datetime.now(timezone.utc),
+                    "retry_count": retry_count
+                }
+            }
+        )
+        
+        await add_job_log(job_id, "failed", f"Error: {str(e)}")
 
 
 # ========== WATCHDOG DE TIMEOUT ==========
