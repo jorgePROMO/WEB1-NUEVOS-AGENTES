@@ -10971,19 +10971,6 @@ async def process_queued_jobs():
         await asyncio.sleep(30)
 
 
-                "$set": {
-                    "status": "failed",
-                    "error_message": str(e),
-                    "error_reason": error_type,
-                    "completed_at": datetime.now(timezone.utc),
-                    "retry_count": retry_count
-                }
-            }
-        )
-        
-        await add_job_log(job_id, "failed", f"Error: {str(e)}")
-
-
 @api_router.post("/admin/users/{user_id}/plans/generate_async")
 async def generate_plans_async(
     user_id: str,
