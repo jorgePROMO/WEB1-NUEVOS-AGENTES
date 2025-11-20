@@ -111,27 +111,33 @@ agent_communication:
 backend:
   - task: "Generation Jobs Collection & Models"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/models.py"
     stuck_count: 0
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Creados modelos Pydantic: GenerationJob, GenerationJobProgress, GenerationJobResult, GenerateAsyncRequest. Colección generation_jobs en MongoDB con todos los campos necesarios para tracking de jobs asíncronos."
+        - working: true
+          agent: "testing"
+          comment: "✅ VERIFIED: Models exist in /app/backend/models.py. Found GenerationJob, GenerationJobProgress, GenerationJobResult, GenerateAsyncRequest classes with correct fields for async job tracking."
 
   - task: "Async Generation Endpoint"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/backend/server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint POST /admin/users/{user_id}/plans/generate_async implementado. Valida usuario y cuestionario, crea job en BD con status=pending, lanza asyncio.create_task(process_generation_job(job_id)), responde inmediatamente con job_id. Soporta mode: training, nutrition, full."
+        - working: false
+          agent: "testing"
+          comment: "❌ CRITICAL ISSUE: Endpoint exists but returns 404 'Cuestionario no encontrado' when testing with mock submission_id. The endpoint requires a REAL nutrition questionnaire submission from the database, not mock data. Authentication also has issues - Bearer token not being accepted properly. NEEDS REAL DATA TO TEST."
 
   - task: "Background Job Processor"
     implemented: true
@@ -144,18 +150,24 @@ backend:
         - working: "NA"
           agent: "main"
           comment: "Función process_generation_job(job_id) implementada. Ejecuta el orquestador E1-E9 y/o N0-N8 según el type del job, actualiza progreso en BD después de cada fase, maneja errores y actualiza status a completed/failed. Reutiliza TODO el código existente del orquestador sin modificarlo."
+        - working: "NA"
+          agent: "testing"
+          comment: "⚠️ CANNOT TEST: Background processor cannot be tested without successful job creation. Depends on Async Generation Endpoint working first. Code exists in server.py as process_generation_job() function."
 
   - task: "Job Status Query Endpoint"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint GET /jobs/{job_id} implementado (público, sin auth para simplificar polling). Devuelve: status, progress, result, error_message, timestamps. Serializa datetime fields correctamente."
+        - working: true
+          agent: "testing"
+          comment: "✅ VERIFIED: GET /jobs/{job_id} endpoint working correctly. Public access (no auth required). Returns proper 404 'Job no encontrado' for non-existent jobs. Ready for polling when jobs are created."
 
 frontend:
   - task: "GenerationProgressModal Component"
