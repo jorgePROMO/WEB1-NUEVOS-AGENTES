@@ -295,43 +295,31 @@ const AdminDashboard = () => {
       return;
     }
     
-    setGeneratingPlan(true);
-    
     try {
-      const params = {
-        submission_id: selectedQuestionnaireForNutrition,  // Usar el seleccionado
-        regenerate: regenerate
+      // Preparar payload para generación asíncrona
+      const payload = {
+        submission_id: selectedQuestionnaireForNutrition,
+        mode: 'nutrition',
+        training_plan_id: selectedTrainingPlanForNutrition || null,
+        previous_nutrition_plan_id: selectedPreviousNutritionPlan || null
       };
       
-      // Agregar plan de entrenamiento si está seleccionado
-      if (selectedTrainingPlanForNutrition) {
-        params.training_plan_id = selectedTrainingPlanForNutrition;
-      }
-      
-      // Agregar plan nutricional previo si está seleccionado
-      if (selectedPreviousNutritionPlan) {
-        params.previous_nutrition_plan_id = selectedPreviousNutritionPlan;
-      }
-      
       const response = await axios.post(
-        `${API}/admin/users/${selectedClient.id}/nutrition/generate`,
-        null,
+        `${API}/admin/users/${selectedClient.id}/plans/generate_async`,
+        payload,
         {
-          params,
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
         }
       );
       
-      alert('✅ Plan de nutrición generado exitosamente con E.D.N.360!');
-      await loadNutritionPlan(selectedClient.id);
-      // Recargar lista de planes para que el nuevo plan aparezca en dropdown de "Plan Previo"
-      await loadNutritionPlansForSelector(selectedClient.id);
+      const { job_id } = response.data;
+      setCurrentJobId(job_id);
+      setShowGenerationProgress(true);
+      
     } catch (error) {
-      console.error('Error generating nutrition plan:', error);
-      alert('❌ Error al generar plan: ' + (error.response?.data?.detail || error.message));
-    } finally {
-      setGeneratingPlan(false);
+      console.error('Error starting nutrition plan generation:', error);
+      alert('❌ Error al iniciar generación: ' + (error.response?.data?.detail || error.message));
     }
   };
 
