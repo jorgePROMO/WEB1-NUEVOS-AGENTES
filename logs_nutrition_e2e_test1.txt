@@ -1,0 +1,36 @@
+2025-11-20 14:21:25,243 - __main__ - INFO - ====================================================================================================
+2025-11-20 14:21:25,243 - __main__ - INFO - 🚀 TEST END-TO-END - NUTRICIÓN INICIAL (N0-N8)
+2025-11-20 14:21:25,243 - __main__ - INFO - ====================================================================================================
+2025-11-20 14:21:25,243 - __main__ - INFO - 
+2025-11-20 14:21:25,243 - __main__ - INFO - 📋 PASO 1: Cargando client_context con training completo...
+2025-11-20 14:21:25,244 - __main__ - INFO - ✅ client_context cargado correctamente
+2025-11-20 14:21:25,244 - __main__ - INFO -    - Cliente: client_juan_perez_e2e
+2025-11-20 14:21:25,244 - __main__ - INFO -    - Snapshot: snapshot_client_juan_perez_e2e_1_f5e4abe8
+2025-11-20 14:21:25,244 - __main__ - INFO -    - Versión: 1
+2025-11-20 14:21:25,244 - __main__ - INFO - ✅ training.bridge_for_nutrition detectado
+2025-11-20 14:21:25,244 - __main__ - INFO - 
+2025-11-20 14:21:25,244 - __main__ - INFO - 🔧 PASO 2: Inicializando orchestrator...
+2025-11-20 14:21:25,760 - edn360.orchestrator - INFO - ✅ Bases de conocimiento cargadas: Training KB (86468 chars), Nutrition KB (83355 chars)
+2025-11-20 14:21:25,760 - __main__ - INFO - ✅ Orchestrator inicializado correctamente
+2025-11-20 14:21:25,760 - __main__ - INFO -    - KB Nutrition: 83355 caracteres
+2025-11-20 14:21:25,760 - __main__ - INFO - 
+2025-11-20 14:21:25,760 - __main__ - INFO - ⚙️ PASO 3: Ejecutando flujo completo N0 → N1 → N2 → N3 → N4 → N5 → N6 → N7 → N8...
+2025-11-20 14:21:25,760 - __main__ - INFO -    (Este proceso puede tomar varios minutos)
+2025-11-20 14:21:25,760 - __main__ - INFO - 
+2025-11-20 14:21:25,760 - edn360.orchestrator - INFO - 🥗 EJECUTANDO PIPELINE DE NUTRICIÓN INDEPENDIENTE
+2025-11-20 14:21:25,760 - edn360.orchestrator - INFO -    Client: client_juan_perez_e2e, Snapshot: snapshot_client_juan_perez_e2e_1_f5e4abe8
+2025-11-20 14:21:25,760 - edn360.orchestrator - INFO -   🥗 INICIANDO PIPELINE DE NUTRICIÓN (N0-N8)
+2025-11-20 14:21:25,760 - edn360.orchestrator - INFO -   ═══════════════════════════════════════════
+2025-11-20 14:21:25,760 - edn360.orchestrator - INFO -   ✅ training.bridge_for_nutrition detectado
+2025-11-20 14:21:25,760 - edn360.orchestrator - INFO -   ▶️ Ejecutando N0 (Analista de Triaje Nutricional)...
+2025-11-20 14:21:25,761 - edn360.agents.base_agent - INFO - 🤖 N0 (Analista de Triaje Nutricional) - Iniciando ejecución
+2025-11-20 14:21:25,762 - edn360.agents.base_agent - INFO - 📚 N0 usando KB de 83355 caracteres
+2025-11-20 14:21:26,137 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 14:21:26,137 - openai._base_client - INFO - Retrying request to /chat/completions in 0.411738 seconds
+2025-11-20 14:21:26,886 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 14:21:26,887 - openai._base_client - INFO - Retrying request to /chat/completions in 0.945742 seconds
+2025-11-20 14:21:28,139 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 14:21:28,140 - edn360.agents.base_agent - ERROR - ❌ N0 falló: Error code: 429 - {'error': {'message': 'Request too large for gpt-4o in organization org-EWRMz9dCMT0ktVNDPdFoICct on tokens per min (TPM): Limit 30000, Requested 38176. The input or output tokens must be reduced in order to run successfully. Visit https://platform.openai.com/account/rate-limits to learn more.', 'type': 'tokens', 'param': None, 'code': 'rate_limit_exceeded'}}
+2025-11-20 14:21:28,140 - edn360.orchestrator - ERROR -   ❌ N0 falló: Error code: 429 - {'error': {'message': 'Request too large for gpt-4o in organization org-EWRMz9dCMT0ktVNDPdFoICct on tokens per min (TPM): Limit 30000, Requested 38176. The input or output tokens must be reduced in order to run successfully. Visit https://platform.openai.com/account/rate-limits to learn more.', 'type': 'tokens', 'param': None, 'code': 'rate_limit_exceeded'}}
+2025-11-20 14:21:28,140 - __main__ - ERROR - ❌ Flujo falló: N0 falló: Error code: 429 - {'error': {'message': 'Request too large for gpt-4o in organization org-EWRMz9dCMT0ktVNDPdFoICct on tokens per min (TPM): Limit 30000, Requested 38176. The input or output tokens must be reduced in order to run successfully. Visit https://platform.openai.com/account/rate-limits to learn more.', 'type': 'tokens', 'param': None, 'code': 'rate_limit_exceeded'}}
+2025-11-20 14:21:28,140 - __main__ - ERROR -    Revisa los logs arriba para identificar en qué agente falló
