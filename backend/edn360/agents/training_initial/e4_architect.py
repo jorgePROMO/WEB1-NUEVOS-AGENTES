@@ -303,16 +303,39 @@ Rango óptimo: 35-55
 Procesa inputs de E1-E3 y diseña el mesociclo mensual."""
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        required = ["e1_output", "e2_output", "e3_output"]
-        return all(key in input_data for key in required)
+        """
+        Valida que el input contenga client_context con campos necesarios
+        
+        NUEVO (Fase 2): Validamos client_context
+        """
+        if "training" not in input_data:
+            return False
+        
+        training = input_data["training"]
+        
+        # Debe tener capacity (E2), adaptation (E3), profile (E1)
+        return (training.get("capacity") is not None and
+                training.get("adaptation") is not None and
+                training.get("profile") is not None)
     
     def process_output(self, raw_output: str) -> Dict[str, Any]:
+        """
+        Valida que devuelva client_context con mesocycle lleno
+        
+        NUEVO (Fase 2): Validamos estructura de salida
+        """
         try:
             output = self._extract_json_from_response(raw_output)
-            if "status" not in output or output["status"] != "ok":
-                raise ValueError("Output no contiene status 'ok'")
-            if "mesociclo" not in output or "semanas" not in output:
-                raise ValueError("Output incompleto")
+            
+            if "client_context" not in output:
+                raise ValueError("Output no contiene client_context")
+            
+            client_context = output["client_context"]
+            training = client_context.get("training", {})
+            
+            # Validar que E4 llenó mesocycle
+            if training.get("mesocycle") is None:
+                raise ValueError("E4 no llenó training.mesocycle")
             return output
         except Exception as e:
             raise ValueError(f"Error procesando output de E4: {str(e)}")
