@@ -694,8 +694,9 @@ class EDN360Orchestrator:
             agent_input = client_context_to_dict(client_context)
             
             # Decidir si pasar KB de nutrición
-            # N0-N4 reciben KB completa, N5-N8 no la necesitan (optimización)
-            agents_with_kb = ["N0", "N1", "N2", "N3", "N4"]
+            # OPTIMIZACIÓN: Solo N1, N2, N3 reciben KB (son los que más la necesitan)
+            # N0 lee del cuestionario, N4-N8 ya tienen todo en client_context
+            agents_with_kb = ["N1", "N2", "N3"]
             if agent.agent_id in agents_with_kb:
                 kb_to_pass = self.knowledge_bases.get("nutrition", "")
             else:
