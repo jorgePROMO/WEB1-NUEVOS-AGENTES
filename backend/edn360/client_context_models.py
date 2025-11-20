@@ -254,19 +254,33 @@ NOTAS IMPORTANTES PARA EL DESARROLLO:
    - Si falta un campo crítico, el agente debe devolver error técnico
 
 3. REGLAS DE MODIFICACIÓN
-   - SOLO el agente asignado puede llenar/modificar su campo
-   - E1 modifica: profile, constraints, prehab, progress
-   - E2 modifica: capacity
-   - E3 modifica: adaptation
-   - E4 modifica: mesocycle
-   - E5 modifica: sessions
-   - E6 modifica: safe_sessions
-   - E7 modifica: formatted_plan
-   - E8 modifica: audit
-   - E9 modifica: bridge_for_nutrition
+   ENTRENAMIENTO (E1-E9):
+   - E1 modifica: training.profile, training.constraints, training.prehab, training.progress
+   - E2 modifica: training.capacity
+   - E3 modifica: training.adaptation
+   - E4 modifica: training.mesocycle
+   - E5 modifica: training.sessions
+   - E6 modifica: training.safe_sessions
+   - E7 modifica: training.formatted_plan
+   - E8 modifica: training.audit
+   - E9 modifica: training.bridge_for_nutrition
+   
+   NUTRICIÓN (N0-N8):
+   - N0 modifica: nutrition.profile
+   - N1 modifica: nutrition.metabolism
+   - N2 modifica: nutrition.energy_strategy
+   - N3 modifica: nutrition.macro_design
+   - N4 modifica: nutrition.weekly_structure
+   - N5 modifica: nutrition.timing_plan
+   - N6 modifica: nutrition.menu_plan
+   - N7 modifica: nutrition.adherence_report
+   - N8 modifica: nutrition.audit
+   
+   REGLA CRÍTICA: Agentes E NO tocan nutrition.*, Agentes N NO tocan training.*
 
 4. FLUJO DE DATOS
-   client_context → E1 → E2 → E3 → E4 → E5 → E6 → E7 → E8 → E9 → client_context completo
+   ENTRENAMIENTO: client_context → E1 → E2 → E3 → E4 → E5 → E6 → E7 → E8 → E9 → client_context
+   NUTRICIÓN: client_context (con training completo) → N0 → N1 → N2 → N3 → N4 → N5 → N6 → N7 → N8 → client_context final
 
 5. KNOWLEDGE BASE (K1)
    - K1 NO está dentro de client_context
