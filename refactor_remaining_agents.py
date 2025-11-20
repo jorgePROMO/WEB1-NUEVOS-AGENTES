@@ -108,7 +108,7 @@ def get_new_process_output(config):
             return output
             
         except Exception as e:
-            raise ValueError(f"Error procesando output de {agent_id}: {e}")'''
+            raise ValueError(f"Error procesando output de {agent_id}: {{e}}")'''
     
     return code
 
