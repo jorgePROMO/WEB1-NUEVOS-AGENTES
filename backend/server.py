@@ -10846,7 +10846,7 @@ async def process_generation_job(job_id: str):
             
             logger.info(f"✅ Plan de nutrición generado: {nutrition_plan_id}")
         
-        # ===== JOB COMPLETADO =====
+        # ===== 5️⃣ JOB COMPLETADO =====
         await db.generation_jobs.update_one(
             {"_id": job_id},
             {
@@ -10856,15 +10856,23 @@ async def process_generation_job(job_id: str):
                     "progress.percentage": 100,
                     "progress.message": "Generación completada exitosamente",
                     "result": result_data,
-                    "completed_at": datetime.now(timezone.utc)
+                    "completed_at": datetime.now(timezone.utc),
+                    "retry_count": retry_count
                 }
             }
         )
         
+        await add_job_log(job_id, "completed", f"Job finalizado exitosamente. Planes generados: {result_data}")
         logger.info(f"✅ Job {job_id} completado exitosamente")
         
     except Exception as e:
         logger.error(f"❌ Error procesando job {job_id}: {str(e)}")
+        
+        # Determinar si es timeout o error general
+        error_type = "error"
+        error_str = str(e).lower()
+        if "timeout" in error_str or "time" in error_str:
+            error_type = "timeout"
         
         # Actualizar job con error
         await db.generation_jobs.update_one(
@@ -10873,10 +10881,14 @@ async def process_generation_job(job_id: str):
                 "$set": {
                     "status": "failed",
                     "error_message": str(e),
-                    "completed_at": datetime.now(timezone.utc)
+                    "error_reason": error_type,
+                    "completed_at": datetime.now(timezone.utc),
+                    "retry_count": retry_count
                 }
             }
         )
+        
+        await add_job_log(job_id, "failed", f"Error: {str(e)}")
 
 
 @api_router.post("/admin/users/{user_id}/plans/generate_async")
