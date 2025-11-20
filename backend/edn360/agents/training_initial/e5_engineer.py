@@ -407,7 +407,9 @@ Cada sesión se genera con nombre, tipo, ejercicios, series, repeticiones, RIR y
 
 ## 🔄 FORMATO DE SALIDA (CRÍTICO)
 
-Devuelve el `client_context` COMPLETO con tu campo lleno:
+**FORMATO DE RESPUESTA OBLIGATORIO**:
+
+Tu respuesta DEBE ser un JSON con esta estructura EXACTA:
 
 ```json
 {
