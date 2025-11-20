@@ -138,3 +138,6 @@
 2025-11-20 13:30:51,226 - edn360.orchestrator - ERROR -   ❌ E5 falló: Error code: 429 - {'error': {'message': 'Request too large for gpt-4o in organization org-EWRMz9dCMT0ktVNDPdFoICct on tokens per min (TPM): Limit 30000, Requested 30542. The input or output tokens must be reduced in order to run successfully. Visit https://platform.openai.com/account/rate-limits to learn more.', 'type': 'tokens', 'param': None, 'code': 'rate_limit_exceeded'}}
 2025-11-20 13:30:51,226 - __main__ - ERROR - ❌ Flujo falló: E5 falló: Error code: 429 - {'error': {'message': 'Request too large for gpt-4o in organization org-EWRMz9dCMT0ktVNDPdFoICct on tokens per min (TPM): Limit 30000, Requested 30542. The input or output tokens must be reduced in order to run successfully. Visit https://platform.openai.com/account/rate-limits to learn more.', 'type': 'tokens', 'param': None, 'code': 'rate_limit_exceeded'}}
 2025-11-20 13:30:51,226 - __main__ - ERROR -    Revisa los logs arriba para identificar en qué agente falló
+
+❌ Test E2E falló
+📄 Revisa /app/logs_training_e2e.txt para detalles
