@@ -361,6 +361,43 @@ const AdminDashboard = () => {
 
   const handleGenerationClose = () => {
     setShowGenerationProgress(false);
+
+  // Generar ambos planes (Training + Nutrition) en un solo job
+  const generateFullPlan = async () => {
+    // Validate selectors
+    if (!selectedQuestionnaireForTraining) {
+      alert('❌ Por favor selecciona un cuestionario base');
+      return;
+    }
+    
+    try {
+      // Preparar payload para generación completa (training + nutrition)
+      const payload = {
+        submission_id: selectedQuestionnaireForTraining,
+        mode: 'full',
+        previous_training_plan_id: selectedPreviousTrainingPlan || null,
+        previous_nutrition_plan_id: selectedPreviousNutritionPlan || null
+      };
+      
+      const response = await axios.post(
+        `${API}/admin/users/${selectedClient.id}/plans/generate_async`,
+        payload,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      
+      const { job_id } = response.data;
+      setCurrentJobId(job_id);
+      setShowGenerationProgress(true);
+      
+    } catch (error) {
+      console.error('Error starting full plan generation:', error);
+      alert('❌ Error al iniciar generación completa: ' + (error.response?.data?.detail || error.message));
+    }
+  };
+
     setCurrentJobId(null);
   };
 
