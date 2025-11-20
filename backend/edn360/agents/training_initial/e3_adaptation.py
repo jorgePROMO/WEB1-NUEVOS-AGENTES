@@ -248,11 +248,23 @@ Si E1 indica `"cambio_horario"`:
 
 ---
 
-## 📤 Output (JSON estructurado)
+## 📤 Output (client_context actualizado)
+
+**CRÍTICO**: Devuelve `client_context` completo con tu campo lleno.
 
 ```json
 {
-  "status": "ok",
+  "client_context": {
+    "meta": { ... },
+    "raw_inputs": { ... },
+    "training": {
+      "profile": { ... },
+      "constraints": { ... },
+      "prehab": { ... },
+      "progress": null,
+      "capacity": { ... },
+      // TU CAMPO:
+      "adaptation": {
   "ia_score": 6.5,
   "interpretacion_ia": "Adaptador medio. Responde bien al entrenamiento pero requiere progresión estándar sin prisas.",
   "tipo_adaptador": "medio",
