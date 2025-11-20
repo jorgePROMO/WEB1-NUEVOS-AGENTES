@@ -10706,6 +10706,7 @@ async def process_generation_job(job_id: str):
             await db.training_plans.insert_one(training_plan_doc)
             result_data["training_plan_id"] = plan_id
             
+            await add_job_log(job_id, "training_completed", f"Plan de entrenamiento generado: {plan_id}")
             logger.info(f"✅ Plan de entrenamiento generado: {plan_id}")
         
         if job_type == "nutrition" or job_type == "full":
