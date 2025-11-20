@@ -20,6 +20,13 @@ class E8TechnicalAuditor(BaseAgent):
     - Verifica equilibrio, volumen, seguridad, coherencia
     - Llena: audit con validaciones y recomendaciones
     - NO modifica otros campos de client_context
+    
+    ⚠️ DEUDA TÉCNICA CONOCIDA (No bloqueante):
+    - Detección de volumen excesivo es inconsistente
+    - El LLM a veces no cuenta correctamente series totales por grupo muscular
+    - TODO: Mejorar prompt con ejemplos más explícitos de conteo
+    - TODO: Considerar pre-procesamiento del volumen antes de auditoría
+    - NOTA: Esta limitación no afecta detección de ejercicios prohibidos ni desequilibrios
     """
     
     def __init__(self):
