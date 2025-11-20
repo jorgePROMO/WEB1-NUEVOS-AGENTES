@@ -202,17 +202,19 @@ class ClientContext(BaseModel):
     Objeto principal que contiene TODO el estado del cliente.
     
     Este objeto:
-    - Es recibido por TODOS los agentes E1-E9
-    - Cada agente modifica SOLO su sección en 'training'
+    - Es recibido por TODOS los agentes (E1-E9 y N0-N8)
+    - Agentes E modifican SOLO 'training'
+    - Agentes N modifican SOLO 'nutrition'
     - Viaja completo de agente en agente sin pérdida de información
     - Permite trazabilidad completa del proceso
     
     Basado en documento oficial:
-    "EMERGENT – SISTEMA DE AGENTES DE ENTRENAMIENTO"
+    "EMERGENT – SISTEMA DE AGENTES DE ENTRENAMIENTO Y NUTRICIÓN"
     """
     meta: ClientContextMeta = Field(..., description="Metadatos de trazabilidad")
     raw_inputs: RawInputs = Field(..., description="Datos crudos de entrada")
     training: TrainingData = Field(default_factory=TrainingData, description="Datos procesados por agentes E1-E9")
+    nutrition: NutritionData = Field(default_factory=NutritionData, description="Datos procesados por agentes N0-N8")
     
     class Config:
         """Configuración de Pydantic"""
