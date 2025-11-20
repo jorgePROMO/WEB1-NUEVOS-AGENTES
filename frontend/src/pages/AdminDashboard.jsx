@@ -123,6 +123,10 @@ const AdminDashboard = () => {
   const [selectedTrainingPlanForNutrition, setSelectedTrainingPlanForNutrition] = useState(null);
   const [selectedPreviousNutritionPlan, setSelectedPreviousNutritionPlan] = useState(null);
   
+  // Async Generation Job states
+  const [currentJobId, setCurrentJobId] = useState(null);
+  const [showGenerationProgress, setShowGenerationProgress] = useState(false);
+  
   // Follow-up Report states
   const [selectedPreviousTrainingForReport, setSelectedPreviousTrainingForReport] = useState(null);
   const [selectedNewTrainingForReport, setSelectedNewTrainingForReport] = useState(null);
