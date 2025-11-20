@@ -84,3 +84,28 @@
 2025-11-20 15:05:59,005 - edn360.agents.base_agent - INFO - 📚 N2 usando KB de 83355 caracteres
 2025-11-20 15:05:59,185 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
 2025-11-20 15:05:59,185 - openai._base_client - INFO - Retrying request to /chat/completions in 53.170000 seconds
+2025-11-20 15:07:53,249 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 15:07:53,282 - edn360.agents.base_agent - INFO - 📝 N2 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 15:07:53,282 - edn360.agents.base_agent - INFO - ✅ N2 completado en 114.28s
+2025-11-20 15:07:53,282 - edn360.orchestrator - INFO -   ✅ N2 actualizó nutrition.* correctamente
+2025-11-20 15:07:53,282 - edn360.orchestrator - INFO -     🔍 Validando contrato de N2...
+2025-11-20 15:07:53,282 - edn360.orchestrator - INFO -   ✅ N2 completado y validado
+2025-11-20 15:07:53,282 - edn360.orchestrator - INFO -   ▶️ Ejecutando N3 (Generador de Plantilla de Macros)...
+2025-11-20 15:07:53,283 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['energy_strategy', 'metabolism']
+2025-11-20 15:07:53,283 - edn360.agents.base_agent - INFO - 🤖 N3 (Generador de Plantilla de Macros) - Iniciando ejecución
+2025-11-20 15:07:53,283 - edn360.agents.base_agent - INFO - 📚 N3 usando KB de 83355 caracteres
+2025-11-20 15:07:53,458 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 15:07:53,458 - openai._base_client - INFO - Retrying request to /chat/completions in 35.560000 seconds
