@@ -1,37 +1,37 @@
-2025-11-20 12:06:25,021 - __main__ - INFO - ====================================================================================================
-2025-11-20 12:06:25,021 - __main__ - INFO - 🚀 TEST END-TO-END - ENTRENAMIENTO INICIAL COMPLETO (v1)
-2025-11-20 12:06:25,021 - __main__ - INFO - ====================================================================================================
-2025-11-20 12:06:25,021 - __main__ - INFO - 
-2025-11-20 12:06:25,021 - __main__ - INFO - 📋 PASO 1: Creando cuestionario inicial realista...
-2025-11-20 12:06:25,021 - __main__ - INFO - ✅ Cuestionario creado:
-2025-11-20 12:06:25,021 - __main__ - INFO -    - Cliente: Juan Pérez García
-2025-11-20 12:06:25,022 - __main__ - INFO -    - Edad: 32 años
-2025-11-20 12:06:25,022 - __main__ - INFO -    - Objetivo: hipertrofia
-2025-11-20 12:06:25,022 - __main__ - INFO -    - Nivel: intermedio
-2025-11-20 12:06:25,022 - __main__ - INFO -    - Disponibilidad: 4 días x 60 min
-2025-11-20 12:06:25,022 - __main__ - INFO -    - Lesiones: 1 activa(s)
-2025-11-20 12:06:25,022 - __main__ - INFO - 
-2025-11-20 12:06:25,022 - __main__ - INFO - 🔧 PASO 2: Inicializando orchestrator...
-2025-11-20 12:06:25,555 - edn360.orchestrator - INFO - ✅ Bases de conocimiento cargadas: Training KB (86468 chars), Nutrition KB (83355 chars)
-2025-11-20 12:06:25,555 - __main__ - INFO - ✅ Orchestrator inicializado correctamente
-2025-11-20 12:06:25,555 - __main__ - INFO -    - KB Training: 86468 caracteres
-2025-11-20 12:06:25,556 - __main__ - INFO -    - KB Nutrition: 83355 caracteres
-2025-11-20 12:06:25,556 - __main__ - INFO - 
-2025-11-20 12:06:25,556 - __main__ - INFO - ⚙️ PASO 3: Ejecutando flujo completo E1 → E2 → E3 → E4 → E5 → E6 → E7 → E8 → E9...
-2025-11-20 12:06:25,556 - __main__ - INFO -    (Este proceso puede tomar varios minutos)
-2025-11-20 12:06:25,556 - __main__ - INFO - 
-2025-11-20 12:06:25,556 - edn360.orchestrator - INFO -   🔧 Inicializando client_context...
-2025-11-20 12:06:25,556 - edn360.orchestrator - INFO -   ✅ client_context inicializado: v1, snapshot_id=snapshot_client_juan_perez_e2e_1_df7b3b82
-2025-11-20 12:06:25,556 - edn360.orchestrator - INFO -   ▶️ Ejecutando E1 (Analista del Atleta)...
-2025-11-20 12:06:25,556 - edn360.agents.base_agent - INFO - 🤖 E1 (Analista del Atleta) - Iniciando ejecución
-2025-11-20 12:06:25,556 - edn360.agents.base_agent - INFO - 📚 E1 usando KB de 86468 caracteres
-2025-11-20 12:07:39,418 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-2025-11-20 12:07:39,425 - edn360.agents.base_agent - INFO - 📝 E1 respuesta (primeros 500 chars): ```json
+2025-11-20 12:24:43,863 - __main__ - INFO - ====================================================================================================
+2025-11-20 12:24:43,863 - __main__ - INFO - 🚀 TEST END-TO-END - ENTRENAMIENTO INICIAL COMPLETO (v1)
+2025-11-20 12:24:43,863 - __main__ - INFO - ====================================================================================================
+2025-11-20 12:24:43,863 - __main__ - INFO - 
+2025-11-20 12:24:43,863 - __main__ - INFO - 📋 PASO 1: Creando cuestionario inicial realista...
+2025-11-20 12:24:43,863 - __main__ - INFO - ✅ Cuestionario creado:
+2025-11-20 12:24:43,863 - __main__ - INFO -    - Cliente: Juan Pérez García
+2025-11-20 12:24:43,863 - __main__ - INFO -    - Edad: 32 años
+2025-11-20 12:24:43,863 - __main__ - INFO -    - Objetivo: hipertrofia
+2025-11-20 12:24:43,863 - __main__ - INFO -    - Nivel: intermedio
+2025-11-20 12:24:43,863 - __main__ - INFO -    - Disponibilidad: 4 días x 60 min
+2025-11-20 12:24:43,863 - __main__ - INFO -    - Lesiones: 1 activa(s)
+2025-11-20 12:24:43,863 - __main__ - INFO - 
+2025-11-20 12:24:43,863 - __main__ - INFO - 🔧 PASO 2: Inicializando orchestrator...
+2025-11-20 12:24:44,396 - edn360.orchestrator - INFO - ✅ Bases de conocimiento cargadas: Training KB (86468 chars), Nutrition KB (83355 chars)
+2025-11-20 12:24:44,396 - __main__ - INFO - ✅ Orchestrator inicializado correctamente
+2025-11-20 12:24:44,396 - __main__ - INFO -    - KB Training: 86468 caracteres
+2025-11-20 12:24:44,396 - __main__ - INFO -    - KB Nutrition: 83355 caracteres
+2025-11-20 12:24:44,396 - __main__ - INFO - 
+2025-11-20 12:24:44,396 - __main__ - INFO - ⚙️ PASO 3: Ejecutando flujo completo E1 → E2 → E3 → E4 → E5 → E6 → E7 → E8 → E9...
+2025-11-20 12:24:44,396 - __main__ - INFO -    (Este proceso puede tomar varios minutos)
+2025-11-20 12:24:44,396 - __main__ - INFO - 
+2025-11-20 12:24:44,396 - edn360.orchestrator - INFO -   🔧 Inicializando client_context...
+2025-11-20 12:24:44,397 - edn360.orchestrator - INFO -   ✅ client_context inicializado: v1, snapshot_id=snapshot_client_juan_perez_e2e_1_3c2653e9
+2025-11-20 12:24:44,397 - edn360.orchestrator - INFO -   ▶️ Ejecutando E1 (Analista del Atleta)...
+2025-11-20 12:24:44,397 - edn360.agents.base_agent - INFO - 🤖 E1 (Analista del Atleta) - Iniciando ejecución
+2025-11-20 12:24:44,397 - edn360.agents.base_agent - INFO - 📚 E1 usando KB de 86468 caracteres
+2025-11-20 12:25:05,586 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 12:25:05,593 - edn360.agents.base_agent - INFO - 📝 E1 respuesta (primeros 500 chars): ```json
 {
   "client_context": {
     "meta": {
       "client_id": "client_juan_perez_e2e",
-      "snapshot_id": "snapshot_client_juan_perez_e2e_1_df7b3b82",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_3c2653e9",
       "version": 1,
       "selected_inputs": {
         "cuestionario": "unknown",
@@ -39,32 +39,23 @@
       }
     },
     "raw_inputs": {
-      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T12:06:25.021943\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
-2025-11-20 12:07:39,426 - edn360.agents.base_agent - INFO - ✅ E1 completado en 73.87s
-2025-11-20 12:07:39,426 - edn360.orchestrator - INFO -   ✅ E1 devolvió client_context actualizado
-2025-11-20 12:07:39,426 - edn360.orchestrator - INFO -     🔍 Validando contrato de E1...
-2025-11-20 12:07:39,426 - edn360.orchestrator - INFO -   ✅ E1 completado y validado
-2025-11-20 12:07:39,426 - edn360.orchestrator - INFO -   ▶️ Ejecutando E2 (Evaluador de Capacidad y Riesgo)...
-2025-11-20 12:07:39,426 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['profile']
-2025-11-20 12:07:39,426 - edn360.agents.base_agent - INFO - 🤖 E2 (Evaluador de Capacidad y Riesgo) - Iniciando ejecución
-2025-11-20 12:07:39,426 - edn360.agents.base_agent - INFO - 📚 E2 usando KB de 86468 caracteres
-2025-11-20 12:07:39,620 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
-2025-11-20 12:07:39,620 - openai._base_client - INFO - Retrying request to /chat/completions in 4.574000 seconds
-2025-11-20 12:07:57,676 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
-2025-11-20 12:07:57,681 - edn360.agents.base_agent - INFO - 📝 E2 respuesta (primeros 500 chars): ```json
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T12:24:43.863488\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 12:25:05,594 - edn360.agents.base_agent - ERROR - ❌ No se pudo extraer JSON de la respuesta de E1
+2025-11-20 12:25:05,594 - edn360.agents.base_agent - ERROR - Respuesta completa (primeros 1000 chars): ```json
 {
-  "status": "ok",
-  "seg_score": 8,
-  "interpretacion_seg": "Cliente robusto con buena capacidad estructural. Puede progresar normalmente con precauciones en ejercicios que involucren la zona lumbar.",
-  "split_recomendado": {
-    "tipo": "upper-lower",
-    "frecuencia_semanal": 4,
-    "distribucion": ["Upper A", "Lower A", "Upper B", "Lower B"],
-    "justificacion": "4 días disponibles, nivel intermedio, permite distribuir volumen sin sobrecargar lumbar."
-  },
-  "tiempo_sesion": {
-   
-2025-11-20 12:07:57,681 - edn360.agents.base_agent - ERROR - ❌ E2 falló: Error procesando output de E2: {str(e)}
-2025-11-20 12:07:57,681 - edn360.orchestrator - ERROR -   ❌ E2 falló: Error procesando output de E2: {str(e)}
-2025-11-20 12:07:57,681 - __main__ - ERROR - ❌ Flujo falló: E2 falló: Error procesando output de E2: {str(e)}
-2025-11-20 12:07:57,681 - __main__ - ERROR -    Revisa los logs arriba para identificar en qué agente falló
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_3c2653e9",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T12:24:43.863488\",\n  \"nombre\": \"Juan Pérez García\",\n  \"edad\": 32,\n  \"sexo\": \"M\",\n  \"peso_actual_kg\": 78,\n  \"altura_cm\": 175,\n  \"porcentaje_grasa_estimado\": 18,\n  \"objetivo_principal\": \"hipertrofia\",\n  \"objetivo_secundario\": \"mejorar composicion corporal\",\n  \"plazo\": \"6 meses\",\n  \"motivacion\": \"alta\",\n  \"razon_principal\": \"Quiero ganar masa muscular y verme mejor\",\n  \"experiencia_entrenamiento\": \"3 años gym intermitente\",\n  \"nivel_estimado\": \"intermedio\",\n  \"deportes_previos\": [\n    \"futbol amateur
+2025-11-20 12:25:05,594 - edn360.agents.base_agent - ERROR - ❌ E1 falló: Error procesando output de E1: No se pudo extraer JSON válido de la respuesta del agente E1
+2025-11-20 12:25:05,594 - edn360.orchestrator - ERROR -   ❌ E1 falló: Error procesando output de E1: No se pudo extraer JSON válido de la respuesta del agente E1
+2025-11-20 12:25:05,594 - __main__ - ERROR - ❌ Flujo falló: E1 falló: Error procesando output de E1: No se pudo extraer JSON válido de la respuesta del agente E1
+2025-11-20 12:25:05,594 - __main__ - ERROR -    Revisa los logs arriba para identificar en qué agente falló
