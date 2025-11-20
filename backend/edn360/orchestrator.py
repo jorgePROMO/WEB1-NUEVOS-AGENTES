@@ -692,8 +692,10 @@ class EDN360Orchestrator:
                         "executions": executions
                     }
             
-            # Preparar input: client_context completo
-            agent_input = client_context_to_dict(client_context)
+            # Preparar input: VISTA COMPACTA para agentes N (sin training.sessions pesado)
+            # Los agentes N NO necesitan ver cada ejercicio del plan de entrenamiento
+            # Trabajan principalmente con training.bridge_for_nutrition
+            agent_input = build_nutrition_llm_context(client_context)
             
             # Decidir si pasar KB de nutrición
             # OPTIMIZACIÓN: Solo N1, N2, N3 reciben KB (son los que más la necesitan)
