@@ -456,6 +456,10 @@ Si falta información crítica:
 
 ## 🔄 FORMATO DE SALIDA (CRÍTICO)
 
+**FORMATO DE RESPUESTA OBLIGATORIO**:
+
+Tu respuesta DEBE ser un JSON con esta estructura EXACTA:
+
 Debes devolver el objeto `client_context` COMPLETO que recibiste, manteniendo:
 - `meta`: Sin cambios
 - `raw_inputs`: Sin cambios  
