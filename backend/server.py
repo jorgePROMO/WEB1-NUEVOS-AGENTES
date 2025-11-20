@@ -10617,35 +10617,54 @@ async def process_generation_job(job_id: str):
             if job.get("previous_training_plan_id"):
                 previous_training_plan = await db.training_plans.find_one({"_id": job["previous_training_plan_id"]})
             
-            # Ejecutar pipeline de training
-            training_result = await orchestrator._execute_training_initial(
-                adapted_questionnaire,
-                previous_plan=previous_training_plan
-            )
+            await add_job_log(job_id, "training_started", "Iniciando pipeline E1-E9")
+            
+            # 3️⃣ EJECUTAR PIPELINE CON RETRY
+            async def run_training_pipeline():
+                return await orchestrator._execute_training_initial(
+                    adapted_questionnaire,
+                    previous_plan=previous_training_plan
+                )
+            
+            training_result, retry_count = await execute_with_retry(run_training_pipeline)
             
             if not training_result["success"]:
                 raise Exception(f"Error en pipeline de training: {training_result.get('error', 'Error desconocido')}")
             
-            # Actualizar progreso después de cada agente (simulación, ya que el orquestador no reporta progreso granular)
-            # En una implementación futura, el orquestador podría tener callbacks
-            for i in range(1, 10):
-                agent_name = f"E{i}"
-                completed = i if job_type == "training" else i
-                total = 9 if job_type == "training" else 18
-                percentage = int((completed / total) * 100)
-                
-                await db.generation_jobs.update_one(
-                    {"_id": job_id},
-                    {
-                        "$set": {
-                            "progress.current_agent": agent_name,
-                            "progress.completed_steps": completed,
-                            "progress.total_steps": total,
-                            "progress.percentage": percentage,
-                            "progress.message": f"Procesando agente {agent_name}"
-                        }
-                    }
-                )
+            # 4️⃣ ACTUALIZAR PROGRESO REAL BASADO EN EXECUTIONS
+            # El orquestador devuelve executions con info de cada agente ejecutado
+            executions = training_result.get("executions", [])
+            total_steps = 9 if job_type == "training" else 18
+            
+            if executions:
+                for idx, execution in enumerate(executions):
+                    agent_id = execution.get("agent_id", f"E{idx+1}")
+                    completed = idx + 1
+                    
+                    await update_job_progress(
+                        job_id,
+                        "training",
+                        agent_id,
+                        completed,
+                        total_steps,
+                        f"Agente {agent_id} completado"
+                    )
+                    await add_job_log(job_id, "agent_completed", f"{agent_id} ejecutado exitosamente")
+            else:
+                # Fallback si no hay executions
+                for i in range(1, 10):
+                    agent_name = f"E{i}"
+                    await update_job_progress(
+                        job_id,
+                        "training",
+                        agent_name,
+                        i,
+                        total_steps,
+                        f"Agente {agent_name} completado"
+                    )
+            
+            if retry_count > 0:
+                await add_job_log(job_id, "retry_success", f"Pipeline completado después de {retry_count} reintento(s)")
             
             # Guardar plan de entrenamiento
             planes_previos_count = await db.training_plans.count_documents({"user_id": user_id})
