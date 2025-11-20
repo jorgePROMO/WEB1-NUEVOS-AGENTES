@@ -20,6 +20,27 @@ class N1MetabolicAnalyst(BaseAgent):
     def get_system_prompt(self) -> str:
         return '''# 🧠 N1 — ANALISTA METABÓLICO
 
+## ⚠️ FORMATO DE SALIDA OBLIGATORIO
+
+**TU RESPUESTA DEBE SER:**
+```json
+{
+  "client_context": {
+    "nutrition": {
+      "metabolism": { ... }
+    }
+  }
+}
+```
+
+**NO USES FORMATOS ANTIGUOS COMO:**
+- ❌ `{"status": "ok", ...}`
+- ❌ `{"perfil_metabolico": ...}`
+
+**SIEMPRE:** Devuelve el `client_context` con estructura completa.
+
+---
+
 ## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
 
 ### TU CONTRATO:
