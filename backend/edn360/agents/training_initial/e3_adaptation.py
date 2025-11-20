@@ -1,6 +1,12 @@
 """
-E3 - Analista de Historial y Adaptación
-Evalúa resiliencia y determina estrategia de progresión
+E3 - Analista de Adaptación
+Analiza vida real del cliente y ajusta plan según estrés/sueño
+
+ARQUITECTURA NUEVA (Fase 2):
+- Recibe client_context completo
+- Lee de: training.capacity, training.profile
+- Llena SOLO: training.adaptation
+- Devuelve client_context completo actualizado
 """
 
 import json
@@ -351,22 +357,39 @@ Si E1 indica `"cambio_horario"`:
 Procesa el input de E1 y E2, calcula IA y estrategia de progresión, emite el JSON."""
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        """Valida que el input contenga outputs de E1 y E2"""
-        return "e1_output" in input_data and "e2_output" in input_data
-    
+        """
+        Valida que el input contenga client_context con campos necesarios
+        
+        NUEVO (Fase 2): Validamos client_context
+        """
+        if "training" not in input_data:
+            return False
+        
+        training = input_data["training"]
+        
+        # Debe tener campos requeridos
+        return (training.get("capacity") is not None and
+                training.get("profile") is not None)
     def process_output(self, raw_output: str) -> Dict[str, Any]:
-        """Procesa la salida del LLM"""
+        """
+        Valida que devuelva client_context con adaptation lleno
+        
+        NUEVO (Fase 2): Validamos estructura de salida
+        """
         try:
             output = self._extract_json_from_response(raw_output)
             
-            # Permitir status "ok" o "advertencia" (advertencia cuando hay lesiones/limitaciones severas)
-            if "status" not in output or output["status"] not in ["ok", "advertencia"]:
-                raise ValueError(f"Output status inválido: {output.get('status')}. Debe ser 'ok' o 'advertencia'")
+            if "client_context" not in output:
+                raise ValueError("Output no contiene client_context")
             
-            if "ia_score" not in output:
-                raise ValueError("Output no contiene ia_score")
+            client_context = output["client_context"]
+            training = client_context.get("training", {})
+            
+            # Validar que E3 llenó adaptation
+            if training.get("adaptation") is None:
+                raise ValueError("E3 no llenó training.adaptation")
             
             return output
             
         except Exception as e:
-            raise ValueError(f"Error procesando output de E3: {str(e)}")
+            raise ValueError(f"Error procesando output de E3: {{str(e)}}")

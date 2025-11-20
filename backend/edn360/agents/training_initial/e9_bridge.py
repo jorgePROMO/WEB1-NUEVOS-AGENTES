@@ -1,5 +1,12 @@
 """
-E9 - Bridge hacia Nutrición
+E9 - Puente a Nutrición
+Genera información para agentes de nutrición
+
+ARQUITECTURA NUEVA (Fase 2):
+- Recibe client_context completo
+- Lee de: training.safe_sessions, training.mesocycle, training.profile
+- Llena SOLO: training.bridge_for_nutrition
+- Devuelve client_context completo actualizado
 """
 
 from typing import Dict, Any
@@ -149,7 +156,40 @@ CRÍTICO: "tipos_dia_presentes" es la fuente de verdad para nutrición.
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        return len(input_data) > 0
-    
+        """
+        Valida que el input contenga client_context con campos necesarios
+        
+        NUEVO (Fase 2): Validamos client_context
+        """
+        if "training" not in input_data:
+            return False
+        
+        training = input_data["training"]
+        
+        # Debe tener campos requeridos
+        return (training.get("safe_sessions") is not None and
+                training.get("mesocycle") is not None and
+                training.get("profile") is not None)
     def process_output(self, raw_output: str) -> Dict[str, Any]:
-        return self._extract_json_from_response(raw_output)
+        """
+        Valida que devuelva client_context con bridge_for_nutrition lleno
+        
+        NUEVO (Fase 2): Validamos estructura de salida
+        """
+        try:
+            output = self._extract_json_from_response(raw_output)
+            
+            if "client_context" not in output:
+                raise ValueError("Output no contiene client_context")
+            
+            client_context = output["client_context"]
+            training = client_context.get("training", {})
+            
+            # Validar que E9 llenó bridge_for_nutrition
+            if training.get("bridge_for_nutrition") is None:
+                raise ValueError("E9 no llenó training.bridge_for_nutrition")
+            
+            return output
+            
+        except Exception as e:
+            raise ValueError(f"Error procesando output de E9: {{str(e)}}")

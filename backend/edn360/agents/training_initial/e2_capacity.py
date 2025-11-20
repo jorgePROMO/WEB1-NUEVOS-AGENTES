@@ -1,6 +1,12 @@
 """
-E2 - Evaluador de Capacidad y Riesgo
-Calcula cargas seguras y banderas clínicas
+E2 - Evaluador de Capacidad
+Evalúa capacidad de entrenamiento y determina volumen/intensidad tolerable
+
+ARQUITECTURA NUEVA (Fase 2):
+- Recibe client_context completo
+- Lee de: training.profile
+- Llena SOLO: training.capacity
+- Devuelve client_context completo actualizado
 """
 
 import json
@@ -397,27 +403,38 @@ Ajustar split a lo posible con equipo disponible, priorizar movimientos funciona
 Procesa el input de E1 y emite el JSON de evaluación de capacidad."""
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        """Valida que el input contenga el perfil de E1"""
-        # E2 recibe {e1_output: {...}, ...questionnaire_data}
-        if "e1_output" not in input_data:
+        """
+        Valida que el input contenga client_context con campos necesarios
+        
+        NUEVO (Fase 2): Validamos client_context
+        """
+        if "training" not in input_data:
             return False
         
-        e1_output = input_data["e1_output"]
-        required_keys = ["perfil_tecnico", "experiencia", "limitaciones_clinicas", "disponibilidad"]
-        return all(key in e1_output for key in required_keys)
-    
+        training = input_data["training"]
+        
+        # Debe tener campos requeridos
+        return (training.get("profile") is not None)
     def process_output(self, raw_output: str) -> Dict[str, Any]:
-        """Procesa la salida del LLM"""
+        """
+        Valida que devuelva client_context con capacity lleno
+        
+        NUEVO (Fase 2): Validamos estructura de salida
+        """
         try:
             output = self._extract_json_from_response(raw_output)
             
-            if "status" not in output:
-                raise ValueError("Output no contiene status")
+            if "client_context" not in output:
+                raise ValueError("Output no contiene client_context")
             
-            if output["status"] == "ok" and "seg_score" not in output:
-                raise ValueError("Output no contiene seg_score")
+            client_context = output["client_context"]
+            training = client_context.get("training", {})
+            
+            # Validar que E2 llenó capacity
+            if training.get("capacity") is None:
+                raise ValueError("E2 no llenó training.capacity")
             
             return output
             
         except Exception as e:
-            raise ValueError(f"Error procesando output de E2: {str(e)}")
+            raise ValueError(f"Error procesando output de E2: {{str(e)}}")

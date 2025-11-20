@@ -1,5 +1,12 @@
 """
-E6 - Técnico Clínico-Preventivo
+E6 - Técnico Clínico
+Adapta sesiones para seguridad, sustituye ejercicios prohibidos
+
+ARQUITECTURA NUEVA (Fase 2):
+- Recibe client_context completo
+- Lee de: training.sessions, training.constraints, training.prehab
+- Llena SOLO: training.safe_sessions
+- Devuelve client_context completo actualizado
 """
 
 from typing import Dict, Any
@@ -277,7 +284,40 @@ extensiones_pesadas → extensiones_ligeras_alto_rep
 Procesa el plan de E5 y emite el JSON con todas las sustituciones y validaciones.'''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        return "e5_output" in input_data
-    
+        """
+        Valida que el input contenga client_context con campos necesarios
+        
+        NUEVO (Fase 2): Validamos client_context
+        """
+        if "training" not in input_data:
+            return False
+        
+        training = input_data["training"]
+        
+        # Debe tener campos requeridos
+        return (training.get("sessions") is not None and
+                training.get("constraints") is not None and
+                training.get("prehab") is not None)
     def process_output(self, raw_output: str) -> Dict[str, Any]:
-        return self._extract_json_from_response(raw_output)
+        """
+        Valida que devuelva client_context con safe_sessions lleno
+        
+        NUEVO (Fase 2): Validamos estructura de salida
+        """
+        try:
+            output = self._extract_json_from_response(raw_output)
+            
+            if "client_context" not in output:
+                raise ValueError("Output no contiene client_context")
+            
+            client_context = output["client_context"]
+            training = client_context.get("training", {})
+            
+            # Validar que E6 llenó safe_sessions
+            if training.get("safe_sessions") is None:
+                raise ValueError("E6 no llenó training.safe_sessions")
+            
+            return output
+            
+        except Exception as e:
+            raise ValueError(f"Error procesando output de E6: {{str(e)}}")
