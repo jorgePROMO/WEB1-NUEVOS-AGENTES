@@ -3406,20 +3406,19 @@ class BackendTester:
         print(f"Backend URL: {BACKEND_URL}")
         print("=" * 80)
         
-        # Run tests in order - focusing on PHASE 3 FOLLOW-UP ANALYSIS & PLAN GENERATION
+        # Run tests in order - focusing on ASYNC GENERATION SYSTEM (E.D.N.360)
         tests = [
-            # PHASE 3: FOLLOW-UP ANALYSIS & PLAN GENERATION TESTS (HIGH PRIORITY)
-            self.test_28_admin_login_for_phase3,
-            self.test_29_check_existing_followups,
-            self.test_30_analyze_followup_without_data,
-            self.test_31_generate_plan_without_analysis,
-            self.test_32_create_test_nutrition_questionnaire,
-            self.test_33_create_test_followup_submission,
-            self.test_34_ai_analysis_of_followup,
-            self.test_35_update_followup_analysis,
-            self.test_36_generate_new_plan_from_followup,
-            self.test_37_verify_followup_status_changes,
-            self.test_38_verify_data_persistence,
+            # CRITICAL: ASYNC GENERATION SYSTEM TESTS (E.D.N.360) - HIGH PRIORITY
+            self.test_28_admin_login_for_async_generation,
+            self.test_29_find_user_with_submission,
+            self.test_30_create_test_submission,
+            self.test_31_async_generation_endpoint_training,
+            self.test_32_job_status_endpoint_initial,
+            self.test_33_job_progress_monitoring,
+            self.test_34_async_generation_endpoint_full,
+            self.test_35_full_mode_job_verification,
+            self.test_36_error_handling_invalid_submission,
+            self.test_37_job_status_nonexistent,
             
             # CRITICAL PRODUCTION TESTS
             self.test_39_admin_login_production_credentials,
