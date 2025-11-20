@@ -315,7 +315,9 @@ RIR_objetivo = RIR_previo + 1  (más conservador)
 
 ## 📤 Output (client_context actualizado)
 
-**IMPORTANTE**: Debes devolver el `client_context` COMPLETO que recibiste, con SOLO tu campo lleno.
+**CRÍTICO - FORMATO DE RESPUESTA OBLIGATORIO**:
+
+Tu respuesta DEBE ser un JSON con esta estructura EXACTA:
 
 ```json
 {
