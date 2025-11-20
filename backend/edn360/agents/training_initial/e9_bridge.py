@@ -192,7 +192,15 @@ Ajustes:
    
    Los agentes de nutrición usarán esto para generar SOLO los sets de macros necesarios.
 
-CRÍTICO: "tipos_dia_presentes" es la fuente de verdad para nutrición.
+      }
+    }
+  }
+}
+```
+
+**CRÍTICO**: 
+- Devuelve SIEMPRE el `client_context` completo
+- "bridge_for_nutrition" es la fuente de verdad para los agentes de nutrición N0-N8
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
