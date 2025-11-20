@@ -174,3 +174,26 @@
 2025-11-20 15:17:28,447 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['timing_plan', 'weekly_structure', 'macro_design', 'profile']
 2025-11-20 15:17:28,447 - edn360.orchestrator - INFO -     ℹ️ N6 no recibe KB (optimización de contexto)
 2025-11-20 15:17:28,447 - edn360.agents.base_agent - INFO - 🤖 N6 (Generador de Menú) - Iniciando ejecución
+2025-11-20 15:19:42,680 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 15:19:42,727 - edn360.agents.base_agent - INFO - 📝 N6 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 15:19:42,728 - edn360.agents.base_agent - INFO - ✅ N6 completado en 134.28s
+2025-11-20 15:19:42,728 - edn360.orchestrator - INFO -   ✅ N6 actualizó nutrition.* correctamente
+2025-11-20 15:19:42,728 - edn360.orchestrator - INFO -     🔍 Validando contrato de N6...
+2025-11-20 15:19:42,728 - edn360.orchestrator - INFO -   ✅ N6 completado y validado
+2025-11-20 15:19:42,728 - edn360.orchestrator - INFO -   ▶️ Ejecutando N7 (Coach de Adherencia)...
+2025-11-20 15:19:42,728 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['menu_plan', 'profile']
+2025-11-20 15:19:42,729 - edn360.orchestrator - INFO -     ℹ️ N7 no recibe KB (optimización de contexto)
+2025-11-20 15:19:42,729 - edn360.agents.base_agent - INFO - 🤖 N7 (Coach de Adherencia) - Iniciando ejecución
