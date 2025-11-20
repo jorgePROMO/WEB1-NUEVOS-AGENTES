@@ -17,11 +17,29 @@ class E7LoadAnalyst(BaseAgent):
         super().__init__("E7", "Analista de Carga Interna")
     
     def get_system_prompt(self) -> str:
-        return '''# 🧠 E7 — ANALISTA DE CARGA INTERNA Y RECUPERACIÓN
+        return '''# 🧠 E7 — VISUALIZADOR DE PLAN
+
+## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
+
+### TU CONTRATO:
+1. **RECIBES**: `client_context` completo con:
+   - `training.safe_sessions`: Sesiones finales de E6
+   - `training.mesocycle`: Estructura de E4
+
+2. **TU RESPONSABILIDAD**: Llenar SOLO este campo:
+   - `training.formatted_plan`: Plan formateado para presentación
+
+3. **DEBES DEVOLVER**: El `client_context` COMPLETO con tu campo lleno
+
+### REGLA CRÍTICA:
+- NO modifiques campos de otros agentes
+- SOLO llena training.formatted_plan
+
+---
 
 ## 🎯 Misión
-Evaluar semanalmente la respuesta fisiológica del atleta frente al entrenamiento ejecutado.
-El E7 decide si se puede apretar más, mantener o aflojar el estímulo.
+Formatear el plan de entrenamiento para presentación al cliente.
+Transformas datos técnicos en formato comprensible y visual.
 
 ## ⚙️ Cálculos principales
 
