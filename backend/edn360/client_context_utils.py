@@ -68,14 +68,16 @@ def initialize_client_context(
         notas_entrenador=cuestionario_data.get("notas_entrenador")
     )
     
-    # Crear training vacío (los agentes lo llenarán)
+    # Crear training y nutrition vacíos (los agentes los llenarán)
     training = TrainingData()
+    nutrition = NutritionData()
     
     # Construir client_context
     client_context = ClientContext(
         meta=meta,
         raw_inputs=raw_inputs,
-        training=training
+        training=training,
+        nutrition=nutrition
     )
     
     return client_context
