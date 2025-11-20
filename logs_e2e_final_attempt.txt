@@ -25,3 +25,105 @@
 2025-11-20 13:37:01,476 - edn360.orchestrator - INFO -   ▶️ Ejecutando E1 (Analista del Atleta)...
 2025-11-20 13:37:01,476 - edn360.agents.base_agent - INFO - 🤖 E1 (Analista del Atleta) - Iniciando ejecución
 2025-11-20 13:37:01,476 - edn360.agents.base_agent - INFO - 📚 E1 usando KB de 86468 caracteres
+2025-11-20 13:37:27,912 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:37:27,919 - edn360.agents.base_agent - INFO - 📝 E1 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:37:27,920 - edn360.agents.base_agent - INFO - ✅ E1 completado en 26.44s
+2025-11-20 13:37:27,920 - edn360.orchestrator - INFO -   ✅ E1 devolvió client_context actualizado
+2025-11-20 13:37:27,920 - edn360.orchestrator - INFO -     🔍 Validando contrato de E1...
+2025-11-20 13:37:27,920 - edn360.orchestrator - INFO -   ✅ E1 completado y validado
+2025-11-20 13:37:27,920 - edn360.orchestrator - INFO -   ▶️ Ejecutando E2 (Evaluador de Capacidad y Riesgo)...
+2025-11-20 13:37:27,920 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['profile']
+2025-11-20 13:37:27,920 - edn360.agents.base_agent - INFO - 🤖 E2 (Evaluador de Capacidad y Riesgo) - Iniciando ejecución
+2025-11-20 13:37:27,920 - edn360.agents.base_agent - INFO - 📚 E2 usando KB de 86468 caracteres
+2025-11-20 13:37:28,108 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:37:28,108 - openai._base_client - INFO - Retrying request to /chat/completions in 25.340000 seconds
+2025-11-20 13:37:53,620 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:37:53,623 - openai._base_client - INFO - Retrying request to /chat/completions in 8.750000 seconds
+2025-11-20 13:38:34,945 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:38:34,951 - edn360.agents.base_agent - INFO - 📝 E2 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:38:34,952 - edn360.agents.base_agent - INFO - ✅ E2 completado en 67.03s
+2025-11-20 13:38:34,952 - edn360.orchestrator - INFO -   ✅ E2 devolvió client_context actualizado
+2025-11-20 13:38:34,952 - edn360.orchestrator - INFO -     🔍 Validando contrato de E2...
+2025-11-20 13:38:34,952 - edn360.orchestrator - INFO -   ✅ E2 completado y validado
+2025-11-20 13:38:34,952 - edn360.orchestrator - INFO -   ▶️ Ejecutando E3 (Analista de Historial y Adaptación)...
+2025-11-20 13:38:34,952 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['capacity', 'profile']
+2025-11-20 13:38:34,952 - edn360.agents.base_agent - INFO - 🤖 E3 (Analista de Historial y Adaptación) - Iniciando ejecución
+2025-11-20 13:38:34,952 - edn360.agents.base_agent - INFO - 📚 E3 usando KB de 86468 caracteres
+2025-11-20 13:38:35,114 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:38:35,115 - openai._base_client - INFO - Retrying request to /chat/completions in 23.532000 seconds
+2025-11-20 13:38:58,819 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:38:58,819 - openai._base_client - INFO - Retrying request to /chat/completions in 10.070000 seconds
+2025-11-20 13:39:46,455 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:39:46,494 - edn360.agents.base_agent - INFO - 📝 E3 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:39:46,495 - edn360.agents.base_agent - INFO - ✅ E3 completado en 71.54s
+2025-11-20 13:39:46,495 - edn360.orchestrator - INFO -   ✅ E3 devolvió client_context actualizado
+2025-11-20 13:39:46,495 - edn360.orchestrator - INFO -     🔍 Validando contrato de E3...
+2025-11-20 13:39:46,495 - edn360.orchestrator - INFO -   ✅ E3 completado y validado
+2025-11-20 13:39:46,495 - edn360.orchestrator - INFO -   ▶️ Ejecutando E4 (Arquitecto del Mesociclo)...
+2025-11-20 13:39:46,495 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['capacity', 'adaptation', 'profile']
+2025-11-20 13:39:46,495 - edn360.agents.base_agent - INFO - 🤖 E4 (Arquitecto del Mesociclo) - Iniciando ejecución
+2025-11-20 13:39:46,495 - edn360.agents.base_agent - INFO - 📚 E4 usando KB de 86468 caracteres
+2025-11-20 13:39:46,711 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2025-11-20 13:39:46,712 - openai._base_client - INFO - Retrying request to /chat/completions in 29.934000 seconds
+2025-11-20 13:41:18,017 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:41:18,019 - edn360.agents.base_agent - INFO - 📝 E4 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:41:18,019 - edn360.agents.base_agent - INFO - ✅ E4 completado en 91.52s
+2025-11-20 13:41:18,019 - edn360.orchestrator - INFO -   ✅ E4 devolvió client_context actualizado
+2025-11-20 13:41:18,019 - edn360.orchestrator - INFO -     🔍 Validando contrato de E4...
+2025-11-20 13:41:18,019 - edn360.orchestrator - INFO -   ✅ E4 completado y validado
+2025-11-20 13:41:18,019 - edn360.orchestrator - INFO -   ▶️ Ejecutando E5 (Ingeniero de Sesiones)...
+2025-11-20 13:41:18,019 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['mesocycle', 'profile']
+2025-11-20 13:41:18,020 - edn360.orchestrator - INFO -     ℹ️ E5 no recibe KB (optimización de contexto)
+2025-11-20 13:41:18,020 - edn360.agents.base_agent - INFO - 🤖 E5 (Ingeniero de Sesiones) - Iniciando ejecución
