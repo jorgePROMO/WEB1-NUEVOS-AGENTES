@@ -83,9 +83,12 @@ def get_new_validate_input(config):
 
 def get_new_process_output(config):
     """Genera método process_output actualizado"""
-    return f'''    def process_output(self, raw_output: str) -> Dict[str, Any]:
+    agent_id = config["agent_id"]
+    fills = config["fills"]
+    
+    code = f'''    def process_output(self, raw_output: str) -> Dict[str, Any]:
         """
-        Valida que devuelva client_context con {config["fills"]} lleno
+        Valida que devuelva client_context con {fills} lleno
         
         NUEVO (Fase 2): Validamos estructura de salida
         """
@@ -96,16 +99,18 @@ def get_new_process_output(config):
                 raise ValueError("Output no contiene client_context")
             
             client_context = output["client_context"]
-            training = client_context.get("training", {})
+            training = client_context.get("training", {{}})
             
-            # Validar que {config["agent_id"]} llenó {config["fills"]}
-            if training.get("{config["fills"]}") is None:
-                raise ValueError("{config["agent_id"]} no llenó training.{config["fills"]}")
+            # Validar que {agent_id} llenó {fills}
+            if training.get("{fills}") is None:
+                raise ValueError("{agent_id} no llenó training.{fills}")
             
             return output
             
         except Exception as e:
-            raise ValueError("Error procesando output de " + config['agent_id'] + ": {str(e)}")'''
+            raise ValueError(f"Error procesando output de {agent_id}: {{{{str(e)}}}}")'''
+    
+    return code
 
 
 def refactor_agent_file(filepath, config):
