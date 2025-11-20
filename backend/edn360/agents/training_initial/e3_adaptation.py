@@ -432,4 +432,4 @@ Procesa el input de E1 y E2, calcula IA y estrategia de progresión, emite el JS
             return output
             
         except Exception as e:
-            raise ValueError(f"Error procesando output de E3: {{str(e)}}")
+            raise ValueError(f"Error procesando output de E3: {e}")

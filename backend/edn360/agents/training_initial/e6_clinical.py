@@ -379,4 +379,4 @@ extensiones_pesadas → extensiones_ligeras_alto_rep
             return output
             
         except Exception as e:
-            raise ValueError(f"Error procesando output de E6: {{str(e)}}")
+            raise ValueError(f"Error procesando output de E6: {e}")

@@ -240,4 +240,4 @@ Ajustes:
             return output
             
         except Exception as e:
-            raise ValueError(f"Error procesando output de E9: {{str(e)}}")
+            raise ValueError(f"Error procesando output de E9: {e}")

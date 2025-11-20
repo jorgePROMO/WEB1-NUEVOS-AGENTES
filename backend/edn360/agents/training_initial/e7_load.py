@@ -166,4 +166,4 @@ IRG = (sueno_h + energia + adherencia%/20 − estres − dolor/2)
             return output
             
         except Exception as e:
-            raise ValueError(f"Error procesando output de E7: {{str(e)}}")
+            raise ValueError(f"Error procesando output de E7: {e}")

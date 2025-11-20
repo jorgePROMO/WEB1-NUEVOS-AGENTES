@@ -479,4 +479,4 @@ Procesa el input de E1 y emite el JSON de evaluación de capacidad."""
             return output
             
         except Exception as e:
-            raise ValueError(f"Error procesando output de E2: {{str(e)}}")
+            raise ValueError(f"Error procesando output de E2: {e}")
