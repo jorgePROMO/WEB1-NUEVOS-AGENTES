@@ -545,84 +545,141 @@ class EDN360Orchestrator:
     
     async def _execute_nutrition_initial(
         self,
-        questionnaire_data: Dict[str, Any],
-        training_bridge_data: Dict[str, Any],
-        previous_plan: Optional[Dict[str, Any]] = None
+        client_context: ClientContext
     ) -> Dict[str, Any]:
-        """Ejecuta la cadena de agentes N0-N8
+        """
+        Ejecuta la cadena de agentes N0-N8 usando client_context unificado.
+        
+        NUEVA ARQUITECTURA (Fase N2):
+        - Recibe client_context con training.* ya completo (debe tener training.bridge_for_nutrition)
+        - Ejecuta N0 → N1 → N2 → N3 → N4 → N5 → N6 → N7 → N8
+        - Cada agente modifica SOLO nutrition.*
+        - Usa misma validación que entrenamiento (validate_agent_contract)
+        - Devuelve client_context con nutrition.* completo
         
         Args:
-            questionnaire_data: Datos del cuestionario del cliente
-            training_bridge_data: Output de E9 con calendario de entrenamiento
-            previous_plan: (Opcional) Plan nutricional previo para progresión
+            client_context: ClientContext con training completo (salida de E1-E9)
+            
+        Returns:
+            Dict con:
+                - success: bool
+                - client_context: ClientContext actualizado con nutrition.*
+                - executions: list de resultados de cada agente
         """
+        logger.info("  🥗 INICIANDO PIPELINE DE NUTRICIÓN (N0-N8)")
+        logger.info("  ═══════════════════════════════════════════")
+        
+        # Verificar que training.bridge_for_nutrition existe
+        if client_context.training.bridge_for_nutrition is None:
+            logger.error("  ❌ FALTA training.bridge_for_nutrition (debe ser generado por E9)")
+            return {
+                "success": False,
+                "error": "Cannot execute nutrition without training.bridge_for_nutrition from E9",
+                "client_context": None,
+                "executions": []
+            }
+        
+        logger.info(f"  ✅ training.bridge_for_nutrition detectado")
+        
         executions = []
-        outputs = {}
         
-        # Si hay plan previo, añadirlo al contexto
-        if previous_plan:
-            logger.info("  📋 Plan nutricional previo incluido como contexto")
-            # Serializar datetime objects a strings para JSON compatibility
-            serialized_plan = _serialize_datetime_fields(previous_plan)
-            questionnaire_data["previous_nutrition_plan"] = serialized_plan
-        
+        # Ejecutar agentes N0-N8 secuencialmente
         for agent in self.nutrition_initial_agents:
-            logger.info(f"  ▶️ Ejecutando {agent.agent_id}...")
+            logger.info(f"  ▶️ Ejecutando {agent.agent_id} ({agent.agent_name})...")
             
-            # Preparar input
-            if agent.agent_id == "N0":
-                agent_input = {
-                    **questionnaire_data,
-                    "training_bridge": training_bridge_data
-                }
+            # Guardar estado antes para validación de contrato
+            client_context_before = ClientContext.model_validate(
+                client_context.model_dump()
+            )
+            
+            # VALIDACIÓN PRE-EJECUCIÓN: Verificar inputs requeridos
+            requirements = get_agent_requirements(agent.agent_id)
+            
+            if requirements.get("requires"):
+                logger.info(f"    🔍 Validando inputs requeridos: {requirements['requires']}")
+                valid_input, error_msg = validate_agent_input(
+                    agent.agent_id,
+                    client_context,
+                    requirements["requires"]
+                )
+                if not valid_input:
+                    logger.error(f"  ❌ {agent.agent_id} - Validación de input falló: {error_msg}")
+                    return {
+                        "success": False,
+                        "error": error_msg,
+                        "client_context": client_context,
+                        "executions": executions
+                    }
+            
+            # Preparar input: client_context completo
+            agent_input = client_context_to_dict(client_context)
+            
+            # Decidir si pasar KB de nutrición
+            # N0-N4 reciben KB completa, N5-N8 no la necesitan (optimización)
+            agents_with_kb = ["N0", "N1", "N2", "N3", "N4"]
+            if agent.agent_id in agents_with_kb:
+                kb_to_pass = self.knowledge_bases.get("nutrition", "")
             else:
-                # N1-N8 reciben todos los outputs anteriores desempaquetados
-                agent_input = {
-                    **questionnaire_data,
-                    "training_bridge": training_bridge_data
-                }
-                for i in range(0, int(agent.agent_id[1:])):
-                    prev_output = outputs.get(f"N{i}", {})
-                    agent_input.update(prev_output)
+                kb_to_pass = ""
+                logger.info(f"    ℹ️ {agent.agent_id} no recibe KB (optimización de contexto)")
             
-            # Ejecutar agente con la KB de nutrición
-            result = await agent.execute(agent_input, knowledge_base=self.knowledge_bases.get("nutrition", ""))
+            # EJECUTAR AGENTE
+            result = await agent.execute(
+                agent_input,
+                knowledge_base=kb_to_pass
+            )
             
-            if result["success"]:
-                outputs[agent.agent_id] = result["output"]
-                
-                # VALIDACIÓN CRÍTICA: N5 debe contener distribuciones con pre/post entreno
-                if agent.agent_id == "N5":
-                    n5_output = result["output"]
-                    dist_a = n5_output.get("distribucion_dia_A", {})
-                    dist_m = n5_output.get("distribucion_dia_M", {})
-                    
-                    # Verificar que días A/M tienen comidas de entreno
-                    comidas_a = dist_a.get("comidas", [])
-                    comidas_m = dist_m.get("comidas", [])
-                    
-                    has_pre_post_a = any("pre" in str(c.get("nombre", "")).lower() for c in comidas_a)
-                    has_pre_post_m = any("pre" in str(c.get("nombre", "")).lower() for c in comidas_m)
-                    
-                    if not has_pre_post_a and not has_pre_post_m:
-                        logger.warning("⚠️ N5 no generó comidas Pre/Post-Entreno. Verificar horario_entrenamiento en cuestionario.")
-                    else:
-                        logger.info("  ✅ N5 validado: Contiene comidas Pre/Post-Entreno")
-                
-                logger.info(f"  ✅ {agent.agent_id} completado")
-            else:
-                logger.error(f"  ❌ {agent.agent_id} falló")
+            # Verificar éxito de ejecución
+            if not result["success"]:
+                logger.error(f"  ❌ {agent.agent_id} falló: {result.get('error')}")
                 return {
                     "success": False,
                     "error": f"{agent.agent_id} falló: {result.get('error')}",
+                    "client_context": client_context,
                     "executions": executions
                 }
             
+            # Actualizar client_context con el output del agente
+            if "client_context" in result.get("output", {}):
+                client_context = ClientContext.model_validate(result["output"]["client_context"])
+                logger.info(f"  ✅ {agent.agent_id} devolvió client_context actualizado")
+            else:
+                logger.error(f"  ❌ {agent.agent_id} no devolvió client_context")
+                return {
+                    "success": False,
+                    "error": f"{agent.agent_id} did not return client_context",
+                    "client_context": client_context,
+                    "executions": executions
+                }
+            
+            # VALIDACIÓN POST-EJECUCIÓN: Verificar contrato
+            logger.info(f"    🔍 Validando contrato de {agent.agent_id}...")
+            valid_contract, contract_errors = validate_agent_contract(
+                agent.agent_id,
+                client_context_before,
+                client_context
+            )
+            
+            if not valid_contract:
+                logger.error(f"  ❌ {agent.agent_id} violó su contrato:")
+                for error in contract_errors:
+                    logger.error(f"     - {error}")
+                return {
+                    "success": False,
+                    "error": f"{agent.agent_id} contract violation: {contract_errors}",
+                    "client_context": client_context,
+                    "executions": executions
+                }
+            
+            logger.info(f"  ✅ {agent.agent_id} completado y validado")
             executions.append(result)
+        
+        logger.info("  ═══════════════════════════════════════════")
+        logger.info("  🎉 PIPELINE DE NUTRICIÓN COMPLETADO")
         
         return {
             "success": True,
-            "plan_data": outputs,
+            "client_context": client_context,
             "executions": executions
         }
     
