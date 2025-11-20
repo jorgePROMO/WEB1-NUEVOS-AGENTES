@@ -179,3 +179,80 @@
 2025-11-20 16:38:12,995 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['menu_plan', 'macro_design', 'profile']
 2025-11-20 16:38:12,996 - edn360.orchestrator - INFO -     ℹ️ N8 no recibe KB (optimización de contexto)
 2025-11-20 16:38:12,996 - edn360.agents.base_agent - INFO - 🤖 N8 (Watchdog de Seguridad Nutricional) - Iniciando ejecución
+2025-11-20 16:46:37,564 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 16:46:37,565 - edn360.agents.base_agent - INFO - 📝 N8 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 16:46:37,566 - edn360.agents.base_agent - INFO - ✅ N8 completado en 504.57s
+2025-11-20 16:46:37,566 - edn360.orchestrator - INFO -   ✅ N8 actualizó nutrition.* correctamente
+2025-11-20 16:46:37,566 - edn360.orchestrator - INFO -     🔍 Validando contrato de N8...
+2025-11-20 16:46:37,566 - edn360.orchestrator - INFO -   ✅ N8 completado y validado
+2025-11-20 16:46:37,566 - edn360.orchestrator - INFO -   ═══════════════════════════════════════════
+2025-11-20 16:46:37,566 - edn360.orchestrator - INFO -   🎉 PIPELINE DE NUTRICIÓN COMPLETADO
+2025-11-20 16:46:37,566 - __main__ - INFO - 
+2025-11-20 16:46:37,566 - __main__ - INFO - 🎉 Flujo N0-N8 completado exitosamente
+2025-11-20 16:46:37,566 - __main__ - INFO - 
+2025-11-20 16:46:37,566 - __main__ - INFO - ⏱️ PASO 4: Duración por agente:
+2025-11-20 16:46:37,566 - __main__ - INFO - 
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ N0 (Analista de Triaje Nutricional): 161.79s
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ N1 (Analista Metabólico): 4.83s
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ N2 (Selector de Estrategia Energética): 123.08s
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ N3 (Generador de Plantilla de Macros): 150.86s
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ N4 (Sincronizador A-M-B): 77.46s
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ N5 (Distribuidor de Timing): 81.85s
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ N6 (Generador de Menú): 135.97s
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ N7 (Coach de Adherencia): 372.00s
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ N8 (Watchdog de Seguridad Nutricional): 504.57s
+2025-11-20 16:46:37,566 - __main__ - INFO - 
+2025-11-20 16:46:37,566 - __main__ - INFO -    Duración total agentes: 1612.40s
+2025-11-20 16:46:37,566 - __main__ - INFO - 
+2025-11-20 16:46:37,566 - __main__ - INFO - 🔍 PASO 5: Verificando campos de nutrition...
+2025-11-20 16:46:37,566 - __main__ - INFO - 
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ nutrition.profile: RELLENO
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ nutrition.metabolism: RELLENO
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ nutrition.energy_strategy: RELLENO
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ nutrition.macro_design: RELLENO
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ nutrition.weekly_structure: RELLENO
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ nutrition.timing_plan: RELLENO
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ nutrition.menu_plan: RELLENO
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ nutrition.adherence_report: RELLENO
+2025-11-20 16:46:37,566 - __main__ - INFO -    ✅ nutrition.audit: RELLENO
+2025-11-20 16:46:37,566 - __main__ - INFO - 
+2025-11-20 16:46:37,567 - __main__ - INFO - ✅ TODOS LOS CAMPOS DE NUTRITION ESTÁN RELLENOS
+2025-11-20 16:46:37,567 - __main__ - INFO - 
+2025-11-20 16:46:37,567 - __main__ - INFO - 🔒 PASO 6: Verificando que training.* NO fue modificado por agentes N...
+2025-11-20 16:46:37,567 - __main__ - INFO - 
+2025-11-20 16:46:37,567 - __main__ - INFO - ✅ training.* NO fue modificado (correcto)
+2025-11-20 16:46:37,567 - __main__ - INFO - 
+2025-11-20 16:46:37,567 - __main__ - INFO - 💾 PASO 7: Guardando artefactos de debug...
+2025-11-20 16:46:37,567 - __main__ - INFO - 
+2025-11-20 16:46:37,569 - __main__ - INFO - ✅ Guardado: /app/debug_client_context_after_n8.json
+2025-11-20 16:46:37,570 - __main__ - INFO - 
+2025-11-20 16:46:37,570 - __main__ - INFO - ====================================================================================================
+2025-11-20 16:46:37,570 - __main__ - INFO - 🎉 TEST END-TO-END COMPLETADO
+2025-11-20 16:46:37,570 - __main__ - INFO - ====================================================================================================
+2025-11-20 16:46:37,570 - __main__ - INFO - 
+2025-11-20 16:46:37,570 - __main__ - INFO - 📁 ARCHIVOS GENERADOS PARA REVISIÓN:
+2025-11-20 16:46:37,570 - __main__ - INFO -    1. /app/debug_client_context_after_n8.json
+2025-11-20 16:46:37,570 - __main__ - INFO -       → client_context final con nutrition.* completo
+2025-11-20 16:46:37,570 - __main__ - INFO - 
+2025-11-20 16:46:37,570 - __main__ - INFO -    2. /app/logs_nutrition_e2e.txt
+2025-11-20 16:46:37,570 - __main__ - INFO -       → Log completo de ejecución con validaciones
+2025-11-20 16:46:37,570 - __main__ - INFO - 
+2025-11-20 16:46:37,570 - __main__ - INFO - ✅ Sistema de nutrición (N0-N8) funcionando correctamente
+2025-11-20 16:46:37,570 - __main__ - INFO - ✅ Listo para revisión final
+2025-11-20 16:46:37,570 - __main__ - INFO - 
+
+✅ Test E2E completado exitosamente
+📁 Revisa /app/debug_client_context_after_n8.json y /app/logs_nutrition_e2e.txt para validación
