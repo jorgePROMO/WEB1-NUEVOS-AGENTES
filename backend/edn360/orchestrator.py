@@ -25,7 +25,9 @@ from .client_context_utils import (
     validate_agent_contract,
     validate_agent_input,
     get_agent_requirements,
-    client_context_to_dict
+    client_context_to_dict,
+    build_nutrition_llm_context,
+    update_nutrition_from_llm_response
 )
 
 # Import agents
