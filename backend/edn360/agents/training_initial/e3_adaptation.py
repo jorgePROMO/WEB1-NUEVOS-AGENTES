@@ -340,12 +340,22 @@ Si E1 indica `"cambio_horario"`:
       "Incluir correctivos core en cada sesión",
       "Monitorizar lumbar post-ejercicios de cadena posterior"
     ],
-    "notas_especiales": [
-      "Cliente con potencial pero historial irregular. Clave: adherencia y técnica."
-    ]
+        "factor_volumen": 0.9,
+        "factor_intensidad": 0.9
+      },
+      // Resto de campos:
+      "mesocycle": null,
+      "sessions": null,
+      "safe_sessions": null,
+      "formatted_plan": null,
+      "audit": null,
+      "bridge_for_nutrition": null
+    }
   }
 }
 ```
+
+**CRÍTICO**: Devuelve siempre el objeto completo `client_context`.
 
 ---
 
