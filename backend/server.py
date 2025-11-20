@@ -10952,6 +10952,9 @@ async def process_queued_jobs():
     Revisa jobs en "queued" y los procesa si hay espacio.
     Se ejecuta cada 30 segundos.
     """
+    # Delay inicial para permitir que el servidor arranque completamente
+    await asyncio.sleep(15)
+    
     while True:
         try:
             # Contar jobs en running
