@@ -10491,9 +10491,17 @@ async def execute_with_retry(func, max_retries=2, *args, **kwargs):
 
 async def process_generation_job(job_id: str):
     """
-    Procesa un job de generación en background.
-    Esta función ejecuta el orquestador E.D.N.360 sin modificarlo.
+    Procesa un job de generación en background con estabilización.
+    
+    MEJORAS IMPLEMENTADAS:
+    - ✅ Control de concurrencia (máx 2 jobs simultáneos)
+    - ✅ Progreso REAL después de cada agente
+    - ✅ Retry automático (2 reintentos con delays 10s, 30s)
+    - ✅ Logging de eventos
+    - ✅ Timeout será manejado por watchdog externo
     """
+    retry_count = 0
+    
     try:
         # Cargar el job
         job = await db.generation_jobs.find_one({"_id": job_id})
@@ -10503,16 +10511,24 @@ async def process_generation_job(job_id: str):
         
         logger.info(f"🚀 Iniciando procesamiento de job {job_id} (type: {job['type']})")
         
-        # Cambiar status a "running"
+        # 1️⃣ CONTROL DE CONCURRENCIA
+        can_run = await check_job_concurrency(job_id)
+        if not can_run:
+            # Job marcado como "queued", salir
+            return
+        
+        # 2️⃣ CAMBIAR STATUS A RUNNING + LOG
         await db.generation_jobs.update_one(
             {"_id": job_id},
             {
                 "$set": {
                     "status": "running",
-                    "started_at": datetime.now(timezone.utc)
+                    "started_at": datetime.now(timezone.utc),
+                    "execution_log": []  # Inicializar log
                 }
             }
         )
+        await add_job_log(job_id, "started", f"Iniciando generación (mode: {job['type']})")
         
         # Obtener datos necesarios
         user_id = job["user_id"]
