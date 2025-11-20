@@ -313,12 +313,23 @@ RIR_objetivo = RIR_previo + 1  (más conservador)
 
 ---
 
-## 📤 Output (JSON estructurado)
+## 📤 Output (client_context actualizado)
+
+**IMPORTANTE**: Debes devolver el `client_context` COMPLETO que recibiste, con SOLO tu campo lleno.
 
 ```json
 {
-  "status": "ok",
-  "seg_score": 7.5,
+  "client_context": {
+    "meta": { ... },  // Mantener igual que input
+    "raw_inputs": { ... },  // Mantener igual que input
+    "training": {
+      "profile": { ... },  // Mantener igual (de E1)
+      "constraints": { ... },  // Mantener igual (de E1)
+      "prehab": { ... },  // Mantener igual (de E1)
+      "progress": null,
+      // TU CAMPO - el único que debes llenar:
+      "capacity": {
+        "seg_score": 7.5,
   "interpretacion_seg": "Cliente con capacidad estructural buena. Progresión estándar con precaución en lumbar.",
   "split_recomendado": {
     "tipo": "upper-lower",
