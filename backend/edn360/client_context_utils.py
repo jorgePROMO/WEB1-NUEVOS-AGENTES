@@ -449,34 +449,62 @@ def build_nutrition_llm_context(client_context: ClientContext) -> Dict[str, Any]
 
 
 def update_nutrition_from_llm_response(
+    agent_id: str,
     client_context_real: ClientContext,
     llm_response: Dict[str, Any]
 ) -> ClientContext:
     """
-    Actualiza SOLO nutrition.* del client_context real con la respuesta del LLM.
+    Actualiza SOLO los campos específicos de nutrition.* según el contrato del agente.
     
-    IMPORTANTE:
-    - El LLM trabaja con una vista compacta (sin training.sessions, etc.)
-    - NO queremos sobreescribir training.*, raw_inputs, meta del real
-    - SOLO actualizamos nutrition.* con lo que el agente N generó
+    CAMBIO CRÍTICO (corrección):
+    - Antes: Sobrescribíamos TODA la rama nutrition.* con lo que devolvió el LLM
+    - Ahora: SOLO copiamos los campos que el agente tiene permiso de llenar (fills)
+    - Esto evita que el LLM "se flagee" y modifique campos de otros agentes
+    
+    REGLAS:
+    1. ❌ NO tocar meta, raw_inputs ni training.*
+    2. ❌ NO sobrescribir nutrition.* completo
+    3. ✅ SOLO copiar campos específicos según AGENT_FIELD_MAPPING[agent_id]["fills"]
     
     Args:
-        client_context_real: ClientContext completo en memoria
+        agent_id: ID del agente (N0, N1, ..., N8)
+        client_context_real: ClientContext completo en memoria (fuente de verdad)
         llm_response: Respuesta del LLM con {"client_context": {...}}
         
     Returns:
-        ClientContext actualizado con nueva nutrition.*
+        ClientContext actualizado SOLO con los campos del agente
     """
     if "client_context" not in llm_response:
         raise ValueError("LLM response no contiene client_context")
     
     llm_context = llm_response["client_context"]
     
-    # Extraer solo nutrition.* de la respuesta del LLM
+    # Extraer nutrition.* de la respuesta del LLM
     if "nutrition" not in llm_context:
         raise ValueError("LLM response no contiene nutrition")
     
-    new_nutrition = NutritionData.model_validate(llm_context["nutrition"])
+    llm_nutrition = llm_context["nutrition"]
+    
+    # Obtener el contrato del agente: qué campos puede llenar
+    requirements = get_agent_requirements(agent_id)
+    fills = requirements.get("fills", [])
+    
+    if not fills:
+        raise ValueError(f"Agente {agent_id} no tiene campos 'fills' definidos en AGENT_FIELD_MAPPING")
+    
+    # Convertir nutrition actual a dict para modificar solo campos específicos
+    current_nutrition_dict = client_context_real.nutrition.model_dump()
+    
+    # COPIAR SOLO los campos que este agente tiene permiso de llenar
+    for field in fills:
+        if field in llm_nutrition:
+            current_nutrition_dict[field] = llm_nutrition[field]
+            logger.debug(f"  📝 Copiando {agent_id}.fills: nutrition.{field}")
+        else:
+            logger.warning(f"  ⚠️ {agent_id} no devolvió el campo esperado: nutrition.{field}")
+    
+    # Recrear NutritionData con solo los campos actualizados
+    updated_nutrition = NutritionData.model_validate(current_nutrition_dict)
     
     # Crear nuevo ClientContext con nutrition actualizada
     # (Pydantic es inmutable, necesitamos crear uno nuevo)
@@ -484,7 +512,7 @@ def update_nutrition_from_llm_response(
         meta=client_context_real.meta,
         raw_inputs=client_context_real.raw_inputs,
         training=client_context_real.training,  # SIN CAMBIOS
-        nutrition=new_nutrition  # ACTUALIZADO
+        nutrition=updated_nutrition  # ACTUALIZADO solo en campos específicos
     )
     
     return updated_context
