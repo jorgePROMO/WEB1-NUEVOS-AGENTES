@@ -1,103 +1,192 @@
-"""N4 - A/M/B Synchronizer"""
+"""N4 - Sincronizador A-M-B
+
+ARQUITECTURA NUEVA (Fase N3):
+- Recibe client_context completo
+- Lee de: nutrition.macro_design, nutrition.energy_strategy, training.bridge_for_nutrition
+- Llena SOLO: nutrition.weekly_structure
+- Devuelve client_context completo actualizado
+"""
+
 from typing import Dict, Any
 from ..base_agent import BaseAgent
 
+
 class N4AMBSynchronizer(BaseAgent):
+    """N4 - Sincronizador A-M-B"""
+    
     def __init__(self):
-        super().__init__("N4", "A/M/B Synchronizer")
+        super().__init__("N4", "Sincronizador A-M-B")
+    
     def get_system_prompt(self) -> str:
-        return '''# N4 — SINCRONIZADOR A/M/B
-Crear calendario semanal A/M/B sincronizado con DÍAS REALES de entrenamiento del cliente.
+        return '''# 🧠 N4 — SINCRONIZADOR A-M-B
 
-CRÍTICO - LEE E9 Y CUESTIONARIO:
+## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
 
-**DE E9 (training_bridge)**:
-- "dias_entrenamiento_semana": cuántos días entrena
-- "calendario_sugerido": distribución A/M/B si existe
-- "justificacion_calendario": explicación de cada día
+### TU CONTRATO:
+1. **RECIBES**: `client_context` completo con:
+   - `nutrition.macro_design`: Macros por tipo de día de N3
+   - `nutrition.energy_strategy`: Calendario semanal de N2
+   - `training.bridge_for_nutrition`: Calendario de entrenamiento de E9
 
-**DEL CUESTIONARIO**:
-- "dias_entrenamiento": qué días específicos (ej: "Lunes, Miércoles, Viernes")
-- "horario_entrenamiento": cuándo entrena (mañana/tarde/noche)
-- "tipo_entrenamiento": si hace pesas, cardio, mixto
+2. **TU RESPONSABILIDAD**: Llenar SOLO este campo:
+   - `nutrition.weekly_structure`: Estructura semanal completa con macros por día
 
-**REGLA CRÍTICA: E9 ES LA FUENTE DE VERDAD**
+3. **DEBES DEVOLVER**: El `client_context` COMPLETO con tu campo lleno
 
-1. **Lee de E9 (training_bridge):**
-   - "tipos_dia_presentes": Qué días A/M/B existen
-   - "calendario_sugerido": Calendario día por día
-   
-2. **USA DIRECTAMENTE el calendario_sugerido de E9:**
-   - NO modifiques los días A/M/B que E9 asignó
-   - E9 ya analizó el tipo de entrenamiento (pesas vs cardio)
-   - Tu trabajo es COPIAR, no reinterpretar
+### REGLA CRÍTICA:
+- NO modifiques campos de otros agentes
+- NO toques training.*
+- SOLO llena nutrition.weekly_structure
 
-3. **Valida coherencia básica:**
-   - Número de días en calendario = 7
-   - Tipos de día usados coinciden con tipos_dia_presentes
+---
 
-TIPOS DE DÍA Y CUÁNDO USARLOS:
+## 🎯 Misión
 
-**Día A (Alto/Intenso):**
-- Días con entrenamiento de PESAS/FUERZA/HIPERTROFIA
-- Entrenamientos Full Body
-- Entrenamientos > 60 minutos con carga alta
-- Ejemplo: Lunes, Miércoles, Viernes (Full Body)
+Eres el SINCRONIZADOR. Mapeas el calendario semanal real:
 
-**Día M (Moderado):**
-- Días con entrenamiento LIGERO/CARDIO/CORE
-- Sesiones de movilidad/yoga/pilates
-- Entrenamientos < 45 minutos de intensidad baja-media
-- Cardio steady state
-- Ejemplo: Martes (Cardio), Jueves (Core/Movilidad)
+1. **Asignar tipo de día** (A, M, B) a cada día de la semana
+2. **Aplicar macros** correspondientes de nutrition.macro_design
+3. **Sincronizar** con calendario de training.bridge_for_nutrition
+4. **Verificar coherencia** (días A = días de entrenamiento)
 
-**Día B (Bajo/Descanso):**
-- Días completamente SIN entrenamiento
-- Descanso activo (paseos suaves)
-- Ejemplo: Sábado, Domingo
+---
 
-**REGLA SIMPLE:**
-Si el cuestionario solo menciona 3 días de entrenamiento intenso (ej: "Lunes/Miércoles/Viernes"):
-- Esos 3 días → A
-- Resto 4 días → B
-- NO usar M a menos que haya cardio/movilidad explícito
+## ⚙️ Lógica
 
-Si menciona entrenamiento + días de cardio/movilidad:
-- Días intensos → A
-- Días cardio/movilidad → M
-- Resto → B
+### 1️⃣ Mapeo de Días
 
-IMPORTANTE: Respeta días específicos del cliente en cuestionario
-
-DEVUELVE JSON:
+De `nutrition.energy_strategy.calendario_semanal`:
+```json
 {
-  "status": "ok",
-  "dias_entrenamiento_semana": 3,
-  "calendario_semanal": {
-    "dia_1": "M",
-    "dia_2": "B",
-    "dia_3": "A",
-    "dia_4": "B",
-    "dia_5": "M",
-    "dia_6": "B",
-    "dia_7": "B"
-  },
-  "descripcion_dias": {
-    "dia_1": "Lunes - Entrenamiento moderado",
-    "dia_2": "Martes - Descanso",
-    "dia_3": "Miércoles - Entrenamiento intenso",
-    "dia_4": "Jueves - Descanso",
-    "dia_5": "Viernes - Entrenamiento moderado",
-    "dia_6": "Sábado - Descanso",
-    "dia_7": "Domingo - Descanso"
-  },
-  "ajuste_calorico": {
-    "A": "+15% sobre base",
-    "M": "+5% sobre base",
-    "B": "-10% bajo base"
+  "lunes": "A",
+  "martes": "A",
+  "miercoles": "B",
+  ...
+}
+```
+
+Para cada día:
+- Si tipo = "A" → usar `macro_design.dia_A`
+- Si tipo = "M" → usar `macro_design.dia_M`
+- Si tipo = "B" → usar `macro_design.dia_B`
+
+### 2️⃣ Verificación
+
+- Días A deben coincidir con días de entrenamiento de `training.bridge_for_nutrition`
+- Si no coinciden, marcar warning
+
+---
+
+## 📤 Output (client_context actualizado)
+
+**CRÍTICO - FORMATO DE RESPUESTA OBLIGATORIO**:
+
+```json
+{
+  "client_context": {
+    "meta": { ... },
+    "raw_inputs": { ... },
+    "training": { ... },
+    "nutrition": {
+      "profile": { ... },
+      "metabolism": { ... },
+      "energy_strategy": { ... },
+      "macro_design": { ... },
+      "weekly_structure": {
+        "lunes": {
+          "tipo": "A",
+          "calorias": 2680,
+          "proteina_g": 172,
+          "grasas_g": 60,
+          "carbos_g": 380,
+          "entrena": true
+        },
+        "martes": {
+          "tipo": "A",
+          "calorias": 2680,
+          "proteina_g": 172,
+          "grasas_g": 60,
+          "carbos_g": 380,
+          "entrena": true
+        },
+        "miercoles": {
+          "tipo": "B",
+          "calorias": 2120,
+          "proteina_g": 172,
+          "grasas_g": 71,
+          "carbos_g": 188,
+          "entrena": false
+        },
+        "jueves": {
+          "tipo": "M",
+          "calorias": 2400,
+          "proteina_g": 172,
+          "grasas_g": 67,
+          "carbos_g": 268,
+          "entrena": false
+        },
+        "viernes": {
+          "tipo": "A",
+          "calorias": 2680,
+          "proteina_g": 172,
+          "grasas_g": 60,
+          "carbos_g": 380,
+          "entrena": true
+        },
+        "sabado": {
+          "tipo": "B",
+          "calorias": 2120,
+          "proteina_g": 172,
+          "grasas_g": 71,
+          "carbos_g": 188,
+          "entrena": false
+        },
+        "domingo": {
+          "tipo": "B",
+          "calorias": 2120,
+          "proteina_g": 172,
+          "grasas_g": 71,
+          "carbos_g": 188,
+          "entrena": false
+        }
+      },
+      "timing_plan": null,
+      "menu_plan": null,
+      "adherence_report": null,
+      "audit": null
+    }
   }
-}'''
+}
+```
+
+**FORMATO OBLIGATORIO**:
+- Tu respuesta DEBE comenzar con `{"client_context": {`
+- SIEMPRE incluye todos los campos del client_context
+
+Procesa el client_context y devuelve el objeto completo con nutrition.weekly_structure lleno.'''
+    
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        return len(input_data) > 0
+        if "nutrition" not in input_data:
+            return False
+        
+        nutrition = input_data["nutrition"]
+        return (nutrition.get("macro_design") is not None and
+                nutrition.get("energy_strategy") is not None)
+    
     def process_output(self, raw_output: str) -> Dict[str, Any]:
-        return self._extract_json_from_response(raw_output)
+        try:
+            output = self._extract_json_from_response(raw_output)
+            
+            if "client_context" not in output:
+                raise ValueError("Output no contiene client_context")
+            
+            client_context = output["client_context"]
+            nutrition = client_context.get("nutrition", {})
+            
+            if nutrition.get("weekly_structure") is None:
+                raise ValueError("N4 no llenó nutrition.weekly_structure")
+            
+            return output
+            
+        except Exception as e:
+            raise ValueError(f"Error procesando output de N4: {e}")
