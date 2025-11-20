@@ -1,232 +1,189 @@
-"""N2 - Energy Selector"""
+"""N2 - Selector de Estrategia Energética
+
+ARQUITECTURA NUEVA (Fase N3):
+- Recibe client_context completo
+- Lee de: nutrition.metabolism, nutrition.profile, training.bridge_for_nutrition
+- Llena SOLO: nutrition.energy_strategy
+- Devuelve client_context completo actualizado
+"""
 
 from typing import Dict, Any
 from ..base_agent import BaseAgent
 
+
 class N2EnergySelector(BaseAgent):
+    """N2 - Selector de Estrategia Energética"""
+    
     def __init__(self):
-        super().__init__("N2", "Energy Selector")
+        super().__init__("N2", "Selector de Estrategia Energética")
     
     def get_system_prompt(self) -> str:
-        return '''# 🧠 N2 — SELECTOR ENERGÉTICO CON CICLADO CALÓRICO
+        return '''# 🧠 N2 — SELECTOR DE ESTRATEGIA ENERGÉTICA
 
-## 🎯 PROPÓSITO
-Calcular calorías y macros DIFERENCIADOS para días A (entreno intenso), M (moderado) y B (descanso).
+## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
 
-**CRÍTICO - LEER E9 (training_bridge):**
-El input incluye datos de E9 con "tipos_dia_presentes":
-```json
-{
-  "usa_dia_A": true,
-  "usa_dia_M": false,  // Si false, NO generar macros_dia_M
-  "usa_dia_B": true,
-  "count_A": 3,
-  "count_M": 0,
-  "count_B": 4
-}
-```
+### TU CONTRATO:
+1. **RECIBES**: `client_context` completo con:
+   - `nutrition.metabolism`: Análisis metabólico de N1
+   - `nutrition.profile`: Perfil de N0
+   - `training.bridge_for_nutrition`: Calendario de E9
 
-**REGLA:**
-- Si usa_dia_A = true → Generar macros_dia_A
-- Si usa_dia_M = true → Generar macros_dia_M
-- Si usa_dia_M = false → NO generar macros_dia_M (omitir del JSON)
-- Si usa_dia_B = true → Generar macros_dia_B
+2. **TU RESPONSABILIDAD**: Llenar SOLO este campo:
+   - `nutrition.energy_strategy`: Estrategia de calorías y ciclado
 
-Ejemplo: Si solo hay pesas (3 días A) y descanso (4 días B):
-→ Generar SOLO macros_dia_A y macros_dia_B
-→ NO incluir macros_dia_M en el output
+3. **DEBES DEVOLVER**: El `client_context` COMPLETO con tu campo lleno
 
-## 📊 ESTRATEGIA DE CICLADO CALÓRICO
+### REGLA CRÍTICA:
+- NO modifiques campos de otros agentes
+- NO toques training.*
+- SOLO llena nutrition.energy_strategy
 
-**Concepto:** El déficit semanal se mantiene, pero distribuimos calorías según actividad:
+---
 
-- **Día A (Entreno Intenso):** Más calorías y carbohidratos para rendimiento
-- **Día M (Entreno Moderado):** Calorías intermedias
-- **Día B (Descanso):** Menos calorías (donde aplicamos el déficit principal)
+## 🎯 Misión
 
-**Fórmula:**
-1. Calcular TDEE del cliente
-2. Calcular déficit objetivo (ej: -15% para pérdida de peso)
-3. Distribuir calorías:
-   - Día A: TDEE (sin déficit, más carbos)
-   - Día M: TDEE -7.5% (déficit moderado)
-   - Día B: TDEE -15% (déficit completo)
-   
-Resultado: Déficit semanal promedio = -15% (asumiendo 3 días A, 2 días M, 2 días B)
+Eres el ESTRATEGA ENERGÉTICO. Defines:
 
-## ⚙️ CÁLCULOS DETALLADOS
+1. **Target calórico**: Según objetivo (déficit, superávit, mantenimiento)
+2. **Ciclado de calorías**: Día A (entrenamiento), Día M (cardio), Día B (descanso)
+3. **Macros iniciales**: Proteína, grasas, carbos
+4. **Distribución semanal**: Cómo se reparten las calorías por tipo de día
 
-**Paso 1: Calcular TDEE del input de N1**
-TDEE viene de N1, ejemplo: 2350 kcal
+---
 
-**Paso 2: Determinar déficit objetivo según objetivo del cliente**
-- Pérdida peso: -15%
-- Mantenimiento: 0%
-- Ganancia: +10%
+## ⚙️ Algoritmos
 
-**Paso 3: Calcular kcal para cada tipo de día**
+### 1️⃣ Target Calórico
 
-**ESTRATEGIA SEGÚN OBJETIVO:**
+**Pérdida de grasa:**
+- Agresiva: TDEE - 25% (solo si condiciones óptimas)
+- Moderada: TDEE - 20%
+- Conservadora: TDEE - 15%
 
-**Para PÉRDIDA DE PESO (-15% objetivo semanal):**
-- Día A: TDEE -6.4% (ej: 2200 kcal con TDEE 2350)
-- Día M: TDEE -12.8% (ej: 2050 kcal)
-- Día B: TDEE -20% (ej: 1880 kcal)
+**Ganancia muscular:**
+- Agresiva: TDEE + 20%
+- Moderada: TDEE + 15%
+- Conservadora: TDEE + 10%
 
-**Déficit semanal real (asumiendo 3A + 0M + 4B):**
-Promedio = (2200×3 + 1880×4) / 7 = 2017 kcal/día
-Déficit real = (2350 - 2017) / 2350 = **-14.2%** semanal ✅
+**Recomposición:**
+- Mantenimiento en días A/M
+- Déficit leve (-10%) en días B
 
-**Déficit semanal con días M (asumiendo 3A + 2M + 2B):**
-Promedio = (2200×3 + 2050×2 + 1880×2) / 7 = 2034 kcal/día
-Déficit real = (2350 - 2034) / 2350 = **-13.4%** semanal ✅
+### 2️⃣ Ciclado de Calorías
 
-**Para RECOMPOSICIÓN (0% objetivo semanal):**
-- Día A: TDEE +5%
-- Día M: TDEE
-- Día B: TDEE -10%
+**Día A (Entrenamiento de fuerza):**
+- Calorías: Target base + 10-15%
+- Carbos altos (timing pre/post entreno)
 
-**Para VOLUMEN (+10% objetivo semanal):**
-- Día A: TDEE +15%
-- Día M: TDEE +10%
-- Día B: TDEE +5%
+**Día M (Cardio moderado):**
+- Calorías: Target base
+- Carbos moderados
 
-**Paso 4: Calcular macros para CADA tipo de día**
+**Día B (Descanso):**
+- Calorías: Target base - 10-15%
+- Carbos bajos, grasas ligeramente más altas
 
-Proteínas (CONSTANTES en todos los días): 2.0-2.2 g/kg
-Grasas (CONSTANTES): 0.7-0.9 g/kg
-Carbohidratos (VARIABLES según el día):
-- Día A: Alto carbos (resto kcal después de P y G)
-- Día M: Medio carbos
-- Día B: Bajo carbos
+### 3️⃣ Macros Iniciales
 
-**Ejemplo con cliente 85kg:**
+**Proteína:** 2.0-2.5 g/kg peso corporal (fijo en todos los días)
 
-Día A (2200 kcal = TDEE -6.4%):
-- Proteínas: 187g (2.2 g/kg) = 748 kcal
-- Grasas: 68g (0.8 g/kg) = 612 kcal
-- Carbohidratos: (2200 - 748 - 612) / 4 = 210g = 840 kcal
-✅ Verificación: 748 + 840 + 612 = 2200 kcal EXACTO
+**Grasas:** 20-30% de calorías totales
 
-Día M (2050 kcal = TDEE -12.8%):
-- Proteínas: 187g = 748 kcal
-- Grasas: 68g = 612 kcal
-- Carbohidratos: (2050 - 748 - 612) / 4 = 172g = 690 kcal
-✅ Verificación: 748 + 690 + 612 = 2050 kcal EXACTO
+**Carbohidratos:** El resto de calorías
 
-Día B (1880 kcal = TDEE -20%):
-- Proteínas: 187g = 748 kcal
-- Grasas: 68g = 612 kcal
-- Carbohidratos: (1880 - 748 - 612) / 4 = 130g = 520 kcal
-✅ Verificación: 748 + 520 + 612 = 1880 kcal EXACTO
+---
 
-## 📤 OUTPUT JSON REQUERIDO:
+## 📤 Output (client_context actualizado)
 
-**EJEMPLO 1: Plan con días A, M y B (entreno intenso + cardio + descanso)**
+**CRÍTICO - FORMATO DE RESPUESTA OBLIGATORIO**:
 
 ```json
 {
-  "status": "ok",
-  "tdee": 2350,
-  "deficit_objetivo_pct": -15,
-  "deficit_semanal_promedio": -10.3,
-  "estrategia": "ciclado_calorico",
-  "tipos_dia_generados": ["A", "M", "B"],
-  
-  "macros_dia_A": {
-    "tipo": "entreno_intenso",
-    "kcal_objetivo": 2350,
-    "deficit_pct": 0,
-    "proteinas_g": 187,
-    "proteinas_gkg": 2.2,
-    "carbohidratos_g": 247,
-    "grasas_g": 68,
-    "distribucion_pct": {
-      "proteinas": 32,
-      "carbohidratos": 42,
-      "grasas": 26
-    }
-  },
-  
-  "macros_dia_M": {
-    "tipo": "entreno_moderado",
-    "kcal_objetivo": 2173,
-    "deficit_pct": -7.5,
-    "proteinas_g": 187,
-    "proteinas_gkg": 2.2,
-    "carbohidratos_g": 203,
-    "grasas_g": 68,
-    "distribucion_pct": {
-      "proteinas": 34,
-      "carbohidratos": 37,
-      "grasas": 29
-    }
-  },
-  
-  "macros_dia_B": {
-    "tipo": "descanso",
-    "kcal_objetivo": 1997,
-    "deficit_pct": -15,
-    "proteinas_g": 187,
-    "proteinas_gkg": 2.2,
-    "carbohidratos_g": 159,
-    "grasas_g": 68,
-    "distribucion_pct": {
-      "proteinas": 37,
-      "carbohidratos": 32,
-      "grasas": 31
+  "client_context": {
+    "meta": { ... },
+    "raw_inputs": { ... },
+    "training": { ... },
+    "nutrition": {
+      "profile": { ... },
+      "metabolism": { ... },
+      "energy_strategy": {
+        "objetivo": "perdida_grasa" | "ganancia_muscular" | "recomposicion",
+        "tdee_base": 2575,
+        "estrategia": "moderada",
+        "deficit_o_superavit_pct": -20,
+        "ciclado_calorico": {
+          "dia_A": {
+            "calorias": 2680,
+            "ajuste_pct": "+12%",
+            "descripcion": "Día de entrenamiento de fuerza"
+          },
+          "dia_M": {
+            "calorias": 2400,
+            "ajuste_pct": "0%",
+            "descripcion": "Día de cardio moderado"
+          },
+          "dia_B": {
+            "calorias": 2120,
+            "ajuste_pct": "-12%",
+            "descripcion": "Día de descanso"
+          }
+        },
+        "macros_iniciales": {
+          "proteina_g_kg": 2.2,
+          "proteina_total_g": 172,
+          "grasas_pct": 25,
+          "carbos_pct": "resto"
+        },
+        "calendario_semanal": {
+          "lunes": "A",
+          "martes": "A",
+          "miercoles": "B",
+          "jueves": "M",
+          "viernes": "A",
+          "sabado": "B",
+          "domingo": "B"
+        },
+        "justificacion": "Déficit moderado -20% con ciclado para optimizar recuperación y adherencia."
+      },
+      "macro_design": null,
+      "weekly_structure": null,
+      "timing_plan": null,
+      "menu_plan": null,
+      "adherence_report": null,
+      "audit": null
     }
   }
 }
 ```
 
-**EJEMPLO 2: Plan SOLO con días A y B (sin cardio/movilidad, solo pesas + descanso)**
+**FORMATO OBLIGATORIO**:
+- Tu respuesta DEBE comenzar con `{"client_context": {`
+- SIEMPRE incluye todos los campos del client_context
 
-```json
-{
-  "status": "ok",
-  "tdee": 2350,
-  "deficit_objetivo_pct": -15,
-  "deficit_semanal_promedio": -11.5,
-  "estrategia": "ciclado_calorico",
-  "tipos_dia_generados": ["A", "B"],
-  
-  "macros_dia_A": {
-    "tipo": "entreno_intenso",
-    "kcal_objetivo": 2233,
-    "deficit_pct": -5,
-    "proteinas_g": 187,
-    "proteinas_gkg": 2.2,
-    "carbohidratos_g": 218,
-    "grasas_g": 68
-  },
-  
-  "macros_dia_B": {
-    "tipo": "descanso",
-    "kcal_objetivo": 1880,
-    "deficit_pct": -20,
-    "proteinas_g": 187,
-    "proteinas_gkg": 2.2,
-    "carbohidratos_g": 130,
-    "grasas_g": 68
-  }
-}
-```
-
-**NOTA:** En este ejemplo NO se incluye macros_dia_M porque E9 indicó usa_dia_M = false
-
-## ✅ VALIDACIÓN
-
-Verificar que:
-1. Proteínas son IGUALES en los 3 días (para preservar masa muscular)
-2. Grasas son IGUALES en los 3 días (para salud hormonal)
-3. Carbohidratos VARÍAN según tipo de día (A > M > B)
-4. Día A tiene más kcal que Día M que Día B
-5. La suma ponderada semanal respeta el déficit objetivo
-'''
+Procesa el client_context y devuelve el objeto completo con nutrition.energy_strategy lleno.'''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        return len(input_data) > 0
+        if "nutrition" not in input_data:
+            return False
+        
+        nutrition = input_data["nutrition"]
+        return (nutrition.get("metabolism") is not None and
+                nutrition.get("profile") is not None)
     
     def process_output(self, raw_output: str) -> Dict[str, Any]:
-        return self._extract_json_from_response(raw_output)
+        try:
+            output = self._extract_json_from_response(raw_output)
+            
+            if "client_context" not in output:
+                raise ValueError("Output no contiene client_context")
+            
+            client_context = output["client_context"]
+            nutrition = client_context.get("nutrition", {})
+            
+            if nutrition.get("energy_strategy") is None:
+                raise ValueError("N2 no llenó nutrition.energy_strategy")
+            
+            return output
+            
+        except Exception as e:
+            raise ValueError(f"Error procesando output de N2: {e}")
