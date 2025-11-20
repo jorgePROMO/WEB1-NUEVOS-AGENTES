@@ -291,13 +291,17 @@ Rango óptimo: 35-55
     "cadera_rodilla": 0.93,
     "validacion": "ratios_dentro_rango"
   },
-  "contrato_para_E5": {
-    "mesociclo_completo": true,
-    "volumen_por_grupo": {...},
-    "patron_semanal": {...},
-    "restricciones_ejercicios": [...],
-    "tiempo_maximo_sesion": 60,
-    "notas": "Generar sesiones detalladas para cada día con ejercicios específicos."
+        },
+        "semanas": [...],
+        "kpi": {...}
+      },
+      // Resto de campos:
+      "sessions": null,
+      "safe_sessions": null,
+      "formatted_plan": null,
+      "audit": null,
+      "bridge_for_nutrition": null
+    }
   }
 }
 ```
