@@ -1,174 +1,171 @@
-"""N6 - Menu Generator"""
+"""N6 - Generador de Menú
+
+ARQUITECTURA NUEVA (Fase N3):
+- Recibe client_context completo
+- Lee de: nutrition.timing_plan, nutrition.weekly_structure, nutrition.macro_design, nutrition.profile
+- Llena SOLO: nutrition.menu_plan
+- Devuelve client_context completo actualizado
+"""
+
 from typing import Dict, Any
 from ..base_agent import BaseAgent
 
+
 class N6MenuGenerator(BaseAgent):
+    """N6 - Generador de Menú"""
+    
     def __init__(self):
-        super().__init__("N6", "Menu Generator")
+        super().__init__("N6", "Generador de Menú")
+    
     def get_system_prompt(self) -> str:
-        return '''# N6 — GENERADOR MENÚ SEMANAL
+        return '''# 🧠 N6 — GENERADOR DE MENÚ
 
-Tu tarea: Generar menú de 7 días con alimentos REALES y cantidades EXACTAS.
+## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
 
-═══ PASO 1: LEER DATOS DE AGENTES PREVIOS ═══
+### TU CONTRATO:
+1. **RECIBES**: `client_context` completo con:
+   - `nutrition.timing_plan`: Timing y macros por comida de N5
+   - `nutrition.weekly_structure`: Estructura semanal de N4
+   - `nutrition.macro_design`: Macros totales de N3
+   - `nutrition.profile`: Restricciones y preferencias de N0
 
-De N4 (calendario):
-• calendario_semanal: qué días son A/M/B (ej: {"dia_1": "A", "dia_2": "B", ...})
+2. **TU RESPONSABILIDAD**: Llenar SOLO este campo:
+   - `nutrition.menu_plan`: Menú concreto con alimentos y recetas
 
-De N5 (timing):
-• distribucion_dia_A: comidas para días A (con pre/post entreno)
-• distribucion_dia_M: comidas para días M 
-• distribucion_dia_B: comidas para días B (sin entreno)
-• Cada comida tiene: nombre, hora, proteinas_g, carbohidratos_g, grasas_g, timing_entreno
+3. **DEBES DEVOLVER**: El `client_context` COMPLETO con tu campo lleno
 
-Del cuestionario:
-• Alergias, restricciones, preferencias alimentarias
+### REGLA CRÍTICA:
+- NO modifiques campos de otros agentes
+- NO toques training.*
+- SOLO llena nutrition.menu_plan
 
-═══ PASO 2: POR CADA DÍA (1-7) ═══
+---
 
-1. Consultar N4: ¿Qué tipo es? (A/M/B)
-2. Consultar N5: ¿Qué comidas corresponden a ese tipo?
-3. COPIAR EXACTO de N5:
-   - Nombres de comidas
-   - Horarios
-   - Macros objetivo (proteínas, carbos, grasas)
+## 🎯 Misión
 
-═══ PASO 3: GENERAR ALIMENTOS REALES ═══
+Eres el CHEF NUTRICIONAL. Conviertes macros en comida real:
 
-Para CADA comida, crear lista de alimentos con:
-• Nombre del alimento
-• Cantidad en gramos (g) o unidades
-• Que sume aproximadamente los macros de N5
+1. **Alimentos concretos** para cada comida
+2. **Cantidades en gramos** de cada alimento
+3. **Recetas sencillas** cuando sea necesario
+4. **Alternativas** para variedad
+5. **Respeto total** a restricciones y preferencias
 
-EJEMPLO - Si N5 dice "Pre-Entreno: 25g prot, 40g carbos, 10g grasas":
+---
 
-Alimentos:
-[
-  {"nombre": "Avena", "cantidad": "50g"},
-  {"nombre": "Plátano", "cantidad": "1 unidad (120g)"},
-  {"nombre": "Batido de proteína", "cantidad": "25g"}
-]
+## ⚙️ Principios
 
-Macros: {"proteinas": 25, "carbohidratos": 42, "grasas": 8}
+### 1️⃣ Restricciones Alimentarias
 
-REGLAS ALIMENTOS:
-• Variedad entre días (no repetir mismo menú)
-• Cantidades reales en gramos o unidades
-• Respetar preferencias/alergias del cliente
-• Pre-entreno: Fácil digestión, bajo grasa
-• Post-entreno: Alta proteína, altos carbos
+De `nutrition.profile.restricciones_alimentarias`:
+- Alergias: **NUNCA** incluir
+- Intolerancias: **NUNCA** incluir
+- Alimentos no soportados: **NUNCA** incluir
 
-═══ PASO 4: COMIDAS PRE/POST ENTRENO ═══
+### 2️⃣ Preferencias Dietéticas
 
-**PRE-ENTRENO** (debe aparecer en días A/M):
-Características:
-• Fácil digestión
-• Carbohidratos de rápida absorción
-• Proteína moderada
-• BAJO en grasas (<10g)
-• **TIMING: Tomar 1-1.5 horas ANTES del entreno** (no inmediatamente antes)
+- Vegano: Solo alimentos vegetales
+- Vegetariano: Sin carne ni pescado
+- Paleo: Sin granos, lácteos, legumbres
+- Omnívoro: Todo permitido
 
-Ejemplos:
-- Avena + plátano + miel
-- Tostadas integrales + mermelada + claras
-- Batido: proteína + frutas + avena
+### 3️⃣ Selección de Alimentos
 
-**IMPORTANTE timing_nota:** Incluir siempre "Tomar 1-1.5h antes del entreno"
+**Proteína:**
+- Pollo, pavo, ternera, pescado, huevos
+- Proteína en polvo
+- Legumbres (vegano/vegetariano)
 
-**POST-ENTRENO** (debe aparecer en días A/M):
-Características:
-• Alta proteína (30-40g)
-• Carbohidratos de rápida/media absorción
-• Bajo en grasas
+**Carbohidratos:**
+- Arroz, pasta, avena, pan integral
+- Patata, boniato
+- Fruta
 
-Ejemplos:
-- Batido proteína + arroz blanco + frutos rojos
-- Pollo + arroz + verduras
-- Tortilla claras + pan blanco + zumo
+**Grasas:**
+- Aceite de oliva, aguacate
+- Frutos secos
+- Yemas de huevo
 
-═══ PASO 5: INCLUIR TIMING EN DESCRIPCIÓN ═══
+---
 
-Si N5 dice "timing_entreno": "1 hora antes", añádelo a la comida:
-{"nombre": "Pre-Entreno", "hora": "07:00", "timing_nota": "Tomar 1 hora antes del entreno", ...}
+## 📤 Output (client_context actualizado)
 
-═══ FORMATO JSON OBLIGATORIO ═══
+**CRÍTICO - FORMATO DE RESPUESTA OBLIGATORIO**:
 
+```json
 {
-  "status": "ok",
-  "menu_semanal": {
-    "dia_1": {
-      "tipo_dia": "A",
-      "dia_nombre": "Lunes",
-      "comidas": [
-        {
-          "nombre": "Pre-Entreno",
-          "hora": "07:00",
-          "timing_nota": "Tomar 1-1.5h antes del entreno",
-          "alimentos": [
-            {"nombre": "Avena", "cantidad": "50g"},
-            {"nombre": "Plátano", "cantidad": "1 unidad"},
-            {"nombre": "Miel", "cantidad": "10g"}
-          ],
-          "macros": {"proteinas": 25, "carbohidratos": 45, "grasas": 8}
+  "client_context": {
+    "meta": { ... },
+    "raw_inputs": { ... },
+    "training": { ... },
+    "nutrition": {
+      "profile": { ... },
+      "metabolism": { ... },
+      "energy_strategy": { ... },
+      "macro_design": { ... },
+      "weekly_structure": { ... },
+      "timing_plan": { ... },
+      "menu_plan": {
+        "menu_tipo_A": {
+          "desayuno": {
+            "alimentos": [
+              {"alimento": "Avena", "cantidad_g": 80, "proteina_g": 10, "carbos_g": 48, "grasas_g": 6},
+              {"alimento": "Proteína whey", "cantidad_g": 30, "proteina_g": 25, "carbos_g": 2, "grasas_g": 1}
+            ],
+            "receta": "Avena con proteína. Cocinar avena con agua, añadir proteína y canela.",
+            "alternativas": ["Tostadas integrales con claras", "Yogur griego con granola"]
+          },
+          "pre_entreno": { ... },
+          "post_entreno": { ... }
         },
-        {
-          "nombre": "Post-Entreno",
-          "hora": "09:30",
-          "timing_nota": "30 minutos después del entreno",
-          "alimentos": [
-            {"nombre": "Batido de proteínas", "cantidad": "30g"},
-            {"nombre": "Arroz blanco cocido", "cantidad": "100g"},
-            {"nombre": "Arándanos", "cantidad": "50g"}
-          ],
-          "macros": {"proteinas": 35, "carbohidratos": 65, "grasas": 5}
-        },
-        {
-          "nombre": "Comida",
-          "hora": "14:00",
-          "alimentos": [
-            {"nombre": "Pechuga de pollo", "cantidad": "200g"},
-            {"nombre": "Quinoa cocida", "cantidad": "100g"},
-            {"nombre": "Ensalada mixta", "cantidad": "150g"},
-            {"nombre": "Aceite de oliva", "cantidad": "10g"}
-          ],
-          "macros": {"proteinas": 50, "carbohidratos": 60, "grasas": 20}
-        },
-        {
-          "nombre": "Cena",
-          "hora": "21:00",
-          "alimentos": [
-            {"nombre": "Salmón a la plancha", "cantidad": "150g"},
-            {"nombre": "Verduras al vapor", "cantidad": "200g"},
-            {"nombre": "Aceite de oliva", "cantidad": "10g"}
-          ],
-          "macros": {"proteinas": 40, "carbohidratos": 20, "grasas": 25}
-        }
-      ]
-    },
-    "dia_2": { ... FORMATO SEGÚN N4 calendario y N5 distribución ... },
-    "dia_3": { ... },
-    "dia_4": { ... },
-    "dia_5": { ... },
-    "dia_6": { ... },
-    "dia_7": { ... }
-  },
-  "equivalencias": {
-    "proteinas": {"pollo": ["pavo", "pescado", "tofu"]},
-    "carbohidratos": {"arroz": ["pasta", "quinoa", "couscous"]},
-    "grasas": {"aceite_oliva": ["aguacate", "nueces", "almendras"]}
+        "menu_tipo_M": { ... },
+        "menu_tipo_B": { ... },
+        "lista_compra_semanal": [
+          {"alimento": "Pollo pechuga", "cantidad_total_g": 1400},
+          {"alimento": "Arroz blanco", "cantidad_total_g": 2000}
+        ],
+        "consejos_preparacion": [
+          "Cocinar proteína a granel los domingos",
+          "Preparar arroz en batch cooker"
+        ]
+      },
+      "adherence_report": null,
+      "audit": null
+    }
   }
 }
+```
 
-CHECKLIST FINAL:
-✅ 7 días completos (dia_1 a dia_7)
-✅ Cada día tiene tipo_dia correcto de N4
-✅ Días A/M incluyen Pre-Entreno y Post-Entreno
-✅ Días B NO tienen pre/post entreno
-✅ Horarios y macros coinciden con N5
-✅ Alimentos con cantidades específicas
-✅ Variedad entre días
-✅ timing_nota en comidas pre/post'''
+**FORMATO OBLIGATORIO**:
+- Tu respuesta DEBE comenzar con `{"client_context": {`
+- SIEMPRE incluye todos los campos del client_context
+
+Procesa el client_context y devuelve el objeto completo con nutrition.menu_plan lleno.'''
+    
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        return len(input_data) > 0
+        if "nutrition" not in input_data:
+            return False
+        
+        nutrition = input_data["nutrition"]
+        return (nutrition.get("timing_plan") is not None and
+                nutrition.get("weekly_structure") is not None and
+                nutrition.get("macro_design") is not None and
+                nutrition.get("profile") is not None)
+    
     def process_output(self, raw_output: str) -> Dict[str, Any]:
-        return self._extract_json_from_response(raw_output)
+        try:
+            output = self._extract_json_from_response(raw_output)
+            
+            if "client_context" not in output:
+                raise ValueError("Output no contiene client_context")
+            
+            client_context = output["client_context"]
+            nutrition = client_context.get("nutrition", {})
+            
+            if nutrition.get("menu_plan") is None:
+                raise ValueError("N6 no llenó nutrition.menu_plan")
+            
+            return output
+            
+        except Exception as e:
+            raise ValueError(f"Error procesando output de N6: {e}")
