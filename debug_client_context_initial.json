@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "client_id": "client_juan_perez_e2e",
+    "snapshot_id": "snapshot_client_juan_perez_e2e_1_f41596c7",
+    "version": 1,
+    "selected_inputs": {
+      "cuestionario": "unknown",
+      "entrenamiento_base": null
+    }
+  },
+  "raw_inputs": {
+    "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"edad\": 32,\n  \"sexo\": \"M\",\n  \"peso_actual_kg\": 78,\n  \"altura_cm\": 175,\n  \"porcentaje_grasa_estimado\": 18,\n  \"objetivo_principal\": \"hipertrofia\",\n  \"objetivo_secundario\": \"mejorar composicion corporal\",\n  \"plazo\": \"6 meses\",\n  \"motivacion\": \"alta\",\n  \"razon_principal\": \"Quiero ganar masa muscular y verme mejor\",\n  \"experiencia_entrenamiento\": \"3 años gym intermitente\",\n  \"nivel_estimado\": \"intermedio\",\n  \"deportes_previos\": [\n    \"futbol amateur\",\n    \"gym\"\n  ],\n  \"tecnica_ejercicios\": \"buena en basicos, regular en accesorios\",\n  \"familiaridad_gym\": \"alta\",\n  \"dias_disponibles\": 4,\n  \"dias_semana_preferidos\": [\n    \"lunes\",\n    \"martes\",\n    \"jueves\",\n    \"viernes\"\n  ],\n  \"minutos_por_sesion\": 60,\n  \"horario_preferido\": \"tarde\",\n  \"hora_especifica\": \"18:00-19:00\",\n  \"flexibilidad_horaria\": \"media\",\n  \"equipo_disponible\": \"gym completo\",\n  \"tipo_gym\": \"comercial bien equipado\",\n  \"equipamiento_especifico\": [\n    \"mancuernas hasta 50kg\",\n    \"barra olimpica\",\n    \"rack con seguridad\",\n    \"maquinas de placas\",\n    \"poleas altas y bajas\",\n    \"banco ajustable\",\n    \"discos variados\"\n  ],\n  \"restricciones_equipo\": [],\n  \"lesiones_previas\": \"Dolor lumbar leve ocasional por mala técnica en peso muerto hace 6 meses\",\n  \"lesiones_activas\": [\n    {\n      \"zona\": \"lumbar\",\n      \"tipo\": \"dolor_ocasional\",\n      \"gravedad\": \"leve\",\n      \"descripcion\": \"Molestia lumbar al hacer flexión de tronco con carga. Aparece con mala técnica o volumen excesivo\",\n      \"tiempo_lesion\": \"6 meses\",\n      \"tratamiento\": \"fisioterapia completada hace 3 meses\",\n      \"estado_actual\": \"recuperado pero con precaución\"\n    }\n  ],\n  \"restricciones_medicas\": [],\n  \"ejercicios_que_molestan\": [\n    \"peso muerto convencional alto volumen\",\n    \"buenos dias\"\n  ],\n  \"ejercicios_prohibidos\": [],\n  \"trabajo\": \"oficina sedentario 8h/día\",\n  \"nivel_estres\": \"medio\",\n  \"fuentes_estres\": [\n    \"trabajo con deadlines\",\n    \"traffic diario\"\n  ],\n  \"horas_sueno_promedio\": 7,\n  \"calidad_sueno\": \"buena\",\n  \"despertares_nocturnos\": \"ocasionales\",\n  \"actividad_fisica_adicional\": \"caminatas ocasionales fin de semana\",\n  \"pasos_diarios_promedio\": 6000,\n  \"nutricion_actual\": \"desordenada, sin seguimiento estructurado\",\n  \"comidas_dia\": 3,\n  \"calidad_alimentacion\": \"media\",\n  \"agua_litros\": 2,\n  \"suplementos_actuales\": [\n    \"proteina whey\",\n    \"creatina ocasional\"\n  ],\n  \"adherencia_historica\": \"irregular - 2-3 meses seguido luego abandono\",\n  \"motivo_abandono_previo\": \"falta de plan estructurado y seguimiento\",\n  \"mayor_racha_constancia\": \"4 meses seguidos hace 1 año\",\n  \"barreras_adherencia\": [\n    \"falta motivacion\",\n    \"no ver resultados rapidos\"\n  ],\n  \"apoyo_familiar\": \"bueno - pareja apoya\",\n  \"presupuesto_suplementos\": \"medio - 50-80€/mes\",\n  \"experiencia_nutricion\": \"basica\",\n  \"preferencias_entrenamiento\": [\n    \"me gustan pesos libres\",\n    \"prefiero ejercicios compuestos\",\n    \"no me gusta cardio tradicional\"\n  ],\n  \"notas_entrenador\": \"Cliente motivado y con buen potencial. Necesita estructura clara y seguimiento para mantener adherencia. Buena base técnica pero requiere enfoque en progresión sostenible. Precaución con volumen lumbar por historial.\",\n  \"fuerza_maxima_estimada\": {\n    \"sentadilla\": \"100kg x 5 reps\",\n    \"press_banca\": \"80kg x 5 reps\",\n    \"peso_muerto\": \"110kg x 5 reps (rumano, no convencional)\"\n  }\n}",
+    "cuestionario_seguimiento": null,
+    "entrenamiento_base": null,
+    "notas_entrenador": "Cliente motivado y con buen potencial. Necesita estructura clara y seguimiento para mantener adherencia. Buena base técnica pero requiere enfoque en progresión sostenible. Precaución con volumen lumbar por historial."
+  },
+  "training": {
+    "profile": null,
+    "constraints": null,
+    "prehab": null,
+    "progress": null,
+    "capacity": null,
+    "adaptation": null,
+    "mesocycle": null,
+    "sessions": null,
+    "safe_sessions": null,
+    "formatted_plan": null,
+    "audit": null,
+    "bridge_for_nutrition": null
+  }
+}

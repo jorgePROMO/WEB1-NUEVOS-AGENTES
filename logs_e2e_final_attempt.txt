@@ -196,3 +196,110 @@
 2025-11-20 13:50:52,146 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['safe_sessions', 'mesocycle', 'capacity', 'constraints']
 2025-11-20 13:50:52,146 - edn360.orchestrator - INFO -     ℹ️ E8 no recibe KB (optimización de contexto)
 2025-11-20 13:50:52,146 - edn360.agents.base_agent - INFO - 🤖 E8 (Auditor Técnico) - Iniciando ejecución
+2025-11-20 13:53:09,715 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:53:09,746 - edn360.agents.base_agent - INFO - 📝 E8 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:53:09,747 - edn360.agents.base_agent - INFO - ✅ E8 completado en 137.60s
+2025-11-20 13:53:09,747 - edn360.orchestrator - INFO -   ✅ E8 devolvió client_context actualizado
+2025-11-20 13:53:09,747 - edn360.orchestrator - INFO -     🔍 Validando contrato de E8...
+2025-11-20 13:53:09,747 - edn360.orchestrator - INFO -   ✅ E8 completado y validado
+2025-11-20 13:53:09,747 - edn360.orchestrator - INFO -   ▶️ Ejecutando E9 (Bridge hacia Nutrición)...
+2025-11-20 13:53:09,748 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['safe_sessions', 'mesocycle', 'profile']
+2025-11-20 13:53:09,748 - edn360.orchestrator - INFO -     ℹ️ E9 no recibe KB (optimización de contexto)
+2025-11-20 13:53:09,748 - edn360.agents.base_agent - INFO - 🤖 E9 (Bridge hacia Nutrición) - Iniciando ejecución
+2025-11-20 13:55:42,674 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:55:42,676 - edn360.agents.base_agent - INFO - 📝 E9 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:55:42,677 - edn360.agents.base_agent - INFO - ✅ E9 completado en 152.93s
+2025-11-20 13:55:42,677 - edn360.orchestrator - INFO -   ✅ E9 devolvió client_context actualizado
+2025-11-20 13:55:42,677 - edn360.orchestrator - INFO -     🔍 Validando contrato de E9...
+2025-11-20 13:55:42,677 - edn360.orchestrator - INFO -   ✅ E9 completado y validado
+2025-11-20 13:55:42,677 - edn360.orchestrator - INFO -   🎉 Cadena de agentes E1-E9 completada exitosamente
+2025-11-20 13:55:42,677 - __main__ - INFO - 
+2025-11-20 13:55:42,677 - __main__ - INFO - 🎉 FLUJO COMPLETADO EXITOSAMENTE
+2025-11-20 13:55:42,677 - __main__ - INFO -    Duración total: 1121.20 segundos (18.7 minutos)
+2025-11-20 13:55:42,677 - __main__ - INFO - 
+2025-11-20 13:55:42,677 - __main__ - INFO - 💾 PASO 4: Guardando artefactos para revisión...
+2025-11-20 13:55:42,679 - __main__ - INFO - ✅ client_context final guardado: /app/debug_client_context_after_e9.json
+2025-11-20 13:55:42,680 - __main__ - INFO - ✅ client_context inicial guardado: /app/debug_client_context_initial.json
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO - 🔍 PASO 5: Verificando que todos los campos están llenos...
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ LLENO - E1 → training.profile
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ LLENO - E1 → training.constraints
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ LLENO - E1 → training.prehab
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ LLENO - E2 → training.capacity
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ LLENO - E3 → training.adaptation
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ LLENO - E4 → training.mesocycle
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ LLENO - E5 → training.sessions
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ LLENO - E6 → training.safe_sessions
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ LLENO - E7 → training.formatted_plan
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ LLENO - E8 → training.audit
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ LLENO - E9 → training.bridge_for_nutrition
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO - ✅ TODOS los campos fueron llenados correctamente
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO - 📊 PASO 6: Resumen de ejecuciones por agente:
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ E1 (Analista del Atleta): 26.44s
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ E2 (Evaluador de Capacidad y Riesgo): 67.03s
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ E3 (Analista de Historial y Adaptación): 71.54s
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ E4 (Arquitecto del Mesociclo): 91.52s
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ E5 (Ingeniero de Sesiones): 104.60s
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ E6 (Técnico Clínico-Preventivo): 156.96s
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ E7 (Analista de Carga Interna): 312.57s
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ E8 (Auditor Técnico): 137.60s
+2025-11-20 13:55:42,680 - __main__ - INFO -    ✅ E9 (Bridge hacia Nutrición): 152.93s
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO -    Duración total agentes: 1121.20s
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO - 🔗 PASO 7: Validando bridge_for_nutrition (conexión con nutrición)...
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO - ✅ bridge_for_nutrition está presente
+2025-11-20 13:55:42,680 - __main__ - INFO -    - Claves en bridge: ['tdee_estimado', 'gasto_semanal_estimado', 'dias_entrenamiento_semana', 'tipos_dia_presentes', 'distribucion_energetica', 'calendario_sugerido', 'justificacion_calendario', 'prioridad_metabolica', 'contrato_para_N0']
+2025-11-20 13:55:42,680 - __main__ - INFO -    Este campo será usado por los agentes de nutrición (N0-N8)
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO - ====================================================================================================
+2025-11-20 13:55:42,680 - __main__ - INFO - 🎉 TEST END-TO-END COMPLETADO
+2025-11-20 13:55:42,680 - __main__ - INFO - ====================================================================================================
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO - 📁 ARCHIVOS GENERADOS PARA REVISIÓN:
+2025-11-20 13:55:42,680 - __main__ - INFO -    1. /app/debug_client_context_initial.json
+2025-11-20 13:55:42,680 - __main__ - INFO -       → client_context justo después de initialize
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO -    2. /app/debug_client_context_after_e9.json
+2025-11-20 13:55:42,680 - __main__ - INFO -       → client_context final con todos los campos llenos
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO -    3. /app/logs_training_e2e.txt
+2025-11-20 13:55:42,680 - __main__ - INFO -       → Log completo de ejecución con validaciones
+2025-11-20 13:55:42,680 - __main__ - INFO - 
+2025-11-20 13:55:42,680 - __main__ - INFO - ✅ Sistema de entrenamiento (E1-E9) funcionando correctamente
+2025-11-20 13:55:42,680 - __main__ - INFO - ✅ Listo para revisión final y posterior implementación de nutrición
+2025-11-20 13:55:42,681 - __main__ - INFO - 
+
+✅ Test E2E completado exitosamente
+📁 Revisa los archivos generados para validación

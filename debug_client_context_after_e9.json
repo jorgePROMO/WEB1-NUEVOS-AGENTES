@@ -1,0 +1,2034 @@
+{
+  "meta": {
+    "client_id": "client_juan_perez_e2e",
+    "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+    "version": 1,
+    "selected_inputs": {
+      "cuestionario": "unknown",
+      "entrenamiento_base": null
+    }
+  },
+  "raw_inputs": {
+    "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"edad\": 32,\n  \"sexo\": \"M\",\n  \"peso_actual_kg\": 78,\n  \"altura_cm\": 175,\n  \"porcentaje_grasa_estimado\": 18,\n  \"objetivo_principal\": \"hipertrofia\",\n  \"objetivo_secundario\": \"mejorar composicion corporal\",\n  \"plazo\": \"6 meses\",\n  \"motivacion\": \"alta\",\n  \"razon_principal\": \"Quiero ganar masa muscular y verme mejor\",\n  \"experiencia_entrenamiento\": \"3 años gym intermitente\",\n  \"nivel_estimado\": \"intermedio\",\n  \"deportes_previos\": [\n    \"futbol amateur\",\n    \"gym\"\n  ],\n  \"tecnica_ejercicios\": \"buena en basicos, regular en accesorios\",\n  \"familiaridad_gym\": \"alta\",\n  \"dias_disponibles\": 4,\n  \"dias_semana_preferidos\": [\n    \"lunes\",\n    \"martes\",\n    \"jueves\",\n    \"viernes\"\n  ],\n  \"minutos_por_sesion\": 60,\n  \"horario_preferido\": \"tarde\",\n  \"hora_especifica\": \"18:00-19:00\",\n  \"flexibilidad_horaria\": \"media\",\n  \"equipo_disponible\": \"gym completo\",\n  \"tipo_gym\": \"comercial bien equipado\",\n  \"equipamiento_especifico\": [\n    \"mancuernas hasta 50kg\",\n    \"barra olimpica\",\n    \"rack con seguridad\",\n    \"maquinas de placas\",\n    \"poleas altas y bajas\",\n    \"banco ajustable\",\n    \"discos variados\"\n  ],\n  \"restricciones_equipo\": [],\n  \"lesiones_previas\": \"Dolor lumbar leve ocasional por mala técnica en peso muerto hace 6 meses\",\n  \"lesiones_activas\": [\n    {\n      \"zona\": \"lumbar\",\n      \"tipo\": \"dolor_ocasional\",\n      \"gravedad\": \"leve\",\n      \"descripcion\": \"Molestia lumbar al hacer flexión de tronco con carga. Aparece con mala técnica o volumen excesivo\",\n      \"tiempo_lesion\": \"6 meses\",\n      \"tratamiento\": \"fisioterapia completada hace 3 meses\",\n      \"estado_actual\": \"recuperado pero con precaución\"\n    }\n  ],\n  \"restricciones_medicas\": [],\n  \"ejercicios_que_molestan\": [\n    \"peso muerto convencional alto volumen\",\n    \"buenos dias\"\n  ],\n  \"ejercicios_prohibidos\": [],\n  \"trabajo\": \"oficina sedentario 8h/día\",\n  \"nivel_estres\": \"medio\",\n  \"fuentes_estres\": [\n    \"trabajo con deadlines\",\n    \"traffic diario\"\n  ],\n  \"horas_sueno_promedio\": 7,\n  \"calidad_sueno\": \"buena\",\n  \"despertares_nocturnos\": \"ocasionales\",\n  \"actividad_fisica_adicional\": \"caminatas ocasionales fin de semana\",\n  \"pasos_diarios_promedio\": 6000,\n  \"nutricion_actual\": \"desordenada, sin seguimiento estructurado\",\n  \"comidas_dia\": 3,\n  \"calidad_alimentacion\": \"media\",\n  \"agua_litros\": 2,\n  \"suplementos_actuales\": [\n    \"proteina whey\",\n    \"creatina ocasional\"\n  ],\n  \"adherencia_historica\": \"irregular - 2-3 meses seguido luego abandono\",\n  \"motivo_abandono_previo\": \"falta de plan estructurado y seguimiento\",\n  \"mayor_racha_constancia\": \"4 meses seguidos hace 1 año\",\n  \"barreras_adherencia\": [\n    \"falta motivacion\",\n    \"no ver resultados rapidos\"\n  ],\n  \"apoyo_familiar\": \"bueno - pareja apoya\",\n  \"presupuesto_suplementos\": \"medio - 50-80€/mes\",\n  \"experiencia_nutricion\": \"basica\",\n  \"preferencias_entrenamiento\": [\n    \"me gustan pesos libres\",\n    \"prefiero ejercicios compuestos\",\n    \"no me gusta cardio tradicional\"\n  ],\n  \"notas_entrenador\": \"Cliente motivado y con buen potencial. Necesita estructura clara y seguimiento para mantener adherencia. Buena base técnica pero requiere enfoque en progresión sostenible. Precaución con volumen lumbar por historial.\",\n  \"fuerza_maxima_estimada\": {\n    \"sentadilla\": \"100kg x 5 reps\",\n    \"press_banca\": \"80kg x 5 reps\",\n    \"peso_muerto\": \"110kg x 5 reps (rumano, no convencional)\"\n  }\n}",
+    "cuestionario_seguimiento": null,
+    "entrenamiento_base": null,
+    "notas_entrenador": "Cliente motivado y con buen potencial. Necesita estructura clara y seguimiento para mantener adherencia. Buena base técnica pero requiere enfoque en progresión sostenible. Precaución con volumen lumbar por historial."
+  },
+  "training": {
+    "profile": {
+      "perfil_tecnico": {
+        "id_cliente": "client_juan_perez_e2e",
+        "nombre": "Juan Pérez García",
+        "edad": 32,
+        "sexo": "M",
+        "peso_kg": 78,
+        "altura_cm": 175,
+        "imc": 25.5,
+        "clasificacion_imc": "sobrepeso"
+      },
+      "experiencia": {
+        "nivel": "intermedio",
+        "años_entrenamiento": 3,
+        "constancia": "irregular",
+        "deportes_previos": [
+          "futbol amateur",
+          "gym"
+        ],
+        "notas": "Tiene experiencia intermitente en el gimnasio con buena técnica en ejercicios básicos."
+      },
+      "objetivo": {
+        "principal": "hipertrofia",
+        "secundarios": [
+          "mejora_composicion"
+        ],
+        "plazo": "6_meses"
+      },
+      "limitaciones_clinicas": {
+        "lesiones": [
+          {
+            "zona": "lumbar",
+            "tipo": "dolor_ocasional",
+            "gravedad": "leve",
+            "estado": "recuperado_con_precaucion",
+            "notas": "Molestia lumbar al hacer flexión de tronco con carga. Debe evitar volumen excesivo."
+          }
+        ],
+        "restricciones_medicas": [],
+        "banderas_alerta": []
+      },
+      "disponibilidad": {
+        "dias_semana": 4,
+        "minutos_por_sesion": 60,
+        "carga_semanal_horas": 4.0,
+        "horario_preferido": "tarde",
+        "flexibilidad": "media"
+      },
+      "equipo": {
+        "tipo": "gym_completo",
+        "equipamiento_especifico": [
+          "mancuernas hasta 50kg",
+          "barra olimpica",
+          "rack con seguridad",
+          "maquinas de placas",
+          "poleas altas y bajas",
+          "banco ajustable",
+          "discos variados"
+        ],
+        "limitaciones": []
+      },
+      "datos_adicionales": {
+        "nutricion_actual": "desordenada, sin seguimiento",
+        "sueno_promedio_h": 7,
+        "estres_nivel": "medio",
+        "adherencia_historica": "irregular"
+      },
+      "notas_interpretativas": [
+        "Cliente con buena base técnica y potencial para hipertrofia.",
+        "Necesita estructura y seguimiento para mejorar adherencia.",
+        "Precaución con volumen en ejercicios que involucren la zona lumbar.",
+        "Disponibilidad y equipamiento óptimos para un plan de hipertrofia."
+      ],
+      "contrato_para_E2": {
+        "prioridades": [
+          "Estructurar plan que evite sobrecarga en zona lumbar",
+          "Asegurar progresión controlada y seguimiento semanal",
+          "Incorporar técnica correcta en todos los ejercicios"
+        ],
+        "restricciones": [
+          "Evitar peso muerto convencional en alto volumen",
+          "Limitar ejercicios que impliquen flexión lumbar bajo carga"
+        ]
+      }
+    },
+    "constraints": {
+      "restricciones_criticas": {
+        "lesiones_activas": [
+          {
+            "lesion": "dolor_ocasional_lumbar",
+            "ejercicios_prohibidos": [
+              "peso muerto convencional",
+              "buenos dias"
+            ],
+            "ejercicios_obligatorios_preventivos": [
+              "plancha_frontal",
+              "bird_dog",
+              "dead_bug",
+              "pallof_press"
+            ],
+            "notas": "Debe evitar cualquier ejercicio que ponga estrés en la zona lumbar sin una técnica óptima."
+          }
+        ],
+        "alergias_alimentarias": [],
+        "intolerancias": [],
+        "alimentos_no_soportados": [],
+        "restricciones_medicas": []
+      }
+    },
+    "prehab": {
+      "protocolos_preventivos": [
+        {
+          "zona": "lumbar",
+          "ejercicios": [
+            "plancha_frontal",
+            "bird_dog",
+            "dead_bug",
+            "pallof_press"
+          ],
+          "frecuencia": "3 veces por semana",
+          "notas": "Enfocarse en fortalecer el core para prevenir molestias lumbares."
+        }
+      ]
+    },
+    "progress": null,
+    "capacity": {
+      "seg_score": 8,
+      "interpretacion_seg": "Cliente robusto, puede progresar normalmente con precaución en ejercicios que involucren el lumbar.",
+      "split_recomendado": {
+        "tipo": "upper-lower",
+        "frecuencia_semanal": 4,
+        "distribucion": [
+          "Upper A",
+          "Lower A",
+          "Upper B",
+          "Lower B"
+        ],
+        "justificacion": "4 días disponibles, nivel intermedio, permite distribuir volumen sin sobrecargar la zona lumbar."
+      },
+      "tiempo_sesion": {
+        "maximo_minutos": 60,
+        "ajustes_aplicados": [
+          "No se requieren ajustes adicionales al tiempo de sesión."
+        ],
+        "estructura_recomendada": {
+          "calentamiento": 10,
+          "trabajo_principal": 40,
+          "correctivos_core": 8,
+          "enfriamiento": 2
+        }
+      },
+      "rir_objetivo": {
+        "semanas_1_2": 4,
+        "semanas_3_4": 3,
+        "mes_2_en_adelante": 2,
+        "notas": "Iniciar con un enfoque conservador para evaluar técnica en las primeras semanas."
+      },
+      "banderas_clinicas": [
+        {
+          "tipo": "lumbar_con_precaucion",
+          "nivel_alerta": "bajo",
+          "accion": "Monitorizar técnica y nivel de fatiga en ejercicios que involucren la zona lumbar."
+        }
+      ],
+      "restricciones_ejercicios": [
+        {
+          "ejercicio": "Peso muerto convencional",
+          "razon": "Evitar sobrecarga lumbar",
+          "sustitucion": "Peso muerto rumano"
+        },
+        {
+          "ejercicio": "Buenos días",
+          "razon": "Alto riesgo lumbar",
+          "sustitucion": "Hip thrust"
+        }
+      ],
+      "ejercicios_obligatorios": [
+        {
+          "ejercicio": "Plancha frontal",
+          "frecuencia": "Cada sesión",
+          "razon": "Fortalecer el core para prevenir molestias lumbares."
+        },
+        {
+          "ejercicio": "Bird-dog",
+          "frecuencia": "Cada sesión",
+          "razon": "Mejorar la estabilidad lumbopélvica."
+        }
+      ],
+      "contrato_para_E3": {
+        "seg_score": 8,
+        "nivel_conservadurismo": "moderado",
+        "parametros_progresion": {
+          "velocidad": "estandar",
+          "incremento_carga_pct": 5,
+          "incremento_volumen_pct": 10,
+          "frecuencia_evaluacion": "semanal"
+        },
+        "zonas_monitorizacion": [
+          "lumbar"
+        ],
+        "clearance_medico_requerido": false
+      }
+    },
+    "adaptation": {
+      "ia_score": 7.5,
+      "interpretacion_ia": "Adaptador medio. Responde bien al entrenamiento pero requiere progresión estándar sin prisas.",
+      "tipo_adaptador": "medio",
+      "factores_ia": {
+        "positivos": [
+          "Edad favorable (32 años): +1",
+          "Experiencia previa en gimnasio: +1",
+          "Sueño adecuado (7h): +0.5"
+        ],
+        "negativos": [
+          "Adherencia histórica baja: -1",
+          "Dolor lumbar ocasional: -0.5"
+        ],
+        "ia_calculado": 7.5
+      },
+      "resiliencia_lesiones": {
+        "clasificacion": "media",
+        "justificacion": "Lesión lumbar leve, recuperada pero con precaución. No hay historial de re-lesiones.",
+        "impacto_programa": "Monitorizar técnica en ejercicios de flexión lumbar, incluir correctivos preventivos."
+      },
+      "estrategia_progresion": {
+        "tipo": "estandar",
+        "justificacion": "IA=7.5 (medio) + SEG=8 (bueno) = progresión estándar segura.",
+        "parametros": {
+          "incremento_volumen_pct": 10,
+          "incremento_carga_pct": 5,
+          "frecuencia_ajustes": "cada_3_semanas",
+          "rir_inicial": 4,
+          "rir_objetivo_mes_2": 3
+        }
+      },
+      "factor_conservadurismo": 0.9,
+      "calculo_factor": {
+        "base": 1.0,
+        "ajuste_estrategia": 1.0,
+        "ajuste_resiliencia": 0.9,
+        "ajuste_seg": 1.0,
+        "factor_final": 0.9
+      },
+      "indicadores_clave": {
+        "volumen_semanal_ajustado": "base × 0.9",
+        "intensidad_ajustada": "base × 0.9",
+        "tiempo_adaptacion_inicial": "2_semanas",
+        "ventana_progresion": "semanas_3_a_12"
+      },
+      "contrato_para_E4": {
+        "ia_score": 7.5,
+        "tipo_adaptador": "medio",
+        "estrategia": "estandar",
+        "factor_volumen": 0.9,
+        "factor_intensidad": 0.9,
+        "frecuencia_progresion": "cada_3_semanas",
+        "prioridades": [
+          "Técnica sólida antes que carga",
+          "Incluir correctivos core en cada sesión",
+          "Monitorizar lumbar post-ejercicios de cadena posterior"
+        ]
+      }
+    },
+    "mesocycle": {
+      "duracion_semanas": 4,
+      "objetivo": "hipertrofia",
+      "estrategia": "estandar",
+      "split": "upper-lower",
+      "frecuencia_semanal": 4,
+      "volumen_por_grupo": {
+        "pecho": {
+          "series_semana": 12,
+          "rango_original": "12-16",
+          "factor_aplicado": 0.9
+        },
+        "espalda": {
+          "series_semana": 14,
+          "rango_original": "14-18",
+          "factor_aplicado": 0.9
+        },
+        "hombros": {
+          "series_semana": 12,
+          "rango_original": "12-16",
+          "factor_aplicado": 0.9
+        },
+        "cuadriceps": {
+          "series_semana": 14,
+          "rango_original": "14-18",
+          "factor_aplicado": 0.9
+        },
+        "isquios_gluteos": {
+          "series_semana": 13,
+          "rango_original": "12-16",
+          "factor_aplicado": 0.9
+        },
+        "biceps": {
+          "series_semana": 10,
+          "rango_original": "10-14",
+          "factor_aplicado": 0.9
+        },
+        "triceps": {
+          "series_semana": 10,
+          "rango_original": "10-14",
+          "factor_aplicado": 0.9
+        },
+        "core": {
+          "series_semana": 9,
+          "rango_original": "9-12",
+          "factor_aplicado": 0.9
+        }
+      },
+      "semanas": [
+        {
+          "numero": 1,
+          "fase": "adaptacion",
+          "volumen_pct": 85,
+          "rir_objetivo": [
+            4,
+            5
+          ],
+          "intensidad": "baja",
+          "kpis": {
+            "volumen_total_series": 47,
+            "cit_estimado": 38,
+            "tiempo_total_min": 240,
+            "adherencia_esperada": 95
+          },
+          "notas": "Semana de familiarización técnica. Prioridad: patrones de movimiento correctos."
+        },
+        {
+          "numero": 2,
+          "fase": "acumulacion",
+          "volumen_pct": 100,
+          "rir_objetivo": [
+            3,
+            4
+          ],
+          "intensidad": "media",
+          "kpis": {
+            "volumen_total_series": 55,
+            "cit_estimado": 48,
+            "tiempo_total_min": 240,
+            "adherencia_esperada": 95
+          },
+          "notas": "Volumen completo. Aumentar carga si técnica es sólida."
+        },
+        {
+          "numero": 3,
+          "fase": "intensificacion",
+          "volumen_pct": 95,
+          "rir_objetivo": [
+            2,
+            3
+          ],
+          "intensidad": "alta",
+          "kpis": {
+            "volumen_total_series": 52,
+            "cit_estimado": 52,
+            "tiempo_total_min": 240,
+            "adherencia_esperada": 90
+          },
+          "notas": "Semana de mayor intensidad. RIR más bajo, volumen ligeramente reducido."
+        },
+        {
+          "numero": 4,
+          "fase": "deload",
+          "volumen_pct": 60,
+          "rir_objetivo": [
+            5
+          ],
+          "intensidad": "muy_baja",
+          "kpis": {
+            "volumen_total_series": 33,
+            "cit_estimado": 25,
+            "tiempo_total_min": 180,
+            "adherencia_esperada": 100
+          },
+          "notas": "Descarga activa. Recuperación y preparación para siguiente mesociclo."
+        }
+      ],
+      "distribucion_semanal_tipo": {
+        "lunes": "Upper A",
+        "martes": "Descanso",
+        "miercoles": "Lower A",
+        "jueves": "Descanso",
+        "viernes": "Upper B",
+        "sabado": "Lower B",
+        "domingo": "Descanso"
+      },
+      "ratios_equilibrio": {
+        "push_pull": 1.0,
+        "cadera_rodilla": 0.93,
+        "validacion": "ratios_dentro_rango"
+      }
+    },
+    "sessions": {
+      "semana_1": [
+        {
+          "dia": 1,
+          "dia_semana": "Lunes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper A",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Press Banca con Mancuernas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Remo con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Elevación Lateral con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Curl Bíceps con Barra",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Plancha Frontal",
+              "series": 3,
+              "reps": "30-45s",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 2,
+          "dia_semana": "Miércoles",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower A",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Sentadilla con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Peso Muerto Rumano",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Prensa de Pierna",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 4,
+              "descanso": 60
+            },
+            {
+              "nombre": "Bird-Dog",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 3,
+          "dia_semana": "Viernes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper B",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Press Militar con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Dominadas Asistidas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Press Inclinado con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Extensión de Tríceps en Polea",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Dead Bug",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 4,
+          "dia_semana": "Sábado",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower B",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Zancadas con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Hip Thrust con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Curl de Piernas en Máquina",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 4,
+              "descanso": 60
+            },
+            {
+              "nombre": "Pallof Press",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        }
+      ],
+      "semana_2": [
+        {
+          "dia": 1,
+          "dia_semana": "Lunes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper A",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Press Banca con Mancuernas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Remo con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Elevación Lateral con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Curl Bíceps con Barra",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Plancha Frontal",
+              "series": 3,
+              "reps": "30-45s",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 2,
+          "dia_semana": "Miércoles",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower A",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Sentadilla con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Peso Muerto Rumano",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Prensa de Pierna",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 4,
+              "descanso": 60
+            },
+            {
+              "nombre": "Bird-Dog",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 3,
+          "dia_semana": "Viernes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper B",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Press Militar con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Dominadas Asistidas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Press Inclinado con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Extensión de Tríceps en Polea",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Dead Bug",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 4,
+          "dia_semana": "Sábado",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower B",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Zancadas con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Hip Thrust con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Curl de Piernas en Máquina",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 4,
+              "descanso": 60
+            },
+            {
+              "nombre": "Pallof Press",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        }
+      ],
+      "semana_3": [
+        {
+          "dia": 1,
+          "dia_semana": "Lunes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper A",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Press Banca con Mancuernas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Remo con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Elevación Lateral con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Curl Bíceps con Barra",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Plancha Frontal",
+              "series": 3,
+              "reps": "30-45s",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 2,
+          "dia_semana": "Miércoles",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower A",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Sentadilla con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Peso Muerto Rumano",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Prensa de Pierna",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 3,
+              "descanso": 60
+            },
+            {
+              "nombre": "Bird-Dog",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 3,
+          "dia_semana": "Viernes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper B",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Press Militar con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Dominadas Asistidas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Press Inclinado con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Extensión de Tríceps en Polea",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Dead Bug",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 4,
+          "dia_semana": "Sábado",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower B",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Zancadas con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Hip Thrust con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Curl de Piernas en Máquina",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 3,
+              "descanso": 60
+            },
+            {
+              "nombre": "Pallof Press",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        }
+      ],
+      "semana_4": [
+        {
+          "dia": 1,
+          "dia_semana": "Lunes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper A",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Press Banca con Mancuernas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Remo con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Elevación Lateral con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Curl Bíceps con Barra",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Plancha Frontal",
+              "series": 3,
+              "reps": "30-45s",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 2,
+          "dia_semana": "Miércoles",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower A",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Sentadilla con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Peso Muerto Rumano",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Prensa de Pierna",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 5,
+              "descanso": 60
+            },
+            {
+              "nombre": "Bird-Dog",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 3,
+          "dia_semana": "Viernes",
+          "hora_recomendada": "18:00",
+          "nombre": "Upper B",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Press Militar con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Dominadas Asistidas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Press Inclinado con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Extensión de Tríceps en Polea",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Dead Bug",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        },
+        {
+          "dia": 4,
+          "dia_semana": "Sábado",
+          "hora_recomendada": "18:00",
+          "nombre": "Lower B",
+          "duracion_min": 60,
+          "ejercicios": [
+            {
+              "nombre": "Zancadas con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Hip Thrust con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Curl de Piernas en Máquina",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 5,
+              "descanso": 60
+            },
+            {
+              "nombre": "Pallof Press",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ]
+        }
+      ]
+    },
+    "safe_sessions": {
+      "semana_1": [
+        {
+          "dia": 1,
+          "dia_semana": "Lunes",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Press Banca con Mancuernas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Remo con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Elevación Lateral con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Curl Bíceps con Barra",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Plancha Frontal",
+              "series": 3,
+              "reps": "30-45s",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Plancha Frontal",
+              "series": 3,
+              "reps": "30-45s",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": []
+        },
+        {
+          "dia": 2,
+          "dia_semana": "Miércoles",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Sentadilla con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Peso Muerto Rumano",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Prensa de Pierna",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 4,
+              "descanso": 60
+            },
+            {
+              "nombre": "Bird-Dog",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Bird-Dog",
+              "series": 3,
+              "reps": "10-12",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": []
+        },
+        {
+          "dia": 3,
+          "dia_semana": "Viernes",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Landmine Press",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Dominadas Asistidas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Press Inclinado con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Extensión de Tríceps en Polea",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Dead Bug",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Dead Bug",
+              "series": 3,
+              "reps": "10-12",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": [
+            {
+              "ejercicio_original": "Press Militar con Barra",
+              "ejercicio_sustituido": "Landmine Press",
+              "razon": "Evitar sobrecarga en el manguito rotador y reducir el riesgo de estrés en la zona lumbar."
+            }
+          ]
+        },
+        {
+          "dia": 4,
+          "dia_semana": "Sábado",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Zancadas con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Hip Thrust con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Curl de Piernas en Máquina",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 4,
+              "descanso": 60
+            },
+            {
+              "nombre": "Pallof Press",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Pallof Press",
+              "series": 3,
+              "reps": "10-12",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": []
+        }
+      ],
+      "semana_2": [
+        {
+          "dia": 1,
+          "dia_semana": "Lunes",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Press Banca con Mancuernas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Remo con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Elevación Lateral con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Curl Bíceps con Barra",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Plancha Frontal",
+              "series": 3,
+              "reps": "30-45s",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Plancha Frontal",
+              "series": 3,
+              "reps": "30-45s",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": []
+        },
+        {
+          "dia": 2,
+          "dia_semana": "Miércoles",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Sentadilla con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Peso Muerto Rumano",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Prensa de Pierna",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 4,
+              "descanso": 60
+            },
+            {
+              "nombre": "Bird-Dog",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Bird-Dog",
+              "series": 3,
+              "reps": "10-12",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": []
+        },
+        {
+          "dia": 3,
+          "dia_semana": "Viernes",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Landmine Press",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Dominadas Asistidas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Press Inclinado con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Extensión de Tríceps en Polea",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Dead Bug",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Dead Bug",
+              "series": 3,
+              "reps": "10-12",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": [
+            {
+              "ejercicio_original": "Press Militar con Barra",
+              "ejercicio_sustituido": "Landmine Press",
+              "razon": "Evitar sobrecarga en el manguito rotador y reducir el riesgo de estrés en la zona lumbar."
+            }
+          ]
+        },
+        {
+          "dia": 4,
+          "dia_semana": "Sábado",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Zancadas con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Hip Thrust con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 4,
+              "descanso": 120
+            },
+            {
+              "nombre": "Curl de Piernas en Máquina",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 4,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 4,
+              "descanso": 60
+            },
+            {
+              "nombre": "Pallof Press",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Pallof Press",
+              "series": 3,
+              "reps": "10-12",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": []
+        }
+      ],
+      "semana_3": [
+        {
+          "dia": 1,
+          "dia_semana": "Lunes",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Press Banca con Mancuernas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Remo con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Elevación Lateral con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Curl Bíceps con Barra",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Plancha Frontal",
+              "series": 3,
+              "reps": "30-45s",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Plancha Frontal",
+              "series": 3,
+              "reps": "30-45s",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": []
+        },
+        {
+          "dia": 2,
+          "dia_semana": "Miércoles",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Sentadilla con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Peso Muerto Rumano",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Prensa de Pierna",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 3,
+              "descanso": 60
+            },
+            {
+              "nombre": "Bird-Dog",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Bird-Dog",
+              "series": 3,
+              "reps": "10-12",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": []
+        },
+        {
+          "dia": 3,
+          "dia_semana": "Viernes",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Landmine Press",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Dominadas Asistidas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Press Inclinado con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Extensión de Tríceps en Polea",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Dead Bug",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Dead Bug",
+              "series": 3,
+              "reps": "10-12",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": [
+            {
+              "ejercicio_original": "Press Militar con Barra",
+              "ejercicio_sustituido": "Landmine Press",
+              "razon": "Evitar sobrecarga en el manguito rotador y reducir el riesgo de estrés en la zona lumbar."
+            }
+          ]
+        },
+        {
+          "dia": 4,
+          "dia_semana": "Sábado",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Zancadas con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Hip Thrust con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 3,
+              "descanso": 120
+            },
+            {
+              "nombre": "Curl de Piernas en Máquina",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 3,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 3,
+              "descanso": 60
+            },
+            {
+              "nombre": "Pallof Press",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Pallof Press",
+              "series": 3,
+              "reps": "10-12",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": []
+        }
+      ],
+      "semana_4": [
+        {
+          "dia": 1,
+          "dia_semana": "Lunes",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Press Banca con Mancuernas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Remo con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Elevación Lateral con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Curl Bíceps con Barra",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Plancha Frontal",
+              "series": 3,
+              "reps": "30-45s",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Plancha Frontal",
+              "series": 3,
+              "reps": "30-45s",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": []
+        },
+        {
+          "dia": 2,
+          "dia_semana": "Miércoles",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Sentadilla con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Peso Muerto Rumano",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Prensa de Pierna",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 5,
+              "descanso": 60
+            },
+            {
+              "nombre": "Bird-Dog",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Bird-Dog",
+              "series": 3,
+              "reps": "10-12",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": []
+        },
+        {
+          "dia": 3,
+          "dia_semana": "Viernes",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Landmine Press",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Dominadas Asistidas",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Press Inclinado con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Extensión de Tríceps en Polea",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Dead Bug",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Dead Bug",
+              "series": 3,
+              "reps": "10-12",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": [
+            {
+              "ejercicio_original": "Press Militar con Barra",
+              "ejercicio_sustituido": "Landmine Press",
+              "razon": "Evitar sobrecarga en el manguito rotador y reducir el riesgo de estrés en la zona lumbar."
+            }
+          ]
+        },
+        {
+          "dia": 4,
+          "dia_semana": "Sábado",
+          "ejercicios_adaptados": [
+            {
+              "nombre": "Zancadas con Mancuernas",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Hip Thrust con Barra",
+              "series": 3,
+              "reps": "8-10",
+              "rir": 5,
+              "descanso": 120
+            },
+            {
+              "nombre": "Curl de Piernas en Máquina",
+              "series": 3,
+              "reps": "10-12",
+              "rir": 5,
+              "descanso": 90
+            },
+            {
+              "nombre": "Elevación de Talones",
+              "series": 3,
+              "reps": "12-15",
+              "rir": 5,
+              "descanso": 60
+            },
+            {
+              "nombre": "Pallof Press",
+              "series": 3,
+              "reps": "10-12",
+              "rir": "-",
+              "descanso": 60
+            }
+          ],
+          "prehab_incluido": [
+            {
+              "ejercicio": "Pallof Press",
+              "series": 3,
+              "reps": "10-12",
+              "posicion": "final_sesion"
+            }
+          ],
+          "sustituciones": []
+        }
+      ]
+    },
+    "formatted_plan": {
+      "resumen": "Plan de 4 semanas para hipertrofia diseñado para Juan Pérez García, enfocado en mejorar la composición corporal con un enfoque en técnica y prevención de lesiones lumbares.",
+      "plan_visual": "El plan sigue una estructura 'upper-lower' con ejercicios compuestos y preventivos integrados en cada sesión. Cada semana tiene un enfoque específico: adaptación, acumulación, intensificación y descarga.",
+      "instrucciones": [
+        "Comienza cada sesión con un calentamiento de 10 minutos.",
+        "Presta atención a la técnica en cada ejercicio, especialmente en aquellos que involucran la zona lumbar.",
+        "Integra los ejercicios preventivos al final de cada sesión para fortalecer el core.",
+        "Mantén un RIR (Repeticiones en Reserva) de 4 en las primeras dos semanas y de 3 en las semanas 3 y 4.",
+        "La semana 4 es de descarga, reduce la intensidad para optimizar la recuperación.",
+        "Monitorea cualquier molestia en la zona lumbar y ajusta la técnica o el volumen si es necesario."
+      ]
+    },
+    "audit": {
+      "status": "aprobado",
+      "checks": {
+        "volumen_semanal": "aprobado",
+        "frecuencia_por_grupo": "aprobado",
+        "equilibrio_push_pull": "aprobado",
+        "restricciones": "aprobado"
+      },
+      "warnings": [],
+      "recomendaciones": []
+    },
+    "bridge_for_nutrition": {
+      "tdee_estimado": 2550,
+      "gasto_semanal_estimado": 17800,
+      "dias_entrenamiento_semana": 4,
+      "tipos_dia_presentes": {
+        "usa_dia_A": true,
+        "usa_dia_M": false,
+        "usa_dia_B": true,
+        "count_A": 4,
+        "count_M": 0,
+        "count_B": 3
+      },
+      "distribucion_energetica": {
+        "A": "+12%",
+        "M": "0%",
+        "B": "-12%"
+      },
+      "calendario_sugerido": {
+        "dia_1": "A",
+        "dia_2": "B",
+        "dia_3": "A",
+        "dia_4": "B",
+        "dia_5": "A",
+        "dia_6": "A",
+        "dia_7": "B"
+      },
+      "justificacion_calendario": {
+        "dia_1": "Lunes: Entrenamiento de fuerza Upper A",
+        "dia_3": "Miércoles: Entrenamiento de fuerza Lower A",
+        "dia_5": "Viernes: Entrenamiento de fuerza Upper B",
+        "dia_6": "Sábado: Entrenamiento de fuerza Lower B"
+      },
+      "prioridad_metabolica": "hipertrofia",
+      "contrato_para_N0": {
+        "estado_fisiologico": "carga_controlada",
+        "tdee": 2550,
+        "dias_entrenamiento": 4,
+        "delta_dias_A": "+12%",
+        "delta_dias_B": "-12%",
+        "prioridad": "hipertrofia",
+        "restricciones_nutricionales": {
+          "alergias": [],
+          "intolerancias": [],
+          "alimentos_no_soportados": [],
+          "restricciones_medicas": [],
+          "notas": "Extraído de E1. N0-N8 deben excluir estos alimentos del plan."
+        }
+      }
+    }
+  }
+}
