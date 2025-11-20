@@ -503,6 +503,11 @@ Debes devolver el objeto `client_context` COMPLETO que recibiste, manteniendo:
 }
 ```
 
+**FORMATO OBLIGATORIO**:
+- Tu respuesta DEBE comenzar con `{"client_context": {`
+- NUNCA devuelvas el JSON directamente sin este wrapper
+- SIEMPRE incluye todos los campos del client_context, no solo training
+
 Procesa el input y devuelve el client_context actualizado siguiendo exactamente este contrato."""
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
