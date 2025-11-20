@@ -10400,8 +10400,94 @@ Analiza la solicitud y genera el plan modificado o responde la pregunta."""
 
 
 # ============================================================================
-# GENERATION JOBS - Sistema Asíncrono de Generación de Planes
+# GENERATION JOBS - Sistema Asíncrono de Generación de Planes con Estabilización
 # ============================================================================
+
+# ========== HELPER FUNCTIONS ==========
+
+async def add_job_log(job_id: str, event: str, details: str = ""):
+    """Añade un evento al log del job"""
+    log_entry = {
+        "timestamp": datetime.now(timezone.utc),
+        "event": event,
+        "details": details
+    }
+    await db.generation_jobs.update_one(
+        {"_id": job_id},
+        {"$push": {"execution_log": log_entry}}
+    )
+
+async def update_job_progress(job_id: str, phase: str, current_agent: str, completed: int, total: int, message: str):
+    """Actualiza el progreso del job después de cada agente REAL"""
+    percentage = int((completed / total) * 100)
+    
+    await db.generation_jobs.update_one(
+        {"_id": job_id},
+        {
+            "$set": {
+                "progress.phase": phase,
+                "progress.current_agent": current_agent,
+                "progress.completed_steps": completed,
+                "progress.total_steps": total,
+                "progress.percentage": percentage,
+                "progress.message": message
+            }
+        }
+    )
+    
+    logger.info(f"  📊 Progreso actualizado: {current_agent} completado ({percentage}%)")
+
+async def check_job_concurrency(job_id: str) -> bool:
+    """
+    Verifica si hay espacio para ejecutar el job.
+    Límite: 2 jobs simultáneos en "running"
+    Si no hay espacio, marca el job como "queued"
+    """
+    running_jobs = await db.generation_jobs.count_documents({"status": "running"})
+    
+    if running_jobs >= 2:
+        logger.info(f"⏳ Job {job_id} en cola (2 jobs ya en ejecución)")
+        await db.generation_jobs.update_one(
+            {"_id": job_id},
+            {"$set": {"status": "queued"}}
+        )
+        await add_job_log(job_id, "queued", f"{running_jobs} jobs en ejecución")
+        return False
+    
+    return True
+
+async def execute_with_retry(func, max_retries=2, *args, **kwargs):
+    """
+    Ejecuta una función con retry automático para errores de OpenAI
+    Reintentos: 2 con delays de 10s y 30s
+    """
+    delays = [10, 30]
+    last_error = None
+    
+    for attempt in range(max_retries + 1):
+        try:
+            result = await func(*args, **kwargs)
+            if attempt > 0:
+                logger.info(f"  ✅ Reintento exitoso (intento {attempt + 1})")
+            return result, attempt
+        except Exception as e:
+            last_error = e
+            error_str = str(e).lower()
+            
+            # Solo reintentar en errores recuperables (rate limit, timeout)
+            is_retryable = any(keyword in error_str for keyword in [
+                "rate limit", "timeout", "429", "503", "connection"
+            ])
+            
+            if attempt < max_retries and is_retryable:
+                delay = delays[attempt]
+                logger.warning(f"  ⚠️ Error recuperable, reintentando en {delay}s (intento {attempt + 1}/{max_retries + 1})")
+                await asyncio.sleep(delay)
+            else:
+                logger.error(f"  ❌ Error no recuperable o límite de reintentos alcanzado")
+                raise last_error
+    
+    raise last_error
 
 async def process_generation_job(job_id: str):
     """
