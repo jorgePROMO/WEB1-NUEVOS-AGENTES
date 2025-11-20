@@ -93,7 +93,41 @@ IRG = (sueno_h + energia + adherencia%/20 − estres − dolor/2)
 }
 ```
 
-**CRÍTICO:** Los campos "cit_semanal" e "irg_score" DEBEN estar en el root level del JSON.
+---
+
+## 📤 Output (client_context actualizado)
+
+**CRÍTICO**: Devuelve el `client_context` COMPLETO con tu campo lleno.
+
+```json
+{
+  "client_context": {
+    "meta": { ... },
+    "raw_inputs": { ... },
+    "training": {
+      // Campos anteriores sin cambios
+      "profile": { ... },
+      "constraints": { ... },
+      "capacity": { ... },
+      "adaptation": { ... },
+      "mesocycle": { ... },
+      "sessions": { ... },
+      "safe_sessions": { ... },
+      // TU CAMPO:
+      "formatted_plan": {
+        "resumen": "Plan de 4 semanas para hipertrofia...",
+        "plan_visual": "...",
+        "instrucciones": [...]
+      },
+      // Resto sin cambios:
+      "audit": null,
+      "bridge_for_nutrition": null
+    }
+  }
+}
+```
+
+**Devuelve SIEMPRE el objeto completo `client_context`.**
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
