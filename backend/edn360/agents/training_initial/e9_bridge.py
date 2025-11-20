@@ -77,11 +77,32 @@ Ajustes:
 - Vie: Full-body con pesas → A
 - Sáb/Dom: Descanso → B
 
-## 📤 Output (JSON estandarizado)
+## 📤 Output (client_context actualizado)
+
+**CRÍTICO**: Devuelve el `client_context` COMPLETO con tu campo lleno.
+
 ```json
 {
-  "status": "ok",
-  "bridge_output": {
+  "client_context": {
+    "meta": { ... },
+    "raw_inputs": { ... },
+    "training": {
+      // Campos anteriores sin cambios
+      "profile": { ... },
+      "constraints": { ... },
+      "capacity": { ... },
+      "adaptation": { ... },
+      "mesocycle": { ... },
+      "sessions": { ... },
+      "safe_sessions": { ... },
+      "formatted_plan": { ... },
+      "audit": { ... },
+      // TU CAMPO - el único que debes llenar:
+      "bridge_for_nutrition": {
+        "tdee_estimado": 2550,
+        "gasto_semanal_estimado": 17800,
+        "dias_entrenamiento_semana": 3,
+        "tipos_dia": {
     "tdee_estimado": 2550,
     "gasto_semanal_estimado": 17800,
     "dias_entrenamiento_semana": 3,
