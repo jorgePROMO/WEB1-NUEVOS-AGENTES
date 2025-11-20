@@ -231,6 +231,54 @@ AGENT_FIELD_MAPPING = {
     "E9": {
         "fills": ["bridge_for_nutrition"],
         "requires": ["safe_sessions", "mesocycle", "profile"]
+    },
+    
+    # AGENTES DE NUTRICIÓN (N0-N8)
+    # Estos agentes trabajan sobre nutrition.* y leen training.bridge_for_nutrition
+    "N0": {
+        "fills": ["profile"],  # nutrition.profile
+        "requires": [],  # N0 es el primero en nutrition, lee de raw_inputs y training.bridge
+        "reads_from_training": ["bridge_for_nutrition"]  # Lee el bridge de E9
+    },
+    "N1": {
+        "fills": ["metabolism"],  # nutrition.metabolism
+        "requires": ["profile"],  # Necesita nutrition.profile de N0
+        "reads_from_training": ["bridge_for_nutrition"]
+    },
+    "N2": {
+        "fills": ["energy_strategy"],  # nutrition.energy_strategy
+        "requires": ["metabolism", "profile"],  # Necesita N1 y N0
+        "reads_from_training": ["bridge_for_nutrition"]
+    },
+    "N3": {
+        "fills": ["macro_design"],  # nutrition.macro_design
+        "requires": ["energy_strategy", "metabolism"],  # Necesita N2 y N1
+        "reads_from_training": ["bridge_for_nutrition"]
+    },
+    "N4": {
+        "fills": ["weekly_structure"],  # nutrition.weekly_structure
+        "requires": ["macro_design", "energy_strategy"],  # Necesita N3 y N2
+        "reads_from_training": ["bridge_for_nutrition"]
+    },
+    "N5": {
+        "fills": ["timing_plan"],  # nutrition.timing_plan
+        "requires": ["weekly_structure", "macro_design"],  # Necesita N4 y N3
+        "reads_from_training": ["bridge_for_nutrition"]
+    },
+    "N6": {
+        "fills": ["menu_plan"],  # nutrition.menu_plan
+        "requires": ["timing_plan", "weekly_structure", "macro_design", "profile"],  # Necesita N5, N4, N3, N0
+        "reads_from_training": []  # No necesita leer de training directamente
+    },
+    "N7": {
+        "fills": ["adherence_report"],  # nutrition.adherence_report
+        "requires": ["menu_plan", "profile"],  # Necesita N6 y N0
+        "reads_from_training": []
+    },
+    "N8": {
+        "fills": ["audit"],  # nutrition.audit
+        "requires": ["menu_plan", "macro_design", "profile"],  # Necesita N6, N3, N0 para auditar
+        "reads_from_training": []
     }
 }
 
