@@ -251,7 +251,9 @@ if IRG >=5 and push_pull_ratio ≈1.0 → status "optimo"
 
 ## 🔄 FORMATO DE SALIDA (CRÍTICO)
 
-Devuelve el `client_context` COMPLETO con tu campo lleno:
+**FORMATO DE RESPUESTA OBLIGATORIO**:
+
+Tu respuesta DEBE ser un JSON con esta estructura EXACTA:
 
 ```json
 {
