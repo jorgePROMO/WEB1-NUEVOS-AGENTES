@@ -69,6 +69,109 @@ class BaseAgent(ABC):
         """
         pass
     
+    
+    def normalize_agent_output(
+        self,
+        parsed_response: Dict[str, Any],
+        original_client_context: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        POST-PROCESADOR: Normaliza la salida del agente al formato esperado.
+        
+        PROBLEMA RESUELTO:
+        - Algunos agentes pueden devolver formato antiguo por influencia de la KB
+        - Ej: {"status": "ok", "metabolism": {...}} en lugar de {"client_context": {...}}
+        
+        COMPORTAMIENTO:
+        1. Si ya tiene "client_context" → No tocar, devolver tal cual ✅
+        2. Si tiene formato antiguo → Convertir automáticamente 🔁
+        3. Si no encaja en ninguno → Error claro ❌
+        
+        Args:
+            parsed_response: JSON parseado de la respuesta del LLM
+            original_client_context: client_context que se envió al LLM (vista completa o compacta)
+            
+        Returns:
+            Dict normalizado con formato {"client_context": {...}}
+        """
+        # CASO 1: Ya tiene el formato correcto
+        if "client_context" in parsed_response:
+            logger.debug(f"✅ {self.agent_id} devolvió formato correcto")
+            return parsed_response
+        
+        # CASO 2: Formato antiguo - intentar convertir
+        logger.warning(f"🔁 {self.agent_id} devolvió formato antiguo. Normalizando...")
+        
+        # Determinar si es agente E o N
+        is_nutrition_agent = self.agent_id.startswith("N")
+        
+        if is_nutrition_agent:
+            # Agente N: El formato antiguo suele tener campos de nutrition directamente
+            # Necesitamos extraer esos campos y meterlos en client_context.nutrition
+            
+            # Campos típicos del formato antiguo de nutrición
+            old_format_fields = [
+                "status", "perfil_metabolico", "tdee_estimado", "bmr_estimado",
+                "objetivo", "estrategia", "ciclado_calorico", "macros_iniciales",
+                "distribucion_dias_A", "menu_tipo_A", "factores_riesgo",
+                "resultado_general", "checks"
+            ]
+            
+            # Verificar si tiene campos del formato antiguo
+            has_old_format = any(field in parsed_response for field in old_format_fields)
+            
+            if has_old_format:
+                # Construir client_context normalizado
+                # Usar el original como base y solo actualizar nutrition
+                normalized = {
+                    "client_context": {
+                        "meta": original_client_context.get("meta", {}),
+                        "raw_inputs": original_client_context.get("raw_inputs", {}),
+                        "training": original_client_context.get("training", {}),
+                        "nutrition": original_client_context.get("nutrition", {})
+                    }
+                }
+                
+                # Mapear campos antiguos según el agente
+                # Por ahora, metemos todo lo que devolvió en el campo correspondiente
+                nutrition_field = self._get_nutrition_field_for_agent()
+                
+                if nutrition_field:
+                    # Actualizar solo el campo que este agente debe llenar
+                    normalized["client_context"]["nutrition"][nutrition_field] = parsed_response
+                    logger.info(f"✅ {self.agent_id} - Formato antiguo convertido a client_context.nutrition.{nutrition_field}")
+                    return normalized
+        
+        else:
+            # Agente E: Similar pero para training
+            logger.warning(f"⚠️ {self.agent_id} (training agent) devolvió formato no reconocido")
+        
+        # CASO 3: No se pudo normalizar
+        logger.error(f"❌ {self.agent_id} - No se pudo normalizar el formato de salida")
+        logger.error(f"   Respuesta recibida (keys): {list(parsed_response.keys())}")
+        raise ValueError(
+            f"{self.agent_id} devolvió formato no reconocido. "
+            f"Se esperaba {{'client_context': {{...}}}} pero recibió: {list(parsed_response.keys())}"
+        )
+    
+    def _get_nutrition_field_for_agent(self) -> Optional[str]:
+        """
+        Retorna el campo de nutrition.* que este agente debe llenar.
+        Usado por el post-procesador para normalizar formato antiguo.
+        """
+        mapping = {
+            "N0": "profile",
+            "N1": "metabolism",
+            "N2": "energy_strategy",
+            "N3": "macro_design",
+            "N4": "weekly_structure",
+            "N5": "timing_plan",
+            "N6": "menu_plan",
+            "N7": "adherence_report",
+            "N8": "audit"
+        }
+        return mapping.get(self.agent_id)
+
     async def execute(self, input_data: Dict[str, Any], knowledge_base: str = "") -> Dict[str, Any]:
         """
         Ejecuta el agente con los datos de entrada y opcionalmente una base de conocimiento
