@@ -304,7 +304,9 @@ extensiones_pesadas → extensiones_ligeras_alto_rep
 
 ## 📤 Output (client_context actualizado)
 
-**CRÍTICO**: Devuelve el `client_context` COMPLETO con tu campo lleno.
+**CRÍTICO - FORMATO DE RESPUESTA OBLIGATORIO**:
+
+Tu respuesta DEBE ser un JSON con esta estructura EXACTA:
 
 ```json
 {
