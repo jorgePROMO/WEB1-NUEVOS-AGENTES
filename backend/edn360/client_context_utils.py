@@ -18,6 +18,7 @@ from .client_context_models import (
     SelectedInputs,
     RawInputs,
     TrainingData,
+    NutritionData,
     ClientContextWrapper
 )
 
