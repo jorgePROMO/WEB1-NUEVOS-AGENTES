@@ -246,40 +246,41 @@ class EDN360Orchestrator:
         Returns:
             Dict con el plan completo generado
         """
-        logger.info(f"🚀 Iniciando generación de plan inicial: {plan_id}")
+        logger.info(f"🚀 Iniciando generación de plan completo: {plan_id}")
         start_time = datetime.now()
         
         try:
-            # Fase 1: Ejecutar agentes de entrenamiento (E1-E9)
-            logger.info("📋 Fase 1: Entrenamiento Inicial (E1-E9)")
-            training_result = await self._execute_training_initial(questionnaire_data)
+            # Fase 1: Ejecutar pipeline de entrenamiento (E1-E9)
+            logger.info("=" * 80)
+            logger.info("📋 FASE 1: ENTRENAMIENTO (E1-E9)")
+            logger.info("=" * 80)
+            
+            client_id = client_data.get("client_id", plan_id)
+            training_result = await self.execute_training_pipeline(
+                questionnaire_data=questionnaire_data,
+                client_id=client_id,
+                version=1
+            )
             
             if not training_result["success"]:
                 raise Exception(f"Error en fase entrenamiento: {training_result.get('error')}")
             
-            # Fase 2: Ejecutar agentes de nutrición (N0-N8)
-            logger.info("🍎 Fase 2: Nutrición Inicial (N0-N8)")
-            nutrition_result = await self._execute_nutrition_initial(
-                questionnaire_data,
-                training_result["bridge_data"]  # Output de E9
+            client_context_after_training = training_result["client_context"]
+            
+            # Fase 2: Ejecutar pipeline de nutrición (N0-N8)
+            logger.info("")
+            logger.info("=" * 80)
+            logger.info("🥗 FASE 2: NUTRICIÓN (N0-N8)")
+            logger.info("=" * 80)
+            
+            nutrition_result = await self.execute_nutrition_pipeline(
+                client_context=client_context_after_training
             )
             
             if not nutrition_result["success"]:
                 raise Exception(f"Error en fase nutrición: {nutrition_result.get('error')}")
             
-            # Validación completa del plan
-            logger.info("✅ Validando plan completo")
-            valid, errors, warnings = self.validator.validate_complete_plan(
-                training_result["plan_data"],
-                nutrition_result["plan_data"],
-                client_data
-            )
-            
-            log_validation_results(plan_id, errors, warnings)
-            
-            if not valid:
-                logger.error(f"❌ Plan tiene errores de validación: {errors}")
-                # Aún así retornamos el plan pero marcado con errores
+            client_context_final = nutrition_result["client_context"]
             
             # Calcular duración total
             duration = (datetime.now() - start_time).total_seconds()
@@ -287,19 +288,18 @@ class EDN360Orchestrator:
             result = {
                 "success": True,
                 "plan_id": plan_id,
-                "training_plan": training_result["plan_data"],
-                "nutrition_plan": nutrition_result["plan_data"],
-                "agent_executions": training_result["executions"] + nutrition_result["executions"],
-                "validation": {
-                    "valid": valid,
-                    "errors": errors,
-                    "warnings": warnings
-                },
+                "client_context": client_context_to_dict(client_context_final),
+                "training_executions": training_result["executions"],
+                "nutrition_executions": nutrition_result["executions"],
                 "total_duration_seconds": duration,
                 "generated_at": datetime.now().isoformat()
             }
             
-            logger.info(f"✅ Plan inicial completado en {duration:.2f}s")
+            logger.info("")
+            logger.info("=" * 80)
+            logger.info(f"✅ PLAN COMPLETO GENERADO EN {duration:.2f}s")
+            logger.info("=" * 80)
+            
             return result
             
         except Exception as e:
