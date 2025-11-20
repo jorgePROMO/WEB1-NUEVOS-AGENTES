@@ -1056,7 +1056,7 @@ class GenerationJobResult(BaseModel):
     nutrition_plan_id: Optional[str] = None
 
 class GenerationJob(BaseModel):
-    """Job de generación de planes E.D.N.360"""
+    """Job de generación de planes E.D.N.360 con estabilización"""
     job_id: str
     user_id: str
     type: str  # "training" | "nutrition" | "full"
@@ -1064,7 +1064,7 @@ class GenerationJob(BaseModel):
     training_plan_id: Optional[str] = None  # Para sincronizar con plan de entrenamiento
     previous_nutrition_plan_id: Optional[str] = None  # Plan nutricional previo
     previous_training_plan_id: Optional[str] = None  # Plan de entrenamiento previo
-    status: str = "pending"  # "pending" | "running" | "completed" | "failed"
+    status: str = "pending"  # "pending" | "queued" | "running" | "completed" | "failed"
     progress: GenerationJobProgress = Field(default_factory=lambda: GenerationJobProgress(
         phase="pending",
         completed_steps=0,
@@ -1074,6 +1074,9 @@ class GenerationJob(BaseModel):
     ))
     result: GenerationJobResult = Field(default_factory=GenerationJobResult)
     error_message: Optional[str] = None
+    error_reason: Optional[str] = None  # "timeout" | "error"
+    retry_count: int = 0  # Número de reintentos realizados
+    execution_log: List[dict] = Field(default_factory=list)  # Log de eventos
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     started_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
