@@ -11122,11 +11122,10 @@ async def startup_db_verification():
         await db.command('ping')
         logger.info(f"✅ Successfully connected to database: {db_name}")
         
-        # Iniciar watchdogs de jobs asíncronos
-        # TEMPORALMENTE DESHABILITADO - causaba bloqueo del event loop
-        # asyncio.create_task(job_timeout_watchdog())
-        # asyncio.create_task(process_queued_jobs())
-        # logger.info("✅ Job watchdogs iniciados (timeout + cola)")
+        # Iniciar watchdogs de jobs asíncronos (con delays iniciales para no bloquear startup)
+        asyncio.create_task(job_timeout_watchdog())
+        asyncio.create_task(process_queued_jobs())
+        logger.info("✅ Job watchdogs iniciados (timeout + cola)")
         
     except Exception as e:
         logger.error(f"❌ CRITICAL: Failed to connect to database {db_name}: {e}")
