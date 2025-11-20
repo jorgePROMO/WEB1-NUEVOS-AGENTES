@@ -205,9 +205,9 @@ metadata:
 test_plan:
   current_focus:
     - "Async Generation Endpoint"
-    - "Job Status Query Endpoint"
     - "Background Job Processor"
     - "GenerationProgressModal Component"
-  stuck_tasks: []
+  stuck_tasks:
+    - "Async Generation Endpoint"
   test_all: false
   test_priority: "high_first"
