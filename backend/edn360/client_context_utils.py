@@ -115,19 +115,22 @@ def validate_agent_input(
     Valida que un agente tiene los campos necesarios de agentes anteriores.
     
     Args:
-        agent_id: ID del agente (E1, E2, etc.)
+        agent_id: ID del agente (E1, E2, N0, etc.)
         client_context: Objeto client_context antes de la ejecución del agente
         required_fields: Lista de campos que deben existir de agentes anteriores
         
     Returns:
         (valid, error_message): True si válido, False con mensaje de error si no
     """
-    training = client_context.training
+    # Determinar si es agente E o N
+    is_nutrition_agent = agent_id.startswith("N")
+    data_section = client_context.nutrition if is_nutrition_agent else client_context.training
+    section_name = "nutrition" if is_nutrition_agent else "training"
     
     for field in required_fields:
-        value = getattr(training, field, None)
+        value = getattr(data_section, field, None)
         if value is None:
-            return False, f"{agent_id} missing required input: training.{field} (should be populated by previous agent)"
+            return False, f"{agent_id} missing required input: {section_name}.{field} (should be populated by previous agent)"
     
     return True, None
 
