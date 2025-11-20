@@ -62,3 +62,6 @@
 2025-11-20 13:21:59,192 - edn360.orchestrator - ERROR -   ❌ E1 falló: Error procesando output de E1: No se pudo extraer JSON válido de la respuesta del agente E1
 2025-11-20 13:21:59,192 - __main__ - ERROR - ❌ Flujo falló: E1 falló: Error procesando output de E1: No se pudo extraer JSON válido de la respuesta del agente E1
 2025-11-20 13:21:59,192 - __main__ - ERROR -    Revisa los logs arriba para identificar en qué agente falló
+
+❌ Test E2E falló
+📄 Revisa /app/logs_training_e2e.txt para detalles
