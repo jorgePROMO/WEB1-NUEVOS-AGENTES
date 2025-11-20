@@ -478,12 +478,16 @@ def update_nutrition_from_llm_response(
         ClientContext actualizado SOLO con los campos del agente
     """
     if "client_context" not in llm_response:
+        logger.error(f"❌ {agent_id} - llm_response keys: {list(llm_response.keys())}")
         raise ValueError("LLM response no contiene client_context")
     
     llm_context = llm_response["client_context"]
     
     # Extraer nutrition.* de la respuesta del LLM
     if "nutrition" not in llm_context:
+        logger.error(f"❌ {agent_id} - llm_context keys: {list(llm_context.keys())}")
+        logger.error(f"   llm_response type: {type(llm_response)}")
+        logger.error(f"   llm_context type: {type(llm_context)}")
         raise ValueError("LLM response no contiene nutrition")
     
     llm_nutrition = llm_context["nutrition"]
