@@ -13,6 +13,7 @@ import httpx
 import socketio
 import uuid
 import json
+import asyncio
 
 from models import (
     UserCreate, UserResponse, UserInDB, Subscription,
