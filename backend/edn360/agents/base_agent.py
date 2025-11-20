@@ -246,6 +246,23 @@ Procesa estos datos siguiendo las instrucciones del sistema y genera la salida e
                                 pass
                     continue
         
+        # Si no hay matches con el patrón completo, buscar JSON truncado sin closing backticks
+        # (Caso: ```json {...  sin ``` al final)
+        truncated_pattern = r'```(?:json)?\s*(\{[\s\S]*)'
+        truncated_matches = re.findall(truncated_pattern, response, re.DOTALL)
+        
+        if truncated_matches:
+            for match in truncated_matches:
+                # Limpiar y reparar
+                match = match.rstrip()
+                if match.count('{') > match.count('}'):
+                    missing = match.count('{') - match.count('}')
+                    match = match + ('\n}' * missing)
+                    try:
+                        return json.loads(match)
+                    except json.JSONDecodeError:
+                        continue
+        
         # Buscar JSON sin bloques de código (buscar el objeto más grande y anidado)
         # Usar una estrategia más sofisticada: encontrar { y su } correspondiente
         stack = []
