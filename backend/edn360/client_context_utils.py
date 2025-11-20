@@ -389,3 +389,103 @@ def validate_agent_contract(
                 errors.append(f"{agent_id} (training agent) illegally modified nutrition.* fields")
     
     return len(errors) == 0, errors
+
+
+
+def build_nutrition_llm_context(client_context: ClientContext) -> Dict[str, Any]:
+    """
+    Construye una vista COMPACTA del client_context para agentes N0-N8.
+    
+    PROBLEMA RESUELTO:
+    - El client_context después de E1-E9 puede ser enorme (~60KB)
+    - training.sessions contiene TODOS los ejercicios con series/reps/RIR/descansos
+    - Esto excede el límite de 30K tokens al enviarlo al LLM
+    
+    SOLUCIÓN:
+    - Los agentes N NO necesitan ver cada serie de cada ejercicio
+    - Nutrición se basa en training.bridge_for_nutrition (resumen de E9)
+    - Esta función elimina campos pesados innecesarios para nutrición
+    
+    IMPORTANTE:
+    - Esta vista es SOLO para el LLM (input)
+    - El client_context REAL se mantiene intacto en memoria
+    - Solo actualizamos nutrition.* del real con la respuesta del LLM
+    
+    Args:
+        client_context: ClientContext completo (con todo training.*)
+        
+    Returns:
+        Dict compacto para enviar al LLM de N0-N8
+    """
+    # Convertir a dict
+    full_dict = client_context_to_dict(client_context)
+    
+    # Crear vista compacta
+    compact_dict = {
+        "meta": full_dict["meta"],
+        "raw_inputs": full_dict["raw_inputs"],
+        "training": {
+            # MANTENER: Campos de alto nivel necesarios para nutrición
+            "profile": full_dict["training"].get("profile"),
+            "constraints": full_dict["training"].get("constraints"),
+            "prehab": full_dict["training"].get("prehab"),
+            "capacity": full_dict["training"].get("capacity"),
+            "adaptation": full_dict["training"].get("adaptation"),
+            "mesocycle": full_dict["training"].get("mesocycle"),
+            
+            # ELIMINAR: Campos pesados innecesarios
+            # "sessions": ELIMINADO - ~30KB de ejercicios detallados
+            # "safe_sessions": ELIMINADO - Similar a sessions
+            # "formatted_plan": ELIMINADO - Representación en texto del plan
+            # "audit": ELIMINADO - Resultado de E8, no crítico para nutrición
+            
+            # MANTENER: El bridge es la fuente principal para nutrición
+            "bridge_for_nutrition": full_dict["training"].get("bridge_for_nutrition")
+        },
+        "nutrition": full_dict["nutrition"]
+    }
+    
+    return compact_dict
+
+
+def update_nutrition_from_llm_response(
+    client_context_real: ClientContext,
+    llm_response: Dict[str, Any]
+) -> ClientContext:
+    """
+    Actualiza SOLO nutrition.* del client_context real con la respuesta del LLM.
+    
+    IMPORTANTE:
+    - El LLM trabaja con una vista compacta (sin training.sessions, etc.)
+    - NO queremos sobreescribir training.*, raw_inputs, meta del real
+    - SOLO actualizamos nutrition.* con lo que el agente N generó
+    
+    Args:
+        client_context_real: ClientContext completo en memoria
+        llm_response: Respuesta del LLM con {"client_context": {...}}
+        
+    Returns:
+        ClientContext actualizado con nueva nutrition.*
+    """
+    if "client_context" not in llm_response:
+        raise ValueError("LLM response no contiene client_context")
+    
+    llm_context = llm_response["client_context"]
+    
+    # Extraer solo nutrition.* de la respuesta del LLM
+    if "nutrition" not in llm_context:
+        raise ValueError("LLM response no contiene nutrition")
+    
+    new_nutrition = NutritionData.model_validate(llm_context["nutrition"])
+    
+    # Crear nuevo ClientContext con nutrition actualizada
+    # (Pydantic es inmutable, necesitamos crear uno nuevo)
+    updated_context = ClientContext(
+        meta=client_context_real.meta,
+        raw_inputs=client_context_real.raw_inputs,
+        training=client_context_real.training,  # SIN CAMBIOS
+        nutrition=new_nutrition  # ACTUALIZADO
+    )
+    
+    return updated_context
+
