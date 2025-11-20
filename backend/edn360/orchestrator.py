@@ -388,8 +388,8 @@ class EDN360Orchestrator:
                     }
             
             # EJECUTAR AGENTE con client_context + KB
-            # Distinguir entre agentes refactorizados y legacy
-            refactored_agents = ["E1", "E5", "E8"]
+            # TODOS los agentes E1-E9 están refactorizados (Fase 2 completada)
+            refactored_agents = ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"]
             
             if agent.agent_id in refactored_agents:
                 # Agente refactorizado: pasar client_context completo
