@@ -300,6 +300,11 @@ Tu respuesta DEBE ser un JSON con esta estructura EXACTA:
 }
 ```
 
+**FORMATO OBLIGATORIO**:
+- Tu respuesta DEBE comenzar con `{"client_context": {`
+- NUNCA devuelvas el JSON directamente sin este wrapper
+- SIEMPRE incluye todos los campos del client_context, no solo training
+
 ## 📝 EJEMPLOS DE AUDITORÍA
 
 ### Ejemplo 1: Plan OK
