@@ -35,7 +35,8 @@ from models import (
     NutritionPlanChatRequest, NutritionPlanChatResponse,
     WaitlistLeadSubmit, WaitlistLeadInDB, WaitlistLeadResponse,
     WaitlistStatusUpdate, WaitlistNoteAdd,
-    ManualPayment, ManualPaymentCreate
+    ManualPayment, ManualPaymentCreate,
+    GenerationJob, GenerateAsyncRequest, GenerationJobProgress, GenerationJobResult
 )
 from auth import (
     get_password_hash, verify_password, create_access_token,
