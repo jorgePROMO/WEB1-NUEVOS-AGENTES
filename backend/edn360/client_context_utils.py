@@ -9,8 +9,11 @@ Funciones auxiliares para:
 
 import json
 import uuid
+import logging
 from datetime import datetime
 from typing import Dict, Any, Optional
+
+logger = logging.getLogger(__name__)
 
 from .client_context_models import (
     ClientContext,
