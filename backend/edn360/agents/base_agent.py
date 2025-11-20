@@ -230,7 +230,20 @@ Procesa estos datos siguiendo las instrucciones del sistema y genera la salida e
             for match in matches_sorted:
                 try:
                     return json.loads(match)
-                except json.JSONDecodeError:
+                except json.JSONDecodeError as e:
+                    # Intentar reparar errores comunes de cierre de llaves
+                    if "Expecting ',' delimiter" in str(e) or "Expecting" in str(e):
+                        # El LLM a veces omite llaves de cierre en objetos anidados grandes
+                        # Intentar agregar llaves faltantes
+                        repaired = match.rstrip()
+                        if repaired.count('{') > repaired.count('}'):
+                            # Faltan llaves de cierre
+                            missing = repaired.count('{') - repaired.count('}')
+                            repaired = repaired + ('\n}' * missing)
+                            try:
+                                return json.loads(repaired)
+                            except json.JSONDecodeError:
+                                pass
                     continue
         
         # Buscar JSON sin bloques de código (buscar el objeto más grande y anidado)
