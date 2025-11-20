@@ -127,3 +127,49 @@
 2025-11-20 13:41:18,019 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['mesocycle', 'profile']
 2025-11-20 13:41:18,020 - edn360.orchestrator - INFO -     ℹ️ E5 no recibe KB (optimización de contexto)
 2025-11-20 13:41:18,020 - edn360.agents.base_agent - INFO - 🤖 E5 (Ingeniero de Sesiones) - Iniciando ejecución
+2025-11-20 13:43:02,574 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:43:02,622 - edn360.agents.base_agent - INFO - 📝 E5 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:43:02,622 - edn360.agents.base_agent - INFO - ✅ E5 completado en 104.60s
+2025-11-20 13:43:02,623 - edn360.orchestrator - INFO -   ✅ E5 devolvió client_context actualizado
+2025-11-20 13:43:02,623 - edn360.orchestrator - INFO -     🔍 Validando contrato de E5...
+2025-11-20 13:43:02,623 - edn360.orchestrator - INFO -   ✅ E5 completado y validado
+2025-11-20 13:43:02,623 - edn360.orchestrator - INFO -   ▶️ Ejecutando E6 (Técnico Clínico-Preventivo)...
+2025-11-20 13:43:02,623 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['sessions', 'constraints', 'prehab']
+2025-11-20 13:43:02,623 - edn360.orchestrator - INFO -     ℹ️ E6 no recibe KB (optimización de contexto)
+2025-11-20 13:43:02,623 - edn360.agents.base_agent - INFO - 🤖 E6 (Técnico Clínico-Preventivo) - Iniciando ejecución
+2025-11-20 13:45:39,576 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:45:39,578 - edn360.agents.base_agent - INFO - 📝 E6 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:45:39,579 - edn360.agents.base_agent - INFO - ✅ E6 completado en 156.96s
+2025-11-20 13:45:39,579 - edn360.orchestrator - INFO -   ✅ E6 devolvió client_context actualizado
+2025-11-20 13:45:39,579 - edn360.orchestrator - INFO -     🔍 Validando contrato de E6...
+2025-11-20 13:45:39,579 - edn360.orchestrator - INFO -   ✅ E6 completado y validado
+2025-11-20 13:45:39,579 - edn360.orchestrator - INFO -   ▶️ Ejecutando E7 (Analista de Carga Interna)...
+2025-11-20 13:45:39,579 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['safe_sessions', 'mesocycle']
+2025-11-20 13:45:39,580 - edn360.orchestrator - INFO -     ℹ️ E7 no recibe KB (optimización de contexto)
+2025-11-20 13:45:39,580 - edn360.agents.base_agent - INFO - 🤖 E7 (Analista de Carga Interna) - Iniciando ejecución
