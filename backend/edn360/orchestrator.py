@@ -449,9 +449,11 @@ class EDN360Orchestrator:
                     agent_input = legacy_outputs
             
             # Decidir si pasar KB según el agente
-            # E8 NO necesita KB completa (optimización de contexto)
-            if agent.agent_id == "E8":
-                kb_to_pass = ""  # E8 no recibe KB
+            # E5-E9 NO necesitan KB completa (optimización de contexto + límite de tokens)
+            # Ya tienen toda la info del cliente en el client_context de E1-E4
+            agents_without_kb = ["E5", "E6", "E7", "E8", "E9"]
+            if agent.agent_id in agents_without_kb:
+                kb_to_pass = ""  # Estos agentes no reciben KB
                 logger.info(f"    ℹ️ {agent.agent_id} no recibe KB (optimización de contexto)")
             else:
                 kb_to_pass = self.knowledge_bases.get("training", "")
