@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://edn360-kb.preview.emergentagent.com
+https://edn-unified.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 

@@ -1,71 +1,90 @@
 <analysis>
-The trajectory details a collaborative refinement of the application's architecture. The initial task was a major refactor to introduce a shared  object for the AI agents, addressing a core flaw of them operating in isolation. The user then introduced a new, critical requirement: integrating two Knowledge Bases (KBs), one for training and one for nutrition, provided as  files.
+The trajectory documents a major architectural refactor of an AI agent-based system, guided by detailed user feedback. The work proceeded in two main parts. First, the integration of global Knowledge Bases (KBs), where the user corrected the initial approach, establishing a core principle: KBs are static, global references, separate from the dynamic, per-client state.
 
-The AI engineer's first proposal was to embed these KBs within the . The user immediately and firmly rejected this, explaining it was conceptually wrong. The user clarified that KBs are global, static, read-only reference guides, whereas  is the dynamic, client-specific state. The KBs should not be duplicated for each client or persisted in the database.
+The second, more significant part was a complete overhaul of the training agent chain (E1-E9) to use a unified state object called . This was a response to the user providing a new architectural document that revealed the original agents were operating in isolated, brittle silos. This refactor was executed in meticulous, user-approved phases:
+1.  **Phase 1**: Defining Pydantic models for  directly from the user's document.
+2.  **Phase 2**: Refactoring the orchestrator and a Proof-of-Concept with agents E1, E5, and E8 to validate the new data flow. This phase included crucial optimizations, like removing the KB from agent E8 to solve context size limits.
+3.  **Phase 3**: Refactoring the remaining six agents. A critical bug was discovered here: the agent prompts were not updated to return data in the new required format, causing the end-to-end test to fail. The most recent work involved fixing all agent prompts and the JSON parsing logic.
 
-Following this crucial correction, the AI engineer formulated a new, approved plan. This plan involves storing the KBs as versioned text files on the filesystem, loading them once in the , and passing the relevant KB to each agent as a separate context from the . The agent prompts will be engineered to prioritize the client's data over the KB's general guidance. The work concluded with the AI engineer having a clear, user-approved implementation plan and awaiting the go-ahead.
-
-The user's primary language is Spanish. The next agent **MUST** respond in Spanish.
+A full end-to-end test of the entire training agent chain is currently running in the background. The user's primary language is Spanish. The next agent **MUST** respond in Spanish.
 </analysis>
 
 <product_requirements>
-The E.D.N.360 application is an AI-powered platform for generating personalized, progressive training and nutrition plans.
+The E.D.N.360 application is an AI-powered platform designed to generate personalized and progressive training and nutrition plans.
 
-**Core Functional Requirements:**
-1.  **AI-Powered Plan Generation:** The system uses a chain of specialized AI agents (E-agents for training, N-agents for nutrition) to create comprehensive plans.
-2.  **Shared Agent Context:** All agents must operate on a single, shared  object. This object contains all client-specific data, questionnaires, previous plans, and the outputs of preceding agents, ensuring data consistency throughout the generation process.
-3.  **Global Knowledge Base Integration:** The system must utilize two global, read-only knowledge bases (one for training, one for nutrition) stored as versioned  files. These KBs serve as a reference manual for the agents.
-4.  **Data Prioritization:** There is a strict hierarchy of information. The agent's decision-making must always prioritize the specific client data in  over the general guidelines in the knowledge base. The system must adapt theory to the client's reality, not the other way around. The KBs must not be persisted in the database with client data.
+**Core System Architecture:**
+The system's logic is driven by a chain of specialized AI agents, orchestrated by a Python backend. There are two main chains: Training (E-agents E1-E9) and Nutrition (N-agents N0-N8).
+
+**Key Functional Requirements:**
+1.  **Unified State Management:** All agents within a chain must operate on a single, shared  object. This Pydantic-defined object carries all client-specific data, including questionnaires, historical plans, and the outputs of preceding agents. This ensures data consistency and traceability throughout the plan generation process.
+2.  **Strict Data Contracts:** Each agent has a specific responsibility and is only permitted to read from and write to designated fields within the . This is enforced by a validation layer in the orchestrator to prevent agents from overwriting each other's work.
+3.  **Global Knowledge Base (KB) Integration:** The system utilizes two global, static, read-only Knowledge Bases (one for training, one for nutrition) stored as versioned  files. These are loaded once by the orchestrator and passed to agents as supplementary, general-purpose reference material.
+4.  **Data Prioritization:** There is a strict hierarchy of information. Agent decision-making must always prioritize the specific client data in  over the general guidelines found in the knowledge base. The KB is a reference, not a rulebook.
 </product_requirements>
 
 <key_technical_concepts>
-- **Agent-Based AI System:** An orchestrated chain of specialized LLM agents for plan generation.
-- **Shared Context Architecture:** A mandatory refactor to use a single, unified  object passed between agents.
-- **Global Knowledge Base (KB) Integration:** A new requirement to load static, versioned  files (, ) once and pass them to agents as a separate, read-only reference context, distinct from the .
-- **Prompt Engineering:** Critical for instructing agents on the strict data hierarchy:  has absolute priority over the KB.
+- **Agentic Architecture:** A sequential chain of specialized LLM agents (E1-E9 for Training) that collaboratively build a complex data object.
+- **Unified State Management ():** A single, comprehensive Pydantic model that acts as the source of truth and is passed between all agents.
+- **Data Contracts:** A system where each agent has defined read () and write () permissions on the , enforced by the .
+- **Separation of State and Knowledge:** Strict architectural separation between the dynamic, client-specific  and the static, global  files.
 </key_technical_concepts>
 
 <code_architecture>
-The application uses a monorepo structure with a React frontend and a Python/FastAPI backend. The core logic resides in a chain of AI agents orchestrated by the backend.
+The application follows a monorepo structure with a FastAPI backend. The core logic is centered around the  which manages a chain of AI agents that operate on a unified  object.
+
+**Directory Structure:**
 
 
+- ****
+  - **Importance:** This new file is the source of truth for the application's state. It defines the Pydantic models for the entire  object, including , , and the  block.
+  - **Changes:** Created from scratch based on the user's architectural document.
 
-- ** (New Directory)**:
-  - **Importance**: This new directory will house the global, static knowledge bases for training and nutrition, as per the user's explicit instructions. This keeps reference data separate from application code.
-  - **Planned Files**: , .
+- ****
+  - **Importance:** This new file centralizes the logic for initializing and, crucially, validating the  against each agent's data contract. It ensures agents only read/write to their permitted fields.
+  - **Changes:** Created from scratch to support the new architecture.
 
-- ****:
-  - **Importance**: This file manages the overall flow of the agent chain.
-  - **Planned Changes**: It will be modified to load the content of the KB text files into memory once at the start of a generation process. It will then be responsible for passing the appropriate KB content (training or nutrition) to each agent call, alongside the .
+- ****
+  - **Importance:** This is the heart of the agent system. It manages the sequential execution of the E1-E9 agent chain.
+  - **Changes:** Heavily refactored. It now initializes the , loads KBs, passes the single  object to every agent, and uses  to validate the contract before and after each agent call. It was also updated to *not* pass the large training KB to the E8 (auditor) agent for performance optimization.
 
-- ****:
-  - **Importance**: This is the parent class for all AI agents, containing the core LLM interaction logic.
-  - **Planned Changes**: The  method will be refactored to accept two distinct arguments: the  (client-specific data) and the  (global reference text). The system prompt construction logic within this file will be updated to include clear instructions on the data hierarchy, ensuring agents prioritize  over the .
+- ****
+  - **Importance:** The parent class for all agents. Contains shared logic for LLM interaction.
+  - **Changes:**
+    - The  method signature was updated to accept an optional  argument.
+    - The  method was improved with a more robust regex () to correctly parse JSON that may be wrapped in markdown backticks.
 
+- ** (All 9 agents)**
+  - **Importance:** These files contain the specific logic and prompts for each step of the training plan generation.
+  - **Changes:** All 9 agents were completely refactored. The  and  methods were rewritten to work with the  object. Most importantly, their system prompts were extensively updated to instruct the LLM to expect the full  as input and to return the entire, updated object inside a  JSON wrapper.
+
+- ****
+  - **Importance:** New directory to store the static, versioned knowledge base text files, separating them from application code.
+  - **Changes:** Created and populated with  and .
 </code_architecture>
 
 <pending_tasks>
-- **Primary Task**: Implement the architectural refactor for Knowledge Base integration.
-  - **Sub-Task 1**: Create the  directory and save the two provided  files with versioning.
-  - **Sub-Task 2**: Modify  to load these files into memory at the start of the process.
-  - **Sub-Task 3**: Modify  and agent prompts to accept and use the KB as a separate, lower-priority context.
-- **On Hold**: Fully implement the  refactor pending the user providing the detailed input/output JSON specifications for each agent (E1-E9, N0-N8).
+- **Primary Task:** Complete and validate the final end-to-end test for the fully refactored E1-E9 training agent chain.
+- **Next Major Feature:** Implement the refactor for the Nutrition agents (N0-N8), applying the same  architecture.
+- **Technical Debt:** Improve the logic for detecting excessive training volume in the E8 (Auditor) agent, which was noted as a known limitation.
 </pending_tasks>
 
 <current_work>
-The immediate work is focused on implementing the user-approved architecture for integrating global knowledge bases (KBs). The previous discussion clarified a critical architectural point: the KBs are **global, static, read-only references** and must be handled separately from the **dynamic, client-specific **.
+The project is at the final validation stage of a major architectural refactor for the training agent chain (E1-E9). The core goal was to transition from isolated agents to a unified system where all agents operate on a single, shared  object.
 
-The agreed-upon plan is:
-1.  **Storage**: Create a new directory  and store the user-provided  and  as versioned files (e.g., ).
-2.  **Loading**: The  will load these files from the disk into memory **once** when a plan generation is initiated.
-3.  **Passing Context**: For each agent call, the orchestrator will pass two separate pieces of context:
-    *   The  object (containing only client-specific data).
-    *   The relevant KB string ( for E-agents,  for N-agents).
-4.  **Prompting**: Prompts will be explicitly engineered to instruct the LLM that the  has absolute priority and the KB is merely a reference guide.
+This multi-stage refactor involved:
+1.  Defining the  structure using Pydantic models.
+2.  Rewriting the  to manage the new state flow and enforce data contracts.
+3.  Refactoring the code of all 9 training agents.
 
-The work is at the very beginning of this implementation phase. The plan is confirmed, and the next step is to start writing the code to create the directory and modify the orchestrator.
+A critical issue was discovered during the first end-to-end test: while the Python code was updated, the agents' system prompts were not, causing them to return data in an old, incompatible format.
+
+The most recent work was a comprehensive effort to fix this:
+1.  **All 9 agent prompts** were meticulously updated to explicitly instruct the LLM to expect and return the entire state within a  JSON structure.
+2.  The JSON parsing logic in  was made more robust to handle markdown wrappers (json...) that the LLM sometimes adds.
+
+Immediately before this summary, a full end-to-end test script, , was launched to run in the background. This script will execute the entire E1→E9 chain to produce the final artifacts requested by the user for validation.
 </current_work>
 
 <optional_next_step>
-Proceed with Step 1 of the implementation plan: Create the  directory and save the versioned KB files.
+Monitor the background execution of the E2E test. Once complete, present the generated artifacts ( and ) to the user for final review and approval of the training agent refactor.
 </optional_next_step>
