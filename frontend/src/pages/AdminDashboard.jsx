@@ -57,6 +57,7 @@ import ExternalClientsCRM from '../components/ExternalClientsCRM';
 import TemplatesManager from '../components/TemplatesManager';
 import ClientsAtRisk from '../components/ClientsAtRisk';
 import GoogleCalendarManager from '../components/GoogleCalendarManager';
+import GenerationProgressModal from '../components/GenerationProgressModal';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
