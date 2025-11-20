@@ -197,3 +197,50 @@
 2025-11-20 15:19:42,728 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['menu_plan', 'profile']
 2025-11-20 15:19:42,729 - edn360.orchestrator - INFO -     ℹ️ N7 no recibe KB (optimización de contexto)
 2025-11-20 15:19:42,729 - edn360.agents.base_agent - INFO - 🤖 N7 (Coach de Adherencia) - Iniciando ejecución
+2025-11-20 15:25:52,398 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 15:25:52,399 - edn360.agents.base_agent - INFO - 📝 N7 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 15:25:52,399 - edn360.agents.base_agent - INFO - ✅ N7 completado en 369.67s
+2025-11-20 15:25:52,399 - edn360.orchestrator - INFO -   ✅ N7 actualizó nutrition.* correctamente
+2025-11-20 15:25:52,399 - edn360.orchestrator - INFO -     🔍 Validando contrato de N7...
+2025-11-20 15:25:52,399 - edn360.orchestrator - INFO -   ✅ N7 completado y validado
+2025-11-20 15:25:52,399 - edn360.orchestrator - INFO -   ▶️ Ejecutando N8 (Watchdog de Seguridad Nutricional)...
+2025-11-20 15:25:52,400 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['menu_plan', 'macro_design', 'profile']
+2025-11-20 15:25:52,400 - edn360.orchestrator - INFO -     ℹ️ N8 no recibe KB (optimización de contexto)
+2025-11-20 15:25:52,400 - edn360.agents.base_agent - INFO - 🤖 N8 (Watchdog de Seguridad Nutricional) - Iniciando ejecución
+2025-11-20 15:33:23,643 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 15:33:23,657 - edn360.agents.base_agent - INFO - 📝 N8 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 15:33:23,657 - edn360.agents.base_agent - INFO - ✅ N8 completado en 451.26s
+2025-11-20 15:33:23,657 - edn360.orchestrator - INFO -   ✅ N8 actualizó nutrition.* correctamente
+2025-11-20 15:33:23,657 - edn360.orchestrator - INFO -     🔍 Validando contrato de N8...
+2025-11-20 15:33:23,658 - edn360.orchestrator - ERROR -   ❌ N8 violó su contrato:
+2025-11-20 15:33:23,658 - edn360.orchestrator - ERROR -      - N8 did not fill required field: nutrition.audit
+2025-11-20 15:33:23,658 - edn360.orchestrator - ERROR -      - N8 illegally modified field: nutrition.menu_plan (belongs to another agent)
+2025-11-20 15:33:23,658 - edn360.orchestrator - ERROR -      - N8 illegally modified field: nutrition.adherence_report (belongs to another agent)
+2025-11-20 15:33:23,658 - __main__ - ERROR - ❌ Flujo falló: N8 contract violation: ['N8 did not fill required field: nutrition.audit', 'N8 illegally modified field: nutrition.menu_plan (belongs to another agent)', 'N8 illegally modified field: nutrition.adherence_report (belongs to another agent)']
+2025-11-20 15:33:23,658 - __main__ - ERROR -    Revisa los logs arriba para identificar en qué agente falló
