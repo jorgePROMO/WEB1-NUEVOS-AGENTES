@@ -123,6 +123,77 @@ class TrainingData(BaseModel):
 
 
 # ============================================================================
+# NUTRITION - Datos procesados por agentes N0-N8
+# ============================================================================
+
+class NutritionData(BaseModel):
+    """
+    Datos de nutrición procesados por la cadena de agentes N0-N8.
+    Cada campo es responsabilidad de un agente específico.
+    
+    REGLAS:
+    - Cada agente modifica SOLO su campo asignado
+    - Los agentes NO pueden borrar ni modificar campos de otros agentes
+    - El objeto completo viaja de N0 → N1 → ... → N8
+    - Usa training.bridge_for_nutrition como nexo con entrenamiento
+    """
+    
+    # N0 - Analista de Triaje Nutricional
+    profile: Optional[Any] = Field(
+        None,
+        description="Perfil nutricional del cliente generado por N0 (Analista de Triaje)"
+    )
+    
+    # N1 - Analista Metabólico
+    metabolism: Optional[Any] = Field(
+        None,
+        description="Análisis metabólico generado por N1 (Analista Metabólico)"
+    )
+    
+    # N2 - Selector de Estrategia Energética
+    energy_strategy: Optional[Any] = Field(
+        None,
+        description="Estrategia energética seleccionada por N2 (Selector de Estrategia)"
+    )
+    
+    # N3 - Generador de Plantilla de Macros
+    macro_design: Optional[Any] = Field(
+        None,
+        description="Diseño de macronutrientes generado por N3 (Generador de Plantilla)"
+    )
+    
+    # N4 - Sincronizador A-M-B
+    weekly_structure: Optional[Any] = Field(
+        None,
+        description="Estructura semanal sincronizada por N4 (Sincronizador A-M-B)"
+    )
+    
+    # N5 - Distribuidor de Timing
+    timing_plan: Optional[Any] = Field(
+        None,
+        description="Plan de timing de comidas generado por N5 (Distribuidor de Timing)"
+    )
+    
+    # N6 - Generador de Menú
+    menu_plan: Optional[Any] = Field(
+        None,
+        description="Menú detallado generado por N6 (Generador de Menú)"
+    )
+    
+    # N7 - Coach de Adherencia
+    adherence_report: Optional[Any] = Field(
+        None,
+        description="Reporte de adherencia y consejos por N7 (Coach de Adherencia)"
+    )
+    
+    # N8 - Watchdog de Seguridad Nutricional
+    audit: Optional[Any] = Field(
+        None,
+        description="Auditoría de seguridad nutricional por N8 (Watchdog)"
+    )
+
+
+# ============================================================================
 # CLIENT_CONTEXT - Objeto principal que viaja entre agentes
 # ============================================================================
 
