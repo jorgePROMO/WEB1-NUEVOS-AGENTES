@@ -105,7 +105,7 @@ def get_new_process_output(config):
             return output
             
         except Exception as e:
-            raise ValueError(f"Error procesando output de {config["agent_id"]}: {{str(e)}}")'''
+            raise ValueError(f"Error procesando output de {config['agent_id']}: {{str(e)}}")'''
 
 
 def refactor_agent_file(filepath, config):
