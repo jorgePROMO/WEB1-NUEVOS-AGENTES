@@ -173,3 +173,26 @@
 2025-11-20 13:45:39,579 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['safe_sessions', 'mesocycle']
 2025-11-20 13:45:39,580 - edn360.orchestrator - INFO -     ℹ️ E7 no recibe KB (optimización de contexto)
 2025-11-20 13:45:39,580 - edn360.agents.base_agent - INFO - 🤖 E7 (Analista de Carga Interna) - Iniciando ejecución
+2025-11-20 13:50:52,071 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-20 13:50:52,144 - edn360.agents.base_agent - INFO - 📝 E7 respuesta (primeros 500 chars): ```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "client_juan_perez_e2e",
+      "snapshot_id": "snapshot_client_juan_perez_e2e_1_f5e4abe8",
+      "version": 1,
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {
+      "cuestionario_inicial": "{\n  \"client_id\": \"client_juan_perez_e2e\",\n  \"version\": 1,\n  \"timestamp\": \"2025-11-20T13:37:00.955160\",\n  \"nombre\": \"Juan Pérez García\",\n  \"ed
+2025-11-20 13:50:52,145 - edn360.agents.base_agent - INFO - ✅ E7 completado en 312.57s
+2025-11-20 13:50:52,145 - edn360.orchestrator - INFO -   ✅ E7 devolvió client_context actualizado
+2025-11-20 13:50:52,145 - edn360.orchestrator - INFO -     🔍 Validando contrato de E7...
+2025-11-20 13:50:52,145 - edn360.orchestrator - INFO -   ✅ E7 completado y validado
+2025-11-20 13:50:52,145 - edn360.orchestrator - INFO -   ▶️ Ejecutando E8 (Auditor Técnico)...
+2025-11-20 13:50:52,146 - edn360.orchestrator - INFO -     🔍 Validando inputs requeridos: ['safe_sessions', 'mesocycle', 'capacity', 'constraints']
+2025-11-20 13:50:52,146 - edn360.orchestrator - INFO -     ℹ️ E8 no recibe KB (optimización de contexto)
+2025-11-20 13:50:52,146 - edn360.agents.base_agent - INFO - 🤖 E8 (Auditor Técnico) - Iniciando ejecución
