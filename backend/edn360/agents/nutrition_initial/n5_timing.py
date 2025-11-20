@@ -1,230 +1,138 @@
-"""N5 - Timing & Distribution"""
+"""N5 - Distribuidor de Timing
+
+ARQUITECTURA NUEVA (Fase N3):
+- Recibe client_context completo
+- Lee de: nutrition.weekly_structure, nutrition.macro_design, nutrition.profile
+- Llena SOLO: nutrition.timing_plan
+- Devuelve client_context completo actualizado
+"""
+
 from typing import Dict, Any
 from ..base_agent import BaseAgent
-import logging
 
-logger = logging.getLogger(__name__)
 
 class N5TimingDistributor(BaseAgent):
+    """N5 - Distribuidor de Timing"""
+    
     def __init__(self):
-        super().__init__("N5", "Timing Distributor")
+        super().__init__("N5", "Distribuidor de Timing")
+    
     def get_system_prompt(self) -> str:
-        return '''# N5 — TIMING & DISTRIBUCIÓN DE COMIDAS
+        return '''
+# 🧠 N5 — DISTRIBUIDOR DE TIMING
 
-Tu tarea: Crear distribución de comidas con horarios y macros ESPECÍFICOS adaptados al horario de entrenamiento del cliente.
+## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
 
-═══ PASO 1: LEER CUESTIONARIO DEL CLIENTE ═══
+### TU CONTRATO:
+1. **RECIBES**: `client_context` completo con:
+   - `nutrition.weekly_structure`: Estructura semanal de N4
+   - `nutrition.macro_design`: Macros por tipo de día de N3
+   - `nutrition.profile`: Horarios habituales del cliente de N0
 
-Busca en el input estos campos clave:
-• "horario_entrenamiento" o "horario_entreno": CUANDO entrena (ej: "mañana", "8:00", "tarde")
-• "numero_comidas": Cuántas comidas hace (3, 4, 5)
-• "horario_desayuno", "horario_comida", "horario_cena": Sus horarios habituales del cliente
-• Busca también: "desayuno", "comida", "cena" con valores de hora
+2. **TU RESPONSABILIDAD**: Llenar SOLO este campo:
+   - `nutrition.timing_plan`: Distribución de comidas y timing de macros
 
-**CRÍTICO - LEER HORARIOS DEL CLIENTE:**
-Si el input contiene horarios específicos (ej: "horario_desayuno": "07:00"), ÚSALOS tal cual.
-NO inventes horarios si el cliente ya especificó los suyos.
+3. **DEBES DEVOLVER**: El `client_context` COMPLETO con tu campo lleno
 
-═══ PASO 2: DETERMINAR HORARIO DE ENTRENO ═══
+### REGLA CRÍTICA:
+- NO modifiques campos de otros agentes
+- NO toques training.*
+- SOLO llena nutrition.timing_plan
 
-Si dice "mañana" o hora < 11:00 → ENTRENA MAÑANA
-Si dice "mediodía" o 11:00-15:00 → ENTRENA MEDIODÍA  
-Si dice "tarde"/"noche" o > 15:00 → ENTRENA TARDE
+---
 
-═══ PASO 3: CREAR DISTRIBUCIONES SEGÚN HORARIO ═══
+## 🎯 Misión
 
-**ENTRENA MAÑANA** (Ejemplo: entrena 8:00-9:00):
+Eres el ARQUITECTO DEL TIMING. Defines:
 
-PASO 3A: Identificar horarios del cliente del cuestionario:
-- horario_desayuno (ej: "07:00")
-- horario_comida (ej: "14:00")  
-- horario_cena (ej: "21:00")
+1. **Número de comidas** por día (típicamente 4-6)
+2. **Horarios** de cada comida
+3. **Distribución de macros** en cada comida
+4. **Timing peri-entreno**: Pre, intra, post entreno
+5. **Comidas específicas**: Desayuno, almuerzo, merienda, cena, snacks
 
-PASO 3B: Calcular GAPS entre comidas:
-- Gap1: Post-entreno (09:30) → Comida (14:00) = 4.5 horas
-- Gap2: Comida (14:00) → Cena (21:00) = 7 horas
+---
 
-REGLA DE GAPS: Si hay un gap > 4 horas, AÑADIR comida intermedia (media mañana o merienda)
+## 📤 Output (client_context actualizado)
 
-Días A/M (con entreno) - EJEMPLO con gaps corregidos:
-1. Pre-Entreno: 1-1.5h antes del entreno (07:00) - 18% kcal
-   {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1h antes del entreno", "proteinas_g": XX, "carbohidratos_g": XX, "grasas_g": XX}
-2. Post-Entreno: 30-60min después (09:30) - 25% kcal
-   {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después del entreno", "proteinas_g": XX, "carbohidratos_g": XX, "grasas_g": XX}
-3. Media Mañana: mitad del gap (11:45) - 12% kcal (SOLO si gap > 4h)
-   {"nombre": "Media Mañana", "hora": "11:45", "proteinas_g": XX, "carbohidratos_g": XX, "grasas_g": XX}
-4. Comida: horario habitual cliente (14:00) - 25% kcal
-5. Merienda: mitad del gap (17:30) - 10% kcal (SOLO si gap > 4h)
-   {"nombre": "Merienda", "hora": "17:30", "proteinas_g": XX, "carbohidratos_g": XX, "grasas_g": XX}
-6. Cena: horario habitual (21:00) - 20% kcal
+**CRÍTICO - FORMATO DE RESPUESTA OBLIGATORIO**:
 
-Días B (descanso) - CON comidas intermedias si hay gaps:
-1. Desayuno: hora habitual (07:00) - 25% kcal
-2. Media Mañana: si gap > 4h (10:30) - 15% kcal
-3. Comida: hora habitual (14:00) - 30% kcal
-4. Merienda: si gap > 4h (17:30) - 15% kcal
-5. Cena: hora habitual (21:00) - 25% kcal
-
-**ENTRENA TARDE** (Ejemplo: entrena 18:00-19:00):
-Días A/M (con entreno):
-1. Desayuno: hora habitual - 25% kcal
-2. Comida: hora habitual - 30% kcal
-3. Pre-entreno: 1.5-2h antes (ej: 16:00) - 20% kcal
-   {"nombre": "Pre-Entreno", "hora": "16:00", "timing_entreno": "2h antes del entreno", ...}
-4. Post-entreno: inmediato (ej: 19:15) - 25% kcal
-   {"nombre": "Post-Entreno", "hora": "19:15", "timing_entreno": "Inmediato post-entreno", ...}
-
-Días B:
-(sin pre/post entreno, distribuir en comidas normales)
-
-═══ PASO 4: CALCULAR MACROS POR COMIDA ═══
-
-**CRÍTICO: Lee los macros ESPECÍFICOS de N2 para cada tipo de día**
-
-N2 genera sets SOLO para los tipos de día que existen en el plan de entrenamiento:
-
-**Si N2 tiene macros_dia_A, macros_dia_M, macros_dia_B:**
-→ Generar distribución para los 3
-
-**Si N2 tiene SOLO macros_dia_A y macros_dia_B (sin M):**
-→ Generar distribución SOLO para A y B
-→ NO incluir distribucion_dia_M en tu output
-
-**REGLA:** Tu output debe tener distribuciones SOLO para los días presentes en N2
-
-**Días A (usar macros_dia_A de N2):**
-Distribuir optimizando rendimiento y digestión:
-
-• Pre-entreno: 17% kcal → BAJO en grasas (<8g), medio carbos, proteína moderada
-• Post-entreno: 26% kcal → BAJO en grasas (<10g), ALTO carbos, ALTA proteína
-• Media Mañana: 12% kcal → Snack ligero
-• Comida: 24% kcal → Balanceado
-• Merienda: 9% kcal → Snack ligero
-• Cena: 12% kcal → ALTA proteína (25-30g), bajo carbos, grasas saludables
-
-TOTAL: 100% = macros_dia_A completos
-
-**AJUSTE FINO DE GRASAS:**
-- Pre/Post: Minimizar grasas (digestión rápida)
-- Media mañana, Comida, Merienda, Cena: Compensar grasas totales
-- Priorizar grasas en comidas alejadas del entreno
-
-**Días M (usar macros_dia_M de N2):**
-Misma distribución de % pero aplicado a macros_dia_M (que tiene menos carbos que A)
-
-**Días B (usar macros_dia_B de N2):**
-Distribuir sin pre/post entreno:
-• Desayuno: 25% kcal
-• Media Mañana: 15% kcal
-• Comida: 30% kcal
-• Merienda: 15% kcal
-• Cena: 15% kcal
-
-TOTAL: 100% = macros_dia_B completos
-
-**FÓRMULA DE CÁLCULO:**
-
-Para cada comida:
-1. Calcular kcal de la comida = kcal_dia * porcentaje
-2. Distribuir macros proporcionalmente:
-   - Proteínas: proteinas_dia * porcentaje
-   - Carbohidratos: carbohidratos_dia * porcentaje
-   - Grasas: grasas_dia * porcentaje
-
-Ejemplo Día A (2350 kcal, 187p, 247c, 68g):
-Pre-entreno (18%):
-- kcal: 2350 * 0.18 = 423 kcal
-- Proteínas: 187 * 0.18 = 34g
-- Carbohidratos: 247 * 0.18 = 44g
-- Grasas: 68 * 0.18 = 12g
-
-**VALIDACIÓN CRÍTICA:**
-✅ Suma de todas las comidas Día A = macros_dia_A exactos
-✅ Suma de todas las comidas Día M = macros_dia_M exactos
-✅ Suma de todas las comidas Día B = macros_dia_B exactos
-
-═══ PASO 5: ESPECIFICAR TIMING EXPLÍCITO ═══
-
-CADA comida pre/post debe incluir:
-"timing_entreno": "1.5 horas antes del entreno" o "30 minutos después del entreno"
-
-═══ FORMATO JSON OBLIGATORIO ═══
-
+```json
 {
-  "status": "ok",
-  "horario_entrenamiento": "mañana",
-  "hora_entreno_detectada": "08:00",
-  "numero_comidas_base": 6,
-  
-  "distribucion_dia_A": {
-    "tipo": "entreno_intenso",
-    "kcal_total": 2350,
-    "numero_comidas": 6,
-    "comidas": [
-      {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1 hora antes", "proteinas_g": 34, "carbohidratos_g": 44, "grasas_g": 12},
-      {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después", "proteinas_g": 47, "carbohidratos_g": 62, "grasas_g": 17},
-      {"nombre": "Media Mañana", "hora": "11:45", "proteinas_g": 22, "carbohidratos_g": 30, "grasas_g": 8},
-      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 47, "carbohidratos_g": 62, "grasas_g": 17},
-      {"nombre": "Merienda", "hora": "17:30", "proteinas_g": 19, "carbohidratos_g": 25, "grasas_g": 7},
-      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 19, "carbohidratos_g": 25, "grasas_g": 7}
-    ]
-  },
-  
-  "distribucion_dia_M": {
-    "tipo": "entreno_moderado",
-    "kcal_total": 2173,
-    "numero_comidas": 6,
-    "comidas": [
-      {"nombre": "Pre-Entreno", "hora": "07:00", "timing_entreno": "1 hora antes", "proteinas_g": 34, "carbohidratos_g": 37, "grasas_g": 12},
-      {"nombre": "Post-Entreno", "hora": "09:30", "timing_entreno": "30min después", "proteinas_g": 47, "carbohidratos_g": 51, "grasas_g": 17},
-      {"nombre": "Media Mañana", "hora": "11:45", "proteinas_g": 22, "carbohidratos_g": 24, "grasas_g": 8},
-      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 47, "carbohidratos_g": 51, "grasas_g": 17},
-      {"nombre": "Merienda", "hora": "17:30", "proteinas_g": 19, "carbohidratos_g": 20, "grasas_g": 7},
-      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 19, "carbohidratos_g": 20, "grasas_g": 7}
-    ]
-  },
-  
-  "distribucion_dia_B": {
-    "tipo": "descanso",
-    "kcal_total": 1997,
-    "numero_comidas": 5,
-    "comidas": [
-      {"nombre": "Desayuno", "hora": "08:00", "proteinas_g": 47, "carbohidratos_g": 40, "grasas_g": 17},
-      {"nombre": "Media Mañana", "hora": "11:00", "proteinas_g": 28, "carbohidratos_g": 24, "grasas_g": 10},
-      {"nombre": "Comida", "hora": "14:00", "proteinas_g": 56, "carbohidratos_g": 48, "grasas_g": 20},
-      {"nombre": "Merienda", "hora": "17:30", "proteinas_g": 28, "carbohidratos_g": 24, "grasas_g": 10},
-      {"nombre": "Cena", "hora": "21:00", "proteinas_g": 28, "carbohidratos_g": 24, "grasas_g": 11}
-    ]
+  "client_context": {
+    "meta": { ... },
+    "raw_inputs": { ... },
+    "training": { ... },
+    "nutrition": {
+      "profile": { ... },
+      "metabolism": { ... },
+      "energy_strategy": { ... },
+      "macro_design": { ... },
+      "weekly_structure": { ... },
+      "timing_plan": {
+        "comidas_por_dia": 5,
+        "distribucion_dias_A": {
+          "desayuno": {
+            "hora": "07:00",
+            "proteina_g": 35,
+            "grasas_g": 15,
+            "carbos_g": 50,
+            "calorias": 465
+          },
+          "pre_entreno": {
+            "hora": "17:00",
+            "proteina_g": 30,
+            "grasas_g": 5,
+            "carbos_g": 60,
+            "calorias": 385
+          },
+          "post_entreno": {
+            "hora": "19:30",
+            "proteina_g": 40,
+            "grasas_g": 10,
+            "carbos_g": 80,
+            "calorias": 530
+          }
+        },
+        "distribucion_dias_M": { ... },
+        "distribucion_dias_B": { ... }
+      },
+      "menu_plan": null,
+      "adherence_report": null,
+      "audit": null
+    }
   }
 }
+```
 
-**VERIFICACIÓN:**
-Día A: 34+47+22+47+19+19 = 187g prot ✅ | 44+62+30+62+25+25 = 248g carbos ✅ | 12+17+8+17+7+7 = 68g grasas ✅
-Día M: 34+47+22+47+19+19 = 187g prot ✅ | 37+51+24+51+20+20 = 203g carbos ✅ | 12+17+8+17+7+7 = 68g grasas ✅
-Día B: 47+28+56+28+28 = 187g prot ✅ | 40+24+48+24+24 = 160g carbos ✅ | 17+10+20+10+11 = 68g grasas ✅
+**FORMATO OBLIGATORIO**:
+- Tu respuesta DEBE comenzar con `{"client_context": {`
+- SIEMPRE incluye todos los campos del client_context
 
-CRÍTICO: 
-✅ SIEMPRE incluir Pre-Entreno y Post-Entreno en días A/M
-✅ SIEMPRE calcular macros específicos (no "N/A")
-✅ SIEMPRE incluir "timing_entreno" en pre/post
-✅ Horarios basados en cuestionario del cliente'''
+Procesa el client_context y devuelve el objeto completo con nutrition.timing_plan lleno.'''
+    
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        """Valida que el input contenga datos de horario de entrenamiento"""
-        if not input_data or len(input_data) == 0:
+        if "nutrition" not in input_data:
             return False
         
-        # Verificar que tenga al menos uno de estos campos de horario
-        has_training_schedule = any([
-            "horario_entrenamiento" in input_data,
-            "horario_preferido" in input_data,
-            "hora_entreno" in input_data,
-            "entrena_manana_tarde" in input_data
-        ])
-        
-        if not has_training_schedule:
-            logger.warning(f"⚠️ N5: Input no contiene información de horario de entrenamiento")
-        
-        # Aún así retornar True para no bloquear (usar defaults)
-        return True
+        nutrition = input_data["nutrition"]
+        return (nutrition.get("weekly_structure") is not None and
+                nutrition.get("macro_design") is not None)
+    
     def process_output(self, raw_output: str) -> Dict[str, Any]:
-        return self._extract_json_from_response(raw_output)
+        try:
+            output = self._extract_json_from_response(raw_output)
+            
+            if "client_context" not in output:
+                raise ValueError("Output no contiene client_context")
+            
+            client_context = output["client_context"]
+            nutrition = client_context.get("nutrition", {})
+            
+            if nutrition.get("timing_plan") is None:
+                raise ValueError("N5 no llenó nutrition.timing_plan")
+            
+            return output
+            
+        except Exception as e:
+            raise ValueError(f"Error procesando output de N5: {e}")
