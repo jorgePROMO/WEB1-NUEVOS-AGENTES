@@ -151,6 +151,79 @@ class EDN360Orchestrator:
                 "nutrition": ""
             }
     
+    async def execute_training_pipeline(
+        self,
+        questionnaire_data: Dict[str, Any],
+        client_id: str,
+        version: int = 1
+    ) -> Dict[str, Any]:
+        """
+        Ejecuta SOLO el pipeline de entrenamiento (E1-E9) de forma independiente.
+        
+        NUEVA ARQUITECTURA (Fase 2 completada):
+        - Inicializa client_context desde cuestionario
+        - Ejecuta E1 → E2 → E3 → E4 → E5 → E6 → E7 → E8 → E9
+        - Devuelve client_context con training.* completo
+        - Puede usarse de forma independiente o como input para nutrición
+        
+        Args:
+            questionnaire_data: Datos del cuestionario del cliente
+            client_id: ID único del cliente
+            version: Número de versión del plan (default: 1)
+            
+        Returns:
+            Dict con:
+                - success: bool
+                - client_context: ClientContext con training completo
+                - executions: lista de ejecuciones de cada agente
+        """
+        logger.info(f"🏋️ EJECUTANDO PIPELINE DE ENTRENAMIENTO INDEPENDIENTE")
+        logger.info(f"   Cliente: {client_id}, Versión: {version}")
+        
+        # Inicializar client_context
+        client_context = initialize_client_context(
+            client_id=client_id,
+            version=version,
+            cuestionario_data=questionnaire_data,
+            previous_training=None,
+            is_followup=False
+        )
+        
+        # Ejecutar pipeline de entrenamiento
+        result = await self._execute_training_initial(client_context, questionnaire_data)
+        
+        return result
+    
+    async def execute_nutrition_pipeline(
+        self,
+        client_context: ClientContext
+    ) -> Dict[str, Any]:
+        """
+        Ejecuta SOLO el pipeline de nutrición (N0-N8) de forma independiente.
+        
+        NUEVA ARQUITECTURA (Fase N2):
+        - Recibe client_context con training.* ya completo
+        - Ejecuta N0 → N1 → N2 → N3 → N4 → N5 → N6 → N7 → N8
+        - Devuelve client_context con nutrition.* completo
+        - Puede ejecutarse sobre cualquier client_context con training completo
+        
+        Args:
+            client_context: ClientContext con training completo (salida de E1-E9)
+            
+        Returns:
+            Dict con:
+                - success: bool
+                - client_context: ClientContext con nutrition completo
+                - executions: lista de ejecuciones de cada agente
+        """
+        logger.info(f"🥗 EJECUTANDO PIPELINE DE NUTRICIÓN INDEPENDIENTE")
+        logger.info(f"   Client: {client_context.meta.client_id}, Snapshot: {client_context.meta.snapshot_id}")
+        
+        # Ejecutar pipeline de nutrición
+        result = await self._execute_nutrition_initial(client_context)
+        
+        return result
+    
     async def generate_initial_plan(
         self,
         questionnaire_data: Dict[str, Any],
@@ -158,7 +231,12 @@ class EDN360Orchestrator:
         plan_id: str
     ) -> Dict[str, Any]:
         """
-        Genera un plan inicial completo (Entrenamiento + Nutrición)
+        Genera un plan inicial completo (Entrenamiento + Nutrición) en cadena.
+        
+        NUEVA ARQUITECTURA:
+        - Ejecuta primero training pipeline (E1-E9)
+        - Luego ejecuta nutrition pipeline (N0-N8) sobre el resultado
+        - Devuelve client_context completo con training.* y nutrition.*
         
         Args:
             questionnaire_data: Datos del cuestionario inicial
