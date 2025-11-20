@@ -10900,6 +10900,9 @@ async def job_timeout_watchdog():
     Revisa jobs en "running" por más de 30 minutos y los marca como failed.
     Se ejecuta cada 5 minutos.
     """
+    # Delay inicial para permitir que el servidor arranque completamente
+    await asyncio.sleep(10)
+    
     timeout_minutes = 30
     
     while True:
@@ -10929,7 +10932,10 @@ async def job_timeout_watchdog():
                     }
                 )
                 
-                await add_job_log(job_id, "timeout", f"Job marcado como failed por timeout ({timeout_minutes} min)")
+                try:
+                    await add_job_log(job_id, "timeout", f"Job marcado como failed por timeout ({timeout_minutes} min)")
+                except:
+                    pass  # Si falla el log, no bloquear
             
             if stuck_jobs:
                 logger.info(f"✅ Watchdog: {len(stuck_jobs)} job(s) marcado(s) como failed por timeout")
