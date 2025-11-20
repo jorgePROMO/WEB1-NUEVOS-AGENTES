@@ -394,10 +394,23 @@ RIR_objetivo = RIR_previo + 1  (más conservador)
       "frecuencia_evaluacion": "semanal"
     },
     "zonas_monitorizacion": ["lumbar"],
-    "clearance_medico_requerido": false
+        "clearance_medico_requerido": false
+      }
+    },
+    // Mantener resto de campos como estaban:
+    "adaptation": null,
+    "mesocycle": null,
+    "sessions": null,
+    "safe_sessions": null,
+    "formatted_plan": null,
+    "audit": null,
+    "bridge_for_nutrition": null
   }
 }
+}
 ```
+
+**CRÍTICO**: Devuelve SIEMPRE el objeto completo `client_context`, no solo `capacity`.
 
 ---
 
