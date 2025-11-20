@@ -10399,6 +10399,474 @@ Analiza la solicitud y genera el plan modificado o responde la pregunta."""
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
 
+# ============================================================================
+# GENERATION JOBS - Sistema Asíncrono de Generación de Planes
+# ============================================================================
+
+async def process_generation_job(job_id: str):
+    """
+    Procesa un job de generación en background.
+    Esta función ejecuta el orquestador E.D.N.360 sin modificarlo.
+    """
+    try:
+        # Cargar el job
+        job = await db.generation_jobs.find_one({"_id": job_id})
+        if not job:
+            logger.error(f"❌ Job {job_id} no encontrado")
+            return
+        
+        logger.info(f"🚀 Iniciando procesamiento de job {job_id} (type: {job['type']})")
+        
+        # Cambiar status a "running"
+        await db.generation_jobs.update_one(
+            {"_id": job_id},
+            {
+                "$set": {
+                    "status": "running",
+                    "started_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        # Obtener datos necesarios
+        user_id = job["user_id"]
+        submission_id = job["submission_id"]
+        job_type = job["type"]
+        
+        # Obtener usuario
+        user = await db.users.find_one({"_id": user_id})
+        if not user:
+            raise Exception(f"Usuario {user_id} no encontrado")
+        
+        # Obtener cuestionario
+        submission = await db.nutrition_questionnaire_submissions.find_one({"_id": submission_id})
+        is_followup = False
+        context_data = None
+        
+        if not submission:
+            # Buscar en follow-ups
+            submission = await db.follow_up_submissions.find_one({"_id": submission_id})
+            is_followup = True
+            
+            if not submission:
+                raise Exception(f"Cuestionario {submission_id} no encontrado")
+        
+        # Si es followup, obtener cuestionario inicial
+        if is_followup:
+            logger.info(f"📋 Generando desde follow-up, obteniendo cuestionario inicial")
+            initial_submission = await db.nutrition_questionnaire_submissions.find_one(
+                {"user_id": user_id},
+                sort=[("submitted_at", 1)]
+            )
+            
+            if not initial_submission:
+                raise Exception("No se encontró cuestionario inicial para contexto")
+            
+            questionnaire_data = initial_submission["responses"]
+            submission_serialized = _serialize_datetime_fields(submission)
+            context_data = {
+                "followup_responses": submission_serialized.get("responses", {}),
+                "ai_analysis": submission_serialized.get("ai_analysis", "")
+            }
+        else:
+            questionnaire_data = submission["responses"]
+        
+        # Adaptar cuestionario al formato E.D.N.360
+        if is_followup and context_data:
+            merged_data = questionnaire_data.copy()
+            merged_data.update(context_data.get("followup_responses", {}))
+            adapted_questionnaire = _adapt_questionnaire_for_edn360(merged_data)
+        else:
+            adapted_questionnaire = _adapt_questionnaire_for_edn360(questionnaire_data)
+        
+        # Obtener fecha actual
+        now = datetime.now(timezone.utc)
+        current_month = now.month
+        current_year = now.year
+        
+        # Importar orquestador
+        from edn360.orchestrator import EDN360Orchestrator
+        orchestrator = EDN360Orchestrator()
+        
+        result_data = {
+            "training_plan_id": None,
+            "nutrition_plan_id": None
+        }
+        
+        # EJECUTAR SEGÚN EL TIPO
+        if job_type == "training" or job_type == "full":
+            # ===== FASE TRAINING (E1-E9) =====
+            logger.info("🏋️ Fase TRAINING: Ejecutando agentes E1-E9")
+            
+            # Actualizar progreso
+            await db.generation_jobs.update_one(
+                {"_id": job_id},
+                {
+                    "$set": {
+                        "progress.phase": "training",
+                        "progress.current_agent": "E1",
+                        "progress.message": "Iniciando análisis del perfil del cliente (E1)"
+                    }
+                }
+            )
+            
+            # Obtener plan de entrenamiento previo si existe
+            previous_training_plan = None
+            if job.get("previous_training_plan_id"):
+                previous_training_plan = await db.training_plans.find_one({"_id": job["previous_training_plan_id"]})
+            
+            # Ejecutar pipeline de training
+            training_result = await orchestrator._execute_training_initial(
+                adapted_questionnaire,
+                previous_plan=previous_training_plan
+            )
+            
+            if not training_result["success"]:
+                raise Exception(f"Error en pipeline de training: {training_result.get('error', 'Error desconocido')}")
+            
+            # Actualizar progreso después de cada agente (simulación, ya que el orquestador no reporta progreso granular)
+            # En una implementación futura, el orquestador podría tener callbacks
+            for i in range(1, 10):
+                agent_name = f"E{i}"
+                completed = i if job_type == "training" else i
+                total = 9 if job_type == "training" else 18
+                percentage = int((completed / total) * 100)
+                
+                await db.generation_jobs.update_one(
+                    {"_id": job_id},
+                    {
+                        "$set": {
+                            "progress.current_agent": agent_name,
+                            "progress.completed_steps": completed,
+                            "progress.total_steps": total,
+                            "progress.percentage": percentage,
+                            "progress.message": f"Procesando agente {agent_name}"
+                        }
+                    }
+                )
+            
+            # Guardar plan de entrenamiento
+            planes_previos_count = await db.training_plans.count_documents({"user_id": user_id})
+            numero_mes = planes_previos_count + 1
+            
+            plan_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
+            plan_data_json = _format_edn360_plan_for_display(training_result["plan_data"])
+            plan_text_professional = _format_edn360_plan_as_text(
+                training_result["plan_data"], 
+                user.get("name", user.get("username", "Cliente")), 
+                numero_mes
+            )
+            
+            training_plan_doc = {
+                "_id": plan_id,
+                "user_id": user_id,
+                "month": current_month,
+                "year": current_year,
+                "source_type": "followup" if is_followup else "initial",
+                "source_id": submission_id,
+                "previous_plan_id": job.get("previous_training_plan_id"),
+                "questionnaire_data": questionnaire_data,
+                "edn360_data": training_result["plan_data"],
+                "agent_executions": training_result.get("executions", []),
+                "system_version": "edn360_v1",
+                "agent_1_output": training_result["plan_data"].get("E1", {}),
+                "agent_2_output": training_result["plan_data"].get("E2", {}),
+                "agent_3_output": training_result["plan_data"].get("E4", {}),
+                "plan_final": plan_data_json,
+                "plan_text": plan_text_professional,
+                "generated_at": now,
+                "edited": False,
+                "pdf_id": None,
+                "pdf_filename": None,
+                "sent_email": False,
+                "sent_whatsapp": False
+            }
+            
+            await db.training_plans.insert_one(training_plan_doc)
+            result_data["training_plan_id"] = plan_id
+            
+            logger.info(f"✅ Plan de entrenamiento generado: {plan_id}")
+        
+        if job_type == "nutrition" or job_type == "full":
+            # ===== FASE NUTRITION (N0-N8) =====
+            logger.info("🥗 Fase NUTRITION: Ejecutando agentes N0-N8")
+            
+            # Actualizar progreso
+            await db.generation_jobs.update_one(
+                {"_id": job_id},
+                {
+                    "$set": {
+                        "progress.phase": "nutrition",
+                        "progress.current_agent": "N0",
+                        "progress.message": "Iniciando análisis nutricional (N0)"
+                    }
+                }
+            )
+            
+            # Obtener plan de entrenamiento para sincronizar
+            training_plan_for_sync = None
+            if job_type == "full" and result_data["training_plan_id"]:
+                # Usar el plan de entrenamiento recién generado
+                training_plan_for_sync = await db.training_plans.find_one({"_id": result_data["training_plan_id"]})
+            elif job.get("training_plan_id"):
+                # Usar plan de entrenamiento especificado
+                training_plan_for_sync = await db.training_plans.find_one({"_id": job["training_plan_id"]})
+            else:
+                # Usar último plan de entrenamiento del usuario
+                training_plan_for_sync = await db.training_plans.find_one(
+                    {"user_id": user_id},
+                    sort=[("generated_at", -1)]
+                )
+            
+            if not training_plan_for_sync:
+                raise Exception("No se encontró plan de entrenamiento para sincronizar")
+            
+            # Obtener plan nutricional previo si existe
+            previous_nutrition_plan = None
+            if job.get("previous_nutrition_plan_id"):
+                previous_nutrition_plan = await db.nutrition_plans.find_one({"_id": job["previous_nutrition_plan_id"]})
+            
+            # Ejecutar pipeline de nutrition
+            nutrition_result = await orchestrator._execute_nutrition_initial(
+                adapted_questionnaire,
+                training_plan=training_plan_for_sync,
+                previous_plan=previous_nutrition_plan
+            )
+            
+            if not nutrition_result["success"]:
+                raise Exception(f"Error en pipeline de nutrition: {nutrition_result.get('error', 'Error desconocido')}")
+            
+            # Actualizar progreso después de cada agente
+            base_steps = 9 if job_type == "full" else 0
+            for i in range(9):
+                agent_name = f"N{i}"
+                completed = base_steps + i + 1
+                total = 18 if job_type == "full" else 9
+                percentage = int((completed / total) * 100)
+                
+                await db.generation_jobs.update_one(
+                    {"_id": job_id},
+                    {
+                        "$set": {
+                            "progress.current_agent": agent_name,
+                            "progress.completed_steps": completed,
+                            "progress.total_steps": total,
+                            "progress.percentage": percentage,
+                            "progress.message": f"Procesando agente {agent_name}"
+                        }
+                    }
+                )
+            
+            # Guardar plan de nutrición
+            nutrition_planes_count = await db.nutrition_plans.count_documents({"user_id": user_id})
+            numero_plan = nutrition_planes_count + 1
+            
+            nutrition_plan_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
+            plan_verificado_json = _format_edn360_nutrition_for_display(nutrition_result["plan_data"])
+            plan_text_nutrition = _format_edn360_nutrition_as_text(
+                nutrition_result["plan_data"],
+                user.get("name", user.get("username", "Cliente")),
+                numero_plan
+            )
+            
+            nutrition_plan_doc = {
+                "_id": nutrition_plan_id,
+                "user_id": user_id,
+                "month": current_month,
+                "year": current_year,
+                "questionnaire_id": submission_id,
+                "training_plan_id": training_plan_for_sync["_id"],
+                "previous_nutrition_plan_id": job.get("previous_nutrition_plan_id"),
+                "questionnaire_data": questionnaire_data,
+                "edn360_data": nutrition_result["plan_data"],
+                "agent_executions": nutrition_result.get("executions", []),
+                "system_version": "edn360_v1",
+                "plan_verificado": plan_verificado_json,
+                "plan_text": plan_text_nutrition,
+                "generated_at": now,
+                "edited": False,
+                "pdf_id": None,
+                "pdf_filename": None,
+                "sent_email": False,
+                "sent_whatsapp": False
+            }
+            
+            await db.nutrition_plans.insert_one(nutrition_plan_doc)
+            result_data["nutrition_plan_id"] = nutrition_plan_id
+            
+            # Marcar cuestionario como usado
+            if not is_followup:
+                await db.nutrition_questionnaire_submissions.update_one(
+                    {"_id": submission_id},
+                    {"$set": {"plan_generated": True}}
+                )
+            
+            logger.info(f"✅ Plan de nutrición generado: {nutrition_plan_id}")
+        
+        # ===== JOB COMPLETADO =====
+        await db.generation_jobs.update_one(
+            {"_id": job_id},
+            {
+                "$set": {
+                    "status": "completed",
+                    "progress.phase": "completed",
+                    "progress.percentage": 100,
+                    "progress.message": "Generación completada exitosamente",
+                    "result": result_data,
+                    "completed_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        
+        logger.info(f"✅ Job {job_id} completado exitosamente")
+        
+    except Exception as e:
+        logger.error(f"❌ Error procesando job {job_id}: {str(e)}")
+        
+        # Actualizar job con error
+        await db.generation_jobs.update_one(
+            {"_id": job_id},
+            {
+                "$set": {
+                    "status": "failed",
+                    "error_message": str(e),
+                    "completed_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+
+
+@api_router.post("/admin/users/{user_id}/plans/generate_async")
+async def generate_plans_async(
+    user_id: str,
+    request_data: GenerateAsyncRequest,
+    request: Request = None
+):
+    """
+    Endpoint asíncrono para generar planes E.D.N.360 sin timeout.
+    Crea un job y lo procesa en background.
+    """
+    await require_admin(request)
+    
+    try:
+        # Validar usuario
+        user = await db.users.find_one({"_id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Validar cuestionario
+        submission = await db.nutrition_questionnaire_submissions.find_one({"_id": request_data.submission_id})
+        is_followup = False
+        
+        if not submission:
+            submission = await db.follow_up_submissions.find_one({"_id": request_data.submission_id})
+            is_followup = True
+            
+            if not submission:
+                raise HTTPException(status_code=404, detail="Cuestionario no encontrado")
+        
+        if submission["user_id"] != user_id:
+            raise HTTPException(status_code=403, detail="El cuestionario no pertenece a este usuario")
+        
+        # Validar mode
+        if request_data.mode not in ["training", "nutrition", "full"]:
+            raise HTTPException(status_code=400, detail="mode debe ser 'training', 'nutrition' o 'full'")
+        
+        # Crear job_id único
+        job_id = f"job_{user_id}_{int(datetime.now(timezone.utc).timestamp() * 1000000)}"
+        
+        # Determinar total_steps según mode
+        total_steps = 9 if request_data.mode in ["training", "nutrition"] else 18
+        
+        # Crear documento de job
+        job_doc = {
+            "_id": job_id,
+            "user_id": user_id,
+            "type": request_data.mode,
+            "submission_id": request_data.submission_id,
+            "training_plan_id": request_data.training_plan_id,
+            "previous_nutrition_plan_id": request_data.previous_nutrition_plan_id,
+            "previous_training_plan_id": request_data.previous_training_plan_id,
+            "status": "pending",
+            "progress": {
+                "phase": "pending",
+                "current_agent": None,
+                "completed_steps": 0,
+                "total_steps": total_steps,
+                "percentage": 0,
+                "message": "Job creado, esperando ejecución"
+            },
+            "result": {
+                "training_plan_id": None,
+                "nutrition_plan_id": None
+            },
+            "error_message": None,
+            "created_at": datetime.now(timezone.utc),
+            "started_at": None,
+            "completed_at": None
+        }
+        
+        # Guardar job en BD
+        await db.generation_jobs.insert_one(job_doc)
+        
+        logger.info(f"✅ Job {job_id} creado para usuario {user_id} (mode: {request_data.mode})")
+        
+        # Lanzar background task
+        import asyncio
+        asyncio.create_task(process_generation_job(job_id))
+        
+        # Responder inmediatamente
+        return {
+            "success": True,
+            "job_id": job_id,
+            "status": "pending",
+            "message": "Job de generación creado. Use GET /jobs/{job_id} para consultar el estado."
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creando job de generación: {e}")
+        raise HTTPException(status_code=500, detail=f"Error creando job: {str(e)}")
+
+
+@api_router.get("/jobs/{job_id}")
+async def get_job_status(job_id: str):
+    """
+    Consulta el estado de un job de generación.
+    Endpoint público (no requiere autenticación) para simplificar polling.
+    """
+    try:
+        job = await db.generation_jobs.find_one({"_id": job_id})
+        
+        if not job:
+            raise HTTPException(status_code=404, detail="Job no encontrado")
+        
+        # Serializar datetime fields
+        job_serialized = _serialize_datetime_fields(job)
+        
+        return {
+            "job_id": job_serialized["_id"],
+            "user_id": job_serialized["user_id"],
+            "type": job_serialized["type"],
+            "status": job_serialized["status"],
+            "progress": job_serialized["progress"],
+            "result": job_serialized["result"],
+            "error_message": job_serialized.get("error_message"),
+            "created_at": job_serialized["created_at"],
+            "started_at": job_serialized.get("started_at"),
+            "completed_at": job_serialized.get("completed_at")
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error consultando job {job_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Error consultando job: {str(e)}")
+
+
+
+
 # Include the router in the main app (moved to end to include all endpoints)
 app.include_router(api_router)
 
