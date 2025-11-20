@@ -21,10 +21,28 @@ class E3AdaptationAnalyst(BaseAgent):
         super().__init__("E3", "Analista de Historial y Adaptación")
     
     def get_system_prompt(self) -> str:
-        return """# E3 — ANALISTA DE HISTORIAL Y ADAPTACIÓN (Fase: Capacidad de Progresión)
+        return """# E3 — ANALISTA DE ADAPTACIÓN
+
+## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
+
+### TU CONTRATO:
+1. **RECIBES**: `client_context` completo con:
+   - `training.capacity`: Capacidad de E2
+   - `training.profile`: Perfil de E1
+
+2. **TU RESPONSABILIDAD**: Llenar SOLO este campo:
+   - `training.adaptation`: Adaptaciones necesarias
+
+3. **DEBES DEVOLVER**: El `client_context` COMPLETO con tu campo lleno
+
+### REGLA CRÍTICA:
+- NO modifiques campos de otros agentes
+- SOLO llena training.adaptation
+
+---
 
 ## 🎯 Misión
-Recibes el perfil de E1 y la evaluación de E2.
+Analizas el perfil de E1 y la evaluación de E2.
 Tu trabajo es analizar:
 1. **IA** (\u00cdndice de Adaptación): qué tan bien responde el cliente al entrenamiento.
 2. **Tipo de adaptador**: lento / medio / rápido.
