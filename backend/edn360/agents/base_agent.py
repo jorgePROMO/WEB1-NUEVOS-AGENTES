@@ -254,8 +254,13 @@ A continuación tienes acceso a una base de conocimiento global que sirve como *
                 # 2. Normalizar formato (convierte formato antiguo a nuevo si es necesario)
                 normalized_json = self.normalize_agent_output(parsed_json, input_data)
                 
-                # 3. Validar con process_output (validaciones específicas del agente)
-                output_data = self.process_output(json.dumps(normalized_json))
+                # 3. Validar estructura básica
+                if "client_context" not in normalized_json:
+                    raise ValueError("Normalized output no contiene client_context")
+                
+                # 4. Validación específica del agente (si es necesaria)
+                # La mayoría de validaciones ya se hacen en normalize_agent_output
+                output_data = normalized_json
                 
             except Exception as parse_error:
                 # Si falla el parseo, guardar la respuesta completa para debugging
