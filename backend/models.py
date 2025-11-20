@@ -1035,3 +1035,54 @@ class ManualPaymentCreate(BaseModel):
     fecha: str
     metodo_pago: str
     notas: Optional[str] = ""
+
+
+# ============================================================================
+# GENERATION JOBS - Sistema Asíncrono de Generación de Planes
+# ============================================================================
+
+class GenerationJobProgress(BaseModel):
+    """Progreso del job de generación"""
+    phase: str  # "training" | "nutrition" | "completed"
+    current_agent: Optional[str] = None  # "E1" | "E2" | ... | "N0" | "N1" | ...
+    completed_steps: int = 0
+    total_steps: int = 18  # 9 agentes training + 9 agentes nutrition
+    percentage: int = 0
+    message: str = ""
+
+class GenerationJobResult(BaseModel):
+    """Resultado del job de generación"""
+    training_plan_id: Optional[str] = None
+    nutrition_plan_id: Optional[str] = None
+
+class GenerationJob(BaseModel):
+    """Job de generación de planes E.D.N.360"""
+    job_id: str
+    user_id: str
+    type: str  # "training" | "nutrition" | "full"
+    submission_id: str
+    training_plan_id: Optional[str] = None  # Para sincronizar con plan de entrenamiento
+    previous_nutrition_plan_id: Optional[str] = None  # Plan nutricional previo
+    previous_training_plan_id: Optional[str] = None  # Plan de entrenamiento previo
+    status: str = "pending"  # "pending" | "running" | "completed" | "failed"
+    progress: GenerationJobProgress = Field(default_factory=lambda: GenerationJobProgress(
+        phase="pending",
+        completed_steps=0,
+        total_steps=18,
+        percentage=0,
+        message="Job creado, esperando ejecución"
+    ))
+    result: GenerationJobResult = Field(default_factory=GenerationJobResult)
+    error_message: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    started_at: Optional[datetime] = None
+    completed_at: Optional[datetime] = None
+
+class GenerateAsyncRequest(BaseModel):
+    """Request para generación asíncrona"""
+    submission_id: str
+    mode: str  # "training" | "nutrition" | "full"
+    training_plan_id: Optional[str] = None
+    previous_nutrition_plan_id: Optional[str] = None
+    previous_training_plan_id: Optional[str] = None
+
