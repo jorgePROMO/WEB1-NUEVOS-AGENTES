@@ -312,9 +312,10 @@ def validate_agent_contract(
     1. Tiene los inputs requeridos antes de ejecutar
     2. Llenó sus campos asignados después de ejecutar
     3. NO modificó campos de otros agentes
+    4. Los agentes E NO tocan nutrition.*, los agentes N NO tocan training.*
     
     Args:
-        agent_id: ID del agente
+        agent_id: ID del agente (E1-E9, N0-N8)
         client_context_before: Context antes de la ejecución
         client_context_after: Context después de la ejecución
         
@@ -323,6 +324,7 @@ def validate_agent_contract(
     """
     errors = []
     requirements = get_agent_requirements(agent_id)
+    is_nutrition_agent = agent_id.startswith("N")
     
     # 1. Validar que tenía inputs requeridos
     valid_input, error_msg = validate_agent_input(
@@ -342,26 +344,45 @@ def validate_agent_contract(
     if not valid_output:
         errors.append(error_msg)
     
-    # 3. Validar que NO modificó campos de otros agentes
-    # (comparar campos que NO son suyos)
-    all_fields = list(AGENT_FIELD_MAPPING.keys())
+    # 3. Validar que NO modificó campos de otros agentes EN SU PROPIA RAMA
+    # (comparar campos que NO son suyos pero están en su misma rama: training o nutrition)
     other_agents_fields = []
     for other_agent_id, mapping in AGENT_FIELD_MAPPING.items():
-        if other_agent_id != agent_id:
+        # Solo validar agentes de la misma categoría (E con E, N con N)
+        other_is_nutrition = other_agent_id.startswith("N")
+        if other_agent_id != agent_id and other_is_nutrition == is_nutrition_agent:
             other_agents_fields.extend(mapping["fills"])
     
-    before_training = client_context_before.training
-    after_training = client_context_after.training
+    # Obtener la sección correcta según el tipo de agente
+    before_section = client_context_before.nutrition if is_nutrition_agent else client_context_before.training
+    after_section = client_context_after.nutrition if is_nutrition_agent else client_context_after.training
+    section_name = "nutrition" if is_nutrition_agent else "training"
     
     for field in other_agents_fields:
-        before_value = getattr(before_training, field, None)
-        after_value = getattr(after_training, field, None)
+        before_value = getattr(before_section, field, None)
+        after_value = getattr(after_section, field, None)
         
         # Si el campo ya existía antes y cambió, es un error
         if before_value is not None and before_value != after_value:
             errors.append(
-                f"{agent_id} illegally modified field: training.{field} "
+                f"{agent_id} illegally modified field: {section_name}.{field} "
                 f"(belongs to another agent)"
             )
+    
+    # 4. Validar que agentes E NO tocan nutrition.* y agentes N NO tocan training.*
+    if is_nutrition_agent:
+        # Agentes N no deben modificar training
+        before_training = client_context_before.training
+        after_training = client_context_after.training
+        if before_training != after_training:
+            errors.append(f"{agent_id} (nutrition agent) illegally modified training.* fields")
+    else:
+        # Agentes E no deben modificar nutrition (excepto si nutrition todavía no ha sido inicializada)
+        before_nutrition = client_context_before.nutrition
+        after_nutrition = client_context_after.nutrition
+        # Solo validar si nutrition ya tiene algún campo lleno
+        if any(getattr(before_nutrition, field, None) is not None for field in ["profile", "metabolism", "energy_strategy", "macro_design", "weekly_structure", "timing_plan", "menu_plan", "adherence_report", "audit"]):
+            if before_nutrition != after_nutrition:
+                errors.append(f"{agent_id} (training agent) illegally modified nutrition.* fields")
     
     return len(errors) == 0, errors
