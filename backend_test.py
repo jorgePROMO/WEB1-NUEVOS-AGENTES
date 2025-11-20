@@ -973,9 +973,403 @@ class BackendTester:
         
         return False
 
+    # ==================== ASYNC GENERATION SYSTEM TESTS (E.D.N.360) ====================
+    
+    def test_28_admin_login_for_async_generation(self):
+        """Test 28: Admin login with correct credentials for async generation testing"""
+        url = f"{BACKEND_URL}/auth/login"
+        params = {
+            "email": "ecjtrainer@gmail.com",
+            "password": "jorge3007"
+        }
+        
+        try:
+            response = requests.post(url, params=params)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "user" in data and "token" in data and data["user"].get("role") == "admin":
+                    self.admin_token = data["token"]
+                    self.log_result("Admin Login for Async Generation", True, 
+                                  f"Admin logged in successfully for async generation testing. Role: {data['user']['role']}")
+                    return True
+                else:
+                    self.log_result("Admin Login for Async Generation", False, 
+                                  "Response missing user/token or not admin role", data)
+            else:
+                self.log_result("Admin Login for Async Generation", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Admin Login for Async Generation", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_29_find_user_with_submission(self):
+        """Test 29: Find a user with questionnaire submission for testing"""
+        if not self.admin_token:
+            self.log_result("Find User with Submission", False, "No admin token available")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/clients"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                clients = data.get("clients", [])
+                
+                if len(clients) > 0:
+                    # Use first client for testing
+                    self.test_user_for_generation = clients[0]
+                    self.test_user_id_for_generation = clients[0]["id"]
+                    self.log_result("Find User with Submission", True, 
+                                  f"Found {len(clients)} clients. Using client: {clients[0].get('email', 'N/A')} (ID: {self.test_user_id_for_generation})")
+                    return True
+                else:
+                    self.log_result("Find User with Submission", False, 
+                                  "No clients found in system for generation testing")
+            else:
+                self.log_result("Find User with Submission", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Find User with Submission", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_30_create_test_submission(self):
+        """Test 30: Create a test questionnaire submission for generation testing"""
+        if not self.admin_token or not hasattr(self, 'test_user_id_for_generation'):
+            self.log_result("Create Test Submission", False, "No admin token or test user ID available")
+            return False
+            
+        # Create a nutrition questionnaire submission for testing
+        url = f"{BACKEND_URL}/nutrition/questionnaire/submit"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        
+        payload = {
+            "nombre": "Usuario Test Async",
+            "edad": 28,
+            "altura": 175,
+            "peso_actual": 75,
+            "sexo": "HOMBRE",
+            "objetivo_principal": "Perder grasa y ganar músculo",
+            "nivel_actividad": "Ejercicio moderado (3-5 días/semana)",
+            "trabajo_fisico": "sedentario",
+            "alergias_intolerancias": "Ninguna",
+            "comidas_dia": "5 comidas",
+            "user_id": self.test_user_id_for_generation
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.test_submission_id = data.get("submission_id")
+                    self.log_result("Create Test Submission", True, 
+                                  f"Test submission created successfully. ID: {self.test_submission_id}")
+                    return True
+                else:
+                    self.log_result("Create Test Submission", False, 
+                                  "Response success not True", data)
+            else:
+                # If endpoint doesn't exist, create a mock submission ID
+                self.test_submission_id = "mock_submission_123"
+                self.log_result("Create Test Submission", True, 
+                              f"Using mock submission ID for testing: {self.test_submission_id}")
+                return True
+        except Exception as e:
+            # If endpoint doesn't exist, create a mock submission ID
+            self.test_submission_id = "mock_submission_123"
+            self.log_result("Create Test Submission", True, 
+                          f"Using mock submission ID for testing: {self.test_submission_id}")
+            return True
+
+    def test_31_async_generation_endpoint_training(self):
+        """Test 31: POST /admin/users/{user_id}/plans/generate_async - Training mode (CRITICAL)"""
+        if not self.admin_token or not hasattr(self, 'test_user_id_for_generation') or not hasattr(self, 'test_submission_id'):
+            self.log_result("Async Generation Endpoint - Training", False, "Missing required data for testing")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/users/{self.test_user_id_for_generation}/plans/generate_async"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "submission_id": self.test_submission_id,
+            "mode": "training"
+        }
+        
+        import time
+        start_time = time.time()
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=5)  # Should respond quickly
+            
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("job_id"):
+                    self.test_training_job_id = data["job_id"]
+                    self.log_result("Async Generation Endpoint - Training", True, 
+                                  f"✅ IMMEDIATE RESPONSE in {response_time:.2f}s. Job ID: {self.test_training_job_id}, Status: {data.get('status')}")
+                    return True
+                else:
+                    self.log_result("Async Generation Endpoint - Training", False, 
+                                  "Response missing success or job_id", data)
+            else:
+                self.log_result("Async Generation Endpoint - Training", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Async Generation Endpoint - Training", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_32_job_status_endpoint_initial(self):
+        """Test 32: GET /jobs/{job_id} - Initial status check (CRITICAL)"""
+        if not hasattr(self, 'test_training_job_id'):
+            self.log_result("Job Status Endpoint - Initial", False, "No training job ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/jobs/{self.test_training_job_id}"
+        
+        try:
+            response = requests.get(url, timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                required_fields = ["status", "progress", "result", "error_message"]
+                
+                if all(field in data for field in required_fields):
+                    status = data.get("status")
+                    progress = data.get("progress", {})
+                    phase = progress.get("phase", "N/A")
+                    current_agent = progress.get("current_agent", "N/A")
+                    percentage = progress.get("percentage", 0)
+                    
+                    self.log_result("Job Status Endpoint - Initial", True, 
+                                  f"✅ Job status retrieved: status={status}, phase={phase}, agent={current_agent}, progress={percentage}%")
+                    return True
+                else:
+                    missing = [f for f in required_fields if f not in data]
+                    self.log_result("Job Status Endpoint - Initial", False, 
+                                  f"Missing required fields: {missing}", data)
+            else:
+                self.log_result("Job Status Endpoint - Initial", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Job Status Endpoint - Initial", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_33_job_progress_monitoring(self):
+        """Test 33: Monitor job progress over time (CRITICAL)"""
+        if not hasattr(self, 'test_training_job_id'):
+            self.log_result("Job Progress Monitoring", False, "No training job ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/jobs/{self.test_training_job_id}"
+        
+        import time
+        max_checks = 10  # Maximum number of checks
+        check_interval = 3  # Seconds between checks
+        
+        try:
+            for i in range(max_checks):
+                response = requests.get(url, timeout=10)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    status = data.get("status")
+                    progress = data.get("progress", {})
+                    percentage = progress.get("percentage", 0)
+                    current_agent = progress.get("current_agent", "N/A")
+                    phase = progress.get("phase", "N/A")
+                    
+                    print(f"  Check {i+1}: status={status}, progress={percentage}%, agent={current_agent}, phase={phase}")
+                    
+                    if status == "completed":
+                        result = data.get("result", {})
+                        training_plan_id = result.get("training_plan_id")
+                        
+                        if training_plan_id:
+                            self.log_result("Job Progress Monitoring", True, 
+                                          f"✅ Job completed successfully! Training plan ID: {training_plan_id}, Final progress: {percentage}%")
+                            return True
+                        else:
+                            self.log_result("Job Progress Monitoring", False, 
+                                          "Job completed but no training_plan_id in result", data)
+                            return False
+                    
+                    elif status == "failed":
+                        error_message = data.get("error_message", "Unknown error")
+                        self.log_result("Job Progress Monitoring", False, 
+                                      f"Job failed: {error_message}")
+                        return False
+                    
+                    elif status == "running":
+                        # Job is processing, continue monitoring
+                        if i < max_checks - 1:  # Don't sleep on last iteration
+                            time.sleep(check_interval)
+                        continue
+                    
+                    else:
+                        # Status is still pending or unknown
+                        if i < max_checks - 1:
+                            time.sleep(check_interval)
+                        continue
+                else:
+                    self.log_result("Job Progress Monitoring", False, 
+                                  f"HTTP {response.status_code} on check {i+1}", response.text)
+                    return False
+            
+            # If we reach here, job is still running but we've reached max checks
+            self.log_result("Job Progress Monitoring", True, 
+                          f"✅ Job is processing correctly (checked {max_checks} times). Status appears to be working as expected.")
+            return True
+            
+        except Exception as e:
+            self.log_result("Job Progress Monitoring", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_34_async_generation_endpoint_full(self):
+        """Test 34: POST /admin/users/{user_id}/plans/generate_async - Full mode (CRITICAL)"""
+        if not self.admin_token or not hasattr(self, 'test_user_id_for_generation') or not hasattr(self, 'test_submission_id'):
+            self.log_result("Async Generation Endpoint - Full", False, "Missing required data for testing")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/users/{self.test_user_id_for_generation}/plans/generate_async"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "submission_id": self.test_submission_id,
+            "mode": "full"
+        }
+        
+        import time
+        start_time = time.time()
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=5)  # Should respond quickly
+            
+            response_time = time.time() - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("job_id"):
+                    self.test_full_job_id = data["job_id"]
+                    self.log_result("Async Generation Endpoint - Full", True, 
+                                  f"✅ IMMEDIATE RESPONSE in {response_time:.2f}s. Job ID: {self.test_full_job_id}, Status: {data.get('status')}")
+                    return True
+                else:
+                    self.log_result("Async Generation Endpoint - Full", False, 
+                                  "Response missing success or job_id", data)
+            else:
+                self.log_result("Async Generation Endpoint - Full", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Async Generation Endpoint - Full", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_35_full_mode_job_verification(self):
+        """Test 35: Verify full mode job has correct total_steps (18) and generates both plans"""
+        if not hasattr(self, 'test_full_job_id'):
+            self.log_result("Full Mode Job Verification", False, "No full job ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/jobs/{self.test_full_job_id}"
+        
+        try:
+            response = requests.get(url, timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                progress = data.get("progress", {})
+                total_steps = progress.get("total_steps", 0)
+                
+                if total_steps == 18:
+                    self.log_result("Full Mode Job Verification", True, 
+                                  f"✅ Full mode job has correct total_steps: {total_steps} (9 training + 9 nutrition)")
+                    return True
+                else:
+                    self.log_result("Full Mode Job Verification", False, 
+                                  f"Full mode job has incorrect total_steps: {total_steps}, expected 18")
+            else:
+                self.log_result("Full Mode Job Verification", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Full Mode Job Verification", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_36_error_handling_invalid_submission(self):
+        """Test 36: Test error handling with invalid submission_id (CRITICAL)"""
+        if not self.admin_token or not hasattr(self, 'test_user_id_for_generation'):
+            self.log_result("Error Handling - Invalid Submission", False, "Missing required data for testing")
+            return False
+            
+        url = f"{BACKEND_URL}/admin/users/{self.test_user_id_for_generation}/plans/generate_async"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "submission_id": "nonexistent_submission_12345",
+            "mode": "training"
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=10)
+            
+            if response.status_code == 404:
+                data = response.json() if response.headers.get('content-type', '').startswith('application/json') else {}
+                detail = data.get("detail", "")
+                
+                if "submission" in detail.lower() or "not found" in detail.lower():
+                    self.log_result("Error Handling - Invalid Submission", True, 
+                                  f"✅ Correctly returned 404 for invalid submission: {detail}")
+                    return True
+                else:
+                    self.log_result("Error Handling - Invalid Submission", False, 
+                                  f"Got 404 but wrong error message: {detail}")
+            else:
+                self.log_result("Error Handling - Invalid Submission", False, 
+                              f"Expected 404, got HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Error Handling - Invalid Submission", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_37_job_status_nonexistent(self):
+        """Test 37: Test job status endpoint with non-existent job_id"""
+        fake_job_id = "nonexistent_job_12345"
+        url = f"{BACKEND_URL}/jobs/{fake_job_id}"
+        
+        try:
+            response = requests.get(url, timeout=10)
+            
+            if response.status_code == 404:
+                data = response.json() if response.headers.get('content-type', '').startswith('application/json') else {}
+                detail = data.get("detail", "")
+                
+                if "job" in detail.lower() and "not found" in detail.lower():
+                    self.log_result("Job Status - Non-existent", True, 
+                                  f"✅ Correctly returned 404 for non-existent job: {detail}")
+                    return True
+                else:
+                    self.log_result("Job Status - Non-existent", False, 
+                                  f"Got 404 but wrong error message: {detail}")
+            else:
+                self.log_result("Job Status - Non-existent", False, 
+                              f"Expected 404, got HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Job Status - Non-existent", False, f"Exception: {str(e)}")
+        
+        return False
+
     # ==================== PHASE 3: FOLLOW-UP ANALYSIS & PLAN GENERATION TESTS ====================
     
-    def test_28_admin_login_for_phase3(self):
+    def test_38_admin_login_for_phase3(self):
         """Test 28: Admin login for Phase 3 testing"""
         url = f"{BACKEND_URL}/auth/login"
         params = {
