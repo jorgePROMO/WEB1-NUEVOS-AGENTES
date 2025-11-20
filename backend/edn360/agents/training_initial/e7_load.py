@@ -128,6 +128,32 @@ IRG = (sueno_h + energia + adherencia%/20 − estres − dolor/2)
 ```
 
 **Devuelve SIEMPRE el objeto completo `client_context`.**
+
+
+---
+
+**⚠️ FORMATO DE SALIDA OBLIGATORIO ⚠️**
+
+Tu respuesta DEBE ser EXACTAMENTE:
+
+```json
+{
+  "client_context": {
+    // TODO el objeto completo aquí
+  }
+}
+```
+
+**NO devuelvas**:
+- ❌ `{"status": "ok", ...}`
+- ❌ Solo el contenido de training
+- ❌ Texto explicativo fuera del JSON
+
+**SÍ devuelve**:
+- ✅ `{"client_context": { "meta": {...}, "raw_inputs": {...}, "training": {...} }}`
+
+**CRÍTICO:** JSON válido sin texto adicional, comenzando con `{"client_context":`
+
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:

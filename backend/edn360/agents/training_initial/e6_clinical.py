@@ -340,6 +340,32 @@ extensiones_pesadas → extensiones_ligeras_alto_rep
 ```
 
 **Procesa el plan de E5 y emite el JSON con el client_context completo actualizado.**
+
+
+---
+
+**⚠️ FORMATO DE SALIDA OBLIGATORIO ⚠️**
+
+Tu respuesta DEBE ser EXACTAMENTE:
+
+```json
+{
+  "client_context": {
+    // TODO el objeto completo aquí
+  }
+}
+```
+
+**NO devuelvas**:
+- ❌ `{"status": "ok", ...}`
+- ❌ Solo el contenido de training
+- ❌ Texto explicativo fuera del JSON
+
+**SÍ devuelve**:
+- ✅ `{"client_context": { "meta": {...}, "raw_inputs": {...}, "training": {...} }}`
+
+**CRÍTICO:** JSON válido sin texto adicional, comenzando con `{"client_context":`
+
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
