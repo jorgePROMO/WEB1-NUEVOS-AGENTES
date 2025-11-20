@@ -723,10 +723,23 @@ class EDN360Orchestrator:
                     "executions": executions
                 }
             
-            # Actualizar client_context con el output del agente
+            # Actualizar SOLO nutrition.* del client_context real
+            # El LLM trabajó con vista compacta, NO queremos sobreescribir training.*
             if "client_context" in result.get("output", {}):
-                client_context = ClientContext.model_validate(result["output"]["client_context"])
-                logger.info(f"  ✅ {agent.agent_id} devolvió client_context actualizado")
+                try:
+                    client_context = update_nutrition_from_llm_response(
+                        client_context_real=client_context,
+                        llm_response=result["output"]
+                    )
+                    logger.info(f"  ✅ {agent.agent_id} actualizó nutrition.* correctamente")
+                except Exception as e:
+                    logger.error(f"  ❌ {agent.agent_id} - Error actualizando nutrition: {e}")
+                    return {
+                        "success": False,
+                        "error": f"{agent.agent_id} update error: {e}",
+                        "client_context": client_context,
+                        "executions": executions
+                    }
             else:
                 logger.error(f"  ❌ {agent.agent_id} no devolvió client_context")
                 return {
