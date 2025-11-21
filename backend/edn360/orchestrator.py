@@ -642,8 +642,13 @@ class EDN360Orchestrator:
             # Actualizar client_context con el output del agente
             # El agente debe devolver el client_context completo actualizado
             if "client_context" in result.get("output", {}):
-                # Agente refactorizado (E1, E5, E8)
-                client_context = ClientContext.model_validate(result["output"]["client_context"])
+                # Agente refactorizado (todos E1-E9 ahora)
+                # IMPORTANTE: Pasar por process_output() del agente para filtrar campos
+                # Esto aplica el filtrado de campos para E3, E4, etc.
+                raw_output_json = json.dumps(result.get("output"))
+                processed_output = agent.process_output(raw_output_json)
+                
+                client_context = ClientContext.model_validate(processed_output["client_context"])
                 logger.info(f"  ✅ {agent.agent_id} devolvió client_context actualizado")
             else:
                 # Compatibilidad: agente legacy (E2, E3, E4, E6, E7, E9)
