@@ -437,6 +437,231 @@ Procesa estos datos siguiendo las instrucciones del sistema y genera la salida e
         logger.error(f"Respuesta completa (primeros 1000 chars): {response[:1000]}")
         raise ValueError(f"No se pudo extraer JSON válido de la respuesta del agente {self.agent_id}")
     
+    def _extract_json_from_response_robust(self, response: str) -> Dict[str, Any]:
+        """
+        Sistema ROBUSTO de extracción de JSON con múltiples estrategias.
+        Incluye validación de estructura y reparación automática.
+        
+        Args:
+            response: Respuesta del LLM
+            
+        Returns:
+            Dict con el JSON parseado y validado
+        """
+        import re
+        
+        # ESTRATEGIA 1: Parseo directo
+        try:
+            parsed = json.loads(response.strip())
+            self._validate_json_structure(parsed)
+            return parsed
+        except (json.JSONDecodeError, ValueError):
+            pass
+        
+        # ESTRATEGIA 2: Markdown con ```json```
+        json_pattern = r'```(?:json)?\s*(\{[\s\S]*?\})\s*```'
+        matches = re.findall(json_pattern, response, re.DOTALL)
+        
+        if matches:
+            for match in sorted(matches, key=len, reverse=True):
+                try:
+                    parsed = json.loads(match)
+                    self._validate_json_structure(parsed)
+                    return parsed
+                except (json.JSONDecodeError, ValueError):
+                    # Intentar reparar
+                    repaired = self._repair_json(match)
+                    if repaired:
+                        try:
+                            parsed = json.loads(repaired)
+                            self._validate_json_structure(parsed)
+                            logger.info(f"✅ {self.agent_id} - JSON reparado exitosamente")
+                            return parsed
+                        except (json.JSONDecodeError, ValueError):
+                            continue
+        
+        # ESTRATEGIA 3: Markdown truncado sin closing ```
+        truncated_pattern = r'```(?:json)?\s*(\{[\s\S]*)'
+        truncated_matches = re.findall(truncated_pattern, response, re.DOTALL)
+        
+        if truncated_matches:
+            for match in truncated_matches:
+                repaired = self._repair_json(match.rstrip())
+                if repaired:
+                    try:
+                        parsed = json.loads(repaired)
+                        self._validate_json_structure(parsed)
+                        logger.info(f"✅ {self.agent_id} - JSON truncado reparado")
+                        return parsed
+                    except (json.JSONDecodeError, ValueError):
+                        continue
+        
+        # ESTRATEGIA 4: Buscar JSON sin markdown
+        stack = []
+        start_idx = -1
+        candidates = []
+        
+        for i, char in enumerate(response):
+            if char == '{':
+                if not stack:
+                    start_idx = i
+                stack.append(char)
+            elif char == '}':
+                if stack:
+                    stack.pop()
+                    if not stack and start_idx != -1:
+                        json_str = response[start_idx:i+1]
+                        candidates.append(json_str)
+        
+        # Intentar con cada candidato (más largo primero)
+        for candidate in sorted(candidates, key=len, reverse=True):
+            try:
+                parsed = json.loads(candidate)
+                self._validate_json_structure(parsed)
+                return parsed
+            except (json.JSONDecodeError, ValueError):
+                repaired = self._repair_json(candidate)
+                if repaired:
+                    try:
+                        parsed = json.loads(repaired)
+                        self._validate_json_structure(parsed)
+                        logger.info(f"✅ {self.agent_id} - JSON sin markdown reparado")
+                        return parsed
+                    except (json.JSONDecodeError, ValueError):
+                        continue
+        
+        # Si nada funcionó, lanzar error que activará auto-corrección
+        logger.error(f"❌ {self.agent_id} - Todas las estrategias de parseo fallaron")
+        raise ValueError(f"No se pudo extraer JSON válido con estrategias robustas")
+    
+    def _repair_json(self, json_str: str) -> str:
+        """
+        Intenta reparar JSON malformado con técnicas comunes.
+        
+        Args:
+            json_str: String JSON potencialmente malformado
+            
+        Returns:
+            String JSON reparado o None si no se pudo reparar
+        """
+        try:
+            json_str = json_str.strip()
+            
+            # 1. Añadir llaves de cierre faltantes
+            open_braces = json_str.count('{')
+            close_braces = json_str.count('}')
+            
+            if open_braces > close_braces:
+                missing = open_braces - close_braces
+                json_str = json_str + ('\n}' * missing)
+                logger.debug(f"🔧 Añadidas {missing} llaves de cierre")
+            
+            # 2. Remover trailing commas
+            json_str = re.sub(r',\s*}', '}', json_str)
+            json_str = re.sub(r',\s*]', ']', json_str)
+            
+            # 3. Intentar parsear
+            json.loads(json_str)
+            return json_str
+            
+        except:
+            return None
+    
+    def _validate_json_structure(self, data: Dict[str, Any]) -> None:
+        """
+        Valida que el JSON tenga la estructura mínima esperada.
+        
+        Args:
+            data: Dict parseado del JSON
+            
+        Raises:
+            ValueError: Si la estructura no es válida
+        """
+        # Para agentes E.D.N.360, esperamos al menos un dict
+        if not isinstance(data, dict):
+            raise ValueError(f"JSON no es un diccionario: {type(data)}")
+        
+        # Verificar que tenga al menos una clave
+        if not data:
+            raise ValueError("JSON está vacío")
+        
+        # Log de validación exitosa
+        logger.debug(f"✅ {self.agent_id} - Estructura JSON validada: {len(data)} claves principales")
+    
+    def _auto_fix_json_response(
+        self,
+        broken_response: str,
+        original_input: Dict[str, Any],
+        system_prompt: str,
+        user_message: str
+    ) -> Dict[str, Any]:
+        """
+        CORRECCIÓN AUTOMÁTICA: Re-ejecuta el LLM con prompt forzado para corregir JSON.
+        
+        Esta es la estrategia de último recurso cuando el parseo robusto falla.
+        
+        Args:
+            broken_response: Respuesta original que falló al parsear
+            original_input: Input data original
+            system_prompt: Prompt del sistema original
+            user_message: Mensaje del usuario original
+            
+        Returns:
+            Dict con el output normalizado
+        """
+        logger.warning(f"🔄 {self.agent_id} - Iniciando corrección automática mediante re-ejecución LLM")
+        
+        # Crear prompt de corrección forzada
+        correction_prompt = f"""# CORRECCIÓN DE FORMATO JSON
+
+La respuesta anterior tenía problemas de formato. Por favor, genera SOLO el JSON válido sin ningún texto adicional.
+
+**REGLAS ESTRICTAS:**
+1. Solo JSON puro, sin markdown (sin ``` ni explicaciones)
+2. Asegúrate de cerrar todas las llaves y corchetes
+3. No incluyas trailing commas
+4. Formato compacto pero válido
+
+**RESPUESTA ORIGINAL PROBLEMÁTICA:**
+{broken_response[:500]}...
+
+**AHORA GENERA EL JSON CORRECTO COMPLETO:**
+"""
+        
+        try:
+            # Re-ejecutar LLM con prompt de corrección
+            completion = self.openai_client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_message},
+                    {"role": "assistant", "content": broken_response[:1000]},  # Contexto parcial
+                    {"role": "user", "content": correction_prompt}
+                ],
+                temperature=0.3,  # Más determinista para corrección
+                max_tokens=6000,
+                timeout=120
+            )
+            
+            corrected_response = completion.choices[0].message.content
+            logger.info(f"🔄 {self.agent_id} - Respuesta de corrección recibida ({len(corrected_response)} chars)")
+            
+            # Intentar parsear la respuesta corregida
+            parsed_json = self._extract_json_from_response_robust(corrected_response)
+            
+            # Normalizar
+            normalized_json = self.normalize_agent_output(parsed_json, original_input)
+            
+            if "client_context" not in normalized_json:
+                raise ValueError("Respuesta corregida no contiene client_context")
+            
+            return normalized_json
+            
+        except Exception as e:
+            logger.error(f"❌ {self.agent_id} - Auto-corrección falló: {str(e)}")
+            raise
+
+    
     def log_execution(self, input_data: Dict[str, Any], output_data: Dict[str, Any]):
         """
         Registra la ejecución del agente (para debugging)
