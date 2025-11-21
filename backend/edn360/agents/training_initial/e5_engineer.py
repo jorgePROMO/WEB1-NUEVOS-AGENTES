@@ -449,17 +449,18 @@ Tu respuesta DEBE ser un JSON con esta estructura EXACTA:
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
         """
-        Valida que el input contenga client_context con mesocycle y profile
-        
-        NUEVO (Fase 2): Validamos client_context
+        Valida que el input contenga campos necesarios - BLOQUE 2
         """
         if "training" not in input_data:
             return False
         
         training = input_data["training"]
         
-        # Debe tener mesocycle (de E4) y profile (de E1)
-        return training.get("mesocycle") is not None and training.get("profile") is not None
+        # E5 requiere: client_summary, capacity, adaptation, mesocycle
+        return (training.get("client_summary") is not None and
+                training.get("capacity") is not None and
+                training.get("adaptation") is not None and
+                training.get("mesocycle") is not None)
     
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         """
