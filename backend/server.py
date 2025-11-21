@@ -9486,18 +9486,22 @@ Genera el informe de seguimiento completo siguiendo la estructura obligatoria.
         try:
             logger.info("🤖 Generando informe con LLM...")
             
-            # Inicializar chat con emergentintegrations
-            chat = LlmChat(
-                api_key=emergent_key,
-                session_id=f"followup_report_{user_id}_{datetime.now(timezone.utc).timestamp()}",
-                system_message=system_message
-            ).with_model("openai", "gpt-4o")
+            # Inicializar cliente de OpenAI
+            client = AsyncOpenAI(api_key=openai_key)
             
-            # Crear mensaje de usuario
-            user_message = UserMessage(text=user_prompt_text)
+            # Crear solicitud a GPT-4o
+            completion = await client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": user_prompt_text}
+                ],
+                temperature=0.7,
+                max_tokens=3000
+            )
             
-            # Enviar mensaje y obtener respuesta
-            report_text = await chat.send_message(user_message)
+            # Obtener respuesta
+            report_text = completion.choices[0].message.content
             logger.info("✅ Informe inteligente generado exitosamente")
             
         except Exception as e:
