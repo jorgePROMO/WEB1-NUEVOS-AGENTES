@@ -1,94 +1,169 @@
 <analysis>
-The trajectory details the debugging and architectural refactoring of a long-running AI plan generation process within the E.D.N.360 application. The initial problem was a  caused by synchronous execution of a multi-agent LLM pipeline (E1-E9 and N0-N8) within a single FastAPI request.
+The trajectory documents a multi-stage debugging and refactoring process of an AI-powered plan generation application. The initial task was to resolve a  by migrating to an asynchronous job-based architecture, which was successfully implemented using a separate  process managed by .
 
-The user explicitly requested a migration to an asynchronous job-based architecture. The initial implementation using FastAPI's  proved insufficient, leading to a cascade of issues including server deadlocks,  event loop conflicts, and recurring login failures. These problems highlighted that  are not suitable for very long-running, CPU/IO-bound processes as they still run within the main server process.
+The subsequent work focused on making the system production-ready, as directed by the user. This involved a series of iterative refinements:
+1.  **API Key Unification:** The system initially used two different keys ( and ). At the user's request, the entire codebase was refactored to exclusively use a single , removing all dependencies on the  library for LLM calls.
+2.  **Implementation of Controls:** The user requested critical controls for cost and stability. This involved adding  to all OpenAI calls, reducing the default , implementing token usage tracking (by capturing  and storing it in MongoDB), and adding a user-level daily rate limit.
+3.  **Validation and Debugging:** The validation phase revealed deeper issues. Jobs failed repeatedly due to  errors and JSON parsing failures in agent . The root cause was diagnosed as a snowballing context problem, where each agent passes an increasingly large data object to the next, causing later agents to exceed token limits and fail.
 
-The final and correct architecture, implemented after several failed attempts, completely decouples the job execution from the web server. A new, separate Python worker process (), managed by , is now responsible for polling the  collection in MongoDB and executing the pipelines. The FastAPI server's role is reduced to simply creating the job record and immediately returning a .
+The conversation concluded with the user requesting a major architectural refactor of the inter-agent data flow to solve this core issue. The AI has confirmed its understanding and is awaiting the go-ahead to begin this new, more structural task.
 
-Throughout this process, numerous bugs were fixed, including incorrect frontend environment variables, missing  prefixes in endpoint calls, and Pydantic validation errors. The very last action was an attempt to resolve an OpenAI  error by using an , which then resulted in a  error, indicating that a specific integration library is required.
-
-The user's primary language is Spanish. **The next agent MUST respond in Spanish.**
+The user's primary language is Spanish. The next agent must respond in **Spanish**.
 </analysis>
 
 <product_requirements>
-The primary goal is to eliminate  errors during the generation of AI-powered training and nutrition plans. This is achieved by converting the synchronous, long-running API endpoint into a robust, asynchronous job-based system.
+The primary goal is to build a stable, robust, and cost-controlled AI plan generation system.
 
-**Implementation Details:**
-1.  **Asynchronous Execution:** Instead of executing the agent pipelines (E1-E9, N0-N8) within a request, a new endpoint () creates a job record in a MongoDB  collection and returns a  immediately.
-2.  **Background Worker:** A separate, persistent worker process is responsible for picking up pending or queued jobs from the database and executing them.
-3.  **Status Polling:** A  endpoint allows the frontend to poll for the job's status (, , , ), progress, and results.
-4.  **Frontend UX:** The frontend displays a progress modal while polling, providing real-time feedback to the user and showing the final result or error message upon completion.
-5.  **System Stability (User-Mandated):** The system must be stable and predictable, incorporating:
-    *   A security timeout for stuck jobs.
-    *   Real-time progress updates per agent.
-    *   Automatic retries for transient API errors.
-    *   A concurrency limit to prevent resource exhaustion.
-    *   Basic logging for each job's lifecycle.
+**Initial Requirement (Completed):**
+Resolve  errors by converting the long-running plan generation into an asynchronous job-based system. This was achieved by creating a  endpoint that queues a job in MongoDB, which is then processed by a separate background worker.
+
+**Evolved Requirement (In Progress):**
+Refactor the internal data flow between AI agents (E1-E9, N0-N8) to prevent the snowballing context problem. Instead of each agent inheriting the entire accumulated data from previous agents, each agent should only receive a compact base profile plus the specific, minimal outputs (cajones or drawers) it needs from its predecessors.
+
+**Objectives of the Refactor:**
+1.  **Reduce Token Consumption:** Drastically lower the input tokens for later-stage agents to reduce operational costs.
+2.  **Prevent Failures:** Eliminate errors caused by exceeding context or output token limits (e.g., the E5 agent JSON truncation).
+3.  **Improve Maintainability:** Create a more modular and predictable data flow.
 </product_requirements>
 
 <key_technical_concepts>
-- **Asynchronous Job Queue:** Using MongoDB as a message broker to queue and track long-running tasks.
-- **Decoupled Worker Process:** Running the intensive AI agent pipeline in a separate Python process managed by  to avoid blocking the main FastAPI web server.
-- **FastAPI:** Used for the web API layer, responsible for creating jobs and providing status updates.
-- **Pydantic:** For data modeling and validation of API requests and database documents.
-- **Frontend Polling:** A client-side pattern where the browser periodically requests updates from the server to track a background task's progress.
+- **Asynchronous Job Queue:** Using MongoDB as a message broker for long-running tasks.
+- **Decoupled Worker Process:** A persistent Python script () managed by  to process jobs independently of the API server.
+- **API Key Management:** Centralizing all LLM calls to use a single  environment variable.
+- **Cost & Stability Controls:** Implementing rate limiting, request timeouts,  limits, and token usage tracking.
+- **Context Scoping:** The new architectural concept of passing minimal, relevant data between chained AI agents instead of a continuously growing context object.
 </key_technical_concepts>
 
 <code_architecture>
-The architecture was refactored from a monolithic API endpoint to a decoupled system with a web server and a separate background worker.
+The architecture consists of a FastAPI web server for handling API requests and a separate Python background worker for processing long-running AI jobs. MongoDB serves as the database and job queue.
 
 **Directory Structure:**
 
 
 - ****
-    - **Importance:** Serves as the main API layer. It's the entry point for all client requests.
-    - **Changes:** The long-running plan generation logic was removed. The endpoint  was added to create a job document in MongoDB and respond immediately. The  endpoint was added for status polling. The use of  was implemented and later removed due to causing server deadlocks. All watchdog/background processing logic was removed from the FastAPI startup event.
-
-- ** (New File)**
-    - **Importance:** This is the core of the new asynchronous architecture. It runs as a separate, persistent process.
-    - **Summary:** The script runs an infinite loop. In each iteration, it connects to MongoDB, queries for jobs with pending or queued status, and processes them one by one using the existing  function (which was moved here from ). It handles the entire lifecycle of a job, including status updates, retries, and logging.
-
-- ** (New File)**
-    - **Importance:** This configuration file ensures the  script is managed by , keeping it running persistently and restarting it on failure.
-    - **Summary:** Defines the command to run the worker using the correct Python virtual environment (), sets the working directory, and configures logging.
+    - **Importance:** The parent class for all primary AI agents (E1-E9, N0-N8). Centralizes LLM call logic.
+    - **Changes:**
+        - Refactored to use a single .
+        - Added  to all OpenAI calls.
+        -  was reduced to , with a dynamic override allowing specific agents like  to use a higher limit ().
+        - Implemented logic to capture  to track token consumption.
+        - A robust JSON parsing method () with retry and self-correction capabilities was added to handle malformed LLM outputs.
 
 - ****
-    - **Importance:** Defines the Pydantic data models for the application.
-    - **Changes:** New models were added to represent the job system: , , , and  to structure the data stored in the  collection.
+    - **Importance:** The main FastAPI application. Defines API endpoints, including the job creation and status polling routes. It also contains the core job processing logic called by the worker.
+    - **Changes:**
+        - Rate limiting logic was added to the  endpoint.
+        - All  LLM calls were replaced with the standard usage: openai [-h] [-v] [-b API_BASE] [-k API_KEY] [-p PROXY [PROXY ...]]
+              [-o ORGANIZATION] [-t {openai,azure}]
+              [--api-version API_VERSION] [--azure-endpoint AZURE_ENDPOINT]
+              [--azure-ad-token AZURE_AD_TOKEN] [-V]
+              {api,tools,migrate,grit} ...
+
+positional arguments:
+  {api,tools,migrate,grit}
+    api                 Direct API calls
+    tools               Client side tools for convenience
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Set verbosity.
+  -b API_BASE, --api-base API_BASE
+                        What API base url to use.
+  -k API_KEY, --api-key API_KEY
+                        What API key to use.
+  -p PROXY [PROXY ...], --proxy PROXY [PROXY ...]
+                        What proxy to use.
+  -o ORGANIZATION, --organization ORGANIZATION
+                        Which organization to run as (will use your default
+                        organization if not specified)
+  -t {openai,azure}, --api-type {openai,azure}
+                        The backend API to call, must be `openai` or `azure`
+  --api-version API_VERSION
+                        The Azure API version, e.g.
+                        'https://learn.microsoft.com/en-us/azure/ai-
+                        services/openai/reference#rest-api-versioning'
+  --azure-endpoint AZURE_ENDPOINT
+                        The Azure endpoint, e.g.
+                        'https://endpoint.openai.azure.com'
+  --azure-ad-token AZURE_AD_TOKEN
+                        A token from Azure Active Directory,
+                        https://www.microsoft.com/en-
+                        us/security/business/identity-access/microsoft-entra-
+                        id
+  -V, --version         show program's version number and exit SDK.
+        - The job processing logic was updated to accumulate token usage data from each agent and save it to the MongoDB job document.
+        - A final log message summarizing total token usage per job was added upon completion.
 
 - ****
-    - **Importance:** Defines the core  Pydantic model.
-    - **Changes:** The model's configuration was changed from  to . This was a critical fix to resolve a  that occurred because the AI orchestrator was adding fields to the context object that were not explicitly defined in the model.
-
-- ** (New File)**
-    - **Importance:** Provides real-time feedback to the user during plan generation.
-    - **Summary:** This React component is displayed after a generation job is started. It uses a  hook and  to poll the  endpoint every 3 seconds, updating a progress bar and status message. It handles the completed and failed terminal states.
+    - **Importance:** Defines all Pydantic data models.
+    - **Changes:**
+        - New models  and  were added to structure the token consumption data.
+        - The main  model was updated to include the new  field, enabling detailed cost tracking.
 
 - ****
-    - **Importance:** The main administrative interface where plan generation is initiated.
-    - **Changes:** The functions  and  were modified to call the new async endpoint (), receive the , and then open the  to start the polling process.
+    - **Importance:** Handles the Free Initial Diagnosis feature.
+    - **Changes:**
+        - Completely refactored to use the standard usage: openai [-h] [-v] [-b API_BASE] [-k API_KEY] [-p PROXY [PROXY ...]]
+              [-o ORGANIZATION] [-t {openai,azure}]
+              [--api-version API_VERSION] [--azure-endpoint AZURE_ENDPOINT]
+              [--azure-ad-token AZURE_AD_TOKEN] [-V]
+              {api,tools,migrate,grit} ...
+
+positional arguments:
+  {api,tools,migrate,grit}
+    api                 Direct API calls
+    tools               Client side tools for convenience
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Set verbosity.
+  -b API_BASE, --api-base API_BASE
+                        What API base url to use.
+  -k API_KEY, --api-key API_KEY
+                        What API key to use.
+  -p PROXY [PROXY ...], --proxy PROXY [PROXY ...]
+                        What proxy to use.
+  -o ORGANIZATION, --organization ORGANIZATION
+                        Which organization to run as (will use your default
+                        organization if not specified)
+  -t {openai,azure}, --api-type {openai,azure}
+                        The backend API to call, must be `openai` or `azure`
+  --api-version API_VERSION
+                        The Azure API version, e.g.
+                        'https://learn.microsoft.com/en-us/azure/ai-
+                        services/openai/reference#rest-api-versioning'
+  --azure-endpoint AZURE_ENDPOINT
+                        The Azure endpoint, e.g.
+                        'https://endpoint.openai.azure.com'
+  --azure-ad-token AZURE_AD_TOKEN
+                        A token from Azure Active Directory,
+                        https://www.microsoft.com/en-
+                        us/security/business/identity-access/microsoft-entra-
+                        id
+  -V, --version         show program's version number and exit library and , removing its previous dependency on  and .
+
+- ****
+    - **Importance:** The standalone worker process that polls MongoDB for pending jobs and executes them. It ensures the API remains responsive.
+    - **Changes:** No major recent changes. Its stability was key to the architecture. It contains the main loop and a timeout watchdog.
+
+- ****
+    - **Importance:** Stores environment variables.
+    - **Changes:** The user is now expected to provide only one key, , for all LLM functionalities. The  is no longer used for LLM calls.
 </code_architecture>
 
 <pending_tasks>
-- **API Key Resolution:** The current  is causing a  error. This must be resolved before any further testing can occur. The user needs to provide a valid, funded OpenAI API key.
-- **Full Validation & Stress Testing:** As requested by the user, a comprehensive validation is pending:
-    1.  Run 3 consecutive  (Training + Nutrition) jobs.
-    2.  Run 2 concurrent jobs to test the concurrency limit.
-    3.  Simulate a failure to verify error handling.
-    4.  Report on execution times, token usage, and system resource load.
+- **Primary Task:** Refactor the inter-agent data flow to implement a scoped context or cajones model, preventing the snowballing context issue.
+- **On Hold:** The full validation and stress testing (3 consecutive jobs, 2 concurrent jobs, 1 forced failure) is pending the completion of the data flow refactor.
 </pending_tasks>
 
 <current_work>
-The project has successfully completed a major architectural refactor, moving from a blocking, synchronous API to a non-blocking, asynchronous system using a separate background worker process. This correctly solves the root cause of the original  errors and subsequent server deadlocks.
+The immediate work is to refactor the data flow between agents as per the user's detailed conceptual request. The previous effort to validate the system failed due to a structural flaw: each agent in the chain (E1->E2->...E9) passes its entire accumulated context to the next, causing the input for later agents like  to become enormous. This leads to failures from exceeding token limits () and exacerbates issues with OpenAI rate limiting.
 
-The most recent work involved debugging the new architecture and resolving an OpenAI  error. The attempt to fix this by using the provided  failed, resulting in a new  error. Analysis revealed this key requires a special library (), and a full migration would be a significant, high-risk change.
+The user has explicitly approved a plan to change this. The new approach involves passing a small, constant  to every agent, plus only the specific, minimal outputs from direct predecessor agents that are necessary for the current agent's task.
 
-Therefore, the current state is:
-- **Architecture:** Stable and correctly implemented (FastAPI + separate  worker).
-- **Functionality:** The job creation, polling, and frontend progress display are all working.
-- **Blocker:** The system is **not operational** because it cannot connect to the OpenAI API due to the API key issue (). No generation jobs can be successfully completed until this is resolved. The system is awaiting a valid, standard OpenAI API key to proceed with the user's requested final validation tests.
+The last action was the AI confirming its complete understanding of this refactoring goal, analyzing the risks and benefits, and stating its readiness to begin the implementation, starting with  (to define the new data cajones) and  (to build the minimal context for each agent). No code for this refactor has been written yet.
 </current_work>
 
 <optional_next_step>
-Ask the user to provide a standard, working OpenAI API key to resolve the  error and unblock the final validation tests.
+Begin the data flow refactoring by modifying  to define the new cajones structure and then updating  to build and pass the minimal context to each agent.
 </optional_next_step>

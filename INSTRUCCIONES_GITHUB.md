@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://edn-job-runner.preview.emergentagent.com
+https://flowsmart-agents.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 

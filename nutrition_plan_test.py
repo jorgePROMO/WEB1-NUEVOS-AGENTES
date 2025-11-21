@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://edn-job-runner.preview.emergentagent.com/api"
+BACKEND_URL = "https://flowsmart-agents.preview.emergentagent.com/api"
 
 class NutritionPlanTester:
     def __init__(self):

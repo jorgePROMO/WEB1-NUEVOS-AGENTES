@@ -6,7 +6,7 @@ Test the second client to ensure consistency across different users
 import requests
 import json
 
-BACKEND_URL = "https://edn-job-runner.preview.emergentagent.com/api"
+BACKEND_URL = "https://flowsmart-agents.preview.emergentagent.com/api"
 
 def test_second_client():
     # Login as admin
