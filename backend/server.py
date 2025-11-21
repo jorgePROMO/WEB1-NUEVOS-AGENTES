@@ -11067,6 +11067,35 @@ async def generate_plans_async(
         if not user:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
         
+        # ===== RATE LIMIT: Verificar límite diario por usuario =====
+        today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        
+        # Contar jobs creados hoy
+        jobs_today = await db.generation_jobs.count_documents({
+            "user_id": user_id,
+            "created_at": {"$gte": today_start}
+        })
+        
+        # Contar jobs FULL creados hoy
+        full_jobs_today = await db.generation_jobs.count_documents({
+            "user_id": user_id,
+            "type": "full",
+            "created_at": {"$gte": today_start}
+        })
+        
+        # Aplicar límites
+        if request_data.mode == "full" and full_jobs_today >= 5:
+            raise HTTPException(
+                status_code=429,
+                detail="Has alcanzado el límite diario de generación de planes completos (5/día). Vuelve a intentarlo mañana o contacta con soporte si crees que es un error."
+            )
+        
+        if jobs_today >= 10:
+            raise HTTPException(
+                status_code=429,
+                detail="Has alcanzado el límite diario de generación de planes (10/día). Vuelve a intentarlo mañana o contacta con soporte si crees que es un error."
+            )
+        
         # Validar cuestionario
         submission = await db.nutrition_questionnaire_submissions.find_one({"_id": request_data.submission_id})
         is_followup = False
