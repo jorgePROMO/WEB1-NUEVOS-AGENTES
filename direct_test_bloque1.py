@@ -116,63 +116,64 @@ async def run_direct_test():
         if not submission:
             raise Exception("No se pudo obtener el cuestionario")
         
+        # 3. Crear client_context
+        print(f"\n🏗️ Creando client_context...")
+        client_context = initialize_client_context(
+            client_id="direct_test_user",
+            version=1,
+            cuestionario_data=submission,
+            is_followup=False
+        )
+        
         print(f"\n🚀 Ejecutando agentes E1-E4...")
         
-        # 3. E1 - Client Summary
-        print(f"\n[E1] Generando client_summary...")
+        # 4. E1 - Analyst
+        print(f"\n[E1] Ejecutando Analyst...")
         e1 = E1Analyst()
-        e1_result = await e1.process(submission, None, None)
+        client_context = await e1.process(client_context)
         
-        if not e1_result.get("success"):
-            raise Exception(f"E1 falló: {e1_result.get('error')}")
-        
-        client_summary = e1_result["client_summary"]
-        e1_tokens = e1_result.get("token_usage", {})
+        # Extraer tokens de E1
+        e1_tokens = getattr(e1, 'last_token_usage', {})
         total_tokens += e1_tokens.get("total_tokens", 0)
         
         print(f"✅ E1 completado - Tokens: {e1_tokens.get('total_tokens', 0):,}")
         
-        # 4. E2 - Capacity Analysis
-        print(f"\n[E2] Analizando capacidad...")
+        # 5. E2 - Capacity
+        print(f"\n[E2] Ejecutando Capacity...")
         e2 = E2Capacity()
-        e2_result = await e2.process(submission, client_summary, None)
+        client_context = await e2.process(client_context)
         
-        if not e2_result.get("success"):
-            raise Exception(f"E2 falló: {e2_result.get('error')}")
-        
-        nutrition_analysis = e2_result["nutrition_analysis"]
-        e2_tokens = e2_result.get("token_usage", {})
+        # Extraer tokens de E2
+        e2_tokens = getattr(e2, 'last_token_usage', {})
         total_tokens += e2_tokens.get("total_tokens", 0)
         
         print(f"✅ E2 completado - Tokens: {e2_tokens.get('total_tokens', 0):,}")
         
-        # 5. E3 - Adaptation Analysis
-        print(f"\n[E3] Analizando adaptación...")
+        # 6. E3 - Adaptation
+        print(f"\n[E3] Ejecutando Adaptation...")
         e3 = E3Adaptation()
-        e3_result = await e3.process(submission, client_summary, None)
+        client_context = await e3.process(client_context)
         
-        if not e3_result.get("success"):
-            raise Exception(f"E3 falló: {e3_result.get('error')}")
-        
-        training_analysis = e3_result["training_analysis"]
-        e3_tokens = e3_result.get("token_usage", {})
+        # Extraer tokens de E3
+        e3_tokens = getattr(e3, 'last_token_usage', {})
         total_tokens += e3_tokens.get("total_tokens", 0)
         
         print(f"✅ E3 completado - Tokens: {e3_tokens.get('total_tokens', 0):,}")
         
-        # 6. E4 - Architecture Design
-        print(f"\n[E4] Diseñando arquitectura...")
+        # 7. E4 - Architect
+        print(f"\n[E4] Ejecutando Architect...")
         e4 = E4Architect()
-        e4_result = await e4.process(submission, client_summary, training_analysis)
+        client_context = await e4.process(client_context)
         
-        if not e4_result.get("success"):
-            raise Exception(f"E4 falló: {e4_result.get('error')}")
-        
-        mesocycle = e4_result["mesocycle"]
-        e4_tokens = e4_result.get("token_usage", {})
+        # Extraer tokens de E4
+        e4_tokens = getattr(e4, 'last_token_usage', {})
         total_tokens += e4_tokens.get("total_tokens", 0)
         
         print(f"✅ E4 completado - Tokens: {e4_tokens.get('total_tokens', 0):,}")
+        
+        # Extraer resultados del client_context
+        client_summary = client_context.training.client_summary
+        mesocycle = client_context.training.mesocycle
         
         # 7. Análisis de resultados
         duration = time.time() - start_time
