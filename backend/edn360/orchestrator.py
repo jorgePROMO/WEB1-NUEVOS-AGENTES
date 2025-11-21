@@ -718,26 +718,32 @@ class EDN360Orchestrator:
             if "client_context" in result.get("output", {}):
                 output_context = result.get("output", {})["client_context"]
                 
-                # BLOQUE 1: Filtrar campos para E3 y E4 (contrato estricto de cajones)
-                if agent.agent_id == "E3":
-                    # E3 solo puede tener: client_summary, capacity, adaptation
-                    training = output_context.get("training", {})
-                    filtered_training = {
-                        k: v for k, v in training.items()
-                        if k in ["client_summary", "capacity", "adaptation"]
-                    }
-                    output_context["training"] = filtered_training
-                    logger.info(f"    🔒 E3: Campos filtrados (solo client_summary + capacity + adaptation)")
+                # FILTRADO ESTRICTO: Cada agente solo puede devolver sus campos permitidos
+                training = output_context.get("training", {})
                 
-                elif agent.agent_id == "E4":
-                    # E4 solo puede tener: client_summary, capacity, adaptation, mesocycle
-                    training = output_context.get("training", {})
-                    filtered_training = {
-                        k: v for k, v in training.items()
-                        if k in ["client_summary", "capacity", "adaptation", "mesocycle"]
-                    }
-                    output_context["training"] = filtered_training
-                    logger.info(f"    🔒 E4: Campos filtrados (solo client_summary + capacity + adaptation + mesocycle)")
+                # Mapeo de campos permitidos por agente
+                allowed_fields_map = {
+                    "E1": ["client_summary", "profile", "constraints", "prehab", "progress"],
+                    "E2": ["client_summary", "profile", "constraints", "prehab", "progress", "capacity"],
+                    "E3": ["client_summary", "capacity", "adaptation"],
+                    "E4": ["client_summary", "capacity", "adaptation", "mesocycle"],
+                    "E5": ["client_summary", "capacity", "adaptation", "mesocycle", "sessions"],
+                    "E6": ["client_summary", "constraints", "prehab", "sessions", "safe_sessions"],
+                    "E7": ["client_summary", "mesocycle", "safe_sessions", "formatted_plan"],
+                    "E8": ["client_summary", "constraints", "mesocycle", "formatted_plan", "audit"],
+                    "E9": ["client_summary", "formatted_plan", "bridge_for_nutrition"]
+                }
+                
+                allowed_fields = allowed_fields_map.get(agent.agent_id, training.keys())
+                
+                # Filtrar campos
+                filtered_training = {
+                    k: v for k, v in training.items()
+                    if k in allowed_fields
+                }
+                
+                output_context["training"] = filtered_training
+                logger.info(f"    🔒 {agent.agent_id}: Campos filtrados ({len(filtered_training)} campos permitidos)")
                 
                 client_context = ClientContext.model_validate(output_context)
                 logger.info(f"  ✅ {agent.agent_id} devolvió client_context actualizado")
