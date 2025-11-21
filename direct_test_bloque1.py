@@ -119,7 +119,7 @@ async def run_direct_test():
         
         # 3. E1 - Client Summary
         print(f"\n[E1] Generando client_summary...")
-        e1 = E1ClientSummary()
+        e1 = E1Analyst()
         e1_result = await e1.process(submission, None, None)
         
         if not e1_result.get("success"):
