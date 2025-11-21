@@ -425,16 +425,16 @@ Procesa el input de E1 y E2, calcula IA y estrategia de progresión, emite el JS
         """
         Valida que el input contenga client_context con campos necesarios
         
-        NUEVO (Fase 2): Validamos client_context
+        BLOQUE 1: E3 recibe client_summary + capacity (NO profile completo)
         """
         if "training" not in input_data:
             return False
         
         training = input_data["training"]
         
-        # Debe tener campos requeridos
+        # Debe tener campos requeridos: client_summary y capacity
         return (training.get("capacity") is not None and
-                training.get("profile") is not None)
+                training.get("client_summary") is not None)
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         """
         Valida que devuelva client_context con adaptation lleno
