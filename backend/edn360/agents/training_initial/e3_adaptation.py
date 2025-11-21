@@ -47,7 +47,7 @@ class E3AdaptationAnalyst(BaseAgent):
 ---
 
 ## 🎯 Misión
-Analizas el perfil de E1 y la evaluación de E2.
+Analizas la evaluación de E2 y el perfil de E1.
 Tu trabajo es analizar:
 1. **IA** (\u00cdndice de Adaptación): qué tan bien responde el cliente al entrenamiento.
 2. **Tipo de adaptador**: lento / medio / rápido.
