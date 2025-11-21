@@ -10321,15 +10321,25 @@ Si requiere cambios, genera el plan modificado en formato JSON."""
 Analiza la solicitud y genera el plan modificado o responde la pregunta."""
         
         # Ejecutar LLM
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
-        llm = LlmChat(
-            api_key=os.environ.get("EMERGENT_LLM_KEY"),
-            session_id=f"modify_plan_{plan_id}",
-            system_message=system_prompt
-        ).with_model("openai", "gpt-4o")
+        from openai import AsyncOpenAI
         
-        user_msg = UserMessage(text=full_message)
-        ai_response = await llm.send_message(user_msg)
+        openai_key = os.environ.get("OPENAI_API_KEY")
+        if not openai_key:
+            raise ValueError("OPENAI_API_KEY no configurada en el entorno")
+        
+        client = AsyncOpenAI(api_key=openai_key)
+        
+        completion = await client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": full_message}
+            ],
+            temperature=0.7,
+            max_tokens=4000
+        )
+        
+        ai_response = completion.choices[0].message.content
         
         # Intentar detectar si hay modificaciones en la respuesta
         modifications_made = False
