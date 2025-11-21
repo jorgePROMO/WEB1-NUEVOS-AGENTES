@@ -381,20 +381,25 @@ Tu respuesta DEBE contener SOLO estos campos:
       "Técnica sólida antes que carga",
       "Incluir correctivos core en cada sesión",
       "Monitorizar lumbar post-ejercicios de cadena posterior"
-    ],
-        "factor_volumen": 0.9,
-        "factor_intensidad": 0.9
-      },
-      // Resto de campos:
-      "mesocycle": null,
-      "sessions": null,
-      "safe_sessions": null,
-      "formatted_plan": null,
-      "audit": null,
-      "bridge_for_nutrition": null
+    ]
+  }
+      }
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // FIN DE TU CAMPO adaptation
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     }
   }
 }
+```
+
+**⚠️ RECORDATORIO CRÍTICO:**
+- NO incluyas `training.profile`
+- NO incluyas `training.constraints`
+- NO incluyas `training.prehab`
+- NO incluyas `training.capacity` (excepto para mantenerlo igual)
+- NO incluyas ningún otro campo adicional
+
+Tu JSON de salida debe tener EXACTAMENTE esta estructura: meta + raw_inputs + training (con solo client_summary + capacity + adaptation).
 ```
 
 **FORMATO OBLIGATORIO**:
