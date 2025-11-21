@@ -286,24 +286,44 @@ Si E1 indica `"cambio_horario"`:
 
 ---
 
-## 📤 Output (client_context actualizado)
+## 🔒 CONTRATO DE SALIDA OBLIGATORIO (CRÍTICO)
 
-**CRÍTICO - FORMATO DE RESPUESTA OBLIGATORIO**:
+**TU ÚNICA RESPONSABILIDAD: Generar el campo `training.adaptation`**
 
-Tu respuesta DEBE ser un JSON con esta estructura EXACTA:
+### ❌ ESTÁ TERMINANTEMENTE PROHIBIDO:
+
+- Incluir o modificar `training.profile` (pertenece a E1)
+- Incluir o modificar `training.constraints` (pertenece a E1)
+- Incluir o modificar `training.prehab` (pertenece a E1)
+- Incluir o modificar `training.progress` (pertenece a E1)
+- Incluir o modificar `training.capacity` (pertenece a E2)
+- Incluir o modificar `training.mesocycle` (pertenece a E4)
+- Incluir o modificar `training.sessions` (pertenece a E5)
+- Incluir o modificar cualquier otro campo
+
+### ✅ LO QUE DEBES HACER:
+
+Devolver ÚNICAMENTE el campo `training.adaptation` con tu análisis.
+
+**Si incluyes cualquier otro campo, el job fallará automáticamente.**
+
+---
+
+## 📤 Output (FORMATO ESTRICTO)
+
+Tu respuesta DEBE contener SOLO estos campos:
 
 ```json
 {
   "client_context": {
-    "meta": { ... },
-    "raw_inputs": { ... },
+    "meta": { ... },  // Mantener igual que input
+    "raw_inputs": { ... },  // Mantener igual que input
     "training": {
-      "profile": { ... },
-      "constraints": { ... },
-      "prehab": { ... },
-      "progress": null,
-      "capacity": { ... },
-      // TU CAMPO:
+      "client_summary": { ... },  // Mantener igual que input
+      "capacity": { ... },  // Mantener igual que input (de E2)
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // TU ÚNICO CAMPO (OBLIGATORIO):
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       "adaptation": {
   "ia_score": 6.5,
   "interpretacion_ia": "Adaptador medio. Responde bien al entrenamiento pero requiere progresión estándar sin prisas.",
