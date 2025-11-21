@@ -349,17 +349,17 @@ Procesa inputs de E1-E3 y diseña el mesociclo mensual."""
         """
         Valida que el input contenga client_context con campos necesarios
         
-        NUEVO (Fase 2): Validamos client_context
+        BLOQUE 1: E4 recibe client_summary + capacity + adaptation (NO profile completo)
         """
         if "training" not in input_data:
             return False
         
         training = input_data["training"]
         
-        # Debe tener capacity (E2), adaptation (E3), profile (E1)
+        # Debe tener capacity (E2), adaptation (E3), client_summary (E1)
         return (training.get("capacity") is not None and
                 training.get("adaptation") is not None and
-                training.get("profile") is not None)
+                training.get("client_summary") is not None)
     
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         """
