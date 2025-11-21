@@ -447,7 +447,8 @@ async def generate_training_plan(questionnaire_data: dict) -> dict:
             ],
             temperature=0.3,
             max_tokens=4000,
-            response_format={"type": "json_object"}
+            response_format={"type": "json_object"},
+            timeout=120
         )
         
         agent_2_output = agent_2_response.choices[0].message.content
