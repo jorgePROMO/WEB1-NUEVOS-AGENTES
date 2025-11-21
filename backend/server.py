@@ -10985,6 +10985,7 @@ async def process_queued_jobs():
 async def generate_plans_async(
     user_id: str,
     request_data: GenerateAsyncRequest,
+    background_tasks: BackgroundTasks,
     request: Request = None
 ):
     """
