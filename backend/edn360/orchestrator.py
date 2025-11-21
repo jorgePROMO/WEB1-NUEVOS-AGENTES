@@ -557,12 +557,18 @@ class EDN360Orchestrator:
                     }
             
             # EJECUTAR AGENTE con client_context + KB
-            # TODOS los agentes E1-E9 están refactorizados (Fase 2 completada)
-            refactored_agents = ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"]
+            # BLOQUE 1 (E1-E4): Usan arquitectura de cajones con client_summary
+            # E5-E9: Todavía usan contexto completo (se refactorizarán en Bloque 2)
+            agents_with_scoped_input = ["E1", "E2", "E3", "E4"]  # BLOQUE 1
             
-            if agent.agent_id in refactored_agents:
-                # Agente refactorizado: pasar client_context completo
+            if agent.agent_id in agents_with_scoped_input:
+                # NUEVA ARQUITECTURA: Input reducido con cajones
+                agent_input = build_scoped_input_for_agent(agent.agent_id, client_context)
+                logger.info(f"    📦 Usando input reducido (cajones) para {agent.agent_id}")
+            elif agent.agent_id in ["E5", "E6", "E7", "E8", "E9"]:
+                # E5-E9: Todavía pasan contexto completo (Bloque 2 pendiente)
                 agent_input = client_context_to_dict(client_context)
+                logger.info(f"    ⏳ {agent.agent_id} usa contexto completo (Bloque 2 pendiente)")
             else:
                 # Agente legacy: pasar formato antiguo (e1_output, e2_output, etc.)
                 logger.info(f"    ⚠️ Preparando input legacy para {agent.agent_id}")
