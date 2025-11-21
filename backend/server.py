@@ -10919,6 +10919,18 @@ async def process_generation_job(job_id: str):
         )
         
         await add_job_log(job_id, "completed", f"Job finalizado exitosamente. Planes generados: {result_data}")
+        
+        # Obtener token usage final para log
+        final_job = await db.generation_jobs.find_one({"_id": job_id})
+        if final_job and "token_usage" in final_job:
+            usage = final_job["token_usage"]
+            logger.info(
+                f"💰 JOB {job_id} – tokens: "
+                f"prompt={usage.get('total_prompt_tokens', 0)}, "
+                f"completion={usage.get('total_completion_tokens', 0)}, "
+                f"total={usage.get('total_tokens', 0)}"
+            )
+        
         logger.info(f"✅ Job {job_id} completado exitosamente")
         
     except Exception as e:
