@@ -1,94 +1,94 @@
 <analysis>
-The trajectory documents a comprehensive, multi-phase architectural refactoring of the E.D.N.360 AI agent system. The primary goal was to shift from siloed agents to a unified architecture where all agents operate on a single, shared  object.
+The trajectory details the debugging and architectural refactoring of a long-running AI plan generation process within the E.D.N.360 application. The initial problem was a  caused by synchronous execution of a multi-agent LLM pipeline (E1-E9 and N0-N8) within a single FastAPI request.
 
-The work began with the Training agent chain (E1-E9). This involved defining Pydantic models for the , rewriting the orchestrator to manage the state flow, and refactoring all nine agents. This phase was marked by iterative debugging, primarily focused on:
-1.  **Enforcing Output Format:** Repeatedly reinforcing agent prompts to ensure the LLM consistently returned JSON wrapped in .
-2.  **Context Size Management:** Discovering that passing the large knowledge base (KB) to later-stage agents caused token limit errors, leading to an optimization in the orchestrator to selectively exclude the KB.
-3.  **Robust Parsing:** Enhancing the base agent's JSON parser to automatically repair common LLM errors like missing closing braces or inconsistent markdown wrappers.
+The user explicitly requested a migration to an asynchronous job-based architecture. The initial implementation using FastAPI's  proved insufficient, leading to a cascade of issues including server deadlocks,  event loop conflicts, and recurring login failures. These problems highlighted that  are not suitable for very long-running, CPU/IO-bound processes as they still run within the main server process.
 
-After successfully validating the Training pipeline via an end-to-end test, the exact same architectural pattern was applied to the Nutrition agent chain (N0-N8). This second refactor encountered similar token limit issues, which were solved by creating a compact view of the  for the nutrition agents, stripping out verbose, unnecessary data from the training block. A key innovation was adding a  function to automatically convert legacy agent responses to the new  format, increasing system resilience.
+The final and correct architecture, implemented after several failed attempts, completely decouples the job execution from the web server. A new, separate Python worker process (), managed by , is now responsible for polling the  collection in MongoDB and executing the pipelines. The FastAPI server's role is reduced to simply creating the job record and immediately returning a .
 
-The work concluded with the successful end-to-end validation of the complete E1-E9 and N0-N8 pipelines and the creation of comprehensive handoff documents for the next, product-focused phase. The user's primary language is Spanish. The next agent **MUST** respond in Spanish.
+Throughout this process, numerous bugs were fixed, including incorrect frontend environment variables, missing  prefixes in endpoint calls, and Pydantic validation errors. The very last action was an attempt to resolve an OpenAI  error by using an , which then resulted in a  error, indicating that a specific integration library is required.
+
+The user's primary language is Spanish. **The next agent MUST respond in Spanish.**
 </analysis>
 
 <product_requirements>
-The E.D.N.360 application is an internal AI-powered system designed to be the engine behind a premium, human-guided coaching business. It is not a standalone consumer-facing SaaS app. Its purpose is to automate the generation of highly personalized training and nutrition plans, enabling the lead coach and their team to scale their services.
+The primary goal is to eliminate  errors during the generation of AI-powered training and nutrition plans. This is achieved by converting the synchronous, long-running API endpoint into a robust, asynchronous job-based system.
 
-The system is architected as two distinct but connected pipelines of specialized AI agents:
-1.  **Training Pipeline (E1-E9):** Ingests a client's initial questionnaire and generates a complete, progressive training plan.
-2.  **Nutrition Pipeline (N0-N8):** Takes the output of the training pipeline and generates a corresponding, synchronized nutrition plan.
-
-**Core Principles:**
--   **Unified State:** All agents operate on a single, shared  object (a Pydantic model) that acts as the single source of truth for all client data.
--   **Strict Data Contracts:** Each agent has explicit read/write permissions on the , enforced by a validation layer to ensure data integrity and prevent unintended side effects.
--   **Separation of Concerns:** Training agents only modify the  section of the context, and nutrition agents only modify the  section. The  field serves as the explicit link between the two.
--   **Global Knowledge:** Static, read-only Knowledge Bases (KBs) provide general reference information but are secondary to the specific client data in .
+**Implementation Details:**
+1.  **Asynchronous Execution:** Instead of executing the agent pipelines (E1-E9, N0-N8) within a request, a new endpoint () creates a job record in a MongoDB  collection and returns a  immediately.
+2.  **Background Worker:** A separate, persistent worker process is responsible for picking up pending or queued jobs from the database and executing them.
+3.  **Status Polling:** A  endpoint allows the frontend to poll for the job's status (, , , ), progress, and results.
+4.  **Frontend UX:** The frontend displays a progress modal while polling, providing real-time feedback to the user and showing the final result or error message upon completion.
+5.  **System Stability (User-Mandated):** The system must be stable and predictable, incorporating:
+    *   A security timeout for stuck jobs.
+    *   Real-time progress updates per agent.
+    *   Automatic retries for transient API errors.
+    *   A concurrency limit to prevent resource exhaustion.
+    *   Basic logging for each job's lifecycle.
 </product_requirements>
 
 <key_technical_concepts>
-- **Agentic Architecture:** A system composed of two sequential chains of specialized LLM agents (E1-E9 for Training, N0-N8 for Nutrition) that collaboratively build a complex data object.
-- **Unified State Management:** Use of a single, comprehensive Pydantic model () as the source of truth, passed between all agents.
-- **Data Contracts:** A system where each agent has defined read/write permissions (/) on the , enforced by the .
-- **Context Optimization:** Strategies to manage LLM token limits, including selectively withholding knowledge bases and creating compact views of the state object.
-- **Robust I/O Handling:** A resilient JSON parser that can repair common LLM output errors (e.g., missing braces) and a normalizer that converts legacy data formats into the required  structure.
+- **Asynchronous Job Queue:** Using MongoDB as a message broker to queue and track long-running tasks.
+- **Decoupled Worker Process:** Running the intensive AI agent pipeline in a separate Python process managed by  to avoid blocking the main FastAPI web server.
+- **FastAPI:** Used for the web API layer, responsible for creating jobs and providing status updates.
+- **Pydantic:** For data modeling and validation of API requests and database documents.
+- **Frontend Polling:** A client-side pattern where the browser periodically requests updates from the server to track a background task's progress.
 </key_technical_concepts>
 
 <code_architecture>
-The application is a FastAPI backend with the core logic organized around a  and two agent pipelines (Training and Nutrition).
+The architecture was refactored from a monolithic API endpoint to a decoupled system with a web server and a separate background worker.
 
 **Directory Structure:**
 
 
 - ****
-    - **Importance:** Defines the entire state of the application via Pydantic models: , , and . It is the canonical schema.
-    - **Changes:** Initially created for , it was later extended to include the  class and add the  field to .
+    - **Importance:** Serves as the main API layer. It's the entry point for all client requests.
+    - **Changes:** The long-running plan generation logic was removed. The endpoint  was added to create a job document in MongoDB and respond immediately. The  endpoint was added for status polling. The use of  was implemented and later removed due to causing server deadlocks. All watchdog/background processing logic was removed from the FastAPI startup event.
+
+- ** (New File)**
+    - **Importance:** This is the core of the new asynchronous architecture. It runs as a separate, persistent process.
+    - **Summary:** The script runs an infinite loop. In each iteration, it connects to MongoDB, queries for jobs with pending or queued status, and processes them one by one using the existing  function (which was moved here from ). It handles the entire lifecycle of a job, including status updates, retries, and logging.
+
+- ** (New File)**
+    - **Importance:** This configuration file ensures the  script is managed by , keeping it running persistently and restarting it on failure.
+    - **Summary:** Defines the command to run the worker using the correct Python virtual environment (), sets the working directory, and configures logging.
 
 - ****
-    - **Importance:** Centralizes all logic for state validation and manipulation. Contains the  which defines the data contracts for all 18 agents.
-    - **Changes:** This file evolved significantly. Initially built for training agents, its validation functions (, ) were refactored to be generic for both E and N agents. Crucially, two functions were added to solve token limit issues for the nutrition pipeline:  (creates a compact view of the state for the LLM) and  (safely merges the LLM's output back into the main state object, respecting data contracts).
+    - **Importance:** Defines the Pydantic data models for the application.
+    - **Changes:** New models were added to represent the job system: , , , and  to structure the data stored in the  collection.
 
 - ****
-    - **Importance:** Manages the sequential execution of agent pipelines.
-    - **Changes:** Refactored to contain two independent pipelines:  and . Logic was added to selectively pass the knowledge base to agents to avoid token limits. It was updated to use the new compact view helpers from  for the nutrition pipeline.
+    - **Importance:** Defines the core  Pydantic model.
+    - **Changes:** The model's configuration was changed from  to . This was a critical fix to resolve a  that occurred because the AI orchestrator was adding fields to the context object that were not explicitly defined in the model.
+
+- ** (New File)**
+    - **Importance:** Provides real-time feedback to the user during plan generation.
+    - **Summary:** This React component is displayed after a generation job is started. It uses a  hook and  to poll the  endpoint every 3 seconds, updating a progress bar and status message. It handles the completed and failed terminal states.
 
 - ****
-    - **Importance:** The parent class for all agents, containing shared LLM interaction logic.
-    - **Changes:** This file saw critical improvements. The  method was made highly robust to repair malformed JSON from the LLM. A  function was added to automatically convert responses from agents using a legacy format into the new  structure, acting as a backward-compatibility layer. The main  method was updated to integrate this normalization step.
-
-- ****
-    - **Importance:** These 18 files contain the specific prompts and logic for each agent.
-    - **Changes:** All 18 agents were completely refactored from a legacy format to work with the . Their system prompts were meticulously rewritten to include an ARCHITECTURE / YOUR CONTRACT section, explicitly defining their read/write permissions and enforcing the  output format.
-
-- ** & **
-    - **Importance:** End-to-end testing scripts that validate the entire agent chains.
-    - **Changes:**  was created and used to debug the training pipeline.  was then created based on it, designed to load the final context from the training test and run the full nutrition pipeline.
-
-- ** & **
-    - **Importance:** Final deliverable documents summarizing the project's business and technical aspects for handoff.
-    - **Changes:** Created at the end of the project upon user request.
+    - **Importance:** The main administrative interface where plan generation is initiated.
+    - **Changes:** The functions  and  were modified to call the new async endpoint (), receive the , and then open the  to start the polling process.
 </code_architecture>
 
 <pending_tasks>
-- **Product/UX Phase:** The user has approved and closed the technical development phase. The pending work is now product-focused, which the user intends to delegate to another AI (ChatGPT). This includes:
-  - Defining the customer experience flow (onboarding, plan presentation).
-  - Designing the client-facing membership ecosystem (dashboard, tracking tools).
-  - Developing pitch decks and sales materials based on the new system's capabilities.
+- **API Key Resolution:** The current  is causing a  error. This must be resolved before any further testing can occur. The user needs to provide a valid, funded OpenAI API key.
+- **Full Validation & Stress Testing:** As requested by the user, a comprehensive validation is pending:
+    1.  Run 3 consecutive  (Training + Nutrition) jobs.
+    2.  Run 2 concurrent jobs to test the concurrency limit.
+    3.  Simulate a failure to verify error handling.
+    4.  Report on execution times, token usage, and system resource load.
 </pending_tasks>
 
 <current_work>
-The project has just concluded a major technical development cycle, successfully refactoring and validating both the Training (E1-E9) and Nutrition (N0-N8) agent pipelines.
+The project has successfully completed a major architectural refactor, moving from a blocking, synchronous API to a non-blocking, asynchronous system using a separate background worker process. This correctly solves the root cause of the original  errors and subsequent server deadlocks.
 
-The very last task was to debug and finalize the Nutrition pipeline's end-to-end test. A critical bug was found where agent N8 violated its data contract by modifying fields belonging to other agents. This was traced to an overly broad update function that was overwriting the entire  branch of the  with the LLM's response.
+The most recent work involved debugging the new architecture and resolving an OpenAI  error. The attempt to fix this by using the provided  failed, resulting in a new  error. Analysis revealed this key requires a special library (), and a full migration would be a significant, high-risk change.
 
-The fix was implemented in  by making the  function more precise. Instead of replacing the whole  object, it now iterates through the agent's specific  fields (defined in ) and copies only those from the LLM's response to the main . This ensures an agent can only write to its designated fields, even if the LLM erroneously includes other data in its output.
-
-After implementing this fix, the  script was executed one final time and completed successfully, with all 9 nutrition agents passing all validations.
-
-Upon receiving this confirmation, the user officially approved and closed the entire technical phase. The final action taken was to generate two handoff documents at the user's request:
--  (Business-oriented summary)
--  (Detailed technical summary)
+Therefore, the current state is:
+- **Architecture:** Stable and correctly implemented (FastAPI + separate  worker).
+- **Functionality:** The job creation, polling, and frontend progress display are all working.
+- **Blocker:** The system is **not operational** because it cannot connect to the OpenAI API due to the API key issue (). No generation jobs can be successfully completed until this is resolved. The system is awaiting a valid, standard OpenAI API key to proceed with the user's requested final validation tests.
 </current_work>
 
 <optional_next_step>
-The technical work is complete and approved. The user will now use the generated handoff documents to proceed with another AI for product and UX design. Await new instructions from the user after they have completed that step.
+Ask the user to provide a standard, working OpenAI API key to resolve the  error and unblock the final validation tests.
 </optional_next_step>

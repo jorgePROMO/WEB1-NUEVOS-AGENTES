@@ -156,7 +156,7 @@ brotli_types text/plain text/css application/json application/javascript;
 
 ### Cómo volver a testear:
 1. Ve a: https://pagespeed.web.dev/
-2. Introduce: `https://agent-pipeline-5.preview.emergentagent.com`
+2. Introduce: `https://edn-job-runner.preview.emergentagent.com`
 3. Espera resultados
 
 ### Métricas objetivo para Google Ads:

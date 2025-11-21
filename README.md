@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://agent-pipeline-5.preview.emergentagent.com
+**URL Actual:** https://edn-job-runner.preview.emergentagent.com
 
 ---
 
