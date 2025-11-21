@@ -67,6 +67,94 @@ def _serialize_datetime_fields(data: Any) -> Any:
         return data
 
 
+def build_scoped_input_for_agent(agent_id: str, client_context: ClientContext) -> Dict[str, Any]:
+    """
+    Construye input mínimo para cada agente según su ID.
+    
+    ARQUITECTURA DE CAJONES (Bloque 1 - E1-E4):
+    - E1: Único agente que recibe raw_inputs completos
+    - E2-E4: Reciben client_summary + cajones específicos necesarios
+    - E5-E9: [Por implementar en Bloque 2]
+    
+    Esta función elimina la "bola de nieve" de contexto, pasando solo
+    la información mínima necesaria a cada agente.
+    
+    Args:
+        agent_id: ID del agente (E1, E2, E3, etc.)
+        client_context: ClientContext completo actual
+        
+    Returns:
+        Dict con input reducido para el agente
+    """
+    from .client_context_models import TrainingData
+    
+    # ========================================
+    # E1 - ÚNICO QUE RECIBE raw_inputs
+    # ========================================
+    if agent_id == "E1":
+        return {
+            "meta": client_context.meta.model_dump(),
+            "raw_inputs": client_context.raw_inputs.model_dump(),
+            "training": TrainingData().model_dump()  # Vacío, E1 inicializa
+        }
+    
+    # ========================================
+    # E2 - Recibe client_summary + profile
+    # ========================================
+    elif agent_id == "E2":
+        return {
+            "meta": client_context.meta.model_dump(),
+            "raw_inputs": {},  # Ya NO recibe raw_inputs
+            "training": {
+                "client_summary": client_context.training.client_summary,
+                "profile": client_context.training.profile,
+                "constraints": client_context.training.constraints,
+                "prehab": client_context.training.prehab,
+                "progress": client_context.training.progress,
+                "capacity": None  # Lo que él va a llenar
+            }
+        }
+    
+    # ========================================
+    # E3 - Recibe client_summary + capacity
+    # ========================================
+    elif agent_id == "E3":
+        return {
+            "meta": client_context.meta.model_dump(),
+            "raw_inputs": {},  # Ya NO recibe raw_inputs
+            "training": {
+                "client_summary": client_context.training.client_summary,
+                "profile": client_context.training.profile,
+                "capacity": client_context.training.capacity,
+                "adaptation": None  # Lo que él va a llenar
+            }
+        }
+    
+    # ========================================
+    # E4 - Recibe client_summary + capacity + adaptation
+    # ========================================
+    elif agent_id == "E4":
+        return {
+            "meta": client_context.meta.model_dump(),
+            "raw_inputs": {},  # Ya NO recibe raw_inputs
+            "training": {
+                "client_summary": client_context.training.client_summary,
+                "capacity": client_context.training.capacity,
+                "adaptation": client_context.training.adaptation,
+                "mesocycle": None  # Lo que él va a llenar
+            }
+        }
+    
+    # ========================================
+    # E5-E9 - [BLOQUE 2 - NO IMPLEMENTADO]
+    # ========================================
+    else:
+        # Por ahora, para E5-E9 seguimos pasando todo el contexto
+        # (Se refactorizará en Bloque 2)
+        logger.warning(f"⚠️ {agent_id} aún no usa arquitectura de cajones (Bloque 2 pendiente)")
+        return client_context_to_dict(client_context)
+
+
 class EDN360Orchestrator:
     """Orquestador principal que ejecuta la cadena de agentes"""
     
