@@ -227,7 +227,8 @@ async def generate_nutrition_plan(client_data: dict) -> dict:
                 }
             ],
             temperature=0.7,
-            max_tokens=3000
+            max_tokens=3000,
+            timeout=120
         )
         
         menu_from_agent_1 = response_1.choices[0].message.content
