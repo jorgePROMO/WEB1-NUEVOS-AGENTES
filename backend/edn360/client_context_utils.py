@@ -214,15 +214,15 @@ AGENT_FIELD_MAPPING = {
     },
     "E2": {
         "fills": ["capacity"],
-        "requires": ["profile"]  # Necesita el profile de E1
+        "requires": ["client_summary", "profile"]  # BLOQUE 1: Necesita client_summary + profile de E1
     },
     "E3": {
         "fills": ["adaptation"],
-        "requires": ["capacity", "profile"]  # Necesita capacity de E2 y profile de E1
+        "requires": ["client_summary", "capacity"]  # BLOQUE 1: Solo client_summary + capacity (NO profile)
     },
     "E4": {
         "fills": ["mesocycle"],
-        "requires": ["capacity", "adaptation", "profile"]
+        "requires": ["client_summary", "capacity", "adaptation"]  # BLOQUE 1: Solo client_summary + E2/E3 (NO profile)
     },
     "E5": {
         "fills": ["sessions"],
