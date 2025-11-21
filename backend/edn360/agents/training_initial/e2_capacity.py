@@ -57,16 +57,34 @@ Calculas:
 
 ---
 
-## 📥 Input (de E1)
+## 📥 Input
+Recibes datos ya procesados por E1:
+
 ```json
 {
-  "perfil_tecnico": {...},
-  "experiencia": {...},
-  "limitaciones_clinicas": {...},
-  "disponibilidad": {...},
-  "equipo": {...}
+  "meta": {...},
+  "training": {
+    "client_summary": {
+      "objetivo_principal": "perdida_grasa",
+      "nivel": "intermedio",
+      "edad": 32,
+      "limitaciones_clave": ["dolor_lumbar_ocasional"],
+      "disponibilidad": {"dias_semana": 4, "minutos_sesion": 60},
+      ...
+    },
+    "profile": {
+      "perfil_tecnico": {...},
+      "experiencia": {...},
+      "limitaciones_clinicas": {...},
+      "disponibilidad": {...},
+      "equipo": {...}
+    },
+    "capacity": null  // Lo que TÚ vas a llenar
+  }
 }
 ```
+
+**NOTA**: Usa `client_summary` para acceso rápido a datos clave, y `profile` para detalles completos.
 
 ---
 
