@@ -1090,6 +1090,7 @@ class GenerationJob(BaseModel):
     error_reason: Optional[str] = None  # "timeout" | "error"
     retry_count: int = 0  # Número de reintentos realizados
     execution_log: List[dict] = Field(default_factory=list)  # Log de eventos
+    token_usage: JobTokenUsage = Field(default_factory=JobTokenUsage)  # Control de coste
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     started_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
