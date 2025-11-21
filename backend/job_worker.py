@@ -25,11 +25,9 @@ from pathlib import Path
 # Add backend to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 
-# Load environment
-load_dotenv()
+# Get MongoDB URL from environment (set by supervisor or default)
 MONGO_URL = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
 
 # MongoDB setup
