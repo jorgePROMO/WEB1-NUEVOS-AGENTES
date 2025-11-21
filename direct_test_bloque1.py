@@ -140,7 +140,7 @@ async def run_direct_test():
         
         # 5. E2 - Capacity
         print(f"\n[E2] Ejecutando Capacity...")
-        e2 = E2Capacity()
+        e2 = E2CapacityEvaluator()
         client_context = await e2.process(client_context)
         
         # Extraer tokens de E2
@@ -151,7 +151,7 @@ async def run_direct_test():
         
         # 6. E3 - Adaptation
         print(f"\n[E3] Ejecutando Adaptation...")
-        e3 = E3Adaptation()
+        e3 = E3AdaptationAnalyst()
         client_context = await e3.process(client_context)
         
         # Extraer tokens de E3
@@ -162,7 +162,7 @@ async def run_direct_test():
         
         # 7. E4 - Architect
         print(f"\n[E4] Ejecutando Architect...")
-        e4 = E4Architect()
+        e4 = E4ProgramArchitect()
         client_context = await e4.process(client_context)
         
         # Extraer tokens de E4
