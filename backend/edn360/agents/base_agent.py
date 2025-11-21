@@ -258,10 +258,10 @@ A continuación tienes acceso a una base de conocimiento global que sirve como *
             # Guardar respuesta completa para debugging (solo en caso de error posterior)
             _full_response = response
             
-            # Procesar salida con post-procesador de normalización
+            # Procesar salida con post-procesador de normalización y retry robusto
             try:
-                # 1. Extraer JSON de la respuesta
-                parsed_json = self._extract_json_from_response(response)
+                # 1. Extraer JSON de la respuesta con sistema mejorado
+                parsed_json = self._extract_json_from_response_robust(response)
                 
                 # 2. Normalizar formato (convierte formato antiguo a nuevo si es necesario)
                 normalized_json = self.normalize_agent_output(parsed_json, input_data)
@@ -275,12 +275,24 @@ A continuación tienes acceso a una base de conocimiento global que sirve como *
                 output_data = normalized_json
                 
             except Exception as parse_error:
-                # Si falla el parseo, guardar la respuesta completa para debugging
-                debug_file = f"/app/debug_response_{self.agent_id}.txt"
-                with open(debug_file, 'w') as f:
-                    f.write(_full_response)
-                logger.error(f"❌ Error parseando respuesta de {self.agent_id}. Respuesta completa guardada en {debug_file}")
-                raise
+                # RETRY AUTOMÁTICO: Si falla el parseo, intentar corrección con LLM
+                logger.warning(f"⚠️ {self.agent_id} - Parseo JSON falló en primer intento. Activando corrección automática...")
+                
+                try:
+                    # Guardar respuesta problemática para debugging
+                    debug_file = f"/app/debug_response_{self.agent_id}_broken.txt"
+                    with open(debug_file, 'w') as f:
+                        f.write(_full_response)
+                    logger.info(f"📁 Respuesta problemática guardada en {debug_file}")
+                    
+                    # Intentar corrección automática mediante prompt forzado
+                    output_data = self._auto_fix_json_response(_full_response, input_data, system_prompt, user_message)
+                    logger.info(f"✅ {self.agent_id} - Corrección automática de JSON exitosa")
+                    
+                except Exception as fix_error:
+                    # Si la corrección también falla, entonces es error definitivo
+                    logger.error(f"❌ {self.agent_id} - Corrección automática falló: {str(fix_error)}")
+                    raise ValueError(f"No se pudo extraer JSON válido de la respuesta del agente {self.agent_id}") from parse_error
             
             # Calcular duración
             duration = (datetime.now() - start_time).total_seconds()

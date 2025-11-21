@@ -3,7 +3,7 @@
   "client_context": {
     "meta": {
       "client_id": "unknown",
-      "snapshot_id": "snapshot_unknown_1_48ba66fe",
+      "snapshot_id": "snapshot_unknown_1_c8268879",
       "version": 1,
       "selected_inputs": {
         "cuestionario": "unknown",
@@ -19,50 +19,50 @@
     "training": {
       "profile": {
         "perfil_tecnico": {
-          "id_cliente": "unknown",
+          "id_cliente": "generado o recibido",
           "nombre": "Jorge1",
           "edad": 38,
           "sexo": "hombre",
-          "peso_kg": 85.0,
-          "altura_cm": 172.0,
+          "peso_kg": 85,
+          "altura_cm": 172,
           "imc": 28.7,
           "clasificacion_imc": "sobrepeso"
         },
         "experiencia": {
           "nivel": "avanzado",
-          "años_entrenamiento": 15,
+          "años_entrenamiento": "dato_no_proporcionado",
           "constancia": "alta",
           "deportes_previos": [
-            "gym"
+            "culturismo"
           ],
-          "notas": "Ha sido culturista profesional con entrenamiento constante."
+          "notas": "Ha sido culturista profesional con dedicación intensa"
         },
         "objetivo": {
-          "principal": "salud_general",
+          "principal": "mejora_general",
           "secundarios": [
-            "mejora_física"
+            "perdida_grasa"
           ],
-          "plazo": "indefinido"
+          "plazo": "dato_no_proporcionado"
         },
         "limitaciones_clinicas": {
           "lesiones": [
             {
-              "zona": "hombros",
+              "zona": "hombro",
               "tipo": "manguito_rotador",
-              "gravedad": "crónica",
+              "gravedad": "cronica",
               "estado": "activa",
-              "notas": "Requiere ejercicios preventivos y evitar ciertos movimientos."
+              "notas": "Compromiso en ambos hombros"
             },
             {
               "zona": "lumbar",
               "tipo": "hernia_discal",
-              "gravedad": "crónica",
+              "gravedad": "cronica",
               "estado": "activa",
-              "notas": "Evitar cargas axiales pesadas y movimientos que comprometan la postura."
+              "notas": "Hernia en L4-L5"
             }
           ],
           "restricciones_medicas": [
-            "hipotiroidismo_medicado"
+            "hipotiroidismo_medicado_eutirox_75"
           ],
           "banderas_alerta": []
         },
@@ -71,38 +71,37 @@
           "minutos_por_sesion": 60,
           "carga_semanal_horas": 3.0,
           "horario_preferido": "mañana",
-          "flexibilidad": "baja"
+          "flexibilidad": "fija"
         },
         "equipo": {
           "tipo": "gym_completo",
           "equipamiento_especifico": [
-            "mancuernas",
-            "barra",
-            "maquinas"
+            "pesas",
+            "máquinas"
           ],
           "limitaciones": []
         },
         "datos_adicionales": {
-          "nutricion_actual": "4 comidas al día, keto previa",
+          "nutricion_actual": "Comidas al día: 4, dieta keto previa",
           "sueno_promedio_h": 7,
           "estres_nivel": "alto",
           "adherencia_historica": "alta"
         },
         "notas_interpretativas": [
-          "Cliente avanzado con historial de culturismo profesional.",
-          "Objetivo principal enfocado en salud general y mantenimiento físico.",
-          "Lesiones crónicas en hombros y lumbar requieren atención especial.",
-          "Disponibilidad de equipo completo en gimnasio facilita un plan estructurado."
+          "Cliente avanzado con historial de culturismo y dedicación intensa.",
+          "Objetivo principal es la mejora general con enfoque en salud y físico.",
+          "Limitaciones clave: manguito rotador de ambos hombros y hernia en L4-L5.",
+          "Disponibilidad limitada (3x60'), pero con acceso a gimnasio completo."
         ],
         "contrato_para_E2": {
           "prioridades": [
-            "Establecer rutina que respete limitaciones del manguito rotador y columna.",
-            "Mantener volumen moderado con enfoque en técnica.",
-            "Plan enfocado en salud y bienestar general."
+            "Diseñar programa que evite estrés en el manguito rotador.",
+            "Incorporar ejercicios de movilidad y estabilidad para proteger la zona lumbar.",
+            "Mantener un enfoque en la técnica y prevención de lesiones."
           ],
           "restricciones": [
-            "Evitar ejercicios con alto riesgo para el manguito rotador.",
-            "Limitar ejercicios con compresión axial para la columna."
+            "Evitar press militar y ejercicios con carga sobre la cabeza.",
+            "Limitar ejercicios que generen compresión axial directa sobre la columna."
           ]
         }
       },
@@ -158,51 +157,43 @@
         }
       },
       "prehab": {
-        "lesiones_activas": [
-          {
-            "lesion": "manguito_rotador_bilateral",
-            "ejercicios_obligatorios_preventivos": [
-              "face_pull",
-              "rotacion_externa_mancuernas",
-              "YTW_en_banco",
-              "remo_horizontal_neutro"
-            ],
-            "notas": "Manguito rotador comprometido en ambos hombros. Evitar abducción >90° con carga y rotación interna bajo tensión."
-          },
-          {
-            "lesion": "hernia_discal_L4_L5",
-            "ejercicios_obligatorios_preventivos": [
-              "plancha_frontal",
-              "bird_dog",
-              "dead_bug",
-              "pallof_press"
-            ],
-            "notas": "Hernia L4-L5. Evitar flexión lumbar bajo carga y compresión axial excesiva. Priorizar variantes con mancuernas y ROM controlado."
-          }
-        ]
+        "protocolo_preventivo": {
+          "hombro": [
+            "face_pull",
+            "rotacion_externa_mancuernas",
+            "YTW_en_banco",
+            "remo_horizontal_neutro"
+          ],
+          "lumbar": [
+            "plancha_frontal",
+            "bird_dog",
+            "dead_bug",
+            "pallof_press"
+          ]
+        }
       },
       "progress": null,
       "capacity": {
-        "seg_score": 6.5,
-        "interpretacion_seg": "Cliente con capacidad estructural moderada. Requiere precaución en hombros y lumbar.",
+        "seg_score": 5,
+        "interpretacion_seg": "Cliente con capacidad estructural moderada. Requiere atención cuidadosa a hombros y lumbar durante el entrenamiento.",
         "split_recomendado": {
           "tipo": "full-body",
           "frecuencia_semanal": 3,
           "distribucion": [
-            "Full Body A",
-            "Full Body B",
-            "Full Body C"
+            "Full-Body A",
+            "Full-Body B",
+            "Full-Body C"
           ],
-          "justificacion": "3 días disponibles, nivel avanzado, permite trabajar todo el cuerpo mientras se respeta la recuperación de hombros y lumbar."
+          "justificacion": "Disponibilidad de 3 días/semana con historial avanzado, permite maximizar la frecuencia sin sobrecargar hombros o lumbar."
         },
         "tiempo_sesion": {
-          "maximo_minutos": 50,
+          "maximo_minutos": 60,
           "ajustes_aplicados": [
-            "Reducido 10 min debido a lesiones activas para incluir ejercicios preventivos y calentamiento adecuado"
+            "Mantener tiempo por disponibilidad y nivel avanzado, priorizar calidad sobre cantidad"
           ],
           "estructura_recomendada": {
             "calentamiento": 10,
-            "trabajo_principal": 30,
+            "trabajo_principal": 40,
             "correctivos_core": 8,
             "enfriamiento": 2
           }
@@ -211,183 +202,215 @@
           "semanas_1_2": 4,
           "semanas_3_4": 3,
           "mes_2_en_adelante": 2,
-          "notas": "Iniciar conservador para evaluar técnica y adaptación. RIR 4 = evitar fatiga en lesiones."
+          "notas": "Comenzar con RIR conservador para evaluar la técnica y adaptarse a las limitaciones actuales."
         },
         "banderas_clinicas": [
           {
-            "tipo": "hombros_lumbares",
+            "tipo": "manguito_rotador",
             "nivel_alerta": "medio",
-            "accion": "Monitorizar dolor y molestias post-sesión. Considerar ajuste en volumen si persisten."
+            "accion": "Evitar ejercicios de abducción con carga y monitorizar cualquier dolor o incomodidad durante y después de las sesiones."
+          },
+          {
+            "tipo": "hernia_lumbar",
+            "nivel_alerta": "medio",
+            "accion": "Priorizar ejercicios de estabilización lumbar y evitar compresión axial directa."
           }
         ],
         "restricciones_ejercicios": [
           {
             "ejercicio": "Press militar",
-            "razon": "Manguito rotador comprometido",
-            "sustitucion": "Press con mancuernas sentado (menos carga axial)"
+            "razon": "Compromiso del manguito rotador",
+            "sustitucion": "Press con mancuernas en banco inclinado bajo"
           },
           {
             "ejercicio": "Peso muerto convencional",
-            "razon": "Hernia L4-L5 activa",
-            "sustitucion": "RDL con mancuernas (menos carga axial)"
+            "razon": "Riesgo de compresión axial lumbar",
+            "sustitucion": "Peso muerto rumano con mancuernas"
           }
         ],
         "ejercicios_obligatorios": [
           {
             "ejercicio": "Face pull",
             "frecuencia": "Cada sesión",
-            "razon": "Fortalecimiento del manguito rotador"
+            "razon": "Estabilización de hombros y prevención de lesión en el manguito rotador"
           },
           {
             "ejercicio": "Plancha frontal",
             "frecuencia": "Cada sesión",
-            "razon": "Fortalecimiento y estabilidad del core"
+            "razon": "Fortalecimiento del core y estabilización lumbar"
           }
-        ]
+        ],
+        "contrato_para_E3": {
+          "seg_score": 5,
+          "nivel_conservadurismo": "moderado",
+          "parametros_progresion": {
+            "velocidad": "lenta_con_precaucion",
+            "incremento_carga_pct": 2.5,
+            "incremento_volumen_pct": 5,
+            "frecuencia_evaluacion": "quincenal"
+          },
+          "zonas_monitorizacion": [
+            "hombros",
+            "lumbar"
+          ],
+          "clearance_medico_requerido": false
+        }
       },
       "adaptation": {
-        "ia_score": 7.0,
-        "interpretacion_ia": "Adaptador medio. Responde favorablemente al entrenamiento con progresión estándar.",
+        "ia_score": 5.5,
+        "interpretacion_ia": "Adaptador medio. Responde bien al entrenamiento pero requiere atención especial debido a lesiones crónicas.",
         "tipo_adaptador": "medio",
         "factores_ia": {
           "positivos": [
-            "Experiencia avanzada en entrenamiento: +1",
-            "Sueño adecuado (7h): +0.5",
-            "Adherencia histórica alta: +1"
+            "Experiencia previa en culturismo: +1",
+            "Sueño adecuado (7h): +0.5"
           ],
           "negativos": [
             "Estrés alto: -1.5",
-            "Lesiones crónicas activas en hombros y lumbar: -2"
+            "Lesiones crónicas en hombros y lumbar: -2"
           ],
-          "ia_calculado": 7.0
+          "ia_calculado": 5.5
         },
         "resiliencia_lesiones": {
           "clasificacion": "baja",
-          "justificacion": "Lesiones crónicas en hombros y lumbar activas. No hay historial de re-lesiones graves, pero requieren monitoreo continuo.",
-          "impacto_programa": "Progresión muy cuidadosa. Priorizar ejercicios preventivos y técnica sobre carga. Monitorizar constantemente."
+          "justificacion": "Lesiones crónicas activas en hombros y lumbar, requiere cuidadosa gestión del volumen y carga.",
+          "impacto_programa": "Progresión muy conservadora, priorizar técnica sobre carga, incluir trabajo correctivo."
         },
         "estrategia_progresion": {
-          "tipo": "estandar",
-          "justificacion": "IA=7.0 (medio) + SEG=6.5 (moderado) = progresión estándar con monitorización cuidadosa.",
+          "tipo": "conservadora",
+          "justificacion": "IA=5.5 (medio) + SEG=5 (moderado) = progresión conservadora para evitar exacerbación de lesiones.",
           "parametros": {
-            "incremento_volumen_pct": 10,
-            "incremento_carga_pct": 5,
-            "frecuencia_ajustes": "cada_3_semanas",
+            "incremento_volumen_pct": 5,
+            "incremento_carga_pct": 2.5,
+            "frecuencia_ajustes": "quincenal",
             "rir_inicial": 4,
-            "rir_objetivo_mes_2": 2
+            "rir_objetivo_mes_2": 3
           }
         },
-        "factor_conservadurismo": 0.9,
+        "factor_conservadurismo": 0.75,
         "calculo_factor": {
           "base": 1.0,
-          "ajuste_estrategia": 1.0,
-          "ajuste_resiliencia": 0.9,
+          "ajuste_estrategia": 0.75,
+          "ajuste_resiliencia": 0.8,
           "ajuste_seg": 1.0,
-          "factor_final": 0.9
+          "factor_final": 0.75
         },
         "indicadores_clave": {
-          "volumen_semanal_ajustado": "base × 0.9",
-          "intensidad_ajustada": "base × 0.9",
+          "volumen_semanal_ajustado": "base × 0.75",
+          "intensidad_ajustada": "base × 0.75",
           "tiempo_adaptacion_inicial": "2_semanas",
           "ventana_progresion": "semanas_3_a_12"
+        },
+        "contrato_para_E4": {
+          "ia_score": 5.5,
+          "tipo_adaptador": "medio",
+          "estrategia": "conservadora",
+          "factor_volumen": 0.75,
+          "factor_intensidad": 0.75,
+          "frecuencia_progresion": "quincenal",
+          "prioridades": [
+            "Técnica sólida antes que carga",
+            "Incluir correctivos core en cada sesión",
+            "Monitorizar hombros y lumbar post-ejercicios"
+          ]
         }
       },
       "mesocycle": {
         "duracion_semanas": 4,
-        "objetivo": "salud_general",
-        "estrategia": "estandar",
+        "objetivo": "mejora_general",
+        "estrategia": "conservadora",
         "split": "full-body",
         "frecuencia_semanal": 3,
         "volumen_por_grupo": {
           "pecho": {
-            "series_semana": 15,
+            "series_semana": 12,
             "rango_original": "16-20",
-            "factor_aplicado": 0.9
+            "factor_aplicado": 0.75
           },
           "espalda": {
-            "series_semana": 16,
+            "series_semana": 14,
             "rango_original": "18-22",
-            "factor_aplicado": 0.9
+            "factor_aplicado": 0.75
           },
           "hombros": {
-            "series_semana": 15,
+            "series_semana": 12,
             "rango_original": "16-20",
-            "factor_aplicado": 0.9
+            "factor_aplicado": 0.75
           },
           "cuadriceps": {
-            "series_semana": 16,
+            "series_semana": 14,
             "rango_original": "18-22",
-            "factor_aplicado": 0.9
+            "factor_aplicado": 0.75
           },
           "isquios_gluteos": {
-            "series_semana": 15,
+            "series_semana": 12,
             "rango_original": "16-20",
-            "factor_aplicado": 0.9
+            "factor_aplicado": 0.75
           },
           "biceps": {
-            "series_semana": 13,
+            "series_semana": 10,
             "rango_original": "14-18",
-            "factor_aplicado": 0.9
+            "factor_aplicado": 0.75
           },
           "triceps": {
-            "series_semana": 13,
+            "series_semana": 10,
             "rango_original": "14-18",
-            "factor_aplicado": 0.9
+            "factor_aplicado": 0.75
           },
           "core": {
-            "series_semana": 11,
+            "series_semana": 9,
             "rango_original": "12-15",
-            "factor_aplicado": 0.9
+            "factor_aplicado": 0.75
           }
         },
         "semanas": [
           {
             "numero": 1,
             "fase": "adaptacion",
-            "volumen_pct": 85,
+            "volumen_pct": 75,
             "rir_objetivo": [
               4
             ],
             "intensidad": "baja",
             "kpis": {
-              "volumen_total_series": 44,
-              "cit_estimado": 39,
-              "tiempo_total_min": 150,
+              "volumen_total_series": 52,
+              "cit_estimado": 38,
+              "tiempo_total_min": 180,
               "adherencia_esperada": 95
             },
-            "notas": "Enfoque en técnica y familiarización. Priorizar ejercicios preventivos."
+            "notas": "Semana de adaptación para evaluar técnica y ajustar a las limitaciones actuales."
           },
           {
             "numero": 2,
             "fase": "acumulacion",
-            "volumen_pct": 100,
+            "volumen_pct": 85,
             "rir_objetivo": [
-              3
+              4
             ],
             "intensidad": "media",
             "kpis": {
-              "volumen_total_series": 52,
-              "cit_estimado": 48,
-              "tiempo_total_min": 150,
+              "volumen_total_series": 58,
+              "cit_estimado": 42,
+              "tiempo_total_min": 180,
               "adherencia_esperada": 95
             },
-            "notas": "Aumentar carga de forma controlada, mantener la técnica."
+            "notas": "Incremento de volumen para estimular adaptaciones sin comprometer la técnica."
           },
           {
             "numero": 3,
             "fase": "intensificacion",
-            "volumen_pct": 95,
+            "volumen_pct": 90,
             "rir_objetivo": [
               3
             ],
             "intensidad": "alta",
             "kpis": {
-              "volumen_total_series": 49,
-              "cit_estimado": 52,
-              "tiempo_total_min": 150,
+              "volumen_total_series": 61,
+              "cit_estimado": 46,
+              "tiempo_total_min": 180,
               "adherencia_esperada": 90
             },
-            "notas": "Intensidad alta con reducción de volumen. Monitorizar molestias."
+            "notas": "Aumentar intensidad mientras se mantiene el enfoque en técnica y control."
           },
           {
             "numero": 4,
@@ -398,26 +421,26 @@
             ],
             "intensidad": "muy_baja",
             "kpis": {
-              "volumen_total_series": 31,
-              "cit_estimado": 25,
-              "tiempo_total_min": 120,
+              "volumen_total_series": 42,
+              "cit_estimado": 30,
+              "tiempo_total_min": 150,
               "adherencia_esperada": 100
             },
-            "notas": "Fase de descarga. Priorizar recuperación y movilidad."
+            "notas": "Semana de descarga para recuperación y preparación del siguiente mesociclo."
           }
         ],
         "distribucion_semanal_tipo": {
-          "lunes": "Full Body A",
+          "lunes": "Full-Body A",
           "martes": "Descanso",
-          "miercoles": "Full Body B",
+          "miercoles": "Full-Body B",
           "jueves": "Descanso",
-          "viernes": "Full Body C",
+          "viernes": "Full-Body C",
           "sabado": "Descanso",
           "domingo": "Descanso"
         },
         "ratios_equilibrio": {
           "push_pull": 1.0,
-          "cadera_rodilla": 0.94,
+          "cadera_rodilla": 0.92,
           "validacion": "ratios_dentro_rango"
         }
       },
@@ -427,19 +450,19 @@
             "dia": 1,
             "dia_semana": "Lunes",
             "hora_recomendada": "08:00",
-            "nombre": "Full Body A",
-            "duracion_min": 50,
+            "nombre": "Full-Body A",
+            "duracion_min": 60,
             "ejercicios": [
               {
-                "nombre": "Press mancuerna 30°",
-                "series": 3,
+                "nombre": "Press mancuernas neutro 30°",
+                "series": 4,
                 "reps": "8-10",
                 "rir": 4,
                 "descanso": 120
               },
               {
                 "nombre": "Remo horizontal neutro",
-                "series": 3,
+                "series": 4,
                 "reps": "8-10",
                 "rir": 4,
                 "descanso": 120
@@ -452,7 +475,7 @@
                 "descanso": 90
               },
               {
-                "nombre": "RDL mancuerna",
+                "nombre": "Peso muerto rumano con mancuernas",
                 "series": 3,
                 "reps": "10-12",
                 "rir": 4,
@@ -475,22 +498,22 @@
             ]
           },
           {
-            "dia": 2,
+            "dia": 3,
             "dia_semana": "Miércoles",
             "hora_recomendada": "08:00",
-            "nombre": "Full Body B",
-            "duracion_min": 50,
+            "nombre": "Full-Body B",
+            "duracion_min": 60,
             "ejercicios": [
               {
-                "nombre": "Press suelo mancuerna",
-                "series": 3,
+                "nombre": "Flexiones inclinadas",
+                "series": 4,
                 "reps": "8-10",
                 "rir": 4,
                 "descanso": 120
               },
               {
                 "nombre": "Dominadas asistidas",
-                "series": 3,
+                "series": 4,
                 "reps": "8-10",
                 "rir": 4,
                 "descanso": 120
@@ -503,37 +526,7 @@
                 "descanso": 90
               },
               {
-                "nombre": "Hip thrust mancuerna",
+                "nombre": "Hip thrust mancuernas",
                 "series": 3,
                 "reps": "10-12",
-                "rir": 4,
-                "descanso": 90
-              },
-              {
-                "nombre": "Rotación externa mancuerna",
-                "series": 3,
-                "reps": "15-20",
-                "rir": 4,
-                "descanso": 60
-              },
-              {
-                "nombre": "Bird-dog",
-                "series": 3,
-                "reps": "15-20",
-                "rir": "-",
-                "descanso": 45
-              }
-            ]
-          },
-          {
-            "dia": 3,
-            "dia_semana": "Viernes",
-            "hora_recomendada": "08:00",
-            "nombre": "Full Body C",
-            "duracion_min": 50,
-            "ejercicios": [
-              {
-                "nombre": "Press mancuernas neutro 30°",
-                "series": 3,
-                "reps": "8-10",
-                "rir": 
+                "rir": 4
