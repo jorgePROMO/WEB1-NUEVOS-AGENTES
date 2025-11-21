@@ -11057,23 +11057,8 @@ async def generate_plans_async(
         
         logger.info(f"✅ Job {job_id} creado para usuario {user_id} (mode: {request_data.mode})")
         
-        # Lanzar background task en thread separado para no bloquear FastAPI
-        import asyncio
-        from concurrent.futures import ThreadPoolExecutor
-        import threading
-        
-        # Función wrapper para ejecutar en thread
-        def run_job_in_thread():
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            try:
-                loop.run_until_complete(process_generation_job(job_id))
-            finally:
-                loop.close()
-        
-        # Ejecutar en thread separado
-        thread = threading.Thread(target=run_job_in_thread, daemon=True)
-        thread.start()
+        # Lanzar background task usando FastAPI BackgroundTasks
+        background_tasks.add_task(process_generation_job, job_id)
         
         # Responder inmediatamente
         return {
