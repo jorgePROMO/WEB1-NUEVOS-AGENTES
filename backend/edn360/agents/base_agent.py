@@ -6,6 +6,7 @@ Proporciona funcionalidad común y estructura estándar
 import os
 import json
 import logging
+import re
 from typing import Dict, Any, Optional
 from datetime import datetime
 from abc import ABC, abstractmethod
