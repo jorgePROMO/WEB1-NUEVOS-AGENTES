@@ -131,9 +131,9 @@ async def run_direct_test():
         
         print(f"✅ E1 completado - Tokens: {e1_tokens.get('total_tokens', 0):,}")
         
-        # 4. E2 - Nutrition Analysis
-        print(f"\n[E2] Analizando nutrición...")
-        e2 = E2NutritionAnalysis()
+        # 4. E2 - Capacity Analysis
+        print(f"\n[E2] Analizando capacidad...")
+        e2 = E2Capacity()
         e2_result = await e2.process(submission, client_summary, None)
         
         if not e2_result.get("success"):
