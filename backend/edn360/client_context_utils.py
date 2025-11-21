@@ -226,23 +226,23 @@ AGENT_FIELD_MAPPING = {
     },
     "E5": {
         "fills": ["sessions"],
-        "requires": ["mesocycle", "profile"]
+        "requires": ["client_summary", "capacity", "adaptation", "mesocycle"]  # BLOQUE 2
     },
     "E6": {
         "fills": ["safe_sessions"],
-        "requires": ["sessions", "constraints", "prehab"]
+        "requires": ["client_summary", "constraints", "prehab", "sessions"]  # BLOQUE 2
     },
     "E7": {
         "fills": ["formatted_plan"],
-        "requires": ["safe_sessions", "mesocycle"]
+        "requires": ["client_summary", "mesocycle", "safe_sessions"]  # BLOQUE 2
     },
     "E8": {
         "fills": ["audit"],
-        "requires": ["safe_sessions", "mesocycle", "capacity", "constraints"]
+        "requires": ["client_summary", "constraints", "mesocycle", "formatted_plan"]  # BLOQUE 2
     },
     "E9": {
         "fills": ["bridge_for_nutrition"],
-        "requires": ["safe_sessions", "mesocycle", "profile"]
+        "requires": ["client_summary", "formatted_plan"]  # BLOQUE 2
     },
     
     # AGENTES DE NUTRICIÓN (N0-N8)
