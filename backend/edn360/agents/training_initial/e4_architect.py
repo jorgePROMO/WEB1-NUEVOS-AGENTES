@@ -236,14 +236,7 @@ Tu respuesta DEBE contener SOLO estos campos:
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // TU ÚNICO CAMPO (OBLIGATORIO):
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      "capacity": { ... },  // De E2
-      "adaptation": { ... },  // De E3
-      // TU CAMPO:
       "mesocycle": {
-        "duracion_semanas": 4,
-        "objetivo": "hipertrofia",
-        "split": "upper-lower",
-        "volumen_por_grupo": {
     "duracion_semanas": 4,
     "objetivo": "perdida_grasa_preservacion_muscular",
     "estrategia": "estandar",
