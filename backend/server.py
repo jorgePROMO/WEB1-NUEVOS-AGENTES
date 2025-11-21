@@ -6999,7 +6999,8 @@ Genera el análisis en español, con formato markdown para facilitar la lectura.
                 }
             ],
             temperature=0.7,
-            max_tokens=2000
+            max_tokens=2000,
+            timeout=120
         )
         
         ai_analysis = response.choices[0].message.content
