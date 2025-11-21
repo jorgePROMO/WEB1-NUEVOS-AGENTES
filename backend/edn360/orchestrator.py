@@ -622,25 +622,16 @@ class EDN360Orchestrator:
                     }
             
             # EJECUTAR AGENTE con client_context + KB
-            # BLOQUE 1 (E1-E4): Usan arquitectura de cajones con client_summary
-            # E5-E9: Todavía usan contexto completo (se refactorizarán en Bloque 2)
-            agents_with_scoped_input = ["E1", "E2", "E3", "E4"]  # BLOQUE 1
+            # ARQUITECTURA DE CAJONES: E1-E9 usan inputs reducidos
+            agents_with_scoped_input = ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"]
             
             if agent.agent_id in agents_with_scoped_input:
-                # NUEVA ARQUITECTURA: Input reducido con cajones
+                # ARQUITECTURA DE CAJONES: Input reducido específico por agente
                 agent_input = build_scoped_input_for_agent(agent.agent_id, client_context)
                 logger.info(f"    📦 Usando input reducido (cajones) para {agent.agent_id}")
                 
-                # CRÍTICO BLOQUE 1: client_context_before debe ser el INPUT reducido, no el contexto completo
-                # Esto permite que la validación compare correctamente
+                # client_context_before = input que el agente recibe (para validación)
                 client_context_before = ClientContext.model_validate(agent_input)
-            elif agent.agent_id in ["E5", "E6", "E7", "E8", "E9"]:
-                # E5-E9: Todavía pasan contexto completo (Bloque 2 pendiente)
-                agent_input = client_context_to_dict(client_context)
-                logger.info(f"    ⏳ {agent.agent_id} usa contexto completo (Bloque 2 pendiente)")
-                
-                # Para E5-E9, client_context_before es el contexto completo
-                client_context_before = ClientContext.model_validate(client_context.model_dump())
             else:
                 # Agente legacy: pasar formato antiguo (e1_output, e2_output, etc.)
                 logger.info(f"    ⚠️ Preparando input legacy para {agent.agent_id}")
