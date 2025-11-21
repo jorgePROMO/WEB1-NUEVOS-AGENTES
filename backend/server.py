@@ -11143,6 +11143,12 @@ async def generate_plans_async(
                 "nutrition_plan_id": None
             },
             "error_message": None,
+            "token_usage": {
+                "total_prompt_tokens": 0,
+                "total_completion_tokens": 0,
+                "total_tokens": 0,
+                "by_agent": {}
+            },
             "created_at": datetime.now(timezone.utc),
             "started_at": None,
             "completed_at": None
