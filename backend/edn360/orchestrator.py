@@ -570,6 +570,9 @@ class EDN360Orchestrator:
                 # Agente legacy: pasar formato antiguo (e1_output, e2_output, etc.)
                 logger.info(f"    ⚠️ Preparando input legacy para {agent.agent_id}")
                 
+                # Para legacy, client_context_before es el contexto completo
+                client_context_before = ClientContext.model_validate(client_context.model_dump())
+                
                 # Construir outputs en formato legacy
                 # E1 llena múltiples campos, así que consolidamos todo
                 legacy_outputs = {}
