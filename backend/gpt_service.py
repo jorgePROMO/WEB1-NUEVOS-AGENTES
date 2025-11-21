@@ -100,18 +100,22 @@ Basándote ÚNICAMENTE en estos datos, genera el análisis personalizado siguien
 """
     
     try:
-        # Inicializar el chat con GPT-4o
-        chat = LlmChat(
-            api_key=EMERGENT_LLM_KEY,
-            session_id=f"prospect-{prospect_data.get('email')}",
-            system_message=SYSTEM_PROMPT
-        ).with_model("openai", "gpt-4o")
+        # Inicializar cliente de OpenAI
+        client = AsyncOpenAI(api_key=OPENAI_API_KEY)
         
-        # Crear mensaje del usuario
-        user_message = UserMessage(text=formatted_data)
+        # Crear la solicitud a GPT-4o
+        completion = await client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": formatted_data}
+            ],
+            temperature=0.7,
+            max_tokens=2000
+        )
         
-        # Enviar mensaje y obtener respuesta
-        response = await chat.send_message(user_message)
+        # Obtener respuesta
+        response = completion.choices[0].message.content
         
         # Agregar título personalizado
         report_title = f"# Tu Ruta Personal para Transformarte – Análisis para {prospect_data.get('nombre')}\n\n"
