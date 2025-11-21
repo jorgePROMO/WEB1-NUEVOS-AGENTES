@@ -384,9 +384,8 @@ Procesa inputs de E1-E3 y diseña el mesociclo mensual."""
     
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         """
-        Valida que devuelva client_context con mesocycle lleno
-        
-        NUEVO (Fase 2): Validamos estructura de salida
+        Valida que devuelva client_context con mesocycle lleno.
+        BLOQUE 1: Filtra campos no permitidos para respetar contrato.
         """
         try:
             output = self._extract_json_from_response(raw_output)
@@ -400,6 +399,26 @@ Procesa inputs de E1-E3 y diseña el mesociclo mensual."""
             # Validar que E4 llenó mesocycle
             if training.get("mesocycle") is None:
                 raise ValueError("E4 no llenó training.mesocycle")
-            return output
+            
+            # FILTRAR: E4 solo puede devolver mesocycle
+            # Remover campos que NO le pertenecen si el LLM los incluyó
+            allowed_fields = ["client_summary", "capacity", "adaptation", "mesocycle"]
+            filtered_training = {
+                field: training[field] 
+                for field in allowed_fields 
+                if field in training
+            }
+            
+            # Reconstruir output con campos filtrados
+            filtered_output = {
+                "client_context": {
+                    "meta": client_context.get("meta"),
+                    "raw_inputs": client_context.get("raw_inputs"),
+                    "training": filtered_training
+                }
+            }
+            
+            return filtered_output
+            
         except Exception as e:
             raise ValueError(f"Error procesando output de E4: {str(e)}")
