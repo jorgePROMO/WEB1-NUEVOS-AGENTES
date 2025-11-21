@@ -124,7 +124,7 @@ def build_scoped_input_for_agent(agent_id: str, client_context: ClientContext) -
             "raw_inputs": {},  # Ya NO recibe raw_inputs
             "training": {
                 "client_summary": client_context.training.client_summary,
-                "profile": client_context.training.profile,
+                # E3 NO necesita profile completo, solo client_summary es suficiente
                 "capacity": client_context.training.capacity,
                 "adaptation": None  # Lo que él va a llenar
             }
