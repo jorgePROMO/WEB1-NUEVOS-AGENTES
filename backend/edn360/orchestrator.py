@@ -643,13 +643,30 @@ class EDN360Orchestrator:
             # Actualizar client_context con el output del agente
             # El agente debe devolver el client_context completo actualizado
             if "client_context" in result.get("output", {}):
-                # Agente refactorizado (todos E1-E9 ahora)
-                # IMPORTANTE: Pasar por process_output() del agente para filtrar campos
-                # Esto aplica el filtrado de campos para E3, E4, etc.
-                raw_output_json = json.dumps(result.get("output"))
-                processed_output = agent.process_output(raw_output_json)
+                output_context = result.get("output", {})["client_context"]
                 
-                client_context = ClientContext.model_validate(processed_output["client_context"])
+                # BLOQUE 1: Filtrar campos para E3 y E4 (contrato estricto de cajones)
+                if agent.agent_id == "E3":
+                    # E3 solo puede tener: client_summary, capacity, adaptation
+                    training = output_context.get("training", {})
+                    filtered_training = {
+                        k: v for k, v in training.items()
+                        if k in ["client_summary", "capacity", "adaptation"]
+                    }
+                    output_context["training"] = filtered_training
+                    logger.info(f"    🔒 E3: Campos filtrados (solo client_summary + capacity + adaptation)")
+                
+                elif agent.agent_id == "E4":
+                    # E4 solo puede tener: client_summary, capacity, adaptation, mesocycle
+                    training = output_context.get("training", {})
+                    filtered_training = {
+                        k: v for k, v in training.items()
+                        if k in ["client_summary", "capacity", "adaptation", "mesocycle"]
+                    }
+                    output_context["training"] = filtered_training
+                    logger.info(f"    🔒 E4: Campos filtrados (solo client_summary + capacity + adaptation + mesocycle)")
+                
+                client_context = ClientContext.model_validate(output_context)
                 logger.info(f"  ✅ {agent.agent_id} devolvió client_context actualizado")
             else:
                 # Compatibilidad: agente legacy (E2, E3, E4, E6, E7, E9)
