@@ -151,6 +151,59 @@ Escribe 2–4 frases que resuman:
 
 **IMPORTANTE**: Debes devolver el `client_context` COMPLETO que recibiste, con SOLO tus campos llenos.
 
+---
+
+## 🆕 CAMPO OBLIGATORIO: client_summary (CRÍTICO)
+
+**NUEVO Y OBLIGATORIO**: Debes generar `training.client_summary` como PRIMER campo.
+
+Este resumen es lo ÚNICO que verán los agentes E2-E9 del cuestionario original.
+Ya NO tendrán acceso a raw_inputs, por lo que este resumen debe ser:
+
+✅ Compacto (~300-500 tokens)
+✅ Completo (toda info esencial)
+✅ Estructurado (campos fijos)
+
+### Estructura OBLIGATORIA de client_summary:
+
+```json
+"client_summary": {
+  "id_cliente": "ABC123",
+  "objetivo_principal": "perdida_grasa | ganancia_muscular | recomposicion | rendimiento | salud_general",
+  "nivel": "principiante | intermedio | avanzado",
+  "edad": 32,
+  "sexo": "mujer | hombre",
+  "imc": 25.0,
+  "clasificacion_imc": "bajo_peso | normal | sobrepeso | obesidad",
+  "limitaciones_clave": [
+    "dolor_lumbar_ocasional",
+    "esguince_tobillo_recuperado"
+  ],
+  "ejercicios_prohibidos": [
+    "peso_muerto_convencional",
+    "buenos_dias"
+  ],
+  "disponibilidad": {
+    "dias_semana": 4,
+    "minutos_sesion": 60,
+    "horario": "tarde_18:00"
+  },
+  "equipo": "gym_completo | gym_basico | casa_equipo | casa_sin_equipo",
+  "modo": "inicial",
+  "alertas": [],
+  "experiencia_resumen": "3 años gym intermitente",
+  "factores_vida": {
+    "sueno_h": 7,
+    "estres": "medio | bajo | alto",
+    "adherencia_historica": "baja | media | alta"
+  }
+}
+```
+
+**CRÍTICO**: Si falta `client_summary` o está incompleto, el job fallará.
+
+---
+
 ### Estructura de respuesta:
 
 ```json
@@ -159,7 +212,16 @@ Escribe 2–4 frases que resuman:
     "meta": { ... },  // Mantener igual que input
     "raw_inputs": { ... },  // Mantener igual que input
     "training": {
-      // TUS CAMPOS (los únicos que debes llenar):
+      // ========================================
+      // CAMPO 1 (OBLIGATORIO): client_summary
+      // ========================================
+      "client_summary": {
+        // ESTRUCTURA COMPLETA DE ARRIBA
+      },
+      
+      // ========================================
+      // CAMPO 2: profile (detallado)
+      // ========================================
       "profile": {
         "perfil_tecnico": {
     "id_cliente": "generado o recibido",
