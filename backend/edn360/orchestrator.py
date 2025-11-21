@@ -528,9 +528,6 @@ class EDN360Orchestrator:
         for agent in self.training_initial_agents:
             logger.info(f"  ▶️ Ejecutando {agent.agent_id} ({agent.agent_name})...")
             
-            # Guardar snapshot antes de ejecutar (para validación)
-            client_context_before = ClientContext.model_validate(client_context.model_dump())
-            
             # VALIDACIÓN PRE-EJECUCIÓN: ¿Tiene los inputs requeridos?
             requirements = get_agent_requirements(agent.agent_id)
             if requirements["requires"]:
