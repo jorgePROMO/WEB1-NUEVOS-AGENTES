@@ -25,7 +25,7 @@ if not OPENAI_API_KEY:
     print("❌ ERROR: OPENAI_API_KEY no encontrada")
     sys.exit(1)
 else:
-    print(f"✅ OpenAI Key cargada: {OPENAI_API_KEY[:20]}...")
+    print(f"✅ OpenAI Key cargada correctamente")
 
 # PROMPT AGENTE 1
 AGENTE_1_PROMPT = """Eres un nutricionista experto calculando macros y creando menús personalizados.
