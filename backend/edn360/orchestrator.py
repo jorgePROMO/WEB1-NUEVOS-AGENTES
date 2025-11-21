@@ -555,6 +555,10 @@ class EDN360Orchestrator:
                 # NUEVA ARQUITECTURA: Input reducido con cajones
                 agent_input = build_scoped_input_for_agent(agent.agent_id, client_context)
                 logger.info(f"    📦 Usando input reducido (cajones) para {agent.agent_id}")
+                
+                # CRÍTICO BLOQUE 1: client_context_before debe ser el INPUT reducido, no el contexto completo
+                # Esto permite que la validación compare correctamente
+                client_context_before = ClientContext.model_validate(agent_input)
             elif agent.agent_id in ["E5", "E6", "E7", "E8", "E9"]:
                 # E5-E9: Todavía pasan contexto completo (Bloque 2 pendiente)
                 agent_input = client_context_to_dict(client_context)
