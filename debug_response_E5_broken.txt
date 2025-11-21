@@ -3,7 +3,7 @@
   "client_context": {
     "meta": {
       "client_id": "unknown",
-      "snapshot_id": "snapshot_unknown_1_4668bc35",
+      "snapshot_id": "snapshot_unknown_1_107eb7c1",
       "version": 1,
       "selected_inputs": {
         "cuestionario": "unknown",
@@ -35,30 +35,31 @@
           "deportes_previos": [
             "culturismo"
           ],
-          "notas": "Ha sido culturista profesional con entrenamiento constante."
+          "notas": "Entrenamiento avanzado con dedicación alta en gimnasio."
         },
         "objetivo": {
-          "principal": "mejora_general",
+          "principal": "salud_general",
           "secundarios": [
-            "perdida_grasa"
+            "definicion_muscular",
+            "mejora_fisica"
           ],
-          "plazo": "6_meses"
+          "plazo": "largo_plazo"
         },
         "limitaciones_clinicas": {
           "lesiones": [
             {
-              "zona": "hombros",
+              "zona": "hombro",
               "tipo": "manguito_rotador",
-              "gravedad": "moderada",
+              "gravedad": "cronica",
               "estado": "activa",
-              "notas": "Problemas en ambos hombros, requiere precaución en ejercicios de empuje."
+              "notas": "Compromiso en ambos hombros, requiere manejo cuidadoso."
             },
             {
               "zona": "lumbar",
-              "tipo": "hernia_discal",
-              "gravedad": "moderada",
+              "tipo": "hernia_L4_L5",
+              "gravedad": "cronica",
               "estado": "activa",
-              "notas": "Hernia L4-L5, evitar ejercicios con compresión axial alta."
+              "notas": "Requiere evitar carga axial alta y movimientos bruscos."
             }
           ],
           "restricciones_medicas": [
@@ -76,34 +77,32 @@
         "equipo": {
           "tipo": "gym_completo",
           "equipamiento_especifico": [
-            "mancuernas",
-            "barra",
-            "maquinas",
-            "rack"
+            "pesas",
+            "máquinas"
           ],
           "limitaciones": []
         },
         "datos_adicionales": {
-          "nutricion_actual": "4 comidas diarias, dieta keto previa con buenos resultados",
+          "nutricion_actual": "4 comidas al día, tendencia a comidas fuertes en comida principal.",
           "sueno_promedio_h": 7,
           "estres_nivel": "alto",
           "adherencia_historica": "media"
         },
         "notas_interpretativas": [
-          "Cliente avanzado con historial de culturismo, requiere manejo cuidadoso de lesiones activas.",
-          "Objetivo principal es la mejora general con foco en pérdida de grasa.",
-          "Tiene un horario de entrenamiento fijo en la mañana con equipo completo disponible.",
-          "Se recomienda precaución con ejercicios de empuje por problemas en el manguito rotador."
+          "Cliente avanzado con historial de culturismo y dedicación constante.",
+          "Objetivo principal en mejorar salud general y definición muscular.",
+          "Lesiones crónicas en hombro y lumbar requieren manejo preventivo.",
+          "Disponibilidad limitada a 3 sesiones semanales, pero con equipo completo."
         ],
         "contrato_para_E2": {
           "prioridades": [
-            "Diseñar programa que minimice riesgo de lesiones en hombros y zona lumbar.",
-            "Incluir trabajo de movilidad y control postural.",
-            "Enfocar en ejercicios seguros y controlados, evitando compresión axial excesiva."
+            "Diseñar un plan que maneje las lesiones crónicas de hombro y lumbar.",
+            "Incluir trabajo preventivo y de movilidad específico.",
+            "Asegurar progreso sin sobrecargar las áreas comprometidas."
           ],
           "restricciones": [
-            "Evitar press militar y press banca pesado hasta evaluar técnica y estado.",
-            "Incluir trabajo específico de fortalecimiento del core y manguito rotador."
+            "Evitar ejercicios que sobrecarguen el manguito rotador.",
+            "Controlar la carga axial para proteger la zona lumbar."
           ]
         }
       },
@@ -159,49 +158,30 @@
         }
       },
       "prehab": {
-        "protocolo_preventivo": [
-          {
-            "foco": "manguito_rotador",
-            "ejercicios": [
-              "face_pull",
-              "rotacion_externa_mancuernas",
-              "YTW_en_banco",
-              "remo_horizontal_neutro"
-            ],
-            "frecuencia": "3 veces por semana",
-            "notas": "Fortalecimiento preventivo para evitar agravamiento de lesión."
-          },
-          {
-            "foco": "core/lumbar",
-            "ejercicios": [
-              "plancha_frontal",
-              "bird_dog",
-              "dead_bug",
-              "pallof_press"
-            ],
-            "frecuencia": "3 veces por semana",
-            "notas": "Ejercicios para estabilización de core y protección lumbar."
-          }
+        "protocolos_preventivos": [
+          "Incluir ejercicios de fortalecimiento de manguito rotador.",
+          "Integrar rutinas de movilidad y fortalecimiento del core.",
+          "Programar sesiones de recuperación activa semanalmente."
         ]
       },
       "progress": null,
       "capacity": {
         "seg_score": 4.5,
-        "interpretacion_seg": "Cliente con riesgo moderado debido a lesiones activas en hombros y lumbar. Supervisión médica recomendada.",
+        "interpretacion_seg": "Muy conservador, priorizar técnica. Progresión debe ser cuidadosa debido a las lesiones activas.",
         "split_recomendado": {
           "tipo": "full-body",
           "frecuencia_semanal": 3,
           "distribucion": [
-            "Full-Body A",
-            "Full-Body B",
-            "Full-Body C"
+            "Full-body A",
+            "Full-body B",
+            "Full-body C"
           ],
-          "justificacion": "Limitaciones clínicas y disponibilidad de 3 días. Proporciona tiempo de recuperación adecuado y minimiza riesgo de sobrecarga."
+          "justificacion": "Dada la disponibilidad de 3 días y las limitaciones por lesiones, se recomienda un enfoque full-body para maximizar la recuperación y reducir riesgo de sobrecarga."
         },
         "tiempo_sesion": {
           "maximo_minutos": 50,
           "ajustes_aplicados": [
-            "Reducido 10 min por lesiones activas y alta carga de trabajo previa"
+            "Reducido 10 min debido a lesiones activas para permitir trabajo preventivo"
           ],
           "estructura_recomendada": {
             "calentamiento": 10,
@@ -214,72 +194,86 @@
           "semanas_1_2": 5,
           "semanas_3_4": 4,
           "mes_2_en_adelante": 3,
-          "notas": "Iniciar conservador por lesiones activas. RIR 5 para asegurar técnica y evitar agravamiento."
+          "notas": "Iniciar conservador debido a la presencia de lesiones activas. Evaluar técnica y ajustar progresivamente."
         },
         "banderas_clinicas": [
           {
-            "tipo": "lumbar_activa",
-            "nivel_alerta": "alto",
-            "accion": "Monitorizar dolor post-sesión. Si aumenta, consultar con un profesional de salud."
+            "tipo": "lesion_hombro",
+            "nivel_alerta": "medio",
+            "accion": "Evitar movimientos de press y sobrecarga directa. Enfocar en fortalecimiento del manguito rotador."
           },
           {
-            "tipo": "hombros_activo",
+            "tipo": "lesion_lumbar",
             "nivel_alerta": "alto",
-            "accion": "Evitar ejercicios de empuje con carga alta. Evaluar progreso y ajustar según respuesta."
+            "accion": "Evitar compresión axial y flexión lumbar con carga. Priorizar estabilidad del core."
           }
         ],
         "restricciones_ejercicios": [
           {
             "ejercicio": "Press militar",
-            "razon": "Lesión de manguito rotador",
-            "sustitucion": "Press con mancuernas bajo control"
+            "razon": "Lesión activa en manguito rotador",
+            "sustitucion": "Press con mancuernas sentado"
           },
           {
             "ejercicio": "Peso muerto convencional",
-            "razon": "Hernia lumbar activa",
-            "sustitucion": "Peso muerto rumano con mancuernas"
+            "razon": "Hernia discal L4-L5",
+            "sustitucion": "RDL con mancuernas"
           }
         ],
         "ejercicios_obligatorios": [
           {
             "ejercicio": "Face pull",
-            "frecuencia": "3 veces/semana",
+            "frecuencia": "Cada sesión",
             "razon": "Fortalecimiento del manguito rotador"
           },
           {
             "ejercicio": "Plancha frontal",
             "frecuencia": "Cada sesión",
-            "razon": "Estabilización lumbar"
+            "razon": "Estabilidad del core y protección lumbar"
           }
-        ]
+        ],
+        "contrato_para_E3": {
+          "seg_score": 4.5,
+          "nivel_conservadurismo": "muy_conservador",
+          "parametros_progresion": {
+            "velocidad": "lenta",
+            "incremento_carga_pct": 2,
+            "incremento_volumen_pct": 5,
+            "frecuencia_evaluacion": "cada 2 semanas"
+          },
+          "zonas_monitorizacion": [
+            "hombro",
+            "lumbar"
+          ],
+          "clearance_medico_requerido": true
+        }
       },
       "adaptation": {
-        "ia_score": 4.0,
-        "interpretacion_ia": "Adaptador lento. Requiere más tiempo para progresar debido a lesiones activas y estrés alto.",
-        "tipo_adaptador": "lento",
+        "ia_score": 5,
+        "interpretacion_ia": "Adaptador medio. Responde al entrenamiento, pero requiere ajustes cuidadosos debido a lesiones.",
+        "tipo_adaptador": "medio",
         "factores_ia": {
           "positivos": [
-            "Experiencia previa en culturismo: +1",
+            "Experiencia previa avanzada en culturismo: +1",
             "Sueño adecuado (7h): +0.5"
           ],
           "negativos": [
             "Estrés alto: -1.5",
-            "Lesiones activas en hombros y lumbar: -1.5",
-            "Adherencia histórica media: -1"
+            "Lesiones crónicas activas (hombro y lumbar): -2"
           ],
-          "ia_calculado": 4.0
+          "ia_calculado": 5
         },
         "resiliencia_lesiones": {
           "clasificacion": "baja",
-          "justificacion": "Lesiones activas en hombros y lumbar. Requiere monitorización y adaptación constante.",
-          "impacto_programa": "Progresión conservadora con enfoque en técnica y prevención de lesiones."
+          "justificacion": "Lesiones crónicas en hombro y lumbar sin historial de recuperación completa. Necesita supervisión continua.",
+          "impacto_programa": "Programa muy conservador, foco en técnica y fortalecimiento correctivo."
         },
         "estrategia_progresion": {
           "tipo": "conservadora",
-          "justificacion": "IA=4.0 (lento) + SEG=4.5 (riesgo moderado) = progresión conservadora necesaria.",
+          "justificacion": "IA=5 (medio) + SEG=4.5 (muy conservador) = progresión conservadora para minimizar riesgos.",
           "parametros": {
             "incremento_volumen_pct": 5,
-            "incremento_carga_pct": 2.5,
+            "incremento_carga_pct": 2,
             "frecuencia_ajustes": "cada_2_semanas",
             "rir_inicial": 5,
             "rir_objetivo_mes_2": 3
@@ -296,20 +290,20 @@
         "indicadores_clave": {
           "volumen_semanal_ajustado": "base × 0.75",
           "intensidad_ajustada": "base × 0.75",
-          "tiempo_adaptacion_inicial": "4_semanas",
-          "ventana_progresion": "semanas_5_a_16"
+          "tiempo_adaptacion_inicial": "2_semanas",
+          "ventana_progresion": "semanas_3_a_12"
         },
         "contrato_para_E4": {
-          "ia_score": 4.0,
-          "tipo_adaptador": "lento",
+          "ia_score": 5,
+          "tipo_adaptador": "medio",
           "estrategia": "conservadora",
           "factor_volumen": 0.75,
           "factor_intensidad": 0.75,
           "frecuencia_progresion": "cada_2_semanas",
           "prioridades": [
-            "Enfocar en técnica y evitar carga excesiva",
-            "Incluir trabajo correctivo en cada sesión",
-            "Monitorizar hombros y lumbar después de ejercicios"
+            "Técnica y seguridad antes que carga",
+            "Integrar correctivos de manguito y core en cada sesión",
+            "Monitorizar hombro y lumbar continuamente"
           ]
         }
       },
@@ -365,80 +359,76 @@
           {
             "numero": 1,
             "fase": "adaptacion",
-            "volumen_pct": 75,
+            "volumen_pct": 85,
             "rir_objetivo": [
               5
             ],
             "intensidad": "baja",
             "kpis": {
-              "volumen_total_series": 48,
-              "cit_estimado": 36,
+              "volumen_total_series": 40,
+              "cit_estimado": 35,
               "tiempo_total_min": 150,
               "adherencia_esperada": 95
             },
-            "notas": "Semana de introducción. Foco en técnica y adaptación a ejercicios."
+            "notas": "Semana de familiarización técnica. Prioridad: patrones de movimiento correctos."
           },
           {
             "numero": 2,
             "fase": "acumulacion",
-            "volumen_pct": 85,
+            "volumen_pct": 100,
             "rir_objetivo": [
-              4
+              5
             ],
             "intensidad": "baja",
             "kpis": {
-              "volumen_total_series": 54,
+              "volumen_total_series": 47,
               "cit_estimado": 40,
               "tiempo_total_min": 150,
               "adherencia_esperada": 95
             },
-            "notas": "Incremento de volumen. Mantener técnica y evaluar respuesta."
+            "notas": "Volumen completo. Aumentar carga si técnica es sólida."
           },
           {
             "numero": 3,
             "fase": "intensificacion",
-            "volumen_pct": 90,
+            "volumen_pct": 95,
             "rir_objetivo": [
               4
             ],
             "intensidad": "media",
             "kpis": {
-              "volumen_total_series": 58,
-              "cit_estimado": 44,
+              "volumen_total_series": 45,
+              "cit_estimado": 45,
               "tiempo_total_min": 150,
               "adherencia_esperada": 90
             },
-            "notas": "Aumenta la intensidad. Vigilar respuesta de hombros y lumbar."
+            "notas": "Semana de mayor intensidad. RIR más bajo, volumen ligeramente reducido."
           },
           {
             "numero": 4,
             "fase": "deload",
-            "volumen_pct": 65,
+            "volumen_pct": 60,
             "rir_objetivo": [
               5
             ],
             "intensidad": "muy_baja",
             "kpis": {
-              "volumen_total_series": 42,
-              "cit_estimado": 28,
+              "volumen_total_series": 28,
+              "cit_estimado": 25,
               "tiempo_total_min": 120,
               "adherencia_esperada": 100
             },
-            "notas": "Recuperación activa. Preparación para el próximo mesociclo."
+            "notas": "Descarga activa. Recuperación y preparación para siguiente mesociclo."
           }
         ],
         "distribucion_semanal_tipo": {
-          "lunes": "Full-Body A",
-          "martes": "Descanso",
-          "miercoles": "Full-Body B",
-          "jueves": "Descanso",
-          "viernes": "Full-Body C",
-          "sabado": "Descanso",
-          "domingo": "Descanso"
+          "lunes": "Full-body A",
+          "miércoles": "Full-body B",
+          "viernes": "Full-body C"
         },
         "ratios_equilibrio": {
           "push_pull": 1.0,
-          "cadera_rodilla": 0.86,
+          "cadera_rodilla": 1.0,
           "validacion": "ratios_dentro_rango"
         }
       },
@@ -448,45 +438,153 @@
             "dia": 1,
             "dia_semana": "Lunes",
             "hora_recomendada": "08:00",
-            "nombre": "Full-Body A",
+            "nombre": "Full-body A",
             "duracion_min": 50,
             "ejercicios": [
-              {"nombre": "Press con mancuernas neutro", "series": 4, "reps": "8-10", "rir": "5", "descanso": 120},
-              {"nombre": "Remo horizontal neutro", "series": 4, "reps": "8-10", "rir": "5", "descanso": 120},
-              {"nombre": "Sentadilla goblet", "series": 4, "reps": "10-12", "rir": "5", "descanso": 90},
-              {"nombre": "Peso muerto rumano con mancuernas", "series": 3, "reps": "10-12", "rir": "5", "descanso": 90},
-              {"nombre": "Face pull", "series": 3, "reps": "12-15", "rir": "5", "descanso": 60},
-              {"nombre": "Plancha frontal", "series": 3, "reps": "30s", "rir": "-", "descanso": 45}
+              {
+                "nombre": "Press con mancuernas inclinado",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Remo con mancuernas neutro",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Sentadilla goblet",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "RDL con mancuernas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Face pull",
+                "series": 3,
+                "reps": "15",
+                "rir": "5",
+                "descanso": 60
+              },
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30s",
+                "rir": "-",
+                "descanso": 45
+              }
             ]
           },
           {
             "dia": 2,
             "dia_semana": "Miércoles",
             "hora_recomendada": "08:00",
-            "nombre": "Full-Body B",
+            "nombre": "Full-body B",
             "duracion_min": 50,
             "ejercicios": [
-              {"nombre": "Press inclinado mancuernas", "series": 4, "reps": "8-10", "rir": "5", "descanso": 120},
-              {"nombre": "Dominadas asistidas", "series": 4, "reps": "8-10", "rir": "5", "descanso": 120},
-              {"nombre": "Zancadas búlgaras", "series": 4, "reps": "10-12", "rir": "5", "descanso": 90},
-              {"nombre": "Hip thrust con mancuernas", "series": 3, "reps": "10-12", "rir": "5", "descanso": 90},
-              {"nombre": "Rotación externa con mancuernas", "series": 3, "reps": "12-15", "rir": "5", "descanso": 60},
-              {"nombre": "Bird dog", "series": 3, "reps": "10", "rir": "-", "descanso": 45}
+              {
+                "nombre": "Press con mancuernas neutro",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Remo con mancuernas inclinado",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Zancadas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Hip thrust con mancuernas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Rotación externa en polea",
+                "series": 3,
+                "reps": "15",
+                "rir": "5",
+                "descanso": 60
+              },
+              {
+                "nombre": "Bird dog",
+                "series": 3,
+                "reps": "10",
+                "rir": "-",
+                "descanso": 45
+              }
             ]
           },
           {
             "dia": 3,
             "dia_semana": "Viernes",
             "hora_recomendada": "08:00",
-            "nombre": "Full-Body C",
+            "nombre": "Full-body C",
             "duracion_min": 50,
             "ejercicios": [
-              {"nombre": "Press con mancuernas 30°", "series": 4, "reps": "8-10", "rir": "5", "descanso": 120},
-              {"nombre": "Remo unilateral con mancuernas", "series": 4, "reps": "8-10", "rir": "5", "descanso": 120},
-              {"nombre": "Step-ups", "series": 4, "reps": "10-12", "rir": "5", "descanso": 90},
-              {"nombre": "RDL unilateral", "series": 3, "reps": "10-12", "rir": "5", "descanso": 90},
-              {"nombre": "YTW en banco", "series": 3, "reps": "12-15", "rir": "5", "descanso": 60},
-              {"nombre": "Dead bug", "series": 3, "reps": "10", "rir": "-", "descanso": 45}
+              {
+                "nombre": "Press con mancuernas 30°",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Remo unilateral con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Step-ups",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "RDL unilateral",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "YTW en banco",
+                "series": 3,
+                "reps": "15",
+                "rir": "5",
+                "descanso": 60
+              },
+              {
+                "nombre": "Dead bug",
+                "series": 3,
+                "reps": "10",
+                "rir": "-",
+                "descanso": 45
+              }
             ]
           }
         ],
@@ -495,45 +593,153 @@
             "dia": 1,
             "dia_semana": "Lunes",
             "hora_recomendada": "08:00",
-            "nombre": "Full-Body A",
+            "nombre": "Full-body A",
             "duracion_min": 50,
             "ejercicios": [
-              {"nombre": "Press con mancuernas neutro", "series": 4, "reps": "8-10", "rir": "4", "descanso": 120},
-              {"nombre": "Remo horizontal neutro", "series": 4, "reps": "8-10", "rir": "4", "descanso": 120},
-              {"nombre": "Sentadilla goblet", "series": 4, "reps": "10-12", "rir": "4", "descanso": 90},
-              {"nombre": "Peso muerto rumano con mancuernas", "series": 3, "reps": "10-12", "rir": "4", "descanso": 90},
-              {"nombre": "Face pull", "series": 3, "reps": "12-15", "rir": "4", "descanso": 60},
-              {"nombre": "Plancha frontal", "series": 3, "reps": "30s", "rir": "-", "descanso": 45}
+              {
+                "nombre": "Press con mancuernas inclinado",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Remo con mancuernas neutro",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Sentadilla goblet",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "RDL con mancuernas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Face pull",
+                "series": 3,
+                "reps": "15",
+                "rir": "5",
+                "descanso": 60
+              },
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30s",
+                "rir": "-",
+                "descanso": 45
+              }
             ]
           },
           {
             "dia": 2,
             "dia_semana": "Miércoles",
             "hora_recomendada": "08:00",
-            "nombre": "Full-Body B",
+            "nombre": "Full-body B",
             "duracion_min": 50,
             "ejercicios": [
-              {"nombre": "Press inclinado mancuernas", "series": 4, "reps": "8-10", "rir": "4", "descanso": 120},
-              {"nombre": "Dominadas asistidas", "series": 4, "reps": "8-10", "rir": "4", "descanso": 120},
-              {"nombre": "Zancadas búlgaras", "series": 4, "reps": "10-12", "rir": "4", "descanso": 90},
-              {"nombre": "Hip thrust con mancuernas", "series": 3, "reps": "10-12", "rir": "4", "descanso": 90},
-              {"nombre": "Rotación externa con mancuernas", "series": 3, "reps": "12-15", "rir": "4", "descanso": 60},
-              {"nombre": "Bird dog", "series": 3, "reps": "10", "rir": "-", "descanso": 45}
+              {
+                "nombre": "Press con mancuernas neutro",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Remo con mancuernas inclinado",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Zancadas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Hip thrust con mancuernas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Rotación externa en polea",
+                "series": 3,
+                "reps": "15",
+                "rir": "5",
+                "descanso": 60
+              },
+              {
+                "nombre": "Bird dog",
+                "series": 3,
+                "reps": "10",
+                "rir": "-",
+                "descanso": 45
+              }
             ]
           },
           {
             "dia": 3,
             "dia_semana": "Viernes",
             "hora_recomendada": "08:00",
-            "nombre": "Full-Body C",
+            "nombre": "Full-body C",
             "duracion_min": 50,
             "ejercicios": [
-              {"nombre": "Press con mancuernas 30°", "series": 4, "reps": "8-10", "rir": "4", "descanso": 120},
-              {"nombre": "Remo unilateral con mancuernas", "series": 4, "reps": "8-10", "rir": "4", "descanso": 120},
-              {"nombre": "Step-ups", "series": 4, "reps": "10-12", "rir": "4", "descanso": 90},
-              {"nombre": "RDL unilateral", "series": 3, "reps": "10-12", "rir": "4", "descanso": 90},
-              {"nombre": "YTW en banco", "series": 3, "reps": "12-15", "rir": "4", "descanso": 60},
-              {"nombre": "Dead bug", "series": 3, "reps": "10", "rir": "-", "descanso": 45}
+              {
+                "nombre": "Press con mancuernas 30°",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Remo unilateral con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Step-ups",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "RDL unilateral",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "YTW en banco",
+                "series": 3,
+                "reps": "15",
+                "rir": "5",
+                "descanso": 60
+              },
+              {
+                "nombre": "Dead bug",
+                "series": 3,
+                "reps": "10",
+                "rir": "-",
+                "descanso": 45
+              }
             ]
           }
         ],
@@ -542,41 +748,87 @@
             "dia": 1,
             "dia_semana": "Lunes",
             "hora_recomendada": "08:00",
-            "nombre": "Full-Body A",
+            "nombre": "Full-body A",
             "duracion_min": 50,
             "ejercicios": [
-              {"nombre": "Press con mancuernas neutro", "series": 4, "reps": "8-10", "rir": "4", "descanso": 120},
-              {"nombre": "Remo horizontal neutro", "series": 4, "reps": "8-10", "rir": "4", "descanso": 120},
-              {"nombre": "Sentadilla goblet", "series": 4, "reps": "10-12", "rir": "4", "descanso": 90},
-              {"nombre": "Peso muerto rumano con mancuernas", "series": 3, "reps": "10-12", "rir": "4", "descanso": 90},
-              {"nombre": "Face pull", "series": 3, "reps": "12-15", "rir": "4", "descanso": 60},
-              {"nombre": "Plancha frontal", "series": 3, "reps": "30s", "rir": "-", "descanso": 45}
+              {
+                "nombre": "Press con mancuernas inclinado",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Remo con mancuernas neutro",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Sentadilla goblet",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "RDL con mancuernas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Face pull",
+                "series": 3,
+                "reps": "15",
+                "rir": "4",
+                "descanso": 60
+              },
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30s",
+                "rir": "-",
+                "descanso": 45
+              }
             ]
           },
           {
             "dia": 2,
             "dia_semana": "Miércoles",
             "hora_recomendada": "08:00",
-            "nombre": "Full-Body B",
+            "nombre": "Full-body B",
             "duracion_min": 50,
             "ejercicios": [
-              {"nombre": "Press inclinado mancuernas", "series": 4, "reps": "8-10", "rir": "4", "descanso": 120},
-              {"nombre": "Dominadas asistidas", "series": 4, "reps": "8-10", "rir": "4", "descanso": 120},
-              {"nombre": "Zancadas búlgaras", "series": 4, "reps": "10-12", "rir": "4", "descanso": 90},
-              {"nombre": "Hip thrust con mancuernas", "series": 3, "reps": "10-12", "rir": "4", "descanso": 90},
-              {"nombre": "Rotación externa con mancuernas", "series": 3, "reps": "12-15", "rir": "4", "descanso": 60},
-              {"nombre": "Bird dog", "series": 3, "reps": "10", "rir": "-", "descanso": 45}
-            ]
-          },
-          {
-            "dia": 3,
-            "dia_semana": "Viernes",
-            "hora_recomendada": "08:00",
-            "nombre": "Full-Body C",
-            "duracion_min": 50,
-            "ejercicios": [
-              {"nombre": "Press con mancuernas 30°", "series": 4, "reps": "8-10", "rir": "4", "descanso": 120},
-              {"nombre": "Remo unilateral con mancuernas", "series": 4, "reps": "8-10", "rir": "4", "descanso": 120},
-              {"nombre": "Step-ups", "series": 4, "reps": "10-12", "rir": "4", "descanso": 90},
-              {"nombre": "RDL unilateral", "series": 3, "reps": "10-12", "rir": "4", "descanso": 90},
-              {"
+              {
+                "nombre": "Press con mancuernas neutro",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Remo con mancuernas inclinado",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Zancadas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Hip thrust con mancuernas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "
