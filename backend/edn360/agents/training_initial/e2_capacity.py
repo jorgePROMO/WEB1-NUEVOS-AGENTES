@@ -42,7 +42,7 @@ class E2CapacityEvaluator(BaseAgent):
 
 ### REGLA CRÍTICA:
 - NO modifiques campos de otros agentes
-- Lee profile pero NO lo modifiques
+- Trabaja con `client_summary` y `profile`, NO los modifiques
 - SOLO llena training.capacity
 
 ---
