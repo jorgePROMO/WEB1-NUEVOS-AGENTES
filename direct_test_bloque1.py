@@ -116,12 +116,17 @@ async def run_direct_test():
         if not submission:
             raise Exception("No se pudo obtener el cuestionario")
         
-        # 3. Crear client_context
-        print(f"\n🏗️ Creando client_context...")
+        # 3. Preparar datos para client_context (convertir datetime a string)
+        print(f"\n🏗️ Preparando datos para client_context...")
+        submission_clean = dict(submission)
+        if 'created_at' in submission_clean:
+            submission_clean['created_at'] = submission_clean['created_at'].isoformat()
+        
+        # Crear client_context
         client_context = initialize_client_context(
             client_id="direct_test_user",
             version=1,
-            cuestionario_data=submission,
+            cuestionario_data=submission_clean,
             is_followup=False
         )
         
