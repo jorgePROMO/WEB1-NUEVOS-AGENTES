@@ -371,20 +371,17 @@ Tu respuesta DEBE ser EXACTAMENTE:
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        """
-        Valida que el input contenga client_context con campos necesarios
-        
-        NUEVO (Fase 2): Validamos client_context
-        """
+        """Valida que el input contenga campos necesarios - BLOQUE 2"""
         if "training" not in input_data:
             return False
         
         training = input_data["training"]
         
-        # Debe tener campos requeridos
-        return (training.get("sessions") is not None and
+        # E6 requiere: client_summary, constraints, prehab, sessions
+        return (training.get("client_summary") is not None and
                 training.get("constraints") is not None and
-                training.get("prehab") is not None)
+                training.get("prehab") is not None and
+                training.get("sessions") is not None)
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         """
         Valida que devuelva client_context con safe_sessions lleno
