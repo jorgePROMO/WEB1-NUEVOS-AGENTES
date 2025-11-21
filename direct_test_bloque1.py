@@ -16,11 +16,13 @@ sys.path.append('/app/backend')
 from dotenv import load_dotenv
 load_dotenv('/app/backend/.env')
 
-# Importar agentes directamente
+# Importar agentes y modelos
 from edn360.agents.training_initial.e1_analyst import E1Analyst
 from edn360.agents.training_initial.e2_capacity import E2Capacity
 from edn360.agents.training_initial.e3_adaptation import E3Adaptation
 from edn360.agents.training_initial.e4_architect import E4Architect
+from edn360.client_context_models import ClientContextMeta, SelectedInputs, RawInputs, TrainingData
+from edn360.client_context_utils import create_client_context
 
 MONGO_URL = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
 client = AsyncIOMotorClient(MONGO_URL)
