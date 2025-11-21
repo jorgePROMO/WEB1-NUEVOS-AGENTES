@@ -462,9 +462,8 @@ Procesa el input de E1 y E2, calcula IA y estrategia de progresión, emite el JS
                 training.get("client_summary") is not None)
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         """
-        Valida que devuelva client_context con adaptation lleno
-        
-        NUEVO (Fase 2): Validamos estructura de salida
+        Valida que devuelva client_context con adaptation lleno.
+        BLOQUE 1: Filtra campos no permitidos para respetar contrato.
         """
         try:
             output = self._extract_json_from_response(raw_output)
@@ -479,7 +478,25 @@ Procesa el input de E1 y E2, calcula IA y estrategia de progresión, emite el JS
             if training.get("adaptation") is None:
                 raise ValueError("E3 no llenó training.adaptation")
             
-            return output
+            # FILTRAR: E3 solo puede devolver adaptation
+            # Remover campos que NO le pertenecen si el LLM los incluyó
+            allowed_fields = ["client_summary", "capacity", "adaptation"]
+            filtered_training = {
+                field: training[field] 
+                for field in allowed_fields 
+                if field in training
+            }
+            
+            # Reconstruir output con campos filtrados
+            filtered_output = {
+                "client_context": {
+                    "meta": client_context.get("meta"),
+                    "raw_inputs": client_context.get("raw_inputs"),
+                    "training": filtered_training
+                }
+            }
+            
+            return filtered_output
             
         except Exception as e:
             raise ValueError(f"Error procesando output de E3: {e}")
