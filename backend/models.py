@@ -1055,6 +1055,19 @@ class GenerationJobResult(BaseModel):
     training_plan_id: Optional[str] = None
     nutrition_plan_id: Optional[str] = None
 
+class TokenUsage(BaseModel):
+    """Uso de tokens por agente"""
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    total_tokens: int = 0
+
+class JobTokenUsage(BaseModel):
+    """Uso total de tokens del job"""
+    total_prompt_tokens: int = 0
+    total_completion_tokens: int = 0
+    total_tokens: int = 0
+    by_agent: dict = Field(default_factory=dict)  # {agent_id: {prompt, completion, total}}
+
 class GenerationJob(BaseModel):
     """Job de generación de planes E.D.N.360 con estabilización"""
     job_id: str
