@@ -11052,20 +11052,20 @@ async def generate_plans_async(
             "completed_at": None
         }
         
-        # Guardar job en BD
+        # Guardar job en BD con status="pending"
         await db.generation_jobs.insert_one(job_doc)
         
-        logger.info(f"✅ Job {job_id} creado para usuario {user_id} (mode: {request_data.mode})")
+        logger.info(f"✅ Job {job_id} creado para usuario {user_id} (mode: {request_data.mode}) - Worker externo lo procesará")
         
-        # Lanzar background task usando FastAPI BackgroundTasks
-        background_tasks.add_task(process_generation_job, job_id)
+        # NO ejecutar aquí - el worker externo lo procesará
+        # FastAPI solo crea el job y responde
         
         # Responder inmediatamente
         return {
             "success": True,
             "job_id": job_id,
             "status": "pending",
-            "message": "Job de generación creado. Use GET /jobs/{job_id} para consultar el estado."
+            "message": "Job creado. El worker lo procesará. Use GET /jobs/{job_id} para consultar el estado."
         }
         
     except HTTPException:
