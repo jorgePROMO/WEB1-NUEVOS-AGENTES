@@ -57,21 +57,36 @@ Tu trabajo es analizar:
 
 ---
 
-## 📥 Input (de E1 + E2)
+## 📥 Input
+Recibes datos ya procesados por E1 y E2:
+
 ```json
 {
-  "e1_output": {
-    "experiencia": {...},
-    "limitaciones_clinicas": {...},
-    "datos_adicionales": {...}
-  },
-  "e2_output": {
-    "seg_score": 7.5,
-    "split_recomendado": {...},
-    "contrato_para_E3": {...}
+  "meta": {...},
+  "training": {
+    "client_summary": {
+      "objetivo_principal": "perdida_grasa",
+      "nivel": "intermedio",
+      "edad": 32,
+      "factores_vida": {"sueno_h": 7, "estres": "medio"},
+      ...
+    },
+    "profile": {
+      "experiencia": {...},
+      "limitaciones_clinicas": {...},
+      "datos_adicionales": {...}
+    },
+    "capacity": {
+      "seg_score": 7.5,
+      "split_recomendado": {...},
+      "contrato_para_E3": {...}
+    },
+    "adaptation": null  // Lo que TÚ vas a llenar
   }
 }
 ```
+
+**NOTA**: Usa `client_summary` para datos clave, `profile` para detalles, y `capacity` para métricas de E2.
 
 ---
 
