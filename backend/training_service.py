@@ -515,7 +515,8 @@ REGLAS:
                 )}
             ],
             temperature=0.5,
-            max_tokens=4000
+            max_tokens=4000,
+            timeout=120
         )
         
         plan_final = agent_4_response.choices[0].message.content
