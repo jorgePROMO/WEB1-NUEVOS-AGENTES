@@ -271,17 +271,8 @@ class EDN360Orchestrator:
         logger.info(f"🏋️ EJECUTANDO PIPELINE DE ENTRENAMIENTO INDEPENDIENTE")
         logger.info(f"   Cliente: {client_id}, Versión: {version}")
         
-        # Inicializar client_context
-        client_context = initialize_client_context(
-            client_id=client_id,
-            version=version,
-            cuestionario_data=questionnaire_data,
-            previous_training=None,
-            is_followup=False
-        )
-        
-        # Ejecutar pipeline de entrenamiento
-        result = await self._execute_training_initial(client_context, questionnaire_data)
+        # Ejecutar pipeline de entrenamiento (incluye inicialización de client_context)
+        result = await self._execute_training_initial(questionnaire_data, previous_plan=None)
         
         return result
     
