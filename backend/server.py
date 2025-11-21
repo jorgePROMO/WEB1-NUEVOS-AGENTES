@@ -10985,12 +10985,12 @@ async def process_queued_jobs():
 async def generate_plans_async(
     user_id: str,
     request_data: GenerateAsyncRequest,
-    background_tasks: BackgroundTasks,
     request: Request = None
 ):
     """
     Endpoint asíncrono para generar planes E.D.N.360 sin timeout.
-    Crea un job y lo procesa en background.
+    Solo crea el job en MongoDB con status="pending".
+    El worker externo lo procesará.
     """
     await require_admin(request)
     
