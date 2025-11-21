@@ -9424,8 +9424,10 @@ PLAN DE ENTRENAMIENTO NUEVO (Mes {new_training.get('month')}/{new_training.get('
         
         from emergentintegrations.llm.chat import LlmChat, UserMessage
         
-        # Usar Emergent LLM key
-        emergent_key = os.environ.get("EMERGENT_LLM_KEY", "sk-emergent-d326cF1Ec43AeDb194")
+        # Usar Emergent LLM key (sin default hardcodeado)
+        emergent_key = os.environ.get("EMERGENT_LLM_KEY")
+        if not emergent_key:
+            raise ValueError("EMERGENT_LLM_KEY no configurada en el entorno")
         
         # Prompt del sistema basado en tu documento
         system_message = f"""Eres un entrenador profesional y nutricionista experto generando un informe de seguimiento personalizado.
