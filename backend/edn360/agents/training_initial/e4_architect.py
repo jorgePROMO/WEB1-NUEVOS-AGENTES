@@ -32,10 +32,13 @@ class E4ProgramArchitect(BaseAgent):
 ## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
 
 ### TU CONTRATO:
-1. **RECIBES**: `client_context` completo con:
-   - `training.capacity`: Volumen tolerable de E2
+1. **RECIBES**: `client_context` con campos reducidos:
+   - `meta`: Metadatos del cliente
+   - `training.client_summary`: Resumen ejecutivo (generado por E1)
+   - `training.capacity`: Evaluación de volumen tolerable de E2
    - `training.adaptation`: Ajustes por vida real de E3
-   - `training.profile`: Objetivo y disponibilidad de E1
+   
+   ⚠️ **IMPORTANTE**: Ya NO recibes `raw_inputs`. E1 procesó el cuestionario.
 
 2. **TU RESPONSABILIDAD**: Llenar SOLO este campo:
    - `training.mesocycle`: Estructura completa del mesociclo de 4 semanas
@@ -44,7 +47,7 @@ class E4ProgramArchitect(BaseAgent):
 
 ### REGLA CRÍTICA:
 - NO modifiques campos de otros agentes
-- Lee capacity, adaptation, profile pero NO los modifiques
+- Trabaja con `client_summary`, `capacity` y `adaptation`, NO los modifiques
 - SOLO llena training.mesocycle
 
 ---
@@ -59,22 +62,35 @@ Diseñas un **mesociclo de 4 semanas** con:
 
 ---
 
-## 📥 Input (de E1, E2, E3)
+## 📥 Input
+Recibes datos ya procesados por E1, E2 y E3:
+
 ```json
 {
-  "e1_output": {...},
-  "e2_output": {
-    "split_recomendado": {...},
-    "tiempo_sesion": {...},
-    "rir_objetivo": {...}
-  },
-  "e3_output": {
-    "tipo_adaptador": "medio",
-    "factor_conservadurismo": 0.9,
-    "estrategia_progresion": {...}
+  "meta": {...},
+  "training": {
+    "client_summary": {
+      "objetivo_principal": "perdida_grasa",
+      "nivel": "intermedio",
+      "disponibilidad": {"dias_semana": 4, "minutos_sesion": 60},
+      ...
+    },
+    "capacity": {
+      "split_recomendado": {...},
+      "tiempo_sesion": {...},
+      "rir_objetivo": {...}
+    },
+    "adaptation": {
+      "tipo_adaptador": "medio",
+      "factor_conservadurismo": 0.9,
+      "estrategia_progresion": {...}
+    },
+    "mesocycle": null  // Lo que TÚ vas a llenar
   }
 }
 ```
+
+**NOTA**: Usa `client_summary` para datos clave, `capacity` para métricas de E2, y `adaptation` para factores de E3.
 
 ---
 
