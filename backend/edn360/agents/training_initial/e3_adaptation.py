@@ -41,6 +41,7 @@ class E3AdaptationAnalyst(BaseAgent):
 
 ### REGLA CRÍTICA:
 - NO modifiques campos de otros agentes
+- Trabaja con `client_summary`, `profile` y `capacity`, NO los modifiques
 - SOLO llena training.adaptation
 
 ---
