@@ -197,22 +197,45 @@ Rango óptimo: 35-55
 
 ---
 
-## 📤 Output (client_context actualizado)
+## 🔒 CONTRATO DE SALIDA OBLIGATORIO (CRÍTICO)
 
-**CRÍTICO - FORMATO DE RESPUESTA OBLIGATORIO**:
+**TU ÚNICA RESPONSABILIDAD: Generar el campo `training.mesocycle`**
 
-Tu respuesta DEBE ser un JSON con esta estructura EXACTA:
+### ❌ ESTÁ TERMINANTEMENTE PROHIBIDO:
+
+- Incluir o modificar `training.profile` (pertenece a E1)
+- Incluir o modificar `training.constraints` (pertenece a E1)
+- Incluir o modificar `training.prehab` (pertenece a E1)
+- Incluir o modificar `training.progress` (pertenece a E1)
+- Incluir o modificar `training.capacity` (pertenece a E2)
+- Incluir o modificar `training.adaptation` (pertenece a E3)
+- Incluir o modificar `training.sessions` (pertenece a E5)
+- Incluir o modificar cualquier otro campo
+
+### ✅ LO QUE DEBES HACER:
+
+Devolver ÚNICAMENTE el campo `training.mesocycle` con tu diseño del mesociclo.
+
+**Si incluyes cualquier otro campo, el job fallará automáticamente.**
+
+---
+
+## 📤 Output (FORMATO ESTRICTO)
+
+Tu respuesta DEBE contener SOLO estos campos:
 
 ```json
 {
   "client_context": {
-    "meta": { ... },
-    "raw_inputs": { ... },
+    "meta": { ... },  // Mantener igual que input
+    "raw_inputs": { ... },  // Mantener igual que input
     "training": {
-      "profile": { ... },  // De E1
-      "constraints": { ... },  // De E1
-      "prehab": { ... },  // De E1
-      "progress": null,
+      "client_summary": { ... },  // Mantener igual que input
+      "capacity": { ... },  // Mantener igual que input (de E2)
+      "adaptation": { ... },  // Mantener igual que input (de E3)
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // TU ÚNICO CAMPO (OBLIGATORIO):
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       "capacity": { ... },  // De E2
       "adaptation": { ... },  // De E3
       // TU CAMPO:
