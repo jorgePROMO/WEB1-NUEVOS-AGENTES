@@ -132,68 +132,95 @@ async def run_direct_test():
         
         print(f"\n🚀 Ejecutando agentes E1-E4...")
         
+        # Convertir a dict para trabajar con los agentes
+        client_context_dict = client_context.model_dump()
+        
         # 4. E1 - Analyst
         print(f"\n[E1] Ejecutando Analyst...")
         e1 = E1Analyst()
-        e1_result = await e1.execute(client_context.dict())
         
-        # Actualizar client_context con resultado de E1
-        if "client_context" in e1_result:
-            client_context = e1_result["client_context"]
-        
-        # Extraer tokens de E1
-        e1_tokens = getattr(e1, 'last_token_usage', {})
-        total_tokens += e1_tokens.get("total_tokens", 0)
-        
-        print(f"✅ E1 completado - Tokens: {e1_tokens.get('total_tokens', 0):,}")
+        try:
+            e1_result = await e1.execute(client_context_dict)
+            
+            # Actualizar client_context con resultado de E1
+            if "client_context" in e1_result:
+                client_context_dict = e1_result["client_context"]
+            
+            # Extraer tokens de E1
+            e1_tokens = getattr(e1, 'last_token_usage', {})
+            total_tokens += e1_tokens.get("total_tokens", 0)
+            
+            print(f"✅ E1 completado - Tokens: {e1_tokens.get('total_tokens', 0):,}")
+            
+        except Exception as e:
+            print(f"❌ E1 falló: {e}")
+            e1_tokens = {}
         
         # 5. E2 - Capacity
         print(f"\n[E2] Ejecutando Capacity...")
         e2 = E2CapacityEvaluator()
-        e2_result = await e2.execute(client_context)
         
-        # Actualizar client_context con resultado de E2
-        if "client_context" in e2_result:
-            client_context = e2_result["client_context"]
-        
-        # Extraer tokens de E2
-        e2_tokens = getattr(e2, 'last_token_usage', {})
-        total_tokens += e2_tokens.get("total_tokens", 0)
-        
-        print(f"✅ E2 completado - Tokens: {e2_tokens.get('total_tokens', 0):,}")
+        try:
+            e2_result = await e2.execute(client_context_dict)
+            
+            # Actualizar client_context con resultado de E2
+            if "client_context" in e2_result:
+                client_context_dict = e2_result["client_context"]
+            
+            # Extraer tokens de E2
+            e2_tokens = getattr(e2, 'last_token_usage', {})
+            total_tokens += e2_tokens.get("total_tokens", 0)
+            
+            print(f"✅ E2 completado - Tokens: {e2_tokens.get('total_tokens', 0):,}")
+            
+        except Exception as e:
+            print(f"❌ E2 falló: {e}")
+            e2_tokens = {}
         
         # 6. E3 - Adaptation
         print(f"\n[E3] Ejecutando Adaptation...")
         e3 = E3AdaptationAnalyst()
-        e3_result = await e3.execute(client_context)
         
-        # Actualizar client_context con resultado de E3
-        if "client_context" in e3_result:
-            client_context = e3_result["client_context"]
-        
-        # Extraer tokens de E3
-        e3_tokens = getattr(e3, 'last_token_usage', {})
-        total_tokens += e3_tokens.get("total_tokens", 0)
-        
-        print(f"✅ E3 completado - Tokens: {e3_tokens.get('total_tokens', 0):,}")
+        try:
+            e3_result = await e3.execute(client_context_dict)
+            
+            # Actualizar client_context con resultado de E3
+            if "client_context" in e3_result:
+                client_context_dict = e3_result["client_context"]
+            
+            # Extraer tokens de E3
+            e3_tokens = getattr(e3, 'last_token_usage', {})
+            total_tokens += e3_tokens.get("total_tokens", 0)
+            
+            print(f"✅ E3 completado - Tokens: {e3_tokens.get('total_tokens', 0):,}")
+            
+        except Exception as e:
+            print(f"❌ E3 falló: {e}")
+            e3_tokens = {}
         
         # 7. E4 - Architect
         print(f"\n[E4] Ejecutando Architect...")
         e4 = E4ProgramArchitect()
-        e4_result = await e4.execute(client_context)
         
-        # Actualizar client_context con resultado de E4
-        if "client_context" in e4_result:
-            client_context = e4_result["client_context"]
-        
-        # Extraer tokens de E4
-        e4_tokens = getattr(e4, 'last_token_usage', {})
-        total_tokens += e4_tokens.get("total_tokens", 0)
-        
-        print(f"✅ E4 completado - Tokens: {e4_tokens.get('total_tokens', 0):,}")
+        try:
+            e4_result = await e4.execute(client_context_dict)
+            
+            # Actualizar client_context con resultado de E4
+            if "client_context" in e4_result:
+                client_context_dict = e4_result["client_context"]
+            
+            # Extraer tokens de E4
+            e4_tokens = getattr(e4, 'last_token_usage', {})
+            total_tokens += e4_tokens.get("total_tokens", 0)
+            
+            print(f"✅ E4 completado - Tokens: {e4_tokens.get('total_tokens', 0):,}")
+            
+        except Exception as e:
+            print(f"❌ E4 falló: {e}")
+            e4_tokens = {}
         
         # Extraer resultados del client_context
-        training_data = client_context.get("training", {})
+        training_data = client_context_dict.get("training", {})
         client_summary = training_data.get("client_summary")
         mesocycle = training_data.get("mesocycle")
         
