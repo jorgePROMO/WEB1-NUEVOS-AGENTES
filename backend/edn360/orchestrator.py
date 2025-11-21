@@ -525,7 +525,13 @@ class EDN360Orchestrator:
         logger.info(f"  ✅ client_context inicializado: v{version}, snapshot_id={client_context.meta.snapshot_id}")
         
         # PASO 2: Ejecutar cada agente secuencialmente
+        # BLOQUE 1: Solo ejecutar E1-E4 (E5-E9 en Bloque 2)
         for agent in self.training_initial_agents:
+            # TEMPORAL BLOQUE 1: Detener en E4
+            if agent.agent_id in ["E5", "E6", "E7", "E8", "E9"]:
+                logger.warning(f"  ⏸️ Deteniendo en {agent.agent_id} (Bloque 2 pendiente)")
+                break
+            
             logger.info(f"  ▶️ Ejecutando {agent.agent_id} ({agent.agent_name})...")
             
             # VALIDACIÓN PRE-EJECUCIÓN: ¿Tiene los inputs requeridos?
