@@ -148,12 +148,87 @@ def build_scoped_input_for_agent(agent_id: str, client_context: ClientContext) -
         }
     
     # ========================================
-    # E5-E9 - [BLOQUE 2 - NO IMPLEMENTADO]
+    # E5 - ENGINEER (Generador de Sesiones)
+    # ========================================
+    elif agent_id == "E5":
+        return {
+            "meta": client_context.meta.model_dump(),
+            "raw_inputs": {},
+            "training": {
+                "client_summary": client_context.training.client_summary,
+                "capacity": client_context.training.capacity,
+                "adaptation": client_context.training.adaptation,
+                "mesocycle": client_context.training.mesocycle,
+                "sessions": None  # Lo que él va a llenar
+            }
+        }
+    
+    # ========================================
+    # E6 - SAFETY OFFICER (Validador de Seguridad)
+    # ========================================
+    elif agent_id == "E6":
+        return {
+            "meta": client_context.meta.model_dump(),
+            "raw_inputs": {},
+            "training": {
+                "client_summary": client_context.training.client_summary,
+                "constraints": client_context.training.constraints,
+                "prehab": client_context.training.prehab,
+                "sessions": client_context.training.sessions,
+                "safe_sessions": None  # Lo que él va a llenar
+            }
+        }
+    
+    # ========================================
+    # E7 - FORMATTER (Formateador de Plan)
+    # ========================================
+    elif agent_id == "E7":
+        return {
+            "meta": client_context.meta.model_dump(),
+            "raw_inputs": {},
+            "training": {
+                "client_summary": client_context.training.client_summary,
+                "mesocycle": client_context.training.mesocycle,
+                "safe_sessions": client_context.training.safe_sessions,
+                "formatted_plan": None  # Lo que él va a llenar
+            }
+        }
+    
+    # ========================================
+    # E8 - AUDITOR (Control de Calidad)
+    # ========================================
+    elif agent_id == "E8":
+        return {
+            "meta": client_context.meta.model_dump(),
+            "raw_inputs": {},
+            "training": {
+                "client_summary": client_context.training.client_summary,
+                "constraints": client_context.training.constraints,
+                "mesocycle": client_context.training.mesocycle,
+                "formatted_plan": client_context.training.formatted_plan,
+                "audit": None  # Lo que él va a llenar
+            }
+        }
+    
+    # ========================================
+    # E9 - BRIDGE (Puente a Nutrición)
+    # ========================================
+    elif agent_id == "E9":
+        return {
+            "meta": client_context.meta.model_dump(),
+            "raw_inputs": {},
+            "training": {
+                "client_summary": client_context.training.client_summary,
+                "formatted_plan": client_context.training.formatted_plan,
+                "bridge_for_nutrition": None  # Lo que él va a llenar
+            }
+        }
+    
+    # ========================================
+    # Agente no reconocido
     # ========================================
     else:
-        # Por ahora, para E5-E9 seguimos pasando todo el contexto
-        # (Se refactorizará en Bloque 2)
-        logger.warning(f"⚠️ {agent_id} aún no usa arquitectura de cajones (Bloque 2 pendiente)")
+        logger.warning(f"⚠️ {agent_id} no tiene input definido en arquitectura de cajones")
         return client_context_to_dict(client_context)
 
 
