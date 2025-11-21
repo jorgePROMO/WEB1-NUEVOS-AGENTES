@@ -13,7 +13,7 @@ const GenerationProgressModal = ({ jobId, onComplete, onError, onClose }) => {
     // Polling interval: cada 3 segundos
     const pollInterval = setInterval(async () => {
       try {
-        const response = await axios.get(`${API}/jobs/${jobId}`);
+        const response = await axios.get(`${API}/api/jobs/${jobId}`);
         const job = response.data;
         
         setJobStatus(job);
