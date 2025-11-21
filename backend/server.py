@@ -10663,6 +10663,23 @@ async def process_generation_job(job_id: str):
                     agent_id = execution.get("agent_id", f"E{idx+1}")
                     completed = idx + 1
                     
+                    # Capturar tokens del agente
+                    token_usage = execution.get("token_usage")
+                    if token_usage:
+                        await db.generation_jobs.update_one(
+                            {"_id": job_id},
+                            {
+                                "$inc": {
+                                    "token_usage.total_prompt_tokens": token_usage.get("prompt_tokens", 0),
+                                    "token_usage.total_completion_tokens": token_usage.get("completion_tokens", 0),
+                                    "token_usage.total_tokens": token_usage.get("total_tokens", 0)
+                                },
+                                "$set": {
+                                    f"token_usage.by_agent.{agent_id}": token_usage
+                                }
+                            }
+                        )
+                    
                     await update_job_progress(
                         job_id,
                         "training",
