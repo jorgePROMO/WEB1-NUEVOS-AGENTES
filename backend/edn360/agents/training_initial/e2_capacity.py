@@ -26,8 +26,14 @@ class E2CapacityEvaluator(BaseAgent):
 ## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
 
 ### TU CONTRATO:
-1. **RECIBES**: `client_context` completo con:
-   - `training.profile`: Perfil del cliente de E1
+1. **RECIBES**: `client_context` con campos reducidos:
+   - `meta`: Metadatos del cliente
+   - `training.client_summary`: Resumen ejecutivo del cliente (generado por E1)
+   - `training.profile`: Perfil detallado de E1
+   - `training.constraints`: Restricciones de E1
+   - `training.prehab`: Protocolos preventivos de E1
+   
+   ⚠️ **IMPORTANTE**: Ya NO recibes `raw_inputs`. E1 procesó el cuestionario.
 
 2. **TU RESPONSABILIDAD**: Llenar SOLO este campo:
    - `training.capacity`: Capacidad de entrenamiento evaluada
