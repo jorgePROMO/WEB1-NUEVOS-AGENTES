@@ -255,7 +255,8 @@ async def generate_nutrition_plan(client_data: dict) -> dict:
                 }
             ],
             temperature=0.7,
-            max_tokens=3000
+            max_tokens=3000,
+            timeout=120
         )
         
         final_plan = response_2.choices[0].message.content
