@@ -227,7 +227,7 @@ A continuación tienes acceso a una base de conocimiento global que sirve como *
             # Añadir instrucción explícita de JSON al system prompt
             json_system_prompt = system_prompt + "\n\n**CRÍTICO: Tu respuesta DEBE ser ÚNICAMENTE un objeto JSON válido. No incluyas texto adicional, explicaciones, ni markdown. Solo el JSON puro.**"
             
-            # Llamada síncrona a OpenAI
+            # Llamada síncrona a OpenAI con control de coste
             completion = self.openai_client.chat.completions.create(
                 model="gpt-4o",
                 messages=[
@@ -235,7 +235,8 @@ A continuación tienes acceso a una base de conocimiento global que sirve como *
                     {"role": "user", "content": user_message}
                 ],
                 temperature=0.7,
-                max_tokens=16000
+                max_tokens=6000,
+                timeout=120
             )
             
             response = completion.choices[0].message.content
