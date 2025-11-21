@@ -563,6 +563,9 @@ class EDN360Orchestrator:
                 # E5-E9: Todavía pasan contexto completo (Bloque 2 pendiente)
                 agent_input = client_context_to_dict(client_context)
                 logger.info(f"    ⏳ {agent.agent_id} usa contexto completo (Bloque 2 pendiente)")
+                
+                # Para E5-E9, client_context_before es el contexto completo
+                client_context_before = ClientContext.model_validate(client_context.model_dump())
             else:
                 # Agente legacy: pasar formato antiguo (e1_output, e2_output, etc.)
                 logger.info(f"    ⚠️ Preparando input legacy para {agent.agent_id}")
