@@ -10340,7 +10340,8 @@ Analiza la solicitud y genera el plan modificado o responde la pregunta."""
                 {"role": "user", "content": full_message}
             ],
             temperature=0.7,
-            max_tokens=4000
+            max_tokens=4000,
+            timeout=120
         )
         
         ai_response = completion.choices[0].message.content
