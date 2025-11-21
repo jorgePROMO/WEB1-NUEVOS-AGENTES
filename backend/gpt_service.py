@@ -111,7 +111,8 @@ Basándote ÚNICAMENTE en estos datos, genera el análisis personalizado siguien
                 {"role": "user", "content": formatted_data}
             ],
             temperature=0.7,
-            max_tokens=2000
+            max_tokens=2000,
+            timeout=120
         )
         
         # Obtener respuesta
