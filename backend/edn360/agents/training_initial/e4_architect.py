@@ -324,20 +324,25 @@ Tu respuesta DEBE contener SOLO estos campos:
     "push_pull": 1.0,
     "cadera_rodilla": 0.93,
     "validacion": "ratios_dentro_rango"
-  },
-        },
-        "semanas": [...],
-        "kpi": {...}
-      },
-      // Resto de campos:
-      "sessions": null,
-      "safe_sessions": null,
-      "formatted_plan": null,
-      "audit": null,
-      "bridge_for_nutrition": null
+  }
+}
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // FIN DE TU CAMPO mesocycle
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     }
   }
 }
+```
+
+**⚠️ RECORDATORIO CRÍTICO:**
+- NO incluyas `training.profile`
+- NO incluyas `training.constraints`
+- NO incluyas `training.prehab`
+- NO incluyas `training.capacity` (excepto para mantenerlo igual)
+- NO incluyas `training.adaptation` (excepto para mantenerlo igual)
+- NO incluyas ningún otro campo adicional
+
+Tu JSON de salida debe tener EXACTAMENTE esta estructura: meta + raw_inputs + training (con solo client_summary + capacity + adaptation + mesocycle).
 ```
 
 **FORMATO OBLIGATORIO**:
