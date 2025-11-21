@@ -55,6 +55,12 @@ class TrainingData(BaseModel):
     - El objeto completo viaja de E1 → E2 → ... → E9
     """
     
+    # E1 - Resumen Ejecutivo (NUEVO - OBLIGATORIO)
+    client_summary: Optional[Any] = Field(
+        None,
+        description="Resumen ejecutivo compacto del cliente generado por E1. A partir de E2, los agentes usan esto en lugar de raw_inputs"
+    )
+    
     # E1 - Analista de Datos del Cliente
     profile: Optional[Any] = Field(
         None, 
