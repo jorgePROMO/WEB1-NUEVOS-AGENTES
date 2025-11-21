@@ -241,6 +241,17 @@ A continuación tienes acceso a una base de conocimiento global que sirve como *
             
             response = completion.choices[0].message.content
             
+            # Capturar uso de tokens para control de coste
+            usage = getattr(completion, "usage", None)
+            token_usage = None
+            if usage:
+                token_usage = {
+                    "prompt_tokens": usage.prompt_tokens,
+                    "completion_tokens": usage.completion_tokens,
+                    "total_tokens": usage.total_tokens
+                }
+                logger.info(f"📊 {self.agent_id} tokens: prompt={usage.prompt_tokens}, completion={usage.completion_tokens}, total={usage.total_tokens}")
+            
             # Log de respuesta para debug
             logger.info(f"📝 {self.agent_id} respuesta (primeros 500 chars): {response[:500]}")
             
