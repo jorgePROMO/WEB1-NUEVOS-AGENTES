@@ -8857,7 +8857,8 @@ Por favor:
             model="gpt-4o",
             messages=messages,
             temperature=0.7,
-            max_tokens=4000
+            max_tokens=4000,
+            timeout=120
         )
         
         ai_response = response.choices[0].message.content
