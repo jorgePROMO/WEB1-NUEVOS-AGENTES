@@ -616,12 +616,20 @@ Procesa el input y devuelve el client_context actualizado siguiendo exactamente 
             
             training = client_context["training"]
             
-            # Validar que E1 llenó sus campos
-            required_fields = ["profile", "constraints", "prehab"]
+            # Validar que E1 llenó sus campos (INCLUYENDO client_summary - OBLIGATORIO)
+            required_fields = ["client_summary", "profile", "constraints", "prehab"]
             missing_fields = [f for f in required_fields if training.get(f) is None]
             
             if missing_fields:
                 raise ValueError(f"E1 no llenó campos requeridos: {missing_fields}")
+            
+            # Validación adicional: client_summary debe tener campos mínimos
+            client_summary = training.get("client_summary", {})
+            required_summary_fields = ["objetivo_principal", "nivel", "edad", "disponibilidad", "equipo", "modo"]
+            missing_summary_fields = [f for f in required_summary_fields if f not in client_summary]
+            
+            if missing_summary_fields:
+                raise ValueError(f"client_summary incompleto. Faltan campos: {missing_summary_fields}")
             
             return output
             
