@@ -287,7 +287,7 @@ A continuación tienes acceso a una base de conocimiento global que sirve como *
             
             logger.info(f"✅ {self.agent_id} completado en {duration:.2f}s")
             
-            return {
+            result = {
                 "success": True,
                 "agent_id": self.agent_id,
                 "agent_name": self.agent_name,
@@ -295,6 +295,12 @@ A continuación tienes acceso a una base de conocimiento global que sirve como *
                 "duration_seconds": duration,
                 "timestamp": datetime.now().isoformat()
             }
+            
+            # Añadir token usage si está disponible
+            if token_usage:
+                result["token_usage"] = token_usage
+            
+            return result
             
         except Exception as e:
             duration = (datetime.now() - start_time).total_seconds()
