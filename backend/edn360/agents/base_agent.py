@@ -228,6 +228,14 @@ A continuación tienes acceso a una base de conocimiento global que sirve como *
             # Añadir instrucción explícita de JSON al system prompt
             json_system_prompt = system_prompt + "\n\n**CRÍTICO: Tu respuesta DEBE ser ÚNICAMENTE un objeto JSON válido. No incluyas texto adicional, explicaciones, ni markdown. Solo el JSON puro.**"
             
+            # Determinar max_tokens según agente
+            # E5, E6 generan sesiones detalladas (necesitan más tokens)
+            # N6 genera menús completos (necesita más tokens)
+            max_tokens = 6000
+            if self.agent_id in ["E5", "E6", "N6"]:
+                max_tokens = 8000  # Aumentar para agentes que generan contenido extenso
+                logger.info(f"📏 {self.agent_id} - Usando max_tokens aumentado: {max_tokens}")
+            
             # Llamada síncrona a OpenAI con control de coste
             completion = self.openai_client.chat.completions.create(
                 model="gpt-4o",
@@ -236,7 +244,7 @@ A continuación tienes acceso a una base de conocimiento global que sirve como *
                     {"role": "user", "content": user_message}
                 ],
                 temperature=0.7,
-                max_tokens=6000,
+                max_tokens=max_tokens,
                 timeout=120
             )
             
