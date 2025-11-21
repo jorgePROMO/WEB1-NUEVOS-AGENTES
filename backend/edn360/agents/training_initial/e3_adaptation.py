@@ -26,9 +26,13 @@ class E3AdaptationAnalyst(BaseAgent):
 ## 🏗️ ARQUITECTURA (NUEVO - CRÍTICO)
 
 ### TU CONTRATO:
-1. **RECIBES**: `client_context` completo con:
-   - `training.capacity`: Capacidad de E2
-   - `training.profile`: Perfil de E1
+1. **RECIBES**: `client_context` con campos reducidos:
+   - `meta`: Metadatos del cliente
+   - `training.client_summary`: Resumen ejecutivo (generado por E1)
+   - `training.profile`: Perfil detallado de E1
+   - `training.capacity`: Capacidad evaluada por E2
+   
+   ⚠️ **IMPORTANTE**: Ya NO recibes `raw_inputs`. E1 procesó el cuestionario.
 
 2. **TU RESPONSABILIDAD**: Llenar SOLO este campo:
    - `training.adaptation`: Adaptaciones necesarias
