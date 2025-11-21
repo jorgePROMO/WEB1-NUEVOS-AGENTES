@@ -145,9 +145,9 @@ async def run_direct_test():
         
         print(f"✅ E2 completado - Tokens: {e2_tokens.get('total_tokens', 0):,}")
         
-        # 5. E3 - Training Analysis
-        print(f"\n[E3] Analizando entrenamiento...")
-        e3 = E3TrainingAnalysis()
+        # 5. E3 - Adaptation Analysis
+        print(f"\n[E3] Analizando adaptación...")
+        e3 = E3Adaptation()
         e3_result = await e3.process(submission, client_summary, None)
         
         if not e3_result.get("success"):
