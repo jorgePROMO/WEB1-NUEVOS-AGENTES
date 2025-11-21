@@ -9422,12 +9422,12 @@ PLAN DE ENTRENAMIENTO NUEVO (Mes {new_training.get('month')}/{new_training.get('
         
         # FASE 3: Generar informe inteligente con LLM
         
-        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        from openai import AsyncOpenAI
         
-        # Usar Emergent LLM key (sin default hardcodeado)
-        emergent_key = os.environ.get("EMERGENT_LLM_KEY")
-        if not emergent_key:
-            raise ValueError("EMERGENT_LLM_KEY no configurada en el entorno")
+        # Usar OpenAI API key
+        openai_key = os.environ.get("OPENAI_API_KEY")
+        if not openai_key:
+            raise ValueError("OPENAI_API_KEY no configurada en el entorno")
         
         # Prompt del sistema basado en tu documento
         system_message = f"""Eres un entrenador profesional y nutricionista experto generando un informe de seguimiento personalizado.
