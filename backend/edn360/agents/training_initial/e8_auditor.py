@@ -368,19 +368,17 @@ Tu respuesta DEBE ser un JSON con esta estructura EXACTA:
 '''
     
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
-        """
-        Valida que el input contenga client_context con safe_sessions
-        
-        NUEVO (Fase 2): Validamos client_context
-        """
+        """Valida que el input contenga campos necesarios - BLOQUE 2"""
         if "training" not in input_data:
             return False
         
         training = input_data["training"]
         
-        # Debe tener safe_sessions (de E6), mesocycle (E4), capacity (E2), constraints (E1)
-        required_fields = ["safe_sessions", "mesocycle", "capacity", "constraints"]
-        return all(training.get(field) is not None for field in required_fields)
+        # E8 requiere: client_summary, constraints, mesocycle, formatted_plan
+        return (training.get("client_summary") is not None and
+                training.get("constraints") is not None and
+                training.get("mesocycle") is not None and
+                training.get("formatted_plan") is not None)
     
     def process_output(self, raw_output: str) -> Dict[str, Any]:
         """
