@@ -25,6 +25,7 @@ class ClientContextMeta(BaseModel):
     client_id: str = Field(..., description="Identificador único del cliente")
     snapshot_id: str = Field(..., description="ID único de este snapshot/versión")
     version: int = Field(..., description="Número de versión (1 para inicial, 2+ para seguimientos)")
+    output_tier: str = Field(default="standard", description="Nivel de detalle del output: 'standard' (conciso) o 'pro' (detallado)")
     selected_inputs: SelectedInputs = Field(..., description="Referencias a inputs usados")
 
 
