@@ -135,7 +135,11 @@ async def run_direct_test():
         # 4. E1 - Analyst
         print(f"\n[E1] Ejecutando Analyst...")
         e1 = E1Analyst()
-        client_context = await e1.process(client_context)
+        e1_result = await e1.execute(client_context.dict())
+        
+        # Actualizar client_context con resultado de E1
+        if "client_context" in e1_result:
+            client_context = e1_result["client_context"]
         
         # Extraer tokens de E1
         e1_tokens = getattr(e1, 'last_token_usage', {})
@@ -146,7 +150,11 @@ async def run_direct_test():
         # 5. E2 - Capacity
         print(f"\n[E2] Ejecutando Capacity...")
         e2 = E2CapacityEvaluator()
-        client_context = await e2.process(client_context)
+        e2_result = await e2.execute(client_context)
+        
+        # Actualizar client_context con resultado de E2
+        if "client_context" in e2_result:
+            client_context = e2_result["client_context"]
         
         # Extraer tokens de E2
         e2_tokens = getattr(e2, 'last_token_usage', {})
@@ -157,7 +165,11 @@ async def run_direct_test():
         # 6. E3 - Adaptation
         print(f"\n[E3] Ejecutando Adaptation...")
         e3 = E3AdaptationAnalyst()
-        client_context = await e3.process(client_context)
+        e3_result = await e3.execute(client_context)
+        
+        # Actualizar client_context con resultado de E3
+        if "client_context" in e3_result:
+            client_context = e3_result["client_context"]
         
         # Extraer tokens de E3
         e3_tokens = getattr(e3, 'last_token_usage', {})
@@ -168,7 +180,11 @@ async def run_direct_test():
         # 7. E4 - Architect
         print(f"\n[E4] Ejecutando Architect...")
         e4 = E4ProgramArchitect()
-        client_context = await e4.process(client_context)
+        e4_result = await e4.execute(client_context)
+        
+        # Actualizar client_context con resultado de E4
+        if "client_context" in e4_result:
+            client_context = e4_result["client_context"]
         
         # Extraer tokens de E4
         e4_tokens = getattr(e4, 'last_token_usage', {})
@@ -177,8 +193,9 @@ async def run_direct_test():
         print(f"✅ E4 completado - Tokens: {e4_tokens.get('total_tokens', 0):,}")
         
         # Extraer resultados del client_context
-        client_summary = client_context.training.client_summary
-        mesocycle = client_context.training.mesocycle
+        training_data = client_context.get("training", {})
+        client_summary = training_data.get("client_summary")
+        mesocycle = training_data.get("mesocycle")
         
         # 7. Análisis de resultados
         duration = time.time() - start_time
