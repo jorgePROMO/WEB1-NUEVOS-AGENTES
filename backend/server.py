@@ -9500,7 +9500,8 @@ Genera el informe de seguimiento completo siguiendo la estructura obligatoria.
                     {"role": "user", "content": user_prompt_text}
                 ],
                 temperature=0.7,
-                max_tokens=3000
+                max_tokens=3000,
+                timeout=120
             )
             
             # Obtener respuesta
