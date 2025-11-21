@@ -4,12 +4,15 @@ Genera informes personalizados usando GPT-4o
 """
 import os
 from dotenv import load_dotenv
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+from openai import AsyncOpenAI
 import asyncio
 
 load_dotenv()
 
-EMERGENT_LLM_KEY = os.getenv("EMERGENT_LLM_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY no configurada en el entorno")
 
 SYSTEM_PROMPT = """Eres un experto en marketing emocional, ventas de alto valor y análisis estratégico de clientes potenciales dentro del mundo fitness y salud integral. Has recibido las respuestas de un formulario detallado de diagnóstico de una persona que quiere transformar su cuerpo, salud o estilo de vida. Tu trabajo es crear un análisis profesional, emocional y motivador con los siguientes objetivos:
 
