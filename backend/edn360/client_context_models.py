@@ -218,8 +218,8 @@ class ClientContext(BaseModel):
     
     class Config:
         """Configuración de Pydantic"""
-        # Permitir campos extra para futura extensibilidad
-        extra = "forbid"  # NO permitir campos no definidos (seguridad)
+        # Permitir campos extra para compatibilidad con el orquestador
+        extra = "allow"  # Permitir campos adicionales del orquestador
         # Validar al asignar valores
         validate_assignment = True
 
