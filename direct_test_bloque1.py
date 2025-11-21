@@ -18,9 +18,9 @@ load_dotenv('/app/backend/.env')
 
 # Importar agentes y modelos
 from edn360.agents.training_initial.e1_analyst import E1Analyst
-from edn360.agents.training_initial.e2_capacity import E2Capacity
-from edn360.agents.training_initial.e3_adaptation import E3Adaptation
-from edn360.agents.training_initial.e4_architect import E4Architect
+from edn360.agents.training_initial.e2_capacity import E2CapacityEvaluator
+from edn360.agents.training_initial.e3_adaptation import E3AdaptationAnalyst
+from edn360.agents.training_initial.e4_architect import E4ProgramArchitect
 from edn360.client_context_utils import initialize_client_context
 
 MONGO_URL = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
