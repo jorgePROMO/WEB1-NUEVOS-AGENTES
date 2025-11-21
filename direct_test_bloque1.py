@@ -159,9 +159,9 @@ async def run_direct_test():
         
         print(f"✅ E3 completado - Tokens: {e3_tokens.get('total_tokens', 0):,}")
         
-        # 6. E4 - Mesocycle Design
-        print(f"\n[E4] Diseñando mesociclo...")
-        e4 = E4MesocycleDesign()
+        # 6. E4 - Architecture Design
+        print(f"\n[E4] Diseñando arquitectura...")
+        e4 = E4Architect()
         e4_result = await e4.process(submission, client_summary, training_analysis)
         
         if not e4_result.get("success"):
