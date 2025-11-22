@@ -27,7 +27,7 @@ async def create_job():
     
     questionnaire = {
         "_id": quest_id,
-        "user_id": "user_bloque2_validation",
+        "user_id": "admin_jorge_001",  # Usuario real existente
         "created_at": datetime.now(timezone.utc),
         
         # Datos completos
