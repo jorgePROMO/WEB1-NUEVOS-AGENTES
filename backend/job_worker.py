@@ -27,12 +27,13 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from motor.motor_asyncio import AsyncIOMotorClient
 
-# Get MongoDB URL from environment (set by supervisor or default)
+# Get MongoDB URL and DB name from environment (set by supervisor or default)
 MONGO_URL = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
+DB_NAME = os.getenv('DB_NAME', 'test_database')
 
 # MongoDB setup
 client = AsyncIOMotorClient(MONGO_URL)
-db = client.test_database
+db = client[DB_NAME]
 
 # Logging setup
 logging.basicConfig(
