@@ -248,18 +248,28 @@ class EDN360Orchestrator:
         """Inicializa el orquestador con todos los agentes y carga las bases de conocimiento"""
         
         # Training Initial Agents (E1-E9)
-        # NOTA: E2, E4, E5, E6 usan versiones V2 con RAZONAMIENTO
+        # ARQUITECTURA HÍBRIDA:
+        # - Legacy: Fuente de verdad estructural (garantiza contratos)
+        # - V2: Capa de razonamiento (enriquece, NO crítico)
         self.training_initial_agents = [
             E1Analyst(),
-            E2CapacityEvaluatorV2(),  # V2: Razonamiento contextual
+            E2CapacityEvaluator(),    # Legacy: Fuente de verdad capacity
             E3AdaptationAnalyst(),
-            E4ProgramArchitectV2(),   # V2: Diseño inteligente
-            E5MicrocycleEngineerV2(), # V2: Selección biomecánica
-            E6ClinicalTechnicianV2(), # V2: Validación preventiva
+            E4ProgramArchitect(),     # Legacy: Fuente de verdad mesocycle
+            E5MicrocycleEngineer(),   # Legacy: Fuente de verdad sessions
+            E6ClinicalTechnician(),   # Legacy: Fuente de verdad safe_sessions
             E7LoadAnalyst(),
             E8TechnicalAuditor(),
             E9NutritionBridge(),
         ]
+        
+        # Agentes V2 (razonamiento paralelo, NO crítico)
+        self.reasoning_agents = {
+            "E2": E2CapacityEvaluatorV2(),
+            "E4": E4ProgramArchitectV2(),
+            "E5": E5MicrocycleEngineerV2(),
+            "E6": E6ClinicalTechnicianV2(),
+        }
         
         # Nutrition Initial Agents (N0-N8)
         self.nutrition_initial_agents = [
