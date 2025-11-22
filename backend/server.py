@@ -10693,34 +10693,68 @@ async def process_generation_job(job_id: str):
             is_followup = True
             
             if not submission:
-                raise Exception(f"Cuestionario {submission_id} no encontrado")
+                raise Exception(f"Cuestionario {submission_id} no encontrado en nutrition_questionnaire_submissions ni follow_up_submissions")
         
-        # Si es followup, obtener cuestionario inicial
+        # VALIDACIÓN ROBUSTA DEL CUESTIONARIO
+        logger.info(f"🔍 Validando formato del cuestionario {submission_id}")
+        
+        submission_to_validate = submission
+        
+        # Si es followup, obtener cuestionario inicial para validar
         if is_followup:
-            logger.info(f"📋 Generando desde follow-up, obteniendo cuestionario inicial")
+            logger.info(f"📋 Detectado follow-up, obteniendo cuestionario inicial para validación")
             initial_submission = await db.nutrition_questionnaire_submissions.find_one(
                 {"user_id": user_id},
                 sort=[("submitted_at", 1)]
             )
             
             if not initial_submission:
-                raise Exception("No se encontró cuestionario inicial para contexto")
+                raise Exception("No se encontró cuestionario inicial para contexto del follow-up")
             
-            questionnaire_data = initial_submission["responses"]
+            submission_to_validate = initial_submission
+        
+        # Validar el formato del cuestionario
+        is_valid, validation_errors, questionnaire_data = _validate_questionnaire_format(submission_to_validate)
+        
+        if not is_valid:
+            error_msg = "❌ FORMATO DE CUESTIONARIO INVÁLIDO:\n" + "\n".join(f"  • {e}" for e in validation_errors)
+            error_msg += "\n\n📋 FORMATO ESPERADO: El cuestionario debe guardarse en MongoDB con estructura:\n"
+            error_msg += "{\n"
+            error_msg += "  '_id': 'timestamp_unico',\n"
+            error_msg += "  'user_id': 'id_usuario',\n"
+            error_msg += "  'responses': {\n"
+            error_msg += "    'nombre_completo': 'string',\n"
+            error_msg += "    'email': 'string',\n"
+            error_msg += "    'fecha_nacimiento': 'YYYY-MM-DD',\n"
+            error_msg += "    'sexo': 'Hombre/Mujer',\n"
+            error_msg += "    'peso': 'string',\n"
+            error_msg += "    'altura_cm': 'string',\n"
+            error_msg += "    'objetivo_fisico': 'string',\n"
+            error_msg += "    ... (otros campos del cuestionario)\n"
+            error_msg += "  },\n"
+            error_msg += "  'submitted_at': datetime,\n"
+            error_msg += "  'plan_generated': boolean\n"
+            error_msg += "}"
+            
+            logger.error(error_msg)
+            raise Exception(error_msg)
+        
+        logger.info(f"✅ Cuestionario validado correctamente")
+        
+        # Si es followup, combinar con datos del follow-up
+        if is_followup:
             submission_serialized = _serialize_datetime_fields(submission)
             context_data = {
                 "followup_responses": submission_serialized.get("responses", {}),
                 "ai_analysis": submission_serialized.get("ai_analysis", "")
             }
-        else:
-            questionnaire_data = submission["responses"]
-        
-        # Adaptar cuestionario al formato E.D.N.360
-        if is_followup and context_data:
+            
+            # Combinar datos
             merged_data = questionnaire_data.copy()
             merged_data.update(context_data.get("followup_responses", {}))
             adapted_questionnaire = _adapt_questionnaire_for_edn360(merged_data)
         else:
+            # Usar datos validados directamente
             adapted_questionnaire = _adapt_questionnaire_for_edn360(questionnaire_data)
         
         # Obtener fecha actual
