@@ -878,40 +878,40 @@ class EDN360Orchestrator:
                     reasoning_context = reasoning_result.get("client_context", {})
                     reasoning_training = reasoning_context.get("training", {})
                     
-                    # Guardar razonamiento en el campo correspondiente
+                    # Guardar razonamiento directamente en el dict de client_context
+                    # (no como atributo Pydantic, sino como key adicional)
+                    training_dict = client_context.training.model_dump() if hasattr(client_context.training, 'model_dump') else dict(client_context.training)
                     
                     if agent.agent_id == "E2":
                         capacity = reasoning_training.get("capacity", {})
                         rationale = capacity.get("razonamiento_interno", {})
                         if rationale:
-                            # Guardar en client_context.training.capacity_rationale
-                            if not hasattr(client_context.training, 'capacity_rationale'):
-                                client_context.training.capacity_rationale = rationale
+                            training_dict["capacity_rationale"] = rationale
                             logger.info(f"    ✅ E2 V2: Razonamiento capturado")
                     
                     elif agent.agent_id == "E4":
                         mesocycle = reasoning_training.get("mesocycle", {})
                         rationale = mesocycle.get("razonamiento_interno", {})
                         if rationale:
-                            if not hasattr(client_context.training, 'mesocycle_rationale'):
-                                client_context.training.mesocycle_rationale = rationale
+                            training_dict["mesocycle_rationale"] = rationale
                             logger.info(f"    ✅ E4 V2: Razonamiento capturado")
                     
                     elif agent.agent_id == "E5":
                         sessions = reasoning_training.get("sessions", {})
                         rationale = sessions.get("razonamiento_interno", {})
                         if rationale:
-                            if not hasattr(client_context.training, 'sessions_rationale'):
-                                client_context.training.sessions_rationale = rationale
+                            training_dict["sessions_rationale"] = rationale
                             logger.info(f"    ✅ E5 V2: Razonamiento capturado")
                     
                     elif agent.agent_id == "E6":
                         safe_sessions = reasoning_training.get("safe_sessions", {})
                         rationale = safe_sessions.get("razonamiento_interno", {})
                         if rationale:
-                            if not hasattr(client_context.training, 'safe_sessions_rationale'):
-                                client_context.training.safe_sessions_rationale = rationale
+                            training_dict["safe_sessions_rationale"] = rationale
                             logger.info(f"    ✅ E6 V2: Razonamiento capturado")
+                    
+                    # Actualizar client_context.training con el dict modificado
+                    client_context.training = TrainingData(**training_dict)
                     
                 except Exception as e:
                     logger.error(f"  ⚠️ {agent.agent_id} V2 falló (NO crítico): {e}")
