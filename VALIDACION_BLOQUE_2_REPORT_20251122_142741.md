@@ -1,0 +1,878 @@
+# VALIDACIÓN EMPÍRICA COMPLETA - PIPELINE E1-E9
+
+**Job ID:** `job_1763806322838231`  
+**Fecha:** 2025-11-22T14:27:40.998874+00:00  
+
+---
+
+## 1️⃣ MÉTRICAS REALES
+
+### ⏱️ Tiempo de Ejecución
+
+- **Inicio:** 2025-11-22T10:12:07.295000
+- **Fin:** 2025-11-22T10:17:54.733000
+- **Duración:** 5.79 minutos (347.4 segundos)
+
+### 💰 Tokens Totales
+
+- **Total:** 174,134 tokens
+- **Input (prompts):** 144,079 tokens
+- **Output (completions):** 30,055 tokens
+
+### 💵 Costos (GPT-5-mini)
+
+- **Input:** $0.010806 USD
+- **Output:** $0.009016 USD
+- **TOTAL:** $0.019822 USD
+
+### 📊 Tokens por Agente
+
+| Agente | Input Tokens | Output Tokens | Total Tokens |
+|--------|--------------|---------------|-------------|
+| E1 | 30,796 | 3,363 | 34,159 |
+| E2 | 29,608 | 2,019 | 31,627 |
+| E3 | 28,745 | 1,616 | 30,361 |
+| E4 | 28,851 | 2,572 | 31,423 |
+| E5 | 7,344 | 6,549 | 13,893 |
+| E6 | 7,326 | 8,000 | 15,326 |
+| E7 | 3,925 | 3,056 | 6,981 |
+| E8 | 4,896 | 1,915 | 6,811 |
+| E9 | 2,588 | 965 | 3,553 |
+
+---
+
+## 2️⃣ OUTPUTS COMPLETOS
+
+### client_summary
+
+```json
+{
+  "id_cliente": "unknown",
+  "objetivo_principal": "recomposicion",
+  "nivel": "avanzado",
+  "edad": 35,
+  "sexo": "hombre",
+  "imc": 24.6,
+  "clasificacion_imc": "normal",
+  "limitaciones_clave": [
+    "dolor_lumbar_ocasional"
+  ],
+  "ejercicios_prohibidos": [
+    "peso_muerto_convencional",
+    "buenos_dias"
+  ],
+  "disponibilidad": {
+    "dias_semana": 3,
+    "minutos_sesion": 60,
+    "horario": "tarde_18:00"
+  },
+  "equipo": "gym_completo",
+  "modo": "inicial",
+  "alertas": [],
+  "experiencia_resumen": "3 años constante, nivel intermedio, pero avanzado por dedicación",
+  "factores_vida": {
+    "sueno_h": 7,
+    "estres": "medio",
+    "adherencia_historica": "media"
+  }
+}
+```
+
+### mesocycle
+
+```json
+{
+  "duracion_semanas": 4,
+  "objetivo": "recomposicion",
+  "estrategia": "estandar",
+  "split": "full-body",
+  "frecuencia_semanal": 3,
+  "volumen_por_grupo": {
+    "pecho": {
+      "series_semana": 14,
+      "rango_original": "16-20",
+      "factor_aplicado": 0.9
+    },
+    "espalda": {
+      "series_semana": 16,
+      "rango_original": "18-22",
+      "factor_aplicado": 0.9
+    },
+    "hombros": {
+      "series_semana": 14,
+      "rango_original": "16-20",
+      "factor_aplicado": 0.9
+    },
+    "cuadriceps": {
+      "series_semana": 16,
+      "rango_original": "18-22",
+      "factor_aplicado": 0.9
+    },
+    "isquios_gluteos": {
+      "series_semana": 14,
+      "rango_original": "16-20",
+      "factor_aplicado": 0.9
+    },
+    "biceps": {
+      "series_semana": 13,
+      "rango_original": "14-18",
+      "factor_aplicado": 0.9
+    },
+    "triceps": {
+      "series_semana": 13,
+      "rango_original": "14-18",
+      "factor_aplicado": 0.9
+    },
+    "core": {
+      "series_semana": 11,
+      "rango_original": "12-15",
+      "factor_aplicado": 0.9
+    }
+  },
+  "semanas": [
+    {
+      "numero": 1,
+      "fase": "adaptacion",
+      "volumen_pct": 85,
+      "rir_objetivo": [
+        4
+      ],
+      "intensidad": "baja",
+      "kpis": {
+        "volumen_total_series": 46,
+        "cit_estimado": 40,
+        "tiempo_total_min": 180,
+        "adherencia_esperada": 95
+      },
+      "notas": "Enfoque en técnica y estabilidad lumbar. Reducir carga si el dolor aumenta."
+    },
+    {
+      "numero": 2,
+      "fase": "acumulacion",
+      "volumen_pct": 100,
+      "rir_objetivo": [
+        4
+      ],
+      "intensidad": "media",
+      "kpis": {
+        "volumen_total_series": 54,
+        "cit_estimado": 48,
+        "tiempo_total_min": 180,
+        "adherencia_esperada": 90
+      },
+      "notas": "Mantener la progresión del volumen mientras se monitorea el estado lumbar."
+    },
+    {
+      "numero": 3,
+      "fase": "intensificacion",
+      "volumen_pct": 95,
+      "rir_objetivo": [
+        3
+      ],
+      "intensidad": "alta",
+      "kpis": {
+        "volumen_total_series": 51,
+        "cit_estimado": 52,
+        "tiempo_total_min": 180,
+        "adherencia_esperada": 85
+      },
+      "notas": "Intensificar cuidando el RIR y monitorear el dolor lumbar. Priorizar ejercicios de core."
+    },
+    {
+      "numero": 4,
+      "fase": "deload",
+      "volumen_pct": 60,
+      "rir_objetivo": [
+        5
+      ],
+      "intensidad": "muy_baja",
+      "kpis": {
+        "volumen_total_series": 32,
+        "cit_estimado": 30,
+        "tiempo_total_min": 150,
+        "adherencia_esperada": 100
+      },
+      "notas": "Reducir cargas y volumen para permitir recuperación completa del lumbar."
+    }
+  ],
+  "distribucion_semanal_tipo": {
+    "lunes": "Full-body A",
+    "martes": "Descanso",
+    "miercoles": "Full-body B",
+    "jueves": "Descanso",
+    "viernes": "Full-body C",
+    "sabado": "Descanso",
+    "domingo": "Descanso"
+  },
+  "ratios_equilibrio": {
+    "push_pull": 1.0,
+    "cadera_rodilla": 0.88,
+    "validacion": "ratios_dentro_rango"
+  }
+}
+```
+
+### sessions
+
+```json
+{
+  "semana_1": [
+    {
+      "dia": 1,
+      "dia_semana": "Lunes",
+      "hora_recomendada": "18:00",
+      "nombre": "Full-body A",
+      "duracion_min": 60,
+      "ejercicios": [
+        {
+          "nombre": "Press de banca con mancuernas",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "4",
+          "descanso": 120
+        },
+        {
+          "nombre": "Remo con barra T",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "4",
+          "descanso": 120
+        },
+        {
+          "nombre": "Sentadilla frontal",
+          "series": 3,
+          "reps": "10-12",
+          "rir": "4",
+          "descanso": 90
+        },
+        {
+          "nombre": "RDL con mancuernas",
+          "series": 3,
+          "reps": "10-12",
+          "rir": "4",
+          "descanso": 90
+        },
+        {
+          "nombre": "Plancha frontal",
+          "series": 3,
+          "reps": "30-45s",
+          "rir": "-",
+          "descanso": 45
+        }
+      ]
+    },
+    {
+      "dia": 3,
+      "dia_semana": "Miércoles",
+      "hora_recomendada": "18:00",
+      "nombre": "Full-body B",
+      "duracion_min": 60,
+      "ejercicios": [
+        {
+          "nombre": "Press inclinado con mancuernas",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "4",
+          "descanso": 120
+        },
+        {
+          "nombre": "Dominadas asistidas",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "4",
+          "descanso": 120
+        },
+        {
+          "nombre": "Zancadas búlgaras",
+          "series": 3,
+          "reps": "10-12",
+          "rir": "4",
+          "descanso": 90
+        },
+        {
+          "nombre": "Hip thrust",
+          "series": 3,
+          "reps": "10-12",
+          "rir": "4",
+          "descanso": 90
+        },
+        {
+          "nombre": "Bird-dog",
+          "series": 3,
+          "reps": "10-15",
+          "rir": "-",
+          "descanso": 45
+        }
+      ]
+    },
+    {
+      "dia": 5,
+      "dia_semana": "Viernes",
+      "hora_recomendada": "18:00",
+      "nombre": "Full-body C",
+      "duracion_min": 60,
+      "ejercicios": [
+        {
+          "nombre": "Press de hombros con mancuernas",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "4",
+          "descanso": 120
+        },
+        {
+          "nombre": "Remo en polea",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "4",
+          "descanso": 120
+        },
+        {
+          "nombre": "Sentadilla goblet",
+          "series": 3,
+          "reps": "10-12",
+          "rir": "4",
+          "descanso": 90
+        },
+        {
+          "nombre": "Puente de glúteos",
+          "series": 3,
+          "reps": "10-12",
+          "rir": "4",
+          "descanso": 90
+        },
+        {
+          "nombre": "Pallof press",
+          "series": 3,
+          "reps": "10-15",
+          "rir": "-",
+          "descanso": 45
+        }
+      ]
+    }
+  ],
+  "semana_2": [
+    {
+      "dia": 8,
+      "dia_semana": "Lunes",
+      "hora_recomendada": "18:00",
+      "nombre": "Full-body A",
+      "duracion_min": 60,
+      "ejercicios": [
+        {
+          "nombre": "Press de banca con mancuernas",
+          "series": 4,
+          "reps": "8-10",
+          "rir": "4",
+          "descanso": 120
+        },
+        {
+          "nombre": "Remo con barra T",
+          "series": 4,
+          "reps": "8-10",
+          "rir": "4",
+          "descanso": 120
+        },
+        {
+          "nombre": "Sentadilla frontal",
+          "series": 3,
+          "reps": "10-12",
+          "rir": "4",
+          "descanso": 90
+        },
+        {
+          "nombre": "RDL con mancuernas",
+          "series": 3,
+          "reps": "10-12",
+          "rir": "4",
+          "descanso": 90
+        },
+        {
+          "nombre": "Plancha frontal",
+          "series": 3,
+          "reps": "30-45s",
+          "rir": "-",
+          "descanso": 45
+        }
+      ]
+    },
+    {
+      "dia": 10,
+      "dia_semana": "Miércoles",
+      "hora_recomendada": "18:00",
+      "nombre": "Full-body B",
+      "duracion_min": 60,
+      "ejercicios": [
+        {
+          "nombre": "Press inclinado con mancuernas",
+          "series": 4,
+          "reps": "8-10",
+          "rir": "4",
+          "descanso": 120
+        },
+        {
+          "nombre": "Dominadas asistidas",
+          "series": 4,
+          "reps": "8-10",
+          "rir": "4",
+          "descanso": 120
+        },
+        {
+          "nombre": "Zancadas búlgaras",
+          "series": 3,
+          "reps": "10-12",
+          "rir": "4",
+          "descanso": 90
+        },
+        {
+          "nombre": "Hip thrust",
+          "series": 3,
+          "reps": "10-12",
+          "rir": "4",
+          "descanso": 90
+        },
+        {
+          "nombre": "Bird-dog",
+          "series": 3,
+          "reps": "10-15",
+          "rir": "-",
+          "descanso": 45
+        }
+      ]
+    },
+    {
+      "dia": 12,
+      "dia_semana": "Viernes",
+      "hora_recomendada": "18:00",
+      "nombre": "Full-body C",
+      "duracion_min": 60,
+      "ejercicios": [
+        {
+          "nombre": "Press de hombros con mancuernas",
+          "series": 4,
+          "reps": "8-10",
+          "rir": "4",
+          "descanso": 120
+        },
+        {
+          "nombre": "Remo en polea",
+          "series": 4,
+          "reps": "8-10",
+          "rir": "4",
+          "descanso": 120
+        },
+        {
+          "nombre": "Sentadilla goblet",
+          "series": 3,
+          "reps": "10-12",
+          "rir": "4",
+          "descanso": 90
+        },
+        {
+          "nombre": "Puente de glúteos",
+          "series": 3,
+          "reps": "10-12",
+          "rir": "4",
+          "descanso": 90
+        },
+        {
+          "nombre": "Pallof press",
+          "series": 3,
+          "reps": "10-15",
+          "rir": "-",
+          "descanso": 45
+        }
+      ]
+    }
+  ],
+  "semana_3": [
+    {
+      "dia": 15,
+      "dia_semana": "Lunes",
+      "hora_recomendada": "18:00",
+      "nombre": "Full-body A",
+      "duracion_min": 60,
+      "ejercicios": [
+        {
+          "nombre": "Press de banca con mancuernas",
+          "series": 4,
+          "reps": "6-8",
+          "rir": "3",
+          "descanso": 120
+        },
+        {
+          "nombre": "Remo con barra T",
+          "series": 4,
+          "reps": "6-8",
+          "rir": "3",
+          "descanso": 120
+        },
+        {
+          "nombre": "Sentadilla frontal",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "3",
+          "descanso": 90
+        },
+        {
+          "nombre": "RDL con mancuernas",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "3",
+          "descanso": 90
+        },
+        {
+          "nombre": "Plancha frontal",
+          "series": 3,
+          "reps": "30-45s",
+          "rir": "-",
+          "descanso": 45
+        }
+      ]
+    },
+    {
+      "dia": 17,
+      "dia_semana": "Miércoles",
+      "hora_recomendada": "18:00",
+      "nombre": "Full-body B",
+      "duracion_min": 60,
+      "ejercicios": [
+        {
+          "nombre": "Press inclinado con mancuernas",
+          "series": 4,
+          "reps": "6-8",
+          "rir": "3",
+          "descanso": 120
+        },
+        {
+          "nombre": "Dominadas asistidas",
+          "series": 4,
+          "reps": "6-8",
+          "rir": "3",
+          "descanso": 120
+        },
+        {
+          "nombre": "Zancadas búlgaras",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "3",
+          "descanso": 90
+        },
+        {
+          "nombre": "Hip thrust",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "3",
+          "descanso": 90
+        },
+        {
+          "nombre": "Bird-dog",
+          "series": 3,
+          "reps": "10-15",
+          "rir": "-",
+          "descanso": 45
+        }
+      ]
+    },
+    {
+      "dia": 19,
+      "dia_semana": "Viernes",
+      "hora_recomendada": "18:00",
+      "nombre": "Full-body C",
+      "duracion_min": 60,
+      "ejercicios": [
+        {
+          "nombre": "Press de hombros con mancuernas",
+          "series": 4,
+          "reps": "6-8",
+          "rir": "3",
+          "descanso": 120
+        },
+        {
+          "nombre": "Remo en polea",
+          "series": 4,
+          "reps": "6-8",
+          "rir": "3",
+          "descanso": 120
+        },
+        {
+          "nombre": "Sentadilla goblet",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "3",
+          "descanso": 90
+        },
+        {
+          "nombre": "Puente de glúteos",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "3",
+          "descanso": 90
+        },
+        {
+          "nombre": "Pallof press",
+          "series": 3,
+          "reps": "10-15",
+          "rir": "-",
+          "descanso": 45
+        }
+      ]
+    }
+  ],
+  "semana_4": [
+    {
+      "dia": 22,
+      "dia_semana": "Lunes",
+      "hora_recomendada": "18:00",
+      "nombre": "Full-body A",
+      "duracion_min": 60,
+      "ejercicios": [
+        {
+          "nombre": "Press de banca con mancuernas",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "5",
+          "descanso": 120
+        },
+        {
+          "nombre": "Remo con barra T",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "5",
+          "descanso": 120
+        },
+        {
+          "nombre": "Sentadilla frontal",
+          "series": 2,
+          "reps": "10-12",
+          "rir": "5",
+          "descanso": 90
+        },
+        {
+          "nombre": "RDL con mancuernas",
+          "series": 2,
+          "reps": "10-12",
+          "rir": "5",
+          "descanso": 90
+        },
+        {
+          "nombre": "Plancha frontal",
+          "series": 2,
+          "reps": "30-45s",
+          "rir": "-",
+          "descanso": 45
+        }
+      ]
+    },
+    {
+      "dia": 24,
+      "dia_semana": "Miércoles",
+      "hora_recomendada": "18:00",
+      "nombre": "Full-body B",
+      "duracion_min": 60,
+      "ejercicios": [
+        {
+          "nombre": "Press inclinado con mancuernas",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "5",
+          "descanso": 120
+        },
+        {
+          "nombre": "Dominadas asistidas",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "5",
+          "descanso": 120
+        },
+        {
+          "nombre": "Zancadas búlgaras",
+          "series": 2,
+          "reps": "10-12",
+          "rir": "5",
+          "descanso": 90
+        },
+        {
+          "nombre": "Hip thrust",
+          "series": 2,
+          "reps": "10-12",
+          "rir": "5",
+          "descanso": 90
+        },
+        {
+          "nombre": "Bird-dog",
+          "series": 2,
+          "reps": "10-15",
+          "rir": "-",
+          "descanso": 45
+        }
+      ]
+    },
+    {
+      "dia": 26,
+      "dia_semana": "Viernes",
+      "hora_recomendada": "18:00",
+      "nombre": "Full-body C",
+      "duracion_min": 60,
+      "ejercicios": [
+        {
+          "nombre": "Press de hombros con mancuernas",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "5",
+          "descanso": 120
+        },
+        {
+          "nombre": "Remo en polea",
+          "series": 3,
+          "reps": "8-10",
+          "rir": "5",
+          "descanso": 120
+        },
+        {
+          "nombre": "Sentadilla goblet",
+          "series": 2,
+          "reps": "10-12",
+          "rir": "5",
+          "descanso": 90
+        },
+        {
+          "nombre": "Puente de glúteos",
+          "series": 2,
+          "reps": "10-12",
+          "rir": "5",
+          "descanso": 90
+        },
+        {
+          "nombre": "Pallof press",
+          "series": 2,
+          "reps": "10-15",
+          "rir": "-",
+          "descanso": 45
+        }
+      ]
+    }
+  ]
+}
+```
+
+### formatted_plan
+
+```json
+{
+  "resumen": "Plan de 4 semanas para hipertrofia con enfoque en recomposición corporal, utilizando un enfoque full-body con sesiones adaptadas para proteger la zona lumbar.",
+  "plan_visual": "El plan se estructura en torno a sesiones de cuerpo completo los lunes, miércoles y viernes, con días de descanso martes, jueves, sábado y domingo.",
+  "instrucciones": [
+    "En cada sesión, enfócate en la técnica especialmente en ejercicios que involucren la zona lumbar.",
+    "Mantén un RIR de 4 durante las primeras dos semanas y ajusta a 3 en la tercera semana.",
+    "Incluye ejercicios de prehab al final de cada sesión para fortalecer el core.",
+    "Monitorea el dolor lumbar y ajusta las cargas si es necesario.",
+    "La semana 4 es de descarga, reduce el volumen y la intensidad para facilitar la recuperación."
+  ]
+}
+```
+
+### audit
+
+```json
+{
+  "status": "bloqueado",
+  "checks": {
+    "volumen_semanal": "aprobado",
+    "frecuencia_por_grupo": "aprobado",
+    "equilibrio_push_pull": "aprobado",
+    "restricciones": "aprobado",
+    "volumen_minimo_por_dia": "fallido"
+  },
+  "warnings": [
+    "Volumen insuficiente de ejercicios en el día lunes: solo 3 ejercicios, se requieren al menos 5."
+  ],
+  "recomendaciones": [
+    "Añadir 2 ejercicios más en el día lunes para alcanzar el mínimo de 5 ejercicios por sesión."
+  ]
+}
+```
+
+### bridge_for_nutrition
+
+```json
+{
+  "tdee_estimado": 2550,
+  "gasto_semanal_estimado": 17800,
+  "dias_entrenamiento_semana": 3,
+  "tipos_dia_presentes": {
+    "usa_dia_A": true,
+    "usa_dia_M": false,
+    "usa_dia_B": true,
+    "count_A": 3,
+    "count_M": 0,
+    "count_B": 4
+  },
+  "distribucion_energetica": {
+    "A": "+12%",
+    "M": "0%",
+    "B": "-12%"
+  },
+  "calendario_sugerido": {
+    "dia_1": "A",
+    "dia_2": "B",
+    "dia_3": "A",
+    "dia_4": "B",
+    "dia_5": "A",
+    "dia_6": "B",
+    "dia_7": "B"
+  },
+  "justificacion_calendario": {
+    "dia_1": "Lunes: Entrenamiento intenso de cuerpo completo.",
+    "dia_3": "Miércoles: Entrenamiento intenso de cuerpo completo.",
+    "dia_5": "Viernes: Entrenamiento intenso de cuerpo completo."
+  },
+  "prioridad_metabolica": "hipertrofia"
+}
+```
+
+---
+
+## 3️⃣ ANÁLISIS DE COHERENCIA
+
+**Checks realizados:** 4  
+**Coherentes:** 2  
+**Advertencias:** 2  
+**No verificables:** 0  
+
+### Detalles de Verificación
+
+#### Mesocycle ↔ Sessions: Cantidad
+
+**Status:** ⚠️ DISCREPANCIA  
+**Detalles:** Mesocycle: 0 sesiones, Sessions: 4 sesiones  
+
+#### Sessions ↔ Formatted Plan: Referencias
+
+**Status:** ⚠️ COHERENCIA DÉBIL  
+**Detalles:** Solo 0 semanas identificadas  
+
+#### Formatted Plan: Estructura
+
+**Status:** ✅ VÁLIDA  
+**Detalles:** Plan contiene referencias temporales correctas  
+
+#### Bridge ↔ Training: Contenido
+
+**Status:** ✅ COHERENTE  
+**Detalles:** Bridge menciona 3/3 aspectos clave del plan  
+
+---
+
+## 4️⃣ CONFIRMACIONES
+
+- **Cuestionario Cumple Schema:** True
+- **Worker Asincrono Usado:** True
+- **Pipeline E1 E9 Completo:** True
+- **Base Datos Correcta:** test_database
+- **Frontend Usa Este Flujo:** PENDIENTE VERIFICACIÓN MANUAL DEL CÓDIGO
+
+---
+
+## CONCLUSIÓN
+
+Este reporte contiene la validación empírica completa del pipeline E1-E9 con datos reales.
