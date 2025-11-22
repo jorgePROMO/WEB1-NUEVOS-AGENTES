@@ -247,11 +247,32 @@ Tu respuesta DEBE ser un JSON con esta estructura EXACTA:
 - ❌ NO devuelvas texto fuera del JSON
 - ❌ NO uses comillas escapadas innecesarias en el Markdown
 
+**⚠️ MUY IMPORTANTE - FORMATO DEL formatted_plan ⚠️**
+
+`formatted_plan` DEBE SER UN STRING, NO UN OBJETO.
+
+❌ INCORRECTO:
+```json
+"formatted_plan": {
+  "resumen": "...",
+  "plan_visual": "...",
+  "instrucciones": [...]
+}
+```
+
+✅ CORRECTO:
+```json
+"formatted_plan": "# PLAN DE ENTRENAMIENTO PERSONALIZADO – EDN360\n\n**Cliente:** Carlos...\n\n## 📋 Resumen del Bloque\n\nEste bloque..."
+```
+
+El formatted_plan debe ser TODO el plan en Markdown como un solo string largo, NO como un objeto con subcampos.
+
 **ESTILO Y REGLAS GENERALES:**
 - Idioma: SIEMPRE español, tono cercano pero profesional.
 - No uses tecnicismos innecesarios.
 - No incluyas código, JSON, ni bloques ```markdown``` dentro de `formatted_plan`.
 - El output DEBE SER JSON válido con el `client_context` completo.
+- formatted_plan es UN STRING LARGO, no un objeto ni un array.
 
 '''
     
