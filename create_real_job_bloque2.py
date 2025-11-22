@@ -11,8 +11,10 @@ from dotenv import load_dotenv
 load_dotenv('/app/backend/.env')
 
 MONGO_URL = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
+DB_NAME = os.getenv('DB_NAME', 'test_database')  # Usar la misma DB que el servidor
 client = AsyncIOMotorClient(MONGO_URL)
-db = client['edn360']
+db = client[DB_NAME]
+print(f"📁 Usando base de datos: {DB_NAME}")
 
 async def create_job():
     print("=" * 80)
