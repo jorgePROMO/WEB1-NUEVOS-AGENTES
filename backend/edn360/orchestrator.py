@@ -877,7 +877,6 @@ class EDN360Orchestrator:
                     reasoning_training = reasoning_context.get("training", {})
                     
                     # Guardar razonamiento en el campo correspondiente
-                    rationale_field = f"{agent.agent_id.lower()}_rationale"
                     
                     if agent.agent_id == "E2":
                         capacity = reasoning_training.get("capacity", {})
