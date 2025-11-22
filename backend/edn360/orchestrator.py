@@ -605,24 +605,6 @@ class EDN360Orchestrator:
         for agent in self.training_initial_agents:
             logger.info(f"  ▶️ Ejecutando {agent.agent_id} ({agent.agent_name})...")
             
-            # VALIDACIÓN PRE-EJECUCIÓN: ¿Tiene los inputs requeridos?
-            requirements = get_agent_requirements(agent.agent_id)
-            if requirements["requires"]:
-                logger.info(f"    🔍 Validando inputs requeridos: {requirements['requires']}")
-                from .client_context_utils import validate_agent_input
-                valid_input, error_msg = validate_agent_input(
-                    agent.agent_id,
-                    client_context,
-                    requirements["requires"]
-                )
-                if not valid_input:
-                    logger.error(f"  ❌ {agent.agent_id} - Validación de input falló: {error_msg}")
-                    return {
-                        "success": False,
-                        "error": error_msg,
-                        "executions": executions
-                    }
-            
             # EJECUTAR AGENTE con client_context + KB
             # ARQUITECTURA DE CAJONES: E1-E9 usan inputs reducidos
             agents_with_scoped_input = ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"]
@@ -634,6 +616,24 @@ class EDN360Orchestrator:
                 
                 # client_context_before = input que el agente recibe (para validación)
                 client_context_before = ClientContext.model_validate(agent_input)
+                
+                # VALIDACIÓN PRE-EJECUCIÓN: Validar sobre el input reducido construido
+                requirements = get_agent_requirements(agent.agent_id)
+                if requirements["requires"]:
+                    logger.info(f"    🔍 Validando inputs requeridos: {requirements['requires']}")
+                    from .client_context_utils import validate_agent_input
+                    valid_input, error_msg = validate_agent_input(
+                        agent.agent_id,
+                        client_context_before,  # ← VALIDAR SOBRE INPUT REDUCIDO, no sobre client_context completo
+                        requirements["requires"]
+                    )
+                    if not valid_input:
+                        logger.error(f"  ❌ {agent.agent_id} - Validación de input falló: {error_msg}")
+                        return {
+                            "success": False,
+                            "error": error_msg,
+                            "executions": executions
+                        }
             else:
                 # Agente legacy: pasar formato antiguo (e1_output, e2_output, etc.)
                 logger.info(f"    ⚠️ Preparando input legacy para {agent.agent_id}")
