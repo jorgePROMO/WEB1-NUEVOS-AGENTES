@@ -760,8 +760,27 @@ class EDN360Orchestrator:
                 output_context["training"] = filtered_training
                 logger.info(f"    🔒 {agent.agent_id}: Campos finales ({len(filtered_training)} campos): {list(filtered_training.keys())}")
                 
-                client_context = ClientContext.model_validate(output_context)
-                logger.info(f"  ✅ {agent.agent_id} devolvió client_context actualizado")
+                # CRÍTICO: Actualizar client_context manteniendo campos anteriores que no se modificaron
+                # Esto asegura que campos de agentes anteriores se mantengan disponibles para agentes futuros
+                new_client_context = ClientContext.model_validate(output_context)
+                
+                # Merge: mantener campos del contexto anterior que no están en el nuevo
+                previous_training = client_context.training.model_dump()
+                new_training = new_client_context.training.model_dump()
+                
+                for field, value in previous_training.items():
+                    if field not in new_training or new_training[field] is None:
+                        new_training[field] = value
+                
+                # Actualizar el contexto global con merge
+                client_context = ClientContext(
+                    meta=new_client_context.meta,
+                    raw_inputs=new_client_context.raw_inputs,
+                    training=TrainingData(**new_training),
+                    nutrition=new_client_context.nutrition
+                )
+                
+                logger.info(f"  ✅ {agent.agent_id} devolvió client_context actualizado (con merge de campos anteriores)")
             else:
                 # Compatibilidad: agente legacy (E2, E3, E4, E6, E7, E9)
                 logger.warning(f"  ⚠️ {agent.agent_id} es legacy, simulando output con datos dummy")
