@@ -785,9 +785,10 @@ class EDN360Orchestrator:
                         new_training[field] = value
                 
                 # Actualizar el contexto global con merge
+                # SALVAGUARDA: raw_inputs puede ser None (arquitectura cajones post-E1)
                 client_context = ClientContext(
                     meta=new_client_context.meta,
-                    raw_inputs=new_client_context.raw_inputs,
+                    raw_inputs=new_client_context.raw_inputs if new_client_context.raw_inputs else None,
                     training=TrainingData(**new_training),
                     nutrition=new_client_context.nutrition
                 )
