@@ -293,6 +293,128 @@ def generate_premium_markdown(
     return "\n".join(markdown_lines)
 
 
+def normalize_sessions_structure(sessions_data: Dict) -> Dict[str, list]:
+    """
+    Normaliza la estructura de sessions/safe_sessions a un formato estándar.
+    
+    E5 genera: {"semana_1": [lista_sesiones], ...}
+    E6 genera: {"semana_1": {"dia_1": {...}, "dia_2": {...}}, ...}
+    
+    Esta función convierte ambos al formato de E5 (lista de sesiones).
+    """
+    normalized = {}
+    
+    for week_key, week_data in sessions_data.items():
+        if not week_key.startswith("semana_"):
+            continue
+        
+        # Si ya es una lista, usar directamente
+        if isinstance(week_data, list):
+            normalized[week_key] = week_data
+        
+        # Si es un dict con dias, convertir
+        elif isinstance(week_data, dict):
+            sesiones = []
+            
+            # Ordenar los días (dia_1, dia_2, etc.)
+            dias_ordenados = sorted(
+                [k for k in week_data.keys() if k.startswith("dia_")],
+                key=lambda x: int(x.split("_")[1])
+            )
+            
+            for dia_key in dias_ordenados:
+                dia_data = week_data[dia_key]
+                
+                # Extraer info de la sesión
+                ejercicios_adaptados = dia_data.get("ejercicios_adaptados", [])
+                
+                if not ejercicios_adaptados:
+                    continue
+                
+                # Reconstruir sesión en formato E5
+                sesion = {
+                    "dia": int(dia_key.split("_")[1]),
+                    "dia_semana": _get_dia_semana(int(dia_key.split("_")[1])),
+                    "hora_recomendada": "18:00",  # Default
+                    "nombre": f"Sesión {dia_key.split('_')[1]}",
+                    "duracion_min": 60,  # Default
+                    "ejercicios": []
+                }
+                
+                # Convertir ejercicios
+                for ej in ejercicios_adaptados:
+                    ejercicio = {
+                        "nombre": ej.get("nombre", "Ejercicio"),
+                        "series": ej.get("series", 3),
+                        "reps": ej.get("reps", "8-10"),
+                        "rir": ej.get("rir", "4"),
+                        "descanso": ej.get("descanso", 90)
+                    }
+                    sesion["ejercicios"].append(ejercicio)
+                
+                if sesion["ejercicios"]:
+                    sesiones.append(sesion)
+            
+            normalized[week_key] = sesiones
+    
+    return normalized
+
+
+def _get_dia_semana(dia_num: int) -> str:
+    """Convierte número de día a nombre del día."""
+    dias = {
+        1: "Lunes",
+        2: "Martes",
+        3: "Miércoles",
+        4: "Jueves",
+        5: "Viernes",
+        6: "Sábado",
+        7: "Domingo"
+    }
+    return dias.get(dia_num, f"Día {dia_num}")
+
+
+def validate_sessions_exist(sessions_data: Dict) -> tuple[bool, str]:
+    """
+    Valida que existan sesiones completas.
+    
+    Returns:
+        (is_valid, error_message)
+    """
+    if not sessions_data:
+        return False, "No hay datos de sesiones (sessions_data vacío)"
+    
+    total_sesiones = 0
+    semanas_con_datos = 0
+    
+    for week_key, week_data in sessions_data.items():
+        if not week_key.startswith("semana_"):
+            continue
+        
+        if isinstance(week_data, list):
+            if week_data:
+                semanas_con_datos += 1
+                total_sesiones += len(week_data)
+        elif isinstance(week_data, dict):
+            dias_con_ejercicios = 0
+            for dia_key, dia_data in week_data.items():
+                if dia_key.startswith("dia_"):
+                    ejercicios = dia_data.get("ejercicios_adaptados", [])
+                    if ejercicios:
+                        dias_con_ejercicios += 1
+            if dias_con_ejercicios > 0:
+                semanas_con_datos += 1
+                total_sesiones += dias_con_ejercicios
+    
+    if total_sesiones == 0:
+        return False, f"No hay sesiones con ejercicios (0 sesiones encontradas)"
+    
+    if semanas_con_datos == 0:
+        return False, f"No hay semanas con datos de entrenamiento"
+    
+    return True, f"{total_sesiones} sesiones en {semanas_con_datos} semanas"
+
+
 def format_plan_for_client(training_data: Dict[str, Any]) -> str:
     """
     Wrapper que extrae los datos necesarios de training_data y genera el Markdown.
@@ -302,13 +424,29 @@ def format_plan_for_client(training_data: Dict[str, Any]) -> str:
     
     Returns:
         String con el plan en Markdown
+        
+    Raises:
+        ValueError: Si no hay sesiones válidas
     """
-    safe_sessions = training_data.get("safe_sessions", {})
+    # Priorizar safe_sessions sobre sessions
+    raw_sessions = training_data.get("safe_sessions")
+    if not raw_sessions:
+        raw_sessions = training_data.get("sessions", {})
+    
+    # Validar que existan sesiones
+    is_valid, message = validate_sessions_exist(raw_sessions)
+    if not is_valid:
+        raise ValueError(f"Sesiones inválidas: {message}")
+    
+    # Normalizar estructura
+    normalized_sessions = normalize_sessions_structure(raw_sessions)
+    
+    # Validar normalización
+    is_valid, message = validate_sessions_exist(normalized_sessions)
+    if not is_valid:
+        raise ValueError(f"Error normalizando sesiones: {message}")
+    
     mesocycle = training_data.get("mesocycle", {})
     client_summary = training_data.get("client_summary", {})
     
-    # Si safe_sessions está vacío, intentar usar sessions
-    if not safe_sessions:
-        safe_sessions = training_data.get("sessions", {})
-    
-    return generate_premium_markdown(safe_sessions, mesocycle, client_summary)
+    return generate_premium_markdown(normalized_sessions, mesocycle, client_summary)
