@@ -61,7 +61,7 @@ async def create_job():
     
     job_doc = {
         "_id": job_id,
-        "user_id": "user_bloque2_validation",
+        "user_id": "admin_jorge_001",  # Usuario real existente
         "type": "training",
         "submission_id": quest_id,
         "training_plan_id": None,
