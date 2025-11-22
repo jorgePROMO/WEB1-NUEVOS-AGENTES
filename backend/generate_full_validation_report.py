@@ -264,27 +264,54 @@ async def generate_full_report(job_id: str):
     if sessions and formatted_plan:
         plan_str = str(formatted_plan).lower()
         
-        # Verificar que las primeras 3 sesiones están mencionadas
-        sessions_mentioned = 0
-        for i, session in enumerate(sessions[:3]):
-            session_name = session.get('name', '').lower()
-            if session_name and session_name in plan_str:
-                sessions_mentioned += 1
-        
-        if sessions_mentioned >= 2:
-            print(f"   ✅ COHERENTE: {sessions_mentioned}/3 primeras sesiones mencionadas en formatted_plan")
-            coherence_checks.append({
-                "check": "Sessions ↔ Formatted Plan: Referencias",
-                "status": "✅ COHERENTE",
-                "detalles": f"{sessions_mentioned}/3 sesiones verificadas en el plan formateado"
-            })
+        # Si sessions es un dict, obtener valores
+        if isinstance(sessions, dict):
+            session_keys = list(sessions.keys())
+            sessions_count = len(session_keys)
+            print(f"   Sessions es dict con {sessions_count} semanas: {session_keys}")
+            
+            # Verificar que las semanas están mencionadas
+            weeks_mentioned = 0
+            for week_key in session_keys[:3]:
+                if week_key.lower() in plan_str:
+                    weeks_mentioned += 1
+            
+            if weeks_mentioned >= 2:
+                print(f"   ✅ COHERENTE: {weeks_mentioned}/{min(3, sessions_count)} semanas mencionadas en formatted_plan")
+                coherence_checks.append({
+                    "check": "Sessions ↔ Formatted Plan: Referencias",
+                    "status": "✅ COHERENTE",
+                    "detalles": f"{weeks_mentioned} semanas verificadas en el plan formateado"
+                })
+            else:
+                print(f"   ⚠️  DÉBIL: Solo {weeks_mentioned} semanas claramente mencionadas")
+                coherence_checks.append({
+                    "check": "Sessions ↔ Formatted Plan: Referencias",
+                    "status": "⚠️ COHERENCIA DÉBIL",
+                    "detalles": f"Solo {weeks_mentioned} semanas identificadas"
+                })
         else:
-            print(f"   ⚠️  DÉBIL: Solo {sessions_mentioned}/3 sesiones claramente mencionadas")
-            coherence_checks.append({
-                "check": "Sessions ↔ Formatted Plan: Referencias",
-                "status": "⚠️ COHERENCIA DÉBIL",
-                "detalles": f"Solo {sessions_mentioned}/3 sesiones identificadas"
-            })
+            # Sessions es lista
+            sessions_mentioned = 0
+            for i, session in enumerate(list(sessions)[:3]):
+                session_name = session.get('name', '').lower() if isinstance(session, dict) else str(session).lower()
+                if session_name and session_name in plan_str:
+                    sessions_mentioned += 1
+            
+            if sessions_mentioned >= 2:
+                print(f"   ✅ COHERENTE: {sessions_mentioned}/3 sesiones mencionadas")
+                coherence_checks.append({
+                    "check": "Sessions ↔ Formatted Plan: Referencias",
+                    "status": "✅ COHERENTE",
+                    "detalles": f"{sessions_mentioned}/3 sesiones verificadas"
+                })
+            else:
+                print(f"   ⚠️  DÉBIL: Solo {sessions_mentioned}/3 sesiones mencionadas")
+                coherence_checks.append({
+                    "check": "Sessions ↔ Formatted Plan: Referencias",
+                    "status": "⚠️ COHERENCIA DÉBIL",
+                    "detalles": f"Solo {sessions_mentioned}/3 sesiones identificadas"
+                })
         
         # Verificar estructura general
         has_semanas = 'semana' in plan_str
