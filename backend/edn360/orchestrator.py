@@ -859,6 +859,62 @@ class EDN360Orchestrator:
             
             logger.info(f"  ✅ {agent.agent_id} completado y validado")
             executions.append(result)
+            
+            # RAZONAMIENTO V2: Si existe agente v2, ejecutar en paralelo (NO crítico)
+            if agent.agent_id in self.reasoning_agents:
+                try:
+                    logger.info(f"  🧠 Ejecutando {agent.agent_id} V2 (razonamiento)...")
+                    reasoning_agent = self.reasoning_agents[agent.agent_id]
+                    
+                    reasoning_result = await reasoning_agent.execute(
+                        client_context.model_dump(exclude_none=True),
+                        kb_training=self.knowledge_bases.get("training", ""),
+                        kb_nutrition=self.knowledge_bases.get("nutrition", "")
+                    )
+                    
+                    # Extraer razonamiento interno
+                    reasoning_context = reasoning_result.get("client_context", {})
+                    reasoning_training = reasoning_context.get("training", {})
+                    
+                    # Guardar razonamiento en el campo correspondiente
+                    rationale_field = f"{agent.agent_id.lower()}_rationale"
+                    
+                    if agent.agent_id == "E2":
+                        capacity = reasoning_training.get("capacity", {})
+                        rationale = capacity.get("razonamiento_interno", {})
+                        if rationale:
+                            # Guardar en client_context.training.capacity_rationale
+                            if not hasattr(client_context.training, 'capacity_rationale'):
+                                client_context.training.capacity_rationale = rationale
+                            logger.info(f"    ✅ E2 V2: Razonamiento capturado")
+                    
+                    elif agent.agent_id == "E4":
+                        mesocycle = reasoning_training.get("mesocycle", {})
+                        rationale = mesocycle.get("razonamiento_interno", {})
+                        if rationale:
+                            if not hasattr(client_context.training, 'mesocycle_rationale'):
+                                client_context.training.mesocycle_rationale = rationale
+                            logger.info(f"    ✅ E4 V2: Razonamiento capturado")
+                    
+                    elif agent.agent_id == "E5":
+                        sessions = reasoning_training.get("sessions", {})
+                        rationale = sessions.get("razonamiento_interno", {})
+                        if rationale:
+                            if not hasattr(client_context.training, 'sessions_rationale'):
+                                client_context.training.sessions_rationale = rationale
+                            logger.info(f"    ✅ E5 V2: Razonamiento capturado")
+                    
+                    elif agent.agent_id == "E6":
+                        safe_sessions = reasoning_training.get("safe_sessions", {})
+                        rationale = safe_sessions.get("razonamiento_interno", {})
+                        if rationale:
+                            if not hasattr(client_context.training, 'safe_sessions_rationale'):
+                                client_context.training.safe_sessions_rationale = rationale
+                            logger.info(f"    ✅ E6 V2: Razonamiento capturado")
+                    
+                except Exception as e:
+                    logger.error(f"  ⚠️ {agent.agent_id} V2 falló (NO crítico): {e}")
+                    logger.info(f"    → Continuando con datos de {agent.agent_id} legacy")
         
         # PASO 3: POST-PROCESAMIENTO - Generar formatted_plan premium en Markdown
         logger.info("  📝 Post-procesando formatted_plan premium...")
