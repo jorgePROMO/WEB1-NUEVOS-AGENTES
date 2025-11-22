@@ -246,13 +246,14 @@ class EDN360Orchestrator:
         """Inicializa el orquestador con todos los agentes y carga las bases de conocimiento"""
         
         # Training Initial Agents (E1-E9)
+        # NOTA: E2, E4, E5, E6 usan versiones V2 con RAZONAMIENTO
         self.training_initial_agents = [
             E1Analyst(),
-            E2CapacityEvaluator(),
+            E2CapacityEvaluatorV2(),  # V2: Razonamiento contextual
             E3AdaptationAnalyst(),
-            E4ProgramArchitect(),
-            E5MicrocycleEngineer(),
-            E6ClinicalTechnician(),
+            E4ProgramArchitectV2(),   # V2: Diseño inteligente
+            E5MicrocycleEngineerV2(), # V2: Selección biomecánica
+            E6ClinicalTechnicianV2(), # V2: Validación preventiva
             E7LoadAnalyst(),
             E8TechnicalAuditor(),
             E9NutritionBridge(),
