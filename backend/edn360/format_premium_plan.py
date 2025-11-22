@@ -417,34 +417,45 @@ def validate_sessions_exist(sessions_data: Dict) -> tuple[bool, str]:
 
 def format_plan_for_client(training_data: Dict[str, Any]) -> str:
     """
-    Wrapper que extrae los datos necesarios de training_data y genera el Markdown.
+    Genera el formatted_plan premium a partir de training.sessions (E5).
+    
+    DECISIÓN DE ARQUITECTURA:
+    - training.sessions (E5) es la FUENTE DE VERDAD para el contenido del cliente
+    - training.safe_sessions (E6) se usa SOLO para auditoría y validación interna
+    - El formatted_plan NUNCA debe generarse a partir de safe_sessions
     
     Args:
-        training_data: Dict con client_summary, mesocycle, safe_sessions, etc.
+        training_data: Dict con client_summary, mesocycle, sessions, etc.
     
     Returns:
-        String con el plan en Markdown
+        String con el plan completo en Markdown
         
     Raises:
-        ValueError: Si no hay sesiones válidas
+        ValueError: Si training.sessions no contiene las 4 semanas completas
     """
-    # Priorizar safe_sessions sobre sessions
-    raw_sessions = training_data.get("safe_sessions")
-    if not raw_sessions:
-        raw_sessions = training_data.get("sessions", {})
+    # USAR SOLO training.sessions (E5) - NO safe_sessions
+    raw_sessions = training_data.get("sessions")
     
-    # Validar que existan sesiones
+    if not raw_sessions:
+        raise ValueError("training.sessions (E5) no existe. El plan no puede generarse sin las sesiones base.")
+    
+    # Validar que existan sesiones completas
     is_valid, message = validate_sessions_exist(raw_sessions)
     if not is_valid:
-        raise ValueError(f"Sesiones inválidas: {message}")
+        raise ValueError(f"training.sessions (E5) inválido: {message}")
     
-    # Normalizar estructura
+    # Normalizar estructura (por si E5 genera formato diferente)
     normalized_sessions = normalize_sessions_structure(raw_sessions)
     
     # Validar normalización
     is_valid, message = validate_sessions_exist(normalized_sessions)
     if not is_valid:
-        raise ValueError(f"Error normalizando sesiones: {message}")
+        raise ValueError(f"Error normalizando training.sessions: {message}")
+    
+    # Validar que haya al menos 3 semanas (mínimo aceptable para un plan)
+    num_semanas = len([k for k in normalized_sessions.keys() if k.startswith("semana_")])
+    if num_semanas < 3:
+        raise ValueError(f"Plan incompleto: solo {num_semanas} semanas encontradas. Se requieren al menos 3 semanas.")
     
     mesocycle = training_data.get("mesocycle", {})
     client_summary = training_data.get("client_summary", {})
