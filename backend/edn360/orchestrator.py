@@ -159,6 +159,8 @@ def build_scoped_input_for_agent(agent_id: str, client_context: ClientContext) -
                 "capacity": client_context.training.capacity,
                 "adaptation": client_context.training.adaptation,
                 "mesocycle": client_context.training.mesocycle,
+                "constraints": client_context.training.constraints,  # Pass-through para E6
+                "prehab": client_context.training.prehab,  # Pass-through para E6
                 "sessions": None  # Lo que él va a llenar
             }
         }
