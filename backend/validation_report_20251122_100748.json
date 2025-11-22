@@ -1,0 +1,67 @@
+{
+  "job_id": "job_1763805768532707",
+  "status": "completed",
+  "execution_time": {
+    "started_at": "2025-11-22T10:02:51.601000",
+    "completed_at": "2025-11-22T10:07:46.981000",
+    "duration_seconds": 295.38,
+    "duration_minutes": 4.923
+  },
+  "token_usage": {
+    "total_tokens": 170642,
+    "prompt_tokens": 143494,
+    "completion_tokens": 27148,
+    "input_cost_usd": 0.0108,
+    "output_cost_usd": 0.0081,
+    "total_cost_usd": 0.0189,
+    "by_agent": {
+      "E1": {
+        "prompt_tokens": 30799,
+        "completion_tokens": 3288,
+        "total_tokens": 34087
+      },
+      "E2": {
+        "prompt_tokens": 29530,
+        "completion_tokens": 1893,
+        "total_tokens": 31423
+      },
+      "E3": {
+        "prompt_tokens": 28734,
+        "completion_tokens": 1617,
+        "total_tokens": 30351
+      },
+      "E4": {
+        "prompt_tokens": 28852,
+        "completion_tokens": 2610,
+        "total_tokens": 31462
+      },
+      "E5": {
+        "prompt_tokens": 7302,
+        "completion_tokens": 6491,
+        "total_tokens": 13793
+      },
+      "E6": {
+        "prompt_tokens": 7271,
+        "completion_tokens": 5246,
+        "total_tokens": 12517
+      },
+      "E7": {
+        "prompt_tokens": 3476,
+        "completion_tokens": 2644,
+        "total_tokens": 6120
+      },
+      "E8": {
+        "prompt_tokens": 4912,
+        "completion_tokens": 2335,
+        "total_tokens": 7247
+      },
+      "E9": {
+        "prompt_tokens": 2618,
+        "completion_tokens": 1024,
+        "total_tokens": 3642
+      }
+    }
+  },
+  "outputs": {},
+  "coherence_analysis": {}
+}
