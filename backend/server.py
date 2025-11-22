@@ -5832,7 +5832,16 @@ async def admin_generate_training_plan(
         
         # Generar versiones del plan
         plan_data_json = _format_edn360_plan_for_display(result["plan_data"])
-        plan_text_professional = _format_edn360_plan_as_text(result["plan_data"], user.get("name", user.get("username", "Cliente")), numero_mes)
+        
+        # FUENTE DE VERDAD: edn360_data.formatted_plan (generado por post-procesador)
+        formatted_plan = result["plan_data"].get("formatted_plan")
+        
+        if isinstance(formatted_plan, str) and formatted_plan.strip():
+            plan_text_professional = formatted_plan
+            logger.info("✅ plan_text tomado directamente de edn360_data.formatted_plan (post-procesador)")
+        else:
+            logger.error("⚠️ formatted_plan ausente o vacío, usando _format_edn360_plan_as_text como fallback")
+            plan_text_professional = _format_edn360_plan_as_text(result["plan_data"], user.get("name", user.get("username", "Cliente")), numero_mes)
         
         # Guardar el plan en training_plans con formato E.D.N.360
         training_plan_doc = {
