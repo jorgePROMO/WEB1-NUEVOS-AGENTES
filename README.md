@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://fitness-plan-debug.preview.emergentagent.com
+**URL Actual:** https://smart-trainer-37.preview.emergentagent.com
 
 ---
 

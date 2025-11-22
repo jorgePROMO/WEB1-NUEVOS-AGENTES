@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://fitness-plan-debug.preview.emergentagent.com
+https://smart-trainer-37.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 
