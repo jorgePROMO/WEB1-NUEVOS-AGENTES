@@ -138,6 +138,7 @@ async def worker_main():
     logger.info("🚀 Job Worker iniciado")
     logger.info("📊 Configuración:")
     logger.info(f"   - MongoDB: {MONGO_URL}")
+    logger.info(f"   - Database: {DB_NAME}")
     logger.info(f"   - Intervalo de polling: 5 segundos")
     logger.info(f"   - Concurrencia máxima: 2 jobs simultáneos")
     logger.info(f"   - Timeout: 30 minutos")
