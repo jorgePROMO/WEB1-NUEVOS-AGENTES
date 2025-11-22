@@ -34,10 +34,12 @@ from .client_context_utils import (
 # Import agents
 from .agents.training_initial import (
     E1Analyst, E3AdaptationAnalyst,
-    E7LoadAnalyst, E8TechnicalAuditor, E9NutritionBridge
+    E7LoadAnalyst, E8TechnicalAuditor, E9NutritionBridge,
+    # Legacy agents (fuente de verdad estructural)
+    E2CapacityEvaluator, E4ProgramArchitect, E5MicrocycleEngineer, E6ClinicalTechnician
 )
 
-# Import REASONING AGENTS (v2)
+# Import REASONING AGENTS (v2) - Solo para razonamiento, NO críticos
 from .agents.training_initial.e2_capacity_v2_reasoning import E2CapacityEvaluatorV2
 from .agents.training_initial.e4_architect_v2_reasoning import E4ProgramArchitectV2
 from .agents.training_initial.e5_engineer_v2_reasoning import E5MicrocycleEngineerV2
