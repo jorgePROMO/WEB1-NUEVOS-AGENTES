@@ -215,11 +215,17 @@ class ClientContext(BaseModel):
     - Viaja completo de agente en agente sin pérdida de información
     - Permite trazabilidad completa del proceso
     
+    ARQUITECTURA DE CAJONES:
+    - raw_inputs es OPCIONAL (puede ser None después de E1)
+    - E1 lee raw_inputs y genera client_summary
+    - E2-E9 usan client_summary, NO raw_inputs
+    - Esto reduce contexto y tokens sin perder información
+    
     Basado en documento oficial:
     "EMERGENT – SISTEMA DE AGENTES DE ENTRENAMIENTO Y NUTRICIÓN"
     """
     meta: ClientContextMeta = Field(..., description="Metadatos de trazabilidad")
-    raw_inputs: RawInputs = Field(..., description="Datos crudos de entrada")
+    raw_inputs: Optional[RawInputs] = Field(None, description="Datos crudos de entrada (opcional tras E1)")
     training: TrainingData = Field(default_factory=TrainingData, description="Datos procesados por agentes E1-E9")
     nutrition: NutritionData = Field(default_factory=NutritionData, description="Datos procesados por agentes N0-N8")
     
