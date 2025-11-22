@@ -25,8 +25,7 @@ db = client[DB_NAME]
 from test_full_pipeline_validation import (
     EXAMPLE_QUESTIONNAIRE_RESPONSES,
     create_test_user_and_submission,
-    create_generation_job,
-    _validate_questionnaire_format
+    create_generation_job
 )
 
 async def quick_check():
