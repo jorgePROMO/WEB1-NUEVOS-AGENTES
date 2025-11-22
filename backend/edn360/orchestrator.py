@@ -767,6 +767,11 @@ class EDN360Orchestrator:
                 output_context["training"] = filtered_training
                 logger.info(f"    🔒 {agent.agent_id}: Campos finales ({len(filtered_training)} campos): {list(filtered_training.keys())}")
                 
+                # SALVAGUARDA: Asegurar que raw_inputs existe (puede ser None post-E1 por arquitectura cajones)
+                if "raw_inputs" not in output_context:
+                    output_context["raw_inputs"] = None
+                    logger.info(f"    🛡️ {agent.agent_id}: raw_inputs no presente, establecido a None (arquitectura cajones)")
+                
                 # CRÍTICO: Actualizar client_context manteniendo campos anteriores que no se modificaron
                 # Esto asegura que campos de agentes anteriores se mantengan disponibles para agentes futuros
                 new_client_context = ClientContext.model_validate(output_context)
