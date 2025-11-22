@@ -10874,11 +10874,20 @@ async def process_generation_job(job_id: str):
             
             plan_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
             plan_data_json = _format_edn360_plan_for_display(training_result["plan_data"])
-            plan_text_professional = _format_edn360_plan_as_text(
-                training_result["plan_data"], 
-                user.get("name", user.get("username", "Cliente")), 
-                numero_mes
-            )
+            
+            # FUENTE DE VERDAD: edn360_data.formatted_plan (generado por post-procesador)
+            formatted_plan = training_result["plan_data"].get("formatted_plan")
+            
+            if isinstance(formatted_plan, str) and formatted_plan.strip():
+                plan_text_professional = formatted_plan
+                logger.info("✅ plan_text tomado directamente de edn360_data.formatted_plan (post-procesador)")
+            else:
+                logger.error("⚠️ formatted_plan ausente o vacío, usando _format_edn360_plan_as_text como fallback")
+                plan_text_professional = _format_edn360_plan_as_text(
+                    training_result["plan_data"], 
+                    user.get("name", user.get("username", "Cliente")), 
+                    numero_mes
+                )
             
             training_plan_doc = {
                 "_id": plan_id,
