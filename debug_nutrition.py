@@ -6,7 +6,7 @@ Debug script to check nutrition questionnaire submissions and plans
 import requests
 import json
 
-BACKEND_URL = "https://state-manager-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://fitness-plan-debug.preview.emergentagent.com/api"
 
 def debug_nutrition():
     # Login as admin

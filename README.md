@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://state-manager-1.preview.emergentagent.com
+**URL Actual:** https://fitness-plan-debug.preview.emergentagent.com
 
 ---
 
