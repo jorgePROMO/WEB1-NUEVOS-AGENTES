@@ -4532,6 +4532,126 @@ async def _adapt_followup_for_edn360(followup_data: dict, user_id: str) -> dict:
         return _adapt_questionnaire_for_edn360(followup_data)
 
 
+def _validate_questionnaire_format(submission: dict) -> tuple[bool, list[str], dict]:
+    """
+    Valida robustamente el formato del cuestionario antes de procesarlo.
+    
+    Args:
+        submission: Documento de la BD (debe contener '_id', 'user_id', 'responses', etc.)
+    
+    Returns:
+        (is_valid, errors, questionnaire_data)
+        
+    FORMATO ESPERADO EN MONGODB:
+    {
+        "_id": "string (timestamp único)",
+        "user_id": "string",
+        "responses": {
+            "nombre_completo": "string",
+            "email": "string",
+            "fecha_nacimiento": "string (YYYY-MM-DD)",
+            "sexo": "string (Hombre/Mujer)",
+            "peso": "string (e.g., '75')",
+            "altura_cm": "string (e.g., '175')",
+            "objetivo_fisico": "string",
+            ... (más campos)
+        },
+        "submitted_at": "datetime",
+        "plan_generated": "boolean"
+    }
+    """
+    errors = []
+    
+    # 1. Validar estructura del submission
+    if not isinstance(submission, dict):
+        errors.append(f"Submission debe ser un dict, recibido: {type(submission)}")
+        return False, errors, {}
+    
+    if "_id" not in submission:
+        errors.append("Campo '_id' ausente en submission")
+    
+    if "user_id" not in submission:
+        errors.append("Campo 'user_id' ausente en submission")
+    
+    # 2. Validar campo 'responses' - CRÍTICO
+    if "responses" not in submission:
+        errors.append("❌ CRÍTICO: Campo 'responses' ausente en submission. El cuestionario debe guardarse con estructura: {_id, user_id, responses: {...}, submitted_at, plan_generated}")
+        return False, errors, {}
+    
+    questionnaire_data = submission.get("responses", {})
+    
+    if not isinstance(questionnaire_data, dict):
+        errors.append(f"Campo 'responses' debe ser un dict, recibido: {type(questionnaire_data)}")
+        return False, errors, {}
+    
+    if len(questionnaire_data) == 0:
+        errors.append("Campo 'responses' está vacío")
+        return False, errors, {}
+    
+    # 3. Validar campos requeridos MÍNIMOS
+    required_fields = {
+        "nombre_completo": "Nombre completo del cliente",
+        "email": "Email del cliente",
+        "fecha_nacimiento": "Fecha de nacimiento (YYYY-MM-DD)",
+        "sexo": "Sexo (Hombre/Mujer)",
+        "peso": "Peso en kg",
+        "altura_cm": "Altura en cm",
+        "objetivo_fisico": "Objetivo principal del entrenamiento"
+    }
+    
+    missing_required = []
+    empty_required = []
+    
+    for field, description in required_fields.items():
+        if field not in questionnaire_data:
+            missing_required.append(f"{field} ({description})")
+        elif not questionnaire_data[field]:
+            empty_required.append(f"{field} ({description})")
+    
+    if missing_required:
+        errors.append(f"Campos requeridos ausentes: {', '.join(missing_required)}")
+    
+    if empty_required:
+        errors.append(f"Campos requeridos vacíos: {', '.join(empty_required)}")
+    
+    # 4. Validar formatos específicos
+    if "fecha_nacimiento" in questionnaire_data and questionnaire_data["fecha_nacimiento"]:
+        try:
+            datetime.strptime(str(questionnaire_data["fecha_nacimiento"]), "%Y-%m-%d")
+        except ValueError:
+            errors.append(f"fecha_nacimiento debe estar en formato YYYY-MM-DD, recibido: {questionnaire_data['fecha_nacimiento']}")
+    
+    if "sexo" in questionnaire_data and questionnaire_data["sexo"]:
+        sexo_normalized = str(questionnaire_data["sexo"]).lower().strip()
+        valid_sexo = ["hombre", "mujer", "masculino", "femenino", "male", "female", "m", "f"]
+        if sexo_normalized not in valid_sexo:
+            errors.append(f"sexo debe ser 'Hombre' o 'Mujer', recibido: '{questionnaire_data['sexo']}'")
+    
+    # 5. Validar campos numéricos
+    numeric_fields = {
+        "peso": "Peso",
+        "altura_cm": "Altura"
+    }
+    
+    for field, name in numeric_fields.items():
+        if field in questionnaire_data and questionnaire_data[field]:
+            try:
+                value = float(str(questionnaire_data[field]))
+                if value <= 0:
+                    errors.append(f"{name} debe ser un número positivo, recibido: {questionnaire_data[field]}")
+            except (ValueError, TypeError):
+                errors.append(f"{name} debe ser un número válido, recibido: '{questionnaire_data[field]}'")
+    
+    is_valid = len(errors) == 0
+    
+    if not is_valid:
+        logger.error(f"❌ Validación de cuestionario falló:")
+        for error in errors:
+            logger.error(f"   - {error}")
+    
+    return is_valid, errors, questionnaire_data
+
+
 def _adapt_questionnaire_for_edn360(questionnaire_data: dict) -> dict:
     """
     Adapta el formato del cuestionario actual al formato esperado por E.D.N.360
