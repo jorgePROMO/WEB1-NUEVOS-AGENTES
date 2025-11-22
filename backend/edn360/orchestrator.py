@@ -849,9 +849,18 @@ class EDN360Orchestrator:
             client_context.training.formatted_plan = markdown_plan
             
             logger.info(f"  ✅ formatted_plan premium generado ({len(markdown_plan):,} caracteres)")
+        
+        except ValueError as e:
+            # Error de validación: sesiones inválidas o ausentes
+            logger.error(f"  ❌ VALIDACIÓN FALLÓ: {e}")
+            logger.error("  El job debe fallar - no se puede generar plan sin sesiones")
+            raise Exception(f"No se puede generar plan de entrenamiento: {e}")
+        
         except Exception as e:
-            logger.error(f"  ⚠️ Error generando formatted_plan premium: {e}")
-            logger.error("  Continuando con formatted_plan original del LLM")
+            # Otro tipo de error
+            logger.error(f"  ⚠️ Error inesperado generando formatted_plan: {e}")
+            logger.error("  El job debe fallar por error en generación del plan")
+            raise Exception(f"Error generando plan premium: {e}")
         
         # PASO 4: Retornar resultado con client_context completo
         logger.info("  🎉 Cadena de agentes E1-E9 completada exitosamente")
