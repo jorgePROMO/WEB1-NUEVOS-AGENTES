@@ -862,10 +862,11 @@ class EDN360Orchestrator:
             executions.append(result)
             
             # RAZONAMIENTO V2: Si existe agente v2, ejecutar en paralelo (NO crítico)
-            if agent.agent_id in self.reasoning_agents:
+            agent_class_name = agent.__class__.__name__
+            if agent_class_name in self.reasoning_agents:
                 try:
                     logger.info(f"  🧠 Ejecutando {agent.agent_id} V2 (razonamiento)...")
-                    reasoning_agent = self.reasoning_agents[agent.agent_id]
+                    reasoning_agent = self.reasoning_agents[agent_class_name]
                     
                     reasoning_result = await reasoning_agent.execute(
                         client_context.model_dump(exclude_none=True),
