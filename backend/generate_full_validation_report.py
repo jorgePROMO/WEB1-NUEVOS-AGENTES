@@ -187,10 +187,18 @@ async def generate_full_report(job_id: str):
         print(f"   ❌ mesocycle: NO ENCONTRADO")
     
     if sessions:
-        print(f"   ✅ sessions (E5): {len(sessions)} sesiones")
-        if sessions:
-            first_session = sessions[0]
-            print(f"      Primera sesión: {first_session.get('name', 'N/A')}")
+        if isinstance(sessions, list):
+            print(f"   ✅ sessions (E5): {len(sessions)} sesiones")
+            if sessions:
+                first_session = sessions[0]
+                print(f"      Primera sesión: {first_session.get('name', 'N/A')}")
+        elif isinstance(sessions, dict):
+            print(f"   ✅ sessions (E5): Dict con {len(sessions)} keys")
+            if sessions:
+                first_key = list(sessions.keys())[0]
+                print(f"      Primera key: {first_key}")
+        else:
+            print(f"   ✅ sessions (E5): {type(sessions)}")
     else:
         print(f"   ❌ sessions: NO ENCONTRADO")
     
