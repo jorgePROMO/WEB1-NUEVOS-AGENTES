@@ -747,6 +747,7 @@ class EDN360Orchestrator:
                 
                 output_context["training"] = filtered_training
                 logger.info(f"    🔒 {agent.agent_id}: Campos filtrados ({len(filtered_training)} campos permitidos)")
+                logger.info(f"    📋 Campos en training después del filtrado: {list(filtered_training.keys())}")
                 
                 client_context = ClientContext.model_validate(output_context)
                 logger.info(f"  ✅ {agent.agent_id} devolvió client_context actualizado")
