@@ -264,11 +264,12 @@ class EDN360Orchestrator:
         ]
         
         # Agentes V2 (razonamiento paralelo, NO crítico)
+        # Mapeo: nombre de clase legacy → instancia de agente v2
         self.reasoning_agents = {
-            "E2": E2CapacityEvaluatorV2(),
-            "E4": E4ProgramArchitectV2(),
-            "E5": E5MicrocycleEngineerV2(),
-            "E6": E6ClinicalTechnicianV2(),
+            "E2CapacityEvaluator": E2CapacityEvaluatorV2(),
+            "E4ProgramArchitect": E4ProgramArchitectV2(),
+            "E5MicrocycleEngineer": E5MicrocycleEngineerV2(),
+            "E6ClinicalTechnician": E6ClinicalTechnicianV2(),
         }
         
         # Nutrition Initial Agents (N0-N8)
