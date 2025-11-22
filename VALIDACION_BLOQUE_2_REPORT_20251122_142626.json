@@ -1,0 +1,110 @@
+{
+  "title": "VALIDACIÓN EMPÍRICA COMPLETA - PIPELINE E1-E9",
+  "job_id": "job_1763806322838231",
+  "fecha_validacion": "2025-11-22T14:26:26.882510+00:00",
+  "metricas": {
+    "tiempo_ejecucion": {
+      "inicio": "2025-11-22T10:12:07.295000",
+      "fin": "2025-11-22T10:17:54.733000",
+      "duracion_segundos": 347.438,
+      "duracion_minutos": 5.79
+    },
+    "tokens_totales": {
+      "total": 174134,
+      "input": 144079,
+      "output": 30055
+    },
+    "tokens_por_agente": {
+      "E1": {
+        "input_tokens": 30796,
+        "output_tokens": 3363,
+        "total_tokens": 34159
+      },
+      "E2": {
+        "input_tokens": 29608,
+        "output_tokens": 2019,
+        "total_tokens": 31627
+      },
+      "E3": {
+        "input_tokens": 28745,
+        "output_tokens": 1616,
+        "total_tokens": 30361
+      },
+      "E4": {
+        "input_tokens": 28851,
+        "output_tokens": 2572,
+        "total_tokens": 31423
+      },
+      "E5": {
+        "input_tokens": 7344,
+        "output_tokens": 6549,
+        "total_tokens": 13893
+      },
+      "E6": {
+        "input_tokens": 7326,
+        "output_tokens": 8000,
+        "total_tokens": 15326
+      },
+      "E7": {
+        "input_tokens": 3925,
+        "output_tokens": 3056,
+        "total_tokens": 6981
+      },
+      "E8": {
+        "input_tokens": 4896,
+        "output_tokens": 1915,
+        "total_tokens": 6811
+      },
+      "E9": {
+        "input_tokens": 2588,
+        "output_tokens": 965,
+        "total_tokens": 3553
+      }
+    },
+    "costos_usd": {
+      "input": 0.010806,
+      "output": 0.009016,
+      "total": 0.019822
+    }
+  },
+  "outputs": {
+    "client_summary": null,
+    "mesocycle": null,
+    "sessions": null,
+    "formatted_plan": null,
+    "audit": null,
+    "bridge_for_nutrition": null
+  },
+  "analisis_coherencia": {
+    "checks_realizados": 3,
+    "checks": [
+      {
+        "check": "Mesocycle ↔ Sessions",
+        "status": "❌ NO VERIFICABLE",
+        "detalles": "Faltan datos"
+      },
+      {
+        "check": "Sessions ↔ Formatted Plan",
+        "status": "❌ NO VERIFICABLE",
+        "detalles": "Faltan datos"
+      },
+      {
+        "check": "Bridge ↔ Formatted Plan",
+        "status": "❌ NO VERIFICABLE",
+        "detalles": "Faltan datos"
+      }
+    ],
+    "resumen": {
+      "coherentes": 0,
+      "advertencias": 0,
+      "no_verificables": 3
+    }
+  },
+  "confirmaciones": {
+    "cuestionario_cumple_schema": true,
+    "worker_asincrono_usado": true,
+    "pipeline_e1_e9_completo": true,
+    "base_datos_correcta": "test_database",
+    "frontend_usa_este_flujo": "PENDIENTE VERIFICACIÓN MANUAL DEL CÓDIGO"
+  }
+}
