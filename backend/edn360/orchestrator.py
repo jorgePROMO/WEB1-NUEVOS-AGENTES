@@ -724,17 +724,18 @@ class EDN360Orchestrator:
                 training_output = output_context.get("training", {})
                 training_input = client_context_before.training.model_dump()
                 
-                # Mapeo de campos permitidos por agente
+                # Mapeo de campos permitidos por agente (campos que pueden estar en el OUTPUT)
+                # Incluye: campos que llena + campos que debe pass-through
                 allowed_fields_map = {
                     "E1": ["client_summary", "profile", "constraints", "prehab", "progress"],
                     "E2": ["client_summary", "profile", "constraints", "prehab", "progress", "capacity"],
                     "E3": ["client_summary", "capacity", "adaptation"],
                     "E4": ["client_summary", "capacity", "adaptation", "mesocycle"],
-                    "E5": ["client_summary", "capacity", "adaptation", "mesocycle", "constraints", "prehab", "sessions"],
-                    "E6": ["client_summary", "constraints", "prehab", "sessions", "safe_sessions"],
-                    "E7": ["client_summary", "mesocycle", "safe_sessions", "formatted_plan"],
-                    "E8": ["client_summary", "constraints", "mesocycle", "formatted_plan", "audit"],
-                    "E9": ["client_summary", "formatted_plan", "bridge_for_nutrition"]
+                    "E5": ["client_summary", "sessions"],  # E5 solo llena sessions, el resto son inputs
+                    "E6": ["client_summary", "safe_sessions"],  # E6 solo llena safe_sessions
+                    "E7": ["client_summary", "formatted_plan"],  # E7 solo llena formatted_plan
+                    "E8": ["client_summary", "audit"],  # E8 solo llena audit
+                    "E9": ["client_summary", "bridge_for_nutrition"]  # E9 solo llena bridge
                 }
                 
                 allowed_fields = allowed_fields_map.get(agent.agent_id, training_output.keys())
