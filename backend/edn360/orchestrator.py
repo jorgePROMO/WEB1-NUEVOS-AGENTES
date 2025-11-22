@@ -868,8 +868,8 @@ class EDN360Orchestrator:
                     
                     reasoning_result = await reasoning_agent.execute(
                         client_context.model_dump(exclude_none=True),
-                        kb_training=self.knowledge_bases.get("training", ""),
-                        kb_nutrition=self.knowledge_bases.get("nutrition", "")
+                        kb_training=self.kb_training,
+                        kb_nutrition=self.kb_nutrition
                     )
                     
                     # Extraer razonamiento interno
