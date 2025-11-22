@@ -722,12 +722,13 @@ class EDN360Orchestrator:
                 training = output_context.get("training", {})
                 
                 # Mapeo de campos permitidos por agente
+                # Nota: Agentes mantienen campos que agentes posteriores necesitarán (pass-through)
                 allowed_fields_map = {
                     "E1": ["client_summary", "profile", "constraints", "prehab", "progress"],
                     "E2": ["client_summary", "profile", "constraints", "prehab", "progress", "capacity"],
                     "E3": ["client_summary", "capacity", "adaptation"],
                     "E4": ["client_summary", "capacity", "adaptation", "mesocycle"],
-                    "E5": ["client_summary", "capacity", "adaptation", "mesocycle", "sessions"],
+                    "E5": ["client_summary", "capacity", "adaptation", "mesocycle", "constraints", "prehab", "sessions"],  # Pass-through constraints/prehab para E6
                     "E6": ["client_summary", "constraints", "prehab", "sessions", "safe_sessions"],
                     "E7": ["client_summary", "mesocycle", "safe_sessions", "formatted_plan"],
                     "E8": ["client_summary", "constraints", "mesocycle", "formatted_plan", "audit"],
