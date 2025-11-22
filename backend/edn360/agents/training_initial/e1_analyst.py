@@ -637,6 +637,39 @@ Procesa el input y devuelve el client_context actualizado siguiendo exactamente 
             if missing_summary_fields:
                 raise ValueError(f"client_summary incompleto. Faltan campos: {missing_summary_fields}")
             
+            # VALIDACIÓN COHERENCIA OBJETIVO (crítico para calidad)
+            objetivo_generado = client_summary.get("objetivo_principal", "").lower()
+            
+            # Buscar objetivo en raw_inputs para validar coherencia
+            raw_inputs = client_context.get("raw_inputs", {})
+            cuest_inicial = raw_inputs.get("cuestionario_inicial", {})
+            cuest_seguimiento = raw_inputs.get("cuestionario_seguimiento", {})
+            
+            # Buscar campo objetivo en cuestionario
+            objetivo_raw = ""
+            if cuest_inicial:
+                objetivo_raw = str(cuest_inicial.get("objetivo_fisico", "")).lower()
+            if not objetivo_raw and cuest_seguimiento:
+                responses = cuest_seguimiento.get("responses", {})
+                objetivo_raw = str(responses.get("objetivo_fisico", "")).lower()
+            
+            # Detectar inconsistencias
+            if objetivo_raw:
+                grasa_en_raw = any(word in objetivo_raw for word in ["gras", "defin", "adelgaz", "peso"])
+                musculo_en_raw = any(word in objetivo_raw for word in ["muscul", "masa", "hipertrof", "volumen"])
+                
+                if grasa_en_raw and objetivo_generado == "salud_general":
+                    import logging
+                    logger = logging.getLogger(__name__)
+                    logger.warning(f"⚠️ INCONSISTENCIA OBJETIVO: Cuestionario dice '{objetivo_raw}' pero E1 generó 'salud_general'. Corrigiendo a 'perdida_grasa'")
+                    client_summary["objetivo_principal"] = "perdida_grasa"
+                
+                elif musculo_en_raw and objetivo_generado == "salud_general":
+                    import logging
+                    logger = logging.getLogger(__name__)
+                    logger.warning(f"⚠️ INCONSISTENCIA OBJETIVO: Cuestionario dice '{objetivo_raw}' pero E1 generó 'salud_general'. Corrigiendo a 'ganancia_muscular'")
+                    client_summary["objetivo_principal"] = "ganancia_muscular"
+            
             return output
             
         except Exception as e:
