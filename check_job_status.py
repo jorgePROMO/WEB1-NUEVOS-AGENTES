@@ -12,10 +12,11 @@ from dotenv import load_dotenv
 load_dotenv('/app/backend/.env')
 
 MONGO_URL = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
+DB_NAME = os.getenv('DB_NAME', 'test_database')
 
 async def check_job(job_id):
     client = AsyncIOMotorClient(MONGO_URL)
-    db = client['edn360']
+    db = client[DB_NAME]
     
     job = await db.generation_jobs.find_one({"_id": job_id})
     
