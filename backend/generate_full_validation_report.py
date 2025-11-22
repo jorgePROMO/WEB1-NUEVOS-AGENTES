@@ -151,15 +151,16 @@ async def generate_full_report(job_id: str):
         print(f"❌ Training plan {training_plan_id} no encontrado en BD")
         return None
     
-    training_data = training_plan.get('training', {})
+    # Los outputs están en edn360_data directamente
+    edn360_data = training_plan.get('edn360_data', {})
     
     # Extraer outputs clave
-    client_summary = training_data.get('client_summary')
-    mesocycle = training_data.get('mesocycle')
-    sessions = training_data.get('sessions')
-    formatted_plan = training_data.get('formatted_plan')
-    audit = training_data.get('audit')
-    bridge_for_nutrition = training_data.get('bridge_for_nutrition')
+    client_summary = edn360_data.get('client_summary')
+    mesocycle = edn360_data.get('mesocycle')
+    sessions = edn360_data.get('sessions')
+    formatted_plan = edn360_data.get('formatted_plan')
+    audit = edn360_data.get('audit')
+    bridge_for_nutrition = edn360_data.get('bridge_for_nutrition')
     
     report["outputs"] = {
         "client_summary": client_summary,
