@@ -835,7 +835,24 @@ class EDN360Orchestrator:
             logger.info(f"  ✅ {agent.agent_id} completado y validado")
             executions.append(result)
         
-        # PASO 3: Retornar resultado con client_context completo
+        # PASO 3: POST-PROCESAMIENTO - Generar formatted_plan premium en Markdown
+        logger.info("  📝 Post-procesando formatted_plan premium...")
+        
+        try:
+            from .format_premium_plan import format_plan_for_client
+            
+            training_dict = client_context.training.model_dump()
+            markdown_plan = format_plan_for_client(training_dict)
+            
+            # Reemplazar el formatted_plan actual con el Markdown premium
+            client_context.training.formatted_plan = markdown_plan
+            
+            logger.info(f"  ✅ formatted_plan premium generado ({len(markdown_plan):,} caracteres)")
+        except Exception as e:
+            logger.error(f"  ⚠️ Error generando formatted_plan premium: {e}")
+            logger.error("  Continuando con formatted_plan original del LLM")
+        
+        # PASO 4: Retornar resultado con client_context completo
         logger.info("  🎉 Cadena de agentes E1-E9 completada exitosamente")
         
         return {
