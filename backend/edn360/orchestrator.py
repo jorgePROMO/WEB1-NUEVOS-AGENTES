@@ -746,10 +746,16 @@ class EDN360Orchestrator:
                 }
                 
                 # PASO 2: PASS-THROUGH automático - restaurar campos que estaban en input pero no en output
+                logger.info(f"    🔍 {agent.agent_id}: Campos en input: {list(training_input.keys())}")
+                logger.info(f"    🔍 {agent.agent_id}: Campos en output LLM: {list(training_output.keys())}")
+                logger.info(f"    🔍 {agent.agent_id}: Campos permitidos: {allowed_fields}")
+                
                 for field in allowed_fields:
                     if field not in filtered_training and field in training_input:
                         filtered_training[field] = training_input[field]
                         logger.info(f"    🔄 {agent.agent_id}: Pass-through de '{field}' (no devuelto por LLM)")
+                    elif field not in filtered_training:
+                        logger.info(f"    ⚠️ {agent.agent_id}: Campo '{field}' permitido pero no disponible")
                 
                 output_context["training"] = filtered_training
                 logger.info(f"    🔒 {agent.agent_id}: Campos finales ({len(filtered_training)} campos): {list(filtered_training.keys())}")
