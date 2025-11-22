@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://flowsmart-agents.preview.emergentagent.com
+https://state-manager-1.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 

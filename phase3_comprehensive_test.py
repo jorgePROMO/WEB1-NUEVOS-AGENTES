@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://flowsmart-agents.preview.emergentagent.com/api"
+BACKEND_URL = "https://state-manager-1.preview.emergentagent.com/api"
 
 class ComprehensivePhase3Tester:
     def __init__(self):
