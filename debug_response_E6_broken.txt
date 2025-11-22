@@ -1,0 +1,1168 @@
+```json
+{
+  "client_context": {
+    "meta": {
+      "client_id": "unknown",
+      "snapshot_id": "snapshot_unknown_1_75460ed9",
+      "version": 1,
+      "output_tier": "standard",
+      "selected_inputs": {
+        "cuestionario": "unknown",
+        "entrenamiento_base": null
+      }
+    },
+    "raw_inputs": {},
+    "training": {
+      "client_summary": {
+        "id_cliente": "unknown",
+        "objetivo_principal": "recomposicion",
+        "nivel": "avanzado",
+        "edad": 35,
+        "sexo": "hombre",
+        "imc": 24.6,
+        "clasificacion_imc": "normal",
+        "limitaciones_clave": [
+          "dolor_lumbar_ocasional"
+        ],
+        "ejercicios_prohibidos": [
+          "peso_muerto_convencional",
+          "buenos_dias"
+        ],
+        "disponibilidad": {
+          "dias_semana": 3,
+          "minutos_sesion": 60,
+          "horario": "tarde_18:00"
+        },
+        "equipo": "gym_completo",
+        "modo": "inicial",
+        "alertas": [],
+        "experiencia_resumen": "3 años constante, nivel intermedio, pero avanzado por dedicación",
+        "factores_vida": {
+          "sueno_h": 7,
+          "estres": "medio",
+          "adherencia_historica": "media"
+        }
+      },
+      "constraints": {
+        "restricciones_criticas": {
+          "lesiones_activas": [
+            {
+              "lesion": "dolor_lumbar_ocasional",
+              "ejercicios_prohibidos": [
+                "peso_muerto_convencional",
+                "buenos_dias"
+              ],
+              "ejercicios_obligatorios_preventivos": [
+                "plancha_frontal",
+                "bird_dog",
+                "pallof_press"
+              ],
+              "notas": "Dolor lumbar ocasional. Evitar flexión lumbar bajo carga y priorizar el trabajo de core."
+            }
+          ],
+          "alergias_alimentarias": [
+            "lactosa"
+          ],
+          "intolerancias": [],
+          "alimentos_no_soportados": [
+            "pescado_azul"
+          ],
+          "restricciones_medicas": []
+        }
+      },
+      "prehab": {
+        "protocolos_preventivos": [
+          {
+            "zona": "lumbar",
+            "ejercicios_preventivos": [
+              "plancha_frontal",
+              "bird_dog",
+              "pallof_press"
+            ],
+            "frecuencia": "cada_sesion",
+            "notas": "Enfocar en fortalecimiento del core y técnicas de estiramiento lumbar."
+          }
+        ]
+      },
+      "sessions": {
+        "semana_1": [
+          {
+            "dia": 1,
+            "dia_semana": "Lunes",
+            "hora_recomendada": "18:00",
+            "nombre": "Full-body A",
+            "duracion_min": 60,
+            "ejercicios": [
+              {
+                "nombre": "Press de banca con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo con barra T",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla frontal",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "RDL con mancuernas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "rir": "-",
+                "descanso": 45
+              }
+            ]
+          },
+          {
+            "dia": 3,
+            "dia_semana": "Miércoles",
+            "hora_recomendada": "18:00",
+            "nombre": "Full-body B",
+            "duracion_min": 60,
+            "ejercicios": [
+              {
+                "nombre": "Press inclinado con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Dominadas asistidas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Zancadas búlgaras",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Hip thrust",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ]
+          },
+          {
+            "dia": 5,
+            "dia_semana": "Viernes",
+            "hora_recomendada": "18:00",
+            "nombre": "Full-body C",
+            "duracion_min": 60,
+            "ejercicios": [
+              {
+                "nombre": "Press de hombros con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo en polea",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla goblet",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Puente de glúteos",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ]
+          }
+        ],
+        "semana_2": [
+          {
+            "dia": 8,
+            "dia_semana": "Lunes",
+            "hora_recomendada": "18:00",
+            "nombre": "Full-body A",
+            "duracion_min": 60,
+            "ejercicios": [
+              {
+                "nombre": "Press de banca con mancuernas",
+                "series": 4,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo con barra T",
+                "series": 4,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla frontal",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "RDL con mancuernas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "rir": "-",
+                "descanso": 45
+              }
+            ]
+          },
+          {
+            "dia": 10,
+            "dia_semana": "Miércoles",
+            "hora_recomendada": "18:00",
+            "nombre": "Full-body B",
+            "duracion_min": 60,
+            "ejercicios": [
+              {
+                "nombre": "Press inclinado con mancuernas",
+                "series": 4,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Dominadas asistidas",
+                "series": 4,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Zancadas búlgaras",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Hip thrust",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ]
+          },
+          {
+            "dia": 12,
+            "dia_semana": "Viernes",
+            "hora_recomendada": "18:00",
+            "nombre": "Full-body C",
+            "duracion_min": 60,
+            "ejercicios": [
+              {
+                "nombre": "Press de hombros con mancuernas",
+                "series": 4,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo en polea",
+                "series": 4,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla goblet",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Puente de glúteos",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ]
+          }
+        ],
+        "semana_3": [
+          {
+            "dia": 15,
+            "dia_semana": "Lunes",
+            "hora_recomendada": "18:00",
+            "nombre": "Full-body A",
+            "duracion_min": 60,
+            "ejercicios": [
+              {
+                "nombre": "Press de banca con mancuernas",
+                "series": 4,
+                "reps": "6-8",
+                "rir": "3",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo con barra T",
+                "series": 4,
+                "reps": "6-8",
+                "rir": "3",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla frontal",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "3",
+                "descanso": 90
+              },
+              {
+                "nombre": "RDL con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "3",
+                "descanso": 90
+              },
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "rir": "-",
+                "descanso": 45
+              }
+            ]
+          },
+          {
+            "dia": 17,
+            "dia_semana": "Miércoles",
+            "hora_recomendada": "18:00",
+            "nombre": "Full-body B",
+            "duracion_min": 60,
+            "ejercicios": [
+              {
+                "nombre": "Press inclinado con mancuernas",
+                "series": 4,
+                "reps": "6-8",
+                "rir": "3",
+                "descanso": 120
+              },
+              {
+                "nombre": "Dominadas asistidas",
+                "series": 4,
+                "reps": "6-8",
+                "rir": "3",
+                "descanso": 120
+              },
+              {
+                "nombre": "Zancadas búlgaras",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "3",
+                "descanso": 90
+              },
+              {
+                "nombre": "Hip thrust",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "3",
+                "descanso": 90
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ]
+          },
+          {
+            "dia": 19,
+            "dia_semana": "Viernes",
+            "hora_recomendada": "18:00",
+            "nombre": "Full-body C",
+            "duracion_min": 60,
+            "ejercicios": [
+              {
+                "nombre": "Press de hombros con mancuernas",
+                "series": 4,
+                "reps": "6-8",
+                "rir": "3",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo en polea",
+                "series": 4,
+                "reps": "6-8",
+                "rir": "3",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla goblet",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "3",
+                "descanso": 90
+              },
+              {
+                "nombre": "Puente de glúteos",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "3",
+                "descanso": 90
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ]
+          }
+        ],
+        "semana_4": [
+          {
+            "dia": 22,
+            "dia_semana": "Lunes",
+            "hora_recomendada": "18:00",
+            "nombre": "Full-body A",
+            "duracion_min": 60,
+            "ejercicios": [
+              {
+                "nombre": "Press de banca con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo con barra T",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla frontal",
+                "series": 2,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "RDL con mancuernas",
+                "series": 2,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Plancha frontal",
+                "series": 2,
+                "reps": "30-45s",
+                "rir": "-",
+                "descanso": 45
+              }
+            ]
+          },
+          {
+            "dia": 24,
+            "dia_semana": "Miércoles",
+            "hora_recomendada": "18:00",
+            "nombre": "Full-body B",
+            "duracion_min": 60,
+            "ejercicios": [
+              {
+                "nombre": "Press inclinado con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 120
+              },
+              {
+                "nombre": "Dominadas asistidas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 120
+              },
+              {
+                "nombre": "Zancadas búlgaras",
+                "series": 2,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Hip thrust",
+                "series": 2,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 2,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ]
+          },
+          {
+            "dia": 26,
+            "dia_semana": "Viernes",
+            "hora_recomendada": "18:00",
+            "nombre": "Full-body C",
+            "duracion_min": 60,
+            "ejercicios": [
+              {
+                "nombre": "Press de hombros con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo en polea",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "5",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla goblet",
+                "series": 2,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Puente de glúteos",
+                "series": 2,
+                "reps": "10-12",
+                "rir": "5",
+                "descanso": 90
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 2,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ]
+          }
+        ]
+      },
+      "safe_sessions": {
+        "semana_1": [
+          {
+            "dia": 1,
+            "ejercicios_adaptados": [
+              {
+                "nombre": "Press de banca con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo con barra T",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla frontal",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "RDL con mancuernas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "rir": "-",
+                "descanso": 45
+              }
+            ],
+            "prehab_incluido": [
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir dolor lumbar."
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Mejorar estabilidad y fortalecer core."
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir rotaciones indeseadas."
+              }
+            ],
+            "sustituciones": []
+          },
+          {
+            "dia": 3,
+            "ejercicios_adaptados": [
+              {
+                "nombre": "Press inclinado con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Dominadas asistidas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Zancadas búlgaras",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Hip thrust",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ],
+            "prehab_incluido": [
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir dolor lumbar."
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Mejorar estabilidad y fortalecer core."
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir rotaciones indeseadas."
+              }
+            ],
+            "sustituciones": []
+          },
+          {
+            "dia": 5,
+            "ejercicios_adaptados": [
+              {
+                "nombre": "Press de hombros con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo en polea",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla goblet",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Puente de glúteos",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ],
+            "prehab_incluido": [
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir dolor lumbar."
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Mejorar estabilidad y fortalecer core."
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir rotaciones indeseadas."
+              }
+            ],
+            "sustituciones": []
+          }
+        ],
+        "semana_2": [
+          {
+            "dia": 8,
+            "ejercicios_adaptados": [
+              {
+                "nombre": "Press de banca con mancuernas",
+                "series": 4,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo con barra T",
+                "series": 4,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla frontal",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "RDL con mancuernas",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "rir": "-",
+                "descanso": 45
+              }
+            ],
+            "prehab_incluido": [
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir dolor lumbar."
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Mejorar estabilidad y fortalecer core."
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir rotaciones indeseadas."
+              }
+            ],
+            "sustituciones": []
+          },
+          {
+            "dia": 10,
+            "ejercicios_adaptados": [
+              {
+                "nombre": "Press inclinado con mancuernas",
+                "series": 4,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Dominadas asistidas",
+                "series": 4,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Zancadas búlgaras",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Hip thrust",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ],
+            "prehab_incluido": [
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir dolor lumbar."
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Mejorar estabilidad y fortalecer core."
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir rotaciones indeseadas."
+              }
+            ],
+            "sustituciones": []
+          },
+          {
+            "dia": 12,
+            "ejercicios_adaptados": [
+              {
+                "nombre": "Press de hombros con mancuernas",
+                "series": 4,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo en polea",
+                "series": 4,
+                "reps": "8-10",
+                "rir": "4",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla goblet",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Puente de glúteos",
+                "series": 3,
+                "reps": "10-12",
+                "rir": "4",
+                "descanso": 90
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ],
+            "prehab_incluido": [
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir dolor lumbar."
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Mejorar estabilidad y fortalecer core."
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir rotaciones indeseadas."
+              }
+            ],
+            "sustituciones": []
+          }
+        ],
+        "semana_3": [
+          {
+            "dia": 15,
+            "ejercicios_adaptados": [
+              {
+                "nombre": "Press de banca con mancuernas",
+                "series": 4,
+                "reps": "6-8",
+                "rir": "3",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo con barra T",
+                "series": 4,
+                "reps": "6-8",
+                "rir": "3",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla frontal",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "3",
+                "descanso": 90
+              },
+              {
+                "nombre": "RDL con mancuernas",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "3",
+                "descanso": 90
+              },
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "rir": "-",
+                "descanso": 45
+              }
+            ],
+            "prehab_incluido": [
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir dolor lumbar."
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Mejorar estabilidad y fortalecer core."
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir rotaciones indeseadas."
+              }
+            ],
+            "sustituciones": []
+          },
+          {
+            "dia": 17,
+            "ejercicios_adaptados": [
+              {
+                "nombre": "Press inclinado con mancuernas",
+                "series": 4,
+                "reps": "6-8",
+                "rir": "3",
+                "descanso": 120
+              },
+              {
+                "nombre": "Dominadas asistidas",
+                "series": 4,
+                "reps": "6-8",
+                "rir": "3",
+                "descanso": 120
+              },
+              {
+                "nombre": "Zancadas búlgaras",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "3",
+                "descanso": 90
+              },
+              {
+                "nombre": "Hip thrust",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "3",
+                "descanso": 90
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "rir": "-",
+                "descanso": 45
+              }
+            ],
+            "prehab_incluido": [
+              {
+                "nombre": "Plancha frontal",
+                "series": 3,
+                "reps": "30-45s",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir dolor lumbar."
+              },
+              {
+                "nombre": "Bird-dog",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Mejorar estabilidad y fortalecer core."
+              },
+              {
+                "nombre": "Pallof press",
+                "series": 3,
+                "reps": "10-15",
+                "posicion": "final_sesion",
+                "objetivo": "Fortalecer core y prevenir rotaciones indeseadas."
+              }
+            ],
+            "sustituciones": []
+          },
+          {
+            "dia": 19,
+            "ejercicios_adaptados": [
+              {
+                "nombre": "Press de hombros con mancuernas",
+                "series": 4,
+                "reps": "6-8",
+                "rir": "3",
+                "descanso": 120
+              },
+              {
+                "nombre": "Remo en polea",
+                "series": 4,
+                "reps": "6-8",
+                "rir": "3",
+                "descanso": 120
+              },
+              {
+                "nombre": "Sentadilla goblet",
+                "series": 3,
+                "reps": "8-10",
+                "rir": "3",
+                "descanso": 90
+              },
+              {
+                "nombre": "
