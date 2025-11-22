@@ -33,10 +33,15 @@ from .client_context_utils import (
 
 # Import agents
 from .agents.training_initial import (
-    E1Analyst, E2CapacityEvaluator, E3AdaptationAnalyst,
-    E4ProgramArchitect, E5MicrocycleEngineer, E6ClinicalTechnician,
+    E1Analyst, E3AdaptationAnalyst,
     E7LoadAnalyst, E8TechnicalAuditor, E9NutritionBridge
 )
+
+# Import REASONING AGENTS (v2)
+from .agents.training_initial.e2_capacity_v2_reasoning import E2CapacityEvaluatorV2
+from .agents.training_initial.e4_architect_v2_reasoning import E4ProgramArchitectV2
+from .agents.training_initial.e5_engineer_v2_reasoning import E5MicrocycleEngineerV2
+from .agents.training_initial.e6_clinical_v2_reasoning import E6ClinicalTechnicianV2
 from .agents.nutrition_initial import (
     N0TriageAnalyst, N1MetabolicAnalyst, N2EnergySelector,
     N3TemplateSnapper, N4AMBSynchronizer, N5TimingDistributor,
