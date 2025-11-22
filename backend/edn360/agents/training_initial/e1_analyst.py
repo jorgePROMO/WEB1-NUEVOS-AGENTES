@@ -95,6 +95,12 @@ Recibirás datos como:
 
 **Objetivo:**
 - Clasificar en: `perdida_grasa | ganancia_muscular | recomposicion | rendimiento | salud_general`
+- **MAPEO EXPLÍCITO (CRÍTICO):**
+  - Si menciona: "perder grasa", "definir", "bajar grasa", "reducir peso" → `perdida_grasa`
+  - Si menciona: "ganar músculo", "masa muscular", "hipertrofia", "volumen" → `ganancia_muscular`
+  - Si menciona: "recomposición", "perder grasa y ganar músculo" → `recomposicion`
+  - Si menciona: "rendimiento", "fuerza", "potencia", "atletismo" → `rendimiento`
+  - Solo si NO menciona nada específico → `salud_general`
 
 **Lesiones y limitaciones:**
 - Extraer zonas afectadas: `lumbar | rodilla | hombro | cadera | tobillo | cervical | muñeca | codo`
