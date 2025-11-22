@@ -25,32 +25,35 @@ async def create_job():
     timestamp = int(time.time())
     quest_id = f"quest_bloque2_real_{timestamp}"
     
+    # FORMATO CORRECTO: Los datos van dentro de "responses"
     questionnaire = {
         "_id": quest_id,
         "user_id": "admin_jorge_001",  # Usuario real existente
         "created_at": datetime.now(timezone.utc),
-        
-        # Datos completos
-        "nombre_completo": "María García López",
-        "email": "maria.garcia@test.com",
-        "fecha_nacimiento": "1990-06-15",
-        "sexo": "mujer",
-        "profesion": "Diseñadora gráfica",
-        "peso": "65",
-        "altura_cm": "168",
-        "grasa_porcentaje": "26",
-        "experiencia_entrenamiento": "2 años de gym, 3 veces por semana. Conozco ejercicios básicos.",
-        "frecuencia_entrenamiento": "3 veces por semana",
-        "tiempo_disponible": "60 minutos",
-        "horario_preferido": "Mañanas 7:00",
-        "equipo_disponible": "Gimnasio completo",
-        "lesiones_actuales": "Ninguna",
-        "lesiones_previas": "Tendinitis hombro derecho hace 1 año (recuperada)",
-        "objetivo_principal": "Perder grasa y tonificar",
-        "peso_objetivo": "60",
-        "horas_sueno": "7",
-        "nivel_estres": "Medio",
-        "trabajo_sedentario": "Sí"
+        "submitted_at": datetime.now(timezone.utc),
+        "responses": {
+            # Datos completos del cuestionario
+            "nombre_completo": "María García López",
+            "email": "maria.garcia@test.com",
+            "fecha_nacimiento": "1990-06-15",
+            "sexo": "mujer",
+            "profesion": "Diseñadora gráfica",
+            "peso": "65",
+            "altura_cm": "168",
+            "grasa_porcentaje": "26",
+            "experiencia_entrenamiento": "2 años de gym, 3 veces por semana. Conozco ejercicios básicos.",
+            "frecuencia_entrenamiento": "3 veces por semana",
+            "tiempo_disponible": "60 minutos",
+            "horario_preferido": "Mañanas 7:00",
+            "equipo_disponible": "Gimnasio completo",
+            "lesiones_actuales": "Ninguna",
+            "lesiones_previas": "Tendinitis hombro derecho hace 1 año (recuperada)",
+            "objetivo_principal": "Perder grasa y tonificar",
+            "peso_objetivo": "60",
+            "horas_sueno": "7",
+            "nivel_estres": "Medio",
+            "trabajo_sedentario": "Sí"
+        }
     }
     
     await db.nutrition_questionnaire_submissions.insert_one(questionnaire)
