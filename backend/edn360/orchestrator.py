@@ -733,7 +733,7 @@ class EDN360Orchestrator:
                     "E5": ["client_summary", "capacity", "adaptation", "mesocycle", "constraints", "prehab", "sessions"],  # Pass-through constraints/prehab para E6
                     "E6": ["client_summary", "constraints", "prehab", "sessions", "safe_sessions"],
                     "E7": ["client_summary", "mesocycle", "safe_sessions", "formatted_plan"],
-                    "E8": ["client_summary", "constraints", "mesocycle", "formatted_plan", "audit"],
+                    "E8": ["client_summary", "constraints", "mesocycle", "formatted_plan", "audit"],  # Pass-through formatted_plan para E9
                     "E9": ["client_summary", "formatted_plan", "bridge_for_nutrition"]
                 }
                 
