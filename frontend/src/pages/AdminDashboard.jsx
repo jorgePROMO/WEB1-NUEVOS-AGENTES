@@ -6236,6 +6236,95 @@ const AdminDashboard = () => {
         </div>
       )}
 
+      {/* EDN360 Input Preview Modal - FASE 2 */}
+      {showEDN360InputModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b bg-indigo-50">
+              <h2 className="text-2xl font-bold text-indigo-900 flex items-center gap-2">
+                <FileText className="h-6 w-6" />
+                EDN360 Input Preview
+              </h2>
+              <button
+                onClick={() => setShowEDN360InputModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-160px)]">
+              {loadingEDN360Input ? (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
+                  <p className="text-gray-600">Construyendo EDN360Input...</p>
+                </div>
+              ) : edn360InputData ? (
+                <div className="space-y-4">
+                  {/* Metadata */}
+                  <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
+                    <h3 className="font-bold text-indigo-900 mb-2">📊 Metadata</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div>
+                        <span className="text-gray-600">User ID:</span>
+                        <p className="font-mono text-xs">{edn360InputData.user_id}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Cuestionarios:</span>
+                        <p className="font-bold">{edn360InputData.metadata.questionnaires_count}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Inicial:</span>
+                        <p className="font-bold">{edn360InputData.metadata.has_initial ? '✅ Sí' : '❌ No'}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Followups:</span>
+                        <p className="font-bold">{edn360InputData.metadata.has_followups ? '✅ Sí' : '❌ No'}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* JSON Viewer */}
+                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-bold text-gray-900">📄 EDN360Input JSON</h3>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            JSON.stringify(edn360InputData.edn360_input, null, 2)
+                          );
+                          alert('JSON copiado al portapapeles');
+                        }}
+                      >
+                        📋 Copiar JSON
+                      </Button>
+                    </div>
+                    <pre className="bg-gray-900 text-green-400 p-4 rounded overflow-x-auto text-xs max-h-[500px] overflow-y-auto">
+                      {JSON.stringify(edn360InputData.edn360_input, null, 2)}
+                    </pre>
+                  </div>
+                  
+                  {/* Info Box */}
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <p className="text-sm text-blue-900">
+                      <strong>ℹ️ FASE 2:</strong> Este JSON es el contrato estándar que usaremos 
+                      para llamar a los Workflows de OpenAI (E1-E9, N0-N8). Puedes copiarlo y 
+                      testearlo manualmente con tus Workflows.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-gray-600">No se pudo cargar el EDN360Input</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Generation Progress Modal */}
       {showGenerationProgress && currentJobId && (
         <GenerationProgressModal
