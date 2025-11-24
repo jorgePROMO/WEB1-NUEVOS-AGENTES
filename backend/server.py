@@ -11680,6 +11680,27 @@ async def startup_db_verification():
         logger.error(f"❌ CRITICAL: Failed to connect to database {db_name}: {e}")
         raise RuntimeError(f"Database connection failed: {e}")
 
+
+@app.on_event("startup")
+async def startup_fase3_indexes():
+    """
+    Inicializar índices de FASE 3 (edn360_snapshots).
+    
+    Este startup event crea los índices necesarios en la colección
+    edn360_snapshots de la BD edn360_app.
+    """
+    try:
+        logger.info("🔧 Inicializando índices de FASE 3 (edn360_snapshots)...")
+        
+        from repositories.edn360_snapshot_repository import ensure_snapshot_indexes
+        await ensure_snapshot_indexes()
+        
+        logger.info("✅ Índices de FASE 3 inicializados correctamente")
+    
+    except Exception as e:
+        logger.warning(f"⚠️ Error inicializando índices de FASE 3: {e}")
+        # No lanzar error para no bloquear el startup del servidor
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
