@@ -369,7 +369,7 @@ Todas las siguientes variables son de tipo **string** con valores "Sí" / "No" /
 
 | Tipo | Cantidad | Variables |
 |------|----------|-----------|
-| **string** | ~85 | La mayoría de campos |
+| **string** | ~90 | La mayoría de campos (incluyendo measurement_type y variantes de medición) |
 | **date** | 1 | `fecha_nacimiento` |
 | **time** | 7 | `hora_levanta`, `hora_desayuno`, `hora_almuerzo`, `hora_comida`, `hora_merienda`, `hora_cena`, `hora_acuesta` |
 | **array** | 1 | `motivos_entrenar` |
@@ -379,8 +379,16 @@ Todas las siguientes variables son de tipo **string** con valores "Sí" / "No" /
 
 | Tipo | Cantidad Aproximada |
 |------|---------------------|
-| **Requerido** | ~50 campos |
-| **Opcional** | ~35 campos |
+| **Requerido** | ~52 campos (incluyendo measurement_type) |
+| **Opcional** | ~38 campos (varía según measurement_type) |
+
+### Por Tipo de Medición (Campos Dinámicos)
+
+| measurement_type | Campos Activos | Campos Obligatorios | Campos Opcionales |
+|------------------|----------------|---------------------|-------------------|
+| **smart_scale** | 7 medidas | peso, altura_cm, grasa_porcentaje | masa_muscular_%, masa_osea_kg, agua_%, grasa_visceral |
+| **tape_measure** | 8 medidas | peso, altura_cm, cintura_cm, cadera_cm | pecho_cm, biceps_relajado, biceps_flexionado, muslo_cm |
+| **none** | 2 medidas | peso, altura_cm | Ninguno |
 
 ### Por Sección
 
