@@ -55,34 +55,28 @@ logger = logging.getLogger('job_worker')
 
 async def process_pending_jobs():
     """
-    Busca y procesa jobs pendientes.
-    Solo procesa si hay espacio (< 2 jobs en running).
+    ⚠️ DESACTIVADO - Solo monitorea jobs pendientes sin procesarlos.
+    
+    La generación de planes está temporalmente deshabilitada mientras
+    migramos al nuevo sistema EDN360 con arquitectura client_drawer.
     """
     try:
-        # Contar jobs en running
-        running_count = await db.generation_jobs.count_documents({"status": "running"})
-        
-        if running_count >= 2:
-            logger.debug(f"⏳ Ya hay {running_count} jobs en ejecución. Esperando...")
-            return
-        
-        # Buscar jobs pendientes (FIFO)
-        available_slots = 2 - running_count
+        # Buscar jobs pendientes (solo para monitoreo)
         pending_jobs = await db.generation_jobs.find(
             {"status": "pending"}
-        ).sort("created_at", 1).limit(available_slots).to_list(length=10)
+        ).sort("created_at", 1).to_list(length=10)
         
-        for job in pending_jobs:
-            job_id = job["_id"]
-            logger.info(f"🚀 Worker procesando job: {job_id}")
+        if pending_jobs:
+            logger.info(f"📊 Monitoreo: {len(pending_jobs)} job(s) pendientes (NO se procesarán - sistema en migración)")
             
-            try:
-                # Ejecutar job
-                await process_generation_job(job_id)
-                logger.info(f"✅ Job {job_id} completado por worker")
-            except Exception as e:
-                logger.error(f"❌ Error procesando job {job_id}: {e}")
-                # El error ya se guarda en process_generation_job
+            for job in pending_jobs:
+                job_id = job["_id"]
+                user_id = job.get("user_id", "unknown")
+                job_type = job.get("type", "unknown")
+                created_at = job.get("created_at", "")
+                
+                logger.info(f"   - Job {job_id}: user={user_id}, type={job_type}, created={created_at}")
+                logger.info(f"     ⚠️ NO PROCESADO: La generación está deshabilitada temporalmente")
     
     except Exception as e:
         logger.error(f"❌ Error en process_pending_jobs: {e}")
