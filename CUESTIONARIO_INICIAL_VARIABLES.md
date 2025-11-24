@@ -401,19 +401,85 @@ Todas las siguientes variables son de tipo **string** con valores "Sí" / "No" /
 
 ## 🔧 NOTAS TÉCNICAS
 
-### 1. Validación de Datos
+### 1. Campos Dinámicos según measurement_type
+
+**⚠️ CRÍTICO:** El cuestionario cambia dinámicamente según la selección de `measurement_type`.
+
+#### Si `measurement_type = "smart_scale"`:
+```javascript
+responses: {
+  measurement_type: "smart_scale",
+  peso: "85",
+  altura_cm: "172",
+  grasa_porcentaje: "28",
+  masa_muscular_porcentaje: "35",
+  masa_osea_kg: "3.2",
+  agua_porcentaje: "55",
+  grasa_visceral: "9",
+  // Campos de cinta métrica NO se envían o quedan null
+  pecho_cm: null,
+  cintura_cm: null,
+  cadera_cm: null,
+  biceps_relajado_cm: null,
+  biceps_flexionado_cm: null,
+  muslo_cm: null
+}
+```
+
+#### Si `measurement_type = "tape_measure"`:
+```javascript
+responses: {
+  measurement_type: "tape_measure",
+  peso: "85",
+  altura_cm: "172",
+  pecho_cm: "100",
+  cintura_cm: "90",
+  cadera_cm: "95",
+  biceps_relajado_cm: "34",
+  biceps_flexionado_cm: "38",
+  muslo_cm: "55",
+  // Campos de báscula inteligente NO se envían o quedan null
+  grasa_porcentaje: null,
+  masa_muscular_porcentaje: null,
+  masa_osea_kg: null,
+  agua_porcentaje: null,
+  grasa_visceral: null
+}
+```
+
+#### Si `measurement_type = "none"`:
+```javascript
+responses: {
+  measurement_type: "none",
+  peso: "85",
+  altura_cm: "172",
+  // Todos los demás campos de medición NO se envían o quedan null
+}
+```
+
+### 2. Validación de Datos
 
 - **Email:** Validación de formato email válido
 - **Fecha de nacimiento:** Formato YYYY-MM-DD
 - **Horarios:** Formato HH:MM (24 horas)
 - **Números:** Peso, altura, porcentajes - validación numérica
 - **Opciones múltiples:** Valores predefinidos estrictos
+- **measurement_type:** Debe ser exactamente "smart_scale", "tape_measure" o "none"
 
-### 2. Campos Condicionales
+### 3. Campos Condicionales
+
+#### 3.1. Según Sexo
 
 Algunos campos solo se muestran/validan según el sexo:
 - `embarazo` → Solo mujeres
 - `menopausia` → Solo mujeres
+
+#### 3.2. Según Tipo de Medición
+
+Los campos de medición corporal son completamente diferentes según `measurement_type`:
+- **smart_scale** → Activa campos de porcentajes (grasa, músculo, agua)
+- **tape_measure** → Activa campos de circunferencias (pecho, cintura, cadera, bíceps, muslo)
+- **none** → Solo peso y altura
 
 ### 3. Campos con Especificación
 
