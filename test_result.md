@@ -109,65 +109,80 @@ agent_communication:
       message: "✅ FASE 3 IMPLEMENTADA COMPLETAMENTE: 1) MODELO EDN360Snapshot creado en /app/backend/edn360_models/edn360_snapshot.py con campos: snapshot_id (UUID), user_id, created_at, version, input (EDN360Input dict), workflow_name, workflow_response (dict), status (success/failed), error_message. 2) REPOSITORY edn360_snapshot_repository.py con funciones: create_snapshot(), get_snapshot_by_id(), get_snapshots_by_user(), get_latest_snapshot_for_user(), count_snapshots_by_user(), get_snapshot_summary_for_user(). Índices creados: user_id, created_at (desc), status. 3) SERVICIO gpt_service.py con call_edn360_workflow() que llama a OpenAI Chat Completions API usando EDN360_OPENAI_API_KEY y EDN360_OPENAI_MODEL (gpt-4o). 4) ORQUESTADOR edn360_orchestrator_v1.py con run_edn360_workflow_for_user() que: construye EDN360Input, llama a OpenAI, crea snapshot inmutable (success o failed), devuelve resumen ligero. 5) ENDPOINT admin POST /api/admin/users/{user_id}/edn360-run-workflow implementado, admin-only, crea snapshot técnico. 6) FRONTEND: Botón 'Lanzar EDN360 Workflow (TEST)' agregado en AdminDashboard, color naranja, muestra spinner durante ejecución, dialog de confirmación, muestra resultado (snapshot_id, status). 7) VARIABLES .env agregadas: EDN360_OPENAI_API_KEY, EDN360_OPENAI_MODEL, EDN360_WORKFLOW_NAME. 8) STARTUP EVENT agregado para inicializar índices de edn360_snapshots al arrancar servidor. NOTA: NO se tocó job_worker, training_plans, nutrition_plans ni botones de usuario. Backend arrancando correctamente. READY FOR TESTING."
 
 backend:
-  - task: "Generation Jobs Collection & Models"
-    implemented: true
-    working: true
-    file: "/app/backend/models.py"
-    stuck_count: 0
-    priority: "critical"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "Creados modelos Pydantic: GenerationJob, GenerationJobProgress, GenerationJobResult, GenerateAsyncRequest. Colección generation_jobs en MongoDB con todos los campos necesarios para tracking de jobs asíncronos."
-        - working: true
-          agent: "testing"
-          comment: "✅ VERIFIED: Models exist in /app/backend/models.py. Found GenerationJob, GenerationJobProgress, GenerationJobResult, GenerateAsyncRequest classes with correct fields for async job tracking."
-
-  - task: "Async Generation Endpoint"
-    implemented: true
-    working: false
-    file: "/app/backend/server.py"
-    stuck_count: 1
-    priority: "critical"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "Endpoint POST /admin/users/{user_id}/plans/generate_async implementado. Valida usuario y cuestionario, crea job en BD con status=pending, lanza asyncio.create_task(process_generation_job(job_id)), responde inmediatamente con job_id. Soporta mode: training, nutrition, full."
-        - working: false
-          agent: "testing"
-          comment: "❌ CRITICAL ISSUE: Endpoint exists but returns 404 'Cuestionario no encontrado' when testing with mock submission_id. The endpoint requires a REAL nutrition questionnaire submission from the database, not mock data. Authentication also has issues - Bearer token not being accepted properly. NEEDS REAL DATA TO TEST."
-
-  - task: "Background Job Processor"
+  - task: "EDN360Snapshot Model & Collection"
     implemented: true
     working: "NA"
-    file: "/app/backend/server.py"
+    file: "/app/backend/edn360_models/edn360_snapshot.py"
     stuck_count: 0
-    priority: "critical"
+    priority: "high"
     needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "Función process_generation_job(job_id) implementada. Ejecuta el orquestador E1-E9 y/o N0-N8 según el type del job, actualiza progreso en BD después de cada fase, maneja errores y actualiza status a completed/failed. Reutiliza TODO el código existente del orquestador sin modificarlo."
-        - working: "NA"
-          agent: "testing"
-          comment: "⚠️ CANNOT TEST: Background processor cannot be tested without successful job creation. Depends on Async Generation Endpoint working first. Code exists in server.py as process_generation_job() function."
+          comment: "Modelo Pydantic EDN360Snapshot creado con campos: snapshot_id (UUID), user_id, created_at, version, input (EDN360Input dict), workflow_name, workflow_response (dict), status (success/failed), error_message. Modelo tiene helpers: is_success(), is_failed(), get_summary(). Funciones auxiliares: validate_snapshot_status(), create_success_snapshot(), create_failed_snapshot()."
 
-  - task: "Job Status Query Endpoint"
+  - task: "EDN360 Snapshot Repository"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/repositories/edn360_snapshot_repository.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Repository creado con funciones: create_snapshot() (insert inmutable), get_snapshot_by_id(), get_snapshots_by_user() (con filtros limit y status), get_latest_snapshot_for_user(), count_snapshots_by_user(), get_snapshot_summary_for_user(). Función ensure_snapshot_indexes() crea índices: user_id, created_at (desc), status. Índices inicializados exitosamente en startup."
+
+  - task: "GPT Service - OpenAI Integration"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/services/gpt_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Servicio call_edn360_workflow() implementado. Usa OpenAI Chat Completions API directa (NO Assistants). Configuración: EDN360_OPENAI_API_KEY (propia del usuario), EDN360_OPENAI_MODEL (gpt-4o), response_format JSON. Maneja errores: APIError, APIConnectionError, RateLimitError, JSONDecodeError. Devuelve workflow_response con _metadata (tokens, model). Helper validate_workflow_response() para validar respuesta. NOTA: API Key placeholder 'TU_API_KEY_AQUI' en .env debe reemplazarse con key real."
+
+  - task: "EDN360 Orchestrator v1"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/services/edn360_orchestrator_v1.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Orquestador run_edn360_workflow_for_user() implementado. Flujo: 1) Construye EDN360Input usando build_edn360_input_for_user() (FASE 2), 2) Llama a call_edn360_workflow(), 3) Crea snapshot inmutable (success o failed), 4) Devuelve resumen ligero (snapshot_id, status, created_at, workflow_name, has_response). Maneja errores: EDN360NoDrawerError, EDN360NoQuestionnaireError, errores de OpenAI. Siempre devuelve resultado (nunca lanza excepciones). NO modifica training_plans ni nutrition_plans."
+
+  - task: "Admin Endpoint - Run Workflow"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint POST /api/admin/users/{user_id}/edn360-run-workflow implementado. Admin-only (require_admin). Valida que usuario existe, llama a run_edn360_workflow_for_user(), devuelve resultado con snapshot info. Respuestas: 200 OK (success o failed), 404 Not Found (usuario inexistente), 500 Internal Server Error. NO modifica training_plans ni nutrition_plans."
+
+  - task: "Startup Indexes Initialization"
     implemented: true
     working: true
     file: "/app/backend/server.py"
     stuck_count: 0
-    priority: "critical"
+    priority: "high"
     needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "Endpoint GET /jobs/{job_id} implementado (público, sin auth para simplificar polling). Devuelve: status, progress, result, error_message, timestamps. Serializa datetime fields correctamente."
+          comment: "Startup event startup_fase3_indexes() agregado. Llama a ensure_snapshot_indexes() al arrancar servidor. Índices creados en colección edn360_snapshots: user_id, created_at (desc), status."
         - working: true
-          agent: "testing"
-          comment: "✅ VERIFIED: GET /jobs/{job_id} endpoint working correctly. Public access (no auth required). Returns proper 404 'Job no encontrado' for non-existent jobs. Ready for polling when jobs are created."
+          agent: "main"
+          comment: "✅ VERIFIED: Backend arrancado exitosamente. Logs muestran '✅ Índice creado: edn360_snapshots.user_id', '✅ Índice creado: edn360_snapshots.created_at', '✅ Índice creado: edn360_snapshots.status', '✅ Índices de edn360_snapshots verificados', '✅ Índices de FASE 3 inicializados correctamente'. Backend funcionando en puerto 8001."
 
 frontend:
   - task: "GenerationProgressModal Component"
