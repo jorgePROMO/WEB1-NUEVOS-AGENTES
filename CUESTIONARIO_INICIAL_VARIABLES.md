@@ -40,25 +40,87 @@
 
 ---
 
-### 2. MEDIDAS ANTROPOMÉTRICAS
+### 2. TIPO DE MEDICIÓN
 
-#### 2.1. Medidas Básicas (Obligatorias)
+**⚠️ CAMPO CRÍTICO:** Esta pregunta determina qué campos de medición estarán disponibles.
 
-| Variable | Tipo | Pregunta/Descripción | Unidad | Ejemplo | Requerido |
-|----------|------|---------------------|--------|---------|-----------|
-| `peso` | string/number | Peso corporal actual | kg | "85" | ✅ Sí |
+| Variable | Tipo | Pregunta | Opciones | Requerido |
+|----------|------|---------|---------|-----------|
+| `measurement_type` | string | ¿Cómo vas a medirte? | "smart_scale" / "tape_measure" / "none" | ✅ Sí |
+
+**Opciones disponibles:**
+
+1. **"smart_scale"** - ⚖️ Báscula inteligente
+   - Con datos de % grasa, % músculo, % agua, masa ósea, grasa visceral, etc.
+   
+2. **"tape_measure"** - 📏 Báscula + Cinta métrica
+   - Con circunferencias corporales (pecho, cintura, cadera, bíceps, muslo)
+   
+3. **"none"** - ❌ No tengo cómo medirme
+   - Solo peso y altura estimados
+
+**Impacto:** Los campos de medición disponibles cambian según esta selección (ver sección 2.1 a 2.4).
+
+---
+
+### 2.1. MEDIDAS ANTROPOMÉTRICAS - Comunes (Todos los tipos)
+
+Estos campos están disponibles independientemente del `measurement_type`:
+
+| Variable | Tipo | Pregunta | Unidad | Requerido |
+|----------|------|---------|--------|-----------|
+| `peso` | string/number | Peso corporal actual | kg | ✅ Sí |
+| `altura_cm` | string/number | Altura | cm | ✅ Sí |
+
+---
+
+### 2.2. MEDIDAS - Báscula Inteligente (measurement_type = "smart_scale")
+
+Cuando el usuario selecciona **báscula inteligente**, estos campos están disponibles:
+
+| Variable | Tipo | Pregunta | Unidad | Ejemplo | Requerido |
+|----------|------|---------|--------|---------|-----------|
+| `peso` | string/number | Peso | kg | "85" | ✅ Sí |
 | `altura_cm` | string/number | Altura | cm | "172" | ✅ Sí |
-| `grasa_porcentaje` | string/number | Porcentaje de grasa corporal (si se conoce) | % | "28" | ⚠️ Opcional |
+| `grasa_porcentaje` | string/number | % Grasa Corporal | % | "28" | ✅ Sí |
+| `masa_muscular_porcentaje` | string/number | % Masa Muscular | % | "35" | ⚠️ Opcional |
+| `masa_osea_kg` | string/number | Masa Ósea | kg | "3.2" | ⚠️ Opcional |
+| `agua_porcentaje` | string/number | % Agua Corporal | % | "55" | ⚠️ Opcional |
+| `grasa_visceral` | string/number | Grasa Visceral | nivel | "9" | ⚠️ Opcional |
 
-#### 2.2. Medidas Adicionales (Opcionales)
+**Nota:** Los campos de circunferencias quedan en `null` o no se envían.
 
-| Variable | Tipo | Pregunta/Descripción | Unidad | Requerido |
-|----------|------|---------------------|--------|-----------|
-| `cintura_cm` | string/number | Circunferencia de cintura | cm | ⚠️ Opcional |
-| `cadera_cm` | string/number | Circunferencia de cadera | cm | ⚠️ Opcional |
-| `biceps_relajado_cm` | string/number | Circunferencia de bíceps relajado | cm | ⚠️ Opcional |
-| `biceps_flexionado_cm` | string/number | Circunferencia de bíceps flexionado | cm | ⚠️ Opcional |
-| `muslo_cm` | string/number | Circunferencia de muslo | cm | ⚠️ Opcional |
+---
+
+### 2.3. MEDIDAS - Cinta Métrica (measurement_type = "tape_measure")
+
+Cuando el usuario selecciona **báscula + cinta métrica**, estos campos están disponibles:
+
+| Variable | Tipo | Pregunta | Unidad | Requerido |
+|----------|------|---------|--------|-----------|
+| `peso` | string/number | Peso | kg | ✅ Sí |
+| `altura_cm` | string/number | Altura | cm | ✅ Sí |
+| `pecho_cm` | string/number | Circunferencia de Pecho | cm | ⚠️ Opcional |
+| `cintura_cm` | string/number | Circunferencia de Cintura | cm | ✅ Sí |
+| `cadera_cm` | string/number | Circunferencia de Cadera | cm | ✅ Sí |
+| `biceps_relajado_cm` | string/number | Circunferencia de Bíceps Relajado | cm | ⚠️ Opcional |
+| `biceps_flexionado_cm` | string/number | Circunferencia de Bíceps Flexionado | cm | ⚠️ Opcional |
+| `muslo_cm` | string/number | Circunferencia de Muslo | cm | ⚠️ Opcional |
+
+**Nota:** Los campos de báscula inteligente (grasa_porcentaje, masa_muscular, etc.) quedan en `null` o no se envían.
+
+---
+
+### 2.4. MEDIDAS - Sin Herramientas (measurement_type = "none")
+
+Cuando el usuario selecciona **no tengo cómo medirme**, solo estos campos están disponibles:
+
+| Variable | Tipo | Pregunta | Unidad | Requerido |
+|----------|------|---------|--------|-----------|
+| `peso` | string/number | Peso estimado | kg | ✅ Sí |
+| `altura_cm` | string/number | Altura | cm | ✅ Sí |
+
+**Nota:** Todos los demás campos de medición quedan en `null` o no se envían.
 
 ---
 
