@@ -472,3 +472,83 @@ async def get_drawer_stats(user_id: str) -> Optional[Dict[str, Any]]:
     except Exception as e:
         logger.error(f"❌ Error obteniendo estadísticas para user_id {user_id}: {e}")
         return None
+
+
+# ============================================
+# TELEMETRÍA GLOBAL - FASE 1 DUAL WRITE
+# ============================================
+
+async def get_global_telemetry() -> Dict[str, Any]:
+    """
+    Obtiene telemetría global del sistema client_drawers.
+    
+    Útil para monitorear la FASE 1 de dual-write.
+    
+    Returns:
+        Dict con estadísticas globales
+    
+    Example:
+        telemetry = await get_global_telemetry()
+        print(f"Total drawers: {telemetry['total_drawers']}")
+        print(f"Total questionnaires: {telemetry['total_shared_questionnaires']}")
+    """
+    try:
+        # Total de cajones
+        total_drawers = await count_drawers()
+        
+        # Estadísticas agregadas
+        pipeline = [
+            {
+                "$project": {
+                    "user_id": 1,
+                    "questionnaires_count": {"$size": {"$ifNull": ["$services.shared_questionnaires", []]}},
+                    "training_plans_count": {"$size": {"$ifNull": ["$services.training.plans", []]}},
+                    "nutrition_plans_count": {"$size": {"$ifNull": ["$services.nutrition.plans", []]}},
+                }
+            },
+            {
+                "$group": {
+                    "_id": None,
+                    "total_questionnaires": {"$sum": "$questionnaires_count"},
+                    "total_training_plans": {"$sum": "$training_plans_count"},
+                    "total_nutrition_plans": {"$sum": "$nutrition_plans_count"},
+                    "avg_questionnaires": {"$avg": "$questionnaires_count"},
+                    "avg_training_plans": {"$avg": "$training_plans_count"},
+                    "avg_nutrition_plans": {"$avg": "$nutrition_plans_count"}
+                }
+            }
+        ]
+        
+        result = await collection.aggregate(pipeline).to_list(length=1)
+        
+        if result:
+            stats = result[0]
+            return {
+                "total_drawers": total_drawers,
+                "total_shared_questionnaires": stats.get("total_questionnaires", 0),
+                "total_training_plans": stats.get("total_training_plans", 0),
+                "total_nutrition_plans": stats.get("total_nutrition_plans", 0),
+                "avg_questionnaires_per_drawer": round(stats.get("avg_questionnaires", 0), 2),
+                "avg_training_plans_per_drawer": round(stats.get("avg_training_plans", 0), 2),
+                "avg_nutrition_plans_per_drawer": round(stats.get("avg_nutrition_plans", 0), 2)
+            }
+        else:
+            return {
+                "total_drawers": 0,
+                "total_shared_questionnaires": 0,
+                "total_training_plans": 0,
+                "total_nutrition_plans": 0,
+                "avg_questionnaires_per_drawer": 0,
+                "avg_training_plans_per_drawer": 0,
+                "avg_nutrition_plans_per_drawer": 0
+            }
+    
+    except Exception as e:
+        logger.error(f"❌ Error obteniendo telemetría global: {e}")
+        return {
+            "error": str(e),
+            "total_drawers": 0,
+            "total_shared_questionnaires": 0,
+            "total_training_plans": 0,
+            "total_nutrition_plans": 0
+        }
