@@ -3621,7 +3621,13 @@ async def send_email_template(email_data: dict, request: Request):
 
 @api_router.post("/nutrition/questionnaire/submit")
 async def submit_nutrition_questionnaire(questionnaire: NutritionQuestionnaireSubmit, request: Request):
-    """Usuario completa cuestionario de nutrición - SOLO GUARDA RESPUESTAS (no genera plan)"""
+    """
+    Usuario completa cuestionario de nutrición - SOLO GUARDA RESPUESTAS (no genera plan)
+    
+    FASE 1 DUAL-WRITE:
+    - Guarda en BD Web (nutrition_questionnaire_submissions) como siempre
+    - Si USE_CLIENT_DRAWER_WRITE=true, también guarda en client_drawers
+    """
     user = await get_current_user(request)
     user_id = user["_id"]
     
@@ -3644,22 +3650,56 @@ async def submit_nutrition_questionnaire(questionnaire: NutritionQuestionnaireSu
         
         # Generar ID único para esta submission
         submission_id = str(int(datetime.now(timezone.utc).timestamp() * 1000000))
+        submitted_at = datetime.now(timezone.utc)
         
-        # Guardar SOLO LAS RESPUESTAS en la colección nutrition_questionnaire_submissions
+        # ============================================
+        # 1. GUARDAR EN BD WEB (fuente de verdad)
+        # ============================================
         submission_doc = {
             "_id": submission_id,
             "user_id": user_id,
             "responses": questionnaire_data,
-            "submitted_at": datetime.now(timezone.utc),
+            "submitted_at": submitted_at,
             "plan_generated": False,  # El admin generará el plan después
             "plan_id": None
         }
         
         await db.nutrition_questionnaire_submissions.insert_one(submission_doc)
+        logger.info(f"✅ Cuestionario guardado en BD Web: {submission_id} (user_id: {user_id})")
         
-        logger.info(f"✅ Cuestionario guardado para usuario {user_id} - {submission_id}")
+        # ============================================
+        # 2. DUAL-WRITE A CLIENT_DRAWERS (best effort)
+        # ============================================
+        use_client_drawer_write = os.getenv('USE_CLIENT_DRAWER_WRITE', 'false').lower() == 'true'
         
-        # Responder INMEDIATAMENTE al frontend
+        if use_client_drawer_write:
+            try:
+                from repositories.client_drawer_repository import add_questionnaire_to_drawer
+                
+                # Añadir cuestionario a client_drawer
+                await add_questionnaire_to_drawer(
+                    user_id=user_id,
+                    submission_id=submission_id,
+                    submitted_at=submitted_at,
+                    source="nutrition_initial",  # Cuestionario inicial detallado
+                    raw_payload=submission_doc  # Documento completo
+                )
+                
+                logger.info(f"✅ Dual-write exitoso a client_drawers: {submission_id}")
+                
+            except Exception as drawer_error:
+                # ⚠️ BEST EFFORT: Si falla client_drawers, NO falla el endpoint
+                logger.error(
+                    f"⚠️  Dual-write to client_drawers failed for user_id {user_id}, "
+                    f"submission_id {submission_id}: {drawer_error}"
+                )
+                # Continuar normalmente, BD Web ya tiene el cuestionario
+        else:
+            logger.info(f"ℹ️  USE_CLIENT_DRAWER_WRITE=false, solo se guardó en BD Web")
+        
+        # ============================================
+        # 3. RESPONDER AL FRONTEND
+        # ============================================
         return {
             "success": True,
             "message": "¡Cuestionario enviado correctamente! Jorge revisará tus respuestas y generará tu plan personalizado.",
