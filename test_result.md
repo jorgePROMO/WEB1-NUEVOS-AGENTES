@@ -185,29 +185,17 @@ backend:
           comment: "✅ VERIFIED: Backend arrancado exitosamente. Logs muestran '✅ Índice creado: edn360_snapshots.user_id', '✅ Índice creado: edn360_snapshots.created_at', '✅ Índice creado: edn360_snapshots.status', '✅ Índices de edn360_snapshots verificados', '✅ Índices de FASE 3 inicializados correctamente'. Backend funcionando en puerto 8001."
 
 frontend:
-  - task: "GenerationProgressModal Component"
-    implemented: true
-    working: "NA"
-    file: "/app/frontend/src/components/GenerationProgressModal.jsx"
-    stuck_count: 0
-    priority: "critical"
-    needs_retesting: true
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "Componente React creado con: polling cada 3 segundos a GET /jobs/{job_id}, barra de progreso animada con gradient, muestra agente actual (E1, E2, etc.), porcentaje y mensaje, animación de loading, maneja estados completed/failed, callbacks onComplete/onError/onClose."
-
-  - task: "Updated Generation Functions"
+  - task: "EDN360 Workflow Launch Button"
     implemented: true
     working: "NA"
     file: "/app/frontend/src/pages/AdminDashboard.jsx"
     stuck_count: 0
-    priority: "critical"
+    priority: "high"
     needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "Actualizadas generateTrainingPlan() y generateNutritionPlan() para llamar a POST /admin/users/{user_id}/plans/generate_async, setear job_id y mostrar GenerationProgressModal. Añadida función generateFullPlan() para mode=full (training + nutrition). Callbacks implementados: handleGenerationComplete (recarga datos), handleGenerationError (muestra error), handleGenerationClose."
+          comment: "Botón 'Lanzar EDN360 Workflow (TEST)' agregado en AdminDashboard después del botón 'Ver EDN360 Input'. Estilo: color naranja (bg-orange-50, border-orange-300, text-orange-700). Estados: launchingWorkflow, workflowResult, showWorkflowResultModal. Función handleLaunchWorkflow() implementada: 1) Confirmación con window.confirm, 2) Llamada POST a /api/admin/users/{user_id}/edn360-run-workflow, 3) Muestra resultado con alert (snapshot_id, status, error_message), 4) Spinner animado durante ejecución. Deshabilitado cuando está lanzando workflow."
 
 metadata:
   created_by: "main_agent"
