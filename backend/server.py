@@ -1643,17 +1643,26 @@ async def delete_session(session_id: str, request: Request):
 
 @api_router.post("/questionnaire/submit")
 async def submit_questionnaire(questionnaire: QuestionnaireSubmit):
-    """Submit diagnostic questionnaire and generate GPT report immediately"""
+    """
+    Submit diagnostic questionnaire and generate GPT report immediately.
+    
+    FASE 1 DUAL-WRITE: Este es el cuestionario de PROSPECCIÓN (antes de ser cliente).
+    - Se guarda en BD Web (questionnaire_responses) como siempre
+    - NO se escribe en client_drawers porque no hay user_id todavía
+    - El cuestionario se añadirá a client_drawers cuando el prospecto se convierta en cliente
+    """
     try:
         # Convert to dict for email function
         questionnaire_data = questionnaire.dict()
         
-        # Save to database for CRM
+        # Save to database for CRM (BD WEB)
         prospect_id = str(datetime.now(timezone.utc).timestamp()).replace(".", "")
+        submitted_at = datetime.now(timezone.utc)
+        
         prospect_doc = {
             "_id": prospect_id,
             **questionnaire_data,
-            "submitted_at": datetime.now(timezone.utc),
+            "submitted_at": submitted_at,
             "stage_name": "Nuevo",
             "stage_id": None,
             "converted_to_client": False,
@@ -1663,7 +1672,10 @@ async def submit_questionnaire(questionnaire: QuestionnaireSubmit):
             "report_sent_via": None  # 'email' or 'whatsapp'
         }
         await db.questionnaire_responses.insert_one(prospect_doc)
-        logger.info(f"Questionnaire saved to CRM with ID: {prospect_id}")
+        logger.info(f"✅ Questionnaire saved to CRM (BD Web) with ID: {prospect_id}")
+        
+        # ⚠️ NO DUAL-WRITE: Este cuestionario es de prospección, no tiene user_id
+        # Se añadirá a client_drawers cuando se convierta en cliente
         
         # NOTE: Report generation is now manual from admin dashboard
         # Admin can generate/regenerate the report from ProspectsCRM
