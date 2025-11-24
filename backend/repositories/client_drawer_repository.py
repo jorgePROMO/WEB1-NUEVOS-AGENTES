@@ -292,13 +292,15 @@ async def add_questionnaire_to_drawer(
     """
     Añade un cuestionario al cajón del usuario.
     
+    ⚠️ IDEMPOTENTE: Si el cuestionario ya existe (mismo submission_id), NO se duplica.
+    
     Si el cajón no existe, lo crea.
     
     Args:
         user_id: ID del usuario
         submission_id: ID del cuestionario en BD Web
         submitted_at: Fecha de envío
-        source: "initial" o "followup"
+        source: "prospect_initial" / "nutrition_initial" / "followup"
         raw_payload: Payload completo del cuestionario (opcional)
     
     Returns:
@@ -309,12 +311,22 @@ async def add_questionnaire_to_drawer(
             user_id="1762...",
             submission_id="submission_123",
             submitted_at=datetime.now(timezone.utc),
-            source="initial"
+            source="nutrition_initial"
         )
     """
     try:
         # Obtener o crear drawer
         drawer = await get_or_create_drawer(user_id)
+        
+        # ⚠️ IDEMPOTENCIA: Verificar si el cuestionario ya existe
+        existing_ids = [q.submission_id for q in drawer.services.shared_questionnaires]
+        
+        if submission_id in existing_ids:
+            logger.info(
+                f"ℹ️  Cuestionario {submission_id} ya existe en drawer de user {user_id}. "
+                f"No se duplica (idempotencia)."
+            )
+            return drawer
         
         # Crear SharedQuestionnaire
         questionnaire = SharedQuestionnaire(
@@ -331,13 +343,17 @@ async def add_questionnaire_to_drawer(
         drawer = await upsert_drawer(drawer)
         
         logger.info(
-            f"✅ Cuestionario añadido: {submission_id} (source: {source}, user_id: {user_id})"
+            f"✅ Cuestionario añadido a client_drawer: {submission_id} "
+            f"(source: {source}, user_id: {user_id})"
         )
         
         return drawer
     
     except Exception as e:
-        logger.error(f"❌ Error añadiendo cuestionario para user_id {user_id}: {e}")
+        logger.error(
+            f"❌ Error añadiendo cuestionario a client_drawer "
+            f"(user_id: {user_id}, submission_id: {submission_id}): {e}"
+        )
         raise
 
 
