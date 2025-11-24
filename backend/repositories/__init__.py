@@ -10,7 +10,8 @@ from .client_drawer_repository import (
     create_empty_drawer_for_user,
     upsert_drawer,
     add_questionnaire_to_drawer,
-    get_or_create_drawer
+    get_or_create_drawer,
+    get_global_telemetry
 )
 
 __all__ = [
@@ -18,5 +19,6 @@ __all__ = [
     "create_empty_drawer_for_user",
     "upsert_drawer",
     "add_questionnaire_to_drawer",
-    "get_or_create_drawer"
+    "get_or_create_drawer",
+    "get_global_telemetry"
 ]
