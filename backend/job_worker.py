@@ -1,12 +1,15 @@
 """
 Job Worker - Proceso separado para ejecutar jobs de generación E.D.N.360
 
-Este worker:
-1. Corre como proceso independiente de FastAPI
-2. Lee jobs con status="pending" de MongoDB
-3. Ejecuta process_generation_job() para cada job
-4. Actualiza progreso en tiempo real
-5. FastAPI NUNCA ejecuta el orquestador directamente
+⚠️ DESACTIVADO TEMPORALMENTE (Enero 2025)
+
+Motivo: Migración de arquitectura AS-IS → TO-BE (client_drawer)
+Estado: El worker sigue corriendo pero NO procesa jobs de generación
+
+Este worker ahora solo:
+1. Monitorea jobs pendientes
+2. Registra logs informativos
+3. Mantiene el sistema estable sin procesar generación legacy
 
 Ejecutar:
     python job_worker.py
@@ -42,13 +45,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger('job_worker')
 
-# Import the job processing function
-from server import (
-    process_generation_job,
-    add_job_log,
-    check_job_concurrency,
-    update_job_progress
-)
+# ⚠️ NO importamos process_generation_job porque el orquestador fue eliminado
+# from server import (
+#     process_generation_job,
+#     add_job_log,
+#     check_job_concurrency,
+#     update_job_progress
+# )
 
 async def process_pending_jobs():
     """
