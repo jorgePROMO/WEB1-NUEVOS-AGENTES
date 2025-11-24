@@ -127,6 +127,11 @@ const AdminDashboard = () => {
   const [currentJobId, setCurrentJobId] = useState(null);
   const [showGenerationProgress, setShowGenerationProgress] = useState(false);
   
+  // EDN360 Input Preview - FASE 2
+  const [showEDN360InputModal, setShowEDN360InputModal] = useState(false);
+  const [edn360InputData, setEDN360InputData] = useState(null);
+  const [loadingEDN360Input, setLoadingEDN360Input] = useState(false);
+  
   // Follow-up Report states
   const [selectedPreviousTrainingForReport, setSelectedPreviousTrainingForReport] = useState(null);
   const [selectedNewTrainingForReport, setSelectedNewTrainingForReport] = useState(null);
