@@ -132,6 +132,11 @@ const AdminDashboard = () => {
   const [edn360InputData, setEDN360InputData] = useState(null);
   const [loadingEDN360Input, setLoadingEDN360Input] = useState(false);
   
+  // EDN360 Workflow Test - FASE 3
+  const [launchingWorkflow, setLaunchingWorkflow] = useState(false);
+  const [workflowResult, setWorkflowResult] = useState(null);
+  const [showWorkflowResultModal, setShowWorkflowResultModal] = useState(false);
+  
   // Follow-up Report states
   const [selectedPreviousTrainingForReport, setSelectedPreviousTrainingForReport] = useState(null);
   const [selectedNewTrainingForReport, setSelectedNewTrainingForReport] = useState(null);
