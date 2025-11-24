@@ -2768,6 +2768,27 @@ const AdminDashboard = () => {
                             Ver EDN360 Input
                           </Button>
                           
+                          {/* EDN360 Workflow Test Button - FASE 3 */}
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-orange-50 border-orange-300 text-orange-700 hover:bg-orange-100"
+                            onClick={() => handleLaunchWorkflow(selectedClient.id, selectedClient.name)}
+                            disabled={launchingWorkflow}
+                          >
+                            {launchingWorkflow ? (
+                              <>
+                                <div className="h-4 w-4 mr-2 border-2 border-orange-600 border-t-transparent rounded-full animate-spin" />
+                                Lanzando...
+                              </>
+                            ) : (
+                              <>
+                                <FileText className="h-4 w-4 mr-2" />
+                                Lanzar EDN360 Workflow (TEST)
+                              </>
+                            )}
+                          </Button>
+                          
                           {selectedClient.subscription?.payment_status === 'pending' && (
                             <Button
                               size="sm"
