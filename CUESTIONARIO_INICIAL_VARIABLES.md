@@ -543,14 +543,26 @@ En la nueva arquitectura, este cuestionario se almacenará como:
     "profesion": "Fontanero",
     "direccion": "Calle Helsinki 7, piso 8, puerta 1",
     "telefono": "669080819",
+    
+    // ⚠️ TIPO DE MEDICIÓN (determina qué campos están disponibles)
+    "measurement_type": "smart_scale",
+    
+    // Medidas con báscula inteligente
     "peso": "85",
     "altura_cm": "172",
     "grasa_porcentaje": "28",
-    "cintura_cm": "",
-    "cadera_cm": "",
-    "biceps_relajado_cm": "",
-    "biceps_flexionado_cm": "",
-    "muslo_cm": "",
+    "masa_muscular_porcentaje": "35",
+    "masa_osea_kg": "3.2",
+    "agua_porcentaje": "55",
+    "grasa_visceral": "9",
+    
+    // Campos de cinta métrica (null porque measurement_type = "smart_scale")
+    "pecho_cm": null,
+    "cintura_cm": null,
+    "cadera_cm": null,
+    "biceps_relajado_cm": null,
+    "biceps_flexionado_cm": null,
+    "muslo_cm": null,
     "medicamentos": "Eutirox75",
     "enfermedad_cronica": "Hipotiroidismo",
     "fuma_cantidad": "Vapeo",
