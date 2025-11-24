@@ -382,6 +382,13 @@ Todas las siguientes variables son de tipo **string** con valores "Sí" / "No" /
 | **Requerido** | ~50 campos |
 | **Opcional** | ~35 campos |
 
+### Por Sección
+
+| Sección | Variables | Requeridas | Opcionales |
+|---------|-----------|------------|------------|
+| **Datos Personales** | 7 | 5-6 | 1-2 |
+| **Tipo de Medición** | 1 | 1 | 0 |
+
 ---
 
 ## 🔧 NOTAS TÉCNICAS
