@@ -10063,13 +10063,15 @@ async def delete_waitlist_lead(lead_id: str, request: Request):
 
 # ============================================
 # E.D.N.360 SYSTEM ENDPOINTS
+# ⚠️ DESACTIVADOS TEMPORALMENTE - Migración a client_drawer
 # ============================================
 
-from edn360.orchestrator import EDN360Orchestrator
-from edn360.models import PlanType, PlanStatus
+# ⚠️ COMENTADO: Orquestador eliminado durante migración
+# from edn360.orchestrator import EDN360Orchestrator
+# from edn360.models import PlanType, PlanStatus
 
-# Inicializar orquestador global
-edn360_orchestrator = EDN360Orchestrator()
+# ⚠️ COMENTADO: Orquestador no disponible
+# edn360_orchestrator = EDN360Orchestrator()
 
 @api_router.post("/admin/edn360/generate-initial-plan")
 async def generate_edn360_initial_plan(
