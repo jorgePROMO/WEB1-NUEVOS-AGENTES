@@ -3823,7 +3823,7 @@ async def admin_generate_nutrition_plan(
                 raise HTTPException(status_code=403, detail="El plan nutricional previo no pertenece a este usuario")
         
         # Generar el plan con E.D.N.360 - SIEMPRE agentes N0-N8
-        from edn360.orchestrator import EDN360Orchestrator
+        # ⚠️ DESACTIVADO: from edn360.orchestrator import EDN360Orchestrator
         orchestrator = EDN360Orchestrator()
         
         logger.info("🚀 Generando plan de NUTRICIÓN con agentes N0-N8")
@@ -5811,7 +5811,7 @@ async def admin_generate_training_plan(
         if previous_plan_data:
             logger.info(f"   📋 Plan previo encontrado: {previous_plan_data['_id']} (usado para progresión)")
         
-        from edn360.orchestrator import EDN360Orchestrator
+        # ⚠️ DESACTIVADO: from edn360.orchestrator import EDN360Orchestrator
         orchestrator = EDN360Orchestrator()
         
         # Pasar plan previo a los agentes si existe
@@ -10774,7 +10774,7 @@ async def process_generation_job(job_id: str):
         current_year = now.year
         
         # Importar orquestador
-        from edn360.orchestrator import EDN360Orchestrator
+        # ⚠️ DESACTIVADO: from edn360.orchestrator import EDN360Orchestrator
         orchestrator = EDN360Orchestrator()
         
         result_data = {
