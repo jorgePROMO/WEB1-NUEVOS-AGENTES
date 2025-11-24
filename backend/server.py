@@ -6835,6 +6835,10 @@ async def startup_db():
 async def submit_follow_up(follow_up: FollowUpSubmit, request: Request):
     """
     Cliente envía cuestionario de seguimiento mensual
+    
+    FASE 1 DUAL-WRITE:
+    - Guarda en BD Web (follow_up_submissions) como siempre
+    - Si USE_CLIENT_DRAWER_WRITE=true, también guarda en client_drawers
     """
     try:
         current_user = await get_current_user(request)
@@ -6862,12 +6866,17 @@ async def submit_follow_up(follow_up: FollowUpSubmit, request: Request):
             sort=[("submitted_at", -1)]
         )
         
-        # Crear el documento de seguimiento
+        # Generar ID y timestamp
         follow_up_id = str(datetime.now(timezone.utc).timestamp()).replace('.', '')
+        submission_date = datetime.now(timezone.utc)
+        
+        # ============================================
+        # 1. GUARDAR EN BD WEB (fuente de verdad)
+        # ============================================
         follow_up_doc = {
             "_id": follow_up_id,
             "user_id": user_id,
-            "submission_date": datetime.now(timezone.utc),
+            "submission_date": submission_date,
             "days_since_last_plan": days_since_plan,
             "previous_plan_id": latest_plan["_id"],
             "previous_questionnaire_id": initial_questionnaire["_id"] if initial_questionnaire else None,
@@ -6881,11 +6890,12 @@ async def submit_follow_up(follow_up: FollowUpSubmit, request: Request):
             "ai_analysis": None,
             "ai_analysis_edited": False,
             "new_plan_id": None,
-            "created_at": datetime.now(timezone.utc),
-            "updated_at": datetime.now(timezone.utc)
+            "created_at": submission_date,
+            "updated_at": submission_date
         }
         
         await db.follow_up_submissions.insert_one(follow_up_doc)
+        logger.info(f"✅ Follow-up guardado en BD Web: {follow_up_id} (user_id: {user_id})")
         
         # Desactivar el botón de seguimiento después de completar
         await db.users.update_one(
@@ -6911,13 +6921,44 @@ async def submit_follow_up(follow_up: FollowUpSubmit, request: Request):
                 "type": "follow_up",
                 "link": f"/admin?client={user_id}&tab=seguimiento",
                 "read": False,
-                "date": datetime.now(timezone.utc),
-                "created_at": datetime.now(timezone.utc)
+                "date": submission_date,
+                "created_at": submission_date
             }
             await db.alerts.insert_one(alert_doc)
         
-        logger.info(f"Follow-up submission saved for user {user_id}")
+        # ============================================
+        # 2. DUAL-WRITE A CLIENT_DRAWERS (best effort)
+        # ============================================
+        use_client_drawer_write = os.getenv('USE_CLIENT_DRAWER_WRITE', 'false').lower() == 'true'
         
+        if use_client_drawer_write:
+            try:
+                from repositories.client_drawer_repository import add_questionnaire_to_drawer
+                
+                # Añadir cuestionario a client_drawer
+                await add_questionnaire_to_drawer(
+                    user_id=user_id,
+                    submission_id=follow_up_id,
+                    submitted_at=submission_date,
+                    source="followup",  # Cuestionario de seguimiento mensual
+                    raw_payload=follow_up_doc  # Documento completo
+                )
+                
+                logger.info(f"✅ Dual-write exitoso a client_drawers: {follow_up_id}")
+                
+            except Exception as drawer_error:
+                # ⚠️ BEST EFFORT: Si falla client_drawers, NO falla el endpoint
+                logger.error(
+                    f"⚠️  Dual-write to client_drawers failed for user_id {user_id}, "
+                    f"submission_id {follow_up_id}: {drawer_error}"
+                )
+                # Continuar normalmente, BD Web ya tiene el cuestionario
+        else:
+            logger.info(f"ℹ️  USE_CLIENT_DRAWER_WRITE=false, solo se guardó en BD Web")
+        
+        # ============================================
+        # 3. RESPONDER AL FRONTEND
+        # ============================================
         return {
             "success": True,
             "message": "Cuestionario de seguimiento enviado correctamente",
