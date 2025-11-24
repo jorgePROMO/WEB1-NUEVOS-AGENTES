@@ -130,15 +130,19 @@ async def timeout_watchdog():
 async def worker_main():
     """
     Loop principal del worker.
-    Procesa jobs cada 5 segundos.
+    
+    ⚠️ MODO MONITOREO: Solo observa jobs pendientes sin procesarlos.
     """
     logger.info("🚀 Job Worker iniciado")
+    logger.info("⚠️  MODO: MONITOREO (generación deshabilitada)")
     logger.info("📊 Configuración:")
     logger.info(f"   - MongoDB: {MONGO_URL}")
     logger.info(f"   - Database: {DB_NAME}")
-    logger.info(f"   - Intervalo de polling: 5 segundos")
-    logger.info(f"   - Concurrencia máxima: 2 jobs simultáneos")
-    logger.info(f"   - Timeout: 30 minutos")
+    logger.info(f"   - Intervalo de polling: 30 segundos")
+    logger.info(f"   - Estado: Migración EDN360 en progreso (AS-IS → TO-BE)")
+    logger.info("")
+    logger.info("ℹ️  El worker NO procesará jobs de generación hasta que se implemente")
+    logger.info("   la nueva arquitectura client_drawer según DOCUMENTO_2_VFINAL")
     
     # Iniciar watchdog en background
     asyncio.create_task(timeout_watchdog())
@@ -150,8 +154,8 @@ async def worker_main():
         except Exception as e:
             logger.error(f"❌ Error en worker_main: {e}")
         
-        # Esperar 5 segundos antes del próximo ciclo
-        await asyncio.sleep(5)
+        # Esperar 30 segundos antes del próximo ciclo (antes era 5s)
+        await asyncio.sleep(30)
 
 if __name__ == "__main__":
     try:
