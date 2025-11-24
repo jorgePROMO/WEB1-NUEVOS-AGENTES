@@ -873,7 +873,7 @@ async def get_edn360_input_preview(user_id: str, request: Request):
     try:
         # Importar el builder
         from services.edn360_input_builder import build_edn360_input_for_user
-        from models.edn360_input import EDN360NoDrawerError, EDN360NoQuestionnaireError
+        from edn360_models.edn360_input import EDN360NoDrawerError, EDN360NoQuestionnaireError
         
         # Construir el EDN360Input
         edn360_input = await build_edn360_input_for_user(user_id)
