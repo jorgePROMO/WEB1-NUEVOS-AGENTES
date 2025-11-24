@@ -933,6 +933,87 @@ async def get_edn360_input_preview(user_id: str, request: Request):
         )
 
 
+@api_router.post("/admin/users/{user_id}/edn360-run-workflow")
+async def admin_run_edn360_workflow(user_id: str, request: Request):
+    """
+    Lanza el Workflow EDN360 para un usuario (FASE 3 - Testing Interno).
+    
+    Este endpoint:
+    1. Construye el EDN360Input para el usuario
+    2. Llama al Workflow de OpenAI con ese input
+    3. Crea un snapshot técnico inmutable en edn360_snapshots
+    
+    IMPORTANTE:
+    - Este endpoint es solo para TESTING INTERNO desde panel admin
+    - NO modifica training_plans ni nutrition_plans
+    - NO envía planes a clientes finales
+    - Solo crea snapshots técnicos en BD para validar el flujo
+    
+    Respuestas:
+    - 200 OK: Workflow ejecutado, snapshot creado (success o failed)
+    - 404 Not Found: Usuario no existe
+    - 500 Internal Server Error: Error inesperado
+    
+    Solo accesible para administradores.
+    """
+    # Verificar que es admin
+    admin = await require_admin(request)
+    
+    try:
+        # Verificar que el usuario existe
+        user = await db.users.find_one({"_id": user_id})
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "user_not_found",
+                    "message": f"Usuario {user_id} no encontrado",
+                    "user_id": user_id
+                }
+            )
+        
+        logger.info(f"🚀 Admin {admin['_id']} lanzando Workflow EDN360 para user_id: {user_id}")
+        
+        # Importar el orquestador
+        from services.edn360_orchestrator_v1 import run_edn360_workflow_for_user
+        
+        # Ejecutar el workflow
+        result = await run_edn360_workflow_for_user(user_id)
+        
+        # Logear resultado
+        if result["status"] == "success":
+            logger.info(
+                f"✅ Workflow EDN360 ejecutado exitosamente | "
+                f"user_id: {user_id} | snapshot_id: {result['snapshot_id']}"
+            )
+        else:
+            logger.warning(
+                f"⚠️  Workflow EDN360 falló | "
+                f"user_id: {user_id} | error: {result.get('error_message')}"
+            )
+        
+        return {
+            "success": True,
+            "result": result,
+            "message": "Workflow EDN360 ejecutado. Snapshot creado en BD."
+        }
+    
+    except HTTPException:
+        # Re-lanzar HTTPExceptions
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error ejecutando Workflow EDN360 para user_id {user_id}: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error ejecutando Workflow EDN360: {str(e)}",
+                "user_id": user_id
+            }
+        )
+
+
 @api_router.post("/admin/verify-payment/{user_id}")
 async def verify_payment(user_id: str, request: Request):
     admin = await require_admin(request)
