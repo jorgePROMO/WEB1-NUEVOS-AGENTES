@@ -24,6 +24,8 @@
 
 ## 🔍 SECCIONES DEL CUESTIONARIO
 
+**⚠️ IMPORTANTE:** El cuestionario inicial tiene campos dinámicos según la selección de `measurement_type` (báscula inteligente, cinta métrica, o sin herramientas).
+
 ### 1. DATOS PERSONALES
 
 #### 1.1. Identificación Básica
