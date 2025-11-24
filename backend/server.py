@@ -850,6 +850,89 @@ async def get_client_details(user_id: str, request: Request):
     }
 
 
+@api_router.get("/admin/users/{user_id}/edn360-input-preview")
+async def get_edn360_input_preview(user_id: str, request: Request):
+    """
+    Vista previa del EDN360Input para un usuario.
+    
+    FASE 2: Este endpoint construye y devuelve el JSON EDN360Input que
+    usaremos como contrato de entrada para los Workflows de OpenAI.
+    
+    NO llama a ningún modelo de IA, solo construye y devuelve el input.
+    
+    Respuestas:
+    - 200 OK: Devuelve el JSON EDN360Input completo
+    - 404 Not Found: Usuario no existe o no tiene client_drawer
+    - 500 Internal Server Error: Error inesperado
+    
+    Solo accesible para administradores.
+    """
+    # Verificar que es admin
+    admin = await require_admin(request)
+    
+    try:
+        # Importar el builder
+        from services.edn360_input_builder import build_edn360_input_for_user
+        from models.edn360_input import EDN360NoDrawerError, EDN360NoQuestionnaireError
+        
+        # Construir el EDN360Input
+        edn360_input = await build_edn360_input_for_user(user_id)
+        
+        # Serializar a JSON
+        edn360_input_json = edn360_input.dict()
+        
+        logger.info(
+            f"✅ EDN360Input generado para user_id {user_id}: "
+            f"{edn360_input.questionnaire_count()} cuestionario(s)"
+        )
+        
+        return {
+            "success": True,
+            "user_id": user_id,
+            "edn360_input": edn360_input_json,
+            "metadata": {
+                "questionnaires_count": edn360_input.questionnaire_count(),
+                "has_initial": edn360_input.get_initial_questionnaire() is not None,
+                "has_followups": edn360_input.has_followups(),
+                "generated_at": edn360_input.generated_at.isoformat(),
+                "version": edn360_input.version
+            }
+        }
+    
+    except EDN360NoDrawerError as e:
+        logger.warning(f"⚠️  No drawer para user_id {user_id}: {e}")
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "error": "no_drawer",
+                "message": str(e),
+                "user_id": user_id
+            }
+        )
+    
+    except EDN360NoQuestionnaireError as e:
+        logger.warning(f"⚠️  Drawer sin cuestionarios para user_id {user_id}: {e}")
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "error": "no_questionnaires",
+                "message": str(e),
+                "user_id": user_id
+            }
+        )
+    
+    except Exception as e:
+        logger.error(f"❌ Error generando EDN360Input para user_id {user_id}: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error generando EDN360Input: {str(e)}",
+                "user_id": user_id
+            }
+        )
+
+
 @api_router.post("/admin/verify-payment/{user_id}")
 async def verify_payment(user_id: str, request: Request):
     admin = await require_admin(request)
