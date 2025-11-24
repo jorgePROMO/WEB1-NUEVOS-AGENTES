@@ -3668,49 +3668,42 @@ const AdminDashboard = () => {
                             </Card>
                           )}
                           
-                          {/* Pending questionnaires - can generate from nutrition questionnaire */}
+                          {/* ⚠️ GENERACIÓN DE PLANES TEMPORALMENTE DESHABILITADA */}
                           {questionnaireSubmissions.length > 0 && (
                             <div className="mb-6">
-                              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-lg p-4">
-                                <h3 className="text-xl font-bold text-blue-800 mb-3 flex items-center gap-2">
-                                  💪 Generar Plan de Entrenamiento
-                                  <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
-                                    Desde Cuestionario
+                              <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-yellow-400 rounded-lg p-4">
+                                <h3 className="text-xl font-bold text-yellow-800 mb-3 flex items-center gap-2">
+                                  ⚠️ Sistema en Migración
+                                  <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">
+                                    Actualización
                                   </span>
                                 </h3>
                                 
                                 <div className="space-y-3">
                                   {questionnaireSubmissions.map((submission) => (
-                                    <Card key={submission.id} className="border-blue-200 bg-white">
+                                    <Card key={submission.id} className="border-yellow-200 bg-white">
                                       <CardHeader>
                                         <div className="flex justify-between items-center">
-                                          <div>
+                                          <div className="flex-1">
                                             <CardTitle className="text-lg text-gray-800">
                                               📋 Cuestionario Disponible
                                             </CardTitle>
-                                            <p className="text-sm text-gray-500">
+                                            <p className="text-sm text-gray-500 mb-2">
                                               Enviado el {new Date(submission.submitted_at).toLocaleDateString('es-ES', {
                                                 day: 'numeric',
                                                 month: 'long',
                                                 year: 'numeric'
                                               })}
                                             </p>
+                                            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                                              <p className="text-sm text-yellow-800 font-medium">
+                                                ⚠️ La generación automática de planes está temporalmente deshabilitada mientras migramos al nuevo sistema EDN360 con arquitectura mejorada.
+                                              </p>
+                                              <p className="text-xs text-yellow-700 mt-1">
+                                                Los cuestionarios se guardan correctamente y estarán disponibles cuando el nuevo sistema esté listo.
+                                              </p>
+                                            </div>
                                           </div>
-                                          
-                                          <Button
-                                            onClick={() => generateTrainingPlan('initial', submission.id)}
-                                            disabled={generatingTrainingPlan || generatingFromFollowup}
-                                            className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white"
-                                          >
-                                            {generatingTrainingPlan ? (
-                                              <>
-                                                <span className="animate-spin mr-2">⏳</span>
-                                                Generando...
-                                              </>
-                                            ) : (
-                                              '💪 Generar Plan de Entrenamiento'
-                                            )}
-                                          </Button>
                                         </div>
                                       </CardHeader>
                                     </Card>
