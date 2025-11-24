@@ -18,7 +18,7 @@ from typing import Optional
 from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from models.edn360_input import (
+from edn360_models.edn360_input import (
     EDN360Input,
     EDN360UserProfile,
     EDN360Questionnaire,
