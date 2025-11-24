@@ -205,10 +205,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Async Generation Endpoint"
-    - "Background Job Processor"
-    - "GenerationProgressModal Component"
-  stuck_tasks:
-    - "Async Generation Endpoint"
+    - "EDN360 Orchestrator v1"
+    - "Admin Endpoint - Run Workflow"
+    - "EDN360 Workflow Launch Button"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
