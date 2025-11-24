@@ -21,7 +21,7 @@ from typing import Optional, Dict, Any
 from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from models.client_drawer import (
+from edn360_models.client_drawer import (
     ClientDrawer,
     SharedQuestionnaire,
     Services,
