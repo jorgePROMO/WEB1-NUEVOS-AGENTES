@@ -21,7 +21,7 @@ from typing import Optional, List, Dict, Any
 from datetime import datetime
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from models.edn360_snapshot import EDN360Snapshot
+from edn360_models.edn360_snapshot import EDN360Snapshot
 
 # Configuración
 MONGO_URL = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
