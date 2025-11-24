@@ -167,8 +167,16 @@ async def call_edn360_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]:
         # Configurar cliente OpenAI
         client = openai.OpenAI(api_key=EDN360_OPENAI_API_KEY)
         
-        # Serializar el EDN360Input a JSON string
-        user_message_content = json.dumps(edn360_input, indent=2, ensure_ascii=False)
+        # Serializar el EDN360Input a JSON string (con handler para datetime)
+        from datetime import datetime
+        
+        def datetime_handler(obj):
+            """Handler para serializar datetime a ISO string"""
+            if isinstance(obj, datetime):
+                return obj.isoformat()
+            raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+        
+        user_message_content = json.dumps(edn360_input, indent=2, ensure_ascii=False, default=datetime_handler)
         
         # Construir mensajes
         messages = [
