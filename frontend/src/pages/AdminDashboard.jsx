@@ -242,6 +242,44 @@ const AdminDashboard = () => {
     }
   };
 
+  // ============================================
+  // EDN360 INPUT PREVIEW - FASE 2
+  // ============================================
+  
+  const handleViewEDN360Input = async (userId) => {
+    setLoadingEDN360Input(true);
+    setShowEDN360InputModal(true);
+    setEDN360InputData(null);
+    
+    try {
+      const response = await axios.get(
+        `${API}/admin/users/${userId}/edn360-input-preview`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      
+      setEDN360InputData(response.data);
+      console.log('✅ EDN360Input cargado:', response.data);
+    } catch (error) {
+      console.error('❌ Error cargando EDN360Input:', error);
+      
+      if (error.response?.status === 404) {
+        alert(
+          error.response?.data?.detail?.message || 
+          'Este usuario no tiene client_drawer o no ha completado cuestionarios.'
+        );
+      } else {
+        alert('Error al cargar EDN360Input. Ver consola para detalles.');
+      }
+      
+      setShowEDN360InputModal(false);
+    } finally {
+      setLoadingEDN360Input(false);
+    }
+  };
+
   const generateTrainingPlan = async (sourceType, sourceId) => {
     // Validate selectors
     if (!selectedQuestionnaireForTraining) {
