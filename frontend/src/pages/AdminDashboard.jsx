@@ -285,6 +285,67 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleLaunchWorkflow = async (userId, userName) => {
+    // Confirmación
+    const confirmed = window.confirm(
+      `¿Seguro que quieres lanzar el Workflow EDN360 para ${userName}?\n\n` +
+      'Esto creará un snapshot técnico en la BD, pero NO enviará ningún plan al cliente.\n\n' +
+      'NOTA: Esto es solo para testing interno (FASE 3).'
+    );
+    
+    if (!confirmed) return;
+    
+    setLaunchingWorkflow(true);
+    
+    try {
+      const response = await axios.post(
+        `${API}/admin/users/${userId}/edn360-run-workflow`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      
+      console.log('✅ Workflow EDN360 ejecutado:', response.data);
+      
+      setWorkflowResult(response.data.result);
+      setShowWorkflowResultModal(true);
+      
+      // Mostrar alerta con resultado
+      const result = response.data.result;
+      if (result.status === 'success') {
+        alert(
+          `✅ Workflow EDN360 ejecutado exitosamente!\n\n` +
+          `Snapshot ID: ${result.snapshot_id}\n` +
+          `Status: ${result.status}\n` +
+          `Workflow: ${result.workflow_name}`
+        );
+      } else {
+        alert(
+          `⚠️ Workflow EDN360 ejecutado pero falló\n\n` +
+          `Snapshot ID: ${result.snapshot_id}\n` +
+          `Status: ${result.status}\n` +
+          `Error: ${result.error_message || 'Sin mensaje de error'}`
+        );
+      }
+    } catch (error) {
+      console.error('❌ Error lanzando Workflow EDN360:', error);
+      
+      let errorMessage = 'Error al lanzar Workflow EDN360.';
+      
+      if (error.response?.status === 404) {
+        errorMessage = error.response?.data?.detail?.message || 'Usuario no encontrado.';
+      } else if (error.response?.data?.detail?.message) {
+        errorMessage = error.response.data.detail.message;
+      }
+      
+      alert(`❌ ${errorMessage}\n\nVer consola para más detalles.`);
+    } finally {
+      setLaunchingWorkflow(false);
+    }
+  };
+
   const generateTrainingPlan = async (sourceType, sourceId) => {
     // Validate selectors
     if (!selectedQuestionnaireForTraining) {
