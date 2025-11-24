@@ -2648,6 +2648,17 @@ const AdminDashboard = () => {
                             Templates
                           </Button>
                           
+                          {/* EDN360 Input Button - FASE 2 */}
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-indigo-50 border-indigo-300 text-indigo-700 hover:bg-indigo-100"
+                            onClick={() => handleViewEDN360Input(selectedClient.id)}
+                          >
+                            <FileText className="h-4 w-4 mr-2" />
+                            Ver EDN360 Input
+                          </Button>
+                          
                           {selectedClient.subscription?.payment_status === 'pending' && (
                             <Button
                               size="sm"
