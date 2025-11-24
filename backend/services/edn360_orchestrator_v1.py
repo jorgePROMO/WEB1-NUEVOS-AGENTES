@@ -26,7 +26,7 @@ from datetime import datetime, timezone
 from services.edn360_input_builder import build_edn360_input_for_user
 from services.gpt_service import call_edn360_workflow
 from repositories.edn360_snapshot_repository import create_snapshot
-from models.edn360_input import EDN360NoDrawerError, EDN360NoQuestionnaireError
+from edn360_models.edn360_input import EDN360NoDrawerError, EDN360NoQuestionnaireError
 
 # Configuración
 EDN360_WORKFLOW_NAME = os.getenv('EDN360_WORKFLOW_NAME', 'edn360_full_plan_v1')
