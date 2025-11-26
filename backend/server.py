@@ -3845,7 +3845,7 @@ async def submit_nutrition_questionnaire(questionnaire: NutritionQuestionnaireSu
                     user_id=user_id,
                     submission_id=submission_id,
                     submitted_at=submitted_at,
-                    source="nutrition_initial",  # Cuestionario inicial detallado
+                    source="initial",  # Cuestionario inicial
                     raw_payload=submission_doc  # Documento completo
                 )
                 
