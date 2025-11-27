@@ -881,9 +881,6 @@ const AdminDashboard = () => {
       await loadFollowUpReports(clientId);
       await loadFollowUpQuestionnaires(clientId);
       
-      // Load EDN360 questionnaires LAST to override any legacy data
-      await loadEDN360Questionnaires(clientId);
-      
       // Now load follow-ups after other data is loaded
       try {
         const response = await axios.get(`${API}/admin/users/${clientId}/follow-ups`, {
@@ -895,6 +892,12 @@ const AdminDashboard = () => {
         console.error('Error loading follow-ups:', error);
         setFollowUps([]);
       }
+      
+      // Load EDN360 questionnaires ABSOLUTELY LAST to override any legacy data
+      console.log('🔥 [FINAL STEP] Loading EDN360 questionnaires...');
+      const edn360Data = await loadEDN360Questionnaires(clientId);
+      console.log('🔥 [FINAL STEP] EDN360 questionnaires loaded:', edn360Data.length);
+      
     } finally {
       // Clear loading state
       setLoadingClientData(false);
