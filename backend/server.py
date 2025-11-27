@@ -1200,10 +1200,9 @@ async def generate_training_plan(request: Request):
             # No bloqueamos el flujo si falla el snapshot
         
         # ============================================
-        # PASO 5: DEVOLVER RESPUESTA LIMPIA
+        # PASO 4.5: GUARDAR EN TRAINING_PLANS_V2
         # ============================================
-        
-        # Extraer solo el client_training_program_enriched
+        # Guardar una copia editable del plan para historial y futuras ediciones
         training_program = workflow_response.get("client_training_program_enriched")
         
         if not training_program:
@@ -1214,6 +1213,37 @@ async def generate_training_plan(request: Request):
                     "message": "El workflow no devolvió un plan de entrenamiento válido"
                 }
             )
+        
+        try:
+            from datetime import datetime, timezone
+            
+            # Obtener BD de EDN360 App
+            edn360_db = mongodb_client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+            
+            training_plan_doc = {
+                "user_id": user_id,
+                "questionnaire_submission_id": questionnaire_submission_id,
+                "created_at": datetime.now(timezone.utc),
+                "plan": training_program,
+                "status": "draft",  # draft | sent
+                "version": "1.0.0",
+                "source": "edn360_workflow_v1"
+            }
+            
+            result = await edn360_db.training_plans_v2.insert_one(training_plan_doc)
+            
+            logger.info(
+                f"✅ Plan guardado en training_plans_v2 | "
+                f"plan_id: {str(result.inserted_id)}"
+            )
+        
+        except Exception as e:
+            logger.warning(f"⚠️ Error guardando en training_plans_v2: {e}")
+            # No bloqueamos el flujo si falla el guardado
+        
+        # ============================================
+        # PASO 5: DEVOLVER RESPUESTA LIMPIA
+        # ============================================
         
         logger.info(
             f"✅ Plan de entrenamiento generado exitosamente | "
