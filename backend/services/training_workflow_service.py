@@ -73,15 +73,16 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
                 "Por favor, configura tu API Key de OpenAI en .env"
             )
         
-        if not EDN360_TRAINING_WORKFLOW_ID or EDN360_TRAINING_WORKFLOW_ID == "TU_WORKFLOW_ID_AQUI":
+        if not EDN360_CORE_ASSISTANT_ID:
             raise Exception(
-                "EDN360_TRAINING_WORKFLOW_ID no está configurada. "
-                "Por favor, pide el Workflow ID a Jorge y configúralo en .env"
+                "EDN360_CORE_ASSISTANT_ID no está configurada. "
+                "Por favor, configura el Core Assistant ID en .env"
             )
         
         logger.info(
             f"🚀 Iniciando Training Workflow EDN360 | "
-            f"Assistant ID: {EDN360_TRAINING_WORKFLOW_ID}"
+            f"Core Assistant ID: {EDN360_CORE_ASSISTANT_ID} | "
+            f"Workflow ID: {EDN360_TRAINING_WORKFLOW_ID}"
         )
         
         # ============================================
