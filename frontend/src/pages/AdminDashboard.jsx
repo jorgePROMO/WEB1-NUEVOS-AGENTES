@@ -1150,20 +1150,24 @@ const AdminDashboard = () => {
   // Load EDN360 questionnaires from client_drawers
   const loadEDN360Questionnaires = async (userId) => {
     try {
+      console.log('🔄 [EDN360] Loading questionnaires for user:', userId);
       const response = await axios.get(`${API}/admin/users/${userId}/edn360-questionnaires`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
       
       const edn360Questionnaires = response.data.questionnaires || [];
+      console.log('📦 [EDN360] Response received:', edn360Questionnaires);
       
-      // Si hay cuestionarios EDN360, usarlos
-      if (edn360Questionnaires.length > 0) {
-        setQuestionnaireSubmissions(edn360Questionnaires);
-        console.log('✅ Cuestionarios EDN360 cargados:', edn360Questionnaires.length);
-      }
+      // SIEMPRE actualizar el estado, incluso si está vacío
+      setQuestionnaireSubmissions(edn360Questionnaires);
+      console.log('✅ [EDN360] questionnaireSubmissions updated, count:', edn360Questionnaires.length);
+      
+      return edn360Questionnaires;
     } catch (error) {
-      console.error('Error loading EDN360 questionnaires:', error);
+      console.error('❌ [EDN360] Error loading questionnaires:', error);
+      setQuestionnaireSubmissions([]);
+      return [];
     }
   };
 
