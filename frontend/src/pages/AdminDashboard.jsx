@@ -859,7 +859,6 @@ const AdminDashboard = () => {
     try {
       await loadClientDetails(clientId);
       await loadNutritionPlan(clientId);
-      await loadEDN360Questionnaires(clientId);
       
       // Load training plans
       try {
@@ -881,6 +880,9 @@ const AdminDashboard = () => {
       await loadNutritionPlansForSelector(clientId);
       await loadFollowUpReports(clientId);
       await loadFollowUpQuestionnaires(clientId);
+      
+      // Load EDN360 questionnaires LAST to override any legacy data
+      await loadEDN360Questionnaires(clientId);
       
       // Now load follow-ups after other data is loaded
       try {
