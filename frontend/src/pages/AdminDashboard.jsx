@@ -859,6 +859,7 @@ const AdminDashboard = () => {
     try {
       await loadClientDetails(clientId);
       await loadNutritionPlan(clientId);
+      await loadEDN360Questionnaires(clientId);
       
       // Load training plans
       try {
