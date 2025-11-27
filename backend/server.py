@@ -9643,7 +9643,7 @@ async def get_user_edn360_questionnaires(user_id: str, request: Request):
     
     try:
         # Obtener BD de EDN360 App
-        edn360_db = mongodb_client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
         
         logger.info(f"🔍 [EDN360] Buscando cuestionarios para user_id: {user_id}")
         
