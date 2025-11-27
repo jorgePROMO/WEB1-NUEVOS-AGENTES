@@ -1163,14 +1163,14 @@ const AdminDashboard = () => {
       const edn360Questionnaires = response.data.questionnaires || [];
       console.log('📦 [EDN360] Response received:', edn360Questionnaires);
       
-      // SIEMPRE actualizar el estado, incluso si está vacío
-      setQuestionnaireSubmissions(edn360Questionnaires);
-      console.log('✅ [EDN360] questionnaireSubmissions updated, count:', edn360Questionnaires.length);
+      // Usar el estado SEPARADO para EDN360
+      setEdn360QuestionnaireSubmissions(edn360Questionnaires);
+      console.log('✅ [EDN360] edn360QuestionnaireSubmissions updated, count:', edn360Questionnaires.length);
       
       return edn360Questionnaires;
     } catch (error) {
       console.error('❌ [EDN360] Error loading questionnaires:', error);
-      setQuestionnaireSubmissions([]);
+      setEdn360QuestionnaireSubmissions([]);
       return [];
     }
   };
