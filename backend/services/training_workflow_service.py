@@ -124,12 +124,12 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
             role="user",
             content=input_json
         )
-        logger.info(f"📤 Mensaje enviado al thread")
+        logger.info("📤 Mensaje enviado al thread")
         
         # ============================================
         # EJECUTAR ASSISTANT (create_and_poll)
         # ============================================
-        logger.info(f"⏳ Ejecutando Assistant (esto puede tardar 1-2 minutos)...")
+        logger.info("⏳ Ejecutando Assistant (esto puede tardar 1-2 minutos)...")
         
         run = client.beta.threads.runs.create_and_poll(
             thread_id=thread.id,
