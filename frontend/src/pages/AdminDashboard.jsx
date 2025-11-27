@@ -693,6 +693,40 @@ const AdminDashboard = () => {
     }
   };
 
+  // Generate EDN360 Training Plan - NEW FLOW
+  const generateEDN360TrainingPlan = async (submissionId) => {
+    if (!selectedClient) return;
+    
+    try {
+      setGeneratingEDN360Plan(true);
+      
+      const response = await axios.post(
+        `${API}/training-plan`,
+        {
+          user_id: selectedClient.id,
+          questionnaire_submission_id: submissionId
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+      
+      // Guardar el plan generado
+      setGeneratedEDN360Plan(response.data.client_training_program_enriched);
+      
+      alert('✅ Plan de entrenamiento generado exitosamente!');
+      
+    } catch (error) {
+      console.error('Error generating EDN360 training plan:', error);
+      const errorMsg = error.response?.data?.detail?.message || error.message;
+      alert(`❌ Error generando plan: ${errorMsg}`);
+    } finally {
+      setGeneratingEDN360Plan(false);
+    }
+  };
+
+
   // Load follow-up reports
   const loadFollowUpReports = async (userId) => {
     try {
