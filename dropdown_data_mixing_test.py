@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://edn360-arch.preview.emergentagent.com/api"
+BACKEND_URL = "https://trainplan-admin.preview.emergentagent.com/api"
 
 class DropdownDataMixingTester:
     def __init__(self):

@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://edn360-arch.preview.emergentagent.com
+**URL Actual:** https://trainplan-admin.preview.emergentagent.com
 
 ---
 
