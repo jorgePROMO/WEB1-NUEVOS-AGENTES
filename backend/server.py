@@ -1032,6 +1032,232 @@ async def verify_payment(user_id: str, request: Request):
     return {"success": True, "message": "Payment verified successfully"}
 
 
+@api_router.post("/training-plan")
+async def generate_training_plan(request: Request):
+    """
+    Genera un plan de entrenamiento usando el workflow de Platform (E1-E7.5).
+    
+    Este endpoint:
+    1. Recibe un questionnaire_submission con todas las respuestas del usuario
+    2. Sincroniza el cuestionario con client_drawers (dual-write)
+    3. Llama al workflow de Platform (E1-E7.5)
+    4. Guarda un snapshot en edn360_snapshots
+    5. Devuelve solo el client_training_program_enriched
+    
+    Request Body:
+    {
+        "questionnaire_submission": {
+            "submission_id": "...",
+            "source": "initial" | "follow_up",
+            "submitted_at": "2025-11-24T20:39:35.848Z",
+            "payload": { ... todas las respuestas ... }
+        }
+    }
+    
+    Response:
+    {
+        "client_training_program_enriched": {
+            "title": "...",
+            "summary": "...",
+            "sessions": [...],
+            ...
+        }
+    }
+    
+    Auth: Usuario autenticado requerido
+    """
+    # Obtener usuario autenticado
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        raise HTTPException(
+            status_code=401,
+            detail="Token de autenticación requerido"
+        )
+    
+    token = auth_header.split(' ')[1]
+    
+    try:
+        # Verificar token y obtener user_id
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        user_id = payload.get('user_id')
+        
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Token inválido")
+        
+        # Verificar que el usuario existe
+        user = await db.users.find_one({"_id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expirado")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Token inválido")
+    
+    try:
+        # Parsear body
+        body = await request.json()
+        
+        # Importar modelos
+        from edn360_models.training_plan_models import (
+            TrainingPlanRequest,
+            QuestionnaireSubmission,
+            validate_questionnaire_submission
+        )
+        
+        # Validar request
+        try:
+            training_request = TrainingPlanRequest(**body)
+        except Exception as e:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Request inválido: {str(e)}"
+            )
+        
+        qs = training_request.questionnaire_submission
+        
+        # Validar questionnaire_submission
+        is_valid, errors = validate_questionnaire_submission(qs)
+        if not is_valid:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": "invalid_questionnaire",
+                    "message": "El cuestionario no es válido",
+                    "errors": errors
+                }
+            )
+        
+        logger.info(
+            f"🏋️ Generando plan de entrenamiento | "
+            f"user_id: {user_id} | submission_id: {qs.submission_id}"
+        )
+        
+        # ============================================
+        # PASO 1: SINCRONIZAR CON CLIENT_DRAWERS
+        # ============================================
+        try:
+            from repositories.client_drawer_repository import add_questionnaire_to_drawer
+            from datetime import datetime
+            
+            # Convertir submitted_at a datetime
+            submitted_at = datetime.fromisoformat(qs.submitted_at.replace('Z', '+00:00'))
+            
+            # Preparar documento completo para el drawer
+            submission_doc = {
+                "_id": qs.submission_id,
+                "user_id": user_id,
+                "submitted_at": submitted_at,
+                "source": qs.source,
+                "payload": qs.payload
+            }
+            
+            # Sincronizar con client_drawers (idempotente)
+            await add_questionnaire_to_drawer(
+                user_id=user_id,
+                submission_id=qs.submission_id,
+                submitted_at=submitted_at,
+                source=qs.source,
+                raw_payload=submission_doc
+            )
+            
+            logger.info(f"✅ Cuestionario sincronizado con client_drawers")
+        
+        except Exception as e:
+            logger.warning(f"⚠️ Error sincronizando con client_drawers: {e}")
+            # No bloqueamos el flujo si falla el dual-write
+        
+        # ============================================
+        # PASO 2: LLAMAR AL WORKFLOW DE PLATFORM
+        # ============================================
+        try:
+            from services.training_workflow_service import call_training_workflow
+            
+            # Preparar input para el workflow (questionnaire_submission dict)
+            workflow_input = qs.dict()
+            
+            # Llamar al workflow E1-E7.5
+            workflow_response = await call_training_workflow(workflow_input)
+            
+            logger.info(
+                f"✅ Training workflow ejecutado | "
+                f"Tokens: {workflow_response.get('_metadata', {}).get('tokens_used', 'N/A')}"
+            )
+        
+        except Exception as e:
+            logger.error(f"❌ Error ejecutando training workflow: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": "workflow_error",
+                    "message": f"Error generando plan de entrenamiento: {str(e)}"
+                }
+            )
+        
+        # ============================================
+        # PASO 3: GUARDAR SNAPSHOT
+        # ============================================
+        try:
+            from repositories.edn360_snapshot_repository import create_snapshot
+            
+            snapshot = await create_snapshot(
+                user_id=user_id,
+                edn360_input=workflow_input,
+                workflow_name="training_plan_v1",
+                workflow_response=workflow_response,
+                status="success",
+                version="1.0.0"
+            )
+            
+            logger.info(f"✅ Snapshot creado: {snapshot.snapshot_id}")
+        
+        except Exception as e:
+            logger.warning(f"⚠️ Error creando snapshot: {e}")
+            # No bloqueamos el flujo si falla el snapshot
+        
+        # ============================================
+        # PASO 4: DEVOLVER RESPUESTA LIMPIA
+        # ============================================
+        
+        # Extraer solo el client_training_program_enriched
+        training_program = workflow_response.get("client_training_program_enriched")
+        
+        if not training_program:
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": "invalid_response",
+                    "message": "El workflow no devolvió un plan de entrenamiento válido"
+                }
+            )
+        
+        logger.info(
+            f"✅ Plan de entrenamiento generado exitosamente | "
+            f"user_id: {user_id} | title: {training_program.get('title', 'N/A')}"
+        )
+        
+        # Devolver solo el training program (sin metadatos internos)
+        return {
+            "client_training_program_enriched": training_program
+        }
+    
+    except HTTPException:
+        # Re-lanzar HTTPExceptions
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error inesperado en /training-plan: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error interno del servidor: {str(e)}"
+            }
+        )
+
+
 @api_router.post("/admin/archive-client/{user_id}")
 async def archive_client(user_id: str, request: Request, reason: Optional[str] = None):
     admin = await require_admin(request)
