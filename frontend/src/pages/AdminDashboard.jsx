@@ -3904,6 +3904,167 @@ const AdminDashboard = () => {
                             </div>
                           )}
                           
+                          {/* ✅ PLAN EDN360 GENERADO - VISTA DE RENDERIZADO */}
+                          {generatedEDN360Plan && (
+                            <div className="mb-6">
+                              <Card className="border-2 border-green-400 bg-gradient-to-br from-green-50 to-emerald-50">
+                                <CardHeader className="border-b border-green-200 bg-white">
+                                  <div className="flex justify-between items-center">
+                                    <div>
+                                      <CardTitle className="text-2xl text-green-900 flex items-center gap-2">
+                                        🎉 {generatedEDN360Plan.title || 'Plan de Entrenamiento'}
+                                      </CardTitle>
+                                      <p className="text-sm text-gray-600 mt-2">{generatedEDN360Plan.summary}</p>
+                                    </div>
+                                    <Button
+                                      variant="outline"
+                                      onClick={() => setGeneratedEDN360Plan(null)}
+                                      className="border-gray-300 hover:bg-gray-100"
+                                    >
+                                      <X className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                </CardHeader>
+                                <CardContent className="pt-4">
+                                  {/* Plan Metadata */}
+                                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                                    <div className="bg-white p-3 rounded-lg border border-green-200">
+                                      <p className="text-xs text-gray-500">Objetivo</p>
+                                      <p className="font-semibold text-gray-900">{generatedEDN360Plan.goal}</p>
+                                    </div>
+                                    <div className="bg-white p-3 rounded-lg border border-green-200">
+                                      <p className="text-xs text-gray-500">Días/Semana</p>
+                                      <p className="font-semibold text-gray-900">{generatedEDN360Plan.days_per_week} días</p>
+                                    </div>
+                                    <div className="bg-white p-3 rounded-lg border border-green-200">
+                                      <p className="text-xs text-gray-500">Duración Sesión</p>
+                                      <p className="font-semibold text-gray-900">{generatedEDN360Plan.session_duration_min} min</p>
+                                    </div>
+                                    <div className="bg-white p-3 rounded-lg border border-green-200">
+                                      <p className="text-xs text-gray-500">Programa</p>
+                                      <p className="font-semibold text-gray-900">{generatedEDN360Plan.weeks} semanas</p>
+                                    </div>
+                                  </div>
+
+                                  {/* General Notes */}
+                                  {generatedEDN360Plan.general_notes && generatedEDN360Plan.general_notes.length > 0 && (
+                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                                      <h4 className="font-semibold text-blue-900 mb-2">📌 Notas Generales</h4>
+                                      <ul className="list-disc list-inside space-y-1 text-sm text-blue-800">
+                                        {generatedEDN360Plan.general_notes.map((note, idx) => (
+                                          <li key={idx}>{note}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+
+                                  {/* Sessions */}
+                                  <div className="space-y-4">
+                                    <h4 className="text-xl font-bold text-gray-900">💪 Sesiones de Entrenamiento</h4>
+                                    {generatedEDN360Plan.sessions && generatedEDN360Plan.sessions.map((session, sessionIdx) => (
+                                      <Card key={sessionIdx} className="border-2 border-blue-300 bg-white">
+                                        <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50 border-b border-blue-200">
+                                          <CardTitle className="text-lg text-blue-900">
+                                            {session.id || `Día ${sessionIdx + 1}`} - {session.name}
+                                          </CardTitle>
+                                          {session.focus && session.focus.length > 0 && (
+                                            <div className="flex flex-wrap gap-2 mt-2">
+                                              {session.focus.map((focus, idx) => (
+                                                <Badge key={idx} variant="secondary" className="bg-blue-100 text-blue-800">
+                                                  {focus}
+                                                </Badge>
+                                              ))}
+                                            </div>
+                                          )}
+                                        </CardHeader>
+                                        <CardContent className="pt-4">
+                                          {/* Session Notes */}
+                                          {session.session_notes && session.session_notes.length > 0 && (
+                                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                                              <p className="text-xs font-semibold text-amber-900 mb-1">📝 Notas de la Sesión:</p>
+                                              <ul className="list-disc list-inside space-y-1 text-xs text-amber-800">
+                                                {session.session_notes.map((note, idx) => (
+                                                  <li key={idx}>{note}</li>
+                                                ))}
+                                              </ul>
+                                            </div>
+                                          )}
+
+                                          {/* Blocks */}
+                                          {session.blocks && session.blocks.map((block, blockIdx) => (
+                                            <div key={blockIdx} className="mb-6 last:mb-0">
+                                              <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-3 rounded-t-lg border-2 border-purple-300 border-b-0">
+                                                <h5 className="font-bold text-purple-900">Bloque {block.id}</h5>
+                                                <div className="flex flex-wrap gap-2 mt-2">
+                                                  {block.primary_muscles && block.primary_muscles.map((muscle, idx) => (
+                                                    <Badge key={idx} className="bg-purple-600 text-white text-xs">
+                                                      💪 {muscle}
+                                                    </Badge>
+                                                  ))}
+                                                  {block.secondary_muscles && block.secondary_muscles.map((muscle, idx) => (
+                                                    <Badge key={idx} variant="outline" className="border-purple-400 text-purple-700 text-xs">
+                                                      {muscle}
+                                                    </Badge>
+                                                  ))}
+                                                </div>
+                                              </div>
+
+                                              {/* Exercises Table */}
+                                              <div className="border-2 border-purple-300 border-t-0 rounded-b-lg overflow-hidden">
+                                                <table className="w-full">
+                                                  <thead className="bg-purple-50 border-b border-purple-200">
+                                                    <tr>
+                                                      <th className="px-3 py-2 text-left text-xs font-semibold text-purple-900">#</th>
+                                                      <th className="px-3 py-2 text-left text-xs font-semibold text-purple-900">Ejercicio</th>
+                                                      <th className="px-3 py-2 text-center text-xs font-semibold text-purple-900">Series</th>
+                                                      <th className="px-3 py-2 text-center text-xs font-semibold text-purple-900">Reps</th>
+                                                      <th className="px-3 py-2 text-center text-xs font-semibold text-purple-900">RPE</th>
+                                                      <th className="px-3 py-2 text-center text-xs font-semibold text-purple-900">Video</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody className="bg-white divide-y divide-purple-100">
+                                                    {block.exercises && block.exercises.map((exercise, exIdx) => (
+                                                      <tr key={exIdx} className="hover:bg-purple-50 transition-colors">
+                                                        <td className="px-3 py-3 text-sm font-medium text-gray-900">{exercise.order}</td>
+                                                        <td className="px-3 py-3">
+                                                          <p className="text-sm font-semibold text-gray-900">{exercise.name}</p>
+                                                          <p className="text-xs text-gray-500">
+                                                            {exercise.primary_group}
+                                                            {exercise.secondary_group && ` / ${exercise.secondary_group}`}
+                                                          </p>
+                                                        </td>
+                                                        <td className="px-3 py-3 text-center text-sm font-semibold text-gray-900">{exercise.series}</td>
+                                                        <td className="px-3 py-3 text-center text-sm text-gray-700">{exercise.reps}</td>
+                                                        <td className="px-3 py-3 text-center text-sm font-semibold text-blue-700">{exercise.rpe}</td>
+                                                        <td className="px-3 py-3 text-center">
+                                                          {exercise.video_url && (
+                                                            <a
+                                                              href={exercise.video_url}
+                                                              target="_blank"
+                                                              rel="noopener noreferrer"
+                                                              className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                                                            >
+                                                              <ExternalLink className="h-3 w-3" />
+                                                              Ver
+                                                            </a>
+                                                          )}
+                                                        </td>
+                                                      </tr>
+                                                    ))}
+                                                  </tbody>
+                                                </table>
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </CardContent>
+                                      </Card>
+                                    ))}
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            </div>
+                          )}
+                          
                           {/* Existing Training Plans */}
                           {trainingPlans.length > 0 ? (
                             <div className="space-y-4">
