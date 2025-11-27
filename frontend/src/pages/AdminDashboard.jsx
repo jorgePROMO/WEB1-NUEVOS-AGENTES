@@ -2807,7 +2807,7 @@ const AdminDashboard = () => {
                             Chat
                           </Button>
                           
-                          {/* Templates Button */}
+                          {/* BOTONES DE PRUEBA OCULTOS TEMPORALMENTE
                           <Button
                             size="sm"
                             variant="outline"
@@ -2818,7 +2818,6 @@ const AdminDashboard = () => {
                             Templates
                           </Button>
                           
-                          {/* EDN360 Input Button - FASE 2 */}
                           <Button
                             size="sm"
                             variant="outline"
@@ -2829,7 +2828,6 @@ const AdminDashboard = () => {
                             Ver EDN360 Input
                           </Button>
                           
-                          {/* EDN360 Workflow Test Button - FASE 3 */}
                           <Button
                             size="sm"
                             variant="outline"
@@ -2849,6 +2847,7 @@ const AdminDashboard = () => {
                               </>
                             )}
                           </Button>
+                          FIN BOTONES DE PRUEBA */}
                           
                           {selectedClient.subscription?.payment_status === 'pending' && (
                             <Button
