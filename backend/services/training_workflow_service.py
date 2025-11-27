@@ -202,9 +202,15 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         # VALIDAR ESTRUCTURA
         # ============================================
         if "client_training_program_enriched" not in workflow_response:
+            # Loggear el contenido completo si hay un error
+            logger.error(f"❌ Respuesta NO contiene 'client_training_program_enriched'")
+            logger.error(f"📦 Claves recibidas: {list(workflow_response.keys())}")
+            logger.error(f"📄 Contenido completo: {json.dumps(workflow_response, indent=2)[:1000]}")
+            
             raise Exception(
                 f"La respuesta no contiene 'client_training_program_enriched'. "
-                f"Claves recibidas: {list(workflow_response.keys())}"
+                f"Claves recibidas: {list(workflow_response.keys())}. "
+                f"Respuesta: {json.dumps(workflow_response, indent=2)[:500]}"
             )
         
         logger.info(
