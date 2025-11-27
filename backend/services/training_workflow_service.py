@@ -21,6 +21,7 @@ from datetime import datetime
 
 # Configuración
 EDN360_OPENAI_API_KEY = os.getenv('EDN360_OPENAI_API_KEY')
+EDN360_CORE_ASSISTANT_ID = os.getenv('EDN360_CORE_ASSISTANT_ID')
 EDN360_TRAINING_WORKFLOW_ID = os.getenv('EDN360_TRAINING_WORKFLOW_ID')
 
 # Logger
