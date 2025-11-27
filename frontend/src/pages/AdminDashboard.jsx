@@ -3847,42 +3847,54 @@ const AdminDashboard = () => {
                             </Card>
                           )}
                           
-                          {/* ⚠️ GENERACIÓN DE PLANES TEMPORALMENTE DESHABILITADA */}
+                          {/* ✅ GENERACIÓN EDN360 - CUESTIONARIOS DISPONIBLES */}
                           {questionnaireSubmissions.length > 0 && (
                             <div className="mb-6">
-                              <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-yellow-400 rounded-lg p-4">
-                                <h3 className="text-xl font-bold text-yellow-800 mb-3 flex items-center gap-2">
-                                  ⚠️ Sistema en Migración
-                                  <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">
-                                    Actualización
-                                  </span>
+                              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-lg p-4">
+                                <h3 className="text-xl font-bold text-blue-900 mb-3 flex items-center gap-2">
+                                  📋 Cuestionarios
+                                  <Badge className="bg-blue-500 text-white">
+                                    {questionnaireSubmissions.length}
+                                  </Badge>
                                 </h3>
                                 
                                 <div className="space-y-3">
                                   {questionnaireSubmissions.map((submission) => (
-                                    <Card key={submission.id} className="border-yellow-200 bg-white">
+                                    <Card key={submission.id} className="border-blue-200 bg-white hover:shadow-md transition-shadow">
                                       <CardHeader>
-                                        <div className="flex justify-between items-center">
+                                        <div className="flex justify-between items-center gap-4">
                                           <div className="flex-1">
-                                            <CardTitle className="text-lg text-gray-800">
-                                              📋 Cuestionario Disponible
+                                            <CardTitle className="text-lg text-gray-800 flex items-center gap-2">
+                                              📝 {submission.source === 'initial' ? 'Cuestionario Inicial' : 'Seguimiento'}
                                             </CardTitle>
-                                            <p className="text-sm text-gray-500 mb-2">
+                                            <p className="text-sm text-gray-500 mt-1">
                                               Enviado el {new Date(submission.submitted_at).toLocaleDateString('es-ES', {
                                                 day: 'numeric',
                                                 month: 'long',
-                                                year: 'numeric'
+                                                year: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
                                               })}
                                             </p>
-                                            <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
-                                              <p className="text-sm text-yellow-800 font-medium">
-                                                ⚠️ La generación automática de planes está temporalmente deshabilitada mientras migramos al nuevo sistema EDN360 con arquitectura mejorada.
-                                              </p>
-                                              <p className="text-xs text-yellow-700 mt-1">
-                                                Los cuestionarios se guardan correctamente y estarán disponibles cuando el nuevo sistema esté listo.
-                                              </p>
-                                            </div>
                                           </div>
+                                          
+                                          <Button
+                                            onClick={() => generateEDN360TrainingPlan(submission.id)}
+                                            disabled={generatingEDN360Plan}
+                                            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-md disabled:opacity-50"
+                                          >
+                                            {generatingEDN360Plan ? (
+                                              <>
+                                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                                Generando...
+                                              </>
+                                            ) : (
+                                              <>
+                                                <Dumbbell className="h-4 w-4 mr-2" />
+                                                Generar plan (EDN360)
+                                              </>
+                                            )}
+                                          </Button>
                                         </div>
                                       </CardHeader>
                                     </Card>
