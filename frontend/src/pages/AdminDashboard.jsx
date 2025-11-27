@@ -1143,6 +1143,28 @@ const AdminDashboard = () => {
     }
   };
 
+
+  // Load EDN360 questionnaires from client_drawers
+  const loadEDN360Questionnaires = async (userId) => {
+    try {
+      const response = await axios.get(`${API}/admin/users/${userId}/edn360-questionnaires`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      
+      const edn360Questionnaires = response.data.questionnaires || [];
+      
+      // Si hay cuestionarios EDN360, usarlos
+      if (edn360Questionnaires.length > 0) {
+        setQuestionnaireSubmissions(edn360Questionnaires);
+        console.log('✅ Cuestionarios EDN360 cargados:', edn360Questionnaires.length);
+      }
+    } catch (error) {
+      console.error('Error loading EDN360 questionnaires:', error);
+    }
+  };
+
+
   // Save nutrition plan changes
   const saveNutritionChanges = async () => {
     const planToUse = modalPlan || selectedPlan;
