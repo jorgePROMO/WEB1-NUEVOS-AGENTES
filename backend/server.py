@@ -9645,13 +9645,18 @@ async def get_user_edn360_questionnaires(user_id: str, request: Request):
         # Obtener BD de EDN360 App
         edn360_db = mongodb_client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
         
+        logger.info(f"🔍 [EDN360] Buscando cuestionarios para user_id: {user_id}")
+        
         # Buscar client_drawer del usuario
         client_drawer = await edn360_db.client_drawers.find_one(
             {"user_id": user_id},
             {"services.shared_questionnaires": 1}
         )
         
+        logger.info(f"📦 [EDN360] Client drawer encontrado: {client_drawer is not None}")
+        
         if not client_drawer:
+            logger.warning(f"⚠️ [EDN360] No se encontró client_drawer para user_id: {user_id}")
             return {"questionnaires": []}
         
         # Extraer cuestionarios
