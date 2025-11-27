@@ -9618,6 +9618,100 @@ async def get_user_questionnaires(user_id: str, request: Request):
     return {"questionnaires": questionnaires}
 
 
+
+@api_router.get("/admin/users/{user_id}/edn360-questionnaires")
+async def get_user_edn360_questionnaires(user_id: str, request: Request):
+    """
+    Obtiene cuestionarios desde client_drawers (arquitectura EDN360).
+    
+    Este endpoint lee los cuestionarios guardados en la nueva arquitectura
+    EDN360 (client_drawers.services.shared_questionnaires).
+    
+    Returns:
+        {
+            "questionnaires": [
+                {
+                    "submission_id": "...",
+                    "source": "initial" | "follow_up",
+                    "submitted_at": "2025-11-26T15:03:52Z",
+                    "label": "Cuestionario Inicial (26/11/2025)"
+                }
+            ]
+        }
+    """
+    await require_admin(request)
+    
+    try:
+        # Obtener BD de EDN360 App
+        edn360_db = mongodb_client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        
+        # Buscar client_drawer del usuario
+        client_drawer = await edn360_db.client_drawers.find_one(
+            {"user_id": user_id},
+            {"services.shared_questionnaires": 1}
+        )
+        
+        if not client_drawer:
+            return {"questionnaires": []}
+        
+        # Extraer cuestionarios
+        shared_questionnaires = (
+            client_drawer.get("services", {}).get("shared_questionnaires", [])
+        )
+        
+        if not shared_questionnaires:
+            return {"questionnaires": []}
+        
+        # Formatear cuestionarios para el frontend
+        questionnaires = []
+        for q in shared_questionnaires:
+            # Parsear fecha
+            submitted_at = q.get("submitted_at")
+            if isinstance(submitted_at, str):
+                try:
+                    from datetime import datetime
+                    dt = datetime.fromisoformat(submitted_at.replace('Z', '+00:00'))
+                    date_str = dt.strftime('%d/%m/%Y')
+                    iso_str = submitted_at
+                except:
+                    date_str = "Fecha desconocida"
+                    iso_str = submitted_at
+            elif hasattr(submitted_at, 'strftime'):
+                date_str = submitted_at.strftime('%d/%m/%Y')
+                iso_str = submitted_at.isoformat()
+            else:
+                date_str = "Fecha desconocida"
+                iso_str = str(submitted_at) if submitted_at else ""
+            
+            # Determinar label
+            source = q.get("source", "")
+            if source == "initial" or source == "nutrition_initial":
+                label = f"Cuestionario Inicial ({date_str})"
+            elif source == "follow_up":
+                label = f"Seguimiento ({date_str})"
+            else:
+                label = f"Cuestionario ({date_str})"
+            
+            questionnaires.append({
+                "id": q.get("submission_id"),
+                "submission_id": q.get("submission_id"),
+                "source": source,
+                "submitted_at": iso_str,
+                "label": label
+            })
+        
+        logger.info(
+            f"✅ Cuestionarios EDN360 obtenidos | "
+            f"user_id: {user_id} | count: {len(questionnaires)}"
+        )
+        
+        return {"questionnaires": questionnaires}
+    
+    except Exception as e:
+        logger.error(f"❌ Error obteniendo cuestionarios EDN360: {e}")
+        return {"questionnaires": []}
+
+
 @api_router.get("/admin/users/{user_id}/training-plans")
 async def get_user_training_plans(user_id: str, request: Request):
     """Obtiene todos los planes de entrenamiento de un usuario (SOLO planes, sin cuestionarios)"""
