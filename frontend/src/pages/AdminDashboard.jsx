@@ -87,7 +87,8 @@ const AdminDashboard = () => {
 
   // Nutrition states
   const [nutritionPlans, setNutritionPlans] = useState([]); // Array de planes
-  const [questionnaireSubmissions, setQuestionnaireSubmissions] = useState([]); // Array de respuestas pendientes
+  const [questionnaireSubmissions, setQuestionnaireSubmissions] = useState([]); // Array de respuestas pendientes LEGACY
+  const [edn360QuestionnaireSubmissions, setEdn360QuestionnaireSubmissions] = useState([]); // EDN360 questionnaires
   const [selectedPlan, setSelectedPlan] = useState(null); // Plan seleccionado actualmente
   const [selectedSubmission, setSelectedSubmission] = useState(null); // Submission seleccionada
   const [editingNutrition, setEditingNutrition] = useState(false);
