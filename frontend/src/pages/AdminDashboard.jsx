@@ -137,6 +137,10 @@ const AdminDashboard = () => {
   const [workflowResult, setWorkflowResult] = useState(null);
   const [showWorkflowResultModal, setShowWorkflowResultModal] = useState(false);
   
+  // EDN360 Training Plan Generation - NEW FLOW
+  const [generatingEDN360Plan, setGeneratingEDN360Plan] = useState(false);
+  const [generatedEDN360Plan, setGeneratedEDN360Plan] = useState(null);
+  
   // Follow-up Report states
   const [selectedPreviousTrainingForReport, setSelectedPreviousTrainingForReport] = useState(null);
   const [selectedNewTrainingForReport, setSelectedNewTrainingForReport] = useState(null);
