@@ -9664,7 +9664,10 @@ async def get_user_edn360_questionnaires(user_id: str, request: Request):
             client_drawer.get("services", {}).get("shared_questionnaires", [])
         )
         
+        logger.info(f"📋 [EDN360] Cuestionarios en shared_questionnaires: {len(shared_questionnaires)}")
+        
         if not shared_questionnaires:
+            logger.warning(f"⚠️ [EDN360] No hay cuestionarios en shared_questionnaires para user_id: {user_id}")
             return {"questionnaires": []}
         
         # Formatear cuestionarios para el frontend
