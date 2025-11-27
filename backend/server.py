@@ -1035,149 +1035,117 @@ async def verify_payment(user_id: str, request: Request):
 @api_router.post("/training-plan")
 async def generate_training_plan(request: Request):
     """
-    Genera un plan de entrenamiento usando el workflow de Platform (E1-E7.5).
+    Genera un plan de entrenamiento usando el workflow EDN360 (E1-E7.5).
     
-    Este endpoint:
-    1. Recibe un questionnaire_submission con todas las respuestas del usuario
-    2. Sincroniza el cuestionario con client_drawers (dual-write)
+    DISEÑO TO-BE:
+    1. Recibe user_id y questionnaire_submission_id
+    2. Construye EDN360Input desde BD (users + client_drawers)
     3. Llama al workflow de Platform (E1-E7.5)
-    4. Guarda un snapshot en edn360_snapshots
-    5. Devuelve solo el client_training_program_enriched
+    4. Guarda snapshot en edn360_snapshots
+    5. Devuelve solo client_training_program_enriched
     
     Request Body:
     {
-        "questionnaire_submission": {
-            "submission_id": "...",
-            "source": "initial" | "follow_up",
-            "submitted_at": "2025-11-24T20:39:35.848Z",
-            "payload": { ... todas las respuestas ... }
-        }
+        "user_id": "1764016044644335",
+        "questionnaire_submission_id": "1764016775848319"
     }
     
     Response:
     {
         "client_training_program_enriched": {
-            "title": "...",
-            "summary": "...",
+            "title": "Hipertrofia...",
             "sessions": [...],
             ...
         }
     }
     
-    Auth: Usuario autenticado requerido
+    Auth: Admin only
     """
-    # Obtener usuario autenticado
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
-        raise HTTPException(
-            status_code=401,
-            detail="Token de autenticación requerido"
-        )
-    
-    token = auth_header.split(' ')[1]
-    
-    try:
-        # Verificar token y obtener user_id
-        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        user_id = payload.get('user_id')
-        
-        if not user_id:
-            raise HTTPException(status_code=401, detail="Token inválido")
-        
-        # Verificar que el usuario existe
-        user = await db.users.find_one({"_id": user_id})
-        if not user:
-            raise HTTPException(status_code=404, detail="Usuario no encontrado")
-        
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expirado")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Token inválido")
+    # Obtener admin autenticado
+    admin = await require_admin(request)
     
     try:
         # Parsear body
         body = await request.json()
         
-        # Importar modelos
-        from edn360_models.training_plan_models import (
-            TrainingPlanRequest,
-            QuestionnaireSubmission,
-            validate_questionnaire_submission
-        )
+        user_id = body.get("user_id")
+        questionnaire_submission_id = body.get("questionnaire_submission_id")
         
-        # Validar request
-        try:
-            training_request = TrainingPlanRequest(**body)
-        except Exception as e:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Request inválido: {str(e)}"
-            )
-        
-        qs = training_request.questionnaire_submission
-        
-        # Validar questionnaire_submission
-        is_valid, errors = validate_questionnaire_submission(qs)
-        if not is_valid:
+        if not user_id or not questionnaire_submission_id:
             raise HTTPException(
                 status_code=400,
                 detail={
-                    "error": "invalid_questionnaire",
-                    "message": "El cuestionario no es válido",
-                    "errors": errors
+                    "error": "missing_fields",
+                    "message": "Se requieren user_id y questionnaire_submission_id"
                 }
             )
         
         logger.info(
             f"🏋️ Generando plan de entrenamiento | "
-            f"user_id: {user_id} | submission_id: {qs.submission_id}"
+            f"admin: {admin['_id']} | user_id: {user_id} | submission_id: {questionnaire_submission_id}"
         )
         
         # ============================================
-        # PASO 1: SINCRONIZAR CON CLIENT_DRAWERS
+        # PASO 1: VALIDAR USUARIO
+        # ============================================
+        user = await db.users.find_one({"_id": user_id})
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "user_not_found",
+                    "message": f"Usuario {user_id} no encontrado"
+                }
+            )
+        
+        # ============================================
+        # PASO 2: CONSTRUIR EDN360INPUT
         # ============================================
         try:
-            from repositories.client_drawer_repository import add_questionnaire_to_drawer
-            from datetime import datetime
+            from services.edn360_input_builder import build_edn360_input_for_user
             
-            # Convertir submitted_at a datetime
-            submitted_at = datetime.fromisoformat(qs.submitted_at.replace('Z', '+00:00'))
+            # Construir EDN360Input completo desde BD
+            # (user_profile + questionnaires desde client_drawers)
+            edn360_input_obj = await build_edn360_input_for_user(user_id)
+            edn360_input = edn360_input_obj.dict()
             
-            # Preparar documento completo para el drawer
-            submission_doc = {
-                "_id": qs.submission_id,
-                "user_id": user_id,
-                "submitted_at": submitted_at,
-                "source": qs.source,
-                "payload": qs.payload
-            }
-            
-            # Sincronizar con client_drawers (idempotente)
-            await add_questionnaire_to_drawer(
-                user_id=user_id,
-                submission_id=qs.submission_id,
-                submitted_at=submitted_at,
-                source=qs.source,
-                raw_payload=submission_doc
+            # Verificar que el submission_id específico está en los questionnaires
+            has_submission = any(
+                q.get("submission_id") == questionnaire_submission_id
+                for q in edn360_input.get("questionnaires", [])
             )
             
-            logger.info(f"✅ Cuestionario sincronizado con client_drawers")
+            if not has_submission:
+                raise HTTPException(
+                    status_code=404,
+                    detail={
+                        "error": "questionnaire_not_found",
+                        "message": f"Cuestionario {questionnaire_submission_id} no encontrado para este usuario"
+                    }
+                )
+            
+            logger.info(f"✅ EDN360Input construido | Cuestionarios: {len(edn360_input['questionnaires'])}")
         
+        except HTTPException:
+            raise
         except Exception as e:
-            logger.warning(f"⚠️ Error sincronizando con client_drawers: {e}")
-            # No bloqueamos el flujo si falla el dual-write
+            logger.error(f"❌ Error construyendo EDN360Input: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": "input_build_error",
+                    "message": f"Error construyendo input: {str(e)}"
+                }
+            )
         
         # ============================================
-        # PASO 2: LLAMAR AL WORKFLOW DE PLATFORM
+        # PASO 3: LLAMAR AL WORKFLOW EDN360
         # ============================================
         try:
             from services.training_workflow_service import call_training_workflow
             
-            # Preparar input para el workflow (questionnaire_submission dict)
-            workflow_input = qs.dict()
-            
             # Llamar al workflow E1-E7.5
-            workflow_response = await call_training_workflow(workflow_input)
+            workflow_response = await call_training_workflow(edn360_input)
             
             logger.info(
                 f"✅ Training workflow ejecutado | "
@@ -1186,6 +1154,22 @@ async def generate_training_plan(request: Request):
         
         except Exception as e:
             logger.error(f"❌ Error ejecutando training workflow: {e}")
+            
+            # Guardar snapshot de error
+            try:
+                from repositories.edn360_snapshot_repository import create_snapshot
+                await create_snapshot(
+                    user_id=user_id,
+                    edn360_input=edn360_input,
+                    workflow_name="training_plan_v1",
+                    workflow_response={"error": str(e)},
+                    status="failed",
+                    error_message=str(e),
+                    version="1.0.0"
+                )
+            except:
+                pass
+            
             raise HTTPException(
                 status_code=500,
                 detail={
@@ -1195,14 +1179,14 @@ async def generate_training_plan(request: Request):
             )
         
         # ============================================
-        # PASO 3: GUARDAR SNAPSHOT
+        # PASO 4: GUARDAR SNAPSHOT (SUCCESS)
         # ============================================
         try:
             from repositories.edn360_snapshot_repository import create_snapshot
             
             snapshot = await create_snapshot(
                 user_id=user_id,
-                edn360_input=workflow_input,
+                edn360_input=edn360_input,
                 workflow_name="training_plan_v1",
                 workflow_response=workflow_response,
                 status="success",
@@ -1216,7 +1200,7 @@ async def generate_training_plan(request: Request):
             # No bloqueamos el flujo si falla el snapshot
         
         # ============================================
-        # PASO 4: DEVOLVER RESPUESTA LIMPIA
+        # PASO 5: DEVOLVER RESPUESTA LIMPIA
         # ============================================
         
         # Extraer solo el client_training_program_enriched
