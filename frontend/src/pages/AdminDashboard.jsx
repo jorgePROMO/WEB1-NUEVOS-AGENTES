@@ -3880,18 +3880,18 @@ const AdminDashboard = () => {
                           )}
                           
                           {/* ✅ GENERACIÓN EDN360 - CUESTIONARIOS DISPONIBLES */}
-                          {questionnaireSubmissions.length > 0 && (
+                          {edn360QuestionnaireSubmissions.length > 0 && (
                             <div className="mb-6">
                               <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-lg p-4">
                                 <h3 className="text-xl font-bold text-blue-900 mb-3 flex items-center gap-2">
-                                  📋 Cuestionarios
+                                  📋 Cuestionarios EDN360
                                   <Badge className="bg-blue-500 text-white">
-                                    {questionnaireSubmissions.length}
+                                    {edn360QuestionnaireSubmissions.length}
                                   </Badge>
                                 </h3>
                                 
                                 <div className="space-y-3">
-                                  {questionnaireSubmissions.map((submission) => (
+                                  {edn360QuestionnaireSubmissions.map((submission) => (
                                     <Card key={submission.id} className="border-blue-200 bg-white hover:shadow-md transition-shadow">
                                       <CardHeader>
                                         <div className="flex justify-between items-center gap-4">
