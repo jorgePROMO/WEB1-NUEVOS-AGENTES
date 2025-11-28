@@ -121,15 +121,14 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         # ============================================
         # ENVIAR MENSAJE AL THREAD
         # ============================================
-        # IMPORTANTE: Incluir "json" en el mensaje para que OpenAI permita response_format='json_object'
-        message_content = f"Please process the following EDN360Input data and respond with a valid JSON object containing the client_training_program_enriched:\n\n{input_json}"
-        
+        # Enviar SOLO el JSON sin texto adicional
+        # El Assistant ya tiene las instrucciones en su system prompt
         client.beta.threads.messages.create(
             thread_id=thread.id,
             role="user",
-            content=message_content
+            content=input_json
         )
-        logger.info("📤 Mensaje enviado al thread")
+        logger.info("📤 EDN360Input JSON enviado al thread")
         
         # ============================================
         # EJECUTAR ASSISTANT (create_and_poll)
