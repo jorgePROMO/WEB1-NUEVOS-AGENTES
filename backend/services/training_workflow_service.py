@@ -134,16 +134,6 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         
         
         # ============================================
-        # PARSEAR JSON
-        # ============================================
-        try:
-            workflow_response = json.loads(response_text)
-        except json.JSONDecodeError as e:
-            logger.error(f"❌ Error parseando JSON: {e}")
-            logger.error(f"Respuesta recibida (primeros 500 chars): {response_text[:500]}")
-            raise Exception(f"El Assistant no devolvió JSON válido: {str(e)}")
-        
-        # ============================================
         # VALIDAR ESTRUCTURA
         # ============================================
         if "client_training_program_enriched" not in workflow_response:
