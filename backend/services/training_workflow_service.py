@@ -92,11 +92,21 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         # ============================================
         logger.info("📤 Enviando EDN360Input al microservicio de workflow...")
         
+        # Función para serializar datetime a ISO string
+        def default_serializer(obj):
+            """Serializa objetos datetime a ISO string"""
+            if isinstance(obj, datetime):
+                return obj.isoformat()
+            return str(obj)
+        
         try:
+            # Serializar payload con manejo de datetime
+            payload_json = json.dumps(edn360_input, default=default_serializer)
+            
             # Timeout de 120 segundos (2 minutos) para dar tiempo al workflow
             workflow_response_raw = requests.post(
                 EDN360_WORKFLOW_SERVICE_URL,
-                json=edn360_input,
+                data=payload_json,
                 headers={"Content-Type": "application/json"},
                 timeout=120
             )
