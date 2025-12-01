@@ -178,69 +178,63 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         logger.info("✅ Mensaje enviado correctamente")
         
         # ============================================
-        # ESPERAR Y OBTENER RESPUESTA DEL WORKFLOW
+        # PASO 3: POLLING - ESPERAR RESPUESTA DEL WORKFLOW
         # ============================================
         logger.info("⏳ Ejecutando Workflow EDN360 (esto puede tardar 1-2 minutos)...")
         
         # Polling: esperar hasta que haya respuesta del assistant
         max_attempts = 60  # 2 minutos máximo (60 intentos x 2 segundos)
-        attempt = 0
+        sleep_seconds = 2
         response_text = None
         
-        while attempt < max_attempts:
-            # Obtener mensajes de la sesión
+        for attempt in range(max_attempts):
+            # Esperar antes de cada intento (excepto el primero)
+            if attempt > 0:
+                time.sleep(sleep_seconds)
+            
+            # Obtener mensajes de la sesión (ordenados desc para obtener los más recientes)
             messages_response = requests.get(
                 f"{chatkit_base_url}/sessions/{session_id}/messages",
                 headers=headers,
+                params={"limit": 50, "order": "desc"},
                 timeout=10
             )
             
             if messages_response.status_code != 200:
                 logger.warning(f"⚠️ Error obteniendo mensajes: {messages_response.status_code}")
-                time.sleep(2)
-                attempt += 1
                 continue
             
             messages_data = messages_response.json()
             messages = messages_data.get('data', [])
             
-            # Buscar último mensaje del assistant
-            assistant_messages = [m for m in messages if m.get('role') == 'assistant']
-            
-            if assistant_messages:
-                # Tomar el último mensaje del assistant
-                final_message = assistant_messages[-1]
-                
-                # Extraer contenido del mensaje
-                content_blocks = final_message.get('content', [])
-                if content_blocks:
-                    # Buscar bloque de texto
+            # Buscar el primer mensaje del assistant con contenido type = "output_text"
+            for message in messages:
+                if message.get('role') == 'assistant':
+                    content_blocks = message.get('content', [])
                     for block in content_blocks:
-                        if block.get('type') == 'text':
+                        # ChatKit puede usar "output_text" o "text" como tipo
+                        if block.get('type') in ['output_text', 'text']:
                             response_text = block.get('text', '')
-                            break
-                
-                if response_text:
-                    logger.info(
-                        f"📥 Respuesta recibida del workflow | "
-                        f"Size: {len(response_text)} chars | "
-                        f"Attempt: {attempt + 1}/{max_attempts}"
-                    )
-                    break
+                            if response_text:
+                                logger.info(
+                                    f"📥 Respuesta recibida del workflow | "
+                                    f"Size: {len(response_text)} chars | "
+                                    f"Attempt: {attempt + 1}/{max_attempts}"
+                                )
+                                break
+                    if response_text:
+                        break
             
-            # Esperar 2 segundos antes del siguiente intento
-            time.sleep(2)
-            attempt += 1
+            if response_text:
+                break
             
             # Log cada 10 intentos para dar feedback
-            if attempt % 10 == 0:
-                logger.info(f"⏳ Esperando respuesta... ({attempt}/{max_attempts} intentos)")
-        
-        if attempt >= max_attempts:
-            raise Exception("Timeout: El workflow no respondió en 2 minutos")
+            if (attempt + 1) % 10 == 0:
+                logger.info(f"⏳ Esperando respuesta... ({attempt + 1}/{max_attempts} intentos)")
         
         if not response_text:
-            raise Exception("El workflow no devolvió contenido")
+            raise Exception(f"Timeout o sin respuesta: El workflow no respondió después de {max_attempts * sleep_seconds} segundos")
+        
         
         # ============================================
         # PARSEAR JSON
