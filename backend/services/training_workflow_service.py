@@ -129,13 +129,15 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         logger.info("📤 EDN360Input JSON enviado al thread")
         
         # ============================================
-        # EJECUTAR ASSISTANT (create_and_poll)
+        # EJECUTAR WORKFLOW (create_and_poll)
         # ============================================
-        logger.info("⏳ Ejecutando Core Assistant EDN360 (esto puede tardar 1-2 minutos)...")
+        logger.info("⏳ Ejecutando Workflow EDN360 (esto puede tardar 1-2 minutos)...")
         
+        # Workflows API: usar el workflow_id como assistant_id
+        # OpenAI Agent Builder workflows son compatibles con Assistants API
         run = client.beta.threads.runs.create_and_poll(
             thread_id=thread.id,
-            assistant_id=EDN360_CORE_ASSISTANT_ID
+            assistant_id=EDN360_TRAINING_WORKFLOW_ID  # workflow_id funciona como assistant_id
         )
         
         logger.info(
