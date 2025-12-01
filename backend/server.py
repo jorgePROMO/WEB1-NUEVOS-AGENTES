@@ -1223,7 +1223,7 @@ async def generate_training_plan(request: Request):
             training_plan_doc = {
                 "user_id": user_id,
                 "questionnaire_submission_id": questionnaire_submission_id,
-                "created_at": datetime.now(timezone.utc),
+                "created_at": datetime.now(timezone.utc).isoformat(),
                 "plan": training_program,
                 "status": "draft",  # draft | sent
                 "version": "1.0.0",
