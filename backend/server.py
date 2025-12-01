@@ -1251,8 +1251,9 @@ async def generate_training_plan(request: Request):
         )
         
         # Devolver solo el training program (sin metadatos internos)
+        # Serializar datetime fields si existen
         return {
-            "client_training_program_enriched": training_program
+            "client_training_program_enriched": _serialize_datetime_fields(training_program)
         }
     
     except HTTPException:
