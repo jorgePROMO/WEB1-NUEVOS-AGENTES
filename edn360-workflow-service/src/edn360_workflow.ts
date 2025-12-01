@@ -49,27 +49,49 @@ export const runWorkflow = async (workflow: WorkflowInput): Promise<any> => {
           focus: ["Fuerza", "Hipertrofia", "Empuje"],
           session_notes: ["Enfoque en técnica perfecta", "No sacrificar forma por peso"],
           warmup: "5-10 min cardio ligero + movilidad articular",
-          exercises: [
+          blocks: [
             {
-              name: "Press Banca Barra",
-              sets: "4",
-              reps: "8-10",
-              rest: "90s",
-              notes: "Control en excéntrica, 2-0-1 tempo"
-            },
-            {
-              name: "Press Militar con Mancuernas",
-              sets: "3",
-              reps: "10-12",
-              rest: "75s",
-              notes: "Mantener core activado"
-            },
-            {
-              name: "Fondos en Paralelas",
-              sets: "3",
-              reps: "10-12",
-              rest: "60s",
-              notes: "Con asistencia si es necesario"
+              id: "Bloque 1",
+              primary_muscles: ["Pectorales", "Deltoides"],
+              secondary_muscles: ["Tríceps"],
+              exercises: [
+                {
+                  order: 1,
+                  name: "Press Banca Barra",
+                  primary_group: "Pecho",
+                  secondary_group: "Hombros",
+                  series: "4",
+                  reps: "8-10",
+                  rpe: "8-9",
+                  rest: "90s",
+                  notes: "Control en excéntrica, 2-0-1 tempo",
+                  video_url: null
+                },
+                {
+                  order: 2,
+                  name: "Press Militar con Mancuernas",
+                  primary_group: "Hombros",
+                  secondary_group: "Tríceps",
+                  series: "3",
+                  reps: "10-12",
+                  rpe: "7-8",
+                  rest: "75s",
+                  notes: "Mantener core activado",
+                  video_url: null
+                },
+                {
+                  order: 3,
+                  name: "Fondos en Paralelas",
+                  primary_group: "Pecho",
+                  secondary_group: "Tríceps",
+                  series: "3",
+                  reps: "10-12",
+                  rpe: "8",
+                  rest: "60s",
+                  notes: "Con asistencia si es necesario",
+                  video_url: null
+                }
+              ]
             }
           ],
           cooldown: "5 min estiramientos estáticos"
@@ -82,27 +104,49 @@ export const runWorkflow = async (workflow: WorkflowInput): Promise<any> => {
           focus: ["Fuerza", "Hipertrofia", "Piernas"],
           session_notes: ["Mantener postura neutral", "Profundidad completa en sentadillas"],
           warmup: "5-10 min cardio + activación glúteos",
-          exercises: [
+          blocks: [
             {
-              name: "Sentadilla Barra",
-              sets: "4",
-              reps: "8-10",
-              rest: "120s",
-              notes: "Profundidad completa, mantener neutro lumbar"
-            },
-            {
-              name: "Prensa 45°",
-              sets: "3",
-              reps: "12-15",
-              rest: "90s",
-              notes: "Rango completo de movimiento"
-            },
-            {
-              name: "Zancadas con Mancuernas",
-              sets: "3",
-              reps: "10 por pierna",
-              rest: "60s",
-              notes: "Alternar piernas"
+              id: "Bloque 1",
+              primary_muscles: ["Cuádriceps", "Glúteos"],
+              secondary_muscles: ["Isquiotibiales", "Core"],
+              exercises: [
+                {
+                  order: 1,
+                  name: "Sentadilla Barra",
+                  primary_group: "Piernas",
+                  secondary_group: "Glúteos",
+                  series: "4",
+                  reps: "8-10",
+                  rpe: "8-9",
+                  rest: "120s",
+                  notes: "Profundidad completa, mantener neutro lumbar",
+                  video_url: null
+                },
+                {
+                  order: 2,
+                  name: "Prensa 45°",
+                  primary_group: "Piernas",
+                  secondary_group: "Glúteos",
+                  series: "3",
+                  reps: "12-15",
+                  rpe: "7-8",
+                  rest: "90s",
+                  notes: "Rango completo de movimiento",
+                  video_url: null
+                },
+                {
+                  order: 3,
+                  name: "Zancadas con Mancuernas",
+                  primary_group: "Piernas",
+                  secondary_group: "Glúteos",
+                  series: "3",
+                  reps: "10 por pierna",
+                  rpe: "7",
+                  rest: "60s",
+                  notes: "Alternar piernas",
+                  video_url: null
+                }
+              ]
             }
           ],
           cooldown: "5 min estiramientos + foam roller"
