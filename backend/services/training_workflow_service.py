@@ -192,15 +192,16 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
                 time.sleep(sleep_seconds)
             
             # Obtener mensajes de la sesión (ordenados desc para obtener los más recientes)
-            messages_response = requests.get(
-                f"{chatkit_base_url}/sessions/{session_id}/messages",
-                headers=headers,
-                params={"limit": 50, "order": "desc"},
-                timeout=10
-            )
-            
-            if messages_response.status_code != 200:
-                logger.warning(f"⚠️ Error obteniendo mensajes: {messages_response.status_code}")
+            try:
+                messages_response = requests.get(
+                    f"{chatkit_base_url}/sessions/{session_id}/messages",
+                    headers=headers,
+                    params={"limit": 50, "order": "desc"},
+                    timeout=10
+                )
+                messages_response.raise_for_status()
+            except requests.exceptions.RequestException as e:
+                logger.warning(f"⚠️ Error obteniendo mensajes: {e}")
                 continue
             
             messages_data = messages_response.json()
