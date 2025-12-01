@@ -162,17 +162,17 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
             ]
         }
         
+        messages_url = f"{chatkit_base_url}/sessions/{session_id}/messages"
+        logger.info(f"📤 POST {messages_url}")
+        
         message_response = requests.post(
-            f"{chatkit_base_url}/sessions/{session_id}/messages",
+            messages_url,
             headers=headers,
             json=message_payload,
             timeout=30
         )
         
-        if message_response.status_code != 200:
-            error_detail = message_response.text
-            logger.error(f"❌ Error enviando mensaje: {error_detail}")
-            raise Exception(f"Error enviando mensaje: {message_response.status_code} - {error_detail}")
+        message_response.raise_for_status()
         
         logger.info("✅ Mensaje enviado correctamente")
         
