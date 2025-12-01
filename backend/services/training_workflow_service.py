@@ -117,29 +117,16 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         )
         
         # ============================================
-        # CREAR SESIÓN CHATKIT CON EL WORKFLOW
+        # PASO 1: CREAR SESIÓN CHATKIT (SIN INPUT)
         # ============================================
         logger.info("🔄 Creando sesión ChatKit con workflow EDN360...")
         
         user_id = edn360_input.get('user_profile', {}).get('user_id', 'edn360_backend')
         
-        # Crear sesión con el workflow y el mensaje inicial
+        # Crear sesión SIN el campo 'input' (ChatKit no lo soporta)
         session_payload = {
             "workflow": {"id": EDN360_TRAINING_WORKFLOW_ID},
-            "user": user_id,
-            "input": {
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "input_text",
-                                "text": input_json_str
-                            }
-                        ]
-                    }
-                ]
-            }
+            "user": user_id
         }
         
         logger.info(f"📤 Creando sesión ChatKit con workflow_id: {EDN360_TRAINING_WORKFLOW_ID}")
@@ -160,6 +147,35 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         session_id = session_data.get('id')
         
         logger.info(f"✅ Sesión ChatKit creada: {session_id}")
+        
+        # ============================================
+        # PASO 2: ENVIAR EDN360INPUT COMO MENSAJE
+        # ============================================
+        logger.info("📤 Enviando EDN360Input como mensaje de usuario...")
+        
+        message_payload = {
+            "role": "user",
+            "content": [
+                {
+                    "type": "input_text",
+                    "text": input_json_str
+                }
+            ]
+        }
+        
+        message_response = requests.post(
+            f"{chatkit_base_url}/sessions/{session_id}/messages",
+            headers=headers,
+            json=message_payload,
+            timeout=30
+        )
+        
+        if message_response.status_code != 200:
+            error_detail = message_response.text
+            logger.error(f"❌ Error enviando mensaje: {error_detail}")
+            raise Exception(f"Error enviando mensaje: {message_response.status_code} - {error_detail}")
+        
+        logger.info("✅ Mensaje enviado correctamente")
         
         # ============================================
         # ESPERAR Y OBTENER RESPUESTA DEL WORKFLOW
