@@ -4046,16 +4046,34 @@ const AdminDashboard = () => {
                                               <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-3 rounded-t-lg border-2 border-purple-300 border-b-0">
                                                 <h5 className="font-bold text-purple-900">Bloque {block.id}</h5>
                                                 <div className="flex flex-wrap gap-2 mt-2">
-                                                  {block.primary_muscles && block.primary_muscles.map((muscle, idx) => (
-                                                    <Badge key={idx} className="bg-purple-600 text-white text-xs">
-                                                      💪 {muscle}
-                                                    </Badge>
-                                                  ))}
-                                                  {block.secondary_muscles && block.secondary_muscles.map((muscle, idx) => (
-                                                    <Badge key={idx} variant="outline" className="border-purple-400 text-purple-700 text-xs">
-                                                      {muscle}
-                                                    </Badge>
-                                                  ))}
+                                                  {(() => {
+                                                    // Proteger primary_muscles
+                                                    const primaryMuscles = Array.isArray(block.primary_muscles)
+                                                      ? block.primary_muscles
+                                                      : block.primary_muscles
+                                                      ? [block.primary_muscles]
+                                                      : [];
+                                                    
+                                                    return primaryMuscles.map((muscle, idx) => (
+                                                      <Badge key={idx} className="bg-purple-600 text-white text-xs">
+                                                        💪 {muscle}
+                                                      </Badge>
+                                                    ));
+                                                  })()}
+                                                  {(() => {
+                                                    // Proteger secondary_muscles
+                                                    const secondaryMuscles = Array.isArray(block.secondary_muscles)
+                                                      ? block.secondary_muscles
+                                                      : block.secondary_muscles
+                                                      ? [block.secondary_muscles]
+                                                      : [];
+                                                    
+                                                    return secondaryMuscles.map((muscle, idx) => (
+                                                      <Badge key={idx} variant="outline" className="border-purple-400 text-purple-700 text-xs">
+                                                        {muscle}
+                                                      </Badge>
+                                                    ));
+                                                  })()}
                                                 </div>
                                               </div>
 
