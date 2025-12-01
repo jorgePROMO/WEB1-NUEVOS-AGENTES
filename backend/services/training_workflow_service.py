@@ -129,19 +129,18 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
             "user": user_id
         }
         
-        logger.info(f"📤 Creando sesión ChatKit con workflow_id: {EDN360_TRAINING_WORKFLOW_ID}")
+        sessions_url = f"{chatkit_base_url}/sessions"
+        logger.info(f"📤 POST {sessions_url}")
+        logger.info(f"   Workflow ID: {EDN360_TRAINING_WORKFLOW_ID}")
         
         session_response = requests.post(
-            f"{chatkit_base_url}/sessions",
+            sessions_url,
             headers=headers,
             json=session_payload,
             timeout=30
         )
         
-        if session_response.status_code != 200:
-            error_detail = session_response.text
-            logger.error(f"❌ Error creando sesión ChatKit: {error_detail}")
-            raise Exception(f"Error creando sesión ChatKit: {session_response.status_code} - {error_detail}")
+        session_response.raise_for_status()
         
         session_data = session_response.json()
         session_id = session_data.get('id')
