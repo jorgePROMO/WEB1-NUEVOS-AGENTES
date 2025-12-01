@@ -149,15 +149,18 @@ backend:
 
   - task: "EDN360 Orchestrator v1"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/services/edn360_orchestrator_v1.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Orquestador run_edn360_workflow_for_user() implementado. Flujo: 1) Construye EDN360Input usando build_edn360_input_for_user() (FASE 2), 2) Llama a call_edn360_workflow(), 3) Crea snapshot inmutable (success o failed), 4) Devuelve resumen ligero (snapshot_id, status, created_at, workflow_name, has_response). Maneja errores: EDN360NoDrawerError, EDN360NoQuestionnaireError, errores de OpenAI. Siempre devuelve resultado (nunca lanza excepciones). NO modifica training_plans ni nutrition_plans."
+        - working: true
+          agent: "testing"
+          comment: "✅ VERIFIED: Backend logs confirm EDN360 orchestrator working correctly. Multiple successful executions logged: '✅ Training Workflow ejecutado exitosamente | Sessions: 2' for both Jorge1 (1764016044644335) and Jorge2 (1764168881795908). Snapshots created successfully with status: success. Plans saved to training_plans_v2 collection. No errors detected in workflow execution."
 
   - task: "Admin Endpoint - Run Workflow"
     implemented: true
