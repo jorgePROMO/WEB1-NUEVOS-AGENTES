@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://trainplan-admin.preview.emergentagent.com
+**URL Actual:** https://fitplan-creator-7.preview.emergentagent.com
 
 ---
 
