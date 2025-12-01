@@ -4020,13 +4020,22 @@ const AdminDashboard = () => {
                                         </CardHeader>
                                         <CardContent className="pt-4">
                                           {/* Session Notes */}
-                                          {session.session_notes && session.session_notes.length > 0 && (
+                                          {session.session_notes && (
                                             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
                                               <p className="text-xs font-semibold text-amber-900 mb-1">📝 Notas de la Sesión:</p>
                                               <ul className="list-disc list-inside space-y-1 text-xs text-amber-800">
-                                                {session.session_notes.map((note, idx) => (
-                                                  <li key={idx}>{note}</li>
-                                                ))}
+                                                {(() => {
+                                                  // Hacer robusto: convertir session_notes a array si no lo es
+                                                  const notesArray = Array.isArray(session.session_notes)
+                                                    ? session.session_notes
+                                                    : typeof session.session_notes === 'string'
+                                                    ? [session.session_notes]
+                                                    : [];
+                                                  
+                                                  return notesArray.map((note, idx) => (
+                                                    <li key={idx}>{note}</li>
+                                                  ));
+                                                })()}
                                               </ul>
                                             </div>
                                           )}
