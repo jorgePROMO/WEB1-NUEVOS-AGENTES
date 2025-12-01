@@ -215,10 +215,7 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "EDN360 Orchestrator v1"
-    - "Admin Endpoint - Run Workflow"
-    - "EDN360 Workflow Launch Button"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
