@@ -1,8 +1,8 @@
 """
-Training Workflow Service - Integración con OpenAI ChatKit (Agent Builder Workflows)
+Training Workflow Service - Integración con Microservicio Node.js (OpenAI Agents SDK)
 
 Este servicio implementa la llamada al workflow de entrenamiento EDN360
-usando ChatKit REST API para workflows de Agent Builder.
+usando un microservicio Node.js que ejecuta el SDK de Agentes de OpenAI.
 
 Contrato:
 - INPUT: EDN360Input (user_profile + questionnaires + context)
@@ -16,13 +16,14 @@ import os
 import json
 import logging
 import requests
-import time
 from typing import Dict, Any
 from datetime import datetime
 
 # Configuración
-EDN360_OPENAI_API_KEY = os.getenv('EDN360_OPENAI_API_KEY')
-EDN360_TRAINING_WORKFLOW_ID = os.getenv('EDN360_TRAINING_WORKFLOW_ID')
+EDN360_WORKFLOW_SERVICE_URL = os.getenv(
+    'EDN360_WORKFLOW_SERVICE_URL',
+    'http://localhost:4000/api/edn360/run-training-workflow'
+)
 
 # Logger
 logger = logging.getLogger(__name__)
