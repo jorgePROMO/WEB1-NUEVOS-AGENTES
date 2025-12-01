@@ -1806,7 +1806,7 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
         }
       ]
     );
-    conversationHistory.push(...e6ExerciseNormalizerDbMapperResultTemp.newItems.map((item) => item.rawItem));
+    conversationHistory.push(...e6ExerciseNormalizerDbMapperResultTemp.newItems.map((item: any) => item.rawItem));
 
     if (!e6ExerciseNormalizerDbMapperResultTemp.finalOutput) {
         throw new Error("Agent result is undefined");
