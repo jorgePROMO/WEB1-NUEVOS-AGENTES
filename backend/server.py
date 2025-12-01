@@ -1218,7 +1218,7 @@ async def generate_training_plan(request: Request):
             from datetime import datetime, timezone
             
             # Obtener BD de EDN360 App
-            edn360_db = mongodb_client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+            edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
             
             training_plan_doc = {
                 "user_id": user_id,
