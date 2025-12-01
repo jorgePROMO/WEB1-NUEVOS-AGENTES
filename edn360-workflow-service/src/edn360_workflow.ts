@@ -1753,7 +1753,7 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
         }
       ]
     );
-    conversationHistory.push(...e4TrainingPlanGeneratorResultTemp.newItems.map((item) => item.rawItem));
+    conversationHistory.push(...e4TrainingPlanGeneratorResultTemp.newItems.map((item: any) => item.rawItem));
 
     if (!e4TrainingPlanGeneratorResultTemp.finalOutput) {
         throw new Error("Agent result is undefined");
