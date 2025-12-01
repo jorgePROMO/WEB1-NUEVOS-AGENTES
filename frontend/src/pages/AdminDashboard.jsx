@@ -3999,13 +3999,22 @@ const AdminDashboard = () => {
                                           <CardTitle className="text-lg text-blue-900">
                                             {session.id || `Día ${sessionIdx + 1}`} - {session.name}
                                           </CardTitle>
-                                          {session.focus && session.focus.length > 0 && (
+                                          {session.focus && (
                                             <div className="flex flex-wrap gap-2 mt-2">
-                                              {session.focus.map((focus, idx) => (
-                                                <Badge key={idx} variant="secondary" className="bg-blue-100 text-blue-800">
-                                                  {focus}
-                                                </Badge>
-                                              ))}
+                                              {(() => {
+                                                // Hacer robusto: convertir focus a array si no lo es
+                                                const focusArray = Array.isArray(session.focus)
+                                                  ? session.focus
+                                                  : typeof session.focus === 'string'
+                                                  ? [session.focus]
+                                                  : [];
+                                                
+                                                return focusArray.map((focus, idx) => (
+                                                  <Badge key={idx} variant="secondary" className="bg-blue-100 text-blue-800">
+                                                    {focus}
+                                                  </Badge>
+                                                ));
+                                              })()}
                                             </div>
                                           )}
                                         </CardHeader>
