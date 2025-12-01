@@ -85,9 +85,14 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         )
         
         # ============================================
-        # PREPARAR CLIENTE OPENAI CON CHATKIT
+        # PREPARAR HEADERS PARA CHATKIT REST API
         # ============================================
-        client = OpenAI(api_key=EDN360_OPENAI_API_KEY)
+        chatkit_base_url = "https://api.openai.com/v1/chatkit"
+        headers = {
+            "Authorization": f"Bearer {EDN360_OPENAI_API_KEY}",
+            "Content-Type": "application/json",
+            "OpenAI-Beta": "chatkit_beta=v1"
+        }
         
         # ============================================
         # SERIALIZAR EDN360INPUT
@@ -98,7 +103,7 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
                 return obj.isoformat()
             raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
         
-        input_json = json.dumps(
+        input_json_str = json.dumps(
             edn360_input, 
             indent=2, 
             ensure_ascii=False, 
@@ -107,7 +112,7 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         
         logger.info(
             f"📋 EDN360Input preparado | "
-            f"Size: {len(input_json)} chars | "
+            f"Size: {len(input_json_str)} chars | "
             f"Questionnaires: {len(edn360_input.get('questionnaires', []))}"
         )
         
@@ -116,26 +121,45 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         # ============================================
         logger.info("🔄 Creando sesión ChatKit con workflow EDN360...")
         
-        # Crear sesión vinculada al workflow
-        session = client.chatkit.sessions.create(
-            workflow={"id": EDN360_TRAINING_WORKFLOW_ID},
-            user=edn360_input.get('user_profile', {}).get('user_id', 'unknown')
+        user_id = edn360_input.get('user_profile', {}).get('user_id', 'edn360_backend')
+        
+        # Crear sesión con el workflow y el mensaje inicial
+        session_payload = {
+            "workflow": {"id": EDN360_TRAINING_WORKFLOW_ID},
+            "user": user_id,
+            "input": {
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "input_text",
+                                "text": input_json_str
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+        
+        logger.info(f"📤 Creando sesión ChatKit con workflow_id: {EDN360_TRAINING_WORKFLOW_ID}")
+        
+        session_response = requests.post(
+            f"{chatkit_base_url}/sessions",
+            headers=headers,
+            json=session_payload,
+            timeout=30
         )
         
-        logger.info(f"✅ Sesión ChatKit creada: {session.id}")
+        if session_response.status_code != 200:
+            error_detail = session_response.text
+            logger.error(f"❌ Error creando sesión ChatKit: {error_detail}")
+            raise Exception(f"Error creando sesión ChatKit: {session_response.status_code} - {error_detail}")
         
-        # ============================================
-        # ENVIAR EDN360INPUT COMO MENSAJE DE USUARIO
-        # ============================================
-        logger.info("📤 Enviando EDN360Input al workflow...")
+        session_data = session_response.json()
+        session_id = session_data.get('id')
         
-        client.chatkit.messages.create(
-            session_id=session.id,
-            role="user",
-            content=input_json
-        )
-        
-        logger.info("✅ Mensaje enviado, esperando respuesta del workflow...")
+        logger.info(f"✅ Sesión ChatKit creada: {session_id}")
         
         # ============================================
         # ESPERAR Y OBTENER RESPUESTA DEL WORKFLOW
@@ -143,14 +167,26 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         logger.info("⏳ Ejecutando Workflow EDN360 (esto puede tardar 1-2 minutos)...")
         
         # Polling: esperar hasta que haya respuesta del assistant
-        import time
-        max_attempts = 60  # 2 minutos máximo
+        max_attempts = 60  # 2 minutos máximo (60 intentos x 2 segundos)
         attempt = 0
+        response_text = None
         
         while attempt < max_attempts:
-            # Listar mensajes de la sesión
-            messages_response = client.chatkit.messages.list(session_id=session.id)
-            messages = messages_response.get('data', [])
+            # Obtener mensajes de la sesión
+            messages_response = requests.get(
+                f"{chatkit_base_url}/sessions/{session_id}/messages",
+                headers=headers,
+                timeout=10
+            )
+            
+            if messages_response.status_code != 200:
+                logger.warning(f"⚠️ Error obteniendo mensajes: {messages_response.status_code}")
+                time.sleep(2)
+                attempt += 1
+                continue
+            
+            messages_data = messages_response.json()
+            messages = messages_data.get('data', [])
             
             # Buscar último mensaje del assistant
             assistant_messages = [m for m in messages if m.get('role') == 'assistant']
@@ -158,18 +194,31 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
             if assistant_messages:
                 # Tomar el último mensaje del assistant
                 final_message = assistant_messages[-1]
-                response_text = final_message.get('content', '')
+                
+                # Extraer contenido del mensaje
+                content_blocks = final_message.get('content', [])
+                if content_blocks:
+                    # Buscar bloque de texto
+                    for block in content_blocks:
+                        if block.get('type') == 'text':
+                            response_text = block.get('text', '')
+                            break
                 
                 if response_text:
                     logger.info(
                         f"📥 Respuesta recibida del workflow | "
-                        f"Size: {len(response_text)} chars"
+                        f"Size: {len(response_text)} chars | "
+                        f"Attempt: {attempt + 1}/{max_attempts}"
                     )
                     break
             
             # Esperar 2 segundos antes del siguiente intento
             time.sleep(2)
             attempt += 1
+            
+            # Log cada 10 intentos para dar feedback
+            if attempt % 10 == 0:
+                logger.info(f"⏳ Esperando respuesta... ({attempt}/{max_attempts} intentos)")
         
         if attempt >= max_attempts:
             raise Exception("Timeout: El workflow no respondió en 2 minutos")
