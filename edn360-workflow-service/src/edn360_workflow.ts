@@ -1781,7 +1781,7 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
         }
       ]
     );
-    conversationHistory.push(...e5TrainingPlanValidatorResultTemp.newItems.map((item) => item.rawItem));
+    conversationHistory.push(...e5TrainingPlanValidatorResultTemp.newItems.map((item: any) => item.rawItem));
 
     if (!e5TrainingPlanValidatorResultTemp.finalOutput) {
         throw new Error("Agent result is undefined");
