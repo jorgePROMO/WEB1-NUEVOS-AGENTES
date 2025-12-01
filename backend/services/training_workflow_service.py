@@ -123,7 +123,7 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
             
         except requests.exceptions.Timeout:
             raise Exception(
-                "Timeout: El microservicio no respondió en 2 minutos. "
+                "Timeout: El microservicio no respondió en 5 minutos. "
                 "Verifica que el servicio esté corriendo y que el workflow no tarde demasiado."
             )
         except requests.exceptions.ConnectionError:
