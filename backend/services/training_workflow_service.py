@@ -2,7 +2,7 @@
 Training Workflow Service - Integración con OpenAI ChatKit (Agent Builder Workflows)
 
 Este servicio implementa la llamada al workflow de entrenamiento EDN360
-usando ChatKit SDK para workflows de Agent Builder.
+usando ChatKit REST API para workflows de Agent Builder.
 
 Contrato:
 - INPUT: EDN360Input (user_profile + questionnaires + context)
@@ -15,8 +15,9 @@ Fecha: Diciembre 2025
 import os
 import json
 import logging
+import requests
+import time
 from typing import Dict, Any
-from openai import OpenAI
 from datetime import datetime
 
 # Configuración
