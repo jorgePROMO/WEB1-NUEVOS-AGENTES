@@ -84,7 +84,7 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         )
         
         # ============================================
-        # PREPARAR CLIENTE OPENAI
+        # PREPARAR CLIENTE OPENAI CON CHATKIT
         # ============================================
         client = OpenAI(api_key=EDN360_OPENAI_API_KEY)
         
@@ -111,81 +111,70 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         )
         
         # ============================================
-        # CREAR THREAD
+        # CREAR SESIÓN CHATKIT CON EL WORKFLOW
         # ============================================
-        thread = client.beta.threads.create()
-        logger.info(f"🧵 Thread creado: {thread.id}")
+        logger.info("🔄 Creando sesión ChatKit con workflow EDN360...")
+        
+        # Crear sesión vinculada al workflow
+        session = client.chatkit.sessions.create(
+            workflow={"id": EDN360_TRAINING_WORKFLOW_ID},
+            user=edn360_input.get('user_profile', {}).get('user_id', 'unknown')
+        )
+        
+        logger.info(f"✅ Sesión ChatKit creada: {session.id}")
         
         # ============================================
-        # ENVIAR MENSAJE AL THREAD
+        # ENVIAR EDN360INPUT COMO MENSAJE DE USUARIO
         # ============================================
-        # Enviar SOLO el JSON sin texto adicional
-        # El Assistant ya tiene las instrucciones en su system prompt
-        client.beta.threads.messages.create(
-            thread_id=thread.id,
+        logger.info("📤 Enviando EDN360Input al workflow...")
+        
+        client.chatkit.messages.create(
+            session_id=session.id,
             role="user",
             content=input_json
         )
-        logger.info("📤 EDN360Input JSON enviado al thread")
+        
+        logger.info("✅ Mensaje enviado, esperando respuesta del workflow...")
         
         # ============================================
-        # EJECUTAR WORKFLOW (create_and_poll)
+        # ESPERAR Y OBTENER RESPUESTA DEL WORKFLOW
         # ============================================
         logger.info("⏳ Ejecutando Workflow EDN360 (esto puede tardar 1-2 minutos)...")
         
-        # Workflows API: usar el workflow_id como assistant_id
-        # OpenAI Agent Builder workflows son compatibles con Assistants API
-        run = client.beta.threads.runs.create_and_poll(
-            thread_id=thread.id,
-            assistant_id=EDN360_TRAINING_WORKFLOW_ID  # workflow_id funciona como assistant_id
-        )
+        # Polling: esperar hasta que haya respuesta del assistant
+        import time
+        max_attempts = 60  # 2 minutos máximo
+        attempt = 0
         
-        logger.info(
-            f"🏁 Run completado | "
-            f"Status: {run.status} | "
-            f"Run ID: {run.id}"
-        )
+        while attempt < max_attempts:
+            # Listar mensajes de la sesión
+            messages_response = client.chatkit.messages.list(session_id=session.id)
+            messages = messages_response.get('data', [])
+            
+            # Buscar último mensaje del assistant
+            assistant_messages = [m for m in messages if m.get('role') == 'assistant']
+            
+            if assistant_messages:
+                # Tomar el último mensaje del assistant
+                final_message = assistant_messages[-1]
+                response_text = final_message.get('content', '')
+                
+                if response_text:
+                    logger.info(
+                        f"📥 Respuesta recibida del workflow | "
+                        f"Size: {len(response_text)} chars"
+                    )
+                    break
+            
+            # Esperar 2 segundos antes del siguiente intento
+            time.sleep(2)
+            attempt += 1
         
-        # ============================================
-        # VERIFICAR STATUS
-        # ============================================
-        if run.status != "completed":
-            error_msg = f"Workflow no completado. Status: {run.status}"
-            if hasattr(run, 'last_error') and run.last_error:
-                error_msg += f" | Error: {run.last_error}"
-            raise Exception(error_msg)
+        if attempt >= max_attempts:
+            raise Exception("Timeout: El workflow no respondió en 2 minutos")
         
-        # ============================================
-        # OBTENER MENSAJES DEL THREAD
-        # ============================================
-        messages = client.beta.threads.messages.list(
-            thread_id=thread.id,
-            order="desc"
-        )
-        
-        if not messages.data:
-            raise Exception("No se recibieron mensajes del Assistant")
-        
-        # El último mensaje (primero en orden desc) es la respuesta
-        final_message = messages.data[0]
-        
-        # Extraer contenido del mensaje
-        if not final_message.content or len(final_message.content) == 0:
-            raise Exception("El mensaje del Assistant está vacío")
-        
-        # El contenido es una lista de ContentBlock, tomamos el primero
-        content_block = final_message.content[0]
-        
-        # Verificar que es texto
-        if not hasattr(content_block, 'text'):
-            raise Exception(f"Tipo de contenido inesperado: {type(content_block)}")
-        
-        response_text = content_block.text.value
-        
-        logger.info(
-            f"📥 Respuesta recibida | "
-            f"Size: {len(response_text)} chars"
-        )
+        if not response_text:
+            raise Exception("El workflow no devolvió contenido")
         
         # ============================================
         # PARSEAR JSON
