@@ -80,155 +80,57 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         )
         
         # ============================================
-        # PREPARAR HEADERS PARA CHATKIT REST API
+        # PREPARAR EDN360INPUT
         # ============================================
-        chatkit_base_url = "https://api.openai.com/v1/chatkit"
-        headers = {
-            "Authorization": f"Bearer {EDN360_OPENAI_API_KEY}",
-            "Content-Type": "application/json",
-            "OpenAI-Beta": "chatkit_beta=v1"
-        }
-        
-        # ============================================
-        # SERIALIZAR EDN360INPUT
-        # ============================================
-        def datetime_handler(obj):
-            """Handler para serializar datetime a ISO string"""
-            if isinstance(obj, datetime):
-                return obj.isoformat()
-            raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
-        
-        input_json_str = json.dumps(
-            edn360_input, 
-            indent=2, 
-            ensure_ascii=False, 
-            default=datetime_handler
-        )
-        
         logger.info(
-            f"📋 EDN360Input preparado | "
-            f"Size: {len(input_json_str)} chars | "
+            f"📋 Preparando EDN360Input | "
             f"Questionnaires: {len(edn360_input.get('questionnaires', []))}"
         )
         
         # ============================================
-        # PASO 1: CREAR SESIÓN CHATKIT (SIN INPUT)
+        # LLAMAR AL MICROSERVICIO NODE.JS
         # ============================================
-        logger.info("🔄 Creando sesión ChatKit con workflow EDN360...")
+        logger.info("📤 Enviando EDN360Input al microservicio de workflow...")
         
-        user_id = edn360_input.get('user_profile', {}).get('user_id', 'edn360_backend')
-        
-        # Crear sesión SIN el campo 'input' (ChatKit no lo soporta)
-        session_payload = {
-            "workflow": {"id": EDN360_TRAINING_WORKFLOW_ID},
-            "user": user_id
-        }
-        
-        sessions_url = f"{chatkit_base_url}/sessions"
-        logger.info(f"📤 POST {sessions_url}")
-        logger.info(f"   Workflow ID: {EDN360_TRAINING_WORKFLOW_ID}")
-        
-        session_response = requests.post(
-            sessions_url,
-            headers=headers,
-            json=session_payload,
-            timeout=30
-        )
-        
-        session_response.raise_for_status()
-        
-        session_data = session_response.json()
-        session_id = session_data.get('id')
-        
-        logger.info(f"✅ Sesión ChatKit creada: {session_id}")
-        
-        # ============================================
-        # PASO 2: ENVIAR EDN360INPUT COMO MENSAJE
-        # ============================================
-        logger.info("📤 Enviando EDN360Input como mensaje de usuario...")
-        
-        message_payload = {
-            "role": "user",
-            "content": [
-                {
-                    "type": "input_text",
-                    "text": input_json_str
-                }
-            ]
-        }
-        
-        messages_url = f"{chatkit_base_url}/sessions/{session_id}/messages"
-        logger.info(f"📤 POST {messages_url}")
-        
-        message_response = requests.post(
-            messages_url,
-            headers=headers,
-            json=message_payload,
-            timeout=30
-        )
-        
-        message_response.raise_for_status()
-        
-        logger.info("✅ Mensaje enviado correctamente")
-        
-        # ============================================
-        # PASO 3: POLLING - ESPERAR RESPUESTA DEL WORKFLOW
-        # ============================================
-        logger.info("⏳ Ejecutando Workflow EDN360 (esto puede tardar 1-2 minutos)...")
-        
-        # Polling: esperar hasta que haya respuesta del assistant
-        max_attempts = 60  # 2 minutos máximo (60 intentos x 2 segundos)
-        sleep_seconds = 2
-        response_text = None
-        
-        for attempt in range(max_attempts):
-            # Esperar antes de cada intento (excepto el primero)
-            if attempt > 0:
-                time.sleep(sleep_seconds)
+        try:
+            # Timeout de 120 segundos (2 minutos) para dar tiempo al workflow
+            workflow_response_raw = requests.post(
+                EDN360_WORKFLOW_SERVICE_URL,
+                json=edn360_input,
+                headers={"Content-Type": "application/json"},
+                timeout=120
+            )
             
-            # Obtener mensajes de la sesión (ordenados desc para obtener los más recientes)
-            try:
-                messages_response = requests.get(
-                    f"{chatkit_base_url}/sessions/{session_id}/messages",
-                    headers=headers,
-                    params={"limit": 50, "order": "desc"},
-                    timeout=10
-                )
-                messages_response.raise_for_status()
-            except requests.exceptions.RequestException as e:
-                logger.warning(f"⚠️ Error obteniendo mensajes: {e}")
-                continue
+            workflow_response_raw.raise_for_status()
             
-            messages_data = messages_response.json()
-            messages = messages_data.get('data', [])
+            # Parsear respuesta
+            workflow_response = workflow_response_raw.json()
             
-            # Buscar el primer mensaje del assistant con contenido type = "output_text"
-            for message in messages:
-                if message.get('role') == 'assistant':
-                    content_blocks = message.get('content', [])
-                    for block in content_blocks:
-                        # ChatKit puede usar "output_text" o "text" como tipo
-                        if block.get('type') in ['output_text', 'text']:
-                            response_text = block.get('text', '')
-                            if response_text:
-                                logger.info(
-                                    f"📥 Respuesta recibida del workflow | "
-                                    f"Size: {len(response_text)} chars | "
-                                    f"Attempt: {attempt + 1}/{max_attempts}"
-                                )
-                                break
-                    if response_text:
-                        break
+            logger.info(
+                f"📥 Respuesta recibida del microservicio | "
+                f"Size: {len(json.dumps(workflow_response))} chars"
+            )
             
-            if response_text:
-                break
-            
-            # Log cada 10 intentos para dar feedback
-            if (attempt + 1) % 10 == 0:
-                logger.info(f"⏳ Esperando respuesta... ({attempt + 1}/{max_attempts} intentos)")
-        
-        if not response_text:
-            raise Exception(f"Timeout o sin respuesta: El workflow no respondió después de {max_attempts * sleep_seconds} segundos")
+        except requests.exceptions.Timeout:
+            raise Exception(
+                "Timeout: El microservicio no respondió en 2 minutos. "
+                "Verifica que el servicio esté corriendo y que el workflow no tarde demasiado."
+            )
+        except requests.exceptions.ConnectionError:
+            raise Exception(
+                f"Error de conexión: No se puede conectar al microservicio en {EDN360_WORKFLOW_SERVICE_URL}. "
+                "Verifica que el servicio esté corriendo."
+            )
+        except requests.exceptions.HTTPError as e:
+            error_detail = workflow_response_raw.text if workflow_response_raw else str(e)
+            raise Exception(
+                f"Error HTTP {workflow_response_raw.status_code} del microservicio: {error_detail}"
+            )
+        except json.JSONDecodeError:
+            raise Exception(
+                "El microservicio no devolvió JSON válido. "
+                f"Respuesta: {workflow_response_raw.text[:500]}"
+            )
         
         
         # ============================================
