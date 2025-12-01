@@ -42,9 +42,12 @@ export const runWorkflow = async (workflow: WorkflowInput): Promise<any> => {
       split_type: "upper_lower",
       sessions: [
         {
+          id: "session-1",
+          name: "Tren Superior - Empuje",
           session_number: 1,
           day: "Lunes",
-          focus: "Tren Superior - Empuje",
+          focus: ["Fuerza", "Hipertrofia", "Empuje"],
+          session_notes: ["Enfoque en técnica perfecta", "No sacrificar forma por peso"],
           warmup: "5-10 min cardio ligero + movilidad articular",
           exercises: [
             {
@@ -72,9 +75,12 @@ export const runWorkflow = async (workflow: WorkflowInput): Promise<any> => {
           cooldown: "5 min estiramientos estáticos"
         },
         {
+          id: "session-2",
+          name: "Tren Inferior - Dominante Rodilla",
           session_number: 2,
           day: "Miércoles",
-          focus: "Tren Inferior - Dominante Rodilla",
+          focus: ["Fuerza", "Hipertrofia", "Piernas"],
+          session_notes: ["Mantener postura neutral", "Profundidad completa en sentadillas"],
           warmup: "5-10 min cardio + activación glúteos",
           exercises: [
             {
