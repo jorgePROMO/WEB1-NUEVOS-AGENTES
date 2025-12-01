@@ -1,15 +1,15 @@
 """
-Training Workflow Service - Integración con OpenAI Assistants API (E1-E7.5)
+Training Workflow Service - Integración con OpenAI ChatKit (Agent Builder Workflows)
 
 Este servicio implementa la llamada al workflow de entrenamiento EDN360
-usando la API de Assistants de OpenAI.
+usando ChatKit SDK para workflows de Agent Builder.
 
 Contrato:
 - INPUT: EDN360Input (user_profile + questionnaires + context)
 - OUTPUT: client_training_program_enriched
 
 Referencia: POST /api/training-plan
-Fecha: Noviembre 2025
+Fecha: Diciembre 2025
 """
 
 import os
