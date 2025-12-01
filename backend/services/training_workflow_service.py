@@ -234,8 +234,8 @@ def get_training_workflow_config() -> Dict[str, Any]:
         Dict con configuración actual
     """
     return {
-        "core_assistant_id": EDN360_CORE_ASSISTANT_ID,
         "workflow_id": EDN360_TRAINING_WORKFLOW_ID,
+        "workflow_type": "openai_agent_builder",
         "has_api_key": bool(
             EDN360_OPENAI_API_KEY and 
             EDN360_OPENAI_API_KEY != "TU_API_KEY_AQUI"
@@ -245,6 +245,8 @@ def get_training_workflow_config() -> Dict[str, Any]:
             if EDN360_OPENAI_API_KEY and EDN360_OPENAI_API_KEY != "TU_API_KEY_AQUI" 
             else "NOT_CONFIGURED"
         ),
-        "core_assistant_configured": bool(EDN360_CORE_ASSISTANT_ID),
-        "workflow_id_configured": bool(EDN360_TRAINING_WORKFLOW_ID)
+        "workflow_id_configured": bool(
+            EDN360_TRAINING_WORKFLOW_ID and 
+            EDN360_TRAINING_WORKFLOW_ID != "TU_WORKFLOW_ID_AQUI"
+        )
     }
