@@ -889,7 +889,7 @@ async def get_edn360_input_preview(user_id: str, request: Request):
         return {
             "success": True,
             "user_id": user_id,
-            "edn360_input": edn360_input_json,
+            "edn360_input": _serialize_datetime_fields(edn360_input_json),
             "metadata": {
                 "questionnaires_count": edn360_input.questionnaire_count(),
                 "has_initial": edn360_input.get_initial_questionnaire() is not None,
