@@ -994,7 +994,7 @@ async def admin_run_edn360_workflow(user_id: str, request: Request):
         
         return {
             "success": True,
-            "result": result,
+            "result": _serialize_datetime_fields(result),
             "message": "Workflow EDN360 ejecutado. Snapshot creado en BD."
         }
     
