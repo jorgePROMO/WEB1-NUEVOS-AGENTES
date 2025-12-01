@@ -1694,7 +1694,7 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
         }
       ]
     );
-    conversationHistory.push(...e2ParseQuestionnaireResultTemp.newItems.map((item) => item.rawItem));
+    conversationHistory.push(...e2ParseQuestionnaireResultTemp.newItems.map((item: any) => item.rawItem));
 
     if (!e2ParseQuestionnaireResultTemp.finalOutput) {
         throw new Error("Agent result is undefined");
