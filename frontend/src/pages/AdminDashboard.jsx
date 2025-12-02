@@ -4612,67 +4612,6 @@ const AdminDashboard = () => {
                               );
                             })()}
                             
-                            {/* Cuestionarios EDN360 */}
-                            {selectedClientDetails?.forms?.filter(f => f.type?.startsWith('edn360_')).map((edn360Form, index) => {
-                              const isInitial = edn360Form.questionnaire_type === 'initial';
-                              const data = edn360Form?.data || {};
-                              
-                              return (
-                                <Card
-                                  key={edn360Form.id}
-                                  className="border-2 border-cyan-200 hover:border-cyan-400 transition-all cursor-pointer hover:shadow-lg"
-                                  onClick={() => setSelectedHistoryItem({ type: 'edn360', data: edn360Form })}
-                                >
-                                  <CardHeader className="bg-cyan-50">
-                                    <CardTitle className="text-lg flex items-center gap-2">
-                                      {isInitial ? '🏋️ Cuestionario EDN360 Inicial' : '🔄 Seguimiento EDN360'}
-                                    </CardTitle>
-                                    <p className="text-sm text-gray-600">
-                                      {new Date(edn360Form.submitted_at).toLocaleDateString('es-ES', {
-                                        day: 'numeric',
-                                        month: 'long',
-                                        year: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                      })}
-                                    </p>
-                                  </CardHeader>
-                                  <CardContent>
-                                    <div className="grid grid-cols-2 gap-2 text-sm mb-3">
-                                      <div>
-                                        <div className="font-semibold text-gray-600">Peso</div>
-                                        <div>{data.peso || 'N/A'} kg</div>
-                                      </div>
-                                      <div>
-                                        <div className="font-semibold text-gray-600">Objetivo</div>
-                                        <div className="text-xs">{data.objetivo_fisico || 'N/A'}</div>
-                                      </div>
-                                      <div>
-                                        <div className="font-semibold text-gray-600">Días/semana</div>
-                                        <div>{data.dias_semana_entrenar || 'N/A'}</div>
-                                      </div>
-                                      <div>
-                                        <div className="font-semibold text-gray-600">Nivel</div>
-                                        <div className="text-xs">{data.nivel_deporte || 'N/A'}</div>
-                                      </div>
-                                    </div>
-                                    <div className="flex gap-2">
-                                      <Button 
-                                        variant="outline" 
-                                        className="flex-1"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setSelectedHistoryItem({ type: 'edn360', data: edn360Form });
-                                        }}
-                                      >
-                                        Ver Respuestas
-                                      </Button>
-                                    </div>
-                                  </CardContent>
-                                </Card>
-                              );
-                            })}
-                            
                             {/* Seguimientos Mensuales - Cards */}
                             {followUps.map((followUp, index) => (
                               <Card
