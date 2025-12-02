@@ -140,11 +140,17 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
             raise Exception(
                 f"Error HTTP {workflow_response_raw.status_code} del microservicio: {error_detail}"
             )
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as e:
+            logger.error(f"❌ JSONDecodeError: {str(e)}")
+            logger.error(f"📄 Raw response: {workflow_response_raw.text[:1000]}")
             raise Exception(
                 "El microservicio no devolvió JSON válido. "
                 f"Respuesta: {workflow_response_raw.text[:500]}"
             )
+        except Exception as e:
+            # Capturar cualquier otra excepción no prevista
+            logger.error(f"❌ Excepción inesperada: {type(e).__name__}: {str(e)}")
+            raise
         
         
         # ============================================
