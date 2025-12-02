@@ -1624,6 +1624,46 @@ type WorkflowInput = {
   [key: string]: any;
 };
 
+// Helper function to safely run agents with detailed error logging
+async function runAgentWithLogging(
+  runner: any,
+  agent: any,
+  agentName: string,
+  input: any[]
+) {
+  try {
+    console.log(`\n🚀 Ejecutando ${agentName}...`);
+    const result = await runner.run(agent, input);
+    console.log(`✅ ${agentName} completado`);
+    return result;
+  } catch (error: any) {
+    console.error(`\n❌ ========== ERROR EN ${agentName} ==========`);
+    console.error(`Error type: ${error.constructor.name}`);
+    console.error(`Error message: ${error.message}`);
+    
+    // Intentar extraer información del error
+    if (error.message && error.message.includes('JSON')) {
+      console.error(`\n🔍 Es un error de JSON parsing`);
+      
+      // Si el error menciona una posición, intentar extraer contexto
+      const posMatch = error.message.match(/position (\d+)/);
+      if (posMatch) {
+        const pos = parseInt(posMatch[1]);
+        console.error(`🔍 Posición del error: ${pos}`);
+      }
+    }
+    
+    // Loguear el stack trace
+    if (error.stack) {
+      console.error(`\n📚 Stack trace:`);
+      console.error(error.stack);
+    }
+    
+    console.error(`\n🔍 ========== FIN ERROR ${agentName} ==========\n`);
+    throw error;
+  }
+}
+
 // Main code entrypoint
 export const runWorkflow = async (workflow: WorkflowInput) => {
   // Si ya viene input_as_text lo usamos; si no, convertimos todo el objeto a texto
