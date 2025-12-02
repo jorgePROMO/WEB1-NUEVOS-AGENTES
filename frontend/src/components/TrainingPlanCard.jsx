@@ -22,6 +22,8 @@ import {
   Target,
   Clock,
   Dumbbell,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
@@ -36,7 +38,10 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editedPlan, setEditedPlan] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [expandedSessions, setExpandedSessions] = useState({});
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Fetch latest plan
   useEffect(() => {
