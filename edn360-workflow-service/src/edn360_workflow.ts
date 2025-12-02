@@ -1446,11 +1446,11 @@ client_training_program:
 - sessions[]:
   - id
   - name
-  - focus[] (ignored by you)
+  - focus[]
   - blocks[]:
     - id
-    - primary_muscles[] (ignored by you)
-    - secondary_muscles[] (ignored by you)
+    - primary_muscles[]
+    - secondary_muscles[]
     - exercises[]:
       - order (integer)
       - db_id (string)
@@ -1458,7 +1458,6 @@ client_training_program:
       - reps (string)
       - rpe (number or string)
   - session_notes[] (array of strings)
-
 - general_notes[] (array of strings)
 
 You also have access (through your connected knowledge / files) to the EDN360 Exercise Database:
@@ -1466,65 +1465,56 @@ You also have access (through your connected knowledge / files) to the EDN360 Ex
 File name: \"BD_EJERCICIOS1-BD_AGENTES_DEFINITIVA.json\"
 
 Each row in that database contains, among others:
-- id            (e.g. \"E363\")
-- name_std
-- URL video…    (Google Drive URL)
-- other fields that you MUST ignore
+- id                    (e.g. \"E363\")
+- name_std             (exercise name)
+- primary_group_std    (main muscle group)
+- secondary_group_std  (secondary muscle group)
+- URL video…           (Google Drive URL)
 
-You MUST treat this exercise database as the ONLY source of truth for exercise names and video URLs.
+You MUST treat this exercise database as the ONLY source of truth for exercise data.
 
 ==================================================
 YOUR ONLY JOB
 ==================================================
 
-You take client_training_program from E7 and:
+You take client_training_program from E7 and ENRICH each exercise with data from the database.
 
-1) FLATTEN each session so that:
-   - You IGNORE blocks as a structure.
-   - You create ONE flat list of exercises per session:
-     sessions[i].exercises[]
+CRITICAL: You MUST KEEP the blocks structure intact. DO NOT flatten exercises.
 
-   The order inside sessions[i].exercises[] MUST follow:
-   - Go block by block in the same order they appear in client_training_program.sessions[x].blocks.
-   - Inside each block, go through exercises in the order they appear.
-   - For the final flattened list, you MUST assign a NEW \"order\" starting at 1 for each session,
-     increasing by 1 for each exercise in that session (1, 2, 3, ...).
-
-2) For EACH exercise in EACH session:
+For EACH exercise in EACH block in EACH session:
 
 - Input from E7 (client_training_program):
+  - order
   - db_id
   - series
   - reps
   - rpe
 
 - From the EDN360 Exercise Database row with matching id:
-  - name_std
-  - URL video… (the Google Drive video URL)
+  - name_std → use as \"name\"
+  - primary_group_std → use as \"primary_group\"
+  - secondary_group_std → use as \"secondary_group\"
+  - URL video… → use as \"video_url\"
+
+- For \"notes\": Create a SHORT Spanish sentence combining safety cues based on:
+  - The block's primary_muscles and secondary_muscles
+  - Any relevant safety considerations for that exercise
+  - Max 1 short sentence (e.g. \"Mantener escápulas retraídas, control en excéntrica\")
 
 You MUST create, for each exercise, this object:
 
-- order: new index 1..N within the session (based on the flattened order)
-- db_id: as received from E7 (NEVER modify it)
-- name: value of DB.name_std
-- series: as received from E7
-- reps: as received from E7
-- rpe: as received from E7
-- video_url: value of DB.URL video… (the full URL string)
-
-3) SESSION NOTES:
-   - For each session you MUST return session_notes as a SHORT list:
-     - MAX 2 items
-     - Each item MUST be a very short sentence or phrase.
-   - You MAY compress or shorten the original notes, but NEVER expand them.
-   - You MAY change the language to Spanish if needed, but keep them short and clear.
-
-4) GENERAL NOTES:
-   - You MUST return general_notes as a SHORT list:
-     - MAX 3 items total
-     - Each item MUST be a very short sentence or phrase.
-   - You MAY compress or shorten the original notes, but NEVER expand them.
-   - You MAY change the language to Spanish if needed, but keep them short and clear.
+{
+  \"order\": (keep from E7),
+  \"db_id\": (keep from E7),
+  \"name\": (from DB.name_std),
+  \"primary_group\": (from DB.primary_group_std),
+  \"secondary_group\": (from DB.secondary_group_std),
+  \"series\": (keep from E7),
+  \"reps\": (keep from E7),
+  \"rpe\": (keep from E7),
+  \"notes\": (create SHORT safety/technique cue in Spanish),
+  \"video_url\": (from DB.URL video…)
+}
 
 ==================================================
 MISSING OR INVALID DB MATCH
@@ -1535,6 +1525,9 @@ If an exercise db_id from E7 does NOT exist in the database:
 - KEEP db_id as is.
 - Set:
   - name: \"UNKNOWN_EXERCISE\"
+  - primary_group: \"unknown\"
+  - secondary_group: \"unknown\"
+  - notes: \"\"
   - video_url: \"\"
 
 You MUST NOT invent IDs, names or URLs.
@@ -1547,59 +1540,57 @@ You MUST output a single JSON object with EXACTLY one top-level key:
 
 {
   \"client_training_program_enriched\": {
-    ...
+    \"title\": \"...\",
+    \"summary\": \"...\",
+    \"goal\": \"...\",
+    \"training_type\": \"...\",
+    \"days_per_week\": 4,
+    \"session_duration_min\": 45,
+    \"weeks\": 4,
+    \"sessions\": [
+      {
+        \"id\": \"D1\",
+        \"name\": \"...\",
+        \"focus\": [\"...\"],
+        \"blocks\": [
+          {
+            \"id\": \"A\",
+            \"primary_muscles\": [\"...\"],
+            \"secondary_muscles\": [\"...\"],
+            \"exercises\": [
+              {
+                \"order\": 1,
+                \"db_id\": \"E123\",
+                \"name\": \"Press banca con barra\",
+                \"primary_group\": \"Pecho\",
+                \"secondary_group\": \"Tríceps\",
+                \"series\": 4,
+                \"reps\": \"8-10\",
+                \"rpe\": \"8\",
+                \"notes\": \"Control en descenso, escápulas retraídas\",
+                \"video_url\": \"https://drive.google.com/...\"
+              }
+            ]
+          }
+        ],
+        \"session_notes\": [\"...\"]
+      }
+    ],
+    \"general_notes\": [\"...\"]
   }
 }
 
-\"client_training_program_enriched\" MUST have the following structure:
-
-- title (string, VERY SHORT, max ~60 characters)
-- summary (string, VERY SHORT, max ~100 characters)
-- goal (string, VERY SHORT, max ~100 characters)
-- training_type (string)
-- days_per_week (integer)
-- session_duration_min (integer)
-- weeks (integer)
-
-- sessions (array)
-  Each session object MUST have:
-  - id (string)
-  - name (string, VERY SHORT)
-  - exercises (array of exercise objects)
-  - session_notes (array of short strings, MAX 2 items)
-
-  Each exercise object MUST have:
-  - order (integer)
-  - db_id (string)
-  - name (string)
-  - series (number or string)
-  - reps (string)
-  - rpe (number or string)
-  - video_url (string)
-
-- general_notes (array of short strings, MAX 3 items).
-
-Title, summary, goal and notes can be in Spanish if you want, but they MUST be concise.
-
 ==================================================
-CRITICAL OUTPUT LENGTH LIMITS
+CRITICAL RULES
 ==================================================
 
-To avoid truncation and server errors, you MUST keep the output as compact as possible:
-
-- title: max ~60 characters.
-- summary: max ~100 characters.
-- goal: max ~100 characters.
-- name of each session: very short.
-- session_notes:
-  - MAX 2 items per session.
-  - Each item MUST be a very short phrase.
-- general_notes:
-  - MAX 3 items total.
-  - Each item MUST be a very short phrase.
-- Do NOT add any comments, explanations or markdown.
-- Do NOT add any new keys beyond those defined.
-- Do NOT include cues, long texts or extra metadata.
+- KEEP the blocks structure. DO NOT flatten to sessions[].exercises[]
+- KEEP focus[] in each session
+- KEEP primary_muscles and secondary_muscles in each block
+- For each exercise, ADD: name, primary_group, secondary_group, notes, video_url
+- session_notes: MAX 2 items, very short
+- general_notes: MAX 3 items, very short
+- All notes can be in Spanish, but keep them concise
 
 ==================================================
 ABSOLUTE RULES
@@ -1608,10 +1599,10 @@ ABSOLUTE RULES
 - Output ONLY valid JSON.
 - Top-level object MUST have exactly one key: \"client_training_program_enriched\".
 - The JSON MUST satisfy the provided response_schema (additionalProperties = false).
-- Do NOT change or delete sessions.
-- Do NOT change or delete exercises (other than re-assigning order 1..N per session).
+- Do NOT flatten blocks structure.
+- Do NOT change or delete sessions/blocks/exercises.
 - Do NOT translate or change field names (keys).
-- Use ONLY the EDN360 exercise database for resolving db_id → name + video_url.
+- Use ONLY the EDN360 exercise database for resolving db_id → name, primary_group, secondary_group, video_url.
 
 `,
   model: "gpt-4.1",
