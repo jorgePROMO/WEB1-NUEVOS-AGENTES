@@ -1852,6 +1852,30 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
     );
     conversationHistory.push(...e75TrainingPlanEnricherResultTemp.newItems.map((item: any) => item.rawItem));
 
+    // 🔍 DEBUG: Loguear el raw output ANTES de validar con Zod
+    console.log('\n\n🔍 ========== E7.5 RAW OUTPUT DEBUG ==========');
+    console.log('🔍 Agent: E7.5 – Training Plan Enricher');
+    
+    // Intentar extraer el raw text del último item de conversación
+    if (e75TrainingPlanEnricherResultTemp.newItems && e75TrainingPlanEnricherResultTemp.newItems.length > 0) {
+      const lastItem = e75TrainingPlanEnricherResultTemp.newItems[e75TrainingPlanEnricherResultTemp.newItems.length - 1];
+      
+      // Loguear la estructura completa del último item
+      console.log('🔍 Last item structure:');
+      console.log(JSON.stringify(lastItem, null, 2));
+      
+      // Intentar obtener el contenido raw
+      if (lastItem.rawItem && lastItem.rawItem.content) {
+        console.log('🔍 Raw content from lastItem:');
+        console.log(JSON.stringify(lastItem.rawItem.content, null, 2));
+      }
+    }
+    
+    // Loguear el finalOutput (ya parseado por Zod o intentado)
+    console.log('🔍 finalOutput (parsed or attempted):');
+    console.log(JSON.stringify(e75TrainingPlanEnricherResultTemp.finalOutput, null, 2).substring(0, 2000));
+    console.log('🔍 ========== END DEBUG ==========\n\n');
+
     if (!e75TrainingPlanEnricherResultTemp.finalOutput) {
         throw new Error("Agent result is undefined");
     }
