@@ -1851,8 +1851,10 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
       output_text: JSON.stringify(e6ExerciseNormalizerDbMapperResultTemp.finalOutput),
       output_parsed: e6ExerciseNormalizerDbMapperResultTemp.finalOutput
     };
-    const e7TrainingPlanAssemblerResultTemp = await runner.run(
+    const e7TrainingPlanAssemblerResultTemp = await runAgentWithLogging(
+      runner,
       e7TrainingPlanAssembler,
+      "E7 – Training Plan Assembler",
       [
         ...conversationHistory,
         {
