@@ -456,39 +456,39 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                 <h3 className="text-base font-bold text-gray-900">Sesiones de Entrenamiento</h3>
                 
                 {editedPlan.plan.sessions.map((session, sessionIdx) => (
-                  <Card key={sessionIdx} className="border-2 border-blue-200">
+                  <Card key={sessionIdx} className="border border-blue-200">
                     <CardHeader
-                      className="cursor-pointer hover:bg-blue-50 transition-colors"
+                      className="cursor-pointer hover:bg-blue-50 transition-colors py-3"
                       onClick={() => toggleSession(sessionIdx)}
                     >
                       <div className="flex justify-between items-center">
-                        <CardTitle className="text-lg text-blue-900">
+                        <CardTitle className="text-sm font-semibold text-blue-900">
                           {session.id} - {session.name}
                         </CardTitle>
                         {expandedSessions[sessionIdx] ? (
-                          <ChevronUp className="h-5 w-5 text-blue-600" />
+                          <ChevronUp className="h-4 w-4 text-blue-600" />
                         ) : (
-                          <ChevronDown className="h-5 w-5 text-blue-600" />
+                          <ChevronDown className="h-4 w-4 text-blue-600" />
                         )}
                       </div>
                     </CardHeader>
 
                     {expandedSessions[sessionIdx] && (
-                      <CardContent className="pt-4 space-y-4">
+                      <CardContent className="pt-3 space-y-3">
                         {/* Session Blocks */}
                         {session.blocks.map((block, blockIdx) => (
-                          <div key={blockIdx} className="bg-gray-50 p-4 rounded-lg space-y-3">
-                            <h4 className="font-semibold text-gray-800">
+                          <div key={blockIdx} className="bg-gray-50 p-3 rounded-lg space-y-2">
+                            <h4 className="text-sm font-semibold text-gray-800">
                               Bloque {block.id} - {block.primary_muscles.join(', ')}
                             </h4>
 
                             {/* Exercises */}
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                               {block.exercises.map((exercise, exerciseIdx) => (
-                                <div key={exerciseIdx} className="bg-white p-3 rounded border border-gray-200">
+                                <div key={exerciseIdx} className="bg-white p-2 rounded border border-gray-200">
                                   <div className="grid grid-cols-12 gap-2 items-start">
                                     <div className="col-span-1 flex items-center justify-center">
-                                      <span className="text-sm font-bold text-gray-500">
+                                      <span className="text-xs font-bold text-gray-500">
                                         {exercise.order}
                                       </span>
                                     </div>
@@ -496,7 +496,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                       <Input
                                         value={exercise.name}
                                         onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'name', e.target.value)}
-                                        className="text-sm"
+                                        className="text-xs h-8"
                                         placeholder="Nombre del ejercicio"
                                       />
                                     </div>
@@ -504,7 +504,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                       <Input
                                         value={exercise.series}
                                         onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'series', e.target.value)}
-                                        className="text-sm"
+                                        className="text-xs h-8"
                                         placeholder="Series"
                                       />
                                     </div>
@@ -512,7 +512,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                       <Input
                                         value={exercise.reps}
                                         onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'reps', e.target.value)}
-                                        className="text-sm"
+                                        className="text-xs h-8"
                                         placeholder="Reps"
                                       />
                                     </div>
@@ -520,7 +520,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                       <Input
                                         value={exercise.rpe}
                                         onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'rpe', e.target.value)}
-                                        className="text-sm"
+                                        className="text-xs h-8"
                                         placeholder="RPE"
                                       />
                                     </div>
@@ -529,7 +529,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                     <Textarea
                                       value={exercise.notes}
                                       onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'notes', e.target.value)}
-                                      className="text-sm"
+                                      className="text-xs"
                                       placeholder="Notas del ejercicio"
                                       rows={1}
                                     />
