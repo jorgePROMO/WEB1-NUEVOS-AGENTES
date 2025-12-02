@@ -811,6 +811,10 @@ async def get_client_details(user_id: str, request: Request):
     # Get nutrition questionnaire submissions and add as 'nutrition' type form
     nutrition_submissions = await db.nutrition_questionnaire_submissions.find({"user_id": user_id}).to_list(100)
     
+    # Get EDN360 questionnaires from client_drawers
+    edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+    client_drawer = await edn360_db.client_drawers.find_one({'_id': f'client_{user_id}'})
+    
     for form in forms:
         form["id"] = str(form["_id"])
     for pdf in pdfs:
@@ -838,6 +842,26 @@ async def get_client_details(user_id: str, request: Request):
             "plan_id": submission.get("plan_id")
         }
         forms.append(nutrition_form)
+    
+    # Add EDN360 questionnaires to forms list with type 'edn360_initial' or 'edn360_followup'
+    if client_drawer and client_drawer.get('shared_questionnaires'):
+        for questionnaire in client_drawer['shared_questionnaires']:
+            submitted_at = questionnaire.get("submitted_at")
+            if isinstance(submitted_at, datetime):
+                submitted_at = submitted_at.isoformat()
+            
+            questionnaire_type = questionnaire.get("questionnaire_type", "initial")
+            form_type = f"edn360_{questionnaire_type}"
+            
+            edn360_form = {
+                "id": questionnaire.get("submission_id", f"edn360_{len(forms)}"),
+                "type": form_type,
+                "submitted_at": submitted_at,
+                "data": questionnaire.get("responses", {}),
+                "questionnaire_type": questionnaire_type,
+                "source": questionnaire.get("source", "edn360")
+            }
+            forms.append(edn360_form)
     
     user["id"] = str(user["_id"])
     del user["password"]
