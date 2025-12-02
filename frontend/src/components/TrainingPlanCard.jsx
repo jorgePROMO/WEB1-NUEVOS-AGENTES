@@ -115,13 +115,34 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      setDeleting(true);
+      await axios.delete(
+        `${API}/admin/users/${userId}/training-plans/latest`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
+      setLatestPlan(null);
+      setShowDeleteConfirm(false);
+      alert('✅ Plan eliminado correctamente');
+      
+      if (onPlanUpdated) onPlanUpdated();
+    } catch (error) {
+      console.error('Error deleting plan:', error);
+      alert('❌ Error eliminando el plan. Por favor intenta de nuevo.');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const handleSendEmail = async () => {
-    // TODO: Implement send email
     alert('Funcionalidad de envío de email próximamente');
   };
 
   const handleExportPDF = async () => {
-    // TODO: Implement PDF export
     alert('Funcionalidad de exportación a PDF próximamente');
   };
 
