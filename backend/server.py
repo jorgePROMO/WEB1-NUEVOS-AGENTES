@@ -1709,6 +1709,116 @@ async def get_latest_training_plan(user_id: str, request: Request):
         )
 
 
+
+@api_router.put("/admin/users/{user_id}/training-plans/edit")
+async def update_training_plan(user_id: str, request: Request):
+    """
+    Actualiza el plan de entrenamiento editado por el admin.
+    
+    Este endpoint:
+    - Busca el plan más reciente del usuario
+    - Actualiza el campo 'plan' con los cambios del admin
+    - Guarda una marca de tiempo de la última edición
+    - Mantiene la versión original en un campo separado
+    
+    Request Body:
+    {
+        "plan": { client_training_program_enriched con cambios }
+    }
+    
+    Response:
+    {
+        "success": true,
+        "message": "Plan actualizado correctamente"
+    }
+    
+    Auth: Admin only
+    """
+    admin = await require_admin(request)
+    
+    try:
+        body = await request.json()
+        updated_plan = body.get("plan")
+        
+        if not updated_plan:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": "missing_plan",
+                    "message": "Se requiere el campo 'plan' con el plan actualizado"
+                }
+            )
+        
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        
+        # Buscar el plan más reciente
+        existing_plan = await edn360_db.training_plans_v2.find_one(
+            {"user_id": user_id},
+            sort=[("created_at", -1)]
+        )
+        
+        if not existing_plan:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "no_plan_found",
+                    "message": f"No se encontró ningún plan para el usuario {user_id}"
+                }
+            )
+        
+        # Guardar la versión original si no existe
+        update_doc = {
+            "plan": updated_plan,
+            "last_edited_at": datetime.now(timezone.utc).isoformat(),
+            "last_edited_by": admin["_id"]
+        }
+        
+        # Si es la primera edición, guardar el plan original
+        if "original_plan" not in existing_plan:
+            update_doc["original_plan"] = existing_plan.get("plan")
+        
+        # Actualizar el documento
+        result = await edn360_db.training_plans_v2.update_one(
+            {"_id": existing_plan["_id"]},
+            {"$set": update_doc}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": "update_failed",
+                    "message": "No se pudo actualizar el plan"
+                }
+            )
+        
+        logger.info(
+            f"✅ Plan actualizado | user_id: {user_id} | "
+            f"admin: {admin['_id']} | plan_id: {str(existing_plan['_id'])}"
+        )
+        
+        return {
+            "success": True,
+            "message": "Plan actualizado correctamente",
+            "plan_id": str(existing_plan["_id"])
+        }
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error actualizando plan: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error actualizando plan: {str(e)}"
+            }
+        )
+
+
 @api_router.post("/admin/archive-client/{user_id}")
 async def archive_client(user_id: str, request: Request, reason: Optional[str] = None):
     admin = await require_admin(request)
