@@ -1422,7 +1422,7 @@ ready for a downstream presenter (E7.5) or backend to enrich with names, videos 
   modelSettings: {
     temperature: 1,
     topP: 1,
-    maxTokens: 2048,
+    maxTokens: 4096,
     store: true
   }
 });
