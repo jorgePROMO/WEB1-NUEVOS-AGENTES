@@ -166,10 +166,10 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
 
   if (loading) {
     return (
-      <Card className="border-2 border-blue-200">
-        <CardContent className="flex items-center justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-          <span className="ml-2 text-gray-600">Cargando plan...</span>
+      <Card className="border border-gray-200">
+        <CardContent className="flex items-center justify-center py-4">
+          <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+          <span className="ml-2 text-sm text-gray-600">Cargando plan...</span>
         </CardContent>
       </Card>
     );
@@ -177,12 +177,12 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
 
   if (!latestPlan) {
     return (
-      <Card className="border-2 border-gray-200">
-        <CardContent className="py-8 text-center">
-          <Dumbbell className="h-12 w-12 mx-auto text-gray-400 mb-2" />
-          <p className="text-gray-600">No hay plan de entrenamiento generado</p>
-          <p className="text-sm text-gray-500 mt-1">
-            Genera un plan usando los cuestionarios EDN360 disponibles
+      <Card className="border border-gray-200">
+        <CardContent className="py-6 text-center">
+          <Dumbbell className="h-10 w-10 mx-auto text-gray-400 mb-2" />
+          <p className="text-sm text-gray-600">No hay plan de entrenamiento generado</p>
+          <p className="text-xs text-gray-500 mt-1">
+            Genera un plan usando los cuestionarios EDN360
           </p>
         </CardContent>
       </Card>
@@ -193,86 +193,175 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
 
   return (
     <>
-      <Card className="border-2 border-blue-300 bg-gradient-to-br from-blue-50 to-cyan-50">
-        <CardHeader className="border-b border-blue-200 bg-white">
-          <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <Dumbbell className="h-5 w-5 text-blue-600" />
-                <CardTitle className="text-xl text-blue-900">
-                  Plan EDN360 (último generado)
-                </CardTitle>
-                <Badge variant={status === 'sent' ? 'success' : 'secondary'}>
-                  {status === 'sent' ? 'Enviado' : 'Borrador'}
-                </Badge>
+      <Card className="border-2 border-blue-300 shadow-sm hover:shadow-md transition-shadow">
+        {/* Compact Header - Always Visible */}
+        <CardHeader 
+          className="cursor-pointer hover:bg-blue-50 transition-colors pb-3"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3 flex-1">
+              <Dumbbell className="h-5 w-5 text-blue-600 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <CardTitle className="text-base font-semibold text-gray-900 truncate">
+                    {plan.title}
+                  </CardTitle>
+                  <Badge 
+                    variant={status === 'sent' ? 'success' : 'secondary'}
+                    className="flex-shrink-0 text-xs"
+                  >
+                    {status === 'sent' ? 'Enviado' : 'Borrador'}
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-3 text-xs text-gray-600">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    {plan.days_per_week} días/sem
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    {plan.session_duration_min} min
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Dumbbell className="h-3 w-3" />
+                    {plan.sessions?.length || 0} sesiones
+                  </span>
+                </div>
               </div>
-              <p className="text-sm text-gray-600">
-                Generado el {new Date(created_at).toLocaleDateString('es-ES', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </p>
+            </div>
+            <div className="flex items-center gap-2 ml-2">
+              {isExpanded ? (
+                <ChevronUp className="h-5 w-5 text-gray-500" />
+              ) : (
+                <ChevronDown className="h-5 w-5 text-gray-500" />
+              )}
             </div>
           </div>
         </CardHeader>
 
-        <CardContent className="pt-4">
-          {/* Plan Header */}
-          <div className="bg-white rounded-lg p-4 mb-4 border border-blue-200">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">{plan.title}</h3>
-            <p className="text-sm text-gray-700 mb-3">{plan.summary}</p>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="flex items-center gap-2 text-sm">
-                <Target className="h-4 w-4 text-blue-600" />
-                <span className="text-gray-700">{plan.goal}</span>
+        {/* Expanded Content */}
+        {isExpanded && (
+          <CardContent className="pt-0 space-y-4 border-t">
+            {/* Plan Details */}
+            <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+              <div>
+                <p className="text-xs font-semibold text-gray-500 mb-1">Objetivo</p>
+                <p className="text-sm text-gray-900">{plan.goal}</p>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Calendar className="h-4 w-4 text-blue-600" />
-                <span className="text-gray-700">{plan.days_per_week} días/semana</span>
+              <div>
+                <p className="text-xs font-semibold text-gray-500 mb-1">Resumen</p>
+                <p className="text-sm text-gray-700">{plan.summary}</p>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Clock className="h-4 w-4 text-blue-600" />
-                <span className="text-gray-700">{plan.session_duration_min} min/sesión</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Dumbbell className="h-4 w-4 text-blue-600" />
-                <span className="text-gray-700">{plan.sessions?.length || 0} sesiones</span>
+              <div>
+                <p className="text-xs font-semibold text-gray-500 mb-1">Generado</p>
+                <p className="text-sm text-gray-700">
+                  {new Date(created_at).toLocaleDateString('es-ES', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </p>
               </div>
             </div>
-          </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-wrap gap-2">
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-2">
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEdit();
+                }}
+                size="sm"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Edit className="h-3 w-3 mr-1" />
+                Ver/Editar
+              </Button>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSendEmail();
+                }}
+                size="sm"
+                variant="outline"
+                className="border-blue-300 text-blue-700 hover:bg-blue-50"
+              >
+                <Mail className="h-3 w-3 mr-1" />
+                Enviar Email
+              </Button>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleExportPDF();
+                }}
+                size="sm"
+                variant="outline"
+                className="border-blue-300 text-blue-700 hover:bg-blue-50"
+              >
+                <FileDown className="h-3 w-3 mr-1" />
+                Exportar PDF
+              </Button>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDeleteConfirm(true);
+                }}
+                size="sm"
+                variant="outline"
+                className="border-red-300 text-red-700 hover:bg-red-50"
+              >
+                <Trash2 className="h-3 w-3 mr-1" />
+                Eliminar
+              </Button>
+            </div>
+          </CardContent>
+        )}
+      </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-700">
+              <AlertTriangle className="h-5 w-5" />
+              ¿Eliminar plan de entrenamiento?
+            </DialogTitle>
+            <DialogDescription>
+              Esta acción no se puede deshacer. El plan será eliminado permanentemente de la base de datos.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2 mt-4">
             <Button
-              onClick={handleEdit}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              variant="outline"
+              onClick={() => setShowDeleteConfirm(false)}
+              disabled={deleting}
             >
-              <Edit className="h-4 w-4 mr-2" />
-              Ver / Editar Plan
+              Cancelar
             </Button>
             <Button
-              onClick={handleSendEmail}
-              variant="outline"
-              className="border-blue-300 text-blue-700 hover:bg-blue-50"
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={deleting}
+              className="bg-red-600 hover:bg-red-700"
             >
-              <Mail className="h-4 w-4 mr-2" />
-              Enviar por Email
-            </Button>
-            <Button
-              onClick={handleExportPDF}
-              variant="outline"
-              className="border-blue-300 text-blue-700 hover:bg-blue-50"
-            >
-              <FileDown className="h-4 w-4 mr-2" />
-              Exportar PDF
+              {deleting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Eliminando...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Sí, eliminar
+                </>
+              )}
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </DialogContent>
+      </Dialog>
 
       {/* Edit Modal */}
       <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
