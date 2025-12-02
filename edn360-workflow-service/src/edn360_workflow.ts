@@ -1613,7 +1613,7 @@ ABSOLUTE RULES
   modelSettings: {
     temperature: 1,
     topP: 1,
-    maxTokens: 2048,
+    maxTokens: 4096,
     store: true
   }
 });
