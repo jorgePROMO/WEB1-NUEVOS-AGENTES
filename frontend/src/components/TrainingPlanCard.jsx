@@ -453,7 +453,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
 
               {/* Sessions */}
               <div className="space-y-4">
-                <h3 className="text-lg font-bold text-gray-900">Sesiones de Entrenamiento</h3>
+                <h3 className="text-base font-bold text-gray-900">Sesiones de Entrenamiento</h3>
                 
                 {editedPlan.plan.sessions.map((session, sessionIdx) => (
                   <Card key={sessionIdx} className="border-2 border-blue-200">
