@@ -86,21 +86,25 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   const handleSave = async () => {
     try {
       setSaving(true);
-      // TODO: Implement save edited plan endpoint
       await axios.put(
-        `${API}/admin/users/${userId}/training-plans/${latestPlan.plan_id}/edit`,
+        `${API}/admin/users/${userId}/training-plans/edit`,
         { plan: editedPlan.plan },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       
+      // Update local state with edited plan
       setLatestPlan(editedPlan);
       setShowEditModal(false);
+      
+      // Show success message
+      alert('✅ Plan guardado correctamente');
+      
       if (onPlanUpdated) onPlanUpdated();
     } catch (error) {
       console.error('Error saving plan:', error);
-      alert('Error guardando el plan. Por favor intenta de nuevo.');
+      alert('❌ Error guardando el plan. Por favor intenta de nuevo.');
     } finally {
       setSaving(false);
     }
