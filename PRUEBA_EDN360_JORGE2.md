@@ -142,7 +142,7 @@ backend                          RUNNING   pid 401, uptime 0:00:12
 ADMIN_TOKEN="<tu_token_de_admin>"
 
 # 2. Generar plan de entrenamiento para Jorge2
-curl -X POST "https://ai-workout-gen.preview.emergentagent.com/api/training-plan" \
+curl -X POST "https://plan-gen-fix.preview.emergentagent.com/api/training-plan" \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{

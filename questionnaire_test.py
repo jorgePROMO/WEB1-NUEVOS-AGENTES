@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://ai-workout-gen.preview.emergentagent.com/api"
+BACKEND_URL = "https://plan-gen-fix.preview.emergentagent.com/api"
 
 def test_questionnaire_endpoint():
     """Test the diagnostic questionnaire endpoint with the exact data from review request"""

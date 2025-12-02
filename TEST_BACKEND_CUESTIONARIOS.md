@@ -119,11 +119,11 @@ Mientras identificamos el problema del frontend, puedes probar el backend direct
 
 ```bash
 # 1. Obtener token (con TU contraseña correcta)
-TOKEN=$(curl -s -X POST "https://ai-workout-gen.preview.emergentagent.com/api/auth/login?email=ecjtrainer@gmail.com&password=TU_CONTRASEÑA_AQUI" | python3 -c "import sys,json;print(json.load(sys.stdin)['token'])")
+TOKEN=$(curl -s -X POST "https://plan-gen-fix.preview.emergentagent.com/api/auth/login?email=ecjtrainer@gmail.com&password=TU_CONTRASEÑA_AQUI" | python3 -c "import sys,json;print(json.load(sys.stdin)['token'])")
 
 # 2. Obtener cuestionarios de Jorge2
 curl -H "Authorization: Bearer $TOKEN" \
-  "https://ai-workout-gen.preview.emergentagent.com/api/admin/users/1764168881795908/edn360-questionnaires"
+  "https://plan-gen-fix.preview.emergentagent.com/api/admin/users/1764168881795908/edn360-questionnaires"
 ```
 
 ### Opción 2: Desde el backend directamente
