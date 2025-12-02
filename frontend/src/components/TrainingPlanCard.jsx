@@ -367,12 +367,12 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
       <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
         <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl text-blue-900 flex items-center gap-2">
-              <Edit className="h-6 w-6" />
+            <DialogTitle className="text-xl text-blue-900 flex items-center gap-2">
+              <Edit className="h-5 w-5" />
               Editar Plan de Entrenamiento
             </DialogTitle>
             <DialogDescription>
-              Modifica cualquier aspecto del plan. Los cambios se guardarán automáticamente.
+              Modifica cualquier aspecto del plan y guarda los cambios.
             </DialogDescription>
           </DialogHeader>
 
