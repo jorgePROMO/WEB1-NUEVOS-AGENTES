@@ -3937,6 +3937,18 @@ const AdminDashboard = () => {
                             </div>
                           )}
                           
+                          {/* ✅ PLAN EDN360 PERSISTENTE - CARD EDITABLE */}
+                          <div className="mb-6">
+                            <TrainingPlanCard 
+                              userId={selectedClient.id}
+                              token={token}
+                              onPlanUpdated={() => {
+                                // Refrescar datos si es necesario
+                                console.log('Plan actualizado');
+                              }}
+                            />
+                          </div>
+                          
                           {/* ✅ PLAN EDN360 GENERADO - VISTA DE RENDERIZADO */}
                           {generatedEDN360Plan && (
                             <div className="mb-6">
