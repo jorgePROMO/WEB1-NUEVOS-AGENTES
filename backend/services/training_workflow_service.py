@@ -103,6 +103,9 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
             # Serializar payload con manejo de datetime
             payload_json = json.dumps(edn360_input, default=default_serializer)
             
+            logger.info(f"🌐 Conectando a: {EDN360_WORKFLOW_SERVICE_URL}")
+            logger.info(f"📦 Payload size: {len(payload_json)} bytes")
+            
             # Timeout de 300 segundos (5 minutos) para dar tiempo al workflow de 8 agentes
             workflow_response_raw = requests.post(
                 EDN360_WORKFLOW_SERVICE_URL,
