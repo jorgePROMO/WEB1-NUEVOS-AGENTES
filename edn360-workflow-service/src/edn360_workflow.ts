@@ -1710,8 +1710,10 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
       output_text: JSON.stringify(e1AnalizadorDePerfilResultTemp.finalOutput),
       output_parsed: e1AnalizadorDePerfilResultTemp.finalOutput
     };
-    const e2ParseQuestionnaireResultTemp = await runner.run(
+    const e2ParseQuestionnaireResultTemp = await runAgentWithLogging(
+      runner,
       e2ParseQuestionnaire,
+      "E2 – Parse Questionnaire",
       [
         ...conversationHistory,
         {
