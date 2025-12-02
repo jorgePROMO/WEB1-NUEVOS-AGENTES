@@ -1807,6 +1807,79 @@ async def update_training_plan(user_id: str, request: Request):
         raise
     
     except Exception as e:
+
+
+@api_router.delete("/admin/users/{user_id}/training-plans/latest")
+async def delete_latest_training_plan(user_id: str, request: Request):
+    """
+    Elimina el último plan de entrenamiento de un usuario.
+    
+    Este endpoint:
+    - Busca el plan más reciente del usuario
+    - Lo elimina de la base de datos
+    - Devuelve confirmación
+    
+    Auth: Admin only
+    """
+    admin = await require_admin(request)
+    
+    try:
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        
+        # Buscar el plan más reciente
+        plan_doc = await edn360_db.training_plans_v2.find_one(
+            {"user_id": user_id},
+            sort=[("created_at", -1)]
+        )
+        
+        if not plan_doc:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "no_plan_found",
+                    "message": f"No se encontró ningún plan para el usuario {user_id}"
+                }
+            )
+        
+        # Eliminar el plan
+        result = await edn360_db.training_plans_v2.delete_one(
+            {"_id": plan_doc["_id"]}
+        )
+        
+        if result.deleted_count == 0:
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": "delete_failed",
+                    "message": "No se pudo eliminar el plan"
+                }
+            )
+        
+        logger.info(
+            f"✅ Plan eliminado | user_id: {user_id} | "
+            f"admin: {admin['_id']} | plan_id: {str(plan_doc['_id'])}"
+        )
+        
+        return {
+            "success": True,
+            "message": "Plan eliminado correctamente"
+        }
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error eliminando plan: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error eliminando plan: {str(e)}"
+            }
+        )
+
         logger.error(f"❌ Error actualizando plan: {e}")
         import traceback
         traceback.print_exc()
