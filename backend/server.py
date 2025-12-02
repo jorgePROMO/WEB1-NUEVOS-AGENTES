@@ -1807,6 +1807,16 @@ async def update_training_plan(user_id: str, request: Request):
         raise
     
     except Exception as e:
+        logger.error(f"❌ Error actualizando plan: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error actualizando plan: {str(e)}"
+            }
+        )
 
 
 @api_router.delete("/admin/users/{user_id}/training-plans/latest")
