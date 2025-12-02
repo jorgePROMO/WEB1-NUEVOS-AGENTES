@@ -129,10 +129,11 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
                 "Timeout: El microservicio no respondió en 5 minutos. "
                 "Verifica que el servicio esté corriendo y que el workflow no tarde demasiado."
             )
-        except requests.exceptions.ConnectionError:
+        except requests.exceptions.ConnectionError as e:
+            logger.error(f"❌ ConnectionError details: {type(e).__name__}: {str(e)}")
             raise Exception(
                 f"Error de conexión: No se puede conectar al microservicio en {EDN360_WORKFLOW_SERVICE_URL}. "
-                "Verifica que el servicio esté corriendo."
+                f"Verifica que el servicio esté corriendo. Detalle: {str(e)}"
             )
         except requests.exceptions.HTTPError as e:
             error_detail = workflow_response_raw.text if workflow_response_raw else str(e)
