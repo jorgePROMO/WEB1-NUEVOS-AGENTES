@@ -1273,6 +1273,442 @@ async def generate_training_plan(request: Request):
         )
 
 
+
+@api_router.post("/training-plan/mock")
+async def generate_training_plan_mock(request: Request):
+    """
+    Endpoint MOCK para testing - Genera un plan de entrenamiento de ejemplo.
+    
+    Este endpoint devuelve un plan hardcodeado con la estructura correcta:
+    sessions[].blocks[].exercises[]
+    
+    Útil para:
+    - Testing del flujo de persistencia
+    - Desarrollo del Card Editable en frontend
+    - Verificación de estructura de datos
+    
+    Request Body:
+    {
+        "user_id": "1764016044644335"
+    }
+    
+    Response: client_training_program_enriched completo
+    
+    Auth: Admin only
+    """
+    admin = await require_admin(request)
+    
+    try:
+        body = await request.json()
+        user_id = body.get("user_id")
+        
+        if not user_id:
+            raise HTTPException(
+                status_code=400,
+                detail={"error": "missing_user_id", "message": "Se requiere user_id"}
+            )
+        
+        logger.info(f"🧪 Generando plan MOCK | admin: {admin['_id']} | user_id: {user_id}")
+        
+        # Plan de entrenamiento MOCK con estructura final
+        mock_plan = {
+            "client_training_program_enriched": {
+                "title": "Plan de Hipertrofia Upper/Lower - 4 días/semana",
+                "summary": "Programa de entrenamiento orientado a hipertrofia muscular, dividido en tren superior e inferior, 4 sesiones semanales de 60 minutos.",
+                "goal": "Aumentar masa muscular con enfoque en técnica segura, considerando molestia en hombro izquierdo.",
+                "training_type": "upper_lower",
+                "days_per_week": 4,
+                "session_duration_min": 60,
+                "weeks": 8,
+                "sessions": [
+                    {
+                        "id": "D1",
+                        "name": "Upper 1 – Push Dominante",
+                        "focus": ["upper_body", "push", "chest", "shoulders", "triceps"],
+                        "blocks": [
+                            {
+                                "id": "A",
+                                "primary_muscles": ["chest"],
+                                "secondary_muscles": ["triceps", "shoulders"],
+                                "exercises": [
+                                    {
+                                        "order": 1,
+                                        "db_id": "E123",
+                                        "name": "Press banca con barra",
+                                        "primary_group": "Pecho",
+                                        "secondary_group": "Tríceps",
+                                        "series": 4,
+                                        "reps": "8-10",
+                                        "rpe": "8",
+                                        "notes": "Control en descenso, evitar arqueo excesivo",
+                                        "video_url": "https://drive.google.com/example1"
+                                    },
+                                    {
+                                        "order": 2,
+                                        "db_id": "E124",
+                                        "name": "Press inclinado con mancuernas",
+                                        "primary_group": "Pecho",
+                                        "secondary_group": "Hombros",
+                                        "series": 3,
+                                        "reps": "10-12",
+                                        "rpe": "7-8",
+                                        "notes": "Inclinación 30-45°, cuidar hombros",
+                                        "video_url": "https://drive.google.com/example2"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "B",
+                                "primary_muscles": ["shoulders"],
+                                "secondary_muscles": ["triceps"],
+                                "exercises": [
+                                    {
+                                        "order": 3,
+                                        "db_id": "E201",
+                                        "name": "Elevaciones laterales con mancuernas",
+                                        "primary_group": "Hombros",
+                                        "secondary_group": "Trapecio",
+                                        "series": 3,
+                                        "reps": "12-15",
+                                        "rpe": "7",
+                                        "notes": "Evitar overhead por molestia en hombro",
+                                        "video_url": "https://drive.google.com/example3"
+                                    },
+                                    {
+                                        "order": 4,
+                                        "db_id": "E202",
+                                        "name": "Press francés con barra Z",
+                                        "primary_group": "Tríceps",
+                                        "secondary_group": "",
+                                        "series": 3,
+                                        "reps": "10-12",
+                                        "rpe": "7-8",
+                                        "notes": "Control del movimiento, proteger codos",
+                                        "video_url": "https://drive.google.com/example4"
+                                    }
+                                ]
+                            }
+                        ],
+                        "session_notes": [
+                            "Calentar hombros con rotaciones y banda elástica",
+                            "Si hay dolor en hombro, reducir peso o saltar ejercicio",
+                            "Finalizar con 5 min de estiramientos de pecho y hombros"
+                        ]
+                    },
+                    {
+                        "id": "D2",
+                        "name": "Lower 1 – Cuádriceps Dominante",
+                        "focus": ["lower_body", "quads", "glutes"],
+                        "blocks": [
+                            {
+                                "id": "A",
+                                "primary_muscles": ["quads"],
+                                "secondary_muscles": ["glutes", "core"],
+                                "exercises": [
+                                    {
+                                        "order": 1,
+                                        "db_id": "E301",
+                                        "name": "Sentadilla con barra",
+                                        "primary_group": "Cuádriceps",
+                                        "secondary_group": "Glúteos",
+                                        "series": 4,
+                                        "reps": "6-8",
+                                        "rpe": "8",
+                                        "notes": "Profundidad controlada, core activado",
+                                        "video_url": "https://drive.google.com/example5"
+                                    },
+                                    {
+                                        "order": 2,
+                                        "db_id": "E302",
+                                        "name": "Prensa de piernas",
+                                        "primary_group": "Cuádriceps",
+                                        "secondary_group": "Glúteos",
+                                        "series": 3,
+                                        "reps": "10-12",
+                                        "rpe": "7-8",
+                                        "notes": "Rango completo sin despegar zona lumbar",
+                                        "video_url": "https://drive.google.com/example6"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "B",
+                                "primary_muscles": ["quads"],
+                                "secondary_muscles": [],
+                                "exercises": [
+                                    {
+                                        "order": 3,
+                                        "db_id": "E303",
+                                        "name": "Extensión de cuádriceps en máquina",
+                                        "primary_group": "Cuádriceps",
+                                        "secondary_group": "",
+                                        "series": 3,
+                                        "reps": "12-15",
+                                        "rpe": "7",
+                                        "notes": "Movimiento controlado, contracción en pico",
+                                        "video_url": "https://drive.google.com/example7"
+                                    }
+                                ]
+                            }
+                        ],
+                        "session_notes": [
+                            "Calentar con movilidad de cadera y sentadillas sin peso",
+                            "Mantener core activo en todos los ejercicios",
+                            "Finalizar con estiramientos de cuádriceps e isquios"
+                        ]
+                    },
+                    {
+                        "id": "D3",
+                        "name": "Upper 2 – Pull Dominante",
+                        "focus": ["upper_body", "pull", "back", "biceps"],
+                        "blocks": [
+                            {
+                                "id": "A",
+                                "primary_muscles": ["back"],
+                                "secondary_muscles": ["biceps"],
+                                "exercises": [
+                                    {
+                                        "order": 1,
+                                        "db_id": "E401",
+                                        "name": "Dominadas con agarre prono",
+                                        "primary_group": "Espalda",
+                                        "secondary_group": "Bíceps",
+                                        "series": 4,
+                                        "reps": "6-8",
+                                        "rpe": "8",
+                                        "notes": "Usar lastre si es necesario, full ROM",
+                                        "video_url": "https://drive.google.com/example8"
+                                    },
+                                    {
+                                        "order": 2,
+                                        "db_id": "E402",
+                                        "name": "Remo con barra",
+                                        "primary_group": "Espalda",
+                                        "secondary_group": "Bíceps",
+                                        "series": 4,
+                                        "reps": "8-10",
+                                        "rpe": "7-8",
+                                        "notes": "Mantener espalda neutra, tirar hacia ombligo",
+                                        "video_url": "https://drive.google.com/example9"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "B",
+                                "primary_muscles": ["biceps"],
+                                "secondary_muscles": [],
+                                "exercises": [
+                                    {
+                                        "order": 3,
+                                        "db_id": "E403",
+                                        "name": "Curl con barra Z",
+                                        "primary_group": "Bíceps",
+                                        "secondary_group": "",
+                                        "series": 3,
+                                        "reps": "10-12",
+                                        "rpe": "7",
+                                        "notes": "Sin balanceo, control en excéntrica",
+                                        "video_url": "https://drive.google.com/example10"
+                                    }
+                                ]
+                            }
+                        ],
+                        "session_notes": [
+                            "Calentar con band pull-aparts y movimientos de escápulas",
+                            "Enfoque en contracción de dorsales",
+                            "Finalizar con estiramientos de espalda y bíceps"
+                        ]
+                    },
+                    {
+                        "id": "D4",
+                        "name": "Lower 2 – Isquios y Glúteos Dominante",
+                        "focus": ["lower_body", "hamstrings", "glutes"],
+                        "blocks": [
+                            {
+                                "id": "A",
+                                "primary_muscles": ["hamstrings", "glutes"],
+                                "secondary_muscles": ["lower_back"],
+                                "exercises": [
+                                    {
+                                        "order": 1,
+                                        "db_id": "E501",
+                                        "name": "Peso muerto rumano",
+                                        "primary_group": "Isquiotibiales",
+                                        "secondary_group": "Glúteos",
+                                        "series": 4,
+                                        "reps": "8-10",
+                                        "rpe": "8",
+                                        "notes": "Bisagra de cadera, espalda neutra",
+                                        "video_url": "https://drive.google.com/example11"
+                                    },
+                                    {
+                                        "order": 2,
+                                        "db_id": "E502",
+                                        "name": "Hip thrust con barra",
+                                        "primary_group": "Glúteos",
+                                        "secondary_group": "Isquiotibiales",
+                                        "series": 3,
+                                        "reps": "10-12",
+                                        "rpe": "7-8",
+                                        "notes": "Contracción máxima en la parte superior",
+                                        "video_url": "https://drive.google.com/example12"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "B",
+                                "primary_muscles": ["hamstrings"],
+                                "secondary_muscles": [],
+                                "exercises": [
+                                    {
+                                        "order": 3,
+                                        "db_id": "E503",
+                                        "name": "Curl femoral en máquina",
+                                        "primary_group": "Isquiotibiales",
+                                        "secondary_group": "",
+                                        "series": 3,
+                                        "reps": "12-15",
+                                        "rpe": "7",
+                                        "notes": "Control en todo el rango",
+                                        "video_url": "https://drive.google.com/example13"
+                                    }
+                                ]
+                            }
+                        ],
+                        "session_notes": [
+                            "Calentar con puente de glúteos y activación de isquios",
+                            "Cuidar la zona lumbar en peso muerto",
+                            "Finalizar con estiramientos de cadena posterior"
+                        ]
+                    }
+                ],
+                "general_notes": [
+                    "Evitar ejercicios overhead por molestia en hombro izquierdo",
+                    "Priorizar técnica sobre peso en todas las series",
+                    "Progresar solo cuando la técnica sea correcta y sin dolor",
+                    "Descanso entre series: 2-3 minutos para ejercicios principales, 1-2 min para accesorios"
+                ]
+            }
+        }
+        
+        # Guardar en training_plans_v2
+        try:
+            edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+            
+            training_plan_doc = {
+                "user_id": user_id,
+                "questionnaire_submission_id": "mock_submission_001",
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "plan": mock_plan["client_training_program_enriched"],
+                "status": "draft",
+                "version": "1.0.0",
+                "source": "mock_endpoint_v1"
+            }
+            
+            result = await edn360_db.training_plans_v2.insert_one(training_plan_doc)
+            
+            logger.info(
+                f"✅ Plan MOCK guardado | "
+                f"plan_id: {str(result.inserted_id)} | user_id: {user_id}"
+            )
+        
+        except Exception as e:
+            logger.warning(f"⚠️ Error guardando plan MOCK: {e}")
+        
+        logger.info(f"✅ Plan MOCK generado | user_id: {user_id}")
+        
+        return mock_plan
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error en /training-plan/mock: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error generando plan mock: {str(e)}"
+            }
+        )
+
+
+@api_router.get("/admin/users/{user_id}/training-plans/latest")
+async def get_latest_training_plan(user_id: str, request: Request):
+    """
+    Obtiene el último plan de entrenamiento generado para un usuario.
+    
+    Este endpoint:
+    - Busca el plan más reciente en training_plans_v2
+    - Devuelve el plan completo con metadatos
+    - Incluye información de cuándo fue creado y su estado
+    
+    Response:
+    {
+        "plan_id": "...",
+        "user_id": "...",
+        "created_at": "...",
+        "status": "draft|sent",
+        "plan": { client_training_program_enriched },
+        "source": "..."
+    }
+    
+    Auth: Admin only
+    """
+    admin = await require_admin(request)
+    
+    try:
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        
+        # Buscar el plan más reciente
+        plan_doc = await edn360_db.training_plans_v2.find_one(
+            {"user_id": user_id},
+            {"_id": 0},
+            sort=[("created_at", -1)]
+        )
+        
+        if not plan_doc:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "no_plan_found",
+                    "message": f"No se encontró ningún plan para el usuario {user_id}"
+                }
+            )
+        
+        logger.info(
+            f"✅ Plan recuperado | user_id: {user_id} | "
+            f"created_at: {plan_doc.get('created_at', 'N/A')}"
+        )
+        
+        return {
+            "user_id": plan_doc.get("user_id"),
+            "questionnaire_submission_id": plan_doc.get("questionnaire_submission_id"),
+            "created_at": plan_doc.get("created_at"),
+            "status": plan_doc.get("status", "draft"),
+            "plan": plan_doc.get("plan"),
+            "source": plan_doc.get("source"),
+            "version": plan_doc.get("version")
+        }
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error obteniendo plan: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error obteniendo plan: {str(e)}"
+            }
+        )
+
+
 @api_router.post("/admin/archive-client/{user_id}")
 async def archive_client(user_id: str, request: Request, reason: Optional[str] = None):
     admin = await require_admin(request)
