@@ -1685,8 +1685,10 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
         workflow_id: "wf_69260afcea288190955843b5a4223eea061948bdf6abc68b"
       }
     });
-    const e1AnalizadorDePerfilResultTemp = await runner.run(
+    const e1AnalizadorDePerfilResultTemp = await runAgentWithLogging(
+      runner,
       e1AnalizadorDePerfil,
+      "E1 – Analizador de Perfil",
       [
         ...conversationHistory,
         {
