@@ -476,11 +476,10 @@ const UserDashboard = () => {
                 </Card>
               )}
 
-              {/* Monthly Follow-Up Questionnaire - Show if activated by admin OR >= 30 days since last plan */}
+              {/* Monthly Follow-Up Questionnaire - Show if activated by admin */}
               {userData.subscription?.plan === 'team' && 
                userData.subscription?.payment_status === 'verified' && 
-               userData.nutrition_plan && 
-               (userData.followup_activated || daysSinceLastPlan >= 30) && (
+               userData.followup_activated && (
                 <Card className="md:col-span-2 border-4 border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-3 text-2xl text-purple-800">
@@ -489,18 +488,9 @@ const UserDashboard = () => {
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-700 mb-4">
-                      {userData.followup_activated ? (
-                        <>
-                          <strong>Tu entrenador ha solicitado que completes este cuestionario de seguimiento.</strong>
-                          <br />
-                          Por favor, responde para que pueda ajustar tu plan según tu progreso.
-                        </>
-                      ) : (
-                        <>
-                          Han pasado <strong>{daysSinceLastPlan} días</strong> desde tu último plan. 
-                          Es momento de evaluar tu progreso y ajustar tu nutrición según tus resultados.
-                        </>
-                      )}
+                      <strong>Tu entrenador ha solicitado que completes este cuestionario de seguimiento.</strong>
+                      <br />
+                      Por favor, responde para que pueda evaluar tu progreso y ajustar tus planes según sea necesario.
                     </p>
                     <Button
                       onClick={() => setShowFollowUpQuestionnaire(true)}
