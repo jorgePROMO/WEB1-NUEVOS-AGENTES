@@ -192,6 +192,18 @@ backend:
           agent: "main"
           comment: "✅ VERIFIED: Backend arrancado exitosamente. Logs muestran '✅ Índice creado: edn360_snapshots.user_id', '✅ Índice creado: edn360_snapshots.created_at', '✅ Índice creado: edn360_snapshots.status', '✅ Índices de edn360_snapshots verificados', '✅ Índices de FASE 3 inicializados correctamente'. Backend funcionando en puerto 8001."
 
+  - task: "EDN360 Evolutionary Training Plan Flow"
+    implemented: true
+    working: false
+    file: "/app/backend/server.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "✅ BACKEND STRUCTURE VERIFIED: POST /api/training-plan endpoint correctly receives user_id + current_questionnaire_id, constructs STATE object with initial_questionnaire, previous_followups, previous_plans, last_plan. Fixed datetime serialization issue. Mock endpoint works perfectly. ❌ WORKFLOW TIMEOUT: Real EDN360 workflow times out after E2 step (Parse Questionnaire), likely due to OpenAI API latency or E3+ step configuration. Microservice processes E1-E2 successfully but hangs on subsequent steps. Error handling works correctly for invalid inputs. Architecture is sound but needs workflow performance optimization."
+
 frontend:
   - task: "EDN360 Workflow Launch Button"
     implemented: true
