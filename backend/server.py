@@ -8059,7 +8059,7 @@ async def submit_follow_up(follow_up: FollowUpSubmit, request: Request):
             "user_id": user_id,
             "submission_date": submission_date,
             "days_since_last_plan": days_since_plan,
-            "previous_plan_id": latest_plan["_id"],
+            "previous_plan_id": latest_plan["_id"] if latest_plan else None,
             "previous_questionnaire_id": initial_questionnaire["_id"] if initial_questionnaire else None,
             "measurement_type": follow_up.measurement_type,
             "measurements": follow_up.measurements.dict() if follow_up.measurements else None,
