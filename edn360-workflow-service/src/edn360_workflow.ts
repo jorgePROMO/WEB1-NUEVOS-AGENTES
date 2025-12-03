@@ -813,8 +813,8 @@ The internal structure is fully defined by the JSON schema. You MUST respect:
 - Do NOT reduce days due to injuries if user is advanced
 
 3) Session duration
-- Use training_context.availability.session_duration_min
-- For this client: ~45 minutes.
+- Use the EXACT value from training_context.availability.session_duration_min
+- Respect the user's time constraints
 
 4) Weeks
 - **ALWAYS** set \"weeks\" to 4 (monthly follow-up cycle)
