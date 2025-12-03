@@ -1150,7 +1150,11 @@ async def generate_training_plan(request: Request):
             # Ordenar por fecha (más antiguo → más reciente)
             all_questionnaires.sort(key=lambda q: q.submitted_at)
             
-            # Encontrar el cuestionario actual
+            # CRÍTICO: initial_questionnaire SIEMPRE es el más antiguo de BD
+            # independientemente de lo que se seleccione en la UI
+            initial_questionnaire = all_questionnaires[0]
+            
+            # Encontrar el cuestionario actual (el último en questionnaire_ids de la UI)
             current_q = None
             current_q_index = -1
             for i, q in enumerate(all_questionnaires):
@@ -1168,14 +1172,16 @@ async def generate_training_plan(request: Request):
                     }
                 )
             
-            # Identificar cuestionario inicial y followups previos
-            initial_questionnaire = all_questionnaires[0]  # El más antiguo
+            # previous_followups: todos los cuestionarios entre el inicial y el actual
+            # EXCLUYENDO el inicial y el actual
             previous_followups = all_questionnaires[1:current_q_index] if current_q_index > 1 else []
             
             logger.info(
                 f"✅ Cuestionarios recuperados | "
-                f"Total: {len(all_questionnaires)} | "
-                f"Initial: 1 | Previous followups: {len(previous_followups)} | Current: 1"
+                f"Total en BD: {len(all_questionnaires)} | "
+                f"Initial (más antiguo): {initial_questionnaire.submission_id} | "
+                f"Previous followups: {len(previous_followups)} | "
+                f"Current: {current_q.submission_id}"
             )
         
         except HTTPException:
