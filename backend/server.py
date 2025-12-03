@@ -8026,21 +8026,20 @@ async def submit_follow_up(follow_up: FollowUpSubmit, request: Request):
         current_user = await get_current_user(request)
         user_id = current_user["id"]
         
-        # Buscar el plan de nutrición más reciente del usuario
+        # Buscar el plan de nutrición más reciente del usuario (opcional)
         latest_plan = await db.nutrition_plans.find_one(
             {"user_id": user_id},
             sort=[("generated_at", -1)]
         )
         
-        if not latest_plan:
-            raise HTTPException(status_code=404, detail="No se encontró un plan de nutrición previo")
-        
-        # Calcular días desde el último plan
-        plan_generated_at = latest_plan["generated_at"]
-        # Asegurar que la fecha tenga timezone
-        if plan_generated_at.tzinfo is None:
-            plan_generated_at = plan_generated_at.replace(tzinfo=timezone.utc)
-        days_since_plan = (datetime.now(timezone.utc) - plan_generated_at).days
+        # Calcular días desde el último plan (si existe)
+        days_since_plan = None
+        if latest_plan:
+            plan_generated_at = latest_plan["generated_at"]
+            # Asegurar que la fecha tenga timezone
+            if plan_generated_at.tzinfo is None:
+                plan_generated_at = plan_generated_at.replace(tzinfo=timezone.utc)
+            days_since_plan = (datetime.now(timezone.utc) - plan_generated_at).days
         
         # Buscar el cuestionario inicial
         initial_questionnaire = await db.nutrition_questionnaire_submissions.find_one(
