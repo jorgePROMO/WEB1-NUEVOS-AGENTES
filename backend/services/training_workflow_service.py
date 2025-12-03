@@ -180,6 +180,152 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
         raise
 
 
+async def call_training_workflow_with_state(workflow_input: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Llama al workflow de entrenamiento EDN360 con ESTADO EVOLUTIVO.
+    
+    Este workflow recibe:
+    - input: Cuestionario actual + user_profile
+    - state: Historial completo (initial_questionnaire, previous_followups, previous_plans, last_plan)
+    
+    El workflow decide automáticamente si usar flujo inicial o evolutivo basado en el state.
+    
+    Args:
+        workflow_input: Objeto con estructura:
+            {
+                "input": {
+                    "input_as_text": "JSON con user_profile + current_questionnaire"
+                },
+                "state": {
+                    "initial_questionnaire": {...},
+                    "previous_followups": [...],
+                    "previous_plans": [...],
+                    "last_plan": {...}
+                }
+            }
+    
+    Returns:
+        Dict con la respuesta del workflow:
+        {
+            "client_training_program_enriched": {...}
+        }
+    
+    Raises:
+        Exception: Si hay error en la ejecución del workflow
+    """
+    try:
+        # ============================================
+        # VALIDACIONES
+        # ============================================
+        if not EDN360_WORKFLOW_SERVICE_URL:
+            raise Exception(
+                "EDN360_WORKFLOW_SERVICE_URL no está configurada"
+            )
+        
+        logger.info(
+            f"🚀 Iniciando Training Workflow EVOLUTIVO EDN360 | "
+            f"Service URL: {EDN360_WORKFLOW_SERVICE_URL}"
+        )
+        
+        # Verificar estructura del input
+        if "input" not in workflow_input or "state" not in workflow_input:
+            raise Exception(
+                "workflow_input debe contener 'input' y 'state'"
+            )
+        
+        state = workflow_input["state"]
+        has_history = bool(state.get("last_plan"))
+        
+        logger.info(
+            f"📋 Preparando Workflow Input | "
+            f"Type: {'Evolutivo' if has_history else 'Inicial'} | "
+            f"Previous plans: {len(state.get('previous_plans', []))}"
+        )
+        
+        # ============================================
+        # LLAMAR AL MICROSERVICIO NODE.JS
+        # ============================================
+        logger.info("📤 Enviando INPUT + STATE al microservicio...")
+        
+        # Función para serializar datetime a ISO string
+        def default_serializer(obj):
+            """Serializa objetos datetime a ISO string"""
+            if isinstance(obj, datetime):
+                return obj.isoformat()
+            return str(obj)
+        
+        try:
+            # Serializar payload
+            payload_json = json.dumps(workflow_input, default=default_serializer)
+            
+            logger.info(f"🌐 Conectando a: {EDN360_WORKFLOW_SERVICE_URL}")
+            logger.info(f"📦 Payload size: {len(payload_json)} bytes")
+            
+            # Timeout de 300 segundos para dar tiempo al workflow
+            workflow_response_raw = requests.post(
+                EDN360_WORKFLOW_SERVICE_URL,
+                data=payload_json,
+                headers={"Content-Type": "application/json"},
+                timeout=300
+            )
+            
+            workflow_response_raw.raise_for_status()
+            
+            # Parsear respuesta
+            workflow_response = workflow_response_raw.json()
+            
+            logger.info(
+                f"📥 Respuesta recibida del microservicio | "
+                f"Size: {len(json.dumps(workflow_response))} chars"
+            )
+            
+        except requests.exceptions.Timeout:
+            raise Exception(
+                "Timeout: El microservicio no respondió en 5 minutos"
+            )
+        except requests.exceptions.ConnectionError as e:
+            logger.error(f"❌ ConnectionError: {type(e).__name__}: {str(e)}")
+            raise Exception(
+                f"Error de conexión al microservicio en {EDN360_WORKFLOW_SERVICE_URL}"
+            )
+        except requests.exceptions.HTTPError as e:
+            error_detail = workflow_response_raw.text if workflow_response_raw else str(e)
+            raise Exception(
+                f"Error HTTP {workflow_response_raw.status_code}: {error_detail}"
+            )
+        except json.JSONDecodeError as e:
+            logger.error(f"❌ JSONDecodeError: {str(e)}")
+            logger.error(f"📄 Raw response: {workflow_response_raw.text[:1000]}")
+            raise Exception(
+                "El microservicio no devolvió JSON válido"
+            )
+        except Exception as e:
+            logger.error(f"❌ Excepción inesperada: {type(e).__name__}: {str(e)}")
+            raise
+        
+        # ============================================
+        # VALIDAR ESTRUCTURA
+        # ============================================
+        if "client_training_program_enriched" not in workflow_response:
+            logger.error(f"❌ Respuesta NO contiene 'client_training_program_enriched'")
+            logger.error(f"📦 Claves recibidas: {list(workflow_response.keys())}")
+            
+            raise Exception(
+                f"La respuesta no contiene 'client_training_program_enriched'"
+            )
+        
+        logger.info(
+            f"✅ Training Workflow EVOLUTIVO ejecutado exitosamente | "
+            f"Sessions: {len(workflow_response['client_training_program_enriched'].get('sessions', []))}"
+        )
+        
+        return workflow_response
+    
+    except Exception as e:
+        logger.error(f"❌ Error en call_training_workflow_with_state: {e}")
+        raise
+
+
 def get_training_workflow_config() -> Dict[str, Any]:
     """
     Devuelve la configuración actual del workflow de entrenamiento.
