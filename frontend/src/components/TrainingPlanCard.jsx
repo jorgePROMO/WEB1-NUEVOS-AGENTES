@@ -393,11 +393,34 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleSendEmail();
+                  handleSendToUserPanel();
                 }}
                 size="sm"
                 variant="outline"
                 className="border-green-400 text-green-700 hover:bg-green-50"
+                disabled={sending || status === 'sent'}
+              >
+                {sending ? (
+                  <>
+                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  <>
+                    <UserCheck className="h-3 w-3 mr-1" />
+                    {status === 'sent' ? 'Ya Enviado' : 'Enviar al Panel del Usuario'}
+                  </>
+                )}
+              </Button>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSendEmail();
+                }}
+                size="sm"
+                variant="outline"
+                className="border-blue-400 text-blue-700 hover:bg-blue-50"
+                disabled={sending}
               >
                 <Mail className="h-3 w-3 mr-1" />
                 Enviar por Email
