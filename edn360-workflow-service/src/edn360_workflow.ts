@@ -2112,7 +2112,8 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
           ` }
           ]
         }
-      ]
+      ],
+      180000  // 3 minutes timeout (E7.5 has Exercise Database Vector Store)
     );
     conversationHistory.push(...e75TrainingPlanEnricherResultTemp.newItems.map((item: any) => item.rawItem));
 
