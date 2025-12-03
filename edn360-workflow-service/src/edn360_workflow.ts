@@ -1994,7 +1994,8 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
           ` }
           ]
         }
-      ]
+      ],
+      180000  // 3 minutes timeout (E4 has Knowledge Base Vector Store)
     );
     conversationHistory.push(...e4TrainingPlanGeneratorResultTemp.newItems.map((item: any) => item.rawItem));
 
