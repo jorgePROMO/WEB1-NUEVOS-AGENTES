@@ -1260,7 +1260,7 @@ async def generate_training_plan(request: Request):
             workflow_input = {
                 "input": {
                     "input_as_text": json.dumps({
-                        "user_profile": user_profile.dict(),
+                        "user_profile": _serialize_datetime_fields(user_profile.dict()),
                         "current_questionnaire": serialize_questionnaire(current_q)
                     })
                 },
