@@ -67,7 +67,7 @@ class EDN360E2ETester:
     def case_1_initial_plan(self):
         """
         CASE 1: Plan Inicial (Sin Historial)
-        Request: user_id + questionnaire_ids: ["edn360_inicial_jorge2"]
+        Request: user_id + questionnaire_ids: ["1764713509409284"] (initial questionnaire)
         Expected: is_evolutionary: false, STATE with last_plan: null, previous_plans: []
         """
         if not self.admin_token:
@@ -75,7 +75,7 @@ class EDN360E2ETester:
             return False
             
         user_id = "1764168881795908"
-        questionnaire_ids = ["edn360_inicial_jorge2"]
+        questionnaire_ids = ["1764713509409284"]  # Using actual questionnaire ID from backend
         
         url = f"{BACKEND_URL}/training-plan"
         headers = {"Authorization": f"Bearer {self.admin_token}"}
