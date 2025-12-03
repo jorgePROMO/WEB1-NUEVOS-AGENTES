@@ -2011,8 +2011,10 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
       output_text: JSON.stringify(e5TrainingPlanValidatorResultTemp.finalOutput),
       output_parsed: e5TrainingPlanValidatorResultTemp.finalOutput
     };
-    const e6ExerciseNormalizerDbMapperResultTemp = await runner.run(
+    const e6ExerciseNormalizerDbMapperResultTemp = await runAgentWithLogging(
+      runner,
       e6ExerciseNormalizerDbMapper,
+      "E6 – Exercise Normalizer & DB Mapper",
       [
         ...conversationHistory,
         {
