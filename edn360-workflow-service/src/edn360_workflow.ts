@@ -2,11 +2,14 @@ import { fileSearchTool, Agent, AgentInputItem, Runner, withTrace } from "@opena
 import { z } from "zod";
 
 // Tool definitions
-const fileSearch = fileSearchTool([
-  "vs_6924b7574b7c8191b6008068aa8a1df0"
+// BD de Ejercicios v2.0 Definitiva (1,477 ejercicios corregidos)
+const fileSearchExercises = fileSearchTool([
+  "vs_693049ea21308191a8bdcee667ef9ba9"
 ])
-const fileSearch1 = fileSearchTool([
-  "vs_692c510043dc81919e4e7887a299d583"
+
+// K1 Entrenamiento - Knowledge Base
+const fileSearchTrainingKB = fileSearchTool([
+  "vs_693049eb1144819197bf732246b1c1f6"
 ])
 const E1AnalizadorDePerfilSchema = z.object({ profile: z.object({ name: z.string(), email: z.string(), age: z.number(), gender: z.enum(["male", "female", "other"]), height_cm: z.number(), weight_kg: z.number(), experience_level: z.enum(["beginner", "intermediate", "advanced"]), training_days_per_week: z.number(), session_duration_min: z.number(), goal_primary: z.enum(["muscle_gain", "fat_loss", "recomposition", "performance"]), goal_secondary: z.string(), injuries_or_limitations: z.array(z.string()), equipment_available: z.array(z.string()), preferences: z.object({ enjoys: z.array(z.string()), dislikes: z.array(z.string()) }) }) });
 const E2ParseQuestionnaireSchema = z.object({ questionnaire_normalized: z.object({ full_name: z.string(), email: z.string(), birth_date: z.string(), gender: z.enum(["male", "female", "other"]), profession: z.string(), phone: z.string(), weight_kg: z.number(), height_cm: z.number(), bodyfat_percent: z.number(), chronic_conditions: z.array(z.string()), medications: z.array(z.string()), injuries_limitations: z.array(z.string()), workload_stress: z.enum(["low", "medium", "high"]), daily_activity: z.enum(["low", "medium", "high"]), training_experience_level: z.enum(["beginner", "intermediate", "advanced"]), training_days_per_week: z.number(), session_duration_min: z.number(), equipment_available: z.array(z.string()), food_intolerances_allergies: z.array(z.string()), foods_disliked: z.array(z.string()), preferred_foods: z.array(z.string()), goal_primary: z.enum(["muscle_gain", "fat_loss", "recomposition", "performance"]), sleep_hours: z.number(), meals_per_day: z.number(), diet_history: z.array(z.string()), supplements: z.array(z.string()), motivation_reason: z.string() }) });
