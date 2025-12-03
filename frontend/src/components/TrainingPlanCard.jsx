@@ -205,14 +205,36 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
     }
   };
 
+  const handleSendToUserPanel = async () => {
+    try {
+      setSending(true);
+      await axios.post(
+        `${API}/admin/users/${userId}/training-plans/send-to-user-panel`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
+      alert('✅ Plan enviado al panel del usuario y notificación por email enviada');
+      
+      // Refrescar el plan para actualizar el status
+      await fetchLatestPlan();
+    } catch (error) {
+      console.error('Error sending to user panel:', error);
+      const errorMsg = error.response?.data?.detail?.message || error.message;
+      alert(`❌ Error: ${errorMsg}`);
+    } finally {
+      setSending(false);
+    }
+  };
+
   const handleSendEmail = async () => {
     try {
       setSending(true);
       await axios.post(
         `${API}/admin/users/${userId}/training-plans/send-email`,
-        {
-          plan_id: latestPlan.id
-        },
+        {},
         {
           headers: { Authorization: `Bearer ${token}` },
         }
