@@ -202,7 +202,7 @@ backend:
     file: "/app/backend/server.py"
     stuck_count: 2
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: false
           agent: "testing"
@@ -210,6 +210,9 @@ backend:
         - working: false
           agent: "testing"
           comment: "🔍 EDN360 E2E COMPREHENSIVE TESTING COMPLETED for Jorge2 (1764168881795908): ✅ BACKEND ARCHITECTURE VERIFIED: STATE construction works correctly - logs show 'Cuestionarios recuperados | Total en BD: 2 | Initial (más antiguo): 1764713509409284 | Previous followups: 0 | Current: 1764713509409284', 'Planes previos recuperados | Total en BD: 0 | Previous plans en STATE: 0 | Has last_plan: False', 'Objeto STATE construido | Has initial: True | Previous followups: 0 | Previous plans: 0 | Has last_plan: False'. ✅ ERROR HANDLING: Correctly returns 404 for invalid users. ✅ MICROSERVICE HEALTH: EDN360 service (localhost:4000) responds healthy. ❌ CRITICAL ISSUE CONFIRMED: Microservice returns HTTP 500 after 84 seconds timeout during workflow execution. Backend logs show 'Error HTTP 500: 500 Server Error: Internal Server Error for url: http://localhost:4000/api/edn360/run-training-workflow'. The evolutionary flow architecture is correctly implemented but blocked by microservice timeout. REQUIRES WEBSEARCH tool to investigate OpenAI workflow timeout solutions and E3+ step debugging."
+        - working: false
+          agent: "main"
+          comment: "🔧 TIMEOUT FIX IMPLEMENTED: troubleshoot_agent diagnosed that E3 hangs when connecting to Knowledge Base Vector Store without explicit timeout. Applied fix: 1) Added timeout parameter (default 120000ms) to runAgentWithLogging() function with Promise.race() pattern, 2) Set explicit timeouts for all agents: E1/E2 (90s), E3/E4/E5/E6/E7.5 (180s for Vector Store agents), E7 (120s), 3) Enhanced logging to show timeout values, 4) Compiled TypeScript and restarted edn360-workflow-service successfully. Service is RUNNING (pid 647). Ready for E2E testing with 3-scenario flow (initial plan, first follow-up, second follow-up) for user Jorge2."
 
 frontend:
   - task: "EDN360 Workflow Launch Button"
