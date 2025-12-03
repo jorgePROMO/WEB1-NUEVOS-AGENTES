@@ -3777,19 +3777,29 @@ class BackendTester:
         print(f"Backend URL: {BACKEND_URL}")
         print("=" * 80)
         
-        # Run tests in order - focusing on ASYNC GENERATION SYSTEM (E.D.N.360)
+        # Run tests in order - focusing on EDN360 EVOLUTIONARY FLOW
         tests = [
-            # CRITICAL: ASYNC GENERATION SYSTEM TESTS (E.D.N.360) - HIGH PRIORITY
-            self.test_28_admin_login_for_async_generation,
-            self.test_29_find_user_with_submission,
-            self.test_30_create_test_submission,
-            self.test_31_async_generation_endpoint_training,
-            self.test_32_job_status_endpoint_initial,
-            self.test_33_job_progress_monitoring,
-            self.test_34_async_generation_endpoint_full,
-            self.test_35_full_mode_job_verification,
-            self.test_36_error_handling_invalid_submission,
-            self.test_37_job_status_nonexistent,
+            # CRITICAL: EDN360 EVOLUTIONARY FLOW TESTS - HIGH PRIORITY
+            self.test_28_admin_login_for_edn360_evolutionary,
+            self.test_29_case1_initial_questionnaire_flow,
+            self.test_30_case2_first_evolution_flow,
+            self.test_31_case3_second_evolution_flow,
+            self.test_32_verify_database_state_progression,
+            self.test_33_microservice_health_check,
+            self.test_34_error_handling_invalid_user,
+            self.test_35_error_handling_invalid_questionnaire,
+            
+            # ASYNC GENERATION SYSTEM TESTS (E.D.N.360)
+            self.test_36_admin_login_for_async_generation,
+            self.test_37_find_user_with_submission,
+            self.test_38_create_test_submission,
+            self.test_39_async_generation_endpoint_training,
+            self.test_40_job_status_endpoint_initial,
+            self.test_41_job_progress_monitoring,
+            self.test_42_async_generation_endpoint_full,
+            self.test_43_full_mode_job_verification,
+            self.test_44_error_handling_invalid_submission,
+            self.test_45_job_status_nonexistent,
             
             # CRITICAL PRODUCTION TESTS
             self.test_39_admin_login_production_credentials,
