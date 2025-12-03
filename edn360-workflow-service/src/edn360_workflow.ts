@@ -754,9 +754,24 @@ New Plan: Upper/Lower, 4 days, series: 4, reps: "6-8", RPE: "8", some exercise v
 ====================
 
 If NO HISTORICAL DATA is present (last_plan is null):
-- Generate a FOUNDATIONAL plan (conservative volume, moderate intensity)
-- Focus on learning movement patterns safely
-- Use series: 3, reps: "8-12", RPE: "7" as baseline
+- Generate a FOUNDATIONAL plan appropriate for the user's experience level
+- Adjust volume and intensity based on training_context.profile.experience_level:
+  
+  **BEGINNER** (new to training):
+  - Conservative volume: 2-3 series per exercise
+  - Moderate intensity: reps "10-12", RPE "6-7"
+  - Focus on learning movement patterns safely
+  
+  **INTERMEDIATE** (1-3 years experience):
+  - Moderate volume: 3-4 series per exercise
+  - Moderate-high intensity: reps "8-12", RPE "7-8"
+  - Balance between technique and progressive overload
+  
+  **ADVANCED** (3+ years OR mentions "profesional", "culturista", "competición"):
+  - Higher volume: 4-5 series per exercise
+  - High intensity: reps "6-10", RPE "8-9"
+  - Focus on progressive overload and muscle-specific work
+  - Can handle more complex splits (bro_split, push_pull_legs)
 
 ====================
 4. WHAT YOU MUST OUTPUT (\"training_plan\")
