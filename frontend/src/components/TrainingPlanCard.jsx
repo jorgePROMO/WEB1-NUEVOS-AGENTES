@@ -310,15 +310,43 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
         {isExpanded && (
           <CardContent className="pt-0 space-y-4 border-t">
             {/* Plan Details */}
-            <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+            <div className="bg-gray-50 rounded-lg p-3 space-y-3">
               <div>
                 <p className="text-xs font-semibold text-gray-500 mb-1">Objetivo</p>
                 <p className="text-sm text-gray-900">{plan.goal}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-500 mb-1">Resumen</p>
+                <p className="text-xs font-semibold text-gray-500 mb-1">Resumen del Programa</p>
                 <p className="text-sm text-gray-700">{plan.summary}</p>
               </div>
+              
+              {/* Notas Generales del Plan */}
+              {plan.general_notes && plan.general_notes.length > 0 && (
+                <div className="border-t border-gray-200 pt-3">
+                  <p className="text-xs font-semibold text-gray-500 mb-2">⚠️ Notas Generales Importantes</p>
+                  <ul className="space-y-1">
+                    {plan.general_notes.map((note, idx) => (
+                      <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                        <span className="text-blue-600 mt-0.5">•</span>
+                        <span>{note}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
+              {/* Programa Info */}
+              <div className="border-t border-gray-200 pt-3 grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 mb-1">Tipo de Rutina</p>
+                  <p className="text-sm text-gray-900">{translate(plan.training_type)}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 mb-1">Duración del Programa</p>
+                  <p className="text-sm text-gray-900">{plan.weeks} semanas</p>
+                </div>
+              </div>
+              
               <div>
                 <p className="text-xs font-semibold text-gray-500 mb-1">Generado</p>
                 <p className="text-sm text-gray-700">
