@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-EDN360 E2E Testing - Jorge2 Evolutionary Workflow
-Tests the complete evolutionary flow for user Jorge2 (1764168881795908)
+EDN360 E2E Testing - 3 Scenario Evolutionary Flow
+Tests the complete evolutionary training plan generation flow for user Jorge2
 """
 
 import requests
 import json
 import sys
 import os
-from datetime import datetime
 import time
+from datetime import datetime
 
 # Backend URL from frontend/.env
 BACKEND_URL = "https://edn360-audit.preview.emergentagent.com/api"
@@ -17,8 +17,13 @@ BACKEND_URL = "https://edn360-audit.preview.emergentagent.com/api"
 class EDN360E2ETester:
     def __init__(self):
         self.admin_token = None
-        self.results = []
-        self.plan_ids = []  # Store plan IDs for sequential testing
+        self.test_results = []
+        self.jorge2_user_id = "1764168881795908"
+        self.captured_data = {
+            "scenario_1": {},
+            "scenario_2": {},
+            "scenario_3": {}
+        }
         
     def log_result(self, test_name, success, message, response_data=None):
         """Log test result"""
