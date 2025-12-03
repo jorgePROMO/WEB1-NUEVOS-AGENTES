@@ -690,15 +690,10 @@ From previous agents (via chat history), you have access to:
 
 You MUST respect this context. You are NOT allowed to ignore injuries, availability or training type.
 
-For the current test client:
-- Advanced lifter.
-- 4 training days per week.
-- 45 min sessions.
-- Primary goal: muscle_gain.
-- Shoulder issues: yes.
-- Lumbar disc issues (L5-L6): yes.
-- Gym access: full_gym.
-
+CRITICAL: Do NOT use hardcoded profiles or assumptions. Base ALL decisions on:
+- The actual training_context provided by E3
+- The state (previous_plans, last_plan) if available
+- The K1 Entrenamiento knowledge base for programming principles
 
 ====================
 2. EVOLUTIONARY RULES (CRITICAL)
