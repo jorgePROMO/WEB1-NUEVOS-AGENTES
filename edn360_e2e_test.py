@@ -277,15 +277,17 @@ class EDN360E2ETester:
     def case_3_second_evolution(self):
         """
         CASE 3: Segundo Seguimiento (Segunda Evolución)
-        Request: user_id + questionnaire_ids: ["edn360_inicial_jorge2", "edn360_seg2_jorge2"] + previous_training_plan_id (Plan 2)
+        Request: user_id + questionnaire_ids: ["1764713509409284", "1764769467597359"] + previous_training_plan_id (Plan 2)
         Expected: is_evolutionary: true, STATE with previous_plans: [Plan 1, Plan 2], last_plan: Plan 2
+        
+        Note: Using same questionnaires as Case 2 since we only have 2 questionnaires available
         """
         if not self.admin_token or not hasattr(self, 'plan_2_info'):
             self.log_result("CASE 3 - Second Evolution", False, "No admin token or Plan 2 info available")
             return False
             
         user_id = "1764168881795908"
-        questionnaire_ids = ["edn360_inicial_jorge2", "edn360_seg2_jorge2"]
+        questionnaire_ids = ["1764713509409284", "1764769467597359"]  # Using available questionnaire IDs
         
         # Get the latest plan ID from database (should be Plan 2)
         previous_training_plan_id = self.get_latest_plan_id(user_id)
