@@ -1074,21 +1074,38 @@ async def generate_training_plan(request: Request):
         body = await request.json()
         
         user_id = body.get("user_id")
-        current_questionnaire_id = body.get("current_questionnaire_id")
+        questionnaire_ids = body.get("questionnaire_ids", [])
+        previous_training_plan_id = body.get("previous_training_plan_id")
         
-        if not user_id or not current_questionnaire_id:
+        # Validaciones
+        if not user_id:
             raise HTTPException(
                 status_code=400,
                 detail={
                     "error": "missing_fields",
-                    "message": "Se requiere user_id y current_questionnaire_id"
+                    "message": "Se requiere user_id"
                 }
             )
+        
+        if not questionnaire_ids or len(questionnaire_ids) == 0:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": "missing_questionnaires",
+                    "message": "Se requiere al menos un cuestionario en questionnaire_ids"
+                }
+            )
+        
+        # El current_questionnaire_id es el ÚLTIMO en el array
+        # (el "Cuestionario Nuevo" de la UI)
+        current_questionnaire_id = questionnaire_ids[-1]
         
         logger.info(
             f"🏋️ Generando plan de entrenamiento EVOLUTIVO | "
             f"admin: {admin['_id']} | user_id: {user_id} | "
-            f"current_questionnaire: {current_questionnaire_id}"
+            f"questionnaire_ids: {questionnaire_ids} | "
+            f"current (último): {current_questionnaire_id} | "
+            f"previous_plan_id: {previous_training_plan_id or 'none'}"
         )
         
         # ============================================
