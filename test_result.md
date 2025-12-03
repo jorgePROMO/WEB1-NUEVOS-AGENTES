@@ -234,8 +234,7 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "EDN360 Evolutionary Training Plan Flow"
+  current_focus: []
   stuck_tasks:
     - "EDN360 Evolutionary Training Plan Flow"
   test_all: false
