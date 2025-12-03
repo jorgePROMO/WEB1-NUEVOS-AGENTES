@@ -2025,7 +2025,8 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
           ` }
           ]
         }
-      ]
+      ],
+      180000  // 3 minutes timeout (E5 has Knowledge Base Vector Store)
     );
     conversationHistory.push(...e5TrainingPlanValidatorResultTemp.newItems.map((item: any) => item.rawItem));
 
