@@ -721,12 +721,23 @@ const AdminDashboard = () => {
     try {
       setGeneratingEDN360Plan(true);
       
+      // Preparar el payload con cuestionario y plan previo (opcional)
+      const payload = {
+        user_id: selectedClient.id,
+        questionnaire_submission_id: submissionId
+      };
+      
+      // Agregar plan previo si está seleccionado
+      if (selectedPreviousTrainingPlan && selectedPreviousTrainingPlan !== 'none') {
+        payload.previous_training_plan_id = selectedPreviousTrainingPlan;
+        console.log('📋 Usando plan previo:', selectedPreviousTrainingPlan);
+      }
+      
+      console.log('🚀 Generando plan EDN360 con payload:', payload);
+      
       const response = await axios.post(
         `${API}/training-plan`,
-        {
-          user_id: selectedClient.id,
-          questionnaire_submission_id: submissionId
-        },
+        payload,
         {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true
