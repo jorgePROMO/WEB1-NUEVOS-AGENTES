@@ -1754,7 +1754,7 @@ ABSOLUTE RULES
 `,
   model: "gpt-4.1",
   tools: [
-    fileSearch1
+    fileSearchExercises  // BD Ejercicios v2.0 Definitiva
   ],
   outputType: E75TrainingPlanEnricherSchema,
   modelSettings: {
