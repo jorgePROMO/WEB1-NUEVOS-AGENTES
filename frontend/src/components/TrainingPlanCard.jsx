@@ -653,7 +653,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                       />
                                     </div>
                                   </div>
-                                  <div className="mt-2">
+                                  <div className="mt-2 space-y-1">
                                     <Textarea
                                       value={exercise.notes}
                                       onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'notes', e.target.value)}
@@ -661,6 +661,18 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                       placeholder="Notas del ejercicio"
                                       rows={1}
                                     />
+                                    {/* Botón Ver Video */}
+                                    {exercise.video_url && (
+                                      <Button
+                                        onClick={() => window.open(exercise.video_url, '_blank')}
+                                        size="sm"
+                                        variant="outline"
+                                        className="w-full text-xs border-blue-300 text-blue-700 hover:bg-blue-50"
+                                      >
+                                        <ExternalLink className="h-3 w-3 mr-1" />
+                                        Ver Video
+                                      </Button>
+                                    )}
                                   </div>
                                 </div>
                               ))}
