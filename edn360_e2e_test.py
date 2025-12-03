@@ -271,8 +271,9 @@ class EDN360E2ETester:
             
             if result.returncode == 0 and result.stdout.strip():
                 logs = result.stdout.strip()
+                lines_count = len(logs.split('\n'))
                 self.log_result("Capture Microservice Logs", True, 
-                              f"Microservice logs captured: {len(logs.split('\n'))} lines")
+                              f"Microservice logs captured: {lines_count} lines")
                 return logs
             else:
                 self.log_result("Capture Microservice Logs", False, 
