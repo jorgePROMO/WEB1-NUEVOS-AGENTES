@@ -243,8 +243,9 @@ class EDN360E2ETester:
             
             if result.returncode == 0 and result.stdout.strip():
                 logs = result.stdout.strip()
+                lines_count = len(logs.split('\n'))
                 self.log_result("Capture Backend Logs", True, 
-                              f"Backend logs captured: {len(logs.split('\n'))} relevant lines")
+                              f"Backend logs captured: {lines_count} relevant lines")
                 
                 # Store logs in captured data
                 for scenario_key in self.captured_data.keys():
