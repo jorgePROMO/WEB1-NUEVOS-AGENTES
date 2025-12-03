@@ -1128,6 +1128,56 @@ async def generate_training_plan(request: Request):
                 )
             
             logger.info(f"✅ EDN360Input construido | Cuestionarios: {len(edn360_input['questionnaires'])}")
+            
+            # ============================================
+            # PASO 2.5: AGREGAR PLAN PREVIO SI EXISTE
+            # ============================================
+            if previous_training_plan_id:
+                logger.info(f"📋 Buscando plan previo: {previous_training_plan_id}")
+                
+                # Buscar el plan previo en training_plans_v2
+                edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+                
+                # El ID puede venir en formato "edn360_{i}_{created_at}"
+                # Necesitamos buscar por created_at o por índice
+                if previous_training_plan_id.startswith('edn360_'):
+                    # Extraer la fecha del ID
+                    parts = previous_training_plan_id.split('_')
+                    if len(parts) >= 3:
+                        created_at = '_'.join(parts[2:])
+                        previous_plan = await edn360_db.training_plans_v2.find_one(
+                            {
+                                "user_id": user_id,
+                                "created_at": created_at
+                            },
+                            {"_id": 0}
+                        )
+                    else:
+                        previous_plan = None
+                else:
+                    # Buscar por _id en training_plans legacy
+                    from bson import ObjectId
+                    try:
+                        previous_plan = await db.training_plans.find_one(
+                            {"_id": ObjectId(previous_training_plan_id)}
+                        )
+                    except:
+                        previous_plan = None
+                
+                if previous_plan:
+                    # Agregar el plan previo al contexto del input
+                    if 'context' not in edn360_input:
+                        edn360_input['context'] = {}
+                    
+                    edn360_input['context']['previous_training_plan'] = {
+                        'plan_data': previous_plan.get('plan', previous_plan),
+                        'created_at': previous_plan.get('created_at'),
+                        'source': 'training_plans_v2'
+                    }
+                    
+                    logger.info(f"✅ Plan previo agregado al contexto")
+                else:
+                    logger.warning(f"⚠️  Plan previo {previous_training_plan_id} no encontrado")
         
         except HTTPException:
             raise
