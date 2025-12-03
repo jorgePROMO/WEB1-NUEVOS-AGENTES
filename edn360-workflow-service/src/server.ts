@@ -18,14 +18,27 @@ app.post('/api/edn360/run-training-workflow', async (req, res) => {
     console.log('🚀 Ejecutando workflow EDN360...');
     console.log(`📦 Input size: ${JSON.stringify(req.body).length} chars`);
     
-    // EDN360Input completo (user_profile + questionnaires + context)
-    const edn360Input = req.body;
+    // Detectar si es flujo evolutivo (con input + state) o antiguo (solo input_as_text)
+    let workflowInput: any;
     
-    // Convertir a string para pasarlo al workflow
-    const inputJsonStr = JSON.stringify(edn360Input);
+    if (req.body.input && req.body.state) {
+      // FLUJO EVOLUTIVO NUEVO: { input, state }
+      console.log('🔄 Flujo EVOLUTIVO detectado (con STATE)');
+      workflowInput = {
+        input: req.body.input,
+        state: req.body.state
+      };
+    } else {
+      // FLUJO ANTIGUO (RETROCOMPATIBILIDAD): EDN360Input directo
+      console.log('📝 Flujo ANTIGUO detectado (sin STATE)');
+      const inputJsonStr = JSON.stringify(req.body);
+      workflowInput = {
+        input_as_text: inputJsonStr
+      };
+    }
     
     // Ejecutar workflow
-    const result = await runWorkflow({ input_as_text: inputJsonStr });
+    const result = await runWorkflow(workflowInput);
     
     console.log('✅ Workflow ejecutado correctamente');
     console.log(`📤 Output size: ${JSON.stringify(result).length} chars`);
