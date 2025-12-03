@@ -78,6 +78,99 @@ def _serialize_datetime_fields(data):
         return data
 
 
+def _translate_training_plan_to_spanish(plan):
+    """
+    Traduce todos los términos de entrenamiento de inglés a español de España.
+    Se aplica ANTES de guardar el plan en la base de datos.
+    """
+    # Diccionario de traducciones (inglés → español)
+    translations = {
+        # Tipos de entrenamiento
+        'full_body': 'Cuerpo Completo',
+        'upper_lower': 'Torso-Pierna',
+        'push_pull_legs': 'Empuje-Tirón-Pierna',
+        'bro_split': 'Rutina Weider',
+        
+        # Focos/énfasis de sesiones
+        'upper_body': 'Tren Superior',
+        'lower_body': 'Tren Inferior',
+        'push': 'Empuje',
+        'pull': 'Tirón',
+        'push_focus': 'Énfasis Empuje',
+        'pull_focus': 'Énfasis Tirón',
+        'quad_focus': 'Énfasis Cuádriceps',
+        'hamstring_focus': 'Énfasis Isquios',
+        'push_emphasis': 'Énfasis Empuje',
+        'pull_emphasis': 'Énfasis Tirón',
+        
+        # Grupos musculares principales
+        'chest': 'Pecho',
+        'back': 'Espalda',
+        'shoulders': 'Hombros',
+        'triceps': 'Tríceps',
+        'biceps': 'Bíceps',
+        'quads': 'Cuádriceps',
+        'hamstrings': 'Isquiotibiales',
+        'glutes': 'Glúteos',
+        'legs': 'Piernas',
+        'arms': 'Brazos',
+        'core': 'Core',
+        'calves': 'Gemelos',
+        
+        # Grupos musculares específicos
+        'front_delts': 'Deltoides Anterior',
+        'side_delts': 'Deltoides Lateral',
+        'rear_delts': 'Deltoides Posterior',
+        'upper_chest': 'Pecho Superior',
+        'lower_chest': 'Pecho Inferior',
+        'lats': 'Dorsales',
+        'traps': 'Trapecios',
+        'lower_back': 'Lumbar',
+        'abs': 'Abdominales',
+        'obliques': 'Oblicuos',
+        'forearms': 'Antebrazos',
+        
+        # Patrones de nombres de sesiones comunes
+        'Upper 1': 'Tren Superior 1',
+        'Upper 2': 'Tren Superior 2',
+        'Lower 1': 'Tren Inferior 1',
+        'Lower 2': 'Tren Inferior 2',
+        'Push Emphasis': 'Énfasis Empuje',
+        'Pull Emphasis': 'Énfasis Tirón',
+        'Quad Emphasis': 'Énfasis Cuádriceps',
+        'Hamstring Emphasis': 'Énfasis Isquios',
+        'Push Dominante': 'Énfasis Empuje',
+        'Pull Dominante': 'Énfasis Tirón'
+    }
+    
+    def translate_text(text):
+        """Traduce un string aplicando todas las traducciones del diccionario"""
+        if not isinstance(text, str):
+            return text
+        
+        translated = text
+        for eng, esp in translations.items():
+            # Case-insensitive replacement
+            import re
+            pattern = re.compile(re.escape(eng), re.IGNORECASE)
+            translated = pattern.sub(esp, translated)
+        
+        return translated
+    
+    def translate_recursive(obj):
+        """Aplica traducción recursivamente a todo el plan"""
+        if isinstance(obj, dict):
+            return {key: translate_recursive(value) for key, value in obj.items()}
+        elif isinstance(obj, list):
+            return [translate_recursive(item) for item in obj]
+        elif isinstance(obj, str):
+            return translate_text(obj)
+        else:
+            return obj
+    
+    return translate_recursive(plan)
+
+
 # ==================== ENVIRONMENT VALIDATION ====================
 # Validate critical environment variables at startup
 required_env_vars = ['MONGO_URL', 'DB_NAME']
