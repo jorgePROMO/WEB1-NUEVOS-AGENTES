@@ -715,25 +715,25 @@ const AdminDashboard = () => {
   };
 
   // Generate EDN360 Training Plan - NEW FLOW
-  const generateEDN360TrainingPlan = async (submissionId) => {
+  const generateEDN360TrainingPlan = async () => {
     if (!selectedClient) return;
     
     try {
       setGeneratingEDN360Plan(true);
       
-      // Preparar el payload con cuestionario y plan previo (opcional)
+      // Preparar el payload - el backend incluirá TODOS los cuestionarios automáticamente
       const payload = {
-        user_id: selectedClient.id,
-        questionnaire_submission_id: submissionId
+        user_id: selectedClient.id
       };
       
       // Agregar plan previo si está seleccionado
-      if (selectedPreviousTrainingPlan && selectedPreviousTrainingPlan !== 'none') {
+      if (selectedPreviousTrainingPlan && selectedPreviousTrainingPlan !== 'none' && selectedPreviousTrainingPlan !== '') {
         payload.previous_training_plan_id = selectedPreviousTrainingPlan;
         console.log('📋 Usando plan previo:', selectedPreviousTrainingPlan);
       }
       
       console.log('🚀 Generando plan EDN360 con payload:', payload);
+      console.log('📋 El backend incluirá TODOS los cuestionarios automáticamente');
       
       const response = await axios.post(
         `${API}/training-plan`,
