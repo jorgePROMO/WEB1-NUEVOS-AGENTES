@@ -931,20 +931,11 @@ Create sessions based on training_context.training_type and training_context.ava
 
 You do NOT need to model rest days, only the actual training days (D1, D2, D3, etc.).
 
-Each upper day:
-- 2–3 blocks:
-  - Block A: compound press + row pattern (horizontal press/row).
-  - Block B: accessory chest/back/shoulders, shoulder-safe.
-  - Block C: arms (biceps/triceps) or extra upper back.
-
-Each lower day:
-- 2–3 blocks:
-  - Block A: main quad-dominant machine (e.g. leg press vs squats).
-  - Block B: hamstring-focused machine (e.g. leg curl, RDL machine).
-  - Block C: glute/hip work and/or calves.
-
-You MUST keep the total time realistic for 45 minutes:
-- Typically 2–3 blocks with 1–2 exercises each.
+**BLOCK STRUCTURE:**
+- Adjust number of blocks (2-4) based on session_duration_min and experience_level
+- More time + advanced → more blocks and exercises
+- Each block: 1-3 exercises targeting related muscle groups
+- Keep total time realistic for the user's available session_duration_min
 
 
 ====================
