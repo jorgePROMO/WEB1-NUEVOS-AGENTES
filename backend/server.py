@@ -2432,18 +2432,6 @@ def _generate_training_plan_email_html(plan_doc: dict, user: dict) -> str:
     return html
 
 
-        logger.error(f"❌ Error actualizando plan: {e}")
-        import traceback
-        traceback.print_exc()
-        raise HTTPException(
-            status_code=500,
-            detail={
-                "error": "internal_error",
-                "message": f"Error actualizando plan: {str(e)}"
-            }
-        )
-
-
 @api_router.post("/admin/archive-client/{user_id}")
 async def archive_client(user_id: str, request: Request, reason: Optional[str] = None):
     admin = await require_admin(request)
