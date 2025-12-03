@@ -765,6 +765,9 @@ const AdminDashboard = () => {
       // Guardar el plan generado
       setGeneratedEDN360Plan(response.data.client_training_program_enriched);
       
+      // Forzar refresh del TrainingPlanCard (hará que se recargue colapsado)
+      setPlanRefreshKey(prev => prev + 1);
+      
       alert('✅ Plan de entrenamiento generado exitosamente!');
       
     } catch (error) {
