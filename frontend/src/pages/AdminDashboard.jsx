@@ -3860,42 +3860,51 @@ const AdminDashboard = () => {
                             <Card className="mb-6 border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50">
                               <CardHeader>
                                 <CardTitle className="text-lg text-blue-900">⚙️ Configuración de Generación</CardTitle>
-                                <p className="text-sm text-gray-600">Selecciona los datos que quieres usar para generar el plan</p>
+                                <p className="text-sm text-gray-600">
+                                  El sistema incluye automáticamente todos los cuestionarios en orden cronológico
+                                </p>
                               </CardHeader>
                               <CardContent className="space-y-4">
-                                {/* Questionnaire Selector */}
-                                <div>
-                                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                    📋 Cuestionario Base
+                                {/* Cuestionarios que se incluirán - INFORMATIVO */}
+                                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-4">
+                                  <label className="block text-sm font-bold text-green-900 mb-3 flex items-center gap-2">
+                                    <span className="text-lg">📋</span>
+                                    Cuestionarios que se incluirán:
                                   </label>
-                                  <select
-                                    value={selectedQuestionnaireForTraining || ''}
-                                    onChange={(e) => setSelectedQuestionnaireForTraining(e.target.value)}
-                                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                  >
-                                    <option value="">Selecciona un cuestionario...</option>
-                                    {availableQuestionnaires.map((q) => (
-                                      <option key={q.id} value={q.id}>
-                                        {q.label}
-                                      </option>
+                                  <div className="space-y-2">
+                                    {availableQuestionnaires.map((q, index) => (
+                                      <div key={q.id} className="flex items-start gap-3 bg-white bg-opacity-60 rounded px-3 py-2">
+                                        <span className="text-green-600 font-bold text-lg flex-shrink-0">✓</span>
+                                        <div className="flex-1">
+                                          <span className="text-sm font-medium text-gray-800 block">
+                                            {index + 1}. {q.label}
+                                          </span>
+                                        </div>
+                                      </div>
                                     ))}
-                                  </select>
-                                  <p className="text-xs text-gray-500 mt-1">
-                                    Datos del cliente (peso, edad, disponibilidad, etc.)
-                                  </p>
+                                  </div>
+                                  <div className="mt-3 bg-blue-100 border-l-4 border-blue-500 p-3 rounded">
+                                    <p className="text-xs text-blue-800 flex items-start gap-2">
+                                      <span className="flex-shrink-0">ℹ️</span>
+                                      <span>
+                                        <strong>Todos los cuestionarios se envían al workflow</strong> para que los agentes analicen 
+                                        el progreso completo (evolución de peso, objetivos, lesiones, preferencias, etc.)
+                                      </span>
+                                    </p>
+                                  </div>
                                 </div>
 
                                 {/* Previous Plan Selector */}
                                 <div>
                                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                    📊 Plan Previo de Referencia (Opcional)
+                                    📊 Plan de Referencia (para progresión)
                                   </label>
                                   <select
                                     value={selectedPreviousTrainingPlan || ''}
                                     onChange={(e) => setSelectedPreviousTrainingPlan(e.target.value || null)}
                                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                   >
-                                    <option value="">Ninguno (empezar de cero)</option>
+                                    <option value="">Ninguno (primer plan del cliente)</option>
                                     {availableTrainingPlans.map((plan) => (
                                       <option key={plan.id} value={plan.id}>
                                         {plan.label}
@@ -3903,7 +3912,7 @@ const AdminDashboard = () => {
                                     ))}
                                   </select>
                                   <p className="text-xs text-gray-500 mt-1">
-                                    Usa este plan como base para progresión (aumentar cargas, volumen, etc.)
+                                    Selecciona el plan anterior para aplicar progresión de cargas, volumen y ejercicios
                                   </p>
                                 </div>
                               </CardContent>
