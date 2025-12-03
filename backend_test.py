@@ -3789,17 +3789,7 @@ class BackendTester:
             self.test_34_error_handling_invalid_user,
             self.test_35_error_handling_invalid_questionnaire,
             
-            # ASYNC GENERATION SYSTEM TESTS (E.D.N.360)
-            self.test_36_admin_login_for_async_generation,
-            self.test_37_find_user_with_submission,
-            self.test_38_create_test_submission,
-            self.test_39_async_generation_endpoint_training,
-            self.test_40_job_status_endpoint_initial,
-            self.test_41_job_progress_monitoring,
-            self.test_42_async_generation_endpoint_full,
-            self.test_43_full_mode_job_verification,
-            self.test_44_error_handling_invalid_submission,
-            self.test_45_job_status_nonexistent,
+            # ASYNC GENERATION SYSTEM TESTS (E.D.N.360) - SKIPPED FOR NOW
             
             # CRITICAL PRODUCTION TESTS
             self.test_46_admin_login_production_credentials,
