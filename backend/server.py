@@ -10355,16 +10355,44 @@ async def get_user_training_plans(user_id: str, request: Request):
     """Obtiene todos los planes de entrenamiento de un usuario (SOLO planes, sin cuestionarios)"""
     await require_admin(request)
     
-    # Obtener planes de entrenamiento
-    plans = await db.training_plans.find(
+    formatted_plans = []
+    
+    # 1. Obtener planes EDN360 de training_plans_v2
+    edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+    edn360_plans = await edn360_db.training_plans_v2.find(
+        {"user_id": user_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(length=1000)
+    
+    for i, plan in enumerate(edn360_plans):
+        created_at = plan.get("created_at")
+        if isinstance(created_at, str):
+            try:
+                created_at_dt = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                date_str = created_at_dt.strftime('%d/%m/%Y %H:%M')
+            except:
+                date_str = "Fecha desconocida"
+        else:
+            date_str = "Fecha desconocida"
+        
+        plan_number = len(edn360_plans) - i
+        title = plan.get("plan", {}).get("title", "Plan EDN360")
+        label = f"📋 EDN360 #{plan_number} - {title[:40]}... ({date_str})"
+        
+        formatted_plans.append({
+            "id": f"edn360_{i}_{created_at}",  # ID único
+            "label": label,
+            "generated_at": created_at,
+            "source_type": "edn360",
+            "type": "edn360_training_plan"
+        })
+    
+    # 2. Obtener planes legacy de training_plans
+    legacy_plans = await db.training_plans.find(
         {"user_id": user_id}
     ).sort("generated_at", -1).to_list(length=1000)
     
-    formatted_plans = []
-    
-    # Agregar planes de entrenamiento (sin cuestionarios)
-    for i, plan in enumerate(plans):
-        # Manejar casos donde generated_at podría no existir
+    for i, plan in enumerate(legacy_plans):
         generated_at = plan.get("generated_at")
         if generated_at:
             date_str = generated_at.strftime('%d/%m/%Y')
@@ -10373,9 +10401,8 @@ async def get_user_training_plans(user_id: str, request: Request):
             date_str = "Fecha desconocida"
             iso_str = datetime.now(timezone.utc).isoformat()
         
-        # Determinar label con convención de nombres mejorada
-        plan_number = len(plans) - i
-        label = f"PLAN ENTRENAMIENTO {plan_number} - {date_str}"
+        plan_number = len(legacy_plans) - i
+        label = f"PLAN LEGACY {plan_number} - {date_str}"
         
         formatted_plans.append({
             "id": str(plan["_id"]),
@@ -10386,8 +10413,6 @@ async def get_user_training_plans(user_id: str, request: Request):
             "source_type": plan.get("source_type", "initial"),
             "type": "training_plan"
         })
-    
-    # Ya no agregamos cuestionarios aquí - tienen su propio endpoint
     
     return {"plans": formatted_plans}
 
