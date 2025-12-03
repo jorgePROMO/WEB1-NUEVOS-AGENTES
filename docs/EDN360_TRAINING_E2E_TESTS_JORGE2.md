@@ -1,90 +1,127 @@
-# EDN360 - Tests E2E - Workflow Evolutivo (MOCK VERSION)
-## Usuario: Jorge2 (1764168881795908)
-## Fecha: 2025-12-03T14:51:31.555532
+# EDN360 E2E Testing Results - Jorge2 User
+            
+## Test Execution Summary
+- **User ID**: 1764168881795908
+- **Test Date**: 2025-12-03T18:52:04.291787
+- **Total Scenarios**: 3
+- **Backend URL**: https://edn360-audit.preview.emergentagent.com/api
 
-### RESUMEN EJECUTIVO
-- **Total Tests:** 6
-- **Exitosos:** 3
-- **Fallidos:** 3
+## Test Results Overview
 
-### ANÁLISIS DE ARQUITECTURA
+## Scenario 1: INITIAL PLAN (No History)
 
-#### Backend Structure Validation
-**Estado:** ❌ FALLIDO
-**Mensaje:** Exception: HTTPSConnectionPool(host='training-plan-gen.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
+### Request Body
+```json
+{
+  "user_id": "1764168881795908",
+  "questionnaire_ids": [
+    "1764713509409284"
+  ],
+  "previous_training_plan_id": null
+}
+```
 
-#### Mock Endpoint Validation
-**Estado:** ❌ FALLIDO
-**Mensaje:** Exception: HTTPSConnectionPool(host='training-plan-gen.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
+### STATE Object
+```
+2025-12-03 18:44:48,061 - server - INFO - ✅ Cuestionarios recuperados | Total en BD: 2 | Initial (más antiguo): 1764713509409284 | Previous followups: 0 | Current: 1764713509409284
+2025-12-03 18:44:48,066 - server - INFO - ✅ Planes previos recuperados | Total en BD: 1 | Previous plans en STATE: 1 | Has last_plan: True
+2025-12-03 18:44:48,076 - server - INFO - ✅ Objeto STATE construido | Has initial: True | Previous followups: 0 | Previous plans: 1 | Has last_plan: True
+2025-12-03 18:49:48,171 - server - INFO - ✅ Cuestionarios recuperados | Total en BD: 2 | Initial (más antiguo): 1764713509409284 | Previous followups: 0 | Current: 1764713509409284
+2025-12-03 18:49:48,171 - server - INFO - ✅ Planes previos recuperados | Total en BD: 1 | Previous plans en STATE: 1 | Has last_plan: True
+2025-12-03 18:49:48,172 - server - INFO - ✅ Objeto STATE construido | Has initial: True | Previous followups: 0 | Previous plans: 1 | Has last_plan: True
+```
 
-#### Error Handling Validation
-**Estado:** ✅ EXITOSO
-**Mensaje:** ✅ Correctly returned 404 for invalid user: Usuario nonexistent_user_12345 no encontrado
+### Final Response
+```json
+{}
+```
 
-#### Microservice Health
-**Estado:** ✅ EXITOSO
-**Mensaje:** ✅ Microservice healthy: {'status': 'ok', 'service': 'edn360-workflow-service'}
+### Validation Results
+- Test failed or incomplete
 
-### CONCLUSIONES CRÍTICAS
+### Exception
+```
+HTTPSConnectionPool(host='edn360-audit.preview.emergentagent.com', port=443): Read timed out. (read timeout=180)
+```
 
-#### ✅ FUNCIONALIDADES VERIFICADAS
-- **Backend Structure:** El backend construye correctamente los objetos STATE e INPUT
-- **Mock Endpoint:** La estructura de respuesta client_training_program_enriched es válida
-- **Error Handling:** Manejo correcto de errores para usuarios/cuestionarios inexistentes
-- **Database Integration:** Los datos de usuario están correctamente almacenados
+## Scenario 2: FIRST FOLLOW-UP (With Initial Plan)
 
-#### ❌ ISSUE CRÍTICO IDENTIFICADO
-- **EDN360 Microservice Timeout:** El microservicio EDN360 (localhost:4000) falla con error 500
-- **Causa:** Timeout en el workflow después del paso E2 (Parse Questionnaire)
-- **Impacto:** Impide la generación real de planes de entrenamiento evolutivos
+### Request Body
+```json
+{
+  "user_id": "1764168881795908",
+  "questionnaire_ids": [
+    "1764713509409284"
+  ],
+  "previous_training_plan_id": null
+}
+```
 
-#### 🔧 RECOMENDACIONES
-1. **Investigar timeout del microservicio EDN360**
-   - Revisar logs del microservicio en localhost:4000
-   - Verificar configuración de OpenAI API
-   - Optimizar pasos E3+ del workflow
+### STATE Object
+```
+2025-12-03 18:44:48,061 - server - INFO - ✅ Cuestionarios recuperados | Total en BD: 2 | Initial (más antiguo): 1764713509409284 | Previous followups: 0 | Current: 1764713509409284
+2025-12-03 18:44:48,066 - server - INFO - ✅ Planes previos recuperados | Total en BD: 1 | Previous plans en STATE: 1 | Has last_plan: True
+2025-12-03 18:44:48,076 - server - INFO - ✅ Objeto STATE construido | Has initial: True | Previous followups: 0 | Previous plans: 1 | Has last_plan: True
+2025-12-03 18:49:48,171 - server - INFO - ✅ Cuestionarios recuperados | Total en BD: 2 | Initial (más antiguo): 1764713509409284 | Previous followups: 0 | Current: 1764713509409284
+2025-12-03 18:49:48,171 - server - INFO - ✅ Planes previos recuperados | Total en BD: 1 | Previous plans en STATE: 1 | Has last_plan: True
+2025-12-03 18:49:48,172 - server - INFO - ✅ Objeto STATE construido | Has initial: True | Previous followups: 0 | Previous plans: 1 | Has last_plan: True
+```
 
-2. **Usar WEBSEARCH tool para investigar:**
-   - Soluciones para timeouts en workflows de OpenAI
-   - Debugging de microservicios Node.js
-   - Optimización de llamadas a APIs de IA
+### Final Response
+```json
+{}
+```
 
-#### 📋 ESTADO ACTUAL
-- **Arquitectura:** ✅ Correcta
-- **Backend Logic:** ✅ Funcional
-- **Database:** ✅ Correcta
-- **Microservice:** ❌ Timeout/Error 500
-- **E2E Flow:** ❌ Bloqueado por microservicio
+### Validation Results
+- Test failed or incomplete
 
-### RESULTADOS DETALLADOS DE TESTS
+### Exception
+```
+HTTPSConnectionPool(host='edn360-audit.preview.emergentagent.com', port=443): Read timed out. (read timeout=180)
+```
 
-#### Admin Login
-- **Estado:** ✅ EXITOSO
-- **Mensaje:** Admin logged in successfully. Role: admin
-- **Timestamp:** 2025-12-03T14:50:26.893352
+## Scenario 3: SECOND FOLLOW-UP (With Multiple Plans)
 
-#### Backend Structure Validation
-- **Estado:** ❌ FALLIDO
-- **Mensaje:** Exception: HTTPSConnectionPool(host='training-plan-gen.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
-- **Timestamp:** 2025-12-03T14:50:56.950872
+### Request Body
+```json
+{
+  "user_id": "1764168881795908",
+  "questionnaire_ids": [
+    "1764713509409284"
+  ],
+  "previous_training_plan_id": null
+}
+```
 
-#### Mock Endpoint Structure
-- **Estado:** ❌ FALLIDO
-- **Mensaje:** Exception: HTTPSConnectionPool(host='training-plan-gen.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
-- **Timestamp:** 2025-12-03T14:51:27.072744
+### STATE Object
+```
+2025-12-03 18:44:48,061 - server - INFO - ✅ Cuestionarios recuperados | Total en BD: 2 | Initial (más antiguo): 1764713509409284 | Previous followups: 0 | Current: 1764713509409284
+2025-12-03 18:44:48,066 - server - INFO - ✅ Planes previos recuperados | Total en BD: 1 | Previous plans en STATE: 1 | Has last_plan: True
+2025-12-03 18:44:48,076 - server - INFO - ✅ Objeto STATE construido | Has initial: True | Previous followups: 0 | Previous plans: 1 | Has last_plan: True
+2025-12-03 18:49:48,171 - server - INFO - ✅ Cuestionarios recuperados | Total en BD: 2 | Initial (más antiguo): 1764713509409284 | Previous followups: 0 | Current: 1764713509409284
+2025-12-03 18:49:48,171 - server - INFO - ✅ Planes previos recuperados | Total en BD: 1 | Previous plans en STATE: 1 | Has last_plan: True
+2025-12-03 18:49:48,172 - server - INFO - ✅ Objeto STATE construido | Has initial: True | Previous followups: 0 | Previous plans: 1 | Has last_plan: True
+```
 
-#### Error Handling - Invalid User
-- **Estado:** ✅ EXITOSO
-- **Mensaje:** ✅ Correctly returned 404 for invalid user: Usuario nonexistent_user_12345 no encontrado
-- **Timestamp:** 2025-12-03T14:51:31.232426
+### Final Response
+```json
+{}
+```
 
-#### Microservice Health
-- **Estado:** ✅ EXITOSO
-- **Mensaje:** ✅ Microservice healthy: {'status': 'ok', 'service': 'edn360-workflow-service'}
-- **Timestamp:** 2025-12-03T14:51:31.235491
+### Validation Results
+- Test failed or incomplete
 
-#### Database State Verification
-- **Estado:** ❌ FALLIDO
-- **Mensaje:** Expected at least 2 questionnaires, found 0
-- **Timestamp:** 2025-12-03T14:51:31.555454
+### Error Details
+- Status Code: 502
+- Error Data: ""
 
+## Test Execution Log
+
+- ✅ **Admin Login**: Admin logged in successfully. Role: admin
+- ✅ **Check User Exists**: Jorge2 user found: Jorge2 (jorge31011987@gmail.com)
+- ✅ **Microservice Health**: EDN360 microservice healthy: {'status': 'ok', 'service': 'edn360-workflow-service'}
+- ❌ **Execute Scenario 1 - Initial Plan**: Exception: HTTPSConnectionPool(host='edn360-audit.preview.emergentagent.com', port=443): Read timed out. (read timeout=180)
+- ❌ **Execute Scenario 2 - First Follow-up**: Exception: HTTPSConnectionPool(host='edn360-audit.preview.emergentagent.com', port=443): Read timed out. (read timeout=180)
+- ❌ **Execute Scenario 3 - Second Follow-up**: HTTP 502
+- ✅ **Capture Backend Logs**: Backend logs captured: 6 relevant lines
+- ✅ **Capture Microservice Logs**: Microservice logs captured: 103 lines
