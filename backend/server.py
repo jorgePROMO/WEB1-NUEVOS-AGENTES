@@ -1035,19 +1035,24 @@ async def verify_payment(user_id: str, request: Request):
 @api_router.post("/training-plan")
 async def generate_training_plan(request: Request):
     """
-    Genera un plan de entrenamiento usando el workflow EDN360 (E1-E7.5).
+    Genera un plan de entrenamiento EVOLUTIVO usando el workflow EDN360 (E1-E7.5).
     
-    DISEÑO TO-BE:
-    1. Recibe user_id y questionnaire_submission_id
-    2. Construye EDN360Input desde BD (users + client_drawers)
-    3. Llama al workflow de Platform (E1-E7.5)
-    4. Guarda snapshot en edn360_snapshots
-    5. Devuelve solo client_training_program_enriched
+    FLUJO EVOLUTIVO CON STATE:
+    1. Recibe user_id y current_questionnaire_id
+    2. Construye el objeto `state` con historial completo:
+       - initial_questionnaire: Primer cuestionario del usuario
+       - previous_followups: Todos los seguimientos anteriores (excepto el actual)
+       - previous_plans: Todos los planes generados previamente
+       - last_plan: El plan más reciente
+    3. Construye el objeto `input` con el cuestionario actual
+    4. Llama al workflow con input + state
+    5. Guarda snapshot y plan en BD
+    6. Devuelve client_training_program_enriched
     
     Request Body:
     {
         "user_id": "1764016044644335",
-        "questionnaire_submission_id": "1764016775848319"
+        "current_questionnaire_id": "quest_followup_002"
     }
     
     Response:
@@ -1069,32 +1074,21 @@ async def generate_training_plan(request: Request):
         body = await request.json()
         
         user_id = body.get("user_id")
-        questionnaire_ids = body.get("questionnaire_ids", [])  # Lista de IDs de cuestionarios
-        previous_training_plan_id = body.get("previous_training_plan_id")  # Plan previo opcional
+        current_questionnaire_id = body.get("current_questionnaire_id")
         
-        if not user_id:
+        if not user_id or not current_questionnaire_id:
             raise HTTPException(
                 status_code=400,
                 detail={
                     "error": "missing_fields",
-                    "message": "Se requiere user_id"
-                }
-            )
-        
-        if not questionnaire_ids or len(questionnaire_ids) == 0:
-            raise HTTPException(
-                status_code=400,
-                detail={
-                    "error": "missing_questionnaires",
-                    "message": "Se requiere al menos un cuestionario (questionnaire_ids)"
+                    "message": "Se requiere user_id y current_questionnaire_id"
                 }
             )
         
         logger.info(
-            f"🏋️ Generando plan de entrenamiento | "
+            f"🏋️ Generando plan de entrenamiento EVOLUTIVO | "
             f"admin: {admin['_id']} | user_id: {user_id} | "
-            f"questionnaires: {len(questionnaire_ids)} | "
-            f"previous_plan_id: {previous_training_plan_id or 'none'}"
+            f"current_questionnaire: {current_questionnaire_id}"
         )
         
         # ============================================
@@ -1111,128 +1105,196 @@ async def generate_training_plan(request: Request):
             )
         
         # ============================================
-        # PASO 2: CONSTRUIR EDN360INPUT
+        # PASO 2: RECUPERAR TODOS LOS CUESTIONARIOS
         # ============================================
         try:
-            from services.edn360_input_builder import build_edn360_input_for_user_with_specific_questionnaires
+            from repositories.client_drawer_repository import get_drawer_by_user_id
             
-            # Construir EDN360Input con los cuestionarios específicos seleccionados
-            edn360_input_obj = await build_edn360_input_for_user_with_specific_questionnaires(
-                user_id,
-                questionnaire_ids
-            )
-            edn360_input = edn360_input_obj.dict()
+            drawer = await get_drawer_by_user_id(user_id)
+            if not drawer:
+                raise HTTPException(
+                    status_code=404,
+                    detail={
+                        "error": "no_drawer",
+                        "message": f"Usuario {user_id} no tiene client_drawer"
+                    }
+                )
             
-            # Verificar que el submission_id específico está en los questionnaires
-            has_submission = any(
-                q.get("submission_id") == questionnaire_submission_id
-                for q in edn360_input.get("questionnaires", [])
-            )
+            all_questionnaires = drawer.services.shared_questionnaires
+            if not all_questionnaires:
+                raise HTTPException(
+                    status_code=404,
+                    detail={
+                        "error": "no_questionnaires",
+                        "message": f"Usuario {user_id} no tiene cuestionarios"
+                    }
+                )
             
-            if not has_submission:
+            # Ordenar por fecha (más antiguo → más reciente)
+            all_questionnaires.sort(key=lambda q: q.submitted_at)
+            
+            # Encontrar el cuestionario actual
+            current_q = None
+            current_q_index = -1
+            for i, q in enumerate(all_questionnaires):
+                if q.submission_id == current_questionnaire_id:
+                    current_q = q
+                    current_q_index = i
+                    break
+            
+            if not current_q:
                 raise HTTPException(
                     status_code=404,
                     detail={
                         "error": "questionnaire_not_found",
-                        "message": f"Cuestionario {questionnaire_submission_id} no encontrado para este usuario"
+                        "message": f"Cuestionario {current_questionnaire_id} no encontrado"
                     }
                 )
             
-            logger.info(f"✅ EDN360Input construido | Cuestionarios: {len(edn360_input['questionnaires'])}")
+            # Identificar cuestionario inicial y followups previos
+            initial_questionnaire = all_questionnaires[0]  # El más antiguo
+            previous_followups = all_questionnaires[1:current_q_index] if current_q_index > 1 else []
             
-            # ============================================
-            # PASO 2.5: AGREGAR PLAN PREVIO SI EXISTE
-            # ============================================
-            if previous_training_plan_id:
-                logger.info(f"📋 Buscando plan previo: {previous_training_plan_id}")
-                
-                # Buscar el plan previo en training_plans_v2
-                edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
-                
-                # El ID puede venir en formato "edn360_{i}_{created_at}"
-                # Necesitamos buscar por created_at o por índice
-                if previous_training_plan_id.startswith('edn360_'):
-                    # Extraer la fecha del ID
-                    parts = previous_training_plan_id.split('_')
-                    if len(parts) >= 3:
-                        created_at = '_'.join(parts[2:])
-                        previous_plan = await edn360_db.training_plans_v2.find_one(
-                            {
-                                "user_id": user_id,
-                                "created_at": created_at
-                            },
-                            {"_id": 0}
-                        )
-                    else:
-                        previous_plan = None
-                else:
-                    # Buscar por _id en training_plans legacy
-                    from bson import ObjectId
-                    try:
-                        previous_plan = await db.training_plans.find_one(
-                            {"_id": ObjectId(previous_training_plan_id)}
-                        )
-                    except:
-                        previous_plan = None
-                
-                if previous_plan:
-                    # Agregar el plan previo al contexto del input
-                    if 'context' not in edn360_input:
-                        edn360_input['context'] = {}
-                    
-                    edn360_input['context']['previous_training_plan'] = {
-                        'plan_data': previous_plan.get('plan', previous_plan),
-                        'created_at': previous_plan.get('created_at'),
-                        'source': 'training_plans_v2'
-                    }
-                    
-                    logger.info(f"✅ Plan previo agregado al contexto")
-                else:
-                    logger.warning(f"⚠️  Plan previo {previous_training_plan_id} no encontrado")
+            logger.info(
+                f"✅ Cuestionarios recuperados | "
+                f"Total: {len(all_questionnaires)} | "
+                f"Initial: 1 | Previous followups: {len(previous_followups)} | Current: 1"
+            )
         
         except HTTPException:
             raise
         except Exception as e:
-            logger.error(f"❌ Error construyendo EDN360Input: {e}")
+            logger.error(f"❌ Error recuperando cuestionarios: {e}")
             raise HTTPException(
                 status_code=500,
                 detail={
-                    "error": "input_build_error",
-                    "message": f"Error construyendo input: {str(e)}"
+                    "error": "questionnaire_fetch_error",
+                    "message": f"Error recuperando cuestionarios: {str(e)}"
                 }
             )
         
         # ============================================
-        # PASO 3: LLAMAR AL WORKFLOW EDN360
+        # PASO 3: RECUPERAR PLANES PREVIOS
         # ============================================
         try:
-            from services.training_workflow_service import call_training_workflow
+            edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
             
-            # Llamar al workflow E1-E7.5
-            workflow_response = await call_training_workflow(edn360_input)
+            # Recuperar todos los planes del usuario ordenados por fecha
+            previous_plans_cursor = edn360_db.training_plans_v2.find(
+                {"user_id": user_id},
+                {"_id": 0}
+            ).sort("created_at", 1)  # Ascendente (más antiguo → más reciente)
+            
+            previous_plans = await previous_plans_cursor.to_list(length=100)
+            
+            last_plan = previous_plans[-1] if previous_plans else None
+            
+            logger.info(
+                f"✅ Planes previos recuperados | "
+                f"Total: {len(previous_plans)} | "
+                f"Has last_plan: {bool(last_plan)}"
+            )
+        
+        except Exception as e:
+            logger.warning(f"⚠️ Error recuperando planes previos: {e}")
+            previous_plans = []
+            last_plan = None
+        
+        # ============================================
+        # PASO 4: CONSTRUIR OBJETO STATE
+        # ============================================
+        try:
+            # Construir el user_profile
+            from services.edn360_input_builder import _build_user_profile
+            user_profile = await _build_user_profile(user_id)
+            
+            if not user_profile:
+                raise HTTPException(
+                    status_code=404,
+                    detail={
+                        "error": "user_profile_error",
+                        "message": f"No se pudo construir el perfil del usuario {user_id}"
+                    }
+                )
+            
+            # Función helper para serializar cuestionarios
+            def serialize_questionnaire(q):
+                return {
+                    "submission_id": q.submission_id,
+                    "submitted_at": q.submitted_at.isoformat() if hasattr(q.submitted_at, 'isoformat') else str(q.submitted_at),
+                    "source": q.source,
+                    "payload": q.raw_payload
+                }
+            
+            # Construir el objeto state
+            state = {
+                "initial_questionnaire": serialize_questionnaire(initial_questionnaire),
+                "previous_followups": [serialize_questionnaire(q) for q in previous_followups],
+                "previous_plans": previous_plans,
+                "last_plan": last_plan
+            }
+            
+            logger.info(
+                f"✅ Objeto STATE construido | "
+                f"Has initial: True | Previous followups: {len(previous_followups)} | "
+                f"Previous plans: {len(previous_plans)} | Has last_plan: {bool(last_plan)}"
+            )
+        
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"❌ Error construyendo STATE: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": "state_build_error",
+                    "message": f"Error construyendo STATE: {str(e)}"
+                }
+            )
+        
+        # ============================================
+        # PASO 5: CONSTRUIR OBJETO INPUT
+        # ============================================
+        try:
+            # El input contiene el cuestionario ACTUAL
+            workflow_input = {
+                "input": {
+                    "input_as_text": json.dumps({
+                        "user_profile": user_profile.dict(),
+                        "current_questionnaire": serialize_questionnaire(current_q)
+                    })
+                },
+                "state": state
+            }
+            
+            logger.info(f"✅ Objeto INPUT construido con STATE")
+        
+        except Exception as e:
+            logger.error(f"❌ Error construyendo INPUT: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": "input_build_error",
+                    "message": f"Error construyendo INPUT: {str(e)}"
+                }
+            )
+        
+        # ============================================
+        # PASO 6: LLAMAR AL WORKFLOW EDN360
+        # ============================================
+        try:
+            from services.training_workflow_service import call_training_workflow_with_state
+            
+            # Llamar al workflow E1-E7.5 con state
+            workflow_response = await call_training_workflow_with_state(workflow_input)
             
             logger.info(
                 f"✅ Training workflow ejecutado | "
-                f"Tokens: {workflow_response.get('_metadata', {}).get('tokens_used', 'N/A')}"
+                f"Type: {'evolutivo' if last_plan else 'inicial'}"
             )
         
         except Exception as e:
             logger.error(f"❌ Error ejecutando training workflow: {e}")
-            
-            # Guardar snapshot de error
-            try:
-                from repositories.edn360_snapshot_repository import create_snapshot
-                await create_snapshot(
-                    user_id=user_id,
-                    edn360_input=edn360_input,
-                    workflow_name="training_plan_v1",
-                    workflow_response={"error": str(e)},
-                    status="failed",
-                    error_message=str(e),
-                    version="1.0.0"
-                )
-            except:
-                pass
             
             raise HTTPException(
                 status_code=500,
@@ -1243,30 +1305,8 @@ async def generate_training_plan(request: Request):
             )
         
         # ============================================
-        # PASO 4: GUARDAR SNAPSHOT (SUCCESS)
+        # PASO 7: GUARDAR EN TRAINING_PLANS_V2
         # ============================================
-        try:
-            from repositories.edn360_snapshot_repository import create_snapshot
-            
-            snapshot = await create_snapshot(
-                user_id=user_id,
-                edn360_input=edn360_input,
-                workflow_name="training_plan_v1",
-                workflow_response=workflow_response,
-                status="success",
-                version="1.0.0"
-            )
-            
-            logger.info(f"✅ Snapshot creado: {snapshot.snapshot_id}")
-        
-        except Exception as e:
-            logger.warning(f"⚠️ Error creando snapshot: {e}")
-            # No bloqueamos el flujo si falla el snapshot
-        
-        # ============================================
-        # PASO 4.5: GUARDAR EN TRAINING_PLANS_V2
-        # ============================================
-        # Guardar una copia editable del plan para historial y futuras ediciones
         training_program = workflow_response.get("client_training_program_enriched")
         
         if not training_program:
@@ -1279,49 +1319,42 @@ async def generate_training_plan(request: Request):
             )
         
         try:
-            from datetime import datetime, timezone
-            
-            # Obtener BD de EDN360 App
-            edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
-            
             training_plan_doc = {
                 "user_id": user_id,
-                "questionnaire_submission_id": questionnaire_submission_id,
+                "questionnaire_submission_id": current_questionnaire_id,
                 "created_at": datetime.now(timezone.utc).isoformat(),
                 "plan": training_program,
-                "status": "draft",  # draft | sent
-                "version": "1.0.0",
-                "source": "edn360_workflow_v1"
+                "status": "draft",
+                "version": "2.0.0",
+                "source": "edn360_workflow_evolutionary_v1",
+                "is_evolutionary": bool(last_plan)
             }
             
             result = await edn360_db.training_plans_v2.insert_one(training_plan_doc)
             
             logger.info(
                 f"✅ Plan guardado en training_plans_v2 | "
-                f"plan_id: {str(result.inserted_id)}"
+                f"plan_id: {str(result.inserted_id)} | "
+                f"Type: {'evolutivo' if last_plan else 'inicial'}"
             )
         
         except Exception as e:
             logger.warning(f"⚠️ Error guardando en training_plans_v2: {e}")
-            # No bloqueamos el flujo si falla el guardado
         
         # ============================================
-        # PASO 5: DEVOLVER RESPUESTA LIMPIA
+        # PASO 8: DEVOLVER RESPUESTA
         # ============================================
-        
         logger.info(
             f"✅ Plan de entrenamiento generado exitosamente | "
             f"user_id: {user_id} | title: {training_program.get('title', 'N/A')}"
         )
         
-        # Devolver solo el training program (sin metadatos internos)
-        # Serializar datetime fields si existen
         return {
-            "client_training_program_enriched": _serialize_datetime_fields(training_program)
+            "client_training_program_enriched": _serialize_datetime_fields(training_program),
+            "is_evolutionary": bool(last_plan)
         }
     
     except HTTPException:
-        # Re-lanzar HTTPExceptions
         raise
     
     except Exception as e:
