@@ -1918,8 +1918,10 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
       output_text: JSON.stringify(e2ParseQuestionnaireResultTemp.finalOutput),
       output_parsed: e2ParseQuestionnaireResultTemp.finalOutput
     };
-    const e3TrainingSummaryResultTemp = await runner.run(
+    const e3TrainingSummaryResultTemp = await runAgentWithLogging(
+      runner,
       e3TrainingSummary,
+      "E3 – Training Summary",
       [
         ...conversationHistory,
         {
