@@ -613,6 +613,9 @@ OUTPUT FORMAT (MANDATORY)
 }
 `,
   model: "gpt-4.1",
+  tools: [
+    fileSearchTrainingKB  // K1 Entrenamiento - KB para decisiones de programación
+  ],
   outputType: E3TrainingSummarySchema,
   modelSettings: {
     temperature: 1,
