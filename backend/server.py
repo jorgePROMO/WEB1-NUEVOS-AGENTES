@@ -1223,7 +1223,7 @@ async def generate_training_plan(request: Request):
                     "submission_id": q.submission_id,
                     "submitted_at": q.submitted_at.isoformat() if hasattr(q.submitted_at, 'isoformat') else str(q.submitted_at),
                     "source": q.source,
-                    "payload": q.raw_payload
+                    "payload": _serialize_datetime_fields(q.raw_payload)
                 }
             
             # Construir el objeto state
