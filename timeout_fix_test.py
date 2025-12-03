@@ -75,7 +75,7 @@ class TimeoutFixTester:
         headers = {"Authorization": f"Bearer {self.admin_token}"}
         payload = {
             "user_id": user_id,
-            "current_questionnaire_id": current_questionnaire_id
+            "questionnaire_ids": [current_questionnaire_id]
         }
         
         try:
