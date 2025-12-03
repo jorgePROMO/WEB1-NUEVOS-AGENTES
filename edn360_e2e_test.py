@@ -187,7 +187,7 @@ class EDN360E2ETester:
     def case_2_first_evolution(self):
         """
         CASE 2: Primer Seguimiento (Primera Evolución)
-        Request: user_id + questionnaire_ids: ["edn360_inicial_jorge2", "edn360_seg1_jorge2"] + previous_training_plan_id
+        Request: user_id + questionnaire_ids: ["1764713509409284", "1764769467597359"] + previous_training_plan_id
         Expected: is_evolutionary: true, STATE with previous_plans: [Plan 1], last_plan: Plan 1
         """
         if not self.admin_token or not hasattr(self, 'plan_1_info'):
@@ -195,7 +195,7 @@ class EDN360E2ETester:
             return False
             
         user_id = "1764168881795908"
-        questionnaire_ids = ["edn360_inicial_jorge2", "edn360_seg1_jorge2"]
+        questionnaire_ids = ["1764713509409284", "1764769467597359"]  # Using actual questionnaire IDs
         
         # Get the latest plan ID from database
         previous_training_plan_id = self.get_latest_plan_id(user_id)
