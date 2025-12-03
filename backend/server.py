@@ -1356,7 +1356,7 @@ async def generate_training_plan(request: Request):
             )
         
         # ============================================
-        # PASO 7: GUARDAR EN TRAINING_PLANS_V2
+        # PASO 7: TRADUCIR Y GUARDAR EN TRAINING_PLANS_V2
         # ============================================
         training_program = workflow_response.get("client_training_program_enriched")
         
@@ -1368,6 +1368,9 @@ async def generate_training_plan(request: Request):
                     "message": "El workflow no devolvió un plan de entrenamiento válido"
                 }
             )
+        
+        # TRADUCIR TODO EL PLAN A ESPAÑOL DE ESPAÑA
+        training_program = _translate_training_plan_to_spanish(training_program)
         
         try:
             training_plan_doc = {
