@@ -970,25 +970,25 @@ Include:
 
 {
   \"training_plan\": {
-    \"training_type\": \"upper_lower\",
-    \"days_per_week\": 4,
-    \"session_duration_min\": 45,
+    \"training_type\": \"<from training_context>\",
+    \"days_per_week\": \"<from training_context.availability>\",
+    \"session_duration_min\": \"<from training_context.availability>\",
     \"weeks\": 4,
     \"goal\": \"Short English description of the plan goal\",
     \"sessions\": [
       {
         \"id\": \"D1\",
-        \"name\": \"Upper 1 – Push emphasis\",
-        \"focus\": [\"upper_body\", \"push_focus\"],
+        \"name\": \"<descriptive name based on focus>\",
+        \"focus\": [\"<muscle groups or training focus>\"],
         \"blocks\": [
           {
             \"id\": \"A\",
-            \"primary_muscles\": [\"chest\", \"triceps\"],
-            \"secondary_muscles\": [\"front_delts\"],
-            \"num_exercises\": 2,
-            \"exercise_types\": [\"horizontal_press\", \"horizontal_row\"],
-            \"series\": 3,
-            \"reps\": \"8-12\",
+            \"primary_muscles\": [\"<target muscles>\"],
+            \"secondary_muscles\": [\"<assisting muscles>\"],
+            \"num_exercises\": \"<1-3 based on time and experience>\",
+            \"exercise_types\": [\"<movement patterns, not specific exercises>\"],
+            \"series\": \"<3-5 based on experience level>\",
+            \"reps\": \"<range based on goal and experience>\",
             \"rpe\": \"7-8\",
             \"notes\": \"Controlled tempo, no shoulder pain, keep scapulae stable.\"
           }
