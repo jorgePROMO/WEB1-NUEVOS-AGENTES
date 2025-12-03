@@ -1618,8 +1618,18 @@ ABSOLUTE RULES
   }
 });
 
-// Tipo de input flexible: puede venir con input_as_text o con el EDN360Input completo
+// Tipo de input EVOLUTIVO: recibe input + state
 type WorkflowInput = {
+  input?: {
+    input_as_text?: string;
+  };
+  state?: {
+    initial_questionnaire?: any;
+    previous_followups?: any[];
+    previous_plans?: any[];
+    last_plan?: any;
+  };
+  // Retrocompatibilidad con formato antiguo
   input_as_text?: string;
   [key: string]: any;
 };
@@ -1666,18 +1676,52 @@ async function runAgentWithLogging(
 
 // Main code entrypoint
 export const runWorkflow = async (workflow: WorkflowInput) => {
-  // Si ya viene input_as_text lo usamos; si no, convertimos todo el objeto a texto
-  const inputAsText =
-    typeof workflow.input_as_text === "string"
+  // NUEVO FLUJO EVOLUTIVO: Soporta input + state
+  let inputAsText: string;
+  let workflowState: any = {};
+  
+  // Detectar si es flujo nuevo (con state) o antiguo (solo input_as_text)
+  if (workflow.input && workflow.state) {
+    // FLUJO EVOLUTIVO NUEVO
+    console.log("🔄 Detectado flujo EVOLUTIVO con STATE");
+    
+    inputAsText = workflow.input.input_as_text || JSON.stringify(workflow.input);
+    workflowState = workflow.state;
+    
+    const hasHistory = Boolean(workflowState.last_plan);
+    console.log(`📊 Tipo de generación: ${hasHistory ? 'EVOLUTIVO' : 'INICIAL'}`);
+    console.log(`📋 Previous plans: ${workflowState.previous_plans?.length || 0}`);
+    console.log(`📋 Previous followups: ${workflowState.previous_followups?.length || 0}`);
+  } else {
+    // FLUJO ANTIGUO (RETROCOMPATIBILIDAD)
+    console.log("📝 Detectado flujo ANTIGUO (sin state)");
+    inputAsText = typeof workflow.input_as_text === "string"
       ? workflow.input_as_text
       : JSON.stringify(workflow);
+    workflowState = {};
+  }
 
   return await withTrace("EDN360 – Entreno v1", async () => {
-    const state = {
-
-    };
+    // Agregar state al contexto inicial si existe
+    let initialContext = inputAsText;
+    if (workflowState.initial_questionnaire || workflowState.last_plan) {
+      initialContext += `\n\n=== HISTORIAL DISPONIBLE ===\n`;
+      if (workflowState.initial_questionnaire) {
+        initialContext += `\nInitial Questionnaire:\n${JSON.stringify(workflowState.initial_questionnaire, null, 2)}`;
+      }
+      if (workflowState.previous_followups && workflowState.previous_followups.length > 0) {
+        initialContext += `\n\nPrevious Follow-ups: ${workflowState.previous_followups.length}`;
+      }
+      if (workflowState.previous_plans && workflowState.previous_plans.length > 0) {
+        initialContext += `\n\nPrevious Plans: ${workflowState.previous_plans.length}`;
+      }
+      if (workflowState.last_plan) {
+        initialContext += `\n\nLast Plan:\n${JSON.stringify(workflowState.last_plan, null, 2)}`;
+      }
+    }
+    
     const conversationHistory: AgentInputItem[] = [
-      { role: "user", content: [{ type: "input_text", text: inputAsText }] }
+      { role: "user", content: [{ type: "input_text", text: initialContext }] }
     ];
     const runner = new Runner({
       traceMetadata: {
