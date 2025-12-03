@@ -205,11 +205,26 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   };
 
   const handleSendEmail = async () => {
-    alert('Funcionalidad de envío de email próximamente');
-  };
-
-  const handleExportPDF = async () => {
-    alert('Funcionalidad de exportación a PDF próximamente');
+    try {
+      setSending(true);
+      await axios.post(
+        `${API}/admin/users/${userId}/training-plans/send-email`,
+        {
+          plan_id: latestPlan.id
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
+      alert('✅ Plan enviado por email correctamente al cliente');
+    } catch (error) {
+      console.error('Error sending email:', error);
+      const errorMsg = error.response?.data?.detail?.message || error.message;
+      alert(`❌ Error enviando email: ${errorMsg}`);
+    } finally:
+      setSending(false);
+    }
   };
 
   const updatePlanField = (field, value) => {
