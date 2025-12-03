@@ -973,9 +973,380 @@ class BackendTester:
         
         return False
 
+    # ==================== EDN360 EVOLUTIONARY FLOW TESTS ====================
+    
+    def test_28_admin_login_for_edn360_evolutionary(self):
+        """Test 28: Admin login for EDN360 evolutionary flow testing"""
+        url = f"{BACKEND_URL}/auth/login"
+        params = {
+            "email": "ecjtrainer@gmail.com",
+            "password": "jorge3007"
+        }
+        
+        try:
+            response = requests.post(url, params=params)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "user" in data and "token" in data and data["user"].get("role") == "admin":
+                    self.admin_token = data["token"]
+                    self.log_result("Admin Login for EDN360 Evolutionary", True, 
+                                  f"Admin logged in successfully for EDN360 evolutionary testing. Role: {data['user']['role']}")
+                    return True
+                else:
+                    self.log_result("Admin Login for EDN360 Evolutionary", False, 
+                                  "Response missing user/token or not admin role", data)
+            else:
+                self.log_result("Admin Login for EDN360 Evolutionary", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("Admin Login for EDN360 Evolutionary", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_29_case1_initial_questionnaire_flow(self):
+        """Test 29: CASE 1 - Initial questionnaire flow (user with questionnaires but zero plans)"""
+        if not self.admin_token:
+            self.log_result("EDN360 Case 1 - Initial Flow", False, "No admin token available")
+            return False
+            
+        # Use Jorge2 user who has questionnaires but no plans yet
+        user_id = "1764168881795908"
+        current_questionnaire_id = "1764713509409284"
+        
+        url = f"{BACKEND_URL}/training-plan"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "user_id": user_id,
+            "current_questionnaire_id": current_questionnaire_id
+        }
+        
+        try:
+            print(f"\n🧪 CASE 1: Testing initial questionnaire flow")
+            print(f"   User ID: {user_id}")
+            print(f"   Questionnaire ID: {current_questionnaire_id}")
+            
+            response = requests.post(url, json=payload, headers=headers, timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Verify response structure
+                if "client_training_program_enriched" in data and "is_evolutionary" in data:
+                    is_evolutionary = data["is_evolutionary"]
+                    training_program = data["client_training_program_enriched"]
+                    
+                    # For initial flow, should be False
+                    if not is_evolutionary:
+                        # Verify training program structure
+                        if "sessions" in training_program and len(training_program["sessions"]) > 0:
+                            sessions = training_program["sessions"]
+                            has_blocks = all("blocks" in session for session in sessions)
+                            has_exercises = all(
+                                all("exercises" in block for block in session.get("blocks", []))
+                                for session in sessions
+                            )
+                            
+                            if has_blocks and has_exercises:
+                                self.log_result("EDN360 Case 1 - Initial Flow", True, 
+                                              f"✅ Initial flow successful: is_evolutionary={is_evolutionary}, sessions={len(sessions)}, title='{training_program.get('title', 'N/A')}'")
+                                
+                                # Store for next test
+                                self.test_user_id_edn360 = user_id
+                                self.test_questionnaire_id_edn360 = current_questionnaire_id
+                                return True
+                            else:
+                                self.log_result("EDN360 Case 1 - Initial Flow", False, 
+                                              f"Invalid training program structure: has_blocks={has_blocks}, has_exercises={has_exercises}")
+                        else:
+                            self.log_result("EDN360 Case 1 - Initial Flow", False, 
+                                          "Training program missing sessions or empty sessions")
+                    else:
+                        self.log_result("EDN360 Case 1 - Initial Flow", False, 
+                                      f"Expected is_evolutionary=False for initial flow, got {is_evolutionary}")
+                else:
+                    self.log_result("EDN360 Case 1 - Initial Flow", False, 
+                                  "Response missing required fields", data)
+            else:
+                self.log_result("EDN360 Case 1 - Initial Flow", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("EDN360 Case 1 - Initial Flow", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_30_case2_first_evolution_flow(self):
+        """Test 30: CASE 2 - First evolution flow (user with 1 plan generated)"""
+        if not self.admin_token or not hasattr(self, 'test_user_id_edn360'):
+            self.log_result("EDN360 Case 2 - First Evolution", False, "No admin token or test user ID available")
+            return False
+            
+        # Use same user and questionnaire (simulating a follow-up)
+        user_id = self.test_user_id_edn360
+        current_questionnaire_id = self.test_questionnaire_id_edn360
+        
+        url = f"{BACKEND_URL}/training-plan"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "user_id": user_id,
+            "current_questionnaire_id": current_questionnaire_id
+        }
+        
+        try:
+            print(f"\n🧪 CASE 2: Testing first evolution flow")
+            print(f"   User ID: {user_id}")
+            print(f"   Questionnaire ID: {current_questionnaire_id}")
+            
+            response = requests.post(url, json=payload, headers=headers, timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Verify response structure
+                if "client_training_program_enriched" in data and "is_evolutionary" in data:
+                    is_evolutionary = data["is_evolutionary"]
+                    training_program = data["client_training_program_enriched"]
+                    
+                    # For evolution flow, should be True (since we now have 1 plan)
+                    if is_evolutionary:
+                        # Verify training program structure
+                        if "sessions" in training_program and len(training_program["sessions"]) > 0:
+                            sessions = training_program["sessions"]
+                            has_blocks = all("blocks" in session for session in sessions)
+                            has_exercises = all(
+                                all("exercises" in block for block in session.get("blocks", []))
+                                for session in sessions
+                            )
+                            
+                            if has_blocks and has_exercises:
+                                self.log_result("EDN360 Case 2 - First Evolution", True, 
+                                              f"✅ First evolution successful: is_evolutionary={is_evolutionary}, sessions={len(sessions)}, title='{training_program.get('title', 'N/A')}'")
+                                return True
+                            else:
+                                self.log_result("EDN360 Case 2 - First Evolution", False, 
+                                              f"Invalid training program structure: has_blocks={has_blocks}, has_exercises={has_exercises}")
+                        else:
+                            self.log_result("EDN360 Case 2 - First Evolution", False, 
+                                          "Training program missing sessions or empty sessions")
+                    else:
+                        self.log_result("EDN360 Case 2 - First Evolution", False, 
+                                      f"Expected is_evolutionary=True for evolution flow, got {is_evolutionary}")
+                else:
+                    self.log_result("EDN360 Case 2 - First Evolution", False, 
+                                  "Response missing required fields", data)
+            else:
+                self.log_result("EDN360 Case 2 - First Evolution", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("EDN360 Case 2 - First Evolution", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_31_case3_second_evolution_flow(self):
+        """Test 31: CASE 3 - Second evolution flow (user with 2 plans generated)"""
+        if not self.admin_token or not hasattr(self, 'test_user_id_edn360'):
+            self.log_result("EDN360 Case 3 - Second Evolution", False, "No admin token or test user ID available")
+            return False
+            
+        # Use same user and questionnaire (simulating another follow-up)
+        user_id = self.test_user_id_edn360
+        current_questionnaire_id = self.test_questionnaire_id_edn360
+        
+        url = f"{BACKEND_URL}/training-plan"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "user_id": user_id,
+            "current_questionnaire_id": current_questionnaire_id
+        }
+        
+        try:
+            print(f"\n🧪 CASE 3: Testing second evolution flow")
+            print(f"   User ID: {user_id}")
+            print(f"   Questionnaire ID: {current_questionnaire_id}")
+            
+            response = requests.post(url, json=payload, headers=headers, timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Verify response structure
+                if "client_training_program_enriched" in data and "is_evolutionary" in data:
+                    is_evolutionary = data["is_evolutionary"]
+                    training_program = data["client_training_program_enriched"]
+                    
+                    # For evolution flow, should be True (since we now have 2 plans)
+                    if is_evolutionary:
+                        # Verify training program structure
+                        if "sessions" in training_program and len(training_program["sessions"]) > 0:
+                            sessions = training_program["sessions"]
+                            has_blocks = all("blocks" in session for session in sessions)
+                            has_exercises = all(
+                                all("exercises" in block for block in session.get("blocks", []))
+                                for session in sessions
+                            )
+                            
+                            if has_blocks and has_exercises:
+                                self.log_result("EDN360 Case 3 - Second Evolution", True, 
+                                              f"✅ Second evolution successful: is_evolutionary={is_evolutionary}, sessions={len(sessions)}, title='{training_program.get('title', 'N/A')}'")
+                                return True
+                            else:
+                                self.log_result("EDN360 Case 3 - Second Evolution", False, 
+                                              f"Invalid training program structure: has_blocks={has_blocks}, has_exercises={has_exercises}")
+                        else:
+                            self.log_result("EDN360 Case 3 - Second Evolution", False, 
+                                          "Training program missing sessions or empty sessions")
+                    else:
+                        self.log_result("EDN360 Case 3 - Second Evolution", False, 
+                                      f"Expected is_evolutionary=True for evolution flow, got {is_evolutionary}")
+                else:
+                    self.log_result("EDN360 Case 3 - Second Evolution", False, 
+                                  "Response missing required fields", data)
+            else:
+                self.log_result("EDN360 Case 3 - Second Evolution", False, 
+                              f"HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("EDN360 Case 3 - Second Evolution", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_32_verify_database_state_progression(self):
+        """Test 32: Verify database state shows progression through evolutionary flow"""
+        if not hasattr(self, 'test_user_id_edn360'):
+            self.log_result("EDN360 Database State Verification", False, "No test user ID available")
+            return False
+            
+        try:
+            import subprocess
+            import json as json_module
+            
+            user_id = self.test_user_id_edn360
+            
+            # Check training_plans_v2 collection for progression
+            cmd = f'mongosh edn360_app --eval "db.training_plans_v2.find({{user_id: \\"{user_id}\\"}}, {{user_id: 1, created_at: 1, is_evolutionary: 1, questionnaire_submission_id: 1}}).sort({{created_at: 1}})" --quiet'
+            
+            result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+            
+            if result.returncode == 0:
+                output = result.stdout.strip()
+                if output and output != "null" and len(output) > 10:
+                    # Count plans by parsing output (rough estimation)
+                    plan_count = output.count('"user_id"')
+                    
+                    if plan_count >= 3:
+                        self.log_result("EDN360 Database State Verification", True, 
+                                      f"✅ Database shows progression: {plan_count} plans created for user {user_id}")
+                        return True
+                    else:
+                        self.log_result("EDN360 Database State Verification", False, 
+                                      f"Expected at least 3 plans, found {plan_count}")
+                else:
+                    self.log_result("EDN360 Database State Verification", False, 
+                                  "No plans found in database")
+            else:
+                self.log_result("EDN360 Database State Verification", False, 
+                              f"Database query failed: {result.stderr}")
+        except Exception as e:
+            self.log_result("EDN360 Database State Verification", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_33_microservice_health_check(self):
+        """Test 33: Verify EDN360 microservice is running and healthy"""
+        try:
+            # Check microservice health endpoint
+            health_url = "http://localhost:4000/health"
+            response = requests.get(health_url, timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("status") == "healthy":
+                    self.log_result("EDN360 Microservice Health", True, 
+                                  f"✅ Microservice healthy: {data}")
+                    return True
+                else:
+                    self.log_result("EDN360 Microservice Health", False, 
+                                  f"Microservice not healthy: {data}")
+            else:
+                self.log_result("EDN360 Microservice Health", False, 
+                              f"Health check failed: HTTP {response.status_code}")
+        except Exception as e:
+            self.log_result("EDN360 Microservice Health", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_34_error_handling_invalid_user(self):
+        """Test 34: Test error handling with invalid user_id"""
+        if not self.admin_token:
+            self.log_result("EDN360 Error Handling - Invalid User", False, "No admin token available")
+            return False
+            
+        url = f"{BACKEND_URL}/training-plan"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "user_id": "nonexistent_user_12345",
+            "current_questionnaire_id": "nonexistent_questionnaire_12345"
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=30)
+            
+            if response.status_code == 404:
+                data = response.json() if response.headers.get('content-type', '').startswith('application/json') else {}
+                detail = data.get("detail", {})
+                
+                if isinstance(detail, dict) and detail.get("error") == "user_not_found":
+                    self.log_result("EDN360 Error Handling - Invalid User", True, 
+                                  f"✅ Correctly returned 404 for invalid user: {detail.get('message', '')}")
+                    return True
+                else:
+                    self.log_result("EDN360 Error Handling - Invalid User", False, 
+                                  f"Got 404 but wrong error format: {detail}")
+            else:
+                self.log_result("EDN360 Error Handling - Invalid User", False, 
+                              f"Expected 404, got HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("EDN360 Error Handling - Invalid User", False, f"Exception: {str(e)}")
+        
+        return False
+
+    def test_35_error_handling_invalid_questionnaire(self):
+        """Test 35: Test error handling with invalid questionnaire_id"""
+        if not self.admin_token or not hasattr(self, 'test_user_id_edn360'):
+            self.log_result("EDN360 Error Handling - Invalid Questionnaire", False, "No admin token or test user ID available")
+            return False
+            
+        url = f"{BACKEND_URL}/training-plan"
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        payload = {
+            "user_id": self.test_user_id_edn360,
+            "current_questionnaire_id": "nonexistent_questionnaire_12345"
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=30)
+            
+            if response.status_code == 404:
+                data = response.json() if response.headers.get('content-type', '').startswith('application/json') else {}
+                detail = data.get("detail", {})
+                
+                if isinstance(detail, dict) and detail.get("error") == "questionnaire_not_found":
+                    self.log_result("EDN360 Error Handling - Invalid Questionnaire", True, 
+                                  f"✅ Correctly returned 404 for invalid questionnaire: {detail.get('message', '')}")
+                    return True
+                else:
+                    self.log_result("EDN360 Error Handling - Invalid Questionnaire", False, 
+                                  f"Got 404 but wrong error format: {detail}")
+            else:
+                self.log_result("EDN360 Error Handling - Invalid Questionnaire", False, 
+                              f"Expected 404, got HTTP {response.status_code}", response.text)
+        except Exception as e:
+            self.log_result("EDN360 Error Handling - Invalid Questionnaire", False, f"Exception: {str(e)}")
+        
+        return False
+
     # ==================== ASYNC GENERATION SYSTEM TESTS (E.D.N.360) ====================
     
-    def test_28_admin_login_for_async_generation(self):
+    def test_36_admin_login_for_async_generation(self):
         """Test 28: Admin login with correct credentials for async generation testing"""
         url = f"{BACKEND_URL}/auth/login"
         params = {
