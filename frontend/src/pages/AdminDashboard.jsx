@@ -143,6 +143,7 @@ const AdminDashboard = () => {
   // EDN360 Training Plan Generation - NEW FLOW
   const [generatingEDN360Plan, setGeneratingEDN360Plan] = useState(false);
   const [generatedEDN360Plan, setGeneratedEDN360Plan] = useState(null);
+  const [planRefreshKey, setPlanRefreshKey] = useState(0); // Para forzar refresh del TrainingPlanCard
   
   // Follow-up Report states
   const [selectedPreviousTrainingForReport, setSelectedPreviousTrainingForReport] = useState(null);
