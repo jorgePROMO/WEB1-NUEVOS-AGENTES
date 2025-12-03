@@ -4057,6 +4057,7 @@ const AdminDashboard = () => {
                           {/* ✅ PLAN EDN360 PERSISTENTE - CARD EDITABLE */}
                           <div className="mb-6">
                             <TrainingPlanCard 
+                              key={`training-plan-${selectedClient.id}-${planRefreshKey}`}
                               userId={selectedClient.id}
                               token={token}
                               onPlanUpdated={() => {
