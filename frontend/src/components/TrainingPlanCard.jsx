@@ -561,6 +561,25 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
 
                             {/* Exercises */}
                             <div className="space-y-2">
+                              {/* Table Headers */}
+                              <div className="grid grid-cols-12 gap-2 items-center bg-gray-100 px-2 py-1 rounded">
+                                <div className="col-span-1 text-xs font-semibold text-gray-700 text-center">
+                                  #
+                                </div>
+                                <div className="col-span-5 text-xs font-semibold text-gray-700">
+                                  Ejercicio
+                                </div>
+                                <div className="col-span-2 text-xs font-semibold text-gray-700">
+                                  Series
+                                </div>
+                                <div className="col-span-2 text-xs font-semibold text-gray-700">
+                                  Reps
+                                </div>
+                                <div className="col-span-2 text-xs font-semibold text-gray-700">
+                                  RPE
+                                </div>
+                              </div>
+                              
                               {block.exercises.map((exercise, exerciseIdx) => (
                                 <div key={exerciseIdx} className="bg-white p-2 rounded border border-gray-200">
                                   <div className="grid grid-cols-12 gap-2 items-start">
