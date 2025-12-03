@@ -32,6 +32,72 @@ import axios from 'axios';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// Traducciones de términos de entrenamiento (inglés → español de España)
+const TRANSLATIONS = {
+  // Tipos de entrenamiento
+  'full_body': 'Cuerpo Completo',
+  'upper_lower': 'Torso-Pierna',
+  'push_pull_legs': 'Empuje-Tirón-Pierna',
+  'bro_split': 'Rutina Weider',
+  
+  // Focos/énfasis
+  'upper_body': 'Tren Superior',
+  'lower_body': 'Tren Inferior',
+  'push': 'Empuje',
+  'pull': 'Tirón',
+  'push_focus': 'Énfasis Empuje',
+  'pull_focus': 'Énfasis Tirón',
+  'chest': 'Pecho',
+  'back': 'Espalda',
+  'shoulders': 'Hombros',
+  'triceps': 'Tríceps',
+  'biceps': 'Bíceps',
+  'quads': 'Cuádriceps',
+  'hamstrings': 'Isquiotibiales',
+  'glutes': 'Glúteos',
+  'legs': 'Piernas',
+  'arms': 'Brazos',
+  'core': 'Core',
+  'calves': 'Gemelos',
+  
+  // Grupos musculares
+  'front_delts': 'Deltoides Anterior',
+  'side_delts': 'Deltoides Lateral',
+  'rear_delts': 'Deltoides Posterior',
+  
+  // Nombres de sesiones comunes (patrones)
+  'Push Emphasis': 'Énfasis Empuje',
+  'Pull Emphasis': 'Énfasis Tirón',
+  'Push Dominante': 'Énfasis Empuje',
+  'Pull Dominante': 'Énfasis Tirón',
+  'Upper 1': 'Tren Superior 1',
+  'Upper 2': 'Tren Superior 2',
+  'Lower 1': 'Tren Inferior 1',
+  'Lower 2': 'Tren Inferior 2',
+  'Quad Dominante': 'Énfasis Cuádriceps',
+  'Cuádriceps Dominante': 'Énfasis Cuádriceps',
+  'Isquios y Glúteos Dominante': 'Énfasis Isquios y Glúteos'
+};
+
+// Función para traducir texto
+const translate = (text) => {
+  if (!text) return text;
+  
+  // Si es un array, traducir cada elemento
+  if (Array.isArray(text)) {
+    return text.map(t => TRANSLATIONS[t] || t).join(', ');
+  }
+  
+  // Si es un string, buscar traducciones parciales
+  let translated = text;
+  Object.keys(TRANSLATIONS).forEach(key => {
+    const regex = new RegExp(key, 'gi');
+    translated = translated.replace(regex, TRANSLATIONS[key]);
+  });
+  
+  return translated;
+};
+
 const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   const [latestPlan, setLatestPlan] = useState(null);
   const [loading, setLoading] = useState(true);
