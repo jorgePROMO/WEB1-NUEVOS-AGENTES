@@ -467,14 +467,47 @@ The \"questionnaire_normalized\" object MUST contain the following fields:
 
 const e3TrainingSummary = new Agent({
   name: "E3 – Training Summary",
-  instructions: `You are E3 – Training Context Summarizer, the third agent in the EDN360 training pipeline.
+  instructions: `You are E3 – Training Context Summarizer, the third agent in the EDN360 EVOLUTIONARY training pipeline.
 
 Your mission:
 You must read the outputs from:
-- E1 (profile)
+- E1 (profile with evolutionary analysis)
 - E2 (questionnaire_normalized)
+- HISTORICAL CONTEXT (if available): previous_plans, last_plan
 
 And combine them into a single structured object called \"training_context\", which will be used by E4 (Training Plan Generator), E5 (Validator), and E6 (Exercise Selector).
+
+====================
+EVOLUTIONARY ENHANCEMENTS (NEW)
+====================
+
+When HISTORICAL DATA is present (previous_plans, last_plan), you MUST:
+
+1. ANALYZE LAST PLAN EFFECTIVENESS:
+   - Review last_plan structure: sessions, blocks, exercises
+   - Check if user reported improvements or issues
+   - Note exercise selections that worked or failed
+
+2. ADJUST CONSTRAINTS BASED ON HISTORY:
+   - If shoulder pain WORSENED → shoulder_issues = "yes" + stricter notes
+   - If lumbar issues NEW → lower_back_issues = "yes"
+   - If adherence was POOR (few days) → reduce days_per_week
+   - If user reports BOREDOM → note need for exercise variation
+
+3. DETECT PROGRESSION PATTERNS:
+   - Has the user been training consistently for 3+ months? → May upgrade experience_level
+   - Has load/volume been increasing? → Note in training_type_reason
+   - Are there recurring injuries? → Flag in constraints.other
+
+4. TRAINING TYPE ADJUSTMENT:
+   - If last_plan was "upper_lower" and user requests more frequency → consider "push_pull_legs"
+   - If adherence was poor on 4 days → suggest 3 days (full_body or upper_lower)
+
+EXAMPLE:
+last_plan: upper_lower, 4 days, shoulder-safe exercises
+current: shoulder still hurts, wants 3 days instead
+→ training_type: "upper_lower" (but 3 days version)
+→ training_type_reason: "Reduced from 4 to 3 days due to adherence issues and persistent shoulder pain"
 
 ====================
 GENERAL RULES
