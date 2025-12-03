@@ -634,23 +634,42 @@ const AdminDashboard = () => {
   const loadQuestionnaires = async (userId) => {
     try {
       console.log('🔍 Loading questionnaires for user:', userId);
-      const response = await axios.get(`${API}/admin/users/${userId}/questionnaires`, {
+      
+      // Cargar cuestionarios EDN360
+      const edn360Response = await axios.get(`${API}/admin/users/${userId}/edn360-questionnaires`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
-      const questionnaires = response.data.questionnaires || [];
-      console.log('📋 Raw questionnaires received:', questionnaires);
-      console.log('📋 Questionnaires count:', questionnaires.length);
-      setAvailableQuestionnaires(questionnaires);
+      
+      const edn360Questionnaires = edn360Response.data.questionnaires || [];
+      console.log('📋 EDN360 questionnaires received:', edn360Questionnaires);
+      
+      // Formatear para el selector
+      const formattedQuestionnaires = edn360Questionnaires.map((q, index) => {
+        const isInitial = q.source === 'initial';
+        const date = new Date(q.submitted_at).toLocaleDateString('es-ES', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        });
+        
+        return {
+          id: q.id,
+          label: `${isInitial ? '📝 Inicial' : '🔄 Seguimiento'} - ${date}`,
+          is_initial: isInitial,
+          submitted_at: q.submitted_at
+        };
+      });
+      
+      console.log('📋 Formatted questionnaires:', formattedQuestionnaires);
+      setAvailableQuestionnaires(formattedQuestionnaires);
       
       // Auto-seleccionar cuestionario inicial solo si no hay selección previa
-      if (!selectedQuestionnaireForTraining && !selectedQuestionnaireForNutrition) {
-        const initial = questionnaires.find(q => q.is_initial);
-        console.log('🎯 Initial questionnaire found:', initial);
+      if (!selectedQuestionnaireForTraining && formattedQuestionnaires.length > 0) {
+        const initial = formattedQuestionnaires.find(q => q.is_initial);
         if (initial) {
           console.log('✅ Auto-seleccionando cuestionario inicial:', initial.id);
           setSelectedQuestionnaireForTraining(initial.id);
-          setSelectedQuestionnaireForNutrition(initial.id);
         }
       }
     } catch (error) {
