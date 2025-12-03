@@ -983,6 +983,9 @@ Include:
 }
 `,
   model: "gpt-4.1",
+  tools: [
+    fileSearchTrainingKB  // K1 Entrenamiento - Manual de programación
+  ],
   outputType: E4TrainingPlanGeneratorSchema,
   modelSettings: {
     temperature: 1,
