@@ -46,7 +46,8 @@ import {
   UserCheck,
   Dumbbell,
   CreditCard,
-  DollarSign
+  DollarSign,
+  AlertTriangle
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { AdminCalendar } from '../components/Calendar';
