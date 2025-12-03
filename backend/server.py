@@ -1114,11 +1114,13 @@ async def generate_training_plan(request: Request):
         # PASO 2: CONSTRUIR EDN360INPUT
         # ============================================
         try:
-            from services.edn360_input_builder import build_edn360_input_for_user
+            from services.edn360_input_builder import build_edn360_input_for_user_with_specific_questionnaires
             
-            # Construir EDN360Input completo desde BD
-            # (user_profile + questionnaires desde client_drawers)
-            edn360_input_obj = await build_edn360_input_for_user(user_id)
+            # Construir EDN360Input con los cuestionarios específicos seleccionados
+            edn360_input_obj = await build_edn360_input_for_user_with_specific_questionnaires(
+                user_id,
+                questionnaire_ids
+            )
             edn360_input = edn360_input_obj.dict()
             
             # Verificar que el submission_id específico está en los questionnaires
