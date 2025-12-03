@@ -3899,60 +3899,37 @@ const AdminDashboard = () => {
                             </Card>
                           )}
                           
-                          {/* ✅ GENERACIÓN EDN360 - CUESTIONARIOS DISPONIBLES */}
-                          {edn360QuestionnaireSubmissions.length > 0 && (
+                          {/* ✅ BOTÓN GENERAR PLAN EDN360 */}
+                          {availableQuestionnaires.length > 0 && (
                             <div className="mb-6">
-                              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-lg p-4">
-                                <h3 className="text-xl font-bold text-blue-900 mb-3 flex items-center gap-2">
-                                  📋 Cuestionarios EDN360
-                                  <Badge className="bg-blue-500 text-white">
-                                    {edn360QuestionnaireSubmissions.length}
-                                  </Badge>
-                                </h3>
-                                
-                                <div className="space-y-3">
-                                  {edn360QuestionnaireSubmissions.map((submission) => (
-                                    <Card key={submission.id} className="border-blue-200 bg-white hover:shadow-md transition-shadow">
-                                      <CardHeader>
-                                        <div className="flex justify-between items-center gap-4">
-                                          <div className="flex-1">
-                                            <CardTitle className="text-lg text-gray-800 flex items-center gap-2">
-                                              📝 {submission.source === 'initial' ? 'Cuestionario Inicial' : 'Seguimiento'}
-                                            </CardTitle>
-                                            <p className="text-sm text-gray-500 mt-1">
-                                              Enviado el {new Date(submission.submitted_at).toLocaleDateString('es-ES', {
-                                                day: 'numeric',
-                                                month: 'long',
-                                                year: 'numeric',
-                                                hour: '2-digit',
-                                                minute: '2-digit'
-                                              })}
-                                            </p>
-                                          </div>
-                                          
-                                          <Button
-                                            onClick={() => generateEDN360TrainingPlan(submission.id)}
-                                            disabled={generatingEDN360Plan}
-                                            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-md disabled:opacity-50"
-                                          >
-                                            {generatingEDN360Plan ? (
-                                              <>
-                                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                                Generando...
-                                              </>
-                                            ) : (
-                                              <>
-                                                <Dumbbell className="h-4 w-4 mr-2" />
-                                                Generar plan (EDN360)
-                                              </>
-                                            )}
-                                          </Button>
-                                        </div>
-                                      </CardHeader>
-                                    </Card>
-                                  ))}
-                                </div>
-                              </div>
+                              <Button
+                                onClick={() => {
+                                  if (!selectedQuestionnaireForTraining) {
+                                    alert('⚠️ Por favor selecciona un cuestionario base');
+                                    return;
+                                  }
+                                  generateEDN360TrainingPlan(selectedQuestionnaireForTraining);
+                                }}
+                                disabled={generatingEDN360Plan || !selectedQuestionnaireForTraining}
+                                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-md disabled:opacity-50 py-6 text-lg"
+                              >
+                                {generatingEDN360Plan ? (
+                                  <>
+                                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                                    Generando plan EDN360...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Dumbbell className="h-5 w-5 mr-2" />
+                                    Generar Plan EDN360
+                                  </>
+                                )}
+                              </Button>
+                              {!selectedQuestionnaireForTraining && (
+                                <p className="text-sm text-amber-600 mt-2 text-center">
+                                  ⚠️ Selecciona un cuestionario base arriba para generar el plan
+                                </p>
+                              )}
                             </div>
                           )}
                           
