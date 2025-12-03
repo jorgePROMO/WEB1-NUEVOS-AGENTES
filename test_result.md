@@ -198,13 +198,16 @@ backend:
     implemented: true
     working: false
     file: "/app/backend/server.py"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
     needs_retesting: false
     status_history:
         - working: false
           agent: "testing"
           comment: "✅ BACKEND STRUCTURE VERIFIED: POST /api/training-plan endpoint correctly receives user_id + current_questionnaire_id, constructs STATE object with initial_questionnaire, previous_followups, previous_plans, last_plan. Fixed datetime serialization issue. Mock endpoint works perfectly. ❌ WORKFLOW TIMEOUT: Real EDN360 workflow times out after E2 step (Parse Questionnaire), likely due to OpenAI API latency or E3+ step configuration. Microservice processes E1-E2 successfully but hangs on subsequent steps. Error handling works correctly for invalid inputs. Architecture is sound but needs workflow performance optimization."
+        - working: false
+          agent: "testing"
+          comment: "🔍 EDN360 E2E COMPREHENSIVE TESTING COMPLETED for Jorge2 (1764168881795908): ✅ BACKEND ARCHITECTURE VERIFIED: STATE construction works correctly - logs show 'Cuestionarios recuperados | Total en BD: 2 | Initial (más antiguo): 1764713509409284 | Previous followups: 0 | Current: 1764713509409284', 'Planes previos recuperados | Total en BD: 0 | Previous plans en STATE: 0 | Has last_plan: False', 'Objeto STATE construido | Has initial: True | Previous followups: 0 | Previous plans: 0 | Has last_plan: False'. ✅ ERROR HANDLING: Correctly returns 404 for invalid users. ✅ MICROSERVICE HEALTH: EDN360 service (localhost:4000) responds healthy. ❌ CRITICAL ISSUE CONFIRMED: Microservice returns HTTP 500 after 84 seconds timeout during workflow execution. Backend logs show 'Error HTTP 500: 500 Server Error: Internal Server Error for url: http://localhost:4000/api/edn360/run-training-workflow'. The evolutionary flow architecture is correctly implemented but blocked by microservice timeout. REQUIRES WEBSEARCH tool to investigate OpenAI workflow timeout solutions and E3+ step debugging."
 
 frontend:
   - task: "EDN360 Workflow Launch Button"
