@@ -582,11 +582,26 @@ A \"training_context\" object with these fields:
    - \"bro_split\"
    - \"other\"
 
-   RULES:
-   - 4 days/week + advanced → usually "upper_lower".
-   - If serious shoulder issues → avoid push/pull/legs.
-   - If lumbar issues → avoid bro_split with heavy axial loading.
-   - Use the safest high-performance option.
+   CRITICAL PRIORITY ORDER:
+   1. **USER EXPLICIT PREFERENCE** (from E2.questionnaire_normalized.activities_realizar or preferences)
+      - If user mentions "weider", "bro split", or "split por músculo" → training_type = "bro_split"
+      - If user mentions "torso pierna", "upper lower" → training_type = "upper_lower"
+      - If user mentions "tirón empuje pierna", "ppl" → training_type = "push_pull_legs"
+      - USER PREFERENCE ALWAYS OVERRIDES OTHER CONSIDERATIONS
+   
+   2. **EXPERIENCE LEVEL** (from E2.questionnaire_normalized.training_experience_level or experiencia_ejercicio_constante)
+      - If "advanced" OR mentions "culturista", "competición", "profesional" → Can handle ANY split including bro_split
+      - Advanced users with injuries can still do bro_split with exercise modifications (not split changes)
+   
+   3. **AVAILABILITY**:
+      - 5-6 days/week + advanced → "bro_split" is ideal
+      - 4 days/week → "upper_lower" or "bro_split" (4-day version)
+      - 3 days/week → "full_body" or "upper_lower"
+   
+   SAFETY NOTES (DO NOT CHANGE SPLIT):
+   - Shoulder/lumbar issues → Adjust EXERCISE SELECTION, not training_type
+   - Injuries are handled by E6 (exercise selector), not by changing the split
+   - If user is advanced and wants bro_split, give bro_split with safe exercises
 
 7) training_type_reason:
    - 1 short English sentence explaining why you chose the split.
