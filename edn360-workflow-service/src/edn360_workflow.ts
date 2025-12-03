@@ -869,13 +869,10 @@ Each session object MUST have:
 
 You MUST design the session layout consistent with:
 
-- training_type (e.g. upper/lower):
-  - Upper days focusing on upper body (push + pull).
-  - Lower days focusing on lower body (quads, hamstrings, glutes).
-- constraints:
-  - Shoulders and lower back must be protected.
-- availability:
-  - 45 minutes per session → avoid too many exercises or excessive volume.
+- training_type from training_context (could be: full_body, upper_lower, push_pull_legs, bro_split, other)
+- constraints from training_context (shoulder_issues, lower_back_issues, other)
+- availability from training_context (days_per_week, session_duration_min)
+  - Adjust exercise count and volume to fit within the user's available time per session
 
 
 ====================
