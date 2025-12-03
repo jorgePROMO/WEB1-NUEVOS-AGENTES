@@ -29,27 +29,47 @@
 - `training_plans_v2` - Planes de entrenamiento EDN360 (0 actualmente)
 - `edn360_snapshots` - Snapshots de ejecuciones de workflows (64)
 
-**Estructura de client_drawers:**
+**⚠️ ESTRUCTURA REAL de client_drawers:**
 ```json
 {
   "_id": "client_{user_id}",
   "user_id": "1764016044644335",
-  "shared_questionnaires": [
-    {
-      "submission_id": "quest_001",
-      "questionnaire_type": "initial",
-      "submitted_at": "2025-12-02T...",
-      "responses": {
-        "nombre_completo": "...",
-        "peso": 85,
-        "altura_cm": 172,
-        ... (83 campos)
+  "services": {
+    "shared_questionnaires": [
+      {
+        "submission_id": "1764016775848319",
+        "submitted_at": "2025-11-24 20:39:35.848000",
+        "source": "initial",
+        "raw_payload": {
+          "_id": "...",
+          "user_id": "...",
+          "responses": {
+            "nombre_completo": "Jorge1",
+            "peso": "85",
+            "altura_cm": "172",
+            ... (83 campos)
+          }
+        }
       }
+    ],
+    "training": {
+      "active_plan_id": null,
+      "plans": [],
+      "snapshots": []
+    },
+    "nutrition": {
+      "active_plan_id": null,
+      "plans": [],
+      "snapshots": []
     }
-  ],
+  },
+  "shared_questionnaires": [],  ← VACÍO, NO SE USA
   "created_at": "2025-11-26T...",
   "updated_at": "..."
 }
+```
+
+**⚠️ IMPORTANTE:** Los cuestionarios están en `services.shared_questionnaires`, NO en `shared_questionnaires` directamente.
 ```
 
 ---
