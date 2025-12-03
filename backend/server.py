@@ -1069,23 +1069,22 @@ async def generate_training_plan(request: Request):
         body = await request.json()
         
         user_id = body.get("user_id")
-        questionnaire_submission_id = body.get("questionnaire_submission_id")
-        previous_training_plan_id = body.get("previous_training_plan_id")  # NUEVO: plan previo opcional
+        previous_training_plan_id = body.get("previous_training_plan_id")  # Plan previo opcional
         
-        if not user_id or not questionnaire_submission_id:
+        if not user_id:
             raise HTTPException(
                 status_code=400,
                 detail={
                     "error": "missing_fields",
-                    "message": "Se requieren user_id y questionnaire_submission_id"
+                    "message": "Se requiere user_id"
                 }
             )
         
         logger.info(
             f"🏋️ Generando plan de entrenamiento | "
             f"admin: {admin['_id']} | user_id: {user_id} | "
-            f"submission_id: {questionnaire_submission_id} | "
-            f"previous_plan_id: {previous_training_plan_id or 'none'}"
+            f"previous_plan_id: {previous_training_plan_id or 'none'} | "
+            f"mode: ALL_QUESTIONNAIRES"
         )
         
         # ============================================
