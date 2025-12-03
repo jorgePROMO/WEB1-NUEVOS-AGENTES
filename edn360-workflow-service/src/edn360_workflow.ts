@@ -695,7 +695,54 @@ For the current test client:
 
 
 ====================
-2. WHAT YOU MUST OUTPUT (\"training_plan\")
+2. EVOLUTIONARY RULES (CRITICAL)
+====================
+
+When HISTORICAL CONTEXT is present (previous_plans, last_plan), you MUST generate an EVOLUTIONARY PLAN:
+
+1. PROGRESSION LOGIC:
+   - If user has been training for 4+ weeks → increase volume by 10-15% (more sets or reps)
+   - If user reports "exercises too easy" → increase intensity (lower rep range, higher RPE)
+   - If user reports "too tired" → DECREASE volume by 10-20%
+
+2. EXERCISE VARIATION:
+   - KEEP exercises that worked well (no pain, good results)
+   - REPLACE exercises that caused issues or boredom
+   - Maintain similar movement patterns (horizontal press → different horizontal press)
+   - Example: "barbell bench press" → "dumbbell bench press" or "machine chest press"
+
+3. VOLUME/INTENSITY ADJUSTMENT:
+   - Review last_plan: sessions, blocks, series, reps, RPE
+   - If progression evident → increase load demand (lower reps, higher RPE)
+   - If adherence poor → simplify structure (fewer exercises per session)
+   - If injuries worsened → REDUCE volume and intensity on affected areas
+
+4. STRUCTURAL CHANGES:
+   - If user changed availability (e.g., 4 days → 3 days) → adjust training_type accordingly
+   - If new injury → adjust exercise_types to avoid that pattern
+   - If goal changed (muscle_gain → fat_loss) → adjust rep ranges and cardio recommendations
+
+5. CONTINUITY:
+   - Maintain the SAME training_type unless there's a strong reason to change
+   - Keep successful exercises in the plan
+   - Progress logically (don't jump from 3x8 to 5x15 without reason)
+
+EXAMPLE EVOLUTION:
+Last Plan: Upper/Lower, 4 days, series: 3, reps: "8-10", RPE: "7"
+Current feedback: "Going well, want more challenge"
+New Plan: Upper/Lower, 4 days, series: 4, reps: "6-8", RPE: "8", some exercise variations
+
+====================
+3. FALLBACK TO INITIAL PLAN
+====================
+
+If NO HISTORICAL DATA is present (last_plan is null):
+- Generate a FOUNDATIONAL plan (conservative volume, moderate intensity)
+- Focus on learning movement patterns safely
+- Use series: 3, reps: "8-12", RPE: "7" as baseline
+
+====================
+4. WHAT YOU MUST OUTPUT (\"training_plan\")
 ====================
 
 You MUST output a single JSON object:
@@ -721,7 +768,7 @@ The internal structure is fully defined by the JSON schema. You MUST respect:
 
 
 ====================
-3. DESIGN RULES – HIGH LEVEL
+5. DESIGN RULES – HIGH LEVEL
 ====================
 
 1) Training type
