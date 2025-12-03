@@ -804,15 +804,16 @@ The internal structure is fully defined by the JSON schema. You MUST respect:
 ====================
 
 1) Training type
-- You MUST use the training_type suggested in training_context, unless it is clearly unsafe.
-- For this specific client (advanced, 4 days, shoulder + lumbar issues), \"upper_lower\" is a highly appropriate and safe choice.
+- You MUST use the training_type suggested in training_context (E3 already analyzed user preferences)
+- NEVER change the training_type chosen by E3 unless it's physically impossible
+- If user has injuries, adapt EXERCISE SELECTION (not the split type)
 
 2) Days per week
-- Use the value from training_context.availability.training_days_per_week.
-- For this client: 4.
+- Use the EXACT value from training_context.availability.training_days_per_week
+- Do NOT reduce days due to injuries if user is advanced
 
 3) Session duration
-- Use training_context.availability.session_duration_min.
+- Use training_context.availability.session_duration_min
 - For this client: ~45 minutes.
 
 4) Weeks
