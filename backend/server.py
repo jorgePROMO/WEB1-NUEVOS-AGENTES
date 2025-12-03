@@ -102,19 +102,31 @@ def _translate_training_plan_to_spanish(plan):
         'hamstring_focus': 'Énfasis Isquios',
         'push_emphasis': 'Énfasis Empuje',
         'pull_emphasis': 'Énfasis Tirón',
+        'posterior_chain': 'Cadena Posterior',
         
         # Grupos musculares principales
+        'Chest': 'Pecho',
         'chest': 'Pecho',
+        'Back': 'Espalda',
         'back': 'Espalda',
+        'Shoulders': 'Hombros',
         'shoulders': 'Hombros',
+        'Triceps': 'Tríceps',
         'triceps': 'Tríceps',
+        'Biceps': 'Bíceps',
         'biceps': 'Bíceps',
+        'Quads': 'Cuádriceps',
         'quads': 'Cuádriceps',
+        'Hamstrings': 'Isquiotibiales',
         'hamstrings': 'Isquiotibiales',
+        'Glutes': 'Glúteos',
         'glutes': 'Glúteos',
+        'Legs': 'Piernas',
         'legs': 'Piernas',
+        'Arms': 'Brazos',
         'arms': 'Brazos',
         'core': 'Core',
+        'Core': 'Core',
         'calves': 'Gemelos',
         
         # Grupos musculares específicos
@@ -124,23 +136,33 @@ def _translate_training_plan_to_spanish(plan):
         'upper_chest': 'Pecho Superior',
         'lower_chest': 'Pecho Inferior',
         'lats': 'Dorsales',
+        'upper_back': 'Espalda Superior',
         'traps': 'Trapecios',
         'lower_back': 'Lumbar',
         'abs': 'Abdominales',
         'obliques': 'Oblicuos',
         'forearms': 'Antebrazos',
+        'abductors': 'Abductores',
         
-        # Patrones de nombres de sesiones comunes
-        'Upper 1': 'Tren Superior 1',
-        'Upper 2': 'Tren Superior 2',
-        'Lower 1': 'Tren Inferior 1',
-        'Lower 2': 'Tren Inferior 2',
-        'Push Emphasis': 'Énfasis Empuje',
-        'Pull Emphasis': 'Énfasis Tirón',
-        'Quad Emphasis': 'Énfasis Cuádriceps',
-        'Hamstring Emphasis': 'Énfasis Isquios',
-        'Push Dominante': 'Énfasis Empuje',
-        'Pull Dominante': 'Énfasis Tirón'
+        # Frases de nombres de sesiones completas (más específicas primero)
+        'Chest & Triceps – Joint Friendly': 'Pecho y Tríceps - Amigable con Articulaciones',
+        'Back & Biceps – Supported Pulls': 'Espalda y Bíceps - Jalones Asistidos',
+        'Legs – Quads & Glutes Emphasis': 'Piernas - Énfasis Cuádriceps y Glúteos',
+        'Shoulders & Arms – Machine/Isolation Safe': 'Hombros y Brazos - Máquinas Seguras',
+        'Upper 1 – Push Emphasis': 'Tren Superior 1 - Énfasis Empuje',
+        'Upper 2 – Pull Emphasis': 'Tren Superior 2 - Énfasis Tirón',
+        'Lower 1 – Quad Emphasis': 'Tren Inferior 1 - Énfasis Cuádriceps',
+        'Lower 2 – Posterior Chain': 'Tren Inferior 2 - Cadena Posterior',
+        
+        # Conectores y palabras comunes
+        '&': 'y',
+        'and': 'y',
+        'Emphasis': 'Énfasis',
+        'emphasis': 'Énfasis',
+        'Joint Friendly': 'Amigable con Articulaciones',
+        'Supported Pulls': 'Jalones Asistidos',
+        'Machine/Isolation Safe': 'Máquinas Seguras',
+        'Posterior Chain': 'Cadena Posterior'
     }
     
     def translate_text(text):
