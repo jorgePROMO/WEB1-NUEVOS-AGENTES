@@ -2056,6 +2056,68 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Overlay bloqueante durante generación de plan */}
+      {generatingEDN360Plan && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full mx-4">
+            <div className="text-center space-y-6">
+              {/* Icono animado */}
+              <div className="flex justify-center">
+                <div className="relative">
+                  <Loader2 className="h-16 w-16 text-blue-600 animate-spin" />
+                  <Dumbbell className="h-8 w-8 text-blue-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                </div>
+              </div>
+              
+              {/* Título */}
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Generando Plan de Entrenamiento
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Nuestros agentes de IA están analizando el cuestionario y creando un plan personalizado
+                </p>
+              </div>
+              
+              {/* Barra de progreso animada */}
+              <div className="space-y-2">
+                <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                  <div className="bg-gradient-to-r from-blue-600 to-cyan-600 h-2.5 rounded-full animate-pulse" style={{width: '100%'}}></div>
+                </div>
+                <p className="text-xs text-gray-500">
+                  Tiempo estimado: 2-3 minutos
+                </p>
+              </div>
+              
+              {/* Mensaje de progreso */}
+              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 mt-0.5">
+                    <div className="h-2 w-2 bg-blue-600 rounded-full animate-ping"></div>
+                  </div>
+                  <div className="text-left space-y-1">
+                    <p className="text-sm font-medium text-blue-900">
+                      Procesando datos del usuario...
+                    </p>
+                    <p className="text-xs text-blue-700">
+                      Los agentes están analizando: experiencia, objetivos, lesiones, preferencias de rutina y equipamiento disponible
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Advertencia */}
+              <div className="flex items-center gap-2 text-xs text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-200">
+                <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+                <p className="text-left">
+                  Por favor no cierres esta ventana ni navegues a otra sección mientras se genera el plan
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Header */}
       <header className="bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
