@@ -345,12 +345,20 @@ class NutritionQuestionnaireSubmit(BaseModel):
     direccion: Optional[str] = None
     telefono: str
     
+    # Tipo de medición
+    measurement_type: Optional[str] = None
+    
     # Medidas corporales
     peso: str
     altura_cm: str
     grasa_porcentaje: Optional[str] = None
+    masa_muscular_porcentaje: Optional[str] = None
+    masa_osea_kg: Optional[str] = None
+    agua_porcentaje: Optional[str] = None
+    grasa_visceral: Optional[str] = None
     cintura_cm: Optional[str] = None
     cadera_cm: Optional[str] = None
+    pecho_cm: Optional[str] = None
     biceps_relajado_cm: Optional[str] = None
     biceps_flexionado_cm: Optional[str] = None
     muslo_cm: Optional[str] = None
