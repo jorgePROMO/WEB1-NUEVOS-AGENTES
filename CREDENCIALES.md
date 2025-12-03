@@ -127,14 +127,14 @@ SMTP_PASSWORD="nxsv tzay tskg jikb"
 SMTP_FROM_NAME="Jorge Calcerrada"
 
 # Frontend URL (para links en emails)
-FRONTEND_URL="https://training-plan-gen.preview.emergentagent.com"
+FRONTEND_URL="https://edn360-audit.preview.emergentagent.com"
 ```
 
 ### Frontend (.env)
 
 ```bash
 # Backend API URL
-REACT_APP_BACKEND_URL="https://training-plan-gen.preview.emergentagent.com"
+REACT_APP_BACKEND_URL="https://edn360-audit.preview.emergentagent.com"
 
 # Configuración WebSocket (para desarrollo)
 WDS_SOCKET_PORT=443
@@ -166,8 +166,8 @@ ENABLE_HEALTH_CHECK=false
 ### Producción (Emergent)
 
 **Frontend + Backend:**
-- URL: https://training-plan-gen.preview.emergentagent.com
-- Backend API: https://training-plan-gen.preview.emergentagent.com/api
+- URL: https://edn360-audit.preview.emergentagent.com
+- Backend API: https://edn360-audit.preview.emergentagent.com/api
 
 **Configuración Interna:**
 - Frontend: Puerto 3000 (interno)
@@ -242,7 +242,7 @@ bash /app/database_init.sh
 - Push con: "Save to GitHub" en la interfaz
 
 ### Emergent Platform
-- URL del preview: https://training-plan-gen.preview.emergentagent.com
+- URL del preview: https://edn360-audit.preview.emergentagent.com
 - Control de servicios: `sudo supervisorctl restart all`
 
 ---

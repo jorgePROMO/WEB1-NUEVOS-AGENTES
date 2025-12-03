@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://training-plan-gen.preview.emergentagent.com
+**URL Actual:** https://edn360-audit.preview.emergentagent.com
 
 ---
 

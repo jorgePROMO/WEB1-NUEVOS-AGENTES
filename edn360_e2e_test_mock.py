@@ -12,7 +12,7 @@ from datetime import datetime
 import time
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://training-plan-gen.preview.emergentagent.com/api"
+BACKEND_URL = "https://edn360-audit.preview.emergentagent.com/api"
 
 class EDN360E2ETesterMock:
     def __init__(self):
