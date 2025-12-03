@@ -1152,6 +1152,9 @@ IMPORTANT HARD LIMITS FOR OUTPUT LENGTH:
 - Never exceed these limits, otherwise JSON will be truncated.
 `,
   model: "gpt-4.1",
+  tools: [
+    fileSearchTrainingKB  // K1 Entrenamiento - Referencia de seguridad
+  ],
   outputType: E5TrainingPlanValidatorSchema,
   modelSettings: {
     temperature: 1,
