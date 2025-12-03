@@ -1203,18 +1203,46 @@ async def generate_training_plan(request: Request):
             edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
             
             # Recuperar todos los planes del usuario ordenados por fecha
-            previous_plans_cursor = edn360_db.training_plans_v2.find(
+            all_plans_cursor = edn360_db.training_plans_v2.find(
                 {"user_id": user_id},
-                {"_id": 0}
+                {"_id": 1, "created_at": 1, "plan": 1}
             ).sort("created_at", 1)  # Ascendente (más antiguo → más reciente)
             
-            previous_plans = await previous_plans_cursor.to_list(length=100)
+            all_plans = await all_plans_cursor.to_list(length=100)
             
-            last_plan = previous_plans[-1] if previous_plans else None
+            # Si se seleccionó un previous_training_plan_id en la UI,
+            # usar solo los planes hasta ese ID (inclusive)
+            if previous_training_plan_id:
+                logger.info(f"📋 Filtrando planes hasta: {previous_training_plan_id}")
+                
+                # Buscar el plan seleccionado
+                selected_plan_index = -1
+                for i, plan in enumerate(all_plans):
+                    plan_id = str(plan.get("_id", ""))
+                    # También verificar formato "edn360_{i}_{created_at}"
+                    if plan_id == previous_training_plan_id or plan.get("created_at") == previous_training_plan_id:
+                        selected_plan_index = i
+                        break
+                
+                if selected_plan_index >= 0:
+                    # Incluir todos los planes hasta el seleccionado (inclusive)
+                    previous_plans = all_plans[:selected_plan_index + 1]
+                    last_plan = previous_plans[-1] if previous_plans else None
+                    logger.info(f"✅ Planes filtrados hasta índice {selected_plan_index}: {len(previous_plans)} planes")
+                else:
+                    logger.warning(f"⚠️ Plan seleccionado {previous_training_plan_id} no encontrado, usando todos los planes")
+                    previous_plans = all_plans
+                    last_plan = previous_plans[-1] if previous_plans else None
+            else:
+                # No se seleccionó plan previo en UI
+                # CASO A: Si no hay planes, esto es el primer plan
+                previous_plans = all_plans
+                last_plan = previous_plans[-1] if previous_plans else None
             
             logger.info(
                 f"✅ Planes previos recuperados | "
-                f"Total: {len(previous_plans)} | "
+                f"Total en BD: {len(all_plans)} | "
+                f"Previous plans en STATE: {len(previous_plans)} | "
                 f"Has last_plan: {bool(last_plan)}"
             )
         
