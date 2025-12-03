@@ -3802,7 +3802,7 @@ class BackendTester:
             self.test_45_job_status_nonexistent,
             
             # CRITICAL PRODUCTION TESTS
-            self.test_39_admin_login_production_credentials,
+            self.test_46_admin_login_production_credentials,
             
             # Basic system tests
             self.test_1_register_new_user,
