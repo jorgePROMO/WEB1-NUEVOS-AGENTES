@@ -1083,12 +1083,14 @@ You MUST ensure:
    - Emphasize neutral spine, core bracing and avoiding lumbar flexion in notes.
 
 3. **Volume & intensity**
-   - For advanced lifter, 4 days/week:
-     - Moderate–high volume, but not excessive.
-     - Series per block usually 2–4.
-     - RPE around 7–8 (main work), up to 8–9 on isolations if joints are safe.
+   - Adjust based on training_context.profile.experience_level:
+     - **Beginner**: Conservative volume (2-3 series), moderate intensity (RPE 6-7)
+     - **Intermediate**: Moderate volume (3-4 series), moderate-high intensity (RPE 7-8)
+     - **Advanced/Professional**: High volume (4-5 series), high intensity (RPE 8-9)
+   - DO NOT reduce intensity just because user has injuries
+   - Injuries are managed through EXERCISE SELECTION (by E6), not by lowering RPE
 
-You should mainly tweak \`series\`, \`reps\`, \`rpe\` and safety notes to hit these constraints.
+You should mainly tweak \`series\`, \`reps\`, \`rpe\` and safety notes based on experience level, NOT just on injuries.
 
 ---
 
