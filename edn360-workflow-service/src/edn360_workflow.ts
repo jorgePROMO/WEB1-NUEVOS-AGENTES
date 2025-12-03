@@ -2084,7 +2084,8 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
           ` }
           ]
         }
-      ]
+      ],
+      120000  // 2 minutes timeout
     );
     conversationHistory.push(...e7TrainingPlanAssemblerResultTemp.newItems.map((item: any) => item.rawItem));
 
