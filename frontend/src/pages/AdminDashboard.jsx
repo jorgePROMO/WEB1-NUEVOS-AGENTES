@@ -3963,11 +3963,8 @@ const AdminDashboard = () => {
                           {availableQuestionnaires.length > 0 && (
                             <div className="mb-6">
                               <Button
-                                onClick={() => {
-                                  // Ya no necesita selección de cuestionario - se envían todos
-                                  generateEDN360TrainingPlan('all');
-                                }}
-                                disabled={generatingEDN360Plan}
+                                onClick={generateEDN360TrainingPlan}
+                                disabled={generatingEDN360Plan || !selectedQuestionnaireForTraining}
                                 className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-md disabled:opacity-50 py-6 text-lg"
                               >
                                 {generatingEDN360Plan ? (
@@ -3982,6 +3979,11 @@ const AdminDashboard = () => {
                                   </>
                                 )}
                               </Button>
+                              {!selectedQuestionnaireForTraining && (
+                                <p className="text-sm text-amber-600 mt-2 text-center">
+                                  ⚠️ Selecciona al menos el cuestionario previo para generar el plan
+                                </p>
+                              )}
                             </div>
                           )}
                           
