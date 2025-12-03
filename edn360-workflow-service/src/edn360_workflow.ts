@@ -1782,11 +1782,25 @@ async function runAgentWithLogging(
   runner: any,
   agent: any,
   agentName: string,
-  input: any[]
+  input: any[],
+  timeoutMs: number = 120000  // Default: 2 minutes
 ) {
   try {
-    console.log(`\n🚀 Ejecutando ${agentName}...`);
-    const result = await runner.run(agent, input);
+    console.log(`\n🚀 Ejecutando ${agentName}... (timeout: ${timeoutMs}ms)`);
+    
+    // Create a timeout promise
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error(`${agentName} exceeded timeout of ${timeoutMs}ms`));
+      }, timeoutMs);
+    });
+    
+    // Race between agent execution and timeout
+    const result = await Promise.race([
+      runner.run(agent, input),
+      timeoutPromise
+    ]);
+    
     console.log(`✅ ${agentName} completado`);
     return result;
   } catch (error: any) {
