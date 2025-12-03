@@ -817,7 +817,9 @@ The internal structure is fully defined by the JSON schema. You MUST respect:
 - For this client: ~45 minutes.
 
 4) Weeks
-- Set \"weeks\" to 4 for now (a 4-week block that can be repeated or progressed).
+- **ALWAYS** set \"weeks\" to 4 (monthly follow-up cycle)
+- This is a NON-NEGOTIABLE requirement: NEVER use 6, 8, 10, or 12 weeks
+- EDN360 operates on 4-week (monthly) follow-up cycles
 
 5) Goal
 - A short ENGLISH string summarizing the plan goal, e.g. \"Hypertrophy-focused strength training with joint-friendly approach\".
