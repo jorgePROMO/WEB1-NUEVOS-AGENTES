@@ -1948,8 +1948,10 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
       output_text: JSON.stringify(e3TrainingSummaryResultTemp.finalOutput),
       output_parsed: e3TrainingSummaryResultTemp.finalOutput
     };
-    const e4TrainingPlanGeneratorResultTemp = await runner.run(
+    const e4TrainingPlanGeneratorResultTemp = await runAgentWithLogging(
+      runner,
       e4TrainingPlanGenerator,
+      "E4 – Training Plan Generator",
       [
         ...conversationHistory,
         {
