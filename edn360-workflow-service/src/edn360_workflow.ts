@@ -1355,7 +1355,7 @@ Produce the minimal and correct mapping from plan exercise_types to EDN360 exerc
 `,
   model: "gpt-4.1",
   tools: [
-    fileSearch
+    fileSearchExercises  // BD Ejercicios v2.0 Definitiva
   ],
   outputType: E6ExerciseNormalizerDbMapperSchema,
   modelSettings: {
