@@ -148,6 +148,110 @@ async def build_edn360_input_for_user(user_id: str) -> EDN360Input:
         raise
 
 
+
+async def build_edn360_input_for_user_with_specific_questionnaires(
+    user_id: str,
+    questionnaire_ids: list[str]
+) -> EDN360Input:
+    """
+    Construye un EDN360Input para un usuario usando SOLO los cuestionarios específicos seleccionados.
+    
+    Args:
+        user_id: ID del usuario
+        questionnaire_ids: Lista de IDs de cuestionarios a incluir (en el orden deseado)
+    
+    Returns:
+        EDN360Input completo con solo los cuestionarios seleccionados
+    
+    Example:
+        # Incluir solo cuestionario inicial + seguimiento 1
+        edn360_input = await build_edn360_input_for_user_with_specific_questionnaires(
+            "1764016044644335",
+            ["quest_initial_001", "quest_followup_001"]
+        )
+    """
+    try:
+        logger.info(
+            f"🏗️  Construyendo EDN360Input para user_id: {user_id} | "
+            f"Con {len(questionnaire_ids)} cuestionarios específicos"
+        )
+        
+        # ============================================
+        # 1. LEER PERFIL DE USUARIO (BD WEB)
+        # ============================================
+        user_profile = await _build_user_profile(user_id)
+        
+        if not user_profile:
+            raise Exception(f"Usuario {user_id} no encontrado en BD Web")
+        
+        logger.info(f"✅ Perfil de usuario cargado: {user_profile.name}")
+        
+        # ============================================
+        # 2. LEER CLIENT_DRAWER (BD EDN360_APP)
+        # ============================================
+        drawer = await get_drawer_by_user_id(user_id)
+        
+        if not drawer:
+            raise EDN360NoDrawerError(
+                f"Usuario {user_id} no tiene client_drawer"
+            )
+        
+        logger.info(f"✅ Client_drawer encontrado: {drawer.id}")
+        
+        # ============================================
+        # 3. FILTRAR CUESTIONARIOS POR IDS
+        # ============================================
+        all_questionnaires = drawer.services.shared_questionnaires
+        
+        # Crear mapa de cuestionarios por ID
+        quest_map = {q.submission_id: q for q in all_questionnaires}
+        
+        # Obtener solo los cuestionarios seleccionados en el orden especificado
+        selected_questionnaires_raw = []
+        for q_id in questionnaire_ids:
+            if q_id in quest_map:
+                selected_questionnaires_raw.append(quest_map[q_id])
+                logger.info(f"   ✓ Cuestionario incluido: {q_id}")
+            else:
+                logger.warning(f"   ⚠️  Cuestionario {q_id} no encontrado en drawer")
+        
+        if not selected_questionnaires_raw:
+            raise Exception(
+                f"Ninguno de los cuestionarios seleccionados fue encontrado en el drawer del usuario"
+            )
+        
+        # Mapear a EDN360Questionnaire
+        questionnaires = _map_questionnaires(selected_questionnaires_raw)
+        
+        logger.info(f"✅ {len(questionnaires)} cuestionario(s) seleccionados y mapeados")
+        
+        # ============================================
+        # 4. CONSTRUIR EDN360INPUT
+        # ============================================
+        edn360_input = EDN360Input(
+            user_profile=user_profile,
+            questionnaires=questionnaires,
+            generated_at=datetime.now(timezone.utc),
+            version="1.0.0"
+        )
+        
+        logger.info(
+            f"✅ EDN360Input construido con cuestionarios específicos: "
+            f"{edn360_input.questionnaire_count()} cuestionario(s)"
+        )
+        
+        return edn360_input
+    
+    except EDN360NoDrawerError:
+        raise
+    except Exception as e:
+        logger.error(
+            f"❌ Error construyendo EDN360Input con cuestionarios específicos "
+            f"para user_id {user_id}: {e}"
+        )
+        raise
+
+
 # ============================================
 # HELPERS INTERNOS
 # ============================================
