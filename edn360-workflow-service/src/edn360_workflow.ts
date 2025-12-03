@@ -1929,7 +1929,8 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
           {{ E1.profile }}` }
           ]
         }
-      ]
+      ],
+      90000  // 90 seconds timeout
     );
     conversationHistory.push(...e2ParseQuestionnaireResultTemp.newItems.map((item: any) => item.rawItem));
 
