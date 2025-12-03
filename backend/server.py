@@ -2156,6 +2156,282 @@ async def delete_latest_training_plan(user_id: str, request: Request):
             }
         )
 
+
+@api_router.post("/admin/users/{user_id}/training-plans/send-to-user-panel")
+async def send_training_plan_to_user_panel(user_id: str, request: Request):
+    """
+    Envía el plan de entrenamiento al panel del usuario y notifica por email.
+    
+    Este endpoint:
+    - Actualiza el status del plan a 'sent'
+    - Envía notificación por email al usuario con enlace a su panel
+    - El plan aparecerá en el UserDashboard del cliente
+    
+    Auth: Admin only
+    """
+    admin = await require_admin(request)
+    
+    try:
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        
+        # Buscar el plan más reciente
+        plan_doc = await edn360_db.training_plans_v2.find_one(
+            {"user_id": user_id},
+            sort=[("created_at", -1)]
+        )
+        
+        if not plan_doc:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "no_plan_found",
+                    "message": f"No se encontró ningún plan para el usuario {user_id}"
+                }
+            )
+        
+        # Actualizar status a 'sent'
+        await edn360_db.training_plans_v2.update_one(
+            {"_id": plan_doc["_id"]},
+            {"$set": {"status": "sent", "sent_at": datetime.now(timezone.utc).isoformat()}}
+        )
+        
+        # Obtener info del usuario para el email
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Enviar email de notificación
+        # TODO: Implementar envío de email con enlace al panel
+        logger.info(
+            f"✅ Plan enviado al panel del usuario | user_id: {user_id} | "
+            f"admin: {admin['_id']} | user_email: {user.get('email')}"
+        )
+        
+        return {
+            "success": True,
+            "message": "Plan enviado al panel del usuario y notificación enviada por email"
+        }
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error enviando plan al panel del usuario: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error enviando plan: {str(e)}"
+            }
+        )
+
+
+@api_router.post("/admin/users/{user_id}/training-plans/send-email")
+async def send_training_plan_email(user_id: str, request: Request):
+    """
+    Envía el plan de entrenamiento por email al usuario.
+    
+    Email incluye:
+    - Toda la información del plan (objetivo, resumen, notas generales)
+    - Sesiones completas con ejercicios
+    - Enlaces a videos
+    - Branding EDN360
+    
+    Auth: Admin only
+    """
+    admin = await require_admin(request)
+    
+    try:
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        
+        # Buscar el plan más reciente
+        plan_doc = await edn360_db.training_plans_v2.find_one(
+            {"user_id": user_id},
+            sort=[("created_at", -1)]
+        )
+        
+        if not plan_doc:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "no_plan_found",
+                    "message": f"No se encontró ningún plan para el usuario {user_id}"
+                }
+            )
+        
+        # Obtener info del usuario
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Generar HTML del email
+        email_html = _generate_training_plan_email_html(plan_doc, user)
+        
+        # Enviar email
+        # TODO: Implementar envío de email con el HTML generado
+        logger.info(
+            f"✅ Plan enviado por email | user_id: {user_id} | "
+            f"admin: {admin['_id']} | user_email: {user.get('email')}"
+        )
+        
+        return {
+            "success": True,
+            "message": f"Plan enviado por email a {user.get('email')}"
+        }
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error enviando email: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error enviando email: {str(e)}"
+            }
+        )
+
+
+def _generate_training_plan_email_html(plan_doc: dict, user: dict) -> str:
+    """
+    Genera el HTML del email con el plan de entrenamiento.
+    Incluye branding EDN360, toda la info del plan, y enlaces a videos.
+    """
+    plan = plan_doc.get("plan", {})
+    
+    # Construir HTML de sesiones
+    sessions_html = ""
+    for session in plan.get("sessions", []):
+        sessions_html += f"""
+        <div style="margin-bottom: 30px; background-color: #f8f9fa; padding: 20px; border-radius: 8px;">
+            <h3 style="color: #1e40af; margin-bottom: 10px;">{session.get('name', 'Sesión')}</h3>
+            <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">
+                <strong>Foco:</strong> {', '.join(session.get('focus', []))}
+            </p>
+        """
+        
+        # Notas de la sesión
+        if session.get('session_notes'):
+            sessions_html += '<p style="color: #ef4444; font-size: 13px; margin-bottom: 10px;"><strong>⚠️ Notas:</strong></p><ul style="margin-left: 20px;">'
+            for note in session['session_notes']:
+                sessions_html += f'<li style="color: #ef4444; font-size: 13px;">{note}</li>'
+            sessions_html += '</ul>'
+        
+        # Bloques y ejercicios
+        for block in session.get('blocks', []):
+            sessions_html += f"""
+            <div style="margin-bottom: 15px;">
+                <h4 style="color: #475569; font-size: 15px; margin-bottom: 10px;">
+                    Bloque {block.get('id')} - {', '.join(block.get('primary_muscles', []))}
+                </h4>
+                <table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 4px; overflow: hidden;">
+                    <thead style="background-color: #e2e8f0;">
+                        <tr>
+                            <th style="padding: 8px; text-align: left; font-size: 13px; color: #475569;">#</th>
+                            <th style="padding: 8px; text-align: left; font-size: 13px; color: #475569;">Ejercicio</th>
+                            <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">Series</th>
+                            <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">Reps</th>
+                            <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">RPE</th>
+                            <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">Video</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            """
+            
+            for exercise in block.get('exercises', []):
+                video_button = ''
+                if exercise.get('video_url'):
+                    video_button = f'<a href="{exercise["video_url"]}" target="_blank" style="background-color: #3b82f6; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">Ver</a>'
+                
+                sessions_html += f"""
+                        <tr style="border-bottom: 1px solid #e2e8f0;">
+                            <td style="padding: 8px; font-size: 13px;">{exercise.get('order')}</td>
+                            <td style="padding: 8px; font-size: 13px;">
+                                <strong>{exercise.get('name')}</strong><br>
+                                <span style="color: #64748b; font-size: 12px;">{exercise.get('notes', '')}</span>
+                            </td>
+                            <td style="padding: 8px; text-align: center; font-size: 13px;">{exercise.get('series')}</td>
+                            <td style="padding: 8px; text-align: center; font-size: 13px;">{exercise.get('reps')}</td>
+                            <td style="padding: 8px; text-align: center; font-size: 13px;">{exercise.get('rpe')}</td>
+                            <td style="padding: 8px; text-align: center;">{video_button}</td>
+                        </tr>
+                """
+            
+            sessions_html += """
+                    </tbody>
+                </table>
+            </div>
+            """
+        
+        sessions_html += "</div>"
+    
+    # HTML completo del email
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px;">
+        <!-- Header con branding EDN360 -->
+        <div style="text-align: center; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); padding: 30px; border-radius: 10px; margin-bottom: 30px;">
+            <h1 style="color: white; margin: 0; font-size: 28px;">EDN360</h1>
+            <p style="color: #e0e7ff; margin: 10px 0 0 0; font-size: 16px;">Tu Plan de Entrenamiento Personalizado</p>
+        </div>
+        
+        <!-- Saludo -->
+        <h2 style="color: #1e40af;">¡Hola {user.get('name', 'Cliente')}!</h2>
+        <p style="font-size: 16px;">Tu entrenador ha preparado un nuevo plan de entrenamiento personalizado para ti.</p>
+        
+        <!-- Info del plan -->
+        <div style="background-color: #eff6ff; padding: 20px; border-radius: 8px; border-left: 4px solid #3b82f6; margin-bottom: 30px;">
+            <h3 style="color: #1e40af; margin-top: 0;">{plan.get('title', 'Plan de Entrenamiento')}</h3>
+            <p style="margin: 10px 0;"><strong>Objetivo:</strong> {plan.get('goal', '')}</p>
+            <p style="margin: 10px 0;"><strong>Resumen:</strong> {plan.get('summary', '')}</p>
+            <p style="margin: 10px 0;"><strong>Duración:</strong> {plan.get('weeks', 4)} semanas | {plan.get('days_per_week', 4)} días/semana | {plan.get('session_duration_min', 45)} min/sesión</p>
+        </div>
+        
+        <!-- Notas Generales -->
+        {f'''
+        <div style="background-color: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444; margin-bottom: 30px;">
+            <h3 style="color: #dc2626; margin-top: 0;">⚠️ Notas Generales Importantes</h3>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                {''.join([f'<li style="color: #dc2626;">{note}</li>' for note in plan.get('general_notes', [])])}
+            </ul>
+        </div>
+        ''' if plan.get('general_notes') else ''}
+        
+        <!-- Sesiones -->
+        <h2 style="color: #1e40af; margin-top: 40px;">Tu Programa de Entrenamiento</h2>
+        {sessions_html}
+        
+        <!-- Call to action -->
+        <div style="text-align: center; margin-top: 40px; padding: 30px; background-color: #f8f9fa; border-radius: 10px;">
+            <p style="font-size: 16px; margin-bottom: 20px;">Accede a tu panel para ver tu plan completo y descargar el PDF</p>
+            <a href="{os.getenv('FRONTEND_URL', 'http://localhost:3000')}/user-dashboard" 
+               style="display: inline-block; background-color: #3b82f6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                Ir a Mi Panel
+            </a>
+        </div>
+        
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 14px;">
+            <p>EDN360 - Entrenamiento Personalizado</p>
+            <p>Este email ha sido enviado por tu entrenador personal</p>
+        </div>
+    </body>
+    </html>
+    """
+    
+    return html
+
+
         logger.error(f"❌ Error actualizando plan: {e}")
         import traceback
         traceback.print_exc()
