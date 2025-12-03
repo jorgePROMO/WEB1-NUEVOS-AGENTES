@@ -718,22 +718,38 @@ const AdminDashboard = () => {
   const generateEDN360TrainingPlan = async () => {
     if (!selectedClient) return;
     
+    // Validar que al menos hay un cuestionario previo seleccionado
+    if (!selectedQuestionnaireForTraining) {
+      alert('⚠️ Por favor selecciona al menos el cuestionario previo (base)');
+      return;
+    }
+    
     try {
       setGeneratingEDN360Plan(true);
       
-      // Preparar el payload - el backend incluirá TODOS los cuestionarios automáticamente
+      // Preparar array de IDs de cuestionarios
+      const questionnaireIds = [selectedQuestionnaireForTraining];
+      
+      // Agregar cuestionario nuevo si está seleccionado
+      if (selectedFollowUpQuestionnaireForReport && selectedFollowUpQuestionnaireForReport !== selectedQuestionnaireForTraining) {
+        questionnaireIds.push(selectedFollowUpQuestionnaireForReport);
+      }
+      
       const payload = {
-        user_id: selectedClient.id
+        user_id: selectedClient.id,
+        questionnaire_ids: questionnaireIds
       };
       
       // Agregar plan previo si está seleccionado
       if (selectedPreviousTrainingPlan && selectedPreviousTrainingPlan !== 'none' && selectedPreviousTrainingPlan !== '') {
         payload.previous_training_plan_id = selectedPreviousTrainingPlan;
-        console.log('📋 Usando plan previo:', selectedPreviousTrainingPlan);
       }
       
-      console.log('🚀 Generando plan EDN360 con payload:', payload);
-      console.log('📋 El backend incluirá TODOS los cuestionarios automáticamente');
+      console.log('🚀 Generando plan EDN360:');
+      console.log('   Cuestionario previo:', selectedQuestionnaireForTraining);
+      console.log('   Cuestionario nuevo:', selectedFollowUpQuestionnaireForReport || 'ninguno');
+      console.log('   Plan previo:', selectedPreviousTrainingPlan || 'ninguno');
+      console.log('   Payload completo:', payload);
       
       const response = await axios.post(
         `${API}/training-plan`,
