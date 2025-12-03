@@ -529,7 +529,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                     >
                       <div className="flex justify-between items-center">
                         <CardTitle className="text-sm font-semibold text-blue-900">
-                          {session.id} - {session.name}
+                          {session.id} - {translate(session.name)}
                         </CardTitle>
                         {expandedSessions[sessionIdx] ? (
                           <ChevronUp className="h-4 w-4 text-blue-600" />
@@ -537,6 +537,17 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                           <ChevronDown className="h-4 w-4 text-blue-600" />
                         )}
                       </div>
+                      
+                      {/* Focus tags (español) */}
+                      {session.focus && session.focus.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {session.focus.map((f, idx) => (
+                            <Badge key={idx} variant="secondary" className="text-xs">
+                              {translate(f)}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                     </CardHeader>
 
                     {expandedSessions[sessionIdx] && (
@@ -545,7 +556,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                         {session.blocks.map((block, blockIdx) => (
                           <div key={blockIdx} className="bg-gray-50 p-3 rounded-lg space-y-2">
                             <h4 className="text-sm font-semibold text-gray-800">
-                              Bloque {block.id} - {block.primary_muscles.join(', ')}
+                              Bloque {block.id} - {translate(block.primary_muscles)}
                             </h4>
 
                             {/* Exercises */}
