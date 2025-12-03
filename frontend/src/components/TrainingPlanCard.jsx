@@ -108,6 +108,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   const [expandedSessions, setExpandedSessions] = useState({});
   const [isExpanded, setIsExpanded] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [sending, setSending] = useState(false);
 
   // Fetch latest plan
   useEffect(() => {
