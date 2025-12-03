@@ -907,14 +907,29 @@ You MUST design the session layout consistent with:
 6. HOW MANY SESSIONS AND HOW TO LAYOUT
 ====================
 
-For a 4-day upper/lower split:
+Create sessions based on training_context.training_type and training_context.availability.training_days_per_week:
 
-- D1: Upper 1 (push emphasis, but always including some row).
-- D2: Lower 1 (quad emphasis, plus hamstrings/glutes).
-- D3: Rest or other day (not defined here).
-- D4: Upper 2 (pull emphasis, plus secondary push).
-- D5: Lower 2 (posterior chain emphasis).
-- You do NOT need to model rest days in this agent, only the 4 training days (D1, D2, D3, D4).
+**FULL_BODY** (typically 2-3 days):
+- Each session works all major muscle groups
+- D1, D2, (D3 optional): Full body with exercise variation
+
+**UPPER_LOWER** (typically 3-4 days):
+- Upper sessions: chest, back, shoulders, arms
+- Lower sessions: quads, hamstrings, glutes, calves
+- Alternate upper/lower each training day
+
+**PUSH_PULL_LEGS** (typically 4-6 days):
+- Push: chest, shoulders, triceps
+- Pull: back, biceps, rear delts
+- Legs: quads, hamstrings, glutes, calves
+- Cycle through push/pull/legs pattern
+
+**BRO_SPLIT (WEIDER)** (typically 4-6 days):
+- Each day focuses on 1-2 major muscle groups
+- Examples: chest day, back day, legs day, shoulders+arms day
+- Allows high volume per muscle group per session
+
+You do NOT need to model rest days, only the actual training days (D1, D2, D3, etc.).
 
 Each upper day:
 - 2–3 blocks:
