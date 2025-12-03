@@ -1069,6 +1069,7 @@ async def generate_training_plan(request: Request):
         body = await request.json()
         
         user_id = body.get("user_id")
+        questionnaire_ids = body.get("questionnaire_ids", [])  # Lista de IDs de cuestionarios
         previous_training_plan_id = body.get("previous_training_plan_id")  # Plan previo opcional
         
         if not user_id:
@@ -1080,11 +1081,20 @@ async def generate_training_plan(request: Request):
                 }
             )
         
+        if not questionnaire_ids or len(questionnaire_ids) == 0:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error": "missing_questionnaires",
+                    "message": "Se requiere al menos un cuestionario (questionnaire_ids)"
+                }
+            )
+        
         logger.info(
             f"🏋️ Generando plan de entrenamiento | "
             f"admin: {admin['_id']} | user_id: {user_id} | "
-            f"previous_plan_id: {previous_training_plan_id or 'none'} | "
-            f"mode: ALL_QUESTIONNAIRES"
+            f"questionnaires: {len(questionnaire_ids)} | "
+            f"previous_plan_id: {previous_training_plan_id or 'none'}"
         )
         
         # ============================================
