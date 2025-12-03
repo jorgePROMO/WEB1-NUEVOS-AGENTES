@@ -1899,7 +1899,8 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
             { type: "output_text", text: "{{ input_as_text }}" }
           ]
         }
-      ]
+      ],
+      90000  // 90 seconds timeout
     );
     conversationHistory.push(...e1AnalizadorDePerfilResultTemp.newItems.map((item: any) => item.rawItem));
 
