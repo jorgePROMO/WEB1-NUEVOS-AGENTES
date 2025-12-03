@@ -381,22 +381,10 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                 }}
                 size="sm"
                 variant="outline"
-                className="border-blue-300 text-blue-700 hover:bg-blue-50"
+                className="border-green-400 text-green-700 hover:bg-green-50"
               >
                 <Mail className="h-3 w-3 mr-1" />
-                Enviar Email
-              </Button>
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleExportPDF();
-                }}
-                size="sm"
-                variant="outline"
-                className="border-blue-300 text-blue-700 hover:bg-blue-50"
-              >
-                <FileDown className="h-3 w-3 mr-1" />
-                Exportar PDF
+                Enviar por Email
               </Button>
               <Button
                 onClick={(e) => {
