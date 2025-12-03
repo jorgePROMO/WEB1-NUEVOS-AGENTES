@@ -223,7 +223,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
       console.error('Error sending email:', error);
       const errorMsg = error.response?.data?.detail?.message || error.message;
       alert(`❌ Error enviando email: ${errorMsg}`);
-    } finally:
+    } finally {
       setSending(false);
     }
   };
