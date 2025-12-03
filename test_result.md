@@ -227,7 +227,9 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
-  stuck_tasks: []
+  current_focus:
+    - "EDN360 Evolutionary Training Plan Flow"
+  stuck_tasks:
+    - "EDN360 Evolutionary Training Plan Flow"
   test_all: false
   test_priority: "high_first"
