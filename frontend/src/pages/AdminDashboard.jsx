@@ -3861,43 +3861,58 @@ const AdminDashboard = () => {
                               <CardHeader>
                                 <CardTitle className="text-lg text-blue-900">⚙️ Configuración de Generación</CardTitle>
                                 <p className="text-sm text-gray-600">
-                                  El sistema incluye automáticamente todos los cuestionarios en orden cronológico
+                                  Selecciona los cuestionarios y plan para generar el nuevo programa
                                 </p>
                               </CardHeader>
                               <CardContent className="space-y-4">
-                                {/* Cuestionarios que se incluirán - INFORMATIVO */}
-                                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-4">
-                                  <label className="block text-sm font-bold text-green-900 mb-3 flex items-center gap-2">
-                                    <span className="text-lg">📋</span>
-                                    Cuestionarios que se incluirán:
-                                  </label>
-                                  <div className="space-y-2">
-                                    {availableQuestionnaires.map((q, index) => (
-                                      <div key={q.id} className="flex items-start gap-3 bg-white bg-opacity-60 rounded px-3 py-2">
-                                        <span className="text-green-600 font-bold text-lg flex-shrink-0">✓</span>
-                                        <div className="flex-1">
-                                          <span className="text-sm font-medium text-gray-800 block">
-                                            {index + 1}. {q.label}
-                                          </span>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                  <div className="mt-3 bg-blue-100 border-l-4 border-blue-500 p-3 rounded">
-                                    <p className="text-xs text-blue-800 flex items-start gap-2">
-                                      <span className="flex-shrink-0">ℹ️</span>
-                                      <span>
-                                        <strong>Todos los cuestionarios se envían al workflow</strong> para que los agentes analicen 
-                                        el progreso completo (evolución de peso, objetivos, lesiones, preferencias, etc.)
-                                      </span>
-                                    </p>
-                                  </div>
-                                </div>
-
-                                {/* Previous Plan Selector */}
+                                {/* Selector 1: Cuestionario Previo */}
                                 <div>
                                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                    📊 Plan de Referencia (para progresión)
+                                    📝 1. Cuestionario Previo (Base)
+                                  </label>
+                                  <select
+                                    value={selectedQuestionnaireForTraining || ''}
+                                    onChange={(e) => setSelectedQuestionnaireForTraining(e.target.value)}
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  >
+                                    <option value="">Selecciona cuestionario previo...</option>
+                                    {availableQuestionnaires.map((q) => (
+                                      <option key={q.id} value={q.id}>
+                                        {q.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Cuestionario base del mes anterior (inicial o último seguimiento)
+                                  </p>
+                                </div>
+
+                                {/* Selector 2: Cuestionario Nuevo */}
+                                <div>
+                                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    🆕 2. Cuestionario Nuevo (Seguimiento Actual)
+                                  </label>
+                                  <select
+                                    value={selectedFollowUpQuestionnaireForReport || ''}
+                                    onChange={(e) => setSelectedFollowUpQuestionnaireForReport(e.target.value)}
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  >
+                                    <option value="">Ninguno (solo usar cuestionario previo)</option>
+                                    {availableQuestionnaires.map((q) => (
+                                      <option key={q.id} value={q.id}>
+                                        {q.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Nuevo seguimiento mensual que acaba de completar el cliente
+                                  </p>
+                                </div>
+
+                                {/* Selector 3: Plan Anterior */}
+                                <div>
+                                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    💪 3. Plan de Entrenamiento Anterior
                                   </label>
                                   <select
                                     value={selectedPreviousTrainingPlan || ''}
@@ -3912,7 +3927,16 @@ const AdminDashboard = () => {
                                     ))}
                                   </select>
                                   <p className="text-xs text-gray-500 mt-1">
-                                    Selecciona el plan anterior para aplicar progresión de cargas, volumen y ejercicios
+                                    Plan previo para aplicar progresión de cargas y volumen
+                                  </p>
+                                </div>
+
+                                {/* Info Box */}
+                                <div className="bg-amber-50 border-l-4 border-amber-400 p-3 rounded">
+                                  <p className="text-xs text-amber-800">
+                                    <strong>ℹ️ Ejemplo:</strong> Cliente completa seguimiento mensual → 
+                                    Selecciona: <em>Cuestionario Previo (Inicial)</em> + <em>Cuestionario Nuevo (Seguimiento 1)</em> + 
+                                    <em>Plan Anterior (Entrenamiento 1)</em> → Genera Entrenamiento 2
                                   </p>
                                 </div>
                               </CardContent>
