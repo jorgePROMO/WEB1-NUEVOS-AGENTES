@@ -2,7 +2,7 @@
 
 # Test E2E del Sistema de Generación Asíncrona E.D.N.360
 
-API="https://plan-gen-fix.preview.emergentagent.com/api"
+API="https://training-plan-gen.preview.emergentagent.com/api"
 USER_ID="1762976907472415"
 SUBMISSION_ID="1762977457211469"
 

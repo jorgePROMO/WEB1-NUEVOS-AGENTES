@@ -6,7 +6,7 @@ Test the second client to ensure consistency across different users
 import requests
 import json
 
-BACKEND_URL = "https://plan-gen-fix.preview.emergentagent.com/api"
+BACKEND_URL = "https://training-plan-gen.preview.emergentagent.com/api"
 
 def test_second_client():
     # Login as admin

@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://plan-gen-fix.preview.emergentagent.com
+https://training-plan-gen.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 

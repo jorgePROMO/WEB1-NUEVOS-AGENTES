@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://plan-gen-fix.preview.emergentagent.com
+**URL Actual:** https://training-plan-gen.preview.emergentagent.com
 
 ---
 
