@@ -2144,13 +2144,21 @@ const AdminDashboard = () => {
                 </div>
               </div>
               
-              {/* Advertencia */}
-              <div className="flex items-center gap-2 text-xs text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-200">
+              {/* Info */}
+              <div className="flex items-center gap-2 text-xs text-blue-700 bg-blue-50 p-3 rounded-lg border border-blue-200">
                 <AlertTriangle className="h-4 w-4 flex-shrink-0" />
                 <p className="text-left">
-                  Por favor no cierres esta ventana ni navegues a otra sección mientras se genera el plan
+                  El plan se genera en segundo plano. Puedes cerrar este aviso y seguir trabajando. Te avisaremos cuando esté listo.
                 </p>
               </div>
+              
+              {/* Botón para cerrar y continuar */}
+              <Button
+                onClick={() => setGeneratingEDN360Plan(false)}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Continuar Trabajando
+              </Button>
             </div>
           </div>
         </div>
