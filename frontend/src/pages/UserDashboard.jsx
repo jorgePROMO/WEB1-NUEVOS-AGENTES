@@ -1660,7 +1660,8 @@ const UserDashboard = () => {
                                         </div>
                                       ) : (
                                         /* LEGACY VIEW: Old block structure for backward compatibility */
-                                        session.blocks && session.blocks.map((block, blockIdx) => (
+                                        <div className="space-y-3">
+                                          {session.blocks && session.blocks.map((block, blockIdx) => (
                                           <div key={blockIdx} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-3 md:p-4">
                                             <h5 className="font-bold text-gray-900 mb-3 text-base">
                                               Bloque {block.id} - {block.primary_muscles ? block.primary_muscles.join(', ') : ''}
