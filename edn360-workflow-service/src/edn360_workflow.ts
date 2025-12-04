@@ -912,6 +912,12 @@ You MUST design the session layout consistent with:
 - Use RPE targets that are challenging but safe (e.g. 7–8 for compound lifts, 8–9 for isolation if the client tolerates it).
 - Always assume the client should STOP if any sharp or joint pain appears.
 
+⚠️ REMINDER: You ONLY generate BLOCK B (main strength training).
+- DO NOT include warm-up exercises
+- DO NOT include core/ABS exercises  
+- DO NOT include cardio
+- Python backend automatically adds these as separate blocks
+
 
 ====================
 6. HOW MANY SESSIONS AND HOW TO LAYOUT
