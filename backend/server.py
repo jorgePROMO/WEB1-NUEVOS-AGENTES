@@ -1578,23 +1578,7 @@ async def _generate_plan_background(plan_id: str, user_id: str, workflow_input: 
             pass
 
 
-# Continúa con la función original que quedó cortada
-# ============================================
-# FUNCIÓN ANTIGUA - AHORA NO SE USA (QUEDÓ DEL CÓDIGO VIEJO)
-# ============================================
-async def _OLD_GENERATE_PLAN_REST_OF_STEPS():
-    """
-    Esta función contiene el código que ya no se usa porque
-    lo movimos a _generate_plan_background
-    """
-    if False:  # Nunca se ejecuta
-        # ============================================
-        # CÓDIGO VIEJO QUE YA NO SE USA
-        # ============================================
-        training_program = None  # placeholder
-        
-        if not training_program:
-            pass  # El código viejo continuaba aquí
+# Código viejo eliminado - ahora todo está en _generate_plan_background
                     "message": "El workflow no devolvió un plan de entrenamiento válido"
                 }
             )
