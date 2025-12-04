@@ -463,7 +463,7 @@ async def login(email: str, password: str):
     # El dashboard mostrará el botón de pago si payment_status="pending"
     
     # Create token
-    access_token = create_access_token(data={"sub": user["_id"]})
+    access_token = create_access_token(data={"sub": str(user["_id"])})
     
     # Return user without password
     user_response = {
