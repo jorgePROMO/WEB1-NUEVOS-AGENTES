@@ -890,7 +890,9 @@ async def get_all_clients(request: Request):
     
     for user in users:
         user["id"] = str(user["_id"])
-        del user["password"]
+        del user["_id"]  # Eliminar _id de MongoDB
+        if "password" in user:
+            del user["password"]
     
     # Calculate stats
     total = len(users)
