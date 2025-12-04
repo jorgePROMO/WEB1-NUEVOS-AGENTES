@@ -1339,8 +1339,90 @@ const UserDashboard = () => {
                                       </div>
                                     )}
 
-                                    {/* Blocks */}
-                                    {session.blocks.map((block, blockIdx) => (
+                                    {/* NEW: 4-Block Structured View */}
+                                    {session.bloques_estructurados ? (
+                                      <div className="space-y-3">
+                                        {/* Block A - Calentamiento */}
+                                        {session.bloques_estructurados.A && (
+                                          <Card className="border-2 border-orange-300 bg-orange-50/50">
+                                            <CardHeader
+                                              className="cursor-pointer hover:bg-orange-100/50 transition-colors py-3"
+                                              onClick={() => toggleBlockExpand(idx, 'A')}
+                                            >
+                                              <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                  <span className="text-2xl">🔥</span>
+                                                  <div>
+                                                    <h5 className="font-bold text-gray-900 text-base">
+                                                      Bloque A - Calentamiento
+                                                    </h5>
+                                                    <p className="text-xs text-gray-600">
+                                                      {session.bloques_estructurados.A.duracion_minutos} min · {session.bloques_estructurados.A.nombre}
+                                                    </p>
+                                                  </div>
+                                                </div>
+                                                <Button variant="ghost" size="sm">
+                                                  {isBlockExpanded(idx, 'A') ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                                </Button>
+                                              </div>
+                                            </CardHeader>
+                                            {isBlockExpanded(idx, 'A') && (
+                                              <CardContent className="pt-0 space-y-2">
+                                                {session.bloques_estructurados.A.ejercicios.map((ejercicio, eIdx) => (
+                                                  <div key={eIdx} className="bg-white rounded-lg p-3 border border-orange-200">
+                                                    <div className="flex items-start gap-2">
+                                                      <span className="font-bold text-orange-600 min-w-[24px]">{ejercicio.orden}.</span>
+                                                      <div className="flex-1">
+                                                        <p className="font-semibold text-gray-900 text-sm">{ejercicio.nombre}</p>
+                                                        {ejercicio.duracion_minutos && (
+                                                          <p className="text-xs text-gray-600 mt-1">Duración: {ejercicio.duracion_minutos} min</p>
+                                                        )}
+                                                        {(ejercicio.series || ejercicio.reps) && (
+                                                          <p className="text-xs text-gray-600 mt-1">
+                                                            {ejercicio.series && `${ejercicio.series} series`}
+                                                            {ejercicio.series && ejercicio.reps && ' × '}
+                                                            {ejercicio.reps && `${ejercicio.reps} reps`}
+                                                          </p>
+                                                        )}
+                                                        {ejercicio.instrucciones && (
+                                                          <p className="text-xs text-gray-500 mt-1 italic">{ejercicio.instrucciones}</p>
+                                                        )}
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                ))}
+                                              </CardContent>
+                                            )}
+                                          </Card>
+                                        )}
+
+                                        {/* Block B - Fuerza (IA) - EXPANDED BY DEFAULT */}
+                                        {session.bloques_estructurados.B && (
+                                          <Card className="border-2 border-blue-400 bg-blue-50/50">
+                                            <CardHeader
+                                              className="cursor-pointer hover:bg-blue-100/50 transition-colors py-3"
+                                              onClick={() => toggleBlockExpand(idx, 'B')}
+                                            >
+                                              <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                  <span className="text-2xl">💪</span>
+                                                  <div>
+                                                    <h5 className="font-bold text-gray-900 text-base">
+                                                      Bloque B - Fuerza Principal
+                                                    </h5>
+                                                    <p className="text-xs text-gray-600">
+                                                      Entrenamiento generado por IA
+                                                    </p>
+                                                  </div>
+                                                </div>
+                                                <Button variant="ghost" size="sm">
+                                                  {isBlockExpanded(idx, 'B') ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                                </Button>
+                                              </div>
+                                            </CardHeader>
+                                            {isBlockExpanded(idx, 'B') && session.bloques_estructurados.B.bloques_fuerza && (
+                                              <CardContent className="pt-0">
+                                                {session.bloques_estructurados.B.bloques_fuerza.map((block, blockIdx) => (
                                       <div key={blockIdx} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-3 md:p-4">
                                         <h5 className="font-bold text-gray-900 mb-3 text-base">
                                           Bloque {block.id} - {block.primary_muscles.join(', ')}
