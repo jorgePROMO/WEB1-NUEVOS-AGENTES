@@ -6,7 +6,7 @@ Test the second client to ensure consistency across different users
 import requests
 import json
 
-BACKEND_URL = "https://edn360-audit.preview.emergentagent.com/api"
+BACKEND_URL = "https://edn360-dashboard-fix.preview.emergentagent.com/api"
 
 def test_second_client():
     # Login as admin

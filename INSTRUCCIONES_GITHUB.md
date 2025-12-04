@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://edn360-audit.preview.emergentagent.com
+https://edn360-dashboard-fix.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 
