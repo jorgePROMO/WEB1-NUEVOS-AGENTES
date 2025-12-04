@@ -7676,6 +7676,104 @@ Dudas o consultas: Contacta a tu entrenador
         return "Error generando el plan. Contacta a tu entrenador."
 
 
+def _integrate_template_blocks(
+    plan_data: dict,
+    user_data: dict,
+    week_number: int = 1,
+    session_number_start: int = 1
+) -> dict:
+    """
+    Integra los bloques de plantillas (A, C, D) con el Bloque B generado por IA.
+    
+    Args:
+        plan_data: Plan generado por IA (contiene training_plan con sessions)
+        user_data: Datos del usuario para selección de plantillas
+        week_number: Número de semana para rotación de ABS
+        session_number_start: Número inicial de sesión para rotación de cardio
+        
+    Returns:
+        Plan con estructura de 4 bloques (A, B, C, D) en cada sesión
+    """
+    from backend.training_templates import seleccionar_plantillas
+    
+    # Obtener el training_plan desde E4
+    training_plan = plan_data.get('E4', {}).get('training_plan', {})
+    
+    if not training_plan or 'sessions' not in training_plan:
+        logger.warning("⚠️ No se encontró training_plan en plan_data, devolviendo sin modificar")
+        return plan_data
+    
+    sessions = training_plan['sessions']
+    session_number = session_number_start
+    
+    for session in sessions:
+        # Determinar grupos musculares del día
+        grupos_musculares = session.get('focus', [])
+        
+        # Info del día para selección
+        dia_entrenamiento = {
+            'grupos_musculares': grupos_musculares,
+            'tipo_sesion': training_plan.get('training_type', 'normal')
+        }
+        
+        # Seleccionar plantillas para este día
+        plantillas = seleccionar_plantillas(
+            user_data=user_data,
+            dia_entrenamiento=dia_entrenamiento,
+            session_number=session_number,
+            week_number=week_number
+        )
+        
+        # Restructurar la sesión con 4 bloques
+        # Bloque B es lo que ya generó la IA (los blocks existentes)
+        bloque_b = {
+            'id': 'B',
+            'nombre': 'Entrenamiento Principal (Fuerza)',
+            'tipo': 'strength_training',
+            'bloques_fuerza': session.get('blocks', [])  # Mantener estructura original de la IA
+        }
+        
+        # Agregar la nueva estructura de bloques
+        session['bloques_estructurados'] = {
+            'A': {
+                'id': 'A',
+                'nombre': plantillas['calentamiento']['nombre'],
+                'tipo': 'calentamiento',
+                'duracion_minutos': plantillas['calentamiento']['duracion_minutos'],
+                'ejercicios': plantillas['calentamiento']['ejercicios']
+            },
+            'B': bloque_b,
+            'C': {
+                'id': 'C',
+                'nombre': plantillas['core_abs']['nombre'],
+                'tipo': 'core_abs',
+                'duracion_minutos': plantillas['core_abs']['duracion_minutos'],
+                'ejercicios': plantillas['core_abs']['ejercicios']
+            },
+            'D': {
+                'id': 'D',
+                'nombre': plantillas['cardio']['nombre'],
+                'tipo': 'cardio',
+                'duracion_minutos': plantillas['cardio']['duracion_minutos'],
+                'opciones': plantillas['cardio']['opciones'],
+                'opcion_seleccionada': plantillas.get('cardio_opcion_seleccionada', plantillas['cardio']['opciones'][0])
+            }
+        }
+        
+        # Agregar metadata para debugging
+        session['plantillas_metadata'] = {
+            'reglas_aplicadas': plantillas['reglas_aplicadas'],
+            'week_number': week_number,
+            'session_number': session_number
+        }
+        
+        session_number += 1
+        
+        logger.info(f"✅ Sesión '{session.get('name')}': Bloques A, C, D integrados")
+    
+    return plan_data
+
+
 def _format_edn360_plan_for_display(edn360_data: dict) -> dict:
     """
     Convierte el output de E.D.N.360 al formato que espera el frontend actual
