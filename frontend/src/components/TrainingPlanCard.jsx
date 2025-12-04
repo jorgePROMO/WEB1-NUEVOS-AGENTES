@@ -118,7 +118,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
     if (userId) {
       fetchAllPlans();
     }
-  }, [userId]);
+  }, [userId, fetchAllPlans]);
 
   const fetchAllPlans = useCallback(async () => {
     try {
