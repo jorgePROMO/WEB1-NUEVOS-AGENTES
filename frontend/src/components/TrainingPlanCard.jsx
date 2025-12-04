@@ -117,32 +117,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
     try {
       setLoading(true);
       
-      // Try to get the latest plan with full data first
-      try {
-        const latestResponse = await axios.get(
-          `${API}/admin/users/${userId}/training-plans/latest`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        
-        if (latestResponse.data && latestResponse.data.plan) {
-          // We have a plan with full data
-          const planData = {
-            id: latestResponse.data.questionnaire_submission_id || 'latest',
-            plan: latestResponse.data.plan,
-            created_at: latestResponse.data.created_at,
-            status: latestResponse.data.status || 'draft'
-          };
-          setAllPlans([planData]);
-          return;
-        }
-      } catch (latestError) {
-        // If latest plan doesn't exist, continue to try the list endpoint
-        console.log('No latest plan found, trying list endpoint');
-      }
-      
-      // Fallback to the list endpoint (returns metadata only)
+      // Get ALL training plans from the list endpoint
       const response = await axios.get(
         `${API}/admin/users/${userId}/training-plans`,
         {
@@ -150,16 +125,11 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
         }
       );
       
-      const plans = response.data?.plans || response.data || [];
+      // Los planes ya vienen ordenados por created_at DESC (más reciente primero)
+      const plans = response.data || [];
       const plansArray = Array.isArray(plans) ? plans : [];
       
-      // These are metadata objects, not full plans - show empty state
-      if (plansArray.length > 0 && !plansArray[0].plan) {
-        console.log('Found plan metadata but no full plan data');
-        setAllPlans([]);
-      } else {
-        setAllPlans(plansArray);
-      }
+      setAllPlans(plansArray);
     } catch (error) {
       if (error.response?.status !== 404) {
         console.error('Error fetching plans:', error);
