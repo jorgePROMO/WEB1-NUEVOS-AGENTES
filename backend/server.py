@@ -467,7 +467,7 @@ async def login(email: str, password: str):
     
     # Return user without password
     user_response = {
-        "id": user["_id"],
+        "id": str(user["_id"]),
         "username": user["username"],
         "email": user["email"],
         "name": user["name"],
