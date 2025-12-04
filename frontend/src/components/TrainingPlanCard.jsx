@@ -223,7 +223,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
       alert('✅ Plan enviado al panel del usuario y notificación por email enviada');
       
       // Refrescar el plan para actualizar el status
-      await fetchLatestPlan();
+      await fetchAllPlans();
     } catch (error) {
       console.error('Error sending to user panel:', error);
       const errorMsg = error.response?.data?.detail?.message || error.message;
