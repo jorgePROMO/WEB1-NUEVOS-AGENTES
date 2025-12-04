@@ -187,10 +187,12 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   };
 
   const handleDelete = async () => {
+    if (!planToDelete) return;
+    
     try {
       setDeleting(true);
       await axios.delete(
-        `${API}/admin/users/${userId}/training-plans/latest`,
+        `${API}/admin/training-plans/${planToDelete.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -198,12 +200,15 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
       
       await fetchAllPlans();
       setShowDeleteConfirm(false);
+      setPlanToDelete(null);
       alert('✅ Plan eliminado correctamente');
       
-      if (onPlanUpdated) onPlanUpdated();
+      if (onPlanUpdated) {
+        onPlanUpdated(null);
+      }
     } catch (error) {
       console.error('Error deleting plan:', error);
-      alert('❌ Error eliminando el plan. Por favor intenta de nuevo.');
+      alert('❌ Error eliminando el plan. Inténtalo de nuevo.');
     } finally {
       setDeleting(false);
     }
