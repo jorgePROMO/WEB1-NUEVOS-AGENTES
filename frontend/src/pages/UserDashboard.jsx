@@ -21,7 +21,10 @@ import {
   Upload,
   Trash2,
   UtensilsCrossed,
-  RefreshCw
+  RefreshCw,
+  Dumbbell,
+  Mail,
+  FileDown
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { UserCalendar } from '../components/Calendar';
