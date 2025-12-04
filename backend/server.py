@@ -1450,19 +1450,72 @@ async def generate_training_plan(request: Request, background_tasks: BackgroundT
             )
         
         # ============================================
-        # PASO 6: LLAMAR AL WORKFLOW EDN360 (ASINCRONO)
+        # PASO 6: CREAR PLAN CON STATUS "generating" Y LANZAR BACKGROUND TASK
+        # ============================================
+        # Crear un plan_id único
+        from uuid import uuid4
+        plan_id = str(uuid4())
+        
+        # Guardar plan inicial con status="generating"
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        initial_plan_doc = {
+            "id": plan_id,
+            "user_id": user_id,
+            "status": "generating",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "plan": None
+        }
+        await edn360_db.training_plans_v2.insert_one(initial_plan_doc)
+        
+        # Lanzar generación en background
+        background_tasks.add_task(
+            _generate_plan_background,
+            plan_id,
+            user_id,
+            workflow_input,
+            state,
+            admin['_id']
+        )
+        
+        logger.info(f"✅ Plan creado con status='generating' | plan_id: {plan_id} | Background task iniciado")
+        
+        # Devolver inmediatamente
+        return {
+            "plan_id": plan_id,
+            "status": "generating",
+            "message": "El plan se está generando. Consulta el status con GET /api/admin/users/{user_id}/training-plans/latest"
+        }
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error inesperado en /training-plan: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error interno del servidor: {str(e)}"
+            }
+        )
+
+
+async def _generate_plan_background(plan_id: str, user_id: str, workflow_input: dict, state: dict, admin_id: str):
+    """
+    Función background para generar el plan sin bloquear el servidor.
+    """
+    try:
+        from services.training_workflow_service import call_training_workflow_with_state
+        
+        logger.info(f"🔄 [Background] Iniciando generación del plan | plan_id: {plan_id}")
+        
+        # ============================================
+        # LLAMAR AL WORKFLOW EDN360
         # ============================================
         try:
-            from services.training_workflow_service import call_training_workflow_with_state
-            import concurrent.futures
-            
-            # Ejecutar el workflow en un thread pool para no bloquear el event loop
-            loop = asyncio.get_event_loop()
-            with concurrent.futures.ThreadPoolExecutor() as pool:
-                workflow_response = await loop.run_in_executor(
-                    pool,
-                    lambda: asyncio.run(call_training_workflow_with_state(workflow_input))
-                )
+            workflow_response = await call_training_workflow_with_state(workflow_input)
             
             logger.info(
                 f"✅ Training workflow ejecutado | "
