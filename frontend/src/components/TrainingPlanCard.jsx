@@ -342,8 +342,20 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   return (
     <div className="space-y-4">
       {allPlans.map((planData, planIndex) => {
+        // Validate planData structure
+        if (!planData || !planData.plan) {
+          console.warn('Invalid plan data at index', planIndex, planData);
+          return null;
+        }
+        
         const { plan, created_at, status, id: planId } = planData;
         const isPlanExpanded = expandedPlans[planIndex] || false;
+        
+        // Validate plan object
+        if (!plan || typeof plan !== 'object') {
+          console.warn('Invalid plan object at index', planIndex, plan);
+          return null;
+        }
 
         return (
           <Card key={planIndex} className="border-2 border-blue-300 shadow-sm hover:shadow-md transition-shadow">
