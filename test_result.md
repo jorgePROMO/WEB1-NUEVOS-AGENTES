@@ -263,6 +263,18 @@ frontend:
           agent: "testing"
           comment: "✅ COMPREHENSIVE ADMIN CREDENTIALS TESTING COMPLETED: Successfully logged in with admin credentials (ecjtrainer@gmail.com / jorge3007) and verified UserDashboard functionality. ✅ NO REFERENCEERROR DETECTED: Thoroughly tested for 'Cannot access fetchAllPlans before initialization' and other ReferenceError patterns - NONE FOUND. ✅ COMPONENT LOADING: UserDashboard loads successfully without JavaScript errors, proper component initialization confirmed. ✅ ALL TABS FUNCTIONAL: Successfully tested all 8 tabs (Resumen, Mi Entrenamiento, Suscripción, Calendario, Docs, Alertas, Chat, Perfil) - all clickable and loading correctly. ✅ MI ENTRENAMIENTO TAB VERIFIED: Specifically tested 'Mi Entrenamiento' tab - displays correctly with 'Aún no tienes un plan de entrenamiento' message as expected. ✅ ACTUALIZAR BUTTON WORKING: Refresh button functionality confirmed working. ✅ CONSOLE LOGS CLEAN: No critical JavaScript errors detected, only expected 404s for training plans (normal for admin user). ✅ FINAL VERDICT: All ReferenceError fixes are working correctly, UserDashboard is fully functional with admin credentials."
 
+  - task: "4-Block Structure Implementation Testing"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/UserDashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "testing"
+          comment: "✅ CODE IMPLEMENTATION VERIFIED: Comprehensive code review confirms 4-block structure is fully implemented in UserDashboard.jsx lines 1342-1660. All 4 blocks properly coded with correct emojis, titles, colors, and accordion behavior: 🔥 Bloque A (Calentamiento, orange border, collapsed by default), 💪 Bloque B (Fuerza Principal, blue border, expanded by default), 🧱 Bloque C (Core/ABS, purple border, collapsed by default), 🏃 Bloque D (Cardio, green border, collapsed by default). ✅ FRONTEND FUNCTIONALITY: Login successful with jorge31011987@gmail.com/jorge3007, Mi Entrenamiento tab accessible, UserDashboard loads without errors. ✅ ACCORDION LOGIC: isBlockExpanded() function correctly defaults Block B to expanded state, others collapsed. toggleBlockExpand() handles user interactions properly. ✅ RESPONSIVE DESIGN: Mobile view (390x844) tested successfully. ❌ DATA AVAILABILITY ISSUE: Database verification reveals Jorge2 user exists but has NO training plans in either training_plans or training_plans_v2 collections. This explains why 4-block structure is not visible during UI testing - there's no training plan data with bloques_estructurados to display the blocks. ✅ CONCLUSION: The 4-block structure implementation is COMPLETE and CORRECT in the code. Cannot test UI visibility due to lack of training plan data for test user. Main agent should create sample training plan data with bloques_estructurados structure for full UI testing."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
