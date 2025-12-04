@@ -1774,9 +1774,14 @@ const UserDashboard = () => {
                                       )}
                                     </CardContent>
                                   )}
-                    </Card>
-                  </div>
-                ) : (
+                                </Card>
+                              ))}
+                            </div>
+                          </CardContent>
+                        )}
+                      </Card>
+                    </div>
+                  ) : (
                   <div className="text-center py-12">
                     <Dumbbell className="h-16 w-16 mx-auto mb-4 text-gray-300" />
                     <p className="text-gray-600 text-lg mb-2">Aún no tienes un plan de entrenamiento</p>
