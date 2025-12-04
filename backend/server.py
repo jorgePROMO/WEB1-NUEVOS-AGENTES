@@ -2503,7 +2503,7 @@ async def send_training_plan_to_myself(user_id: str, request: Request):
         )
 
 
-@app.get("/api/users/{user_id}/training-plans/download-pdf")
+@api_router.get("/users/{user_id}/training-plans/download-pdf")
 async def download_training_plan_pdf(user_id: str, request: Request):
     """
     Descarga el plan de entrenamiento como PDF con videos clicables.
