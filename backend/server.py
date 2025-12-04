@@ -2431,6 +2431,190 @@ def _generate_training_plan_email_html(plan_doc: dict, user: dict) -> str:
     <html>
     <head>
         <meta charset="UTF-8">
+
+
+@app.post("/api/users/{user_id}/training-plans/send-to-me")
+async def send_training_plan_to_myself(user_id: str, request: Request):
+    """
+    El usuario se envía su propio plan de entrenamiento por email.
+    """
+    # Verificar que el usuario solo pueda enviar su propio plan
+    user_data = await require_user(request)
+    if user_data['id'] != user_id:
+        raise HTTPException(status_code=403, detail="No puedes acceder a planes de otros usuarios")
+    
+    try:
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        
+        # Buscar el plan más reciente con status='sent'
+        plan_doc = await edn360_db.training_plans_v2.find_one(
+            {"user_id": user_id, "status": "sent"},
+            sort=[("created_at", -1)]
+        )
+        
+        if not plan_doc:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "no_plan_found",
+                    "message": "No tienes ningún plan de entrenamiento disponible"
+                }
+            )
+        
+        # Obtener info del usuario
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Generar HTML del email
+        email_html = _generate_training_plan_email_html(plan_doc, user)
+        
+        # Enviar email
+        from email_utils import send_email
+        
+        email_subject = f"Tu Plan de Entrenamiento - {plan_doc['plan'].get('title', 'EDN360')}"
+        
+        send_email(
+            to_email=user.get('email'),
+            subject=email_subject,
+            html_body=email_html
+        )
+        
+        logger.info(f"✅ Usuario se envió el plan por email | user_id: {user_id}")
+        
+        return {
+            "success": True,
+            "message": f"Plan enviado a tu email: {user.get('email')}"
+        }
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error enviando email al usuario: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error enviando email: {str(e)}"
+            }
+        )
+
+
+@app.get("/api/users/{user_id}/training-plans/download-pdf")
+async def download_training_plan_pdf(user_id: str, request: Request):
+    """
+    Descarga el plan de entrenamiento como PDF con videos clicables.
+    """
+    # Verificar que el usuario solo pueda descargar su propio plan
+    user_data = await require_user(request)
+    if user_data['id'] != user_id:
+        raise HTTPException(status_code=403, detail="No puedes acceder a planes de otros usuarios")
+    
+    try:
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        
+        # Buscar el plan más reciente con status='sent'
+        plan_doc = await edn360_db.training_plans_v2.find_one(
+            {"user_id": user_id, "status": "sent"},
+            sort=[("created_at", -1)]
+        )
+        
+        if not plan_doc:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "no_plan_found",
+                    "message": "No tienes ningún plan de entrenamiento disponible"
+                }
+            )
+        
+        # Obtener info del usuario
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        # Generar HTML del plan (igual que el email)
+        html_content = _generate_training_plan_email_html(plan_doc, user)
+        
+        # Convertir HTML a PDF usando pdfkit
+        import pdfkit
+        
+        pdf = pdfkit.from_string(html_content, False)
+        
+        logger.info(f"✅ Usuario descargó PDF del plan | user_id: {user_id}")
+        
+        from fastapi.responses import Response
+        return Response(
+            content=pdf,
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f"attachment; filename=Plan_Entrenamiento_{user.get('name', 'Cliente')}_{datetime.now(timezone.utc).strftime('%Y%m%d')}.pdf"
+            }
+        )
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error generando PDF: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error generando PDF: {str(e)}"
+            }
+        )
+
+
+@app.get("/api/users/{user_id}/training-plans/latest")
+async def get_user_latest_training_plan(user_id: str, request: Request):
+    """
+    Obtiene el plan de entrenamiento más reciente del usuario (solo si status='sent').
+    """
+    # Verificar que el usuario solo pueda ver su propio plan
+    user_data = await require_user(request)
+    if user_data['id'] != user_id:
+        raise HTTPException(status_code=403, detail="No puedes acceder a planes de otros usuarios")
+    
+    try:
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        
+        # Buscar el plan más reciente con status='sent'
+        plan_doc = await edn360_db.training_plans_v2.find_one(
+            {"user_id": user_id, "status": "sent"},
+            {"_id": 0},
+            sort=[("created_at", -1)]
+        )
+        
+        if not plan_doc:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "no_plan_found",
+                    "message": "No tienes ningún plan de entrenamiento disponible"
+                }
+            )
+        
+        return plan_doc
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error obteniendo plan del usuario: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error obteniendo plan: {str(e)}"
+            }
+        )
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px;">
