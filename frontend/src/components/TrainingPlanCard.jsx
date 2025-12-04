@@ -120,21 +120,22 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
     }
   }, [userId]);
 
-  const fetchLatestPlan = async () => {
+  const fetchAllPlans = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${API}/admin/users/${userId}/training-plans/latest`,
+        `${API}/admin/users/${userId}/training-plans`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setLatestPlan(response.data);
+      // Los planes ya vienen ordenados por created_at DESC (más reciente primero)
+      setAllPlans(response.data || []);
     } catch (error) {
       if (error.response?.status !== 404) {
-        console.error('Error fetching latest plan:', error);
+        console.error('Error fetching plans:', error);
       }
-      setLatestPlan(null);
+      setAllPlans([]);
     } finally {
       setLoading(false);
     }
