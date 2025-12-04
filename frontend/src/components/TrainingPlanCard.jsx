@@ -510,6 +510,31 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
+                  handleToggleStatus(planData);
+                }}
+                size="sm"
+                variant="outline"
+                className={
+                  status === 'sent'
+                    ? 'border-orange-400 text-orange-700 hover:bg-orange-50'
+                    : 'border-green-400 text-green-700 hover:bg-green-50'
+                }
+              >
+                {status === 'sent' ? (
+                  <>
+                    <EyeOff className="h-3 w-3 mr-1" />
+                    Desactivar
+                  </>
+                ) : (
+                  <>
+                    <Eye className="h-3 w-3 mr-1" />
+                    Activar
+                  </>
+                )}
+              </Button>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
                   setPlanToDelete(planData);
                   setShowDeleteConfirm(true);
                 }}
