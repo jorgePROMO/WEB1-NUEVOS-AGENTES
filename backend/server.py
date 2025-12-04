@@ -2663,7 +2663,7 @@ async def download_training_plan_pdf(user_id: str, request: Request):
     Descarga el plan de entrenamiento como PDF con videos clicables.
     """
     # Verificar que el usuario solo pueda descargar su propio plan
-    user_data = await require_user(request)
+    user_data = await get_current_user(request)
     if user_data['id'] != user_id:
         raise HTTPException(status_code=403, detail="No puedes acceder a planes de otros usuarios")
     
