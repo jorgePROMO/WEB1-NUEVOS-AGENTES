@@ -762,19 +762,52 @@ const AdminDashboard = () => {
         }
       );
       
-      // NO guardar en generatedEDN360Plan - causaría duplicación
-      // El TrainingPlanCard se encargará de hacer fetch del nuevo plan
+      // La generación ahora es asíncrona - devuelve inmediatamente
+      // Iniciar polling para ver cuándo termina
       
-      // Forzar refresh del TrainingPlanCard (hará que se recargue colapsado)
-      setPlanRefreshKey(prev => prev + 1);
+      alert('⏳ El plan se está generando en segundo plano (2-3 minutos). Te avisaremos cuando esté listo.');
       
-      alert('✅ Plan de entrenamiento generado exitosamente!');
+      // Polling cada 5 segundos para verificar si terminó
+      const pollInterval = setInterval(async () => {
+        try {
+          const checkResponse = await axios.get(
+            `${API}/admin/users/${selectedClient.id}/training-plans/latest`,
+            { headers: { 'Authorization': `Bearer ${token}` } }
+          );
+          
+          const status = checkResponse.data?.status;
+          
+          if (status === 'draft' || status === 'sent') {
+            // Plan generado exitosamente
+            clearInterval(pollInterval);
+            setPlanRefreshKey(prev => prev + 1);
+            setGeneratingEDN360Plan(false);
+            alert('✅ Plan de entrenamiento generado exitosamente!');
+          } else if (status === 'error') {
+            // Error en la generación
+            clearInterval(pollInterval);
+            setGeneratingEDN360Plan(false);
+            alert('❌ Error generando el plan. Por favor inténtalo de nuevo.');
+          }
+          // Si status === 'generating', continuar polling
+        } catch (error) {
+          console.error('Error checking plan status:', error);
+        }
+      }, 5000); // Cada 5 segundos
+      
+      // Timeout después de 5 minutos
+      setTimeout(() => {
+        clearInterval(pollInterval);
+        if (generatingEDN360Plan) {
+          setGeneratingEDN360Plan(false);
+          alert('⚠️ La generación está tardando más de lo esperado. Por favor recarga la página.');
+        }
+      }, 300000); // 5 minutos
       
     } catch (error) {
       console.error('Error generating EDN360 training plan:', error);
       const errorMsg = error.response?.data?.detail?.message || error.message;
       alert(`❌ Error generando plan: ${errorMsg}`);
-    } finally {
       setGeneratingEDN360Plan(false);
     }
   };
