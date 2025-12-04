@@ -283,12 +283,12 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
     );
   }
 
-  if (!latestPlan) {
+  if (allPlans.length === 0) {
     return (
       <Card className="border border-gray-200">
         <CardContent className="py-6 text-center">
           <Dumbbell className="h-10 w-10 mx-auto text-gray-400 mb-2" />
-          <p className="text-sm text-gray-600">No hay plan de entrenamiento generado</p>
+          <p className="text-sm text-gray-600">No hay planes de entrenamiento generados</p>
           <p className="text-xs text-gray-500 mt-1">
             Genera un plan usando los cuestionarios EDN360
           </p>
@@ -297,16 +297,20 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
     );
   }
 
-  const { plan, created_at, status } = latestPlan;
-
+  // Renderizar TODOS los planes (más reciente arriba)
   return (
-    <>
-      <Card className="border-2 border-blue-300 shadow-sm hover:shadow-md transition-shadow">
-        {/* Compact Header - Always Visible */}
-        <CardHeader 
-          className="cursor-pointer hover:bg-blue-50 transition-colors pb-3"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
+    <div className="space-y-4">
+      {allPlans.map((planData, planIndex) => {
+        const { plan, created_at, status, id: planId } = planData;
+        const isPlanExpanded = expandedPlans[planIndex] || false;
+
+        return (
+          <Card key={planIndex} className="border-2 border-blue-300 shadow-sm hover:shadow-md transition-shadow">
+            {/* Compact Header - Always Visible */}
+            <CardHeader 
+              className="cursor-pointer hover:bg-blue-50 transition-colors pb-3"
+              onClick={() => setExpandedPlans(prev => ({...prev, [planIndex]: !prev[planIndex]}))}
+            >
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3 flex-1">
               <Dumbbell className="h-5 w-5 text-blue-600 flex-shrink-0" />
