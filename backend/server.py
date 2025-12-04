@@ -1536,10 +1536,65 @@ async def _generate_plan_background(plan_id: str, user_id: str, workflow_input: 
         training_program = workflow_response.get("client_training_program_enriched")
         
         if not training_program:
-            raise HTTPException(
-                status_code=500,
-                detail={
-                    "error": "invalid_response",
+            logger.error(f"❌ [Background] No se recibió training_program | plan_id: {plan_id}")
+            edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+            await edn360_db.training_plans_v2.update_one(
+                {"id": plan_id},
+                {"$set": {"status": "error", "error_message": "Workflow no devolvió plan válido"}}
+            )
+            return
+        
+        # Traducir el plan a español
+        training_program = _translate_training_plan_to_spanish(training_program)
+        
+        # Actualizar el plan en BD con status="draft"
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        last_plan = state.get("last_plan")
+        
+        await edn360_db.training_plans_v2.update_one(
+            {"id": plan_id},
+            {"$set": {
+                "status": "draft",
+                "plan": _serialize_datetime_fields(training_program),
+                "is_evolutionary": bool(last_plan),
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        
+        logger.info(f"✅ [Background] Plan generado y guardado | plan_id: {plan_id} | title: {training_program.get('title', 'N/A')}")
+    
+    except Exception as e:
+        logger.error(f"❌ [Background] Error inesperado: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        try:
+            edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+            await edn360_db.training_plans_v2.update_one(
+                {"id": plan_id},
+                {"$set": {"status": "error", "error_message": str(e)}}
+            )
+        except:
+            pass
+
+
+# Continúa con la función original que quedó cortada
+# ============================================
+# FUNCIÓN ANTIGUA - AHORA NO SE USA (QUEDÓ DEL CÓDIGO VIEJO)
+# ============================================
+async def _OLD_GENERATE_PLAN_REST_OF_STEPS():
+    """
+    Esta función contiene el código que ya no se usa porque
+    lo movimos a _generate_plan_background
+    """
+    if False:  # Nunca se ejecuta
+        # ============================================
+        # CÓDIGO VIEJO QUE YA NO SE USA
+        # ============================================
+        training_program = None  # placeholder
+        
+        if not training_program:
+            pass  # El código viejo continuaba aquí
                     "message": "El workflow no devolvió un plan de entrenamiento válido"
                 }
             )
