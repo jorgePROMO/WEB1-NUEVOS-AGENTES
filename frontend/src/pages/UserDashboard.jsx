@@ -153,7 +153,27 @@ const UserDashboard = () => {
   }, [user?.id, token]);
 
   const handleOpenVideoModal = useCallback((videoUrl) => {
-    setCurrentVideoUrl(videoUrl);
+    // Convertir enlaces de Google Drive a formato embebible
+    let embedUrl = videoUrl;
+    
+    if (videoUrl.includes('drive.google.com')) {
+      // Extraer el ID del archivo de diferentes formatos de URL de Google Drive
+      let fileId = null;
+      
+      // Formato: https://drive.google.com/file/d/FILE_ID/view
+      const match1 = videoUrl.match(/\/file\/d\/([^\/]+)/);
+      if (match1) fileId = match1[1];
+      
+      // Formato: https://drive.google.com/open?id=FILE_ID
+      const match2 = videoUrl.match(/[?&]id=([^&]+)/);
+      if (match2) fileId = match2[1];
+      
+      if (fileId) {
+        embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+      }
+    }
+    
+    setCurrentVideoUrl(embedUrl);
     setVideoModalOpen(true);
   }, []);
 
