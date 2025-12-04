@@ -7848,6 +7848,36 @@ async def admin_generate_training_plan(
         planes_previos_count = await db.training_plans.count_documents({"user_id": user_id})
         numero_mes = planes_previos_count + 1
         
+        # ========== INTEGRACIÓN DE PLANTILLAS (BLOQUES A, C, D) ==========
+        logger.info("🔧 Integrando plantillas de calentamiento, core y cardio...")
+        
+        from backend.training_templates import seleccionar_plantillas
+        
+        # Extraer datos del usuario para selección de plantillas
+        user_data_for_templates = {
+            'edad': adapted_questionnaire.get('edad', 0),
+            'nivel': adapted_questionnaire.get('experience_level', 'principiante').lower(),
+            'objetivo': adapted_questionnaire.get('goal_primary', 'mantenimiento').lower(),
+            'lesion_hombro': adapted_questionnaire.get('injuries_or_limitations', '').lower().find('hombro') != -1,
+            'lesion_lumbar': adapted_questionnaire.get('injuries_or_limitations', '').lower().find('lumbar') != -1 or 
+                           adapted_questionnaire.get('injuries_or_limitations', '').lower().find('espalda baja') != -1,
+            'muy_sedentario': adapted_questionnaire.get('lifestyle_activity', '').lower() == 'sedentary',
+            'primera_sesion': planes_previos_count == 0
+        }
+        
+        # Procesar el plan de la IA y agregar plantillas a cada sesión
+        plan_data_original = result["plan_data"]
+        plan_with_blocks = _integrate_template_blocks(
+            plan_data_original, 
+            user_data_for_templates,
+            week_number=numero_mes,  # Usar número de mes como número de semana
+            session_number_start=1
+        )
+        
+        # Usar el plan con bloques integrados
+        result["plan_data"] = plan_with_blocks
+        logger.info("✅ Plantillas integradas exitosamente en todas las sesiones")
+        
         # Generar versiones del plan
         plan_data_json = _format_edn360_plan_for_display(result["plan_data"])
         
