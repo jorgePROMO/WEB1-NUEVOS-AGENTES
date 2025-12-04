@@ -353,7 +353,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
         </CardHeader>
 
         {/* Expanded Content */}
-        {isExpanded && (
+        {isPlanExpanded && (
           <CardContent className="pt-0 space-y-4 border-t">
             {/* Plan Details */}
             <div className="bg-gray-50 rounded-lg p-3 space-y-3">
