@@ -101,15 +101,16 @@ const translate = (text) => {
 };
 
 const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
-  const [latestPlan, setLatestPlan] = useState(null);
+  const [allPlans, setAllPlans] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editedPlan, setEditedPlan] = useState(null);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [editedPlan, setEditedPlan] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [expandedSessions, setExpandedSessions] = useState({});
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [expandedPlans, setExpandedPlans] = useState({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [planToDelete, setPlanToDelete] = useState(null);
   const [sending, setSending] = useState(false);
 
   // Fetch latest plan
