@@ -861,7 +861,7 @@ async def get_user_dashboard(request: Request):
     
     return {
         "user": {
-            "id": user["_id"],
+            "id": str(user["_id"]),
             "username": user["username"],
             "email": user["email"],
             "name": user["name"],
