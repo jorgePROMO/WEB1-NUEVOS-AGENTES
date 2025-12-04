@@ -1459,6 +1459,33 @@ const UserDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Video Modal */}
+      <Dialog open={videoModalOpen} onOpenChange={setVideoModalOpen}>
+        <DialogContent className="max-w-4xl w-full">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Video del Ejercicio</h3>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCloseVideoModal}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          {currentVideoUrl && (
+            <div className="aspect-video">
+              <iframe
+                src={currentVideoUrl}
+                className="w-full h-full rounded-lg"
+                frameBorder="0"
+                allowFullScreen
+                title="Exercise Video"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
