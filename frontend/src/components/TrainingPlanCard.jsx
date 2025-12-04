@@ -24,6 +24,8 @@ import {
   Dumbbell,
   Trash2,
   AlertTriangle,
+  UserCheck,
+  ExternalLink,
 } from 'lucide-react';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
