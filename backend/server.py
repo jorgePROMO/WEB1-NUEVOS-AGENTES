@@ -2186,6 +2186,68 @@ async def delete_latest_training_plan(user_id: str, request: Request):
         logger.error(f"❌ Error eliminando plan: {e}")
         import traceback
         traceback.print_exc()
+
+
+@api_router.delete("/admin/training-plans/{plan_id}")
+async def delete_training_plan_by_id(plan_id: str, request: Request):
+    """
+    Elimina un plan de entrenamiento específico por su ID.
+    
+    Auth: Admin only
+    """
+    admin = await require_admin(request)
+    
+    try:
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        
+        # Buscar el plan por ID
+        plan_doc = await edn360_db.training_plans_v2.find_one({"id": plan_id})
+        
+        if not plan_doc:
+            raise HTTPException(
+                status_code=404,
+                detail={
+                    "error": "no_plan_found",
+                    "message": f"No se encontró el plan con ID {plan_id}"
+                }
+            )
+        
+        # Eliminar el plan
+        result = await edn360_db.training_plans_v2.delete_one({"id": plan_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": "delete_failed",
+                    "message": "No se pudo eliminar el plan"
+                }
+            )
+        
+        logger.info(
+            f"✅ Plan eliminado | plan_id: {plan_id} | admin: {admin['_id']}"
+        )
+        
+        return {
+            "success": True,
+            "message": "Plan eliminado exitosamente"
+        }
+    
+    except HTTPException:
+        raise
+    
+    except Exception as e:
+        logger.error(f"❌ Error eliminando plan: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "internal_error",
+                "message": f"Error eliminando plan: {str(e)}"
+            }
+        )
+
         raise HTTPException(
             status_code=500,
             detail={
