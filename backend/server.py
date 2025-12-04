@@ -162,7 +162,23 @@ def _translate_training_plan_to_spanish(plan):
         'Joint Friendly': 'Amigable con Articulaciones',
         'Supported Pulls': 'Jalones Asistidos',
         'Machine/Isolation Safe': 'Máquinas Seguras',
-        'Posterior Chain': 'Cadena Posterior'
+        'Posterior Chain': 'Cadena Posterior',
+        
+        # Términos técnicos en inglés que necesitan traducción
+        'ROM': 'Rango de Movimiento',
+        'Rear Delts': 'Deltoides Posteriores',
+        'rear delts': 'deltoides posteriores',
+        'Support': 'Soporte',
+        'support': 'soporte',
+        'Safety': 'Seguridad',
+        'safety': 'seguridad',
+        'Support Only': 'Solo Soporte',
+        'Support y Safety': 'Soporte y Seguridad',
+        'lateral_delts': 'Deltoides Laterales',
+        'upper_Espalda': 'Espalda Superior',
+        'Machine Énfasis': 'Énfasis en Máquinas',
+        'Cuff': 'Manguito Rotador',
+        'Joint Care': 'Cuidado Articular'
     }
     
     def translate_text(text):
