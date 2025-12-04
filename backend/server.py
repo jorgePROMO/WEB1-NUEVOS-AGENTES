@@ -1450,13 +1450,19 @@ async def generate_training_plan(request: Request, background_tasks: BackgroundT
             )
         
         # ============================================
-        # PASO 6: LLAMAR AL WORKFLOW EDN360
+        # PASO 6: LLAMAR AL WORKFLOW EDN360 (ASINCRONO)
         # ============================================
         try:
             from services.training_workflow_service import call_training_workflow_with_state
+            import concurrent.futures
             
-            # Llamar al workflow E1-E7.5 con state
-            workflow_response = await call_training_workflow_with_state(workflow_input)
+            # Ejecutar el workflow en un thread pool para no bloquear el event loop
+            loop = asyncio.get_event_loop()
+            with concurrent.futures.ThreadPoolExecutor() as pool:
+                workflow_response = await loop.run_in_executor(
+                    pool,
+                    lambda: asyncio.run(call_training_workflow_with_state(workflow_input))
+                )
             
             logger.info(
                 f"✅ Training workflow ejecutado | "
