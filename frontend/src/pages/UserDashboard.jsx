@@ -1476,9 +1476,10 @@ const UserDashboard = () => {
           {currentVideoUrl && (
             <div className="aspect-video">
               <iframe
-                src={currentVideoUrl}
+                src={`${currentVideoUrl}${currentVideoUrl.includes('?') ? '&' : '?'}autoplay=1`}
                 className="w-full h-full rounded-lg"
                 frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 title="Exercise Video"
               />
