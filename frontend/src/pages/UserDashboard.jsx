@@ -1197,139 +1197,170 @@ const UserDashboard = () => {
                   </div>
                 ) : trainingPlan && trainingPlan.status === 'sent' ? (
                   <div className="space-y-6">
-                    {/* Plan Info */}
-                    <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg p-6 border border-blue-200">
-                      <h3 className="text-xl font-bold text-blue-900 mb-2">
-                        {trainingPlan.plan.title}
-                      </h3>
-                      <p className="text-blue-700 mb-4">{trainingPlan.plan.goal}</p>
-                      <div className="grid grid-cols-3 gap-4 text-sm">
-                        <div>
-                          <p className="text-gray-600">Días por semana</p>
-                          <p className="font-bold text-gray-900">{trainingPlan.plan.days_per_week} días</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Duración sesión</p>
-                          <p className="font-bold text-gray-900">{trainingPlan.plan.session_duration_min} min</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600">Duración programa</p>
-                          <p className="font-bold text-gray-900">{trainingPlan.plan.weeks} semanas</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      <Button
-                        onClick={handleSendTrainingPlanEmail}
-                        className="flex-1 bg-green-600 hover:bg-green-700"
+                    {/* Plan Summary Card - Collapsible */}
+                    <Card className="border-2 border-blue-300">
+                      <CardHeader 
+                        className="cursor-pointer hover:bg-gray-50 transition-colors"
+                        onClick={() => setPlanCollapsed(!planCollapsed)}
                       >
-                        <Mail className="h-4 w-4 mr-2" />
-                        Enviarme por Email
-                      </Button>
-                      <Button
-                        onClick={handleDownloadTrainingPlanPDF}
-                        className="flex-1 bg-blue-600 hover:bg-blue-700"
-                      >
-                        <FileDown className="h-4 w-4 mr-2" />
-                        Descargar PDF
-                      </Button>
-                    </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <CardTitle className="text-xl text-blue-900 mb-1">
+                              {trainingPlan.plan.title}
+                            </CardTitle>
+                            <p className="text-sm text-blue-700">{trainingPlan.plan.goal}</p>
+                          </div>
+                          <Button variant="ghost" size="sm">
+                            {planCollapsed ? <ChevronDown className="h-5 w-5" /> : <ChevronUp className="h-5 w-5" />}
+                          </Button>
+                        </div>
+                      </CardHeader>
+                      
+                      {!planCollapsed && (
+                        <CardContent className="space-y-6 pt-4">
+                          {/* Plan Info */}
+                          <div className="grid grid-cols-3 gap-4 text-sm">
+                            <div className="text-center p-3 bg-blue-50 rounded-lg">
+                              <p className="text-gray-600 mb-1">Días por semana</p>
+                              <p className="font-bold text-xl text-gray-900">{trainingPlan.plan.days_per_week}</p>
+                            </div>
+                            <div className="text-center p-3 bg-blue-50 rounded-lg">
+                              <p className="text-gray-600 mb-1">Duración sesión</p>
+                              <p className="font-bold text-xl text-gray-900">{trainingPlan.plan.session_duration_min} min</p>
+                            </div>
+                            <div className="text-center p-3 bg-blue-50 rounded-lg">
+                              <p className="text-gray-600 mb-1">Duración programa</p>
+                              <p className="font-bold text-xl text-gray-900">{trainingPlan.plan.weeks} sem</p>
+                            </div>
+                          </div>
 
-                    {/* Sessions */}
-                    <div className="space-y-4">
-                      <h4 className="text-lg font-semibold text-gray-900">Sesiones de Entrenamiento</h4>
-                      {trainingPlan.plan.sessions.map((session, idx) => (
-                        <Card key={idx}>
-                          <CardHeader>
-                            <CardTitle className="text-base">{session.name}</CardTitle>
-                            {session.focus && session.focus.length > 0 && (
-                              <div className="flex flex-wrap gap-1 mt-2">
-                                {session.focus.map((f, i) => (
-                                  <Badge key={i} variant="secondary" className="text-xs">
-                                    {f}
-                                  </Badge>
-                                ))}
-                              </div>
-                            )}
-                          </CardHeader>
-                          <CardContent className="space-y-4">
-                            {/* Session Notes */}
-                            {session.session_notes && session.session_notes.length > 0 && (
-                              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                                <p className="text-sm font-semibold text-red-800 mb-2">⚠️ Notas Importantes:</p>
-                                <ul className="space-y-1">
-                                  {session.session_notes.map((note, i) => (
-                                    <li key={i} className="text-sm text-red-700 flex items-start gap-2">
-                                      <span>•</span>
-                                      <span>{note}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
+                          {/* Action Buttons */}
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <Button
+                              onClick={handleSendTrainingPlanEmail}
+                              className="flex-1 bg-green-600 hover:bg-green-700"
+                            >
+                              <Mail className="h-4 w-4 mr-2" />
+                              Enviarme por Email
+                            </Button>
+                            <Button
+                              onClick={handleDownloadTrainingPlanPDF}
+                              className="flex-1 bg-blue-600 hover:bg-blue-700"
+                            >
+                              <FileDown className="h-4 w-4 mr-2" />
+                              Descargar PDF
+                            </Button>
+                          </div>
 
-                            {/* Blocks */}
-                            {session.blocks.map((block, blockIdx) => (
-                              <div key={blockIdx} className="bg-gray-50 rounded-lg p-4">
-                                <h5 className="font-semibold text-gray-800 mb-3">
-                                  Bloque {block.id} - {block.primary_muscles.join(', ')}
-                                </h5>
-                                
-                                {/* Table Headers */}
-                                <div className="grid grid-cols-12 gap-2 items-center bg-gray-200 px-2 py-2 rounded mb-2">
-                                  <div className="col-span-1 text-xs font-semibold text-gray-700 text-center">#</div>
-                                  <div className="col-span-5 text-xs font-semibold text-gray-700">Ejercicio</div>
-                                  <div className="col-span-2 text-xs font-semibold text-gray-700">Series</div>
-                                  <div className="col-span-2 text-xs font-semibold text-gray-700">Reps</div>
-                                  <div className="col-span-2 text-xs font-semibold text-gray-700">RPE</div>
-                                </div>
-
-                                {/* Exercises */}
-                                <div className="space-y-2">
-                                  {block.exercises.map((exercise, exIdx) => (
-                                    <div key={exIdx} className="bg-white rounded border border-gray-200 p-3">
-                                      <div className="grid grid-cols-12 gap-2 items-center mb-2">
-                                        <div className="col-span-1 text-center text-sm font-bold text-gray-600">
-                                          {exercise.order}
+                          {/* Sessions */}
+                          <div className="space-y-3">
+                            <h4 className="text-lg font-semibold text-gray-900">Sesiones de Entrenamiento</h4>
+                            {trainingPlan.plan.sessions.map((session, idx) => (
+                              <Card key={idx} className="border border-gray-300">
+                                <CardHeader 
+                                  className="cursor-pointer hover:bg-gray-50 transition-colors py-3"
+                                  onClick={() => toggleSessionExpand(idx)}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex-1">
+                                      <CardTitle className="text-base font-semibold">{session.name}</CardTitle>
+                                      {session.focus && session.focus.length > 0 && (
+                                        <div className="flex flex-wrap gap-1 mt-1">
+                                          {session.focus.map((f, i) => (
+                                            <Badge key={i} variant="secondary" className="text-xs">
+                                              {f}
+                                            </Badge>
+                                          ))}
                                         </div>
-                                        <div className="col-span-5 text-sm font-semibold text-gray-900">
-                                          {exercise.name}
-                                        </div>
-                                        <div className="col-span-2 text-sm text-center text-gray-900">
-                                          {exercise.series}
-                                        </div>
-                                        <div className="col-span-2 text-sm text-center text-gray-900">
-                                          {exercise.reps}
-                                        </div>
-                                        <div className="col-span-2 text-sm text-center text-gray-900">
-                                          {exercise.rpe}
-                                        </div>
-                                      </div>
-                                      {exercise.notes && (
-                                        <p className="text-xs text-gray-600 mb-2 pl-2">{exercise.notes}</p>
-                                      )}
-                                      {exercise.video_url && (
-                                        <Button
-                                          onClick={() => window.open(exercise.video_url, '_blank')}
-                                          size="sm"
-                                          variant="outline"
-                                          className="w-full text-xs border-blue-300 text-blue-700 hover:bg-blue-50"
-                                        >
-                                          <ExternalLink className="h-3 w-3 mr-1" />
-                                          Ver Video del Ejercicio
-                                        </Button>
                                       )}
                                     </div>
-                                  ))}
-                                </div>
-                              </div>
+                                    <Button variant="ghost" size="sm">
+                                      {expandedSessions[idx] ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                    </Button>
+                                  </div>
+                                </CardHeader>
+                                
+                                {expandedSessions[idx] && (
+                                  <CardContent className="space-y-4 pt-0">
+                                    {/* Session Notes */}
+                                    {session.session_notes && session.session_notes.length > 0 && (
+                                      <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                                        <p className="text-sm font-semibold text-red-800 mb-2">⚠️ Notas Importantes:</p>
+                                        <ul className="space-y-1">
+                                          {session.session_notes.map((note, i) => (
+                                            <li key={i} className="text-sm text-red-700 flex items-start gap-2">
+                                              <span>•</span>
+                                              <span>{note}</span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+
+                                    {/* Blocks */}
+                                    {session.blocks.map((block, blockIdx) => (
+                                      <div key={blockIdx} className="bg-gray-50 rounded-lg p-4">
+                                        <h5 className="font-semibold text-gray-800 mb-3">
+                                          Bloque {block.id} - {block.primary_muscles.join(', ')}
+                                        </h5>
+                                        
+                                        {/* Table Headers - FIXED SPACING */}
+                                        <div className="grid grid-cols-[50px_1fr_80px_80px_60px] gap-3 items-center bg-gray-200 px-3 py-2 rounded mb-2">
+                                          <div className="text-xs font-semibold text-gray-700 text-center">#</div>
+                                          <div className="text-xs font-semibold text-gray-700">Ejercicio</div>
+                                          <div className="text-xs font-semibold text-gray-700 text-center">Series</div>
+                                          <div className="text-xs font-semibold text-gray-700 text-center">Reps</div>
+                                          <div className="text-xs font-semibold text-gray-700 text-center">RPE</div>
+                                        </div>
+
+                                        {/* Exercises - FIXED SPACING */}
+                                        <div className="space-y-2">
+                                          {block.exercises.map((exercise, exIdx) => (
+                                            <div key={exIdx} className="bg-white rounded border border-gray-200 p-3">
+                                              <div className="grid grid-cols-[50px_1fr_80px_80px_60px] gap-3 items-center mb-2">
+                                                <div className="text-center text-sm font-bold text-blue-600">
+                                                  {exercise.order}
+                                                </div>
+                                                <div className="text-sm font-semibold text-gray-900">
+                                                  {exercise.name}
+                                                </div>
+                                                <div className="text-sm text-center font-medium text-gray-900">
+                                                  {exercise.series}
+                                                </div>
+                                                <div className="text-sm text-center font-medium text-gray-900">
+                                                  {exercise.reps}
+                                                </div>
+                                                <div className="text-sm text-center font-medium text-gray-900">
+                                                  {exercise.rpe}
+                                                </div>
+                                              </div>
+                                              {exercise.notes && (
+                                                <p className="text-xs text-gray-600 mb-2 pl-2 italic">{exercise.notes}</p>
+                                              )}
+                                              {exercise.video_url && (
+                                                <Button
+                                                  onClick={() => handleOpenVideoModal(exercise.video_url)}
+                                                  size="sm"
+                                                  variant="outline"
+                                                  className="w-full text-xs border-blue-300 text-blue-700 hover:bg-blue-50"
+                                                >
+                                                  <ExternalLink className="h-3 w-3 mr-1" />
+                                                  Ver Video del Ejercicio
+                                                </Button>
+                                              )}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </CardContent>
+                                )}
+                              </Card>
                             ))}
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
+                          </div>
+                        </CardContent>
+                      )}
+                    </Card>
                   </div>
                 ) : (
                   <div className="text-center py-12">
