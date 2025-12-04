@@ -116,7 +116,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   // Fetch latest plan
   useEffect(() => {
     if (userId) {
-      fetchLatestPlan();
+      fetchAllPlans();
     }
   }, [userId]);
 
