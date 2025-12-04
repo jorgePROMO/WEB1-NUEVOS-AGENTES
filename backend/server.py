@@ -2688,7 +2688,7 @@ async def download_training_plan_pdf(user_id: str, request: Request):
             )
         
         # Obtener info del usuario
-        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        user = await db.users.find_one({"_id": user_id}, {"_id": 0})
         if not user:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
         
