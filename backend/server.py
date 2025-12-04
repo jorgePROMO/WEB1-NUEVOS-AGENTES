@@ -2206,6 +2206,52 @@ async def delete_latest_training_plan(user_id: str, request: Request):
         traceback.print_exc()
 
 
+@api_router.patch("/admin/training-plans/{plan_id}/toggle-status")
+async def toggle_training_plan_status(plan_id: str, request: Request):
+    """
+    Activa o desactiva un plan de entrenamiento (cambia status entre 'sent' y 'draft').
+    
+    Auth: Admin only
+    """
+    admin = await require_admin(request)
+    
+    try:
+        edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+        
+        # Buscar el plan
+        plan_doc = await edn360_db.training_plans_v2.find_one({"questionnaire_submission_id": plan_id})
+        
+        if not plan_doc:
+            raise HTTPException(status_code=404, detail="Plan no encontrado")
+        
+        # Alternar status
+        current_status = plan_doc.get("status", "draft")
+        new_status = "draft" if current_status == "sent" else "sent"
+        
+        # Actualizar
+        result = await edn360_db.training_plans_v2.update_one(
+            {"questionnaire_submission_id": plan_id},
+            {"$set": {"status": new_status}}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=500, detail="No se pudo actualizar el plan")
+        
+        logger.info(f"✅ Plan status cambiado | plan_id: {plan_id} | {current_status} → {new_status}")
+        
+        return {
+            "success": True,
+            "message": f"Plan {'activado' if new_status == 'sent' else 'desactivado'} correctamente",
+            "new_status": new_status
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Error cambiando status del plan: {e}")
+        raise HTTPException(status_code=500, detail="Error interno del servidor")
+
+
 @api_router.delete("/admin/training-plans/{plan_id}")
 async def delete_training_plan_by_id(plan_id: str, request: Request):
     """
