@@ -1,0 +1,1182 @@
+{
+  "metadata": {
+    "version": "3.0_FINAL",
+    "fecha_creacion": "2025-12-04",
+    "autor": "EDN360",
+    "descripcion": "Plantillas finales estructuradas para bloques A (calentamiento), C (core) y D (cardio). Bloque B lo genera la IA.",
+    "cambios_v3": [
+      "Campo 'nivel' unificado como array en todas las plantillas",
+      "Reglas de seguridad con manejo de combinaciones claramente definido",
+      "Orden de prioridad en reglas completamente predecible"
+    ],
+    "notas_importantes": [
+      "Todos los videos están fijos y vienen de Google Drive",
+      "NO se deben buscar videos nuevos ni generar enlaces",
+      "El agente solo lee las URLs, nunca las genera",
+      "Las plantillas son estables y reutilizables",
+      "Campo 'nivel' es siempre array: ['principiante'], ['intermedio', 'avanzado'], etc."
+    ]
+  },
+
+  "calentamientos": [
+    {
+      "id": "calentamiento_push_1",
+      "nombre": "Calentamiento Tren Superior Push",
+      "duracion_minutos": 8,
+      "nivel": ["principiante", "intermedio", "avanzado"],
+      "apto_para_grupos": ["pecho", "hombros", "triceps", "push"],
+      "no_apto_si": ["lesion_hombro_severa", "lesion_muneca_activa"],
+      "prioridad": 2,
+      "ejercicios": [
+        {
+          "orden": 1,
+          "nombre": "Cardio ligero - Remo o Elíptica",
+          "tipo": "cardio_warmup",
+          "duracion_minutos": 4,
+          "intensidad": "muy_baja",
+          "instrucciones": "Enfoque en movimiento de brazos, ritmo tranquilo",
+          "video_url": null
+        },
+        {
+          "orden": 2,
+          "nombre": "Círculos de hombros",
+          "tipo": "movilidad",
+          "series": 1,
+          "reps": "15 adelante + 15 atrás",
+          "instrucciones": "Movimiento controlado, rango completo",
+          "video_url": null
+        },
+        {
+          "orden": 3,
+          "nombre": "Rotaciones de muñecas",
+          "tipo": "movilidad",
+          "series": 1,
+          "reps": "10 cada dirección",
+          "video_url": null
+        },
+        {
+          "orden": 4,
+          "nombre": "Dislocaciones con banda elástica",
+          "tipo": "movilidad_activa",
+          "series": 1,
+          "reps": 10,
+          "instrucciones": "Banda ancha, brazos extendidos, pasar por encima de la cabeza",
+          "video_url": null
+        },
+        {
+          "orden": 5,
+          "nombre": "Push-ups en rodillas",
+          "tipo": "activacion",
+          "series": 2,
+          "reps": "8-10",
+          "descanso_segundos": 30,
+          "instrucciones": "Control en descenso, core activo",
+          "video_url": null
+        }
+      ]
+    },
+
+    {
+      "id": "calentamiento_pull_1",
+      "nombre": "Calentamiento Tren Superior Pull",
+      "duracion_minutos": 8,
+      "nivel": ["principiante", "intermedio", "avanzado"],
+      "apto_para_grupos": ["espalda", "biceps", "pull", "dorsales"],
+      "no_apto_si": ["lesion_codo_activa"],
+      "prioridad": 2,
+      "ejercicios": [
+        {
+          "orden": 1,
+          "nombre": "Cardio ligero - Remo (enfoque espalda)",
+          "tipo": "cardio_warmup",
+          "duracion_minutos": 4,
+          "intensidad": "muy_baja",
+          "video_url": null
+        },
+        {
+          "orden": 2,
+          "nombre": "Cat-Cow (Gato-Vaca)",
+          "tipo": "movilidad",
+          "series": 1,
+          "reps": 10,
+          "instrucciones": "Movimiento fluido, respiración coordinada",
+          "video_url": null
+        },
+        {
+          "orden": 3,
+          "nombre": "Rotaciones torácicas",
+          "tipo": "movilidad",
+          "series": 1,
+          "reps": "10 cada lado",
+          "instrucciones": "En cuadrupedia, seguir la mano con la mirada",
+          "video_url": null
+        },
+        {
+          "orden": 4,
+          "nombre": "Band Pull-Aparts",
+          "tipo": "activacion",
+          "series": 2,
+          "reps": 15,
+          "descanso_segundos": 30,
+          "instrucciones": "Banda a la altura del pecho, brazos extendidos",
+          "video_url": null
+        },
+        {
+          "orden": 5,
+          "nombre": "Remo con banda elástica",
+          "tipo": "activacion",
+          "series": 2,
+          "reps": 12,
+          "descanso_segundos": 30,
+          "video_url": null
+        }
+      ]
+    },
+
+    {
+      "id": "calentamiento_piernas_1",
+      "nombre": "Calentamiento Tren Inferior",
+      "duracion_minutos": 10,
+      "nivel": ["principiante", "intermedio", "avanzado"],
+      "apto_para_grupos": ["piernas", "cuadriceps", "gluteos", "isquios", "lower_body"],
+      "no_apto_si": ["lesion_rodilla_severa", "lesion_cadera_activa"],
+      "prioridad": 2,
+      "ejercicios": [
+        {
+          "orden": 1,
+          "nombre": "Bici estática",
+          "tipo": "cardio_warmup",
+          "duracion_minutos": 5,
+          "intensidad": "baja",
+          "video_url": null
+        },
+        {
+          "orden": 2,
+          "nombre": "Círculos de cadera",
+          "tipo": "movilidad",
+          "series": 1,
+          "reps": "10 cada dirección",
+          "video_url": null
+        },
+        {
+          "orden": 3,
+          "nombre": "Rotaciones de rodilla",
+          "tipo": "movilidad",
+          "series": 1,
+          "reps": "10 cada pierna",
+          "video_url": null
+        },
+        {
+          "orden": 4,
+          "nombre": "Sentadillas sin peso",
+          "tipo": "activacion",
+          "series": 2,
+          "reps": 15,
+          "descanso_segundos": 30,
+          "video_url": null
+        },
+        {
+          "orden": 5,
+          "nombre": "Puentes de glúteo",
+          "tipo": "activacion",
+          "series": 2,
+          "reps": 15,
+          "descanso_segundos": 30,
+          "video_url": null
+        },
+        {
+          "orden": 6,
+          "nombre": "Zancadas sin peso",
+          "tipo": "activacion",
+          "series": 2,
+          "reps": "10 cada pierna",
+          "descanso_segundos": 30,
+          "video_url": null
+        }
+      ]
+    },
+
+    {
+      "id": "calentamiento_hombros_especifico",
+      "nombre": "Calentamiento Hombros + Manguito Rotador",
+      "duracion_minutos": 10,
+      "nivel": ["principiante", "intermedio", "avanzado"],
+      "apto_para_grupos": ["hombros", "deltoides"],
+      "no_apto_si": [],
+      "prioridad": 1,
+      "condiciones_especiales": ["lesion_hombro_previa", "proteccion_manguito_rotador", "dolor_hombro_cronico"],
+      "ejercicios": [
+        {
+          "orden": 1,
+          "nombre": "Elíptica suave",
+          "tipo": "cardio_warmup",
+          "duracion_minutos": 3,
+          "intensidad": "muy_baja",
+          "video_url": null
+        },
+        {
+          "orden": 2,
+          "nombre": "Péndulos de Codman",
+          "tipo": "movilidad_terapeutica",
+          "series": 1,
+          "reps": "10 cada brazo",
+          "instrucciones": "Inclinado, brazo colgando, movimiento circular pasivo",
+          "video_url": null
+        },
+        {
+          "orden": 3,
+          "nombre": "Rotación externa con banda",
+          "tipo": "activacion_manguito",
+          "series": 2,
+          "reps": "15 cada brazo",
+          "descanso_segundos": 30,
+          "instrucciones": "Codo pegado al cuerpo, resistencia ligera",
+          "video_url": null
+        },
+        {
+          "orden": 4,
+          "nombre": "Rotación interna con banda",
+          "tipo": "activacion_manguito",
+          "series": 2,
+          "reps": "15 cada brazo",
+          "descanso_segundos": 30,
+          "video_url": null
+        },
+        {
+          "orden": 5,
+          "nombre": "Face Pulls con banda",
+          "tipo": "activacion",
+          "series": 2,
+          "reps": 15,
+          "descanso_segundos": 30,
+          "instrucciones": "Tirar hacia la cara, codos altos",
+          "video_url": null
+        }
+      ]
+    },
+
+    {
+      "id": "calentamiento_fullbody_1",
+      "nombre": "Calentamiento Full Body (Cuerpo Completo)",
+      "duracion_minutos": 10,
+      "nivel": ["intermedio", "avanzado"],
+      "apto_para_grupos": ["fullbody", "circuito", "general"],
+      "no_apto_si": ["lesiones_multiples", "muy_principiante"],
+      "prioridad": 2,
+      "ejercicios": [
+        {
+          "orden": 1,
+          "nombre": "Jumping Jacks",
+          "tipo": "cardio_dinamico",
+          "duracion_segundos": 30,
+          "video_url": null
+        },
+        {
+          "orden": 2,
+          "nombre": "High Knees (Rodillas altas)",
+          "tipo": "cardio_dinamico",
+          "duracion_segundos": 30,
+          "video_url": null
+        },
+        {
+          "orden": 3,
+          "nombre": "Butt Kicks (Talones al glúteo)",
+          "tipo": "cardio_dinamico",
+          "duracion_segundos": 30,
+          "video_url": null
+        },
+        {
+          "orden": 4,
+          "nombre": "Mountain Climbers",
+          "tipo": "cardio_dinamico",
+          "duracion_segundos": 30,
+          "video_url": null
+        },
+        {
+          "orden": 5,
+          "nombre": "Descanso activo",
+          "tipo": "descanso",
+          "duracion_segundos": 30,
+          "video_url": null
+        },
+        {
+          "orden": 6,
+          "nombre": "Inchworms",
+          "tipo": "movilidad_dinamica",
+          "reps": 8,
+          "instrucciones": "De pie, bajar manos al suelo, caminar a plancha, volver",
+          "video_url": null
+        },
+        {
+          "orden": 7,
+          "nombre": "Spiderman Lunges",
+          "tipo": "movilidad_dinamica",
+          "reps": "10 (5 cada lado)",
+          "video_url": null
+        },
+        {
+          "orden": 8,
+          "nombre": "World's Greatest Stretch",
+          "tipo": "movilidad_dinamica",
+          "reps": "8 (4 cada lado)",
+          "video_url": null
+        }
+      ],
+      "notas": "Repetir circuito cardio (ejercicios 1-5) 2 veces antes de pasar a movilidad"
+    },
+
+    {
+      "id": "calentamiento_bajo_impacto",
+      "nombre": "Calentamiento Bajo Impacto (Senior/Lesiones)",
+      "duracion_minutos": 12,
+      "nivel": ["principiante"],
+      "apto_para_grupos": ["todos"],
+      "no_apto_si": [],
+      "prioridad": 1,
+      "condiciones_especiales": ["edad_mayor_50", "lesiones_activas", "muy_sedentario", "primera_sesion"],
+      "ejercicios": [
+        {
+          "orden": 1,
+          "nombre": "Bici o elíptica muy suave",
+          "tipo": "cardio_warmup",
+          "duracion_minutos": 5,
+          "intensidad": "minima",
+          "instrucciones": "Ritmo muy tranquilo, sin esfuerzo",
+          "video_url": null
+        },
+        {
+          "orden": 2,
+          "nombre": "Círculos de cuello",
+          "tipo": "movilidad",
+          "series": 1,
+          "reps": "8 cada dirección",
+          "instrucciones": "Muy lento y controlado",
+          "video_url": null
+        },
+        {
+          "orden": 3,
+          "nombre": "Círculos de hombros",
+          "tipo": "movilidad",
+          "series": 1,
+          "reps": "10 cada dirección",
+          "video_url": null
+        },
+        {
+          "orden": 4,
+          "nombre": "Círculos de cadera",
+          "tipo": "movilidad",
+          "series": 1,
+          "reps": "10 cada dirección",
+          "video_url": null
+        },
+        {
+          "orden": 5,
+          "nombre": "Extensión/flexión de rodillas",
+          "tipo": "movilidad",
+          "series": 1,
+          "reps": 10,
+          "instrucciones": "Sentado o con apoyo",
+          "video_url": null
+        },
+        {
+          "orden": 6,
+          "nombre": "Sentadilla parcial con apoyo",
+          "tipo": "activacion",
+          "series": 2,
+          "reps": 10,
+          "descanso_segundos": 45,
+          "instrucciones": "Con apoyo en silla o pared",
+          "video_url": null
+        },
+        {
+          "orden": 7,
+          "nombre": "Press de pared",
+          "tipo": "activacion",
+          "series": 2,
+          "reps": 10,
+          "descanso_segundos": 45,
+          "video_url": null
+        }
+      ]
+    }
+  ],
+
+  "core_abs": [
+    {
+      "id": "abs_basico_1",
+      "nombre": "Core Básico (Principiante)",
+      "duracion_minutos": 10,
+      "nivel": ["principiante"],
+      "dificultad": 1,
+      "apto_para": ["todos"],
+      "no_apto_si": ["lesion_lumbar_aguda", "hernia_discal_activa"],
+      "ejercicios": [
+        {
+          "orden": 1,
+          "nombre": "Crunch abdominal",
+          "grupo_muscular": "recto_abdominal",
+          "series": 3,
+          "reps": "12-15",
+          "descanso_segundos": 30,
+          "instrucciones": "Manos en pecho o nuca, elevar solo omóplatos",
+          "video_url": null
+        },
+        {
+          "orden": 2,
+          "nombre": "Plancha frontal",
+          "grupo_muscular": "core_completo",
+          "series": 3,
+          "duracion_segundos": "20-30",
+          "descanso_segundos": 30,
+          "instrucciones": "Codos bajo hombros, core apretado, no hundir cadera",
+          "video_url": null
+        },
+        {
+          "orden": 3,
+          "nombre": "Dead Bug",
+          "grupo_muscular": "core_estabilidad",
+          "series": 3,
+          "reps": "10 (5 cada lado)",
+          "descanso_segundos": 30,
+          "instrucciones": "Lumbar pegada al suelo, movimiento alterno pierna-brazo",
+          "video_url": null
+        },
+        {
+          "orden": 4,
+          "nombre": "Plancha lateral",
+          "grupo_muscular": "oblicuos",
+          "series": 2,
+          "duracion_segundos": "15-20 cada lado",
+          "descanso_segundos": 30,
+          "instrucciones": "Cuerpo en línea recta, core activado",
+          "video_url": null
+        }
+      ]
+    },
+
+    {
+      "id": "abs_oblicuos_2",
+      "nombre": "Core con Énfasis en Oblicuos (Intermedio)",
+      "duracion_minutos": 12,
+      "nivel": ["intermedio"],
+      "dificultad": 2,
+      "apto_para": ["todos"],
+      "no_apto_si": ["lesion_lumbar_aguda"],
+      "ejercicios": [
+        {
+          "orden": 1,
+          "nombre": "Russian Twist",
+          "grupo_muscular": "oblicuos",
+          "series": 3,
+          "reps": "20 (10 cada lado)",
+          "descanso_segundos": 30,
+          "instrucciones": "Pies elevados opcional, torso a 45°, rotación controlada",
+          "video_url": null
+        },
+        {
+          "orden": 2,
+          "nombre": "Plancha lateral con elevación de cadera",
+          "grupo_muscular": "oblicuos",
+          "series": 3,
+          "reps": "12 cada lado",
+          "descanso_segundos": 30,
+          "instrucciones": "Subir y bajar cadera sin perder alineación",
+          "video_url": null
+        },
+        {
+          "orden": 3,
+          "nombre": "Bicicleta (Bicycle Crunch)",
+          "grupo_muscular": "oblicuos_recto",
+          "series": 3,
+          "reps": "20 (10 cada lado)",
+          "descanso_segundos": 30,
+          "instrucciones": "Codo a rodilla opuesta, extensión completa pierna contraria",
+          "video_url": null
+        },
+        {
+          "orden": 4,
+          "nombre": "Wood Chop con banda o cable",
+          "grupo_muscular": "oblicuos_rotacion",
+          "series": 3,
+          "reps": "12 cada lado",
+          "descanso_segundos": 30,
+          "instrucciones": "Rotación desde arriba hacia abajo en diagonal",
+          "video_url": null
+        }
+      ]
+    },
+
+    {
+      "id": "abs_antirotacion_3",
+      "nombre": "Core Anti-Rotación (Estabilidad Funcional)",
+      "duracion_minutos": 12,
+      "nivel": ["intermedio", "avanzado"],
+      "dificultad": 3,
+      "apto_para": ["funcional", "deportistas"],
+      "no_apto_si": [],
+      "ejercicios": [
+        {
+          "orden": 1,
+          "nombre": "Pallof Press (con banda o cable)",
+          "grupo_muscular": "core_antirotacion",
+          "series": 3,
+          "reps": "10 cada lado",
+          "descanso_segundos": 30,
+          "instrucciones": "Resistir rotación del torso, extender brazos al frente",
+          "video_url": null
+        },
+        {
+          "orden": 2,
+          "nombre": "Plancha con toque de hombro",
+          "grupo_muscular": "core_estabilidad",
+          "series": 3,
+          "reps": "16 (8 cada lado)",
+          "descanso_segundos": 30,
+          "instrucciones": "Minimizar rotación de cadera, movimiento controlado",
+          "video_url": null
+        },
+        {
+          "orden": 3,
+          "nombre": "Bird Dog con pausa",
+          "grupo_muscular": "core_lumbar",
+          "series": 3,
+          "reps": "10 (5 cada lado)",
+          "descanso_segundos": 30,
+          "instrucciones": "Mantener 2 seg arriba, espalda plana",
+          "video_url": null
+        },
+        {
+          "orden": 4,
+          "nombre": "Side Plank con rotación",
+          "grupo_muscular": "oblicuos_estabilidad",
+          "series": 3,
+          "reps": "10 cada lado",
+          "descanso_segundos": 30,
+          "instrucciones": "Rotar torso hacia abajo y volver, mantener cadera alta",
+          "video_url": null
+        }
+      ]
+    },
+
+    {
+      "id": "abs_avanzado_4",
+      "nombre": "Core Avanzado (Máxima Fuerza)",
+      "duracion_minutos": 15,
+      "nivel": ["avanzado"],
+      "dificultad": 4,
+      "apto_para": ["avanzados"],
+      "no_apto_si": ["lesiones", "principiantes"],
+      "ejercicios": [
+        {
+          "orden": 1,
+          "nombre": "Ab Wheel Rollout",
+          "grupo_muscular": "core_completo",
+          "series": 3,
+          "reps": "8-10",
+          "descanso_segundos": 45,
+          "instrucciones": "Desde rodillas, extensión controlada, evitar arquear lumbar",
+          "video_url": null
+        },
+        {
+          "orden": 2,
+          "nombre": "Leg Raises colgado o en banco",
+          "grupo_muscular": "abdominal_inferior",
+          "series": 3,
+          "reps": "12-15",
+          "descanso_segundos": 45,
+          "instrucciones": "Piernas rectas o semiflexionadas, elevar hasta 90°",
+          "video_url": null
+        },
+        {
+          "orden": 3,
+          "nombre": "Dragon Flag (progresión)",
+          "grupo_muscular": "core_completo",
+          "series": 3,
+          "reps": "6-8",
+          "descanso_segundos": 60,
+          "instrucciones": "Control total, no arquear espalda, progresión desde negativas",
+          "video_url": null
+        },
+        {
+          "orden": 4,
+          "nombre": "L-Sit Hold (en paralelas o suelo)",
+          "grupo_muscular": "core_flexores_cadera",
+          "series": 3,
+          "duracion_segundos": "15-20",
+          "descanso_segundos": 45,
+          "instrucciones": "Piernas rectas paralelas al suelo, hombros deprimidos",
+          "video_url": null
+        }
+      ]
+    },
+
+    {
+      "id": "abs_quema_grasa_5",
+      "nombre": "Core Metabólico (Quema Grasa)",
+      "duracion_minutos": 12,
+      "nivel": ["intermedio", "avanzado"],
+      "dificultad": 3,
+      "apto_para": ["perdida_grasa", "condicion_fisica"],
+      "formato": "AMRAP",
+      "tiempo_total_minutos": 12,
+      "notas": "Completar tantas rondas como sea posible en 12 minutos",
+      "ejercicios": [
+        {
+          "orden": 1,
+          "nombre": "Mountain Climbers",
+          "reps": 20,
+          "instrucciones": "Ritmo rápido, core estable",
+          "video_url": null
+        },
+        {
+          "orden": 2,
+          "nombre": "Plank Jacks",
+          "reps": 15,
+          "instrucciones": "Saltar pies abriendo y cerrando",
+          "video_url": null
+        },
+        {
+          "orden": 3,
+          "nombre": "Sit-ups",
+          "reps": 15,
+          "instrucciones": "Subir completamente, bajar controlado",
+          "video_url": null
+        },
+        {
+          "orden": 4,
+          "nombre": "Russian Twist",
+          "reps": "20 (10 cada lado)",
+          "video_url": null
+        },
+        {
+          "orden": 5,
+          "nombre": "Burpees",
+          "reps": 10,
+          "instrucciones": "Descenso controlado, salto explosivo",
+          "video_url": null
+        },
+        {
+          "orden": 6,
+          "nombre": "Plancha estática",
+          "duracion_segundos": 30,
+          "instrucciones": "Mantener forma perfecta",
+          "video_url": null
+        }
+      ],
+      "descanso_entre_rondas_segundos": "60-90"
+    }
+  ],
+
+  "cardio": [
+    {
+      "id": "cardio_principiante_perdida_grasa",
+      "nombre": "Cardio Principiante - Pérdida de Grasa",
+      "nivel": ["principiante"],
+      "objetivo": "perdida_grasa",
+      "duracion_minutos": 20,
+      "intensidad": "baja_moderada",
+      "zona_cardiaca_fcm": "60-70%",
+      "opciones": [
+        {
+          "opcion": 1,
+          "nombre": "Steady State - Caminata Rápida",
+          "duracion_minutos": 20,
+          "equipo": ["cinta"],
+          "parametros": {
+            "velocidad_kmh": "5-6",
+            "inclinacion_porcentaje": "3-5",
+            "esfuerzo_percibido": "6/10"
+          },
+          "instrucciones": "Caminata continua a ritmo sostenible, puedes mantener conversación"
+        },
+        {
+          "opcion": 2,
+          "nombre": "Intervalos Suaves",
+          "duracion_minutos": 20,
+          "equipo": ["cinta", "eliptica"],
+          "estructura": [
+            {"fase": "Calentamiento", "duracion_min": 3, "esfuerzo": "3/10"},
+            {"fase": "Intervalo activo", "duracion_seg": 60, "esfuerzo": "6/10", "repeticiones": 8},
+            {"fase": "Intervalo recuperación", "duracion_seg": 60, "esfuerzo": "4/10", "repeticiones": 8},
+            {"fase": "Enfriamiento", "duracion_min": 2, "esfuerzo": "3/10"}
+          ],
+          "instrucciones": "Alternar entre ritmo rápido y moderado sin llegar a correr"
+        }
+      ]
+    },
+
+    {
+      "id": "cardio_principiante_mantenimiento",
+      "nombre": "Cardio Principiante - Mantenimiento/Salud",
+      "nivel": ["principiante"],
+      "objetivo": "mantenimiento",
+      "duracion_minutos": 20,
+      "intensidad": "baja",
+      "zona_cardiaca_fcm": "50-60%",
+      "opciones": [
+        {
+          "opcion": 1,
+          "nombre": "Cardio Mixto",
+          "duracion_minutos": 15,
+          "estructura": [
+            {"equipo": "bici", "duracion_min": 5, "intensidad": "comoda"},
+            {"equipo": "eliptica", "duracion_min": 5, "intensidad": "comoda"},
+            {"equipo": "remo", "duracion_min": 5, "intensidad": "comoda"}
+          ],
+          "instrucciones": "Ritmo conversacional, sin esfuerzo significativo"
+        },
+        {
+          "opcion": 2,
+          "nombre": "Caminata Suave",
+          "duracion_minutos": 20,
+          "equipo": ["exterior", "cinta"],
+          "parametros": {
+            "velocidad_kmh": "4-5",
+            "inclinacion_porcentaje": "0-2"
+          },
+          "instrucciones": "Caminata relajada, ideal para recuperación activa"
+        }
+      ]
+    },
+
+    {
+      "id": "cardio_intermedio_perdida_grasa",
+      "nombre": "Cardio Intermedio - Pérdida de Grasa",
+      "nivel": ["intermedio"],
+      "objetivo": "perdida_grasa",
+      "duracion_minutos": 25,
+      "intensidad": "moderada_alta",
+      "zona_cardiaca_fcm": "70-85%",
+      "opciones": [
+        {
+          "opcion": 1,
+          "nombre": "HIIT Moderado",
+          "duracion_minutos": 23,
+          "equipo": ["assault_bike", "remo", "cinta"],
+          "estructura": [
+            {"fase": "Calentamiento", "duracion_min": 3, "esfuerzo": "4/10"},
+            {"fase": "Sprint", "duracion_seg": 45, "esfuerzo": "7-8/10", "repeticiones": 10},
+            {"fase": "Recuperación activa", "duracion_seg": 45, "esfuerzo": "4/10", "repeticiones": 10},
+            {"fase": "Enfriamiento", "duracion_min": 3, "esfuerzo": "3/10"}
+          ]
+        },
+        {
+          "opcion": 2,
+          "nombre": "Circuito Metabólico",
+          "duracion_minutos": 24,
+          "estructura": [
+            {"ejercicio": "Assault Bike o Remo", "duracion_min": 2, "esfuerzo": "7-8/10"},
+            {"ejercicio": "Mountain Climbers", "duracion_min": 1},
+            {"ejercicio": "Descanso", "duracion_min": 1}
+          ],
+          "rondas": 4,
+          "instrucciones": "Completar 4 rondas del circuito completo"
+        }
+      ]
+    },
+
+    {
+      "id": "cardio_intermedio_mantenimiento",
+      "nombre": "Cardio Intermedio - Mantenimiento",
+      "nivel": ["intermedio"],
+      "objetivo": "mantenimiento",
+      "duracion_minutos": 20,
+      "intensidad": "moderada",
+      "zona_cardiaca_fcm": "65-75%",
+      "opciones": [
+        {
+          "opcion": 1,
+          "nombre": "Steady State Moderado",
+          "duracion_minutos": 20,
+          "equipo": ["eliptica", "bici"],
+          "instrucciones": "Ritmo constante, conversación difícil pero posible"
+        },
+        {
+          "opcion": 2,
+          "nombre": "Fartlek (Juego de Velocidades)",
+          "duracion_minutos": 20,
+          "estructura": [
+            {"fase": "Calentamiento", "duracion_min": 3},
+            {"fase": "Variación de intensidad", "duracion_min": 15, "nota": "Cambiar intensidad cada 2-3 min"},
+            {"fase": "Enfriamiento", "duracion_min": 2}
+          ],
+          "instrucciones": "Variar entre ritmo moderado y moderado-alto sin estructura fija"
+        }
+      ]
+    },
+
+    {
+      "id": "cardio_avanzado_perdida_grasa",
+      "nombre": "Cardio Avanzado - Pérdida de Grasa",
+      "nivel": ["avanzado"],
+      "objetivo": "perdida_grasa",
+      "duracion_minutos": 30,
+      "intensidad": "alta",
+      "zona_cardiaca_fcm": "80-90%",
+      "opciones": [
+        {
+          "opcion": 1,
+          "nombre": "HIIT Intenso",
+          "duracion_minutos": 24,
+          "estructura": [
+            {"fase": "Calentamiento", "duracion_min": 3},
+            {"fase": "Sprint máximo", "duracion_seg": 30, "esfuerzo": "9/10", "repeticiones": 12},
+            {"fase": "Descanso completo", "duracion_seg": 30, "repeticiones": 12},
+            {"fase": "Enfriamiento", "duracion_min": 3}
+          ]
+        },
+        {
+          "opcion": 2,
+          "nombre": "Tabata Protocol (4 bloques)",
+          "duracion_minutos": 24,
+          "estructura_bloque": {
+            "trabajo_seg": 20,
+            "descanso_seg": 10,
+            "rondas_por_bloque": 8
+          },
+          "bloques": [
+            {"bloque": 1, "ejercicio": "Assault Bike"},
+            {"bloque": 2, "ejercicio": "Burpees"},
+            {"bloque": 3, "ejercicio": "Remo"},
+            {"bloque": 4, "ejercicio": "Jump Squats"}
+          ],
+          "descanso_entre_bloques_min": 2
+        }
+      ]
+    },
+
+    {
+      "id": "cardio_avanzado_mantenimiento",
+      "nombre": "Cardio Avanzado - Mantenimiento",
+      "nivel": ["avanzado"],
+      "objetivo": "mantenimiento",
+      "duracion_minutos": 20,
+      "intensidad": "moderada",
+      "zona_cardiaca_fcm": "60-70%",
+      "opciones": [
+        {
+          "opcion": 1,
+          "nombre": "Post-Entrenamiento (Recuperación Activa)",
+          "duracion_minutos": 15,
+          "equipo": ["bici", "eliptica"],
+          "intensidad": "baja_moderada",
+          "instrucciones": "Ritmo suave, ayuda a eliminar lactato y promover recuperación"
+        },
+        {
+          "opcion": 2,
+          "nombre": "LISS - Caminata Inclinada",
+          "duracion_minutos": 20,
+          "equipo": ["cinta"],
+          "parametros": {
+            "velocidad_kmh": "5-6",
+            "inclinacion_porcentaje": "8-12"
+          },
+          "instrucciones": "Low Intensity Steady State, quema calorías sin impactar recuperación"
+        }
+      ]
+    },
+
+    {
+      "id": "cardio_senior_perdida_grasa",
+      "nombre": "Cardio Senior (+60) - Pérdida de Grasa",
+      "nivel": ["senior"],
+      "objetivo": "perdida_grasa",
+      "edad_minima": 60,
+      "duracion_minutos": 20,
+      "intensidad": "baja_moderada",
+      "zona_cardiaca_fcm": "50-60%",
+      "prioridad": 1,
+      "opciones": [
+        {
+          "opcion": 1,
+          "nombre": "Caminata Estructurada",
+          "duracion_minutos": 18,
+          "estructura": [
+            {"fase": "Calentamiento", "duracion_min": 3, "velocidad": "muy_suave"},
+            {"fase": "Caminata principal", "duracion_min": 12, "velocidad": "sostenible"},
+            {"fase": "Enfriamiento", "duracion_min": 3, "velocidad": "suave"}
+          ],
+          "instrucciones": "Puedes mantener conversación durante toda la sesión"
+        },
+        {
+          "opcion": 2,
+          "nombre": "Bici Reclinada",
+          "duracion_minutos": 20,
+          "equipo": ["bici_reclinada"],
+          "parametros": {
+            "resistencia": "baja_moderada",
+            "cadencia_rpm": "50-60"
+          },
+          "instrucciones": "Posición cómoda, sin tensión en espalda baja"
+        }
+      ]
+    },
+
+    {
+      "id": "cardio_senior_mantenimiento",
+      "nombre": "Cardio Senior (+60) - Mantenimiento/Salud",
+      "nivel": ["senior"],
+      "objetivo": "mantenimiento",
+      "edad_minima": 60,
+      "duracion_minutos": 15,
+      "intensidad": "baja",
+      "zona_cardiaca_fcm": "50-60%",
+      "prioridad": 1,
+      "opciones": [
+        {
+          "opcion": 1,
+          "nombre": "Cardio Suave Mixto",
+          "duracion_minutos": 15,
+          "estructura": [
+            {"actividad": "Bici reclinada", "duracion_min": 5, "intensidad": "muy_suave"},
+            {"actividad": "Caminata lenta", "duracion_min": 5},
+            {"actividad": "Estiramientos dinámicos", "duracion_min": 5}
+          ]
+        },
+        {
+          "opcion": 2,
+          "nombre": "Actividad Funcional",
+          "duracion_minutos": 15,
+          "actividades": [
+            "Caminar con cambios de dirección",
+            "Subir y bajar escalones (paso bajo)",
+            "Movimientos de brazos con banda elástica"
+          ],
+          "instrucciones": "Simular movimientos cotidianos para mantener funcionalidad"
+        }
+      ]
+    }
+  ],
+
+  "reglas_asignacion": {
+    "descripcion": "Sistema jerárquico con manejo de combinaciones claramente definido",
+    "orden_evaluacion": "Se evalúan TODAS las reglas en orden de prioridad. Las reglas de mayor prioridad pueden SOBRESCRIBIR las de menor prioridad.",
+    
+    "prioridad_1_seguridad": {
+      "orden": 1,
+      "descripcion": "Máxima prioridad - Seguridad y limitaciones físicas. SIEMPRE se aplican primero.",
+      "reglas": [
+        {
+          "id": "regla_edad_senior",
+          "condicion": "edad >= 60",
+          "acciones": {
+            "calentamiento": "calentamiento_bajo_impacto",
+            "cardio": ["cardio_senior_perdida_grasa", "cardio_senior_mantenimiento"],
+            "core_abs": "abs_basico_1"
+          },
+          "nota": "SIEMPRE priorizar sobre nivel declarado. Edad >= 60 SOBRESCRIBE cualquier otra regla de nivel.",
+          "combinaciones": {
+            "si_tambien_lesion_hombro": {
+              "calentamiento": "calentamiento_bajo_impacto",
+              "nota": "Bajo impacto incluye movilidad suave de hombros, es seguro"
+            },
+            "si_tambien_lesion_lumbar": {
+              "calentamiento": "calentamiento_bajo_impacto",
+              "core_abs": "abs_basico_1",
+              "nota": "Doble precaución: edad + lumbar"
+            }
+          }
+        },
+        {
+          "id": "regla_lesion_hombro",
+          "condicion": "lesion_hombro == true OR dolor_hombro == true",
+          "acciones": {
+            "calentamiento": "calentamiento_hombros_especifico"
+          },
+          "solo_si": "dia_incluye_hombros == true OR dia_incluye_push == true",
+          "nota": "Solo aplica si es día de hombros o push. Si edad >= 60, usar bajo_impacto en su lugar.",
+          "combinaciones": {
+            "si_edad_mayor_60": {
+              "calentamiento": "calentamiento_bajo_impacto",
+              "nota": "Edad tiene prioridad sobre lesión específica"
+            }
+          }
+        },
+        {
+          "id": "regla_lesion_lumbar",
+          "condicion": "lesion_lumbar == true OR hernia_discal == true",
+          "acciones": {
+            "calentamiento": "calentamiento_bajo_impacto",
+            "core_abs": "abs_basico_1"
+          },
+          "nota": "Evitar ejercicios de flexión espinal intensa",
+          "combinaciones": {
+            "si_edad_mayor_60": {
+              "calentamiento": "calentamiento_bajo_impacto",
+              "core_abs": "abs_basico_1",
+              "nota": "Misma asignación, se refuerza la seguridad"
+            }
+          }
+        },
+        {
+          "id": "regla_muy_sedentario",
+          "condicion": "muy_sedentario == true OR primera_sesion == true",
+          "acciones": {
+            "calentamiento": "calentamiento_bajo_impacto",
+            "core_abs": "abs_basico_1",
+            "cardio": "cardio_principiante_mantenimiento"
+          },
+          "nota": "Primera sesión o usuario muy sedentario requiere introducción gradual"
+        }
+      ]
+    },
+
+    "prioridad_2_especificidad": {
+      "orden": 2,
+      "descripcion": "Especificidad del entrenamiento del día. Solo aplica si NO hay reglas de Prioridad 1 activas.",
+      "reglas": [
+        {
+          "id": "regla_push",
+          "condicion": "grupos_musculares CONTAINS ANY OF ['pecho', 'hombros', 'triceps']",
+          "acciones": {
+            "calentamiento": "calentamiento_push_1"
+          },
+          "puede_ser_sobrescrito_por": ["regla_edad_senior", "regla_lesion_hombro", "regla_lesion_lumbar", "regla_muy_sedentario"]
+        },
+        {
+          "id": "regla_pull",
+          "condicion": "grupos_musculares CONTAINS ANY OF ['espalda', 'biceps', 'dorsales']",
+          "acciones": {
+            "calentamiento": "calentamiento_pull_1"
+          },
+          "puede_ser_sobrescrito_por": ["regla_edad_senior", "regla_lesion_lumbar", "regla_muy_sedentario"]
+        },
+        {
+          "id": "regla_piernas",
+          "condicion": "grupos_musculares CONTAINS ANY OF ['piernas', 'cuadriceps', 'gluteos', 'isquios']",
+          "acciones": {
+            "calentamiento": "calentamiento_piernas_1"
+          },
+          "puede_ser_sobrescrito_por": ["regla_edad_senior", "regla_lesion_lumbar", "regla_muy_sedentario"]
+        },
+        {
+          "id": "regla_fullbody",
+          "condicion": "tipo_sesion == 'fullbody'",
+          "acciones": {
+            "calentamiento": "calentamiento_fullbody_1"
+          },
+          "puede_ser_sobrescrito_por": ["regla_edad_senior", "regla_lesion_lumbar", "regla_muy_sedentario"]
+        }
+      ]
+    },
+
+    "prioridad_3_optimizacion": {
+      "orden": 3,
+      "descripcion": "Optimización según nivel y objetivo. Solo aplica si NO hay reglas de Prioridad 1 o 2 que afecten estos bloques.",
+      "reglas_core_abs": [
+        {
+          "id": "abs_principiante",
+          "condicion": "nivel == 'principiante'",
+          "acciones": {
+            "core_abs": "abs_basico_1"
+          },
+          "rotacion": "Usar siempre el mismo circuito por 4 semanas",
+          "puede_ser_sobrescrito_por": ["regla_edad_senior", "regla_lesion_lumbar", "regla_muy_sedentario"]
+        },
+        {
+          "id": "abs_intermedio",
+          "condicion": "nivel == 'intermedio'",
+          "acciones": {
+            "core_abs": ["abs_oblicuos_2", "abs_antirotacion_3"]
+          },
+          "rotacion": "Alternar cada semana",
+          "puede_ser_sobrescrito_por": ["regla_edad_senior", "regla_lesion_lumbar"]
+        },
+        {
+          "id": "abs_avanzado",
+          "condicion": "nivel == 'avanzado'",
+          "acciones": {
+            "core_abs": ["abs_antirotacion_3", "abs_avanzado_4"]
+          },
+          "rotacion": "Alternar cada semana",
+          "puede_ser_sobrescrito_por": ["regla_edad_senior", "regla_lesion_lumbar"]
+        },
+        {
+          "id": "abs_quema_grasa",
+          "condicion": "objetivo == 'perdida_grasa' AND nivel IN ['intermedio', 'avanzado']",
+          "acciones": {
+            "core_abs": "abs_quema_grasa_5"
+          },
+          "frecuencia": "1-2 veces por semana, intercalar con circuitos regulares",
+          "puede_ser_sobrescrito_por": ["regla_edad_senior", "regla_lesion_lumbar"]
+        }
+      ],
+
+      "reglas_cardio": [
+        {
+          "id": "cardio_matriz",
+          "descripcion": "Matriz nivel x objetivo para asignación de cardio",
+          "matriz": {
+            "principiante": {
+              "perdida_grasa": "cardio_principiante_perdida_grasa",
+              "mantenimiento": "cardio_principiante_mantenimiento"
+            },
+            "intermedio": {
+              "perdida_grasa": "cardio_intermedio_perdida_grasa",
+              "mantenimiento": "cardio_intermedio_mantenimiento"
+            },
+            "avanzado": {
+              "perdida_grasa": "cardio_avanzado_perdida_grasa",
+              "mantenimiento": "cardio_avanzado_mantenimiento"
+            }
+          },
+          "nota": "SIEMPRE sobrescrito por regla_edad_senior si edad >= 60"
+        }
+      ]
+    },
+
+    "sistema_rotacion": {
+      "core_abs": {
+        "metodo": "semanal",
+        "descripcion": "Cambiar circuito cada semana dentro de los permitidos por nivel",
+        "implementacion": "Usar week_number % len(circuitos_disponibles) como índice"
+      },
+      "cardio": {
+        "metodo": "por_sesion",
+        "descripcion": "Alternar entre opción 1 y opción 2 cada sesión de entrenamiento",
+        "implementacion": "Usar session_number % 2 para elegir opción (0 = opción 1, 1 = opción 2)"
+      }
+    },
+
+    "algoritmo_implementacion": {
+      "paso_1": "Evaluar TODAS las reglas de Prioridad 1 (Seguridad)",
+      "paso_2": "Si alguna regla de Prioridad 1 aplica, marcar qué bloques están asignados",
+      "paso_3": "Para bloques NO asignados por Prioridad 1, evaluar Prioridad 2 (Especificidad)",
+      "paso_4": "Para bloques AÚN NO asignados, evaluar Prioridad 3 (Optimización)",
+      "paso_5": "Aplicar sistema de rotación según corresponda",
+      "paso_6": "Loggear qué reglas se aplicaron para cada bloque (debugging)",
+      
+      "ejemplo_edad_mayor_60_con_dia_push": {
+        "entrada": {
+          "edad": 65,
+          "grupos_musculares": ["pecho", "triceps"],
+          "nivel": "intermedio",
+          "objetivo": "perdida_grasa"
+        },
+        "evaluacion": {
+          "prioridad_1": {
+            "regla_edad_senior": "APLICA",
+            "resultado": {
+              "calentamiento": "calentamiento_bajo_impacto",
+              "cardio": "cardio_senior_perdida_grasa",
+              "core_abs": "abs_basico_1"
+            }
+          },
+          "prioridad_2": {
+            "regla_push": "NO APLICA (sobrescrito por edad)",
+            "nota": "Edad >= 60 tiene prioridad absoluta sobre especificidad"
+          },
+          "prioridad_3": {
+            "nota": "Todos los bloques ya asignados por Prioridad 1"
+          }
+        },
+        "salida_final": {
+          "calentamiento": "calentamiento_bajo_impacto",
+          "cardio": "cardio_senior_perdida_grasa",
+          "core_abs": "abs_basico_1",
+          "log": "Reglas aplicadas: [regla_edad_senior (P1)]"
+        }
+      }
+    }
+  }
+}
