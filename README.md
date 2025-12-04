@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://edn360-dashboard-fix.preview.emergentagent.com
+**URL Actual:** https://workout-structure-1.preview.emergentagent.com
 
 ---
 
