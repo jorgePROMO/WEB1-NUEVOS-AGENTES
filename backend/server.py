@@ -2201,7 +2201,53 @@ async def send_training_plan_to_user_panel(user_id: str, request: Request):
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
         
         # Enviar email de notificación
-        # TODO: Implementar envío de email con enlace al panel
+        from email_utils import send_email
+        
+        frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+        dashboard_url = f"{frontend_url}/user-dashboard"
+        
+        notification_subject = "¡Tu Plan de Entrenamiento está Listo! 💪"
+        notification_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); padding: 30px; border-radius: 10px; margin-bottom: 30px;">
+                <h1 style="color: white; margin: 0; font-size: 28px;">EDN360</h1>
+                <p style="color: #e0e7ff; margin: 10px 0 0 0; font-size: 16px;">¡Tu Plan de Entrenamiento está Listo!</p>
+            </div>
+            
+            <h2 style="color: #1e40af;">¡Hola {user.get('name', 'Cliente')}!</h2>
+            <p style="font-size: 16px;">Tu entrenador ha preparado un nuevo plan de entrenamiento personalizado para ti.</p>
+            
+            <div style="background-color: #eff6ff; padding: 20px; border-radius: 8px; border-left: 4px solid #3b82f6; margin: 30px 0;">
+                <p style="margin: 0; font-size: 16px; font-weight: bold; color: #1e40af;">Tu plan ya está disponible en tu panel</p>
+            </div>
+            
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="{dashboard_url}" 
+                   style="display: inline-block; background-color: #3b82f6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                    Ver Mi Plan de Entrenamiento
+                </a>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 14px;">
+                <p>EDN360 - Entrenamiento Personalizado</p>
+                <p>Jorge Calcerrada - Entrenador Personal</p>
+            </div>
+        </body>
+        </html>
+        """
+        
+        send_email(
+            to_email=user.get('email'),
+            subject=notification_subject,
+            html_body=notification_html
+        )
+        
         logger.info(
             f"✅ Plan enviado al panel del usuario | user_id: {user_id} | "
             f"admin: {admin['_id']} | user_email: {user.get('email')}"
