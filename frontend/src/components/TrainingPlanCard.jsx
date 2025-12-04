@@ -113,13 +113,6 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   const [planToDelete, setPlanToDelete] = useState(null);
   const [sending, setSending] = useState(false);
 
-  // Fetch latest plan
-  useEffect(() => {
-    if (userId) {
-      fetchAllPlans();
-    }
-  }, [userId, fetchAllPlans]);
-
   const fetchAllPlans = useCallback(async () => {
     try {
       setLoading(true);
@@ -140,6 +133,13 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
       setLoading(false);
     }
   }, [userId, token]);
+
+  // Fetch latest plan
+  useEffect(() => {
+    if (userId) {
+      fetchAllPlans();
+    }
+  }, [userId, fetchAllPlans]);
 
   const handleEdit = (planData) => {
     setEditedPlan(JSON.parse(JSON.stringify(planData))); // Deep clone
