@@ -2441,7 +2441,7 @@ def _generate_training_plan_email_html(plan_doc: dict, user: dict) -> str:
         </div>
         
         <!-- Saludo -->
-        <h2 style="color: #1e40af;">¡Hola {user.get('name', 'Cliente')}!</h2>
+        <h2 style="color: #1e40af;">Hola {user.get('name', 'Cliente')}!</h2>
         <p style="font-size: 16px;">Tu entrenador ha preparado un nuevo plan de entrenamiento personalizado para ti.</p>
         
         <!-- Info del plan -->
@@ -2449,13 +2449,13 @@ def _generate_training_plan_email_html(plan_doc: dict, user: dict) -> str:
             <h3 style="color: #1e40af; margin-top: 0;">{plan.get('title', 'Plan de Entrenamiento')}</h3>
             <p style="margin: 10px 0;"><strong>Objetivo:</strong> {plan.get('goal', '')}</p>
             <p style="margin: 10px 0;"><strong>Resumen:</strong> {plan.get('summary', '')}</p>
-            <p style="margin: 10px 0;"><strong>Duración:</strong> {plan.get('weeks', 4)} semanas | {plan.get('days_per_week', 4)} días/semana | {plan.get('session_duration_min', 45)} min/sesión</p>
+            <p style="margin: 10px 0;"><strong>Duracion:</strong> {plan.get('weeks', 4)} semanas | {plan.get('days_per_week', 4)} dias/semana | {plan.get('session_duration_min', 45)} min/sesion</p>
         </div>
         
         <!-- Notas Generales -->
         {f'''
         <div style="background-color: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444; margin-bottom: 30px;">
-            <h3 style="color: #dc2626; margin-top: 0;">⚠️ Notas Generales Importantes</h3>
+            <h3 style="color: #dc2626; margin-top: 0;">Notas Generales Importantes</h3>
             <ul style="margin: 10px 0; padding-left: 20px;">
                 {''.join([f'<li style="color: #dc2626;">{note}</li>' for note in plan.get('general_notes', [])])}
             </ul>
@@ -2679,7 +2679,7 @@ async def get_user_latest_training_plan(user_id: str, request: Request):
         </div>
         
         <!-- Saludo -->
-        <h2 style="color: #1e40af;">¡Hola {user.get('name', 'Cliente')}!</h2>
+        <h2 style="color: #1e40af;">Hola {user.get('name', 'Cliente')}!</h2>
         <p style="font-size: 16px;">Tu entrenador ha preparado un nuevo plan de entrenamiento personalizado para ti.</p>
         
         <!-- Info del plan -->
@@ -2687,13 +2687,13 @@ async def get_user_latest_training_plan(user_id: str, request: Request):
             <h3 style="color: #1e40af; margin-top: 0;">{plan.get('title', 'Plan de Entrenamiento')}</h3>
             <p style="margin: 10px 0;"><strong>Objetivo:</strong> {plan.get('goal', '')}</p>
             <p style="margin: 10px 0;"><strong>Resumen:</strong> {plan.get('summary', '')}</p>
-            <p style="margin: 10px 0;"><strong>Duración:</strong> {plan.get('weeks', 4)} semanas | {plan.get('days_per_week', 4)} días/semana | {plan.get('session_duration_min', 45)} min/sesión</p>
+            <p style="margin: 10px 0;"><strong>Duracion:</strong> {plan.get('weeks', 4)} semanas | {plan.get('days_per_week', 4)} dias/semana | {plan.get('session_duration_min', 45)} min/sesion</p>
         </div>
         
         <!-- Notas Generales -->
         {f'''
         <div style="background-color: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444; margin-bottom: 30px;">
-            <h3 style="color: #dc2626; margin-top: 0;">⚠️ Notas Generales Importantes</h3>
+            <h3 style="color: #dc2626; margin-top: 0;">Notas Generales Importantes</h3>
             <ul style="margin: 10px 0; padding-left: 20px;">
                 {''.join([f'<li style="color: #dc2626;">{note}</li>' for note in plan.get('general_notes', [])])}
             </ul>
