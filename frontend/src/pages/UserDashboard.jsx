@@ -58,20 +58,7 @@ const UserDashboard = () => {
   const [payments, setPayments] = useState([]);
   const [loadingSubscription, setLoadingSubscription] = useState(false);
 
-  useEffect(() => {
-    loadDashboardData();
-    loadTrainingPlan();
-    
-    // Auto-reload data every 30 seconds to catch updates from admin
-    const interval = setInterval(() => {
-      loadDashboardData();
-      loadTrainingPlan();
-    }, 30000); // 30 seconds
-    
-    return () => clearInterval(interval);
-  }, []);
-
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     try {
       const response = await axios.get(`${API}/users/dashboard`, {
         headers: {
@@ -99,10 +86,9 @@ const UserDashboard = () => {
       console.error('Error loading dashboard:', error);
       setLoading(false);
     }
-  };
+  }, [token]);
 
-
-  const loadTrainingPlan = async () => {
+  const loadTrainingPlan = useCallback(async () => {
     try {
       setLoadingTrainingPlan(true);
       const response = await axios.get(`${API}/users/${user.id}/training-plans/latest`, {
@@ -117,9 +103,9 @@ const UserDashboard = () => {
     } finally {
       setLoadingTrainingPlan(false);
     }
-  };
+  }, [user?.id, token]);
 
-  const handleSendTrainingPlanEmail = async () => {
+  const handleSendTrainingPlanEmail = useCallback(async () => {
     try {
       await axios.post(
         `${API}/users/${user.id}/training-plans/send-to-me`,
@@ -131,9 +117,9 @@ const UserDashboard = () => {
       console.error('Error sending training plan email:', error);
       alert('❌ Error enviando el email. Inténtalo de nuevo.');
     }
-  };
+  }, [user?.id, token]);
 
-  const handleDownloadTrainingPlanPDF = async () => {
+  const handleDownloadTrainingPlanPDF = useCallback(async () => {
     try {
       const response = await axios.get(
         `${API}/users/${user.id}/training-plans/download-pdf`,
@@ -156,7 +142,20 @@ const UserDashboard = () => {
       console.error('Error downloading PDF:', error);
       alert('❌ Error descargando el PDF. Inténtalo de nuevo.');
     }
-  };
+  }, [user?.id, token]);
+
+  useEffect(() => {
+    loadDashboardData();
+    loadTrainingPlan();
+    
+    // Auto-reload data every 30 seconds to catch updates from admin
+    const interval = setInterval(() => {
+      loadDashboardData();
+      loadTrainingPlan();
+    }, 30000); // 30 seconds
+    
+    return () => clearInterval(interval);
+  }, [loadDashboardData, loadTrainingPlan]);
 
 
   const markAlertAsRead = async (alertId) => {
