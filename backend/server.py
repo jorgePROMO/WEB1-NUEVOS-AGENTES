@@ -1147,10 +1147,14 @@ async def verify_payment(user_id: str, request: Request):
     return {"success": True, "message": "Payment verified successfully"}
 
 
+from fastapi import BackgroundTasks
+
 @api_router.post("/training-plan")
-async def generate_training_plan(request: Request):
+async def generate_training_plan(request: Request, background_tasks: BackgroundTasks):
     """
     Genera un plan de entrenamiento EVOLUTIVO usando el workflow EDN360 (E1-E7.5).
+    
+    GENERACION ASINCRONA - No bloquea el servidor.
     
     FLUJO EVOLUTIVO CON STATE:
     1. Recibe user_id y current_questionnaire_id
