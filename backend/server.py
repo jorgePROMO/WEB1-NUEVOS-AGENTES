@@ -2433,10 +2433,10 @@ def _generate_training_plan_email_html(plan_doc: dict, user: dict) -> str:
         <meta charset="UTF-8">
 
 
-@app.post("/api/users/{user_id}/training-plans/send-to-me")
+@api_router.post("/users/{user_id}/training-plans/send-to-me")
 async def send_training_plan_to_myself(user_id: str, request: Request):
     """
-    El usuario se envía su propio plan de entrenamiento por email.
+    El usuario se envia su propio plan de entrenamiento por email.
     """
     # Verificar que el usuario solo pueda enviar su propio plan
     user_data = await require_user(request)
