@@ -2410,7 +2410,7 @@ async def send_training_plan_email(user_id: str, request: Request):
             )
         
         # Obtener info del usuario
-        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        user = await db.users.find_one({"_id": user_id}, {"_id": 0})
         if not user:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
         
@@ -2618,7 +2618,7 @@ async def send_training_plan_to_myself(user_id: str, request: Request):
             )
         
         # Obtener info del usuario
-        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        user = await db.users.find_one({"_id": user_id}, {"_id": 0})
         if not user:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
         
