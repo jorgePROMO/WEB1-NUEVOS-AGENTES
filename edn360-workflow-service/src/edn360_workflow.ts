@@ -869,11 +869,13 @@ Each session object MUST have:
   - rpe: short string, e.g. \"7-8\", \"8-9\".
   - notes: short guidance in English about execution or load (e.g. \"Controlled tempo, no pain in shoulders, stop 2 reps before failure.\").
 
-- core_mobility_block:
-  - include: boolean.
-  - details: short text describing what to do if include is true (e.g. \"Core stability and anti-rotation work, lumbar-friendly, 5-10 minutes.\").
+- ⚠️ core_mobility_block: DEPRECATED - DO NOT USE
+  - Always set: { "include": false, "details": "" }
+  - Core/ABS is handled by Python templates (Block C)
 
-- session_notes: array of short strings with reminders or cues for that session (e.g. [\"Warm up shoulders thoroughly.\", \"Avoid any shoulder pain.\", \"Keep lumbar neutral at all times.\"]).
+- session_notes: array of short strings with reminders or cues ONLY for the main strength training (Block B).
+  - Focus on exercise execution, load management, and safety cues
+  - Do NOT include warm-up, cardio, or core instructions
 
 You MUST design the session layout consistent with:
 
