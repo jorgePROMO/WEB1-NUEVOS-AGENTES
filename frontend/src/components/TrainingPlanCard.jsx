@@ -26,6 +26,8 @@ import {
   AlertTriangle,
   UserCheck,
   ExternalLink,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
