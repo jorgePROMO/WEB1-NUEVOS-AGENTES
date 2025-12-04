@@ -141,12 +141,12 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
     }
   };
 
-  const handleEdit = () => {
-    setEditedPlan(JSON.parse(JSON.stringify(latestPlan))); // Deep clone
+  const handleEdit = (planData) => {
+    setEditedPlan(JSON.parse(JSON.stringify(planData))); // Deep clone
     setShowEditModal(true);
     // Initialize all sessions as collapsed
     const sessionsState = {};
-    latestPlan.plan.sessions.forEach((_, idx) => {
+    planData.plan.sessions.forEach((_, idx) => {
       sessionsState[idx] = false;
     });
     setExpandedSessions(sessionsState);
