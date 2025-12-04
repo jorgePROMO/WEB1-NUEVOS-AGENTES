@@ -458,6 +458,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
               <Button
                 onClick={(e) => {
                   e.stopPropagation();
+                  setPlanToDelete(planData);
                   setShowDeleteConfirm(true);
                 }}
                 size="sm"
