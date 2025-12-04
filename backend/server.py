@@ -2593,7 +2593,7 @@ async def send_training_plan_to_myself(user_id: str, request: Request):
     El usuario se envia su propio plan de entrenamiento por email.
     """
     # Verificar que el usuario solo pueda enviar su propio plan
-    user_data = await require_user(request)
+    user_data = await get_current_user(request)
     if user_data['id'] != user_id:
         raise HTTPException(status_code=403, detail="No puedes acceder a planes de otros usuarios")
     
