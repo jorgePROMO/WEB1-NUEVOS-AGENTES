@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Badge } from '../components/ui/badge';
+import { Dialog, DialogContent } from '../components/ui/dialog';
 import axios from 'axios';
 import { 
   CreditCard, 
@@ -24,7 +25,10 @@ import {
   RefreshCw,
   Dumbbell,
   Mail,
-  FileDown
+  FileDown,
+  ChevronDown,
+  ChevronUp,
+  X
 } from 'lucide-react';
 import ChatBox from '../components/ChatBox';
 import { UserCalendar } from '../components/Calendar';
