@@ -55,6 +55,10 @@ const UserDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [trainingPlan, setTrainingPlan] = useState(null);
   const [loadingTrainingPlan, setLoadingTrainingPlan] = useState(false);
+  const [expandedSessions, setExpandedSessions] = useState({});
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState(null);
+  const [planCollapsed, setPlanCollapsed] = useState(true);
   
   // Subscription states
   const [subscription, setSubscription] = useState(null);
