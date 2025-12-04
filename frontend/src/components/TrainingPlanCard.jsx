@@ -772,7 +772,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
           )}
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
 
