@@ -190,6 +190,23 @@ const UserDashboard = () => {
     }));
   }, []);
 
+  const toggleBlockExpand = useCallback((sessionIdx, blockId) => {
+    const key = `${sessionIdx}-${blockId}`;
+    setExpandedBlocks(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  }, []);
+
+  const isBlockExpanded = useCallback((sessionIdx, blockId) => {
+    const key = `${sessionIdx}-${blockId}`;
+    // Block B expanded by default, others collapsed
+    if (expandedBlocks[key] === undefined) {
+      return blockId === 'B';
+    }
+    return expandedBlocks[key];
+  }, [expandedBlocks]);
+
   useEffect(() => {
     loadDashboardData();
     loadTrainingPlan();
