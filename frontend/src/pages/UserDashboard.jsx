@@ -56,6 +56,7 @@ const UserDashboard = () => {
   const [trainingPlan, setTrainingPlan] = useState(null);
   const [loadingTrainingPlan, setLoadingTrainingPlan] = useState(false);
   const [expandedSessions, setExpandedSessions] = useState({});
+  const [expandedBlocks, setExpandedBlocks] = useState({});
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [currentVideoUrl, setCurrentVideoUrl] = useState(null);
   const [planCollapsed, setPlanCollapsed] = useState(true);
