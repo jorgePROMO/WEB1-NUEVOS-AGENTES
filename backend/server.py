@@ -2316,7 +2316,16 @@ async def send_training_plan_email(user_id: str, request: Request):
         email_html = _generate_training_plan_email_html(plan_doc, user)
         
         # Enviar email
-        # TODO: Implementar envío de email con el HTML generado
+        from email_utils import send_email
+        
+        email_subject = f"Tu Plan de Entrenamiento - {plan_doc['plan'].get('title', 'EDN360')}"
+        
+        send_email(
+            to_email=user.get('email'),
+            subject=email_subject,
+            html_body=email_html
+        )
+        
         logger.info(
             f"✅ Plan enviado por email | user_id: {user_id} | "
             f"admin: {admin['_id']} | user_email: {user.get('email')}"
