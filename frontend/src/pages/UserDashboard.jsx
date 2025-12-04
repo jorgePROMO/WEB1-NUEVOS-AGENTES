@@ -152,6 +152,23 @@ const UserDashboard = () => {
     }
   }, [user?.id, token]);
 
+  const handleOpenVideoModal = useCallback((videoUrl) => {
+    setCurrentVideoUrl(videoUrl);
+    setVideoModalOpen(true);
+  }, []);
+
+  const handleCloseVideoModal = useCallback(() => {
+    setVideoModalOpen(false);
+    setCurrentVideoUrl(null);
+  }, []);
+
+  const toggleSessionExpand = useCallback((sessionIdx) => {
+    setExpandedSessions(prev => ({
+      ...prev,
+      [sessionIdx]: !prev[sessionIdx]
+    }));
+  }, []);
+
   useEffect(() => {
     loadDashboardData();
     loadTrainingPlan();
