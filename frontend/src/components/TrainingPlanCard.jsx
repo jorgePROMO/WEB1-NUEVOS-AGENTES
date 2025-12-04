@@ -471,6 +471,8 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
           </CardContent>
         )}
       </Card>
+        );
+      })}
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
