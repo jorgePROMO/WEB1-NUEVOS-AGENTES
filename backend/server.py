@@ -1517,21 +1517,18 @@ async def _generate_plan_background(plan_id: str, user_id: str, workflow_input: 
         try:
             workflow_response = await call_training_workflow_with_state(workflow_input)
             
-            logger.info(
-                f"✅ Training workflow ejecutado | "
-                f"Type: {'evolutivo' if last_plan else 'inicial'}"
-            )
+            logger.info(f"✅ [Background] Training workflow ejecutado | plan_id: {plan_id}")
         
         except Exception as e:
-            logger.error(f"❌ Error ejecutando training workflow: {e}")
+            logger.error(f"❌ [Background] Error ejecutando training workflow: {e}")
             
-            raise HTTPException(
-                status_code=500,
-                detail={
-                    "error": "workflow_error",
-                    "message": f"Error generando plan de entrenamiento: {str(e)}"
-                }
+            # Actualizar status a "error"
+            edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+            await edn360_db.training_plans_v2.update_one(
+                {"id": plan_id},
+                {"$set": {"status": "error", "error_message": str(e)}}
             )
+            return
         
         # ============================================
         # PASO 7: TRADUCIR Y GUARDAR EN TRAINING_PLANS_V2
