@@ -1660,12 +1660,118 @@ const UserDashboard = () => {
                                         </div>
                                       ) : (
                                         /* LEGACY VIEW: Old block structure for backward compatibility */
-                                        <div className="space-y-3">
-                                          {session.blocks && session.blocks.map((block, blockIdx) => (
-                            ))}
-                          </div>
-                        </CardContent>
-                      )}
+                                        session.blocks && session.blocks.map((block, blockIdx) => (
+                                          <div key={blockIdx} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-3 md:p-4">
+                                            <h5 className="font-bold text-gray-900 mb-3 text-base">
+                                              Bloque {block.id} - {block.primary_muscles ? block.primary_muscles.join(', ') : ''}
+                                            </h5>
+                                            
+                                            {/* Desktop: Table Layout */}
+                                            <div className="hidden md:block">
+                                              <div className="grid grid-cols-[50px_1fr_80px_80px_60px] gap-3 items-center bg-gray-200 px-3 py-2 rounded mb-2">
+                                                <div className="text-xs font-semibold text-gray-700 text-center">#</div>
+                                                <div className="text-xs font-semibold text-gray-700">Ejercicio</div>
+                                                <div className="text-xs font-semibold text-gray-700 text-center">Series</div>
+                                                <div className="text-xs font-semibold text-gray-700 text-center">Reps</div>
+                                                <div className="text-xs font-semibold text-gray-700 text-center">RPE</div>
+                                              </div>
+
+                                              <div className="space-y-2">
+                                                {block.exercises && block.exercises.map((exercise, exIdx) => (
+                                                  <div key={exIdx} className="bg-white rounded border border-gray-200 p-3">
+                                                    <div className="grid grid-cols-[50px_1fr_80px_80px_60px] gap-3 items-center mb-2">
+                                                      <div className="text-center text-sm font-bold text-blue-600">
+                                                        {exercise.order}
+                                                      </div>
+                                                      <div className="text-sm font-semibold text-gray-900">
+                                                        {exercise.name}
+                                                      </div>
+                                                      <div className="text-sm text-center font-medium text-gray-900">
+                                                        {exercise.series}
+                                                      </div>
+                                                      <div className="text-sm text-center font-medium text-gray-900">
+                                                        {exercise.reps}
+                                                      </div>
+                                                      <div className="text-sm text-center font-medium text-gray-900">
+                                                        {exercise.rpe}
+                                                      </div>
+                                                    </div>
+                                                    {exercise.notes && (
+                                                      <p className="text-xs text-gray-600 mb-2 pl-2 italic">{exercise.notes}</p>
+                                                    )}
+                                                    {exercise.video_url && (
+                                                      <Button
+                                                        onClick={() => handleOpenVideoModal(exercise.video_url)}
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="w-full text-xs border-blue-300 text-blue-700 hover:bg-blue-50"
+                                                      >
+                                                        <ExternalLink className="h-3 w-3 mr-1" />
+                                                        Ver Video del Ejercicio
+                                                      </Button>
+                                                    )}
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            </div>
+
+                                            {/* Mobile: Card Layout */}
+                                            <div className="md:hidden space-y-3">
+                                              {block.exercises && block.exercises.map((exercise, exIdx) => (
+                                                <div key={exIdx} className="bg-white rounded-lg border-2 border-gray-300 p-4 shadow-sm">
+                                                  {/* Número de ejercicio */}
+                                                  <div className="flex items-start gap-3 mb-3">
+                                                    <div className="flex-shrink-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                                                      <span className="text-white font-bold text-lg">{exercise.order}</span>
+                                                    </div>
+                                                    <div className="flex-1">
+                                                      <h6 className="font-bold text-gray-900 text-base leading-tight">
+                                                        {exercise.name}
+                                                      </h6>
+                                                    </div>
+                                                  </div>
+
+                                                  {/* Info del ejercicio */}
+                                                  <div className="grid grid-cols-3 gap-3 mb-3">
+                                                    <div className="bg-blue-50 rounded-lg p-3 text-center">
+                                                      <p className="text-xs text-gray-600 mb-1">Series</p>
+                                                      <p className="font-bold text-xl text-blue-600">{exercise.series}</p>
+                                                    </div>
+                                                    <div className="bg-green-50 rounded-lg p-3 text-center">
+                                                      <p className="text-xs text-gray-600 mb-1">Reps</p>
+                                                      <p className="font-bold text-xl text-green-600">{exercise.reps}</p>
+                                                    </div>
+                                                    <div className="bg-orange-50 rounded-lg p-3 text-center">
+                                                      <p className="text-xs text-gray-600 mb-1">RPE</p>
+                                                      <p className="font-bold text-xl text-orange-600">{exercise.rpe}</p>
+                                                    </div>
+                                                  </div>
+
+                                                  {/* Notas */}
+                                                  {exercise.notes && (
+                                                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-3">
+                                                      <p className="text-sm text-gray-700 italic">{exercise.notes}</p>
+                                                    </div>
+                                                  )}
+
+                                                  {/* Botón de video */}
+                                                  {exercise.video_url && (
+                                                    <Button
+                                                      onClick={() => handleOpenVideoModal(exercise.video_url)}
+                                                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3"
+                                                    >
+                                                      <ExternalLink className="h-4 w-4 mr-2" />
+                                                      Ver Video del Ejercicio
+                                                    </Button>
+                                                  )}
+                                                </div>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        ))
+                                      )}
+                                    </CardContent>
+                                  )}
                     </Card>
                   </div>
                 ) : (
