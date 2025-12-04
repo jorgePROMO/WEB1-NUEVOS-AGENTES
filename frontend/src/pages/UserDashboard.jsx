@@ -343,9 +343,14 @@ const UserDashboard = () => {
 
         {/* Main Content */}
         <Tabs defaultValue="overview" className="space-y-4 md:space-y-6" onValueChange={(value) => { if (value === 'subscription') loadSubscriptionData(); }}>
-          <TabsList className="grid grid-cols-3 sm:grid-cols-7 w-full gap-1 h-auto p-1">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-8 w-full gap-1 h-auto p-1">
             <TabsTrigger value="overview" className="text-xs sm:text-sm py-2">
               Resumen
+            </TabsTrigger>
+            <TabsTrigger value="training" className="text-xs sm:text-sm py-2">
+              <UtensilsCrossed className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Mi Entrenamiento</span>
+              <span className="sm:hidden">Entre</span>
             </TabsTrigger>
             <TabsTrigger value="subscription" className="text-xs sm:text-sm py-2">
               <CreditCard className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
