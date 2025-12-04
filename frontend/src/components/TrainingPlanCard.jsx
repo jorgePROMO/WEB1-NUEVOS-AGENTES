@@ -343,7 +343,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
               </div>
             </div>
             <div className="flex items-center gap-2 ml-2">
-              {isExpanded ? (
+              {isPlanExpanded ? (
                 <ChevronUp className="h-5 w-5 text-gray-500" />
               ) : (
                 <ChevronDown className="h-5 w-5 text-gray-500" />
