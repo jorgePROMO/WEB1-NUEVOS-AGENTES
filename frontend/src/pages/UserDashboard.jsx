@@ -158,7 +158,7 @@ const UserDashboard = () => {
   }, [loadDashboardData, loadTrainingPlan]);
 
 
-  const markAlertAsRead = async (alertId) => {
+  const markAlertAsRead = useCallback(async (alertId) => {
     try {
       await axios.patch(`${API}/alerts/${alertId}/read`, {}, {
         headers: {
@@ -168,7 +168,7 @@ const UserDashboard = () => {
       });
       
       // Update local state
-      setAlerts(alerts.map(alert => 
+      setAlerts(prevAlerts => prevAlerts.map(alert => 
         alert.id === alertId ? { ...alert, read: true } : alert
       ));
       
@@ -177,9 +177,9 @@ const UserDashboard = () => {
     } catch (error) {
       console.error('Error marking alert as read:', error);
     }
-  };
+  }, [token]);
 
-  const handleDownloadPDF = async (pdfId, pdfTitle) => {
+  const handleDownloadPDF = useCallback(async (pdfId, pdfTitle) => {
     try {
       const response = await axios.get(`${API}/pdfs/${pdfId}/download`, {
         headers: {
@@ -201,21 +201,14 @@ const UserDashboard = () => {
       console.error('Error downloading PDF:', error);
       alert('Error al descargar el PDF');
     }
-  };
+  }, [token]);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     logout();
     navigate('/');
-  };
+  }, [logout, navigate]);
 
-  const handlePayment = async () => {
-    // Usar el nuevo sistema de Stripe integrado
-    await handleActivateSubscription();
-  };
-
-
-  // Subscription Functions
-  const loadSubscriptionData = async () => {
+  const loadSubscriptionData = useCallback(async () => {
     try {
       setLoadingSubscription(true);
       
@@ -239,9 +232,9 @@ const UserDashboard = () => {
       console.error('Error loading subscription data:', error);
       setLoadingSubscription(false);
     }
-  };
+  }, [token]);
 
-  const handleActivateSubscription = async () => {
+  const handleActivateSubscription = useCallback(async () => {
     try {
       setLoadingSubscription(true);
       
@@ -269,9 +262,9 @@ const UserDashboard = () => {
       alert('Error al activar suscripción. Por favor, inténtalo de nuevo.');
       setLoadingSubscription(false);
     }
-  };
+  }, [token]);
 
-  const handleCancelSubscription = async () => {
+  const handleCancelSubscription = useCallback(async () => {
     if (!window.confirm('¿Estás seguro de que deseas cancelar tu suscripción?')) {
       return;
     }
@@ -295,9 +288,14 @@ const UserDashboard = () => {
       alert('Error al cancelar suscripción. Por favor, inténtalo de nuevo.');
       setLoadingSubscription(false);
     }
-  };
+  }, [token, loadSubscriptionData]);
 
-  const formatDate = (dateString) => {
+  const handlePayment = useCallback(async () => {
+    // Usar el nuevo sistema de Stripe integrado
+    await handleActivateSubscription();
+  }, [handleActivateSubscription]);
+
+  const formatDate = useCallback((dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', {
@@ -305,14 +303,14 @@ const UserDashboard = () => {
       month: 'long',
       day: 'numeric'
     });
-  };
+  }, []);
 
-  const formatAmount = (amount, currency = 'EUR') => {
+  const formatAmount = useCallback((amount, currency = 'EUR') => {
     return new Intl.NumberFormat('es-ES', {
       style: 'currency',
       currency: currency.toUpperCase()
     }).format(amount);
-  };
+  }, []);
 
   if (loading) {
     return (
