@@ -1256,16 +1256,20 @@ const UserDashboard = () => {
                           <div className="space-y-3">
                             <h4 className="text-lg font-semibold text-gray-900">Sesiones de Entrenamiento</h4>
                             {trainingPlan.plan.sessions.map((session, idx) => (
-                              <Card key={idx} className="border border-gray-300">
+                              <Card key={idx} className="border-2 border-gray-300">
                                 <CardHeader 
-                                  className="cursor-pointer hover:bg-gray-50 transition-colors py-3"
+                                  className="cursor-pointer hover:bg-gray-50 transition-colors py-4"
                                   onClick={() => toggleSessionExpand(idx)}
                                 >
-                                  <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-3">
+                                    {/* Número de día - Grande y visible */}
+                                    <div className="flex-shrink-0 w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center">
+                                      <span className="text-white font-bold text-lg">D{idx + 1}</span>
+                                    </div>
                                     <div className="flex-1">
-                                      <CardTitle className="text-base font-semibold">{session.name}</CardTitle>
+                                      <CardTitle className="text-lg font-bold text-gray-900">{session.name}</CardTitle>
                                       {session.focus && session.focus.length > 0 && (
-                                        <div className="flex flex-wrap gap-1 mt-1">
+                                        <div className="flex flex-wrap gap-1 mt-2">
                                           {session.focus.map((f, i) => (
                                             <Badge key={i} variant="secondary" className="text-xs">
                                               {f}
@@ -1274,8 +1278,8 @@ const UserDashboard = () => {
                                         </div>
                                       )}
                                     </div>
-                                    <Button variant="ghost" size="sm">
-                                      {expandedSessions[idx] ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                    <Button variant="ghost" size="sm" className="flex-shrink-0">
+                                      {expandedSessions[idx] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
                                     </Button>
                                   </div>
                                 </CardHeader>
