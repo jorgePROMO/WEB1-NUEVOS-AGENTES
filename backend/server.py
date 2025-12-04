@@ -2571,7 +2571,7 @@ async def download_training_plan_pdf(user_id: str, request: Request):
         )
 
 
-@app.get("/api/users/{user_id}/training-plans/latest")
+@api_router.get("/users/{user_id}/training-plans/latest")
 async def get_user_latest_training_plan(user_id: str, request: Request):
     """
     Obtiene el plan de entrenamiento más reciente del usuario (solo si status='sent').
