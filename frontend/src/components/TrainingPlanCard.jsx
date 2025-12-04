@@ -123,7 +123,8 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
         }
       );
       // Los planes ya vienen ordenados por created_at DESC (más reciente primero)
-      setAllPlans(response.data || []);
+      const plans = response.data?.plans || response.data || [];
+      setAllPlans(Array.isArray(plans) ? plans : []);
     } catch (error) {
       if (error.response?.status !== 404) {
         console.error('Error fetching plans:', error);
