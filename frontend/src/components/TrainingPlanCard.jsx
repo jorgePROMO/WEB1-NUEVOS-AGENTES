@@ -196,7 +196,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
         }
       );
       
-      setLatestPlan(null);
+      await fetchAllPlans();
       setShowDeleteConfirm(false);
       alert('✅ Plan eliminado correctamente');
       
