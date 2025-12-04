@@ -2731,7 +2731,7 @@ async def get_user_latest_training_plan(user_id: str, request: Request):
     Obtiene el plan de entrenamiento más reciente del usuario (solo si status='sent').
     """
     # Verificar que el usuario solo pueda ver su propio plan
-    user_data = await require_user(request)
+    user_data = await get_current_user(request)
     if user_data['id'] != user_id:
         raise HTTPException(status_code=403, detail="No puedes acceder a planes de otros usuarios")
     
