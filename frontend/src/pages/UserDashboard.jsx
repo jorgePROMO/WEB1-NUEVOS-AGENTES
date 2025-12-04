@@ -179,6 +179,63 @@ const UserDashboard = () => {
     } catch (error) {
       console.error('Error loading subscription data:', error);
       setLoadingSubscription(false);
+
+  const loadTrainingPlan = async () => {
+    try {
+      setLoadingTrainingPlan(true);
+      const response = await axios.get(`${API}/users/${user.id}/training-plans/latest`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setTrainingPlan(response.data);
+    } catch (error) {
+      if (error.response?.status !== 404) {
+        console.error('Error loading training plan:', error);
+      }
+      setTrainingPlan(null);
+    } finally {
+      setLoadingTrainingPlan(false);
+    }
+  };
+
+  const handleSendTrainingPlanEmail = async () => {
+    try {
+      await axios.post(
+        `${API}/users/${user.id}/training-plans/send-to-me`,
+        {},
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
+      alert('✅ Plan enviado a tu email correctamente');
+    } catch (error) {
+      console.error('Error sending training plan email:', error);
+      alert('❌ Error enviando el email. Inténtalo de nuevo.');
+    }
+  };
+
+  const handleDownloadTrainingPlanPDF = async () => {
+    try {
+      const response = await axios.get(
+        `${API}/users/${user.id}/training-plans/download-pdf`,
+        { 
+          headers: { 'Authorization': `Bearer ${token}` },
+          responseType: 'blob'
+        }
+      );
+      
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Plan_Entrenamiento_${new Date().toISOString().split('T')[0]}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      alert('❌ Error descargando el PDF. Inténtalo de nuevo.');
+    }
+  };
+
     }
   };
 
