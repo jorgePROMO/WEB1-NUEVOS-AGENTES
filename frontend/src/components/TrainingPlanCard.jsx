@@ -220,6 +220,35 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
     }
   };
 
+  const handleToggleStatus = async (planData) => {
+    try {
+      const currentStatus = planData.status || 'draft';
+      const action = currentStatus === 'sent' ? 'desactivar' : 'activar';
+      
+      if (!window.confirm(`¿Seguro que quieres ${action} este plan?`)) {
+        return;
+      }
+      
+      const response = await axios.patch(
+        `${API}/admin/training-plans/${planData.id}/toggle-status`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      
+      await fetchAllPlans();
+      alert(response.data.message || '✅ Estado actualizado correctamente');
+      
+      if (onPlanUpdated) {
+        onPlanUpdated(null);
+      }
+    } catch (error) {
+      console.error('Error toggling plan status:', error);
+      alert('❌ Error cambiando el estado del plan. Inténtalo de nuevo.');
+    }
+  };
+
   const handleSendToUserPanel = async () => {
     try {
       setSending(true);
