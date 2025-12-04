@@ -1515,8 +1515,17 @@ async def generate_training_plan(request: Request, background_tasks: BackgroundT
             logger.warning(f"⚠️ Error guardando en training_plans_v2: {e}")
         
         # ============================================
-        # PASO 8: DEVOLVER RESPUESTA
+        # PASO 8: ACTUALIZAR STATUS A COMPLETED Y DEVOLVER RESPUESTA
         # ============================================
+        # Actualizar el status del plan a "completed"
+        try:
+            await edn360_db.training_plans_v2.update_one(
+                {"id": plan_id},
+                {"$set": {"status": "completed"}}
+            )
+        except:
+            pass
+        
         logger.info(
             f"✅ Plan de entrenamiento generado exitosamente | "
             f"user_id: {user_id} | title: {training_program.get('title', 'N/A')}"
