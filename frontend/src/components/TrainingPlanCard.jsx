@@ -120,7 +120,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
     }
   }, [userId]);
 
-  const fetchAllPlans = async () => {
+  const fetchAllPlans = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get(
@@ -139,7 +139,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId, token]);
 
   const handleEdit = (planData) => {
     setEditedPlan(JSON.parse(JSON.stringify(planData))); // Deep clone
