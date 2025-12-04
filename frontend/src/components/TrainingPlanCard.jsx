@@ -170,8 +170,8 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
         }
       );
       
-      // Update local state with edited plan
-      setLatestPlan(editedPlan);
+      // Refresh plans to get updated data
+      await fetchAllPlans();
       setShowEditModal(false);
       
       // Show success message
