@@ -2431,6 +2431,60 @@ def _generate_training_plan_email_html(plan_doc: dict, user: dict) -> str:
     <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px;">
+        <!-- Header con branding EDN360 -->
+        <div style="text-align: center; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); padding: 30px; border-radius: 10px; margin-bottom: 30px;">
+            <h1 style="color: white; margin: 0; font-size: 28px;">EDN360</h1>
+            <p style="color: #e0e7ff; margin: 10px 0 0 0; font-size: 16px;">Tu Plan de Entrenamiento Personalizado</p>
+        </div>
+        
+        <!-- Saludo -->
+        <h2 style="color: #1e40af;">¡Hola {user.get('name', 'Cliente')}!</h2>
+        <p style="font-size: 16px;">Tu entrenador ha preparado un nuevo plan de entrenamiento personalizado para ti.</p>
+        
+        <!-- Info del plan -->
+        <div style="background-color: #eff6ff; padding: 20px; border-radius: 8px; border-left: 4px solid #3b82f6; margin-bottom: 30px;">
+            <h3 style="color: #1e40af; margin-top: 0;">{plan.get('title', 'Plan de Entrenamiento')}</h3>
+            <p style="margin: 10px 0;"><strong>Objetivo:</strong> {plan.get('goal', '')}</p>
+            <p style="margin: 10px 0;"><strong>Resumen:</strong> {plan.get('summary', '')}</p>
+            <p style="margin: 10px 0;"><strong>Duración:</strong> {plan.get('weeks', 4)} semanas | {plan.get('days_per_week', 4)} días/semana | {plan.get('session_duration_min', 45)} min/sesión</p>
+        </div>
+        
+        <!-- Notas Generales -->
+        {f'''
+        <div style="background-color: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444; margin-bottom: 30px;">
+            <h3 style="color: #dc2626; margin-top: 0;">⚠️ Notas Generales Importantes</h3>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                {''.join([f'<li style="color: #dc2626;">{note}</li>' for note in plan.get('general_notes', [])])}
+            </ul>
+        </div>
+        ''' if plan.get('general_notes') else ''}
+        
+        <!-- Sesiones -->
+        <h2 style="color: #1e40af; margin-top: 40px;">Tu Programa de Entrenamiento</h2>
+        {sessions_html}
+        
+        <!-- Call to action -->
+        <div style="text-align: center; margin-top: 40px; padding: 30px; background-color: #f8f9fa; border-radius: 10px;">
+            <p style="font-size: 16px; margin-bottom: 20px;">Accede a tu panel para ver tu plan completo y descargar el PDF</p>
+            <a href="{os.getenv('FRONTEND_URL', 'http://localhost:3000')}/user-dashboard" 
+               style="display: inline-block; background-color: #3b82f6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                Ir a Mi Panel
+            </a>
+        </div>
+        
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 14px;">
+            <p>EDN360 - Entrenamiento Personalizado</p>
+            <p>Este email ha sido enviado por tu entrenador personal</p>
+        </div>
+    </body>
+    </html>
+    """
+    
+    return html
 
 
 @api_router.post("/users/{user_id}/training-plans/send-to-me")
