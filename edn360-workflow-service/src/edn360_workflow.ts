@@ -14,7 +14,60 @@ const fileSearchTrainingKB = fileSearchTool([
 const E1AnalizadorDePerfilSchema = z.object({ profile: z.object({ name: z.string(), email: z.string(), age: z.number(), gender: z.enum(["male", "female", "other"]), height_cm: z.number(), weight_kg: z.number(), experience_level: z.enum(["beginner", "intermediate", "advanced"]), training_days_per_week: z.number(), session_duration_min: z.number(), goal_primary: z.enum(["muscle_gain", "fat_loss", "recomposition", "performance"]), goal_secondary: z.string(), injuries_or_limitations: z.array(z.string()), equipment_available: z.array(z.string()), preferences: z.object({ enjoys: z.array(z.string()), dislikes: z.array(z.string()) }) }) });
 const E2ParseQuestionnaireSchema = z.object({ questionnaire_normalized: z.object({ full_name: z.string(), email: z.string(), birth_date: z.string(), gender: z.enum(["male", "female", "other"]), profession: z.string(), phone: z.string(), weight_kg: z.number(), height_cm: z.number(), bodyfat_percent: z.number(), chronic_conditions: z.array(z.string()), medications: z.array(z.string()), injuries_limitations: z.array(z.string()), workload_stress: z.enum(["low", "medium", "high"]), daily_activity: z.enum(["low", "medium", "high"]), training_experience_level: z.enum(["beginner", "intermediate", "advanced"]), training_days_per_week: z.number(), session_duration_min: z.number(), equipment_available: z.array(z.string()), food_intolerances_allergies: z.array(z.string()), foods_disliked: z.array(z.string()), preferred_foods: z.array(z.string()), goal_primary: z.enum(["muscle_gain", "fat_loss", "recomposition", "performance"]), sleep_hours: z.number(), meals_per_day: z.number(), diet_history: z.array(z.string()), supplements: z.array(z.string()), motivation_reason: z.string() }) });
 const E3TrainingSummarySchema = z.object({ training_context: z.object({ profile: z.object({ full_name: z.string(), age: z.number(), gender: z.enum(["male", "female", "other"]), experience_level: z.enum(["beginner", "intermediate", "advanced"]), height_cm: z.number(), weight_kg: z.number() }), goals: z.object({ primary: z.enum(["muscle_gain", "fat_loss", "recomposition", "performance"]), secondary: z.string() }), constraints: z.object({ shoulder_issues: z.string(), lower_back_issues: z.string(), other: z.array(z.string()) }), equipment: z.object({ gym_access: z.boolean(), home_equipment: z.array(z.string()) }), availability: z.object({ training_days_per_week: z.number(), session_duration_min: z.number() }), training_type: z.enum(["full_body", "upper_lower", "push_pull_legs", "bro_split", "other"]), training_type_reason: z.string() }) });
-const E4TrainingPlanGeneratorSchema = z.object({ training_plan: z.object({ training_type: z.enum(["full_body", "upper_lower", "push_pull_legs", "bro_split", "other"]), days_per_week: z.number(), session_duration_min: z.number(), weeks: z.number(), goal: z.string(), sessions: z.array(z.object({ id: z.string(), name: z.string(), focus: z.array(z.string()), blocks: z.array(z.object({ id: z.string(), primary_muscles: z.array(z.string()), secondary_muscles: z.array(z.string()), num_exercises: z.number(), exercise_types: z.array(z.string()), series: z.number(), reps: z.string(), rpe: z.string(), notes: z.string() })), core_mobility_block: z.object({ include: z.boolean(), details: z.string() }), session_notes: z.array(z.string()) })), general_notes: z.array(z.string()) }) });
+// E4 Schema V4.0 - K1 Based (Abstract Terms Only)
+const E4TrainingPlanGeneratorSchema = z.object({
+  training_plan: z.object({
+    training_type: z.enum(["full_body", "upper_lower", "push_pull_legs", "bro_split", "other"]),
+    days_per_week: z.number(),
+    session_duration_min: z.number(),
+    weeks: z.literal(4), // ALWAYS 4
+    goal: z.string(),
+    sessions: z.array(z.object({
+      id: z.string(),
+      name: z.string(),
+      focus: z.array(z.string()),
+      blocks: z.array(z.object({
+        id: z.literal("B"), // ONLY Block B
+        block_name: z.string(),
+        primary_muscles: z.array(z.string()),
+        secondary_muscles: z.array(z.string()),
+        exercises: z.array(z.object({
+          order: z.number(),
+          exercise_id: z.string(), // Reference to catalog
+          patron: z.enum(["empuje_horizontal", "empuje_vertical", "tiron_horizontal", "tiron_vertical", "dominante_rodilla", "dominante_cadera", "zancada", "core_antirotacion", "core_antiextension", "core_antiflexion", "core_rotacional"]),
+          tipo: z.enum(["compuesto_alta_demanda", "compuesto_media_demanda", "aislamiento", "correctivo_estabilidad", "pliometrico", "balistico", "metabolico_circuito"]),
+          volumen_abstracto: z.enum(["muy_bajo", "bajo", "medio", "alto", "muy_alto"]),
+          series_abstracto: z.enum(["bajas", "medias", "altas"]),
+          reps_abstracto: z.enum(["bajas", "medias", "altas"]),
+          intensidad_abstracta: z.enum(["muy_ligera", "ligera", "moderada", "alta", "muy_alta"]),
+          proximidad_fallo_abstracta: z.enum(["muy_lejos_del_fallo", "lejos_del_fallo", "moderadamente_cerca_del_fallo", "cerca_del_fallo", "muy_cerca_o_en_fallo"]),
+          notas_tecnicas: z.string(),
+          k1_justification: z.object({
+            por_que_este_ejercicio: z.string(),
+            por_que_este_volumen: z.string(),
+            por_que_esta_intensidad: z.string()
+          })
+        })),
+        volumen_total_bloque: z.enum(["muy_bajo", "bajo", "medio", "alto", "muy_alto"]),
+        densidad: z.enum(["densidad_baja", "densidad_media", "densidad_alta"]),
+        metodo_entrenamiento: z.enum(["basico", "intensificacion_local", "intensificacion_sistemica", "potencia_pliometria", "metabolico", "avanzado_carga"])
+      })),
+      core_mobility_block: z.object({ 
+        include: z.literal(false), // DEPRECATED - always false
+        details: z.literal("")
+      }),
+      session_notes: z.array(z.string()),
+      k1_decisions: z.object({
+        reglas_aplicadas: z.array(z.string()),
+        volumen_justificacion: z.string(),
+        intensidad_justificacion: z.string(),
+        metodos_usados: z.array(z.enum(["basico", "intensificacion_local", "intensificacion_sistemica", "potencia_pliometria", "metabolico", "avanzado_carga"])),
+        patrones_cubiertos: z.array(z.enum(["empuje_horizontal", "empuje_vertical", "tiron_horizontal", "tiron_vertical", "dominante_rodilla", "dominante_cadera", "zancada", "core_antirotacion", "core_antiextension", "core_antiflexion", "core_rotacional"]))
+      })
+    })),
+    general_notes: z.array(z.string())
+  })
+});
 const E5TrainingPlanValidatorSchema = z.object({ final_training_plan: z.object({ training_type: z.enum(["full_body", "upper_lower", "push_pull_legs", "bro_split", "other"]), days_per_week: z.number(), session_duration_min: z.number(), weeks: z.number(), goal: z.string(), sessions: z.array(z.object({ id: z.string(), name: z.string(), focus: z.array(z.string()), blocks: z.array(z.object({ id: z.string(), primary_muscles: z.array(z.string()), secondary_muscles: z.array(z.string()), num_exercises: z.number(), exercise_types: z.array(z.string()), series: z.number(), reps: z.string(), rpe: z.string(), notes: z.string() })), core_mobility_block: z.object({ include: z.boolean(), details: z.string() }), session_notes: z.array(z.string()) })), general_notes: z.array(z.string()) }), safety_ok: z.boolean(), issues: z.array(z.string()) });
 const E6ExerciseNormalizerDbMapperSchema = z.object({ mappings: z.array(z.object({ session_id: z.string(), block_id: z.string(), exercise_index: z.number(), exercise_type_from_plan: z.string(), db_match: z.object({ id: z.string() }), similar_candidates: z.array(z.string()) })) });
 const E7TrainingPlanAssemblerSchema = z.object({ client_training_program: z.object({ title: z.string(), summary: z.string(), goal: z.string(), training_type: z.string(), days_per_week: z.number(), session_duration_min: z.number(), weeks: z.number(), sessions: z.array(z.object({ id: z.string(), name: z.string(), focus: z.array(z.string()), blocks: z.array(z.object({ id: z.string(), primary_muscles: z.array(z.string()), secondary_muscles: z.array(z.string()), exercises: z.array(z.object({ order: z.number(), db_id: z.string(), name: z.string(), primary_group: z.string(), secondary_group: z.string(), series: z.union([z.number(), z.string()]), reps: z.string(), rpe: z.union([z.number(), z.string()]), notes: z.string(), video_url: z.string() })) })), session_notes: z.array(z.string()) })), general_notes: z.array(z.string()) }) });
