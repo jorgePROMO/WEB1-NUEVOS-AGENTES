@@ -7741,12 +7741,31 @@ def _integrate_template_blocks(
         )
         
         # Restructurar la sesión con 4 bloques
-        # Bloque B es lo que ya generó la IA (los blocks existentes)
+        # Bloque B: Combinar TODOS los ejercicios en una sola lista (sin subdivisión por músculo)
+        all_exercises = []
+        exercise_counter = 1
+        
+        for block in session.get('blocks', []):
+            # Extraer ejercicios de cada sub-bloque y agregarlos a la lista continua
+            for exercise in block.get('exercises', []):
+                # Renumerar el orden para que sea continuo
+                exercise_copy = exercise.copy()
+                exercise_copy['order'] = exercise_counter
+                all_exercises.append(exercise_copy)
+                exercise_counter += 1
+        
+        # Obtener músculos principales de todos los bloques
+        all_muscles = []
+        for block in session.get('blocks', []):
+            muscles = block.get('primary_muscles', [])
+            all_muscles.extend(muscles)
+        
         bloque_b = {
             'id': 'B',
             'nombre': 'Entrenamiento Principal (Fuerza)',
             'tipo': 'strength_training',
-            'bloques_fuerza': session.get('blocks', [])  # Mantener estructura original de la IA
+            'primary_muscles': list(set(all_muscles)),  # Únicos
+            'exercises': all_exercises  # Lista continua de TODOS los ejercicios
         }
         
         # Agregar la nueva estructura de bloques
