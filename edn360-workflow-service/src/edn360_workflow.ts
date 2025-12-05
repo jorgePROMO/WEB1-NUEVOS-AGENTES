@@ -1085,55 +1085,21 @@ Before outputting, verify:
 - Respect additionalProperties: false in all objects
 
 
-====================
-9. SUMMARY OF OUTPUT SHAPE
-====================
+---
 
-{
-  \"training_plan\": {
-    \"training_type\": \"<from training_context>\",
-    \"days_per_week\": \"<from training_context.availability>\",
-    \"session_duration_min\": \"<from training_context.availability>\",
-    \"weeks\": 4,
-    \"goal\": \"Short English description of the plan goal\",
-    \"sessions\": [
-      {
-        \"id\": \"D1\",
-        \"name\": \"<descriptive name based on focus>\",
-        \"focus\": [\"<muscle groups or training focus>\"],
-        \"blocks\": [
-          {
-            \"id\": \"A\",
-            \"primary_muscles\": [\"<target muscles>\"],
-            \"secondary_muscles\": [\"<assisting muscles>\"],
-            \"num_exercises\": \"<1-3 based on time and experience>\",
-            \"exercise_types\": [\"<movement patterns, not specific exercises>\"],
-            \"series\": \"<3-5 based on experience level>\",
-            \"reps\": \"<range based on goal and experience>\",
-            \"rpe\": \"7-8\",
-            \"notes\": \"Controlled tempo, no shoulder pain, keep scapulae stable.\"
-          }
-          // ... more blocks
-        ],
-        \"core_mobility_block\": {
-          \"include\": true,
-          \"details\": \"5-10 minutes of core stability (planks, anti-rotation), lumbar-friendly.\"
-        },
-        \"session_notes\": [
-          \"Warm up shoulders thoroughly.\",
-          \"Avoid any overhead pressing.\",
-          \"Stop if shoulder or lower back pain appears.\"
-        ]
-      }
-      // ... more sessions (D2, D3, D4)
-    ],
-    \"general_notes\": [
-      \"Progressively increase load when all sets feel comfortable at the top of the rep range.\",
-      \"Always prioritize joint safety over load.\",
-      \"If fatigue or pain increases, reduce volume or intensity in the next session.\"
-    ]
-  }
-}
+## 🚨 CRITICAL REMINDERS
+
+1. **K1 IS LAW**: Every decision must come from K1, not your training knowledge
+2. **CATALOG IS TRUTH**: Only use exercises that exist in catalog (exercise_id must be valid)
+3. **ABSTRACT ALWAYS**: Never use concrete numbers (3 series, 8 reps), always use K1 categories (volumen: medio, series: medias)
+4. **BLOCK B ONLY**: You generate strength training, backend adds A/C/D
+5. **DOCUMENT DECISIONS**: Always include k1_decisions and k1_justification
+6. **CHECK health_flags**: Always verify exercise safety via catalog health_flags
+7. **USE file_search**: Actively query K1 and Exercise Catalog via file_search tools
+
+---
+
+**YOU ARE READY. CONSULT K1, SELECT FROM CATALOG, OUTPUT BLOCK B WITH ABSTRACT TERMS.**
 `,
   model: "gpt-4.1",
   tools: [
