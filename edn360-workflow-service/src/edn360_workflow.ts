@@ -2015,7 +2015,7 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
           ]
         }
       ],
-      180000  // 3 minutes timeout (E3 has Knowledge Base Vector Store)
+      600000  // 10 minutes timeout (E3 has Knowledge Base Vector Store - increased for reliability)
     );
     conversationHistory.push(...e3TrainingSummaryResultTemp.newItems.map((item: any) => item.rawItem));
 
