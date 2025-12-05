@@ -1420,13 +1420,16 @@ const UserDashboard = () => {
                                                 </Button>
                                               </div>
                                             </CardHeader>
-                                            {isBlockExpanded(idx, 'B') && session.bloques_estructurados.B.bloques_fuerza && (
+                                            {isBlockExpanded(idx, 'B') && session.bloques_estructurados.B.exercises && (
                                               <CardContent className="pt-0">
-                                                {session.bloques_estructurados.B.bloques_fuerza.map((block, blockIdx) => (
-                                      <div key={blockIdx} className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-3 md:p-4">
-                                        <h5 className="font-bold text-gray-900 mb-3 text-base">
-                                          Bloque {block.id} - {block.primary_muscles.join(', ')}
-                                        </h5>
+                                                {/* Header con músculos principales */}
+                                                {session.bloques_estructurados.B.primary_muscles && session.bloques_estructurados.B.primary_muscles.length > 0 && (
+                                                  <div className="mb-3 text-center">
+                                                    <span className="text-sm text-gray-600">
+                                                      Músculos trabajados: <strong>{session.bloques_estructurados.B.primary_muscles.join(', ')}</strong>
+                                                    </span>
+                                                  </div>
+                                                )}
                                         
                                         {/* Desktop: Table Layout */}
                                         <div className="hidden md:block">
@@ -1439,7 +1442,7 @@ const UserDashboard = () => {
                                           </div>
 
                                           <div className="space-y-2">
-                                            {block.exercises.map((exercise, exIdx) => (
+                                            {session.bloques_estructurados.B.exercises.map((exercise, exIdx) => (
                                               <div key={exIdx} className="bg-white rounded border border-gray-200 p-3">
                                                 <div className="grid grid-cols-[50px_1fr_80px_80px_60px] gap-3 items-center mb-2">
                                                   <div className="text-center text-sm font-bold text-blue-600">
