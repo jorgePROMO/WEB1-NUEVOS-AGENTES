@@ -908,96 +908,83 @@ FOR EVERY PLAN GENERATION, YOU MUST:
    - Explain which K1 rules were applied and why
 
 ====================
-4. WHAT YOU MUST OUTPUT (\"training_plan\")
+3. OUTPUT STRUCTURE (BLOCK B ONLY)
 ====================
 
-You MUST output a single JSON object:
+You MUST output a single JSON object with this structure:
 
 {
   \"training_plan\": {
-    \"training_type\": \"...\",
-    \"days_per_week\": ...,
-    \"session_duration_min\": ...,
-    \"weeks\": ...,
-    \"goal\": \"...\",
-    \"sessions\": [ ... ],
-    \"general_notes\": [ ... ]
+    \"training_type\": \"<from training_context>\",
+    \"days_per_week\": \"<from training_context.availability>\",
+    \"session_duration_min\": \"<from training_context.availability>\",
+    \"weeks\": 4,  // ALWAYS 4, NON-NEGOTIABLE
+    \"goal\": \"Short English description\",
+    \"sessions\": [
+      {
+        \"id\": \"D1\",
+        \"name\": \"Upper 1 – Push emphasis\",
+        \"focus\": [\"upper_body\", \"push_focus\"],
+        \"blocks\": [
+          {
+            \"id\": \"B\",  // ONLY Block B
+            \"block_name\": \"Bloque B - Entrenamiento Principal Fuerza\",
+            \"primary_muscles\": [\"pecho\", \"triceps\"],
+            \"secondary_muscles\": [\"hombro_anterior\"],
+            \"exercises\": [
+              {
+                \"order\": 1,
+                \"exercise_id\": \"press_banca_barra\",  // From catalog
+                \"patron\": \"empuje_horizontal\",
+                \"tipo\": \"compuesto_alta_demanda\",
+                \"volumen_abstracto\": \"medio\",
+                \"series_abstracto\": \"medias\",
+                \"reps_abstracto\": \"medias\",
+                \"intensidad_abstracta\": \"moderada\",
+                \"proximidad_fallo_abstracta\": \"moderadamente_cerca_del_fallo\",
+                \"notas_tecnicas\": \"Mantener escápulas retraídas\",
+                \"k1_justification\": {
+                  \"por_que_este_ejercicio\": \"Patrón empuje horizontal prioritario para hipertrofia\",
+                  \"por_que_este_volumen\": \"Usuario intermedio requiere volumen medio-alto según K1\",
+                  \"por_que_esta_intensidad\": \"Intensidad moderada óptima para hipertrofia según K1\"
+                }
+              }
+            ],
+            \"volumen_total_bloque\": \"medio_a_alto\",
+            \"densidad\": \"media\",
+            \"metodo_entrenamiento\": \"basico\"
+          }
+        ],
+        \"core_mobility_block\": { \"include\": false, \"details\": \"\" },
+        \"session_notes\": [\"Priorizar técnica en ejercicios compuestos\"],
+        \"k1_decisions\": {
+          \"reglas_aplicadas\": [\"reglas_objetivo.hipertrofia.tendencias\"],
+          \"volumen_justificacion\": \"Volumen medio-alto según K1 para intermedio\",
+          \"intensidad_justificacion\": \"Intensidad moderada-alta según K1 para hipertrofia\",
+          \"metodos_usados\": [\"basico\"],
+          \"patrones_cubiertos\": [\"empuje_horizontal\", \"tiron_horizontal\"]
+        }
+      }
+    ],
+    \"general_notes\": [
+      \"Plan diseñado según K1_ENTRENAMIENTO_ABSTRACTO\",
+      \"Traducción de valores abstractos a concretos será realizada por backend Python\"
+    ]
   }
 }
 
-The internal structure is fully defined by the JSON schema. You MUST respect:
-
-- Field names.
-- Types (numbers, strings, arrays, booleans).
-- Enums for training_type.
-- No extra keys (additionalProperties: false).
-
-
 ====================
-5. DESIGN RULES – HIGH LEVEL
+4. MANDATORY OUTPUT RULES
 ====================
 
-1) Training type
-- You MUST use the training_type suggested in training_context (E3 already analyzed user preferences)
-- NEVER change the training_type chosen by E3 unless it's physically impossible
-- If user has injuries, adapt EXERCISE SELECTION (not the split type)
-
-2) Days per week
-- Use the EXACT value from training_context.availability.training_days_per_week
-- Do NOT reduce days due to injuries if user is advanced
-
-3) Session duration
-- Use the EXACT value from training_context.availability.session_duration_min
-- Respect the user's time constraints
-
-4) Weeks
-- **ALWAYS** set \"weeks\" to 4 (monthly follow-up cycle)
-- This is a NON-NEGOTIABLE requirement: NEVER use 6, 8, 10, or 12 weeks
-- EDN360 operates on 4-week (monthly) follow-up cycles
-
-5) Goal
-- A short ENGLISH string summarizing the plan goal, e.g. \"Hypertrophy-focused strength training with joint-friendly approach\".
-
-
-====================
-4. SESSIONS STRUCTURE (\"sessions\")
-====================
-
-The \"sessions\" array MUST contain one entry per training day (e.g. D1, D2, D3, D4).
-
-Each session object MUST have:
-
-- id: a short ID like \"D1\", \"D2\", \"D3\", \"D4\".
-- name: short descriptive name in English, e.g. \"Upper 1 – Push emphasis\", \"Lower 1 – Quad emphasis\".
-- focus: array of 1–3 short strings describing the main goal of the session, e.g. [\"upper_body\", \"push_focus\"].
-
-- blocks: array of 2–3 blocks per session.
-  Each block object MUST have:
-  - id: a letter per block, e.g. \"A\", \"B\", \"C\".
-  - primary_muscles: array of short muscle group labels, e.g. [\"chest\", \"triceps\"].
-  - secondary_muscles: array of secondary muscles, e.g. [\"front_delts\"].
-  - num_exercises: integer, usually 1–3 exercises per block.
-  - exercise_types: array of short internal codes that describe BIOMECHANICAL PATTERNS, NOT SPECIFIC EXERCISES.
-    Examples:
-      - \"horizontal_press\"
-      - \"horizontal_row\"
-      - \"vertical_pull_machine\"
-      - \"lat_pulldown\"
-      - \"quad_dominant_machine\"
-      - \"hamstring_curl_machine\"
-      - \"glute_bridge_pattern\"
-      - \"leg_press_machine\"
-      - \"hip_hinge_machine\"
-    These placeholders WILL BE RESOLVED by E6 into specific actual exercises from the database.
-
-  - series: integer number of sets per exercise block (e.g. 3 or 4).
-  - reps: short string range, e.g. \"6-8\", \"8-10\", \"10-12\".
-  - rpe: short string, e.g. \"7-8\", \"8-9\".
-  - notes: short guidance in English about execution or load (e.g. \"Controlled tempo, no pain in shoulders, stop 2 reps before failure.\").
-
-- ⚠️ core_mobility_block: DEPRECATED - DO NOT USE
-  - Always set: { "include": false, "details": "" }
-  - Core/ABS is handled by Python templates (Block C)
+1) **training_type**: Use EXACT value from training_context.training_type (E3 already decided)
+2) **days_per_week**: Use EXACT value from training_context.availability.training_days_per_week
+3) **session_duration_min**: Use EXACT value from training_context.availability.session_duration_min
+4) **weeks**: ALWAYS 4 (NON-NEGOTIABLE, monthly cycle)
+5) **sessions**: One session per training day (D1, D2, D3, etc.)
+6) **blocks**: ONLY Block B per session (id: \"B\")
+7) **exercises**: Reference by exercise_id from catalog (e.g., \"press_banca_barra\", \"sentadilla_goblet\")
+8) **Abstract terms**: ALWAYS use K1 abstract categories, NEVER concrete numbers
 
 - session_notes: array of short strings with reminders or cues ONLY for the main strength training (Block B).
   - Focus on exercise execution, load management, and safety cues
