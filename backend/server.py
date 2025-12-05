@@ -8194,7 +8194,7 @@ async def admin_generate_training_plan(
         logger.info(f"🔧 Llamando a _integrate_template_blocks con {len(plan_data_original.get('sessions', []))} sesiones")
         logger.info(f"🔧 user_data_for_templates: {user_data_for_templates}")
         
-        plan_with_blocks = _integrate_template_blocks(
+        plan_with_blocks = await _integrate_template_blocks(
             plan_data_original, 
             user_data_for_templates,
             week_number=numero_mes,  # Usar número de mes como número de semana
