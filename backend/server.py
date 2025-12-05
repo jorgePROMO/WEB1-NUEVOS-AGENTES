@@ -11468,22 +11468,47 @@ async def delete_questionnaire_submission(submission_id: str, request: Request):
     await require_admin(request)
     
     try:
-        # Intentar eliminar de nutrition_questionnaire_submissions
-        result = await db.nutrition_questionnaire_submissions.delete_one({"_id": submission_id})
+        user_id = None
+        questionnaire_type = None
         
-        if result.deleted_count > 0:
-            logger.info(f"✅ Cuestionario de nutrición eliminado: {submission_id}")
-            return {"message": "Cuestionario eliminado exitosamente", "type": "nutrition"}
+        # Buscar primero en nutrition_questionnaire_submissions
+        nutrition_doc = await db.nutrition_questionnaire_submissions.find_one({"_id": submission_id})
+        if nutrition_doc:
+            user_id = nutrition_doc.get("user_id")
+            questionnaire_type = "nutrition"
+            result = await db.nutrition_questionnaire_submissions.delete_one({"_id": submission_id})
+            if result.deleted_count > 0:
+                logger.info(f"✅ Cuestionario de nutrición eliminado: {submission_id}")
         
-        # Si no estaba en nutrition, intentar en diagnosis_questionnaire_submissions
-        result = await db.diagnosis_questionnaire_submissions.delete_one({"_id": submission_id})
+        # Si no estaba en nutrition, buscar en diagnosis
+        if not nutrition_doc:
+            diagnosis_doc = await db.diagnosis_questionnaire_submissions.find_one({"_id": submission_id})
+            if diagnosis_doc:
+                user_id = diagnosis_doc.get("user_id")
+                questionnaire_type = "diagnosis"
+                result = await db.diagnosis_questionnaire_submissions.delete_one({"_id": submission_id})
+                if result.deleted_count > 0:
+                    logger.info(f"✅ Cuestionario de diagnóstico eliminado: {submission_id}")
         
-        if result.deleted_count > 0:
-            logger.info(f"✅ Cuestionario de diagnóstico eliminado: {submission_id}")
-            return {"message": "Cuestionario eliminado exitosamente", "type": "diagnosis"}
+        if not nutrition_doc and not diagnosis_doc:
+            raise HTTPException(status_code=404, detail="Cuestionario no encontrado")
         
-        raise HTTPException(status_code=404, detail="Cuestionario no encontrado")
+        # Eliminar también del client_drawer si existe
+        if user_id:
+            edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+            update_result = await edn360_db.client_drawers.update_one(
+                {"user_id": user_id},
+                {"$pull": {"services.shared_questionnaires": {"submission_id": submission_id}}}
+            )
+            if update_result.modified_count > 0:
+                logger.info(f"✅ Cuestionario eliminado del client_drawer: {submission_id}")
+            else:
+                logger.warning(f"⚠️ No se encontró el cuestionario en client_drawer o ya no existía")
         
+        return {"message": "Cuestionario eliminado exitosamente", "type": questionnaire_type}
+        
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error eliminando cuestionario: {e}")
         raise HTTPException(status_code=500, detail=f"Error eliminando cuestionario: {str(e)}")
