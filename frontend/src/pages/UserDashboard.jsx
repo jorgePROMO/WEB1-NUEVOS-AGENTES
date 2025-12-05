@@ -1442,47 +1442,47 @@ const UserDashboard = () => {
                                                   </div>
 
                                                   <div className="space-y-2">
-                                                    {session.bloques_estructurados.B.exercises.map((exercise, exIdx) => (
-                                              <div key={exIdx} className="bg-white rounded border border-gray-200 p-3">
-                                                <div className="grid grid-cols-[50px_1fr_80px_80px_60px] gap-3 items-center mb-2">
-                                                  <div className="text-center text-sm font-bold text-blue-600">
-                                                    {exercise.order}
-                                                  </div>
-                                                  <div className="text-sm font-semibold text-gray-900">
-                                                    {exercise.name}
-                                                  </div>
-                                                  <div className="text-sm text-center font-medium text-gray-900">
-                                                    {exercise.series}
-                                                  </div>
-                                                  <div className="text-sm text-center font-medium text-gray-900">
-                                                    {exercise.reps}
-                                                  </div>
-                                                  <div className="text-sm text-center font-medium text-gray-900">
-                                                    {exercise.rpe}
+                                                            {session.bloques_estructurados.B.exercises.map((exercise, exIdx) => (
+                                                      <div key={exIdx} className="bg-white rounded border border-gray-200 p-3">
+                                                        <div className="grid grid-cols-[50px_1fr_80px_80px_60px] gap-3 items-center mb-2">
+                                                          <div className="text-center text-sm font-bold text-blue-600">
+                                                            {exercise.order}
+                                                          </div>
+                                                          <div className="text-sm font-semibold text-gray-900">
+                                                            {exercise.name}
+                                                          </div>
+                                                          <div className="text-sm text-center font-medium text-gray-900">
+                                                            {exercise.series}
+                                                          </div>
+                                                          <div className="text-sm text-center font-medium text-gray-900">
+                                                            {exercise.reps}
+                                                          </div>
+                                                          <div className="text-sm text-center font-medium text-gray-900">
+                                                            {exercise.rpe}
+                                                          </div>
+                                                        </div>
+                                                        {exercise.notes && (
+                                                          <p className="text-xs text-gray-600 mb-2 pl-2 italic">{exercise.notes}</p>
+                                                        )}
+                                                        {exercise.video_url && (
+                                                          <Button
+                                                            onClick={() => handleOpenVideoModal(exercise.video_url)}
+                                                            size="sm"
+                                                            variant="outline"
+                                                            className="w-full text-xs border-blue-300 text-blue-700 hover:bg-blue-50"
+                                                          >
+                                                            <ExternalLink className="h-3 w-3 mr-1" />
+                                                            Ver Video del Ejercicio
+                                                          </Button>
+                                                        )}
+                                                      </div>
+                                                    ))}
                                                   </div>
                                                 </div>
-                                                {exercise.notes && (
-                                                  <p className="text-xs text-gray-600 mb-2 pl-2 italic">{exercise.notes}</p>
-                                                )}
-                                                {exercise.video_url && (
-                                                  <Button
-                                                    onClick={() => handleOpenVideoModal(exercise.video_url)}
-                                                    size="sm"
-                                                    variant="outline"
-                                                    className="w-full text-xs border-blue-300 text-blue-700 hover:bg-blue-50"
-                                                  >
-                                                    <ExternalLink className="h-3 w-3 mr-1" />
-                                                    Ver Video del Ejercicio
-                                                  </Button>
-                                                )}
-                                              </div>
-                                            ))}
-                                          </div>
-                                        </div>
 
-                                        {/* Mobile: Card Layout */}
-                                        <div className="md:hidden space-y-3">
-                                          {session.bloques_estructurados.B.exercises.map((exercise, exIdx) => (
+                                                {/* Mobile: Card Layout */}
+                                                <div className="md:hidden space-y-3">
+                                                  {session.bloques_estructurados.B.exercises.map((exercise, exIdx) => (
                                             <div key={exIdx} className="bg-white rounded-lg border-2 border-gray-300 p-4 shadow-sm">
                                               {/* Número de ejercicio */}
                                               <div className="flex items-start gap-3 mb-3">
