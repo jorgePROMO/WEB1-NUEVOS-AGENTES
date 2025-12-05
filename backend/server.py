@@ -8001,12 +8001,24 @@ async def admin_generate_training_plan(
         
         # Procesar el plan de la IA y agregar plantillas a cada sesión
         plan_data_original = result["plan_data"]
+        logger.info(f"🔧 Llamando a _integrate_template_blocks con {len(plan_data_original.get('sessions', []))} sesiones")
+        logger.info(f"🔧 user_data_for_templates: {user_data_for_templates}")
+        
         plan_with_blocks = _integrate_template_blocks(
             plan_data_original, 
             user_data_for_templates,
             week_number=numero_mes,  # Usar número de mes como número de semana
             session_number_start=1
         )
+        
+        logger.info(f"🔧 Después de _integrate_template_blocks: {len(plan_with_blocks.get('sessions', []))} sesiones")
+        if plan_with_blocks.get('sessions'):
+            first_session = plan_with_blocks['sessions'][0]
+            if 'bloques_estructurados' in first_session:
+                logger.info("✅ Primera sesión TIENE bloques_estructurados")
+                logger.info(f"   Bloques: {list(first_session['bloques_estructurados'].keys())}")
+            else:
+                logger.error("❌ Primera sesión NO TIENE bloques_estructurados!")
         
         # Usar el plan con bloques integrados
         result["plan_data"] = plan_with_blocks
