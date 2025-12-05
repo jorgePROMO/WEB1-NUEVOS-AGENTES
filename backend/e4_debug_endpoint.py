@@ -234,3 +234,122 @@ async def get_k1_version():
     except Exception as e:
         logger.error(f"❌ Error obteniendo versión K1: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@debug_router.post("/debug/validate-e4-response")
+async def validate_e4_response_endpoint(e4_response: Dict):
+    """
+    Endpoint para validar una respuesta de E4
+    
+    Útil para:
+    - Testear el validador con respuestas de prueba
+    - Verificar que una respuesta cumple los requisitos
+    - Ver score y errores detallados
+    
+    Ejemplo:
+    ```
+    POST /api/debug/validate-e4-response
+    {
+      "training_plan": { ... }
+    }
+    ```
+    """
+    from e4_response_validator import E4ResponseValidator
+    
+    try:
+        validator = E4ResponseValidator()
+        result = validator.validate_full_response(e4_response)
+        
+        return {
+            "validation_result": result.dict(),
+            "should_retry": validator.should_retry(result),
+            "formatted_report": validator.format_validation_report(result)
+        }
+    except Exception as e:
+        logger.error(f"❌ Error validando respuesta E4: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@debug_router.get("/debug/e4-logs/{user_id}")
+async def get_e4_logs_by_user(user_id: str, limit: int = 10):
+    """
+    Obtiene los logs de decisiones E4 para un usuario
+    
+    Args:
+        user_id: ID del usuario
+        limit: Número máximo de logs (default: 10)
+        
+    Returns:
+        Lista de logs con decisiones K1
+    """
+    from e4_decision_logger import get_logger
+    
+    try:
+        logger_inst = get_logger()
+        logs = await logger_inst.get_logs_by_user(user_id, limit)
+        
+        return {
+            "user_id": user_id,
+            "total_logs": len(logs),
+            "logs": logs
+        }
+    except Exception as e:
+        logger.error(f"❌ Error obteniendo logs E4: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@debug_router.get("/debug/e4-logs/plan/{plan_id}")
+async def get_e4_log_by_plan(plan_id: str):
+    """
+    Obtiene el log de decisión para un plan específico
+    
+    Args:
+        plan_id: ID del plan
+        
+    Returns:
+        Log completo con todas las decisiones K1 aplicadas
+    """
+    from e4_decision_logger import get_logger
+    
+    try:
+        logger_inst = get_logger()
+        log = await logger_inst.get_log_by_plan_id(plan_id)
+        
+        if not log:
+            raise HTTPException(status_code=404, detail=f"No se encontró log para plan_id: {plan_id}")
+        
+        return {
+            "log": log,
+            "formatted_report": logger_inst.format_decision_report(log)
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Error obteniendo log por plan_id: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@debug_router.get("/debug/e4-stats/{user_id}")
+async def get_e4_stats_by_user(user_id: str):
+    """
+    Estadísticas agregadas de decisiones E4 para un usuario
+    
+    Muestra:
+    - Total de generaciones
+    - Tasa de éxito
+    - Promedio de intentos
+    - Patrones más usados
+    """
+    from e4_decision_logger import get_logger
+    
+    try:
+        logger_inst = get_logger()
+        stats = await logger_inst.get_stats_by_user(user_id)
+        
+        return {
+            "user_id": user_id,
+            "stats": stats
+        }
+    except Exception as e:
+        logger.error(f"❌ Error obteniendo stats E4: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
