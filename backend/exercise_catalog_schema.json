@@ -42,7 +42,7 @@
           },
           "patrones": {
             "type": "array",
-            "description": "Patrones de movimiento que cumple (según taxonomía K1)",
+            "description": "Patrones de movimiento que cumple - DEBE seguir ESTRICTAMENTE la taxonomía del K1 (NO inventar nuevas categorías)",
             "items": {
               "type": "string",
               "enum": [
@@ -59,7 +59,8 @@
                 "core_rotacional"
               ]
             },
-            "minItems": 1
+            "minItems": 1,
+            "x-validation": "Los valores DEBEN coincidir EXACTAMENTE con la taxonomía del K1. Cualquier valor fuera de esta lista será rechazado."
           },
           "tipos": {
             "type": "array",
