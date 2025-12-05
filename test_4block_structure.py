@@ -145,10 +145,18 @@ async def add_4block_structure():
         session['bloques_estructurados'] = bloques_estructurados
     
     # Update the plan in the database
+    from bson import ObjectId
+    try:
+        object_id = ObjectId(plan_id)
+    except:
+        object_id = plan_id
+    
     result = await edn360_db.training_plans_v2.update_one(
-        {"_id": plan_id},
+        {"_id": object_id},
         {"$set": {"plan": plan['plan']}}
     )
+    
+    print(f"🔧 Update result: matched={result.matched_count}, modified={result.modified_count}")
     
     if result.modified_count > 0:
         print("✅ Plan updated with 4-block structure successfully!")
@@ -156,13 +164,13 @@ async def add_4block_structure():
         
         # Send to user panel
         await edn360_db.training_plans_v2.update_one(
-            {"_id": plan_id},
+            {"_id": object_id},
             {"$set": {"status": "sent_to_user"}}
         )
         
         print("✅ Plan sent to user panel!")
     else:
-        print("❌ Failed to update plan")
+        print("❌ Failed to update plan - no changes made")
     
     client.close()
 
