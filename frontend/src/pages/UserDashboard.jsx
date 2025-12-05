@@ -1430,9 +1430,9 @@ const UserDashboard = () => {
                                                     </span>
                                                   </div>
                                                 )}
-                                        
-                                        {/* Desktop: Table Layout */}
-                                        <div className="hidden md:block">
+                                                
+                                                {/* Desktop: Table Layout */}
+                                                <div className="hidden md:block">
                                           <div className="grid grid-cols-[50px_1fr_80px_80px_60px] gap-3 items-center bg-gray-200 px-3 py-2 rounded mb-2">
                                             <div className="text-xs font-semibold text-gray-700 text-center">#</div>
                                             <div className="text-xs font-semibold text-gray-700">Ejercicio</div>
