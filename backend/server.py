@@ -1630,7 +1630,7 @@ async def _generate_plan_background(plan_id: str, user_id: str, workflow_input: 
                 numero_mes = planes_previos_count + 1
                 
                 # Integrar plantillas en el plan
-                training_program = _integrate_template_blocks(
+                training_program = await _integrate_template_blocks(
                     training_program, 
                     user_data_for_templates,
                     week_number=numero_mes,
