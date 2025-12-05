@@ -1410,9 +1410,6 @@ const UserDashboard = () => {
                                                     <h5 className="font-bold text-gray-900 text-base">
                                                       Bloque B - Fuerza Principal
                                                     </h5>
-                                                    <p className="text-xs text-gray-600">
-                                                      Entrenamiento generado por IA
-                                                    </p>
                                                   </div>
                                                 </div>
                                                 <Button variant="ghost" size="sm">
