@@ -19,9 +19,25 @@ async def add_4block_structure():
     # Get the latest draft plan
     plan_id = "6932dfc2adbfdd696113a5d8"
     
+    # List collections to debug
+    collections = await edn360_db.list_collection_names()
+    print(f"📋 Available collections: {collections}")
+    
+    # Try to find the plan
     plan = await edn360_db.training_plans_v2.find_one({"_id": plan_id})
     
     if not plan:
+        # Try with ObjectId
+        from bson import ObjectId
+        try:
+            plan = await edn360_db.training_plans_v2.find_one({"_id": ObjectId(plan_id)})
+        except:
+            pass
+    
+    if not plan:
+        # List some plans to see the format
+        sample_plans = await edn360_db.training_plans_v2.find({}).limit(3).to_list(3)
+        print(f"📋 Sample plan IDs: {[str(p['_id']) for p in sample_plans]}")
         print(f"❌ Plan {plan_id} not found")
         return
     
