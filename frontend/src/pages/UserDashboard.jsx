@@ -1533,11 +1533,10 @@ const UserDashboard = () => {
                                           ))}
                                         </div>
                                       </div>
-                                                  ))}
-                                                </CardContent>
-                                              )}
-                                            </Card>
-                                          )}
+                                              </CardContent>
+                                            )}
+                                          </Card>
+                                        )}
 
                                           {/* Block C - Core/ABS */}
                                           {session.bloques_estructurados.C && (
