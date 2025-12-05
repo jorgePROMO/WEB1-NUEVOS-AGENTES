@@ -854,13 +854,17 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                   )}
                                   
                                   {/* Show cardio options if available */}
-                                  {block.opciones && (
+                                  {block.opciones && Array.isArray(block.opciones) && (
                                     <div className="text-xs text-gray-600 mt-2">
                                       <p className="font-semibold">Opciones disponibles:</p>
                                       <ul className="list-disc list-inside">
-                                        {block.opciones.map((opcion, idx) => (
-                                          <li key={idx}>{opcion}</li>
-                                        ))}
+                                        {block.opciones.map((opcion, idx) => {
+                                          // Handle both string and object formats
+                                          const opcionText = typeof opcion === 'string' 
+                                            ? opcion 
+                                            : (opcion.nombre || opcion.opcion || JSON.stringify(opcion));
+                                          return <li key={idx}>{opcionText}</li>;
+                                        })}
                                       </ul>
                                     </div>
                                   )}
