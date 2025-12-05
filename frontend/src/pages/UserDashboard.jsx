@@ -1433,16 +1433,16 @@ const UserDashboard = () => {
                                                 
                                                 {/* Desktop: Table Layout */}
                                                 <div className="hidden md:block">
-                                          <div className="grid grid-cols-[50px_1fr_80px_80px_60px] gap-3 items-center bg-gray-200 px-3 py-2 rounded mb-2">
-                                            <div className="text-xs font-semibold text-gray-700 text-center">#</div>
-                                            <div className="text-xs font-semibold text-gray-700">Ejercicio</div>
-                                            <div className="text-xs font-semibold text-gray-700 text-center">Series</div>
-                                            <div className="text-xs font-semibold text-gray-700 text-center">Reps</div>
-                                            <div className="text-xs font-semibold text-gray-700 text-center">RPE</div>
-                                          </div>
+                                                  <div className="grid grid-cols-[50px_1fr_80px_80px_60px] gap-3 items-center bg-gray-200 px-3 py-2 rounded mb-2">
+                                                    <div className="text-xs font-semibold text-gray-700 text-center">#</div>
+                                                    <div className="text-xs font-semibold text-gray-700">Ejercicio</div>
+                                                    <div className="text-xs font-semibold text-gray-700 text-center">Series</div>
+                                                    <div className="text-xs font-semibold text-gray-700 text-center">Reps</div>
+                                                    <div className="text-xs font-semibold text-gray-700 text-center">RPE</div>
+                                                  </div>
 
-                                          <div className="space-y-2">
-                                            {session.bloques_estructurados.B.exercises.map((exercise, exIdx) => (
+                                                  <div className="space-y-2">
+                                                    {session.bloques_estructurados.B.exercises.map((exercise, exIdx) => (
                                               <div key={exIdx} className="bg-white rounded border border-gray-200 p-3">
                                                 <div className="grid grid-cols-[50px_1fr_80px_80px_60px] gap-3 items-center mb-2">
                                                   <div className="text-center text-sm font-bold text-blue-600">
