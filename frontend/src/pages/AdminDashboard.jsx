@@ -379,11 +379,17 @@ const AdminDashboard = () => {
     }
     
     try {
-      // Mostrar alerta de que el proceso va a comenzar
-      alert('⏳ Generando plan de entrenamiento... Este proceso puede tardar 2-3 minutos. Por favor espera, la página se actualizará automáticamente cuando termine.');
+      // Confirmar antes de generar
+      const confirmed = window.confirm('⏳ ¿Generar plan de entrenamiento?\n\nEste proceso puede tardar 5-8 minutos.\n\nPuedes cerrar esta ventana y el plan se generará en segundo plano.');
       
-      // Llamar al endpoint síncrono
-      const response = await axios.post(
+      if (!confirmed) {
+        return;
+      }
+      
+      // Llamar al endpoint síncrono en background
+      console.log('🚀 Iniciando generación de plan...');
+      
+      axios.post(
         `${API}/admin/users/${selectedClient.id}/training/generate`,
         {},
         {
@@ -393,21 +399,26 @@ const AdminDashboard = () => {
             source_id: actualSourceId,
             previous_plan_id: selectedPreviousTrainingPlan || null
           },
-          withCredentials: true
+          withCredentials: true,
+          timeout: 900000 // 15 minutos
         }
-      );
+      ).then(response => {
+        console.log('✅ Plan generado exitosamente!', response.data);
+        alert('✅ Plan generado exitosamente! Recargando planes...');
+        if (selectedClient && selectedClient.id) {
+          loadPlansForClient(selectedClient.id);
+        }
+      }).catch(error => {
+        console.error('❌ Error generating training plan:', error);
+        alert('❌ Error generando plan: ' + (error.response?.data?.detail || error.message) + '\n\nPor favor recarga la página e inténtalo de nuevo.');
+      });
       
-      // Si llegamos aquí, el plan se generó exitosamente
-      alert('✅ Plan generado exitosamente!');
-      
-      // Recargar los planes
-      if (selectedClient && selectedClient.id) {
-        await loadPlansForClient(selectedClient.id);
-      }
+      // Mostrar mensaje informativo (no bloqueante)
+      alert('✅ Generación iniciada!\n\nEl plan se está generando en segundo plano (5-8 min).\n\nPuedes seguir trabajando. Te avisaremos cuando esté listo.');
       
     } catch (error) {
-      console.error('Error generating training plan:', error);
-      alert('❌ Error generando plan: ' + (error.response?.data?.detail || error.message));
+      console.error('Error starting training plan generation:', error);
+      alert('❌ Error iniciando generación: ' + error.message);
     }
   };
 
