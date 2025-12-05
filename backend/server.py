@@ -7939,21 +7939,76 @@ async def _integrate_template_blocks(
         
         logger.info(f"📍 Sesión {session.get('id')}: focus={training_focus}, focus_list={focus_list}")
         
-        # Restructurar la sesión con 4 bloques
-        # Bloque B: Combinar TODOS los ejercicios en una sola lista (sin subdivisión por músculo)
+        # ============================================
+        # GENERAR BLOQUES A, C, D USANDO TEMPLATES PARAMETRICOS
+        # ============================================
+        
+        # BLOCK A - Warmup
+        try:
+            block_a_data = generate_warmup_block(
+                training_focus=training_focus,
+                nivel=nivel,
+                injuries=injuries,
+                environment='gym',  # Default, could be from user_data
+                session_duration_min=session_duration
+            )
+            logger.info(f"  ✅ Block A generado: {block_a_data['duration_min']} min")
+        except Exception as e:
+            logger.error(f"  ❌ Error generando Block A: {e}")
+            block_a_data = {'id': 'A', 'block_name': 'Calentamiento', 'duration_min': 10, 'components': []}
+        
+        # Determine volumen del Bloque B para ajustar C
+        # Aproximación: contar ejercicios en blocks
+        total_exercises_b = sum(len(block.get('exercises', [])) for block in session.get('blocks', []))
+        if total_exercises_b >= 6:
+            volumen_b = 'alto'
+        elif total_exercises_b >= 4:
+            volumen_b = 'medio'
+        else:
+            volumen_b = 'bajo'
+        
+        # BLOCK C - Core
+        try:
+            block_c_data = generate_core_block(
+                nivel=nivel,
+                objetivo=objetivo,
+                volumen_bloque_b=volumen_b,
+                injuries=injuries,
+                environment='gym'
+            )
+            logger.info(f"  ✅ Block C generado: {len(block_c_data['exercises'])} ejercicios")
+        except Exception as e:
+            logger.error(f"  ❌ Error generando Block C: {e}")
+            block_c_data = {'id': 'C', 'block_name': 'Core', 'exercises': []}
+        
+        # BLOCK D - Cardio
+        try:
+            block_d_data = generate_cardio_block(
+                objetivo=objetivo,
+                nivel=nivel,
+                volumen_bloque_b=volumen_b,
+                injuries=injuries,
+                session_duration_min=session_duration,
+                dias_por_semana=days_per_week
+            )
+            logger.info(f"  ✅ Block D generado: {len(block_d_data['recommendations'])} recomendaciones")
+        except Exception as e:
+            logger.error(f"  ❌ Error generando Block D: {e}")
+            block_d_data = {'id': 'D', 'block_name': 'Cardio', 'recommendations': []}
+        
+        # ============================================
+        # BLOQUE B: FUERZA (DEL E4)
+        # ============================================
         all_exercises = []
         exercise_counter = 1
         
         for block in session.get('blocks', []):
-            # Extraer ejercicios de cada sub-bloque y agregarlos a la lista continua
             for exercise in block.get('exercises', []):
-                # Renumerar el orden para que sea continuo
                 exercise_copy = exercise.copy()
                 exercise_copy['order'] = exercise_counter
                 all_exercises.append(exercise_copy)
                 exercise_counter += 1
         
-        # Obtener músculos principales de todos los bloques
         all_muscles = []
         for block in session.get('blocks', []):
             muscles = block.get('primary_muscles', [])
@@ -7963,53 +8018,81 @@ async def _integrate_template_blocks(
             'id': 'B',
             'nombre': 'Entrenamiento Principal (Fuerza)',
             'tipo': 'strength_training',
-            'primary_muscles': list(set(all_muscles)),  # Únicos
-            'exercises': all_exercises  # Lista continua de TODOS los ejercicios
+            'primary_muscles': list(set(all_muscles)),
+            'exercises': all_exercises
         }
         
-        # Enriquecer ejercicios de bloques A y C con videos desde BD
-        ejercicios_calentamiento = await enrich_exercises_with_videos(plantillas['calentamiento']['ejercicios'])
-        ejercicios_core = await enrich_exercises_with_videos(plantillas['core_abs']['ejercicios'])
-        
-        # Agregar la nueva estructura de bloques
+        # ============================================
+        # INTEGRAR ESTRUCTURA COMPLETA A+B+C+D
+        # ============================================
         session['bloques_estructurados'] = {
             'A': {
                 'id': 'A',
-                'nombre': plantillas['calentamiento']['nombre'],
+                'nombre': block_a_data.get('block_name', 'Calentamiento'),
                 'tipo': 'calentamiento',
-                'duracion_minutos': plantillas['calentamiento']['duracion_minutos'],
-                'ejercicios': ejercicios_calentamiento
+                'duracion_minutos': block_a_data.get('duration_min', 10),
+                'ejercicios': _convert_warmup_to_ejercicios(block_a_data)
             },
             'B': bloque_b,
             'C': {
                 'id': 'C',
-                'nombre': plantillas['core_abs']['nombre'],
-                'tipo': 'core_abs',
-                'duracion_minutos': plantillas['core_abs']['duracion_minutos'],
-                'ejercicios': ejercicios_core
+                'nombre': block_c_data.get('block_name', 'Core'),
+                'tipo': 'core',
+                'duracion_minutos': block_c_data.get('duration_estimate_min', 10),
+                'ejercicios': _convert_core_to_ejercicios(block_c_data)
             },
             'D': {
                 'id': 'D',
-                'nombre': plantillas['cardio']['nombre'],
+                'nombre': block_d_data.get('block_name', 'Cardio'),
                 'tipo': 'cardio',
-                'duracion_minutos': plantillas['cardio']['duracion_minutos'],
-                'opciones': plantillas['cardio']['opciones'],
-                'opcion_seleccionada': plantillas.get('cardio_opcion_seleccionada', plantillas['cardio']['opciones'][0])
+                'recomendaciones': block_d_data.get('recommendations', []),
+                'general_notes': block_d_data.get('general_notes', [])
             }
         }
         
-        # Agregar metadata para debugging
-        session['plantillas_metadata'] = {
-            'reglas_aplicadas': plantillas['reglas_aplicadas'],
-            'week_number': week_number,
-            'session_number': session_number
-        }
-        
         session_number += 1
-        
-        logger.info(f"✅ Sesión '{session.get('name')}': Bloques A, C, D integrados")
+        logger.info(f"✅ Sesión '{session.get('name')}': Bloques A, B, C, D integrados con nuevos templates")
     
     return plan_data
+
+
+def _convert_warmup_to_ejercicios(block_a_data):
+    """Convierte la estructura del Block A a formato de ejercicios para BD"""
+    ejercicios = []
+    orden = 1
+    
+    for component in block_a_data.get('components', []):
+        for exercise in component.get('exercises', []):
+            ejercicio = {
+                'orden': orden,
+                'nombre': exercise.get('name', exercise.get('exercise_code', 'Ejercicio')),
+                'series': exercise.get('sets', '1-2'),
+                'reps': exercise.get('reps', exercise.get('duration', '30 seg')),
+                'instrucciones': exercise.get('notes', exercise.get('description', ''))
+            }
+            ejercicios.append(ejercicio)
+            orden += 1
+    
+    return ejercicios
+
+
+def _convert_core_to_ejercicios(block_c_data):
+    """Convierte la estructura del Block C a formato de ejercicios para BD"""
+    ejercicios = []
+    
+    for exercise in block_c_data.get('exercises', []):
+        ejercicio = {
+            'orden': exercise.get('order', 1),
+            'nombre': exercise.get('name', exercise.get('exercise_code', 'Ejercicio Core')),
+            'series': exercise.get('series', 3),
+            'reps': exercise.get('reps', '10-12'),
+            'instrucciones': exercise.get('notes', ''),
+            'video_url': exercise.get('video_url', ''),
+            'exercise_code': exercise.get('exercise_code', '')
+        }
+        ejercicios.append(ejercicio)
+    
+    return ejercicios
 
 
 def _format_edn360_plan_for_display(edn360_data: dict) -> dict:
