@@ -136,11 +136,19 @@ const GenerationProgressModal = ({ jobId, onComplete, onError, onClose }) => {
               </div>
             )}
 
-            {/* Note */}
+            {/* Note and Close Button */}
             {status === 'running' && (
-              <p className="text-xs text-gray-400 text-center mt-4">
-                Este proceso puede tardar 2-5 minutos. Por favor no cierres esta ventana.
-              </p>
+              <>
+                <p className="text-xs text-gray-400 text-center mt-4 mb-3">
+                  Este proceso puede tardar 2-5 minutos. Puedes cerrar esta ventana y el plan seguirá generándose en segundo plano.
+                </p>
+                <button
+                  onClick={onClose}
+                  className="w-full bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+                >
+                  Cerrar y continuar en segundo plano
+                </button>
+              </>
             )}
           </>
         )}
