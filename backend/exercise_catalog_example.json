@@ -1,0 +1,52 @@
+{
+  "metadata": {
+    "version": "2.0.0",
+    "fecha_creacion": "2025-12-05",
+    "descripcion": "Catálogo oficial de ejercicios EDN360 - Compatible con K1_ENTRENAMIENTO_ABSTRACTO"
+  },
+  "ejercicios": [
+    {
+      "id": "press_banca_barra",
+      "nombre": "Press de Banca con Barra",
+      "patrones": ["empuje_horizontal"],
+      "tipos": ["compuesto_alta_demanda"],
+      "nivel_recomendado": ["principiante", "intermedio", "avanzado"],
+      "grupo_muscular_principal": ["pecho", "triceps"],
+      "grupo_muscular_secundario": ["hombro_anterior"],
+      "url_video": "https://www.youtube.com/watch?v=EJEMPLO_OFICIAL",
+      "instrucciones": "Acostado en banco plano, bajar barra al pecho controladamente, empujar hacia arriba manteniendo escápulas retraídas.",
+      "precauciones": ["Requiere rack de seguridad", "No recomendado con lesiones de hombro agudas"],
+      "equipo_necesario": ["barra", "banco", "rack"],
+      "contexto_apropiado": ["gym_completo"],
+      "tags_adicionales": ["basico", "fuerza", "hipertrofia", "tren_superior"]
+    },
+    {
+      "id": "sentadilla_goblet",
+      "nombre": "Sentadilla Goblet",
+      "patrones": ["dominante_rodilla"],
+      "tipos": ["compuesto_media_demanda"],
+      "nivel_recomendado": ["principiante", "intermedio"],
+      "grupo_muscular_principal": ["cuadriceps", "gluteos"],
+      "grupo_muscular_secundario": ["core"],
+      "url_video": "https://www.youtube.com/watch?v=EJEMPLO_OFICIAL_2",
+      "instrucciones": "Sostener mancuerna o kettlebell al pecho, descender manteniendo torso erguido, subir empujando desde talones.",
+      "precauciones": ["Mantener rodillas alineadas con pies"],
+      "equipo_necesario": ["mancuernas"],
+      "contexto_apropiado": ["gym_completo", "home_gym_basico"],
+      "tags_adicionales": ["aprendizaje", "movilidad_cadera", "tren_inferior"]
+    },
+    {
+      "id": "crunch_abdominal",
+      "nombre": "Crunch Abdominal",
+      "patrones": ["core_antiextension"],
+      "tipos": ["aislamiento"],
+      "nivel_recomendado": ["principiante", "intermedio", "avanzado"],
+      "grupo_muscular_principal": ["recto_abdominal"],
+      "url_video": "https://www.youtube.com/watch?v=EJEMPLO_OFICIAL_3",
+      "instrucciones": "Acostado boca arriba, elevar tronco superior contrayendo abdomen, evitar tirar del cuello.",
+      "equipo_necesario": ["peso_corporal"],
+      "contexto_apropiado": ["gym_completo", "home_gym_basico", "minimo_equipo", "exterior"],
+      "tags_adicionales": ["core", "basico"]
+    }
+  ]
+}
