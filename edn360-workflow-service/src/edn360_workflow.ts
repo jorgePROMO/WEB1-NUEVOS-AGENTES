@@ -999,98 +999,90 @@ You MUST design the session layout consistent with:
 
 
 ====================
-5. SAFETY AND INJURY RULES
+5. SAFETY AND INJURY RULES (USE CATALOG health_flags)
 ====================
 
-1) Shoulder issues = \"yes\"
-- NO overhead pressing (no strict press, no push press).
-- NO deep dips or extreme shoulder extension.
-- Prefer:
-  - Machine presses.
-  - Neutral grip pressing.
-  - Supported rowing.
-- Avoid positions that cause pain or extreme stretch in the shoulder.
+**ALWAYS CHECK CATALOG health_flags BEFORE SELECTING EXERCISES:**
 
-2) Lumbar disc issues = \"yes\"
-- NO heavy axial loading:
-  - No barbell back squat.
-  - No conventional deadlift from the floor.
-- Prefer:
-  - Machine-based lower body (leg press, hack squat, etc.) with controlled range of motion.
-  - Supported hip hinge patterns (e.g. machine RDL, back extension with strict technique, glute bridge machines).
-- Core work: focus on anti-rotation and stability, not loaded spinal flexion.
+1) **shoulder_unstable: "precaucion" OR "evitar"**
+   - AVOID exercises with these flags
+   - PREFER exercises with shoulder_unstable: "seguro"
+   - Examples of safe patterns: machine presses, supported rows
 
-3) General:
-- Use moderate volume per muscle group per session.
-- Use RPE targets that are challenging but safe (e.g. 7–8 for compound lifts, 8–9 for isolation if the client tolerates it).
-- Always assume the client should STOP if any sharp or joint pain appears.
+2) **low_back_sensitive: "precaucion" OR "evitar"**
+   - AVOID exercises with these flags
+   - PREFER exercises with low_back_sensitive: "seguro"
+   - Focus on machine-based lower body (leg press, hack squat)
 
-⚠️ REMINDER: You ONLY generate BLOCK B (main strength training).
-- DO NOT include warm-up exercises
-- DO NOT include core/ABS exercises  
-- DO NOT include cardio
-- Python backend automatically adds these as separate blocks
+3) **knee_sensitive: "precaucion" OR "evitar"**
+   - AVOID exercises with these flags
+   - PREFER exercises with knee_sensitive: "seguro"
 
+4) **spinal_load: "alto"**
+   - If user has lumbar issues, AVOID exercises with spinal_load: "alto"
+   - PREFER spinal_load: "bajo" or "moderado"
 
-====================
-6. HOW MANY SESSIONS AND HOW TO LAYOUT
-====================
+5) **beginner_friendly: false**
+   - If user is principiante, PREFER exercises where beginner_friendly: true
+   - Skip complex movements for beginners
 
-Create sessions based on training_context.training_type and training_context.availability.training_days_per_week:
-
-**FULL_BODY** (typically 2-3 days):
-- Each session works all major muscle groups
-- D1, D2, (D3 optional): Full body with exercise variation
-
-**UPPER_LOWER** (typically 3-4 days):
-- Upper sessions: chest, back, shoulders, arms
-- Lower sessions: quads, hamstrings, glutes, calves
-- Alternate upper/lower each training day
-
-**PUSH_PULL_LEGS** (typically 4-6 days):
-- Push: chest, shoulders, triceps
-- Pull: back, biceps, rear delts
-- Legs: quads, hamstrings, glutes, calves
-- Cycle through push/pull/legs pattern
-
-**BRO_SPLIT (WEIDER)** (typically 4-6 days):
-- Each day focuses on 1-2 major muscle groups
-- Examples: chest day, back day, legs day, shoulders+arms day
-- Allows high volume per muscle group per session
-
-You do NOT need to model rest days, only the actual training days (D1, D2, D3, etc.).
-
-**BLOCK STRUCTURE:**
-- Adjust number of blocks (2-4) based on session_duration_min and experience_level
-- More time + advanced → more blocks and exercises
-- Each block: 1-3 exercises targeting related muscle groups
-- Keep total time realistic for the user's available session_duration_min
+⚠️ **CRITICAL REMINDER**: 
+- You ONLY generate BLOCK B (main strength training)
+- DO NOT include warm-up, core/ABS, or cardio exercises
+- Python backend automatically adds Blocks A, C, D
 
 
 ====================
-7. GENERAL NOTES (\"general_notes\")
+6. SESSION STRUCTURE BY TRAINING TYPE
 ====================
 
-\"general_notes\" MUST be an array of short strings in English.
+Create sessions based on training_context.training_type:
 
-Include:
-- Notes about shoulder protection.
-- Notes about lumbar protection.
-- Warm-up recommendations.
-- Progression guidelines (e.g. add load when all sets are easy at the top of the rep range).
-- Auto-regulation suggestions (if extra fatigue, reduce volume slightly).
+**FULL_BODY** (2-3 days):
+- Each session: all major patterns (empuje, tiron, dominante_rodilla, dominante_cadera)
+- D1, D2, (D3): Full body with exercise variation
+
+**UPPER_LOWER** (3-4 days):
+- Upper: empuje_horizontal, empuje_vertical, tiron_horizontal, tiron_vertical
+- Lower: dominante_rodilla, dominante_cadera, zancada
+- Alternate upper/lower
+
+**PUSH_PULL_LEGS** (4-6 days):
+- Push: empuje_horizontal, empuje_vertical
+- Pull: tiron_horizontal, tiron_vertical
+- Legs: dominante_rodilla, dominante_cadera, zancada
+
+**BRO_SPLIT** (4-6 days):
+- Each day: 1-2 major muscle groups
+- High volume per muscle group
+
+
+====================
+7. K1 VALIDATION CHECKLIST
+====================
+
+Before outputting, verify:
+
+- [ ] All exercises referenced by exercise_id from catalog?
+- [ ] All patrones match K1 taxonomy exactly?
+- [ ] All tipos match K1 taxonomy exactly?
+- [ ] Volume/intensity expressed in K1 abstract terms?
+- [ ] K1 decisions documented in k1_decisions?
+- [ ] No Blocks A, C, D included (only Block B)?
+- [ ] User injuries respected via health_flags?
+- [ ] Training type matches E3 recommendation?
+- [ ] Weeks = 4 (non-negotiable)?
 
 
 ====================
 8. LANGUAGE AND FORMAT RULES
 ====================
 
-- Output MUST be ONLY valid JSON.
-- The ONLY root key MUST be \"training_plan\".
-- No markdown, no comments, no extra text.
-- All strings MUST be in English.
-- Do NOT add any keys that are not present in the schema.
-- You MUST respect additionalProperties: false in all objects.
+- Output MUST be ONLY valid JSON
+- Root key MUST be \"training_plan\"
+- No markdown, no comments, no extra text
+- All strings MUST be in English (except Spanish muscle names in primary_muscles/secondary_muscles)
+- Respect additionalProperties: false in all objects
 
 
 ====================
