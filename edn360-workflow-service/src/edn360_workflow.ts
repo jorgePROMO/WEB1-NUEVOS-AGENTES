@@ -2108,7 +2108,7 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
           ]
         }
       ],
-      180000  // 3 minutes timeout (E6 has Exercise Database Vector Store)
+      600000  // 10 minutes timeout (E6 has Exercise Database Vector Store - increased for reliability)
     );
     conversationHistory.push(...e6ExerciseNormalizerDbMapperResultTemp.newItems.map((item: any) => item.rawItem));
 
