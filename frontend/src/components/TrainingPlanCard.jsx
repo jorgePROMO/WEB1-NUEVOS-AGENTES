@@ -285,13 +285,30 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   const handleSave = async () => {
     try {
       setSaving(true);
-      await axios.put(
-        `${API}/admin/users/${userId}/training-plans/edit`,
-        { plan: editedPlan.plan },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      
+      // If in plain text mode, save the plain text content
+      // Backend will store it as-is
+      if (editMode === 'plaintext') {
+        await axios.put(
+          `${API}/admin/users/${userId}/training-plans/edit`,
+          { 
+            plan: editedPlan.plan,
+            plain_text_override: plainTextContent // Send plain text for storage
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+      } else {
+        // Structured mode: save as normal
+        await axios.put(
+          `${API}/admin/users/${userId}/training-plans/edit`,
+          { plan: editedPlan.plan },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+      }
       
       // Refresh plans to get updated data
       await fetchAllPlans();
