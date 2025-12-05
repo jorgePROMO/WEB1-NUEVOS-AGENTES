@@ -11419,14 +11419,18 @@ async def get_user_training_plans(user_id: str, request: Request):
     # 1. Obtener planes EDN360 de training_plans_v2 con TODA la información
     edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
     edn360_plans = await edn360_db.training_plans_v2.find(
-        {"user_id": user_id},
-        {"_id": 0}
+        {"user_id": user_id}
     ).sort("created_at", -1).to_list(length=1000)
     
     for plan_doc in edn360_plans:
+        # Usar questionnaire_submission_id si existe, o convertir _id a string
+        plan_id = plan_doc.get("questionnaire_submission_id")
+        if not plan_id:
+            plan_id = str(plan_doc.get("_id"))
+        
         # Devolver el plan completo con toda la información
         all_plans.append({
-            "id": plan_doc.get("questionnaire_submission_id", "unknown"),
+            "id": plan_id,
             "plan": plan_doc.get("plan", {}),
             "created_at": plan_doc.get("created_at"),
             "status": plan_doc.get("status", "draft"),
