@@ -1482,7 +1482,7 @@ const UserDashboard = () => {
 
                                         {/* Mobile: Card Layout */}
                                         <div className="md:hidden space-y-3">
-                                          {block.exercises.map((exercise, exIdx) => (
+                                          {session.bloques_estructurados.B.exercises.map((exercise, exIdx) => (
                                             <div key={exIdx} className="bg-white rounded-lg border-2 border-gray-300 p-4 shadow-sm">
                                               {/* Número de ejercicio */}
                                               <div className="flex items-start gap-3 mb-3">
