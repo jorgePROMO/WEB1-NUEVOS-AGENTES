@@ -7911,26 +7911,33 @@ async def _integrate_template_blocks(
         logger.warning("⚠️ No se encontraron sessions en training_plan, devolviendo sin modificar")
         return plan_data
     
+    # Extraer parámetros del usuario
+    nivel = user_data.get('nivel', 'intermedio')
+    objetivo = user_data.get('objetivo', 'hipertrofia')
+    injuries = []
+    if user_data.get('lesion_hombro'): injuries.append('shoulder')
+    if user_data.get('lesion_lumbar'): injuries.append('low_back')
+    
+    training_type = training_plan.get('training_type', 'upper_lower')
+    session_duration = training_plan.get('session_duration_min', 60)
+    days_per_week = training_plan.get('days_per_week', 4)
+    
+    logger.info(f"🔧 Parámetros para templates: nivel={nivel}, objetivo={objetivo}, injuries={injuries}, tipo={training_type}")
+    
     sessions = training_plan['sessions']
     session_number = session_number_start
     
     for session in sessions:
-        # Determinar grupos musculares del día
-        grupos_musculares = session.get('focus', [])
+        # Determinar focus del entrenamiento (upper, lower, full_body)
+        focus_list = session.get('focus', [])
+        training_focus = 'full_body'  # default
         
-        # Info del día para selección
-        dia_entrenamiento = {
-            'grupos_musculares': grupos_musculares,
-            'tipo_sesion': training_plan.get('training_type', 'normal')
-        }
+        if any(f in ['upper_body', 'push', 'pull', 'push_focus', 'pull_focus'] for f in focus_list):
+            training_focus = 'upper'
+        elif any(f in ['lower_body', 'legs', 'quads', 'hamstrings'] for f in focus_list):
+            training_focus = 'lower'
         
-        # Seleccionar plantillas para este día
-        plantillas = seleccionar_plantillas(
-            user_data=user_data,
-            dia_entrenamiento=dia_entrenamiento,
-            session_number=session_number,
-            week_number=week_number
-        )
+        logger.info(f"📍 Sesión {session.get('id')}: focus={training_focus}, focus_list={focus_list}")
         
         # Restructurar la sesión con 4 bloques
         # Bloque B: Combinar TODOS los ejercicios en una sola lista (sin subdivisión por músculo)
