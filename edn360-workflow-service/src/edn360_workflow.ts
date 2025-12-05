@@ -1103,7 +1103,8 @@ Before outputting, verify:
 `,
   model: "gpt-4.1",
   tools: [
-    fileSearchTrainingKB  // K1 Entrenamiento - Manual de programación
+    fileSearchTrainingKB,  // K1 Entrenamiento - Knowledge Base (Abstract Rules)
+    fileSearchExercises    // Exercise Catalog (Concrete Exercises)
   ],
   outputType: E4TrainingPlanGeneratorSchema,
   modelSettings: {
