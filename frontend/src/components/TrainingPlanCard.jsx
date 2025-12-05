@@ -114,6 +114,10 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [planToDelete, setPlanToDelete] = useState(null);
   const [sending, setSending] = useState(false);
+  
+  // NEW: Plain text editing mode
+  const [editMode, setEditMode] = useState('structured'); // 'structured' or 'plaintext'
+  const [plainTextContent, setPlainTextContent] = useState('');
 
   const fetchAllPlans = useCallback(async () => {
     try {
