@@ -106,12 +106,13 @@ async def call_training_workflow(edn360_input: Dict[str, Any]) -> Dict[str, Any]
             logger.info(f"🌐 Conectando a: {EDN360_WORKFLOW_SERVICE_URL}")
             logger.info(f"📦 Payload size: {len(payload_json)} bytes")
             
-            # Timeout de 300 segundos (5 minutos) para dar tiempo al workflow de 8 agentes
+            # Timeout de 900 segundos (15 minutos) para dar tiempo al workflow de 8 agentes
+            # Increased to 15 min to handle complex plans and API latency
             workflow_response_raw = requests.post(
                 EDN360_WORKFLOW_SERVICE_URL,
                 data=payload_json,
                 headers={"Content-Type": "application/json"},
-                timeout=300
+                timeout=900
             )
             
             workflow_response_raw.raise_for_status()
