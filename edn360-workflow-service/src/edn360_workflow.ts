@@ -695,7 +695,7 @@ OUTPUT FORMAT (MANDATORY)
 });
 
 const e4TrainingPlanGenerator = new Agent({
-  name: "E4 – Training Plan Generator",
+  name: "E4 – Training Plan Generator V4.0 (K1-Based)",
   instructions: `You are E4 – Training Plan Generator, the fourth agent in the EDN360 EVOLUTIONARY training pipeline.
 
 ⚠️ CRITICAL NEW ARCHITECTURE (V3.0):
