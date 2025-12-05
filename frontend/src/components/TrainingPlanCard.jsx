@@ -728,106 +728,238 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                     {expandedSessions[sessionIdx] && (
                       <CardContent className="pt-3 space-y-3">
                         {/* Session Blocks - New 4-block structure */}
-                        {(session.bloques_estructurados || session.blocks).map((block, blockIdx) => {
-                          // Handle new 4-block structure or old structure for backward compatibility
-                          const blockName = block.nombre || `Bloque ${block.id} - ${translate(block.primary_muscles)}`;
-                          const blockExercises = block.ejercicios || block.exercises;
-                          
-                          return (
-                            <div key={blockIdx} className="bg-gray-50 p-3 rounded-lg space-y-2">
-                              <h4 className="text-sm font-semibold text-gray-800">
-                                {blockName}
-                              </h4>
+                        {(() => {
+                          // Handle new 4-block structure (bloques_estructurados) or old structure (blocks)
+                          if (session.bloques_estructurados) {
+                            // New structure: bloques_estructurados is a dictionary with keys A, B, C, D
+                            const blockOrder = ['A', 'B', 'C', 'D'];
+                            return blockOrder.map((blockKey, blockIdx) => {
+                              const block = session.bloques_estructurados[blockKey];
+                              if (!block) return null;
+                              
+                              const blockName = block.nombre || `Bloque ${blockKey}`;
+                              const blockExercises = block.ejercicios || block.exercises || [];
+                              
+                              return (
+                                <div key={blockKey} className="bg-gray-50 p-3 rounded-lg space-y-2">
+                                  <h4 className="text-sm font-semibold text-gray-800">
+                                    {blockName}
+                                  </h4>
 
-                              {/* Exercises */}
-                              <div className="space-y-2">
-                                {/* Table Headers */}
-                                <div className="grid grid-cols-12 gap-2 items-center bg-gray-100 px-2 py-1 rounded">
-                                  <div className="col-span-1 text-xs font-semibold text-gray-700 text-center">
-                                    #
-                                  </div>
-                                  <div className="col-span-5 text-xs font-semibold text-gray-700">
-                                    Ejercicio
-                                  </div>
-                                  <div className="col-span-2 text-xs font-semibold text-gray-700">
-                                    Series
-                                  </div>
-                                  <div className="col-span-2 text-xs font-semibold text-gray-700">
-                                    Reps
-                                  </div>
-                                  <div className="col-span-2 text-xs font-semibold text-gray-700">
-                                    RPE
+                                  {/* Exercises */}
+                                  {blockExercises.length > 0 && (
+                                    <div className="space-y-2">
+                                      {/* Table Headers */}
+                                      <div className="grid grid-cols-12 gap-2 items-center bg-gray-100 px-2 py-1 rounded">
+                                        <div className="col-span-1 text-xs font-semibold text-gray-700 text-center">
+                                          #
+                                        </div>
+                                        <div className="col-span-5 text-xs font-semibold text-gray-700">
+                                          Ejercicio
+                                        </div>
+                                        <div className="col-span-2 text-xs font-semibold text-gray-700">
+                                          Series
+                                        </div>
+                                        <div className="col-span-2 text-xs font-semibold text-gray-700">
+                                          Reps
+                                        </div>
+                                        <div className="col-span-2 text-xs font-semibold text-gray-700">
+                                          RPE
+                                        </div>
+                                      </div>
+                                      
+                                      {blockExercises.map((exercise, exerciseIdx) => (
+                                        <div key={exerciseIdx} className="bg-white p-2 rounded border border-gray-200">
+                                          <div className="grid grid-cols-12 gap-2 items-start">
+                                            <div className="col-span-1 flex items-center justify-center">
+                                              <span className="text-xs font-bold text-gray-500">
+                                                {exercise.order || exerciseIdx + 1}
+                                              </span>
+                                            </div>
+                                            <div className="col-span-5">
+                                              <Input
+                                                value={exercise.name}
+                                                onChange={(e) => updateExerciseField(sessionIdx, blockKey, exerciseIdx, 'name', e.target.value)}
+                                                className="text-xs h-8"
+                                                placeholder="Nombre del ejercicio"
+                                              />
+                                            </div>
+                                            <div className="col-span-2">
+                                              <Input
+                                                value={exercise.series}
+                                                onChange={(e) => updateExerciseField(sessionIdx, blockKey, exerciseIdx, 'series', e.target.value)}
+                                                className="text-xs h-8"
+                                                placeholder="Series"
+                                              />
+                                            </div>
+                                            <div className="col-span-2">
+                                              <Input
+                                                value={exercise.reps}
+                                                onChange={(e) => updateExerciseField(sessionIdx, blockKey, exerciseIdx, 'reps', e.target.value)}
+                                                className="text-xs h-8"
+                                                placeholder="Reps"
+                                              />
+                                            </div>
+                                            <div className="col-span-2">
+                                              <Input
+                                                value={exercise.rpe}
+                                                onChange={(e) => updateExerciseField(sessionIdx, blockKey, exerciseIdx, 'rpe', e.target.value)}
+                                                className="text-xs h-8"
+                                                placeholder="RPE"
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="mt-2 space-y-1">
+                                            <Textarea
+                                              value={exercise.notes || ''}
+                                              onChange={(e) => updateExerciseField(sessionIdx, blockKey, exerciseIdx, 'notes', e.target.value)}
+                                              className="text-xs"
+                                              placeholder="Notas del ejercicio"
+                                              rows={1}
+                                            />
+                                            {/* Botón Ver Video */}
+                                            {exercise.video_url && (
+                                              <Button
+                                                onClick={() => window.open(exercise.video_url, '_blank')}
+                                                size="sm"
+                                                variant="outline"
+                                                className="w-full text-xs border-blue-300 text-blue-700 hover:bg-blue-50"
+                                              >
+                                                <ExternalLink className="h-3 w-3 mr-1" />
+                                                Ver Video
+                                              </Button>
+                                            )}
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                  
+                                  {/* Show duration for cardio/warmup blocks */}
+                                  {block.duracion_minutos && (
+                                    <p className="text-xs text-gray-600 mt-2">
+                                      Duración: {block.duracion_minutos} minutos
+                                    </p>
+                                  )}
+                                  
+                                  {/* Show cardio options if available */}
+                                  {block.opciones && (
+                                    <div className="text-xs text-gray-600 mt-2">
+                                      <p className="font-semibold">Opciones disponibles:</p>
+                                      <ul className="list-disc list-inside">
+                                        {block.opciones.map((opcion, idx) => (
+                                          <li key={idx}>{opcion}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            });
+                          } else if (session.blocks) {
+                            // Old structure: blocks is an array
+                            return session.blocks.map((block, blockIdx) => {
+                              const blockName = `Bloque ${block.id} - ${translate(block.primary_muscles)}`;
+                              const blockExercises = block.exercises || [];
+                              
+                              return (
+                                <div key={blockIdx} className="bg-gray-50 p-3 rounded-lg space-y-2">
+                                  <h4 className="text-sm font-semibold text-gray-800">
+                                    {blockName}
+                                  </h4>
+
+                                  {/* Exercises */}
+                                  <div className="space-y-2">
+                                    {/* Table Headers */}
+                                    <div className="grid grid-cols-12 gap-2 items-center bg-gray-100 px-2 py-1 rounded">
+                                      <div className="col-span-1 text-xs font-semibold text-gray-700 text-center">
+                                        #
+                                      </div>
+                                      <div className="col-span-5 text-xs font-semibold text-gray-700">
+                                        Ejercicio
+                                      </div>
+                                      <div className="col-span-2 text-xs font-semibold text-gray-700">
+                                        Series
+                                      </div>
+                                      <div className="col-span-2 text-xs font-semibold text-gray-700">
+                                        Reps
+                                      </div>
+                                      <div className="col-span-2 text-xs font-semibold text-gray-700">
+                                        RPE
+                                      </div>
+                                    </div>
+                                    
+                                    {blockExercises.map((exercise, exerciseIdx) => (
+                                      <div key={exerciseIdx} className="bg-white p-2 rounded border border-gray-200">
+                                        <div className="grid grid-cols-12 gap-2 items-start">
+                                          <div className="col-span-1 flex items-center justify-center">
+                                            <span className="text-xs font-bold text-gray-500">
+                                              {exercise.order}
+                                            </span>
+                                          </div>
+                                          <div className="col-span-5">
+                                            <Input
+                                              value={exercise.name}
+                                              onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'name', e.target.value)}
+                                              className="text-xs h-8"
+                                              placeholder="Nombre del ejercicio"
+                                            />
+                                          </div>
+                                          <div className="col-span-2">
+                                            <Input
+                                              value={exercise.series}
+                                              onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'series', e.target.value)}
+                                              className="text-xs h-8"
+                                              placeholder="Series"
+                                            />
+                                          </div>
+                                          <div className="col-span-2">
+                                            <Input
+                                              value={exercise.reps}
+                                              onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'reps', e.target.value)}
+                                              className="text-xs h-8"
+                                              placeholder="Reps"
+                                            />
+                                          </div>
+                                          <div className="col-span-2">
+                                            <Input
+                                              value={exercise.rpe}
+                                              onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'rpe', e.target.value)}
+                                              className="text-xs h-8"
+                                              placeholder="RPE"
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="mt-2 space-y-1">
+                                          <Textarea
+                                            value={exercise.notes}
+                                            onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'notes', e.target.value)}
+                                            className="text-xs"
+                                            placeholder="Notas del ejercicio"
+                                            rows={1}
+                                          />
+                                          {/* Botón Ver Video */}
+                                          {exercise.video_url && (
+                                            <Button
+                                              onClick={() => window.open(exercise.video_url, '_blank')}
+                                              size="sm"
+                                              variant="outline"
+                                              className="w-full text-xs border-blue-300 text-blue-700 hover:bg-blue-50"
+                                            >
+                                              <ExternalLink className="h-3 w-3 mr-1" />
+                                              Ver Video
+                                            </Button>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ))}
                                   </div>
                                 </div>
-                                
-                                {blockExercises.map((exercise, exerciseIdx) => (
-                                  <div key={exerciseIdx} className="bg-white p-2 rounded border border-gray-200">
-                                    <div className="grid grid-cols-12 gap-2 items-start">
-                                      <div className="col-span-1 flex items-center justify-center">
-                                        <span className="text-xs font-bold text-gray-500">
-                                          {exercise.order}
-                                        </span>
-                                      </div>
-                                      <div className="col-span-5">
-                                        <Input
-                                          value={exercise.name}
-                                          onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'name', e.target.value)}
-                                          className="text-xs h-8"
-                                          placeholder="Nombre del ejercicio"
-                                        />
-                                      </div>
-                                      <div className="col-span-2">
-                                        <Input
-                                          value={exercise.series}
-                                          onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'series', e.target.value)}
-                                          className="text-xs h-8"
-                                          placeholder="Series"
-                                        />
-                                      </div>
-                                      <div className="col-span-2">
-                                        <Input
-                                          value={exercise.reps}
-                                          onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'reps', e.target.value)}
-                                          className="text-xs h-8"
-                                          placeholder="Reps"
-                                        />
-                                      </div>
-                                      <div className="col-span-2">
-                                        <Input
-                                          value={exercise.rpe}
-                                          onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'rpe', e.target.value)}
-                                          className="text-xs h-8"
-                                          placeholder="RPE"
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="mt-2 space-y-1">
-                                      <Textarea
-                                        value={exercise.notes}
-                                        onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'notes', e.target.value)}
-                                        className="text-xs"
-                                        placeholder="Notas del ejercicio"
-                                        rows={1}
-                                      />
-                                      {/* Botón Ver Video */}
-                                      {exercise.video_url && (
-                                        <Button
-                                          onClick={() => window.open(exercise.video_url, '_blank')}
-                                          size="sm"
-                                          variant="outline"
-                                          className="w-full text-xs border-blue-300 text-blue-700 hover:bg-blue-50"
-                                        >
-                                          <ExternalLink className="h-3 w-3 mr-1" />
-                                          Ver Video
-                                        </Button>
-                                      )}
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          );
-                        })}
+                              );
+                            });
+                          }
+                          return null;
+                        })()}
                       </CardContent>
                     )}
                   </Card>
