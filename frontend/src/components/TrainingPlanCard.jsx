@@ -762,6 +762,59 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
 
           {editedPlan && (
             <div className="space-y-6 py-4">
+              {/* Mode Toggle */}
+              <div className="flex items-center justify-between bg-blue-50 p-3 rounded-lg border border-blue-200">
+                <div>
+                  <p className="text-sm font-semibold text-blue-900">Modo de Edición</p>
+                  <p className="text-xs text-blue-700">Elige cómo quieres editar el plan</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant={editMode === 'structured' ? 'default' : 'outline'}
+                    onClick={() => setEditMode('structured')}
+                    className={editMode === 'structured' ? 'bg-blue-600' : ''}
+                  >
+                    <FileText className="h-3 w-3 mr-1" />
+                    Estructurado
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant={editMode === 'plaintext' ? 'default' : 'outline'}
+                    onClick={() => {
+                      setEditMode('plaintext');
+                      // Regenerate plain text from current editedPlan state
+                      setPlainTextContent(convertPlanToPlainText(editedPlan));
+                    }}
+                    className={editMode === 'plaintext' ? 'bg-blue-600' : ''}
+                  >
+                    <Edit className="h-3 w-3 mr-1" />
+                    Texto Plano
+                  </Button>
+                </div>
+              </div>
+
+              {/* Plain Text Editor Mode */}
+              {editMode === 'plaintext' && (
+                <div className="space-y-3">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                    <p className="text-sm text-amber-800">
+                      <strong>📝 Modo Texto Plano:</strong> Edita el plan como texto. Puedes copiar, pegar, y ajustar libremente. 
+                      Los cambios se guardarán tal cual los escribas.
+                    </p>
+                  </div>
+                  <Textarea
+                    value={plainTextContent}
+                    onChange={(e) => setPlainTextContent(e.target.value)}
+                    className="w-full font-mono text-xs leading-relaxed min-h-[600px]"
+                    placeholder="Edita el plan aquí..."
+                  />
+                </div>
+              )}
+
+              {/* Structured Editor Mode */}
+              {editMode === 'structured' && (
+                <>
               {/* Header Section */}
               <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
                 <div>
