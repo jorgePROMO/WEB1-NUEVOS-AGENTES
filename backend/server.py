@@ -13954,6 +13954,10 @@ async def get_job_status(job_id: str):
 # Include the router in the main app (moved to end to include all endpoints)
 app.include_router(api_router)
 
+# Include E4 Debug Router (K1 System)
+from e4_debug_endpoint import debug_router
+app.include_router(debug_router, prefix="/api")
+
 # Verify database connection at startup
 @app.on_event("startup")
 async def startup_db_verification():
