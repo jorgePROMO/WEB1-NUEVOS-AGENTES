@@ -7951,6 +7951,10 @@ async def _integrate_template_blocks(
             'exercises': all_exercises  # Lista continua de TODOS los ejercicios
         }
         
+        # Enriquecer ejercicios de bloques A y C con videos desde BD
+        ejercicios_calentamiento = await enrich_exercises_with_videos(plantillas['calentamiento']['ejercicios'])
+        ejercicios_core = await enrich_exercises_with_videos(plantillas['core_abs']['ejercicios'])
+        
         # Agregar la nueva estructura de bloques
         session['bloques_estructurados'] = {
             'A': {
@@ -7958,7 +7962,7 @@ async def _integrate_template_blocks(
                 'nombre': plantillas['calentamiento']['nombre'],
                 'tipo': 'calentamiento',
                 'duracion_minutos': plantillas['calentamiento']['duracion_minutos'],
-                'ejercicios': plantillas['calentamiento']['ejercicios']
+                'ejercicios': ejercicios_calentamiento
             },
             'B': bloque_b,
             'C': {
@@ -7966,7 +7970,7 @@ async def _integrate_template_blocks(
                 'nombre': plantillas['core_abs']['nombre'],
                 'tipo': 'core_abs',
                 'duracion_minutos': plantillas['core_abs']['duracion_minutos'],
-                'ejercicios': plantillas['core_abs']['ejercicios']
+                'ejercicios': ejercicios_core
             },
             'D': {
                 'id': 'D',
