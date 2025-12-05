@@ -1572,16 +1572,29 @@ async def _generate_plan_background(plan_id: str, user_id: str, workflow_input: 
             logger.info("🔧 ========== INICIANDO INTEGRACIÓN DE PLANTILLAS 4-BLOQUES ==========")
             
             # Obtener datos del usuario para selección de plantillas
+            # Try both databases - trainsmart and edn360_app
             db = client[os.getenv('MONGO_DB_NAME', 'trainsmart')]
-            # Try both string and ObjectId formats for user lookup
+            edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+            
+            user = None
+            # Try trainsmart database first
             user = await db.users.find_one({"_id": user_id})
             if not user:
-                # Try with string format
                 user = await db.users.find_one({"_id": str(user_id)})
             if not user:
-                # Try with numeric format
                 try:
                     user = await db.users.find_one({"_id": int(user_id)})
+                except ValueError:
+                    pass
+            
+            # If not found in trainsmart, try edn360_app database
+            if not user:
+                user = await edn360_db.users.find_one({"_id": user_id})
+            if not user:
+                user = await edn360_db.users.find_one({"_id": str(user_id)})
+            if not user:
+                try:
+                    user = await edn360_db.users.find_one({"_id": int(user_id)})
                 except ValueError:
                     pass
             
