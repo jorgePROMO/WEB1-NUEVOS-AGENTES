@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-12-05T18:09:55.543655",
+  "count": 21,
+  "data": [
+    {
+      "id": "crunch abdominal",
+      "nombre": "Crunch abdominal",
+      "tipo": "core",
+      "video_url": null,
+      "grupo_muscular": "recto_abdominal",
+      "instrucciones": "Manos en pecho o nuca, elevar solo omóplatos",
+      "series": 3,
+      "reps": "12-15",
+      "duracion_segundos": null,
+      "duracion_minutos": null,
+      "descanso_segundos": 30,
+      "created_at": 
