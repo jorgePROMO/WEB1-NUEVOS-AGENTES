@@ -719,101 +719,107 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
 
                     {expandedSessions[sessionIdx] && (
                       <CardContent className="pt-3 space-y-3">
-                        {/* Session Blocks */}
-                        {session.blocks.map((block, blockIdx) => (
-                          <div key={blockIdx} className="bg-gray-50 p-3 rounded-lg space-y-2">
-                            <h4 className="text-sm font-semibold text-gray-800">
-                              Bloque {block.id} - {translate(block.primary_muscles)}
-                            </h4>
+                        {/* Session Blocks - New 4-block structure */}
+                        {(session.bloques_estructurados || session.blocks).map((block, blockIdx) => {
+                          // Handle new 4-block structure or old structure for backward compatibility
+                          const blockName = block.nombre || `Bloque ${block.id} - ${translate(block.primary_muscles)}`;
+                          const blockExercises = block.ejercicios || block.exercises;
+                          
+                          return (
+                            <div key={blockIdx} className="bg-gray-50 p-3 rounded-lg space-y-2">
+                              <h4 className="text-sm font-semibold text-gray-800">
+                                {blockName}
+                              </h4>
 
-                            {/* Exercises */}
-                            <div className="space-y-2">
-                              {/* Table Headers */}
-                              <div className="grid grid-cols-12 gap-2 items-center bg-gray-100 px-2 py-1 rounded">
-                                <div className="col-span-1 text-xs font-semibold text-gray-700 text-center">
-                                  #
+                              {/* Exercises */}
+                              <div className="space-y-2">
+                                {/* Table Headers */}
+                                <div className="grid grid-cols-12 gap-2 items-center bg-gray-100 px-2 py-1 rounded">
+                                  <div className="col-span-1 text-xs font-semibold text-gray-700 text-center">
+                                    #
+                                  </div>
+                                  <div className="col-span-5 text-xs font-semibold text-gray-700">
+                                    Ejercicio
+                                  </div>
+                                  <div className="col-span-2 text-xs font-semibold text-gray-700">
+                                    Series
+                                  </div>
+                                  <div className="col-span-2 text-xs font-semibold text-gray-700">
+                                    Reps
+                                  </div>
+                                  <div className="col-span-2 text-xs font-semibold text-gray-700">
+                                    RPE
+                                  </div>
                                 </div>
-                                <div className="col-span-5 text-xs font-semibold text-gray-700">
-                                  Ejercicio
-                                </div>
-                                <div className="col-span-2 text-xs font-semibold text-gray-700">
-                                  Series
-                                </div>
-                                <div className="col-span-2 text-xs font-semibold text-gray-700">
-                                  Reps
-                                </div>
-                                <div className="col-span-2 text-xs font-semibold text-gray-700">
-                                  RPE
-                                </div>
+                                
+                                {blockExercises.map((exercise, exerciseIdx) => (
+                                  <div key={exerciseIdx} className="bg-white p-2 rounded border border-gray-200">
+                                    <div className="grid grid-cols-12 gap-2 items-start">
+                                      <div className="col-span-1 flex items-center justify-center">
+                                        <span className="text-xs font-bold text-gray-500">
+                                          {exercise.order}
+                                        </span>
+                                      </div>
+                                      <div className="col-span-5">
+                                        <Input
+                                          value={exercise.name}
+                                          onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'name', e.target.value)}
+                                          className="text-xs h-8"
+                                          placeholder="Nombre del ejercicio"
+                                        />
+                                      </div>
+                                      <div className="col-span-2">
+                                        <Input
+                                          value={exercise.series}
+                                          onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'series', e.target.value)}
+                                          className="text-xs h-8"
+                                          placeholder="Series"
+                                        />
+                                      </div>
+                                      <div className="col-span-2">
+                                        <Input
+                                          value={exercise.reps}
+                                          onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'reps', e.target.value)}
+                                          className="text-xs h-8"
+                                          placeholder="Reps"
+                                        />
+                                      </div>
+                                      <div className="col-span-2">
+                                        <Input
+                                          value={exercise.rpe}
+                                          onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'rpe', e.target.value)}
+                                          className="text-xs h-8"
+                                          placeholder="RPE"
+                                        />
+                                      </div>
+                                    </div>
+                                    <div className="mt-2 space-y-1">
+                                      <Textarea
+                                        value={exercise.notes}
+                                        onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'notes', e.target.value)}
+                                        className="text-xs"
+                                        placeholder="Notas del ejercicio"
+                                        rows={1}
+                                      />
+                                      {/* Botón Ver Video */}
+                                      {exercise.video_url && (
+                                        <Button
+                                          onClick={() => window.open(exercise.video_url, '_blank')}
+                                          size="sm"
+                                          variant="outline"
+                                          className="w-full text-xs border-blue-300 text-blue-700 hover:bg-blue-50"
+                                        >
+                                          <ExternalLink className="h-3 w-3 mr-1" />
+                                          Ver Video
+                                        </Button>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
-                              
-                              {block.exercises.map((exercise, exerciseIdx) => (
-                                <div key={exerciseIdx} className="bg-white p-2 rounded border border-gray-200">
-                                  <div className="grid grid-cols-12 gap-2 items-start">
-                                    <div className="col-span-1 flex items-center justify-center">
-                                      <span className="text-xs font-bold text-gray-500">
-                                        {exercise.order}
-                                      </span>
-                                    </div>
-                                    <div className="col-span-5">
-                                      <Input
-                                        value={exercise.name}
-                                        onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'name', e.target.value)}
-                                        className="text-xs h-8"
-                                        placeholder="Nombre del ejercicio"
-                                      />
-                                    </div>
-                                    <div className="col-span-2">
-                                      <Input
-                                        value={exercise.series}
-                                        onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'series', e.target.value)}
-                                        className="text-xs h-8"
-                                        placeholder="Series"
-                                      />
-                                    </div>
-                                    <div className="col-span-2">
-                                      <Input
-                                        value={exercise.reps}
-                                        onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'reps', e.target.value)}
-                                        className="text-xs h-8"
-                                        placeholder="Reps"
-                                      />
-                                    </div>
-                                    <div className="col-span-2">
-                                      <Input
-                                        value={exercise.rpe}
-                                        onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'rpe', e.target.value)}
-                                        className="text-xs h-8"
-                                        placeholder="RPE"
-                                      />
-                                    </div>
-                                  </div>
-                                  <div className="mt-2 space-y-1">
-                                    <Textarea
-                                      value={exercise.notes}
-                                      onChange={(e) => updateExerciseField(sessionIdx, blockIdx, exerciseIdx, 'notes', e.target.value)}
-                                      className="text-xs"
-                                      placeholder="Notas del ejercicio"
-                                      rows={1}
-                                    />
-                                    {/* Botón Ver Video */}
-                                    {exercise.video_url && (
-                                      <Button
-                                        onClick={() => window.open(exercise.video_url, '_blank')}
-                                        size="sm"
-                                        variant="outline"
-                                        className="w-full text-xs border-blue-300 text-blue-700 hover:bg-blue-50"
-                                      >
-                                        <ExternalLink className="h-3 w-3 mr-1" />
-                                        Ver Video
-                                      </Button>
-                                    )}
-                                  </div>
-                                </div>
-                              ))}
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </CardContent>
                     )}
                   </Card>
