@@ -1565,6 +1565,65 @@ async def _generate_plan_background(plan_id: str, user_id: str, workflow_input: 
         # Traducir el plan a español
         training_program = _translate_training_plan_to_spanish(training_program)
         
+        # ============================================
+        # PASO 8: INTEGRAR PLANTILLAS DE 4 BLOQUES
+        # ============================================
+        try:
+            logger.info("🔧 ========== INICIANDO INTEGRACIÓN DE PLANTILLAS 4-BLOQUES ==========")
+            
+            # Obtener datos del usuario para selección de plantillas
+            db = client[os.getenv('MONGO_DB_NAME', 'trainsmart')]
+            user = await db.users.find_one({"_id": user_id})
+            
+            if user:
+                # Obtener el cuestionario inicial para datos del usuario
+                initial_questionnaire = state.get("initial_questionnaire", {})
+                questionnaire_payload = initial_questionnaire.get("payload", {})
+                
+                # Extraer datos del usuario para selección de plantillas
+                user_data_for_templates = {
+                    'edad': questionnaire_payload.get('edad', 0),
+                    'nivel': questionnaire_payload.get('experience_level', 'principiante').lower(),
+                    'objetivo': questionnaire_payload.get('goal_primary', 'mantenimiento').lower(),
+                    'lesion_hombro': questionnaire_payload.get('injuries_or_limitations', '').lower().find('hombro') != -1,
+                    'lesion_lumbar': questionnaire_payload.get('injuries_or_limitations', '').lower().find('lumbar') != -1 or 
+                                   questionnaire_payload.get('injuries_or_limitations', '').lower().find('espalda baja') != -1,
+                    'muy_sedentario': questionnaire_payload.get('lifestyle_activity', '').lower() == 'sedentary',
+                    'primera_sesion': not bool(state.get("last_plan"))
+                }
+                
+                logger.info(f"🔧 user_data_for_templates: {user_data_for_templates}")
+                
+                # Contar planes previos para determinar número de mes
+                edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+                planes_previos_count = await edn360_db.training_plans_v2.count_documents({"user_id": user_id})
+                numero_mes = planes_previos_count + 1
+                
+                # Integrar plantillas en el plan
+                training_program = _integrate_template_blocks(
+                    training_program, 
+                    user_data_for_templates,
+                    week_number=numero_mes,
+                    session_number_start=1
+                )
+                
+                # Verificar que se agregaron los bloques estructurados
+                if training_program.get('sessions') and len(training_program['sessions']) > 0:
+                    first_session = training_program['sessions'][0]
+                    if 'bloques_estructurados' in first_session:
+                        logger.info("✅ Primera sesión TIENE bloques_estructurados")
+                        logger.info(f"   Bloques: {list(first_session['bloques_estructurados'].keys())}")
+                    else:
+                        logger.error("❌ Primera sesión NO TIENE bloques_estructurados!")
+                
+                logger.info("✅ Plantillas 4-bloques integradas exitosamente")
+            else:
+                logger.warning("⚠️ Usuario no encontrado, saltando integración de plantillas")
+                
+        except Exception as e:
+            logger.error(f"❌ Error integrando plantillas 4-bloques: {e}")
+            # Continuar sin las plantillas si hay error
+        
         # Actualizar el plan en BD con status="draft"
         edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
         last_plan = state.get("last_plan")
