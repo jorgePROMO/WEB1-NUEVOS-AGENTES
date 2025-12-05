@@ -1600,11 +1600,11 @@ async def _generate_plan_background(plan_id: str, user_id: str, workflow_input: 
             
             logger.info(f"🔍 User lookup result: {'Found' if user else 'Not found'} | user_id: {user_id} | type: {type(user_id)}")
             
-            if user:
-                # Obtener el cuestionario inicial para datos del usuario
-                initial_questionnaire = state.get("initial_questionnaire", {})
-                questionnaire_payload = initial_questionnaire.get("payload", {})
-                
+            # Obtener el cuestionario inicial para datos del usuario (desde state)
+            initial_questionnaire = state.get("initial_questionnaire", {})
+            questionnaire_payload = initial_questionnaire.get("payload", {})
+            
+            if questionnaire_payload:
                 # Extraer datos del usuario para selección de plantillas
                 user_data_for_templates = {
                     'edad': questionnaire_payload.get('edad', 0),
@@ -1643,7 +1643,7 @@ async def _generate_plan_background(plan_id: str, user_id: str, workflow_input: 
                 
                 logger.info("✅ Plantillas 4-bloques integradas exitosamente")
             else:
-                logger.warning("⚠️ Usuario no encontrado, saltando integración de plantillas")
+                logger.warning("⚠️ Cuestionario no encontrado en state, saltando integración de plantillas")
                 
         except Exception as e:
             logger.error(f"❌ Error integrando plantillas 4-bloques: {e}")
