@@ -7982,7 +7982,8 @@ async def admin_generate_training_plan(
         numero_mes = planes_previos_count + 1
         
         # ========== INTEGRACIÓN DE PLANTILLAS (BLOQUES A, C, D) ==========
-        logger.info("🔧 Integrando plantillas de calentamiento, core y cardio...")
+        logger.info("🔧 ========== INICIANDO INTEGRACIÓN DE PLANTILLAS ==========")
+        logger.info(f"🔧 Plan original tiene {len(result['plan_data'].get('sessions', []))} sesiones")
         
         from backend.training_templates import seleccionar_plantillas
         
