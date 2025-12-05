@@ -1605,11 +1605,16 @@ async def _generate_plan_background(plan_id: str, user_id: str, workflow_input: 
             questionnaire_payload = initial_questionnaire.get("payload", {})
             
             if questionnaire_payload:
+                # Log questionnaire keys for debugging
+                logger.info(f"🔍 Questionnaire payload keys: {list(questionnaire_payload.keys())[:20]}")
+                logger.info(f"🔍 experience_level: {questionnaire_payload.get('experience_level')}")
+                logger.info(f"🔍 goal_primary: {questionnaire_payload.get('goal_primary')}")
+                
                 # Extraer datos del usuario para selección de plantillas
                 user_data_for_templates = {
-                    'edad': questionnaire_payload.get('edad', 0),
-                    'nivel': questionnaire_payload.get('experience_level', 'principiante').lower(),
-                    'objetivo': questionnaire_payload.get('goal_primary', 'mantenimiento').lower(),
+                    'edad': questionnaire_payload.get('edad', questionnaire_payload.get('age', 0)),
+                    'nivel': questionnaire_payload.get('experience_level', questionnaire_payload.get('nivel', 'principiante')).lower(),
+                    'objetivo': questionnaire_payload.get('goal_primary', questionnaire_payload.get('objetivo', 'mantenimiento')).lower(),
                     'lesion_hombro': questionnaire_payload.get('injuries_or_limitations', '').lower().find('hombro') != -1,
                     'lesion_lumbar': questionnaire_payload.get('injuries_or_limitations', '').lower().find('lumbar') != -1 or 
                                    questionnaire_payload.get('injuries_or_limitations', '').lower().find('espalda baja') != -1,
