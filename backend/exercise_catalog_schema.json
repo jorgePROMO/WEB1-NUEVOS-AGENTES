@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EDN360 Exercise Catalog Schema",
+  "description": "Esquema oficial para el catálogo de ejercicios EDN360 v2.0",
+  "type": "object",
+  "required": ["metadata", "ejercicios"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["version", "fecha_creacion"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Versión del catálogo (ej: 2.0.0)"
+        },
+        "fecha_creacion": {
+          "type": "string",
+          "format": "date",
+          "description": "Fecha de creación del catálogo"
+        },
+        "descripcion": {
+          "type": "string",
+          "description": "Descripción general del catálogo"
+        }
+      }
+    },
+    "ejercicios": {
+      "type": "array",
+      "description": "Lista de todos los ejercicios del catálogo",
+      "items": {
+        "type": "object",
+        "required": ["id", "nombre", "patrones", "tipos", "nivel_recomendado", "grupo_muscular_principal"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único del ejercicio (slug: lowercase, sin espacios). Ej: 'press_banca_barra'",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "nombre": {
+            "type": "string",
+            "description": "Nombre legible del ejercicio. Ej: 'Press de Banca con Barra'"
+          },
+          "patrones": {
+            "type": "array",
+            "description": "Patrones de movimiento que cumple (según taxonomía K1)",
+            "items": {
+              "type": "string",
+              "enum": [
+                "empuje_horizontal",
+                "empuje_vertical",
+                "tiron_horizontal",
+                "tiron_vertical",
+                "dominante_rodilla",
+                "dominante_cadera",
+                "zancada",
+                "core_antirotacion",
+                "core_antiextension",
+                "core_antiflexion",
+                "core_rotacional"
+              ]
+            },
+            "minItems": 1
+          },
+          "tipos": {
+            "type": "array",
+            "description": "Tipos de ejercicio (según taxonomía K1)",
+            "items": {
+              "type": "string",
+              "enum": [
+                "compuesto_alta_demanda",
+                "compuesto_media_demanda",
+                "aislamiento",
+                "correctivo_estabilidad",
+                "pliometrico",
+                "balistico",
+                "metabolico_circuito"
+              ]
+            },
+            "minItems": 1
+          },
+          "nivel_recomendado": {
+            "type": "array",
+            "description": "Niveles de usuario para los que es apropiado",
+            "items": {
+              "type": "string",
+              "enum": ["principiante", "intermedio", "avanzado"]
+            },
+            "minItems": 1
+          },
+          "grupo_muscular_principal": {
+            "type": "array",
+            "description": "Grupos musculares principales trabajados",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "grupo_muscular_secundario": {
+            "type": "array",
+            "description": "Grupos musculares secundarios (opcional)",
+            "items": {
+              "type": "string"
+            }
+          },
+          "url_video": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL del video oficial del ejercicio"
+          },
+          "instrucciones": {
+            "type": "string",
+            "description": "Instrucciones breves de ejecución"
+          },
+          "precauciones": {
+            "type": "array",
+            "description": "Contraindicaciones o precauciones",
+            "items": {
+              "type": "string"
+            }
+          },
+          "equipo_necesario": {
+            "type": "array",
+            "description": "Equipamiento necesario",
+            "items": {
+              "type": "string",
+              "enum": [
+                "barra",
+                "mancuernas",
+                "kettlebell",
+                "maquina",
+                "cables",
+                "bandas",
+                "peso_corporal",
+                "trx",
+                "banco",
+                "rack",
+                "otros"
+              ]
+            }
+          },
+          "contexto_apropiado": {
+            "type": "array",
+            "description": "Contextos donde se puede realizar",
+            "items": {
+              "type": "string",
+              "enum": ["gym_completo", "home_gym_basico", "minimo_equipo", "exterior"]
+            }
+          },
+          "tags_adicionales": {
+            "type": "array",
+            "description": "Tags adicionales para búsqueda/filtrado",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
