@@ -379,29 +379,35 @@ const AdminDashboard = () => {
     }
     
     try {
-      // Preparar payload para generación asíncrona
-      const payload = {
-        submission_id: actualSourceId,
-        mode: 'training',
-        previous_training_plan_id: selectedPreviousTrainingPlan || null
-      };
+      // Mostrar alerta de que el proceso va a comenzar
+      alert('⏳ Generando plan de entrenamiento... Este proceso puede tardar 2-3 minutos. Por favor espera, la página se actualizará automáticamente cuando termine.');
       
+      // Llamar al endpoint síncrono
       const response = await axios.post(
-        `${API}/admin/users/${selectedClient.id}/plans/generate_async`,
-        payload,
+        `${API}/admin/users/${selectedClient.id}/training/generate`,
+        {},
         {
           headers: { Authorization: `Bearer ${token}` },
+          params: {
+            source_type: actualSourceType,
+            source_id: actualSourceId,
+            previous_plan_id: selectedPreviousTrainingPlan || null
+          },
           withCredentials: true
         }
       );
       
-      const { job_id } = response.data;
-      setCurrentJobId(job_id);
-      setShowGenerationProgress(true);
+      // Si llegamos aquí, el plan se generó exitosamente
+      alert('✅ Plan generado exitosamente!');
+      
+      // Recargar los planes
+      if (selectedClient && selectedClient.id) {
+        await loadPlansForClient(selectedClient.id);
+      }
       
     } catch (error) {
-      console.error('Error starting training plan generation:', error);
-      alert('❌ Error al iniciar generación: ' + (error.response?.data?.detail || error.message));
+      console.error('Error generating training plan:', error);
+      alert('❌ Error generando plan: ' + (error.response?.data?.detail || error.message));
     }
   };
 
