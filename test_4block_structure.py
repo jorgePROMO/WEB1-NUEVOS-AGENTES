@@ -9,8 +9,12 @@ import json
 
 async def add_4block_structure():
     # Connect to database
-    client = AsyncIOMotorClient(os.getenv('MONGO_URL', 'mongodb://localhost:27017'))
-    edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+    mongo_url = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
+    print(f"🔗 Connecting to: {mongo_url}")
+    client = AsyncIOMotorClient(mongo_url)
+    edn360_db_name = os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')
+    print(f"📦 Using database: {edn360_db_name}")
+    edn360_db = client[edn360_db_name]
     
     # Get the latest draft plan
     plan_id = "6932dfc2adbfdd696113a5d8"
