@@ -7794,7 +7794,10 @@ def _integrate_template_blocks(
     Returns:
         Plan con estructura de 4 bloques (A, B, C, D) en cada sesión
     """
-    from backend.training_templates import seleccionar_plantillas
+    import sys
+    import os
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from training_templates import seleccionar_plantillas
     
     # Obtener el training_plan desde E4 (estructura vieja) o directamente (estructura nueva)
     if 'E4' in plan_data:
