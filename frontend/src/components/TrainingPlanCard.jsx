@@ -309,7 +309,15 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   const updateExerciseField = (sessionIdx, blockIdx, exerciseIdx, field, value) => {
     setEditedPlan(prev => {
       const newPlan = JSON.parse(JSON.stringify(prev));
-      newPlan.plan.sessions[sessionIdx].blocks[blockIdx].exercises[exerciseIdx][field] = value;
+      const session = newPlan.plan.sessions[sessionIdx];
+      
+      // Support both new structure (bloques_estructurados) and old structure (blocks)
+      if (session.bloques_estructurados) {
+        session.bloques_estructurados[blockIdx].ejercicios[exerciseIdx][field] = value;
+      } else if (session.blocks) {
+        session.blocks[blockIdx].exercises[exerciseIdx][field] = value;
+      }
+      
       return newPlan;
     });
   };
