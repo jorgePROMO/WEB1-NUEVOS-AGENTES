@@ -1,176 +1,128 @@
 <analysis>**original_problem_statement:**
-The user, Jorge, wants to evolve his EDN360 training plan generation system. The initial goal was a technical audit and fixing UI/UX bugs. This has evolved into a major architectural overhaul and fixing critical regressions.
+The user, Jorge, initiated a complete architectural overhaul of the EDN360 training plan generation system. The goal is to replace the old, monolithic AI process with a new, modular, and rule-based architecture.
 
-**PRODUCT REQUIREMENTS:**
+**PRODUCT REQUIREMENTS (New Architecture):**
 
-1.  **AI Logic & Plan Structure (New Architecture):**
-    *   The plan generation process must be a hybrid AI + Template model.
-    *   The AI (Node.js microservice) generates **Block B (Main Strength Workout)** as a single, continuous list of exercises, without muscle group subdivisions.
-    *   The Python backend programmatically selects and adds **Block A (Warmup)**, **Block C (Core/Abs)**, and **Block D (Cardio)** from templates.
-    *   The final plan must have a  key with the four separate blocks (A, B, C, D).
-
-2.  **UI/UX Enhancements:**
-    *   The  must render the new 4-block plan structure with Block B expanded by default and others collapsed. This is implemented but needs verification.
-    *   The UI must be backward-compatible with old plan formats.
-    *   The  plan generation must be non-blocking. The user should be able to close the generation modal and see a small notification/queue in the corner. The system should handle queuing multiple plan generations automatically.
-
-3.  **Bug Fixes & Regressions:**
-    *   **PDF Generation:** The generated PDF must reflect the new 4-block structure. Currently, it's regressed to the old format.
-    *   **Plan Generation Blocking:** The admin UI freezes during plan generation. This is a critical issue.
-    *   **Admin plan management:** The ability to delete and activate/deactivate plans was broken and has been fixed.
-    *   **Data Consistency:** Deleted questionnaires were still appearing in dropdowns due to a caching issue in . This has been fixed.
+1.  **System Reset:** Completely eliminate the old exercise database, templates (), and related logic. Old, generated plans must be preserved in a read-only legacy mode.
+2.  **New Knowledge Sources:**
+    *   **K1 Knowledge Base:** A new abstract knowledge base () defining the principles, rules, and logic of training (e.g., volume, intensity, progression) in abstract terms (low, medium, high). This is the brain.
+    *   **Exercise Catalog:** A new, definitive set of user-provided JSON files (, , ) containing all official exercises, their properties (patterns, muscles, video URLs), and substitution logic. This is the dictionary.
+3.  **E4 Agent (AI) Refactoring:**
+    *   The Node.js AI agent (E4) must be updated to use the K1 knowledge base and the new Exercise Catalog as its only sources of truth.
+    *   E4 is responsible **only** for generating **Block B (Main Strength Workout)**.
+    *   Its output must use abstract terms from K1 (e.g., ) and select exercises by their uid=0(root) gid=0(root) groups=0(root) from the catalog. It must not generate Blocks A, C, or D.
+4.  **Backend Logic:**
+    *   The Python backend is responsible for translating E4's abstract output into concrete numbers (e.g.,  -> ).
+    *   It must programmatically build **Blocks A (Warmup), C (Core), and D (Cardio)** using new templates derived exclusively from the official exercise catalog.
+    *   It must implement a validator to check E4's output for compliance with K1 rules.
+    *   It must implement a logger to record the decisions made by E4 for debugging and auditing.
+5.  **UI/UX Changes:**
+    *   **Admin Dashboard:** The training plan card must display the plan as **editable plain text** to allow for easy manual adjustments, copying, and saving.
+    *   **Client Dashboard:** Must be adapted to render the new 4-block structure while providing a fallback to correctly display old legacy plans.
 
 **User's preferred language**: Spanish
 
 **what currently exists?**
-The application is a React/FastAPI/Node.js stack.
-- **Backend**: Logic for the 4-block hybrid model is present in  and , but it is failing to apply correctly during plan generation, resulting in an incorrect plan structure. Endpoints for deleting and toggling plans were fixed to use the correct MongoDB . Timeouts for calls to the Node.js microservice were increased. Logging was just added to  to debug the template integration.
-- **AI Microservice**: Timeouts for AI agent steps in  were increased from 3 minutes to 10 minutes, and the TypeScript code was recompiled to apply the changes.
-- **Frontend**:  has been updated to render the 4-block structure and the flattened exercise list for Block B, but has not been visually verified with a correctly generated plan.  was modified to use a non-blocking notification for plan generation, but the user is still experiencing a hanging UI, likely due to a combination of browser caching serving old component code and the backend process still being synchronous.
+The project is in the middle of a major, user-directed architectural refactoring.
+- **Cleanup Done (Phase 1):** The old template file (), the old  MongoDB collection, and the associated Python module () have been backed up and deleted.
+- **K1 Implemented (Phase 2):** The new abstract knowledge base () is in place, and a Python module () can successfully load and process its rules.
+- **Backend Tooling Ready (Phases 4, 5):** A robust response validator () and a decision logger () have been created and tested in isolation.
+- **Debug Endpoint Live:** A comprehensive debug endpoint () exists in the Python backend, allowing simulation and verification of the K1 logic, validation, and logging.
+- **Official Catalog Received:** The user has provided the three final, definitive JSON files for the exercise catalog, variants, and substitution rules.
+- **Node.js Agent (E4) is Outdated:** The main AI workflow in  is still using the old prompt and logic. The new Zod schema has been added, but the full prompt integration is pending.
 
 **Last working item**:
--   **Last item agent was working**: The agent was trying to solve two critical, simultaneous problems reported by the user:
-    1.  The  UI hangs when generating a plan, showing an old, non-closable modal.
-    2.  The resulting plan (and its PDF) is still using the old structure (e.g., Bloque A - Pecho) instead of the new 4-block structure (Calentamiento, Fuerza, etc.).
-    The agent identified that the UI hanging is likely due to browser cache and that the incorrect structure is a backend logic failure. The agent added logging to the backend () and restarted all services to try and debug the plan structure issue and force the frontend to update.
--   **Status**: IN PROGRESS
+-   **Last item agent was working**: The agent had just received the final, user-approved exercise catalog files. It was about to begin the final, comprehensive integration task: updating the Node.js (TypeScript) E4 agent with the new K1-based prompt and schema, making it consume the new exercise catalog, and connecting the entire end-to-end pipeline.
+-   **Status**: NOT STARTED
 -   **Agent Testing Done**: N
--   **Which testing method agent to use?** both. The Frontend testing agent is needed to confirm the non-blocking UI and new 4-block display in both Admin and User dashboards. The backend needs to be tested via curl or a test script to confirm a newly generated plan has the correct .
+-   **Which testing method agent to use?** both. A backend test is needed to verify the full pipeline (E4 -> Validator -> Logger -> Backend Translation). A frontend testing agent is needed to verify the new UI requirements (plain-text admin, client legacy fallback) once the backend is functional.
 -   **User Testing Done**: N
 
 **All Pending/In progress Issue list**:
--   **Issue 1: Generated Plan/PDF Does Not Have 4-Block Structure (P0, CRITICAL)**
--   **Issue 2: Admin UI Hangs During Plan Generation (P0, CRITICAL)**
--   **Issue 3: Implement a non-blocking job queue with notifications (P1)**
-
-**Issues Detail:**
--   **Issue 1: Generated Plan/PDF Does Not Have 4-Block Structure**
-    -   **Attempted fixes**: The agent modified  to flatten the AI's output into a single list of exercises for Block B and added logging to the  function to trace its execution. The user's last generated plan still showed the old structure, indicating the fix was not effective or not executed.
-    -   **Next debug checklist**:
-        1.  Trigger a new plan generation for the user .
-        2.  Check the backend logs () for the INTEGRATION LOG messages added in  to see if  is being called and if it's processing the sessions correctly.
-        3.  Inspect the plan document created in the  collection in MongoDB to verify its structure.
-        4.  If the structure is still wrong, debug the logic within  in .
-    -   **Why fix this issue and what will be achieved with the fix?**: This is the core feature of the current development cycle. Fixing it will align the application's output with the user's primary requirement.
-    -   **Status**: IN PROGRESS
-    -   **Is recurring issue?** Y
-    -   **Should Test frontend/backend/both after fix?**: Both.
-    -   **Blocked on other issue**: None.
-
--   **Issue 2: Admin UI Hangs During Plan Generation**
-    -   **Attempted fixes**: The agent increased timeouts in the Node.js microservice and the Python backend. It also modified  to use a non-blocking toast notification instead of a modal. However, the user's screenshots show the old, blocking modal, indicating a severe browser caching problem. The agent restarted the frontend service, but this doesn't clear the user's browser cache.
-    -   **Next debug checklist**:
-        1.  The highest priority is to implement a true non-blocking backend process (see Issue 3).
-        2.  As a temporary measure, explicitly instruct the user to perform a hard refresh (Ctrl+Shift+R or Cmd+Shift+R) to bypass their local browser cache.
-        3.  Review  to ensure no legacy code could still trigger the old modal.
-    -   **Why fix this issue and what will be achieved with the fix?**: The app is unusable for the admin while a plan is generating. Fixing this is critical for workflow.
-    -   **Status**: IN PROGRESS
-    -   **Is recurring issue?** Y
-    -   **Should Test frontend/backend/both after fix?**: Frontend.
-    -   **Blocked on other issue**: Blocked by the lack of a true asynchronous backend process.
-
--   **Issue 3: Implement a non-blocking job queue with notifications**
-    -   **Attempted fixes**: None. This is the planned solution for Issue 2.
-    -   **Next debug checklist**:
-        1.  Modify the plan generation endpoints () in  to use FastAPI's .
-        2.  The endpoint should immediately return a  and run the intensive AI call in the background.
-        3.  Create a new endpoint  for the frontend to poll for status.
-        4.  Implement the UI for a notification queue in the corner of the , as requested by the user.
-    -   **Why fix this issue and what will be achieved with the fix?**: This will definitively solve the UI blocking problem and allow the admin to queue multiple jobs, fulfilling a key user requirement.
-    -   **Status**: NOT STARTED
-    -   **Is recurring issue?** N/A
-    -   **Should Test frontend/backend/both after fix?**: Both.
-    -   **Blocked on other issue**: None.
+This project is a feature implementation, not bug fixing. The work is tracked in phases based on the user's approved plan.
 
 **In progress Task List**:
-None. The current work is categorized as issue resolution.
+-   **Task 1: Final E4 & Catalog Integration (P0, CRITICAL)**
+    -   **Where to resume**:
+        1.  Process the three user-provided JSON files (, , ) and store them appropriately for the E4 agent to access (e.g., as searchable files).
+        2.  Fully replace the prompt and logic inside the  agent in  with the new V4 K1-based prompt.
+        3.  Ensure the agent is configured to use  to consult both the K1 knowledge base and the new exercise catalog.
+        4.  Compile the TypeScript code ().
+        5.  Integrate the full pipeline: Frontend trigger -> Python backend -> E4 Agent -> Python validator -> Python logger -> Final plan saved to DB.
+    -   **What will be achieved with this?**: This will complete the core AI and backend logic of the new architecture, making the system ready for UI adaptations.
+    -   **Status**: IN PROGRESS
+    -   **Should Test frontend/backend/both after fix?**: Both
+    -   **Blocked on something**: Nothing. All dependencies (K1, validator, logger, catalog) are now available.
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks**:
-    -   (P1) **Implement FastAPI BackgroundTasks**: Convert synchronous plan generation endpoints to be asynchronous to fix UI blocking (Part of Issue 3).
-    -   (P1) **Implement Job Queue UI**: Create the frontend components for the non-blocking progress modal and job queue notification system.
-    -   (P2) **Update Admin Dashboard UI**: Modify  to display the 4-block plan structure, allowing the admin to see what the user sees.
--   **Future Tasks**:
-    -   (P2) **Add Progress Indicators**: Implement features for users to track their progress.
-    -   (P3) **Enable Manual Edits**: Allow the admin to manually edit the generated plans.
-    -   (P4) **Automatic Progressions**: Implement logic for the AI to create progressive overload in subsequent plans (V4).
-    -   (P5) **Refactor **: This is a large, monolithic file that should be broken down into smaller components.
+    -   (P0) **Phase 6: Rebuild Templates A, C, D:** Re-create the programmatic templates for Warmup, Core, and Cardio using ONLY exercises from the new, official .
+    -   (P1) **Phase 7: Adapt Admin Dashboard:** Rework the  plan view to display the generated plan as editable plain text and implement functionality to save the edits.
+    -   (P1) **Phase 8: Adapt Client Dashboard:** Update  to correctly render the new 4-block plan structure while implementing a legacy fallback view for plans generated with the old architecture.
+    -   (P2) **Phase 9: Unification & E2E Testing:** Perform a final end-to-end test of the entire, unified system to ensure all components work together seamlessly.
 
 **Completed work in this session**
--   **PDF Download Fixed**: Resolved an  by installing the  package and restarting the backend.
--   **Admin Plan Management Fixed**: Corrected the  and  plan functions in  to use the plan's MongoDB  instead of a missing , making them functional again.
--   **Data Consistency Fix**: Updated questionnaire deletion endpoints in  to also remove the entry from the cached  document, resolving an issue where deleted items still appeared in UI dropdowns. The user's stale cache entry was manually cleaned.
--   **Plan Structure Logic Updated**:
-    -   Backend (): Modified  to flatten the AI's workout (Block B) into a single continuous list of exercises.
-    -   Frontend (): Updated the component to render the flattened exercise list for Block B.
--   **Generation Timeout Increased**: Increased timeouts in the Node.js microservice () and the Python backend () to prevent failures during long AI runs. Recompiled TypeScript code to apply changes.
--   **Frontend Syntax/Rendering Fixes**: Corrected multiple JSX syntax, indentation, and closing tag errors in  that arose during development.
-
-**Earlier issues found/mentioned but not fixed**
--   **Issue 1:  is fragile and complex.**
-    -   **Debug checklist**: The file is over 6,000 lines and needs to be decomposed into smaller, reusable React components.
-    -   **Why to solve this issue and what will be achieved with this?** Refactoring will improve maintainability, reduce the risk of introducing new bugs, and make future development faster. This is a standing technical debt item.
-    -   **Should Test frontend/backend/both after fix**: Frontend.
-    -   **Is recurring issue?** Y.
+- **Architectural Pivot:** Successfully managed a major, user-directed pivot to a new K1-based architecture.
+- **Phase 1 - Cleanup:** Old template files (), database collections (), and Python logic () were backed up and removed.
+- **Phase 2 - K1 Implementation:** Integrated the user's K1 abstract knowledge base () with a dedicated Python loader ().
+- **Phase 3 (Partial) - Debug Endpoint:** Created a powerful Python-based debug endpoint () to test the K1 logic, validator, and logger in isolation before the full E4 integration.
+- **Phase 4 - Validator:** Built a Python module () to validate the E4 agent's output against K1 rules.
+- **Phase 5 - Logger:** Built a Python module () to create detailed logs of the E4 agent's reasoning.
+- **Catalog Definition:** Collaborated with the user to define and finalize the JSON schema for the new exercise catalog.
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
--   **Hybrid AI/Template Architecture**: Combining AI generation (Block B) with a deterministic template engine (Blocks A, C, D).
--   **Rule-based Logic Engine**: The  module applies hierarchical rules to select templates.
--   **Client-side Caching Issues**: A major blocker, where the user's browser serves stale frontend code, preventing UI fixes from being visible.
--   **Synchronous vs. Asynchronous Tasks**: The core of the UI hanging issue is a long-running synchronous API call. The planned solution is .
+-   **Hybrid Rule-Based/AI System**: A clear separation of concerns where an abstract Knowledge Base (K1) dictates rules, an AI agent (E4) makes selections based on those rules, and backend code translates abstract concepts to concrete values.
+-   **Abstract-to-Concrete Translation**: The backend is responsible for converting terms like  into numerical values like .
+-   **Single Source of Truth**: The entire system will rely on two definitive sources:  for logic and the user's  for exercise data.
+-   **Legacy Fallback**: The frontend must be able to distinguish between old and new plan formats and render them accordingly.
+-   **In-flight Architectural Refactoring**: The project is in a transient state, moving from a legacy architecture to a new one, with some new components built and some old ones waiting for replacement.
 
 **key DB schema**
--   ****: Contains the full plan document. The goal is for new plans to have a  object. Endpoint logic was fixed to use the MongoDB  for operations.
--   ****: Contains cached user data, including . The delete logic was fixed to correctly update this cache.
+-    (in ): **DELETED**. To be replaced by file-based access to the new user-provided catalog JSONs.
+-   : Will now store plans generated with the new 4-block structure. Old plans with the previous structure remain for legacy viewing.
 
 **All files of reference**
--   : Primary file for backend logic, including the broken plan generation and fixed admin endpoints.
--   : Source of the UI hanging issue.
--   : Where the new 4-block structure should be displayed.
--   : AI microservice where timeouts were adjusted.
--   : Contains the logic for programmatic block selection.
+-   **Files to Modify:**
+    -    (CRITICAL: Needs full E4 agent replacement)
+    -    (Needs integration of the new E4 flow, validator, logger, and new template logic)
+    -    (Needs UI rework for plain-text editing)
+    -    (Needs UI update for new structure + legacy fallback)
+-   **New Core Logic Files:**
+    -   
+    -   
+    -   
+-   **New Data Sources (Just Provided):**
+    -   
+    -   
+    -   
 
 **Critical Info for New Agent**
--   You are facing two critical, intertwined issues: **1) The plan generation hangs the admin UI**, and **2) The generated plan has an incorrect structure.**
--   The UI hanging is almost certainly a **browser caching issue** on the user's end, combined with a **synchronous backend process**. Your changes to the frontend are not being seen. You MUST prioritize moving to a true asynchronous backend with  (Issue #3) to solve this permanently. You may also need to instruct the user to perform a hard refresh (Ctrl+Shift+R).
--   The incorrect plan structure is a backend bug. You just added logging to  in . Your immediate next step should be to **trigger a new plan generation, then examine the backend logs** to see what the new logging reveals about the function's execution.
--   The user has approved a roadmap. Follow it, prioritizing the critical fixes for plan structure and the non-blocking UI first.
+-   **The project's source of truth is the user's major refactoring request (message #271) and subsequent clarifications.** All previous work and bug fixes are largely obsolete except as historical context.
+-   **Follow the approved 10-phase plan.** You are about to start the main integration task, which combines several parts: integrating the final catalog files provided by the user and updating the large TypeScript file for the E4 agent.
+-   **Do not use any of the old template logic.** The modules  and  are gone. All template logic for Blocks A, C, and D must be rebuilt from scratch using the new official catalog.
+-   **The Python backend tooling (K1, validator, logger, debug endpoint) is ready and tested in isolation.** Your task is to connect the updated Node.js agent to this backend pipeline.
 
 **Last 10 User Messages and any pending user messages**
--   **User (Msg 258):** Reported multiple issues: 1) User login is blocked during plan generation. 2) Requested a non-blocking UI with a download-manager-style queue. 3) The generated PDF has the wrong block structure (e.g., Pecho and Triceps instead of 4 blocks). **Status: In Progress**.
--   **Agent (Msg 263):** Presented a detailed 4-phase roadmap to fix all reported issues, which the user approved. **Status: Acknowledged**.
--   **User (Msg 264):** Approved the roadmap with clarifications: the job queue should be automatic, and Block B should be one continuous list of exercises. Instructed the agent to start with Phase 1. **Status: Acknowledged**.
--   **Agent (Msg 265-302):** Began Phase 1. Updated backend and frontend to flatten Block B exercises. Summarized completion. **Status: Incomplete, as it didn't solve the root problem**.
--   **User (Msg 303):** Reported the screen is still hanging on a modal. **Status: In Progress**.
--   **Agent (Msg 304-345):** Investigated and found the Node.js service was timing out and the frontend was likely showing a cached version. Restarted services and suggested implementing the permanent async fix. **Status: In Progress**.
--   **User (Msg 346):** Demanded a permanent solution to the generation problem. **Status: Acknowledged**.
--   **Agent (Msg 347-396):** Implemented the permanent fix by increasing timeouts in Node.js and the backend. **Status: Incomplete, as it did not work**.
--   **User (Msg 397):** Reported the screen is still hanging and the modal is unclosable. **Status: In Progress**.
--   **User (Msg 422):** Reported the screen is STILL hanging and the generated plan STILL has the old block structure. **Status: In Progress**.
+-   **User (Msg 386):** Approves moving forward with the full E4 TypeScript integration without waiting for the catalog.
+-   **Agent (Msg 398):** Summarizes progress and proposes waiting for the catalog to do the full integration at once.
+-   **User (Msg 399):** Agrees to the agent's proposal and **provides the three final, definitive catalog JSON files**, giving the green light for the final integration. **Status: Complete, Action Required.**
 
 **Project Health Check:**
--   **Broken**:
-    -   Plan generation from the Admin Dashboard is critically broken. It blocks the UI and produces a plan with an incorrect structure.
-    -   PDF generation reflects the incorrect plan structure.
--   **Mocked**: None.
+-   **Broken**: The main plan generation flow is intentionally broken as it's mid-refactor. The Node.js agent is out of sync with the new backend architecture.
+-   **Mocked**: The Python debug endpoint () mocks the E4 response to allow for isolated testing of the backend logic (K1 rules, validation, logging).
 
 **3rd Party Integrations**
--   OpenAI Assistants API — uses User API Key for the AI agent workflow (Block B generation).
--   Gmail SMTP — uses credentials from  to send emails.
--   wkhtmltopdf - A command-line tool used by the  library in the backend to generate PDFs.
+-   **OpenAI Assistants API**: Core of the E4 agent. Its prompt and schema are being completely overhauled.
 
 **Testing status**
--   **Testing agent used after significant changes**: YES (but not for the most recent, failing changes).
+-   **Testing agent used after significant changes**: NO (not since the major pivot).
 -   **Troubleshoot agent used after agent stuck in loop**: NO.
--   **Test files created**:  (from a previous session, might be outdated).
--   **Known regressions**: Plan structure and PDF content are regressed to the old format. The plan generation UI is non-functional.
+-   **Test files created**: None for the new architecture.
+-   **Known regressions**: N/A (The system is being rebuilt, so old functionality is intentionally disabled).
 
 **Credentials to test flow:**
 -   **User:** 
--   **Password:** 
-
-**What agent forgot to execute**
-The agent correctly identified that the Node.js TypeScript code needed to be recompiled after increasing timeouts but only did so after a subsequent failure. The most significant oversight has been underestimating the user's browser caching issue. Despite changing the frontend code to be non-blocking, the agent did not instruct the user to perform a hard refresh, leading to a loop of the user reporting the same UI bug.</analysis>
+-   **Password:** </analysis>

@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://trainsmart-17.preview.emergentagent.com
+https://fitness-modular.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 

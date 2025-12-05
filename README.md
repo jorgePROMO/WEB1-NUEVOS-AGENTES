@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://trainsmart-17.preview.emergentagent.com
+**URL Actual:** https://fitness-modular.preview.emergentagent.com
 
 ---
 
