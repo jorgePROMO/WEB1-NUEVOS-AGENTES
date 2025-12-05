@@ -2641,51 +2641,132 @@ def _generate_training_plan_email_html(plan_doc: dict, user: dict) -> str:
                 sessions_html += f'<li style="color: #ef4444; font-size: 13px;">{note}</li>'
             sessions_html += '</ul>'
         
-        # Bloques y ejercicios
-        for block in session.get('blocks', []):
-            sessions_html += f"""
-            <div style="margin-bottom: 15px;">
-                <h4 style="color: #475569; font-size: 15px; margin-bottom: 10px;">
-                    Bloque {block.get('id')} - {', '.join(block.get('primary_muscles', []))}
-                </h4>
-                <table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 4px; overflow: hidden;">
-                    <thead style="background-color: #e2e8f0;">
-                        <tr>
-                            <th style="padding: 8px; text-align: left; font-size: 13px; color: #475569;">#</th>
-                            <th style="padding: 8px; text-align: left; font-size: 13px; color: #475569;">Ejercicio</th>
-                            <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">Series</th>
-                            <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">Reps</th>
-                            <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">RPE</th>
-                            <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">Video</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            """
-            
-            for exercise in block.get('exercises', []):
-                video_button = ''
-                if exercise.get('video_url'):
-                    video_button = f'<a href="{exercise["video_url"]}" target="_blank" style="background-color: #3b82f6; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">Ver</a>'
+        # Bloques y ejercicios - Support both new (bloques_estructurados) and old (blocks) structure
+        if 'bloques_estructurados' in session:
+            # New 4-block structure
+            bloques_estructurados = session['bloques_estructurados']
+            for block_key in ['A', 'B', 'C', 'D']:
+                if block_key not in bloques_estructurados:
+                    continue
+                    
+                block = bloques_estructurados[block_key]
+                block_name = block.get('nombre', f'Bloque {block_key}')
+                exercises = block.get('ejercicios', block.get('exercises', []))
                 
+                # Skip cardio block (D) - just show the options
+                if block_key == 'D' and 'opciones' in block:
+                    sessions_html += f"""
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #475569; font-size: 15px; margin-bottom: 10px;">
+                            {block_name}
+                        </h4>
+                        <p style="color: #64748b; font-size: 14px; margin: 10px 0;">
+                            <strong>Duración:</strong> {block.get('duracion_minutos', 10)} minutos
+                        </p>
+                        <p style="color: #64748b; font-size: 14px; margin: 10px 0;">
+                            <strong>Opciones disponibles:</strong>
+                        </p>
+                        <ul style="margin-left: 20px; color: #64748b; font-size: 14px;">
+                    """
+                    for opcion in block.get('opciones', []):
+                        sessions_html += f'<li>{opcion}</li>'
+                    sessions_html += """
+                        </ul>
+                    </div>
+                    """
+                    continue
+                
+                # For warmup and core blocks
+                if len(exercises) > 0:
+                    sessions_html += f"""
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #475569; font-size: 15px; margin-bottom: 10px;">
+                            {block_name}
+                        </h4>
+                        <table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 4px; overflow: hidden;">
+                            <thead style="background-color: #e2e8f0;">
+                                <tr>
+                                    <th style="padding: 8px; text-align: left; font-size: 13px; color: #475569;">#</th>
+                                    <th style="padding: 8px; text-align: left; font-size: 13px; color: #475569;">Ejercicio</th>
+                                    <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">Series</th>
+                                    <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">Reps</th>
+                                    <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">RPE</th>
+                                    <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">Video</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    """
+                    
+                    for exercise in exercises:
+                        video_button = ''
+                        if exercise.get('video_url'):
+                            video_button = f'<a href="{exercise["video_url"]}" target="_blank" style="background-color: #3b82f6; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">Ver</a>'
+                        
+                        sessions_html += f"""
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 8px; font-size: 13px;">{exercise.get('order', '')}</td>
+                                    <td style="padding: 8px; font-size: 13px;">
+                                        <strong>{exercise.get('name', exercise.get('nombre', ''))}</strong><br>
+                                        <span style="color: #64748b; font-size: 12px;">{exercise.get('notes', exercise.get('notas', ''))}</span>
+                                    </td>
+                                    <td style="padding: 8px; text-align: center; font-size: 13px;">{exercise.get('series', '')}</td>
+                                    <td style="padding: 8px; text-align: center; font-size: 13px;">{exercise.get('reps', exercise.get('repeticiones', ''))}</td>
+                                    <td style="padding: 8px; text-align: center; font-size: 13px;">{exercise.get('rpe', '')}</td>
+                                    <td style="padding: 8px; text-align: center;">{video_button}</td>
+                                </tr>
+                        """
+                    
+                    sessions_html += """
+                            </tbody>
+                        </table>
+                    </div>
+                    """
+        else:
+            # Old structure for backward compatibility
+            for block in session.get('blocks', []):
                 sessions_html += f"""
-                        <tr style="border-bottom: 1px solid #e2e8f0;">
-                            <td style="padding: 8px; font-size: 13px;">{exercise.get('order')}</td>
-                            <td style="padding: 8px; font-size: 13px;">
-                                <strong>{exercise.get('name')}</strong><br>
-                                <span style="color: #64748b; font-size: 12px;">{exercise.get('notes', '')}</span>
-                            </td>
-                            <td style="padding: 8px; text-align: center; font-size: 13px;">{exercise.get('series')}</td>
-                            <td style="padding: 8px; text-align: center; font-size: 13px;">{exercise.get('reps')}</td>
-                            <td style="padding: 8px; text-align: center; font-size: 13px;">{exercise.get('rpe')}</td>
-                            <td style="padding: 8px; text-align: center;">{video_button}</td>
-                        </tr>
+                <div style="margin-bottom: 15px;">
+                    <h4 style="color: #475569; font-size: 15px; margin-bottom: 10px;">
+                        Bloque {block.get('id')} - {', '.join(block.get('primary_muscles', []))}
+                    </h4>
+                    <table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 4px; overflow: hidden;">
+                        <thead style="background-color: #e2e8f0;">
+                            <tr>
+                                <th style="padding: 8px; text-align: left; font-size: 13px; color: #475569;">#</th>
+                                <th style="padding: 8px; text-align: left; font-size: 13px; color: #475569;">Ejercicio</th>
+                                <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">Series</th>
+                                <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">Reps</th>
+                                <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">RPE</th>
+                                <th style="padding: 8px; text-align: center; font-size: 13px; color: #475569;">Video</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                 """
-            
-            sessions_html += """
-                    </tbody>
-                </table>
-            </div>
-            """
+                
+                for exercise in block.get('exercises', []):
+                    video_button = ''
+                    if exercise.get('video_url'):
+                        video_button = f'<a href="{exercise["video_url"]}" target="_blank" style="background-color: #3b82f6; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-size: 12px;">Ver</a>'
+                    
+                    sessions_html += f"""
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+                                <td style="padding: 8px; font-size: 13px;">{exercise.get('order')}</td>
+                                <td style="padding: 8px; font-size: 13px;">
+                                    <strong>{exercise.get('name')}</strong><br>
+                                    <span style="color: #64748b; font-size: 12px;">{exercise.get('notes', '')}</span>
+                                </td>
+                                <td style="padding: 8px; text-align: center; font-size: 13px;">{exercise.get('series')}</td>
+                                <td style="padding: 8px; text-align: center; font-size: 13px;">{exercise.get('reps')}</td>
+                                <td style="padding: 8px; text-align: center; font-size: 13px;">{exercise.get('rpe')}</td>
+                                <td style="padding: 8px; text-align: center;">{video_button}</td>
+                            </tr>
+                    """
+                
+                sessions_html += """
+                        </tbody>
+                    </table>
+                </div>
+                """
         
         sessions_html += "</div>"
     
