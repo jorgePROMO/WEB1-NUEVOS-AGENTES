@@ -13523,26 +13523,9 @@ async def generate_plans_async(
     request: Request = None
 ):
     """
-    ⚠️ DESACTIVADO TEMPORALMENTE
-    
-    La generación de planes está temporalmente deshabilitada mientras
-    migramos al nuevo sistema EDN360 con arquitectura client_drawer.
-    
-    Fecha de desactivación: Enero 2025
-    Motivo: Migración de arquitectura AS-IS → TO-BE
+    Genera planes de entrenamiento/nutrición de forma asíncrona usando background jobs.
     """
     await require_admin(request)
-    
-    # ENDPOINT DESACTIVADO - Retornar error controlado
-    raise HTTPException(
-        status_code=501,
-        detail={
-            "error": "Generación de planes temporalmente deshabilitada",
-            "message": "La generación automática de planes está deshabilitada mientras migramos al nuevo sistema EDN360.",
-            "status": "migration_in_progress",
-            "expected_date": "Próximamente"
-        }
-    )
     
     try:
         # Validar usuario
