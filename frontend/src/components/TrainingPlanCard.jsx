@@ -153,8 +153,119 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
     }
   }, [userId, fetchAllPlans]);
 
+  // NEW: Convert plan to plain text format
+  const convertPlanToPlainText = (planData) => {
+    let text = '';
+    const plan = planData.plan;
+    
+    text += `═══════════════════════════════════════════════════════════════\n`;
+    text += `  ${plan.title || 'PLAN DE ENTRENAMIENTO'}\n`;
+    text += `═══════════════════════════════════════════════════════════════\n\n`;
+    
+    text += `📋 INFORMACIÓN GENERAL\n`;
+    text += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    text += `Tipo de Rutina: ${translate(plan.training_type)}\n`;
+    text += `Días por Semana: ${plan.days_per_week}\n`;
+    text += `Duración Sesión: ${plan.session_duration_min} minutos\n`;
+    text += `Duración Programa: ${plan.weeks} semanas\n`;
+    text += `Objetivo: ${plan.goal}\n\n`;
+    
+    if (plan.summary) {
+      text += `📝 RESUMEN\n`;
+      text += `${plan.summary}\n\n`;
+    }
+    
+    if (plan.general_notes && plan.general_notes.length > 0) {
+      text += `⚠️ NOTAS GENERALES IMPORTANTES\n`;
+      text += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+      plan.general_notes.forEach(note => {
+        text += `  • ${note}\n`;
+      });
+      text += `\n`;
+    }
+    
+    // Sessions
+    plan.sessions.forEach((session, idx) => {
+      text += `\n${'═'.repeat(63)}\n`;
+      text += `  ${session.id} - ${translate(session.name)}\n`;
+      text += `${'═'.repeat(63)}\n`;
+      
+      if (session.focus && session.focus.length > 0) {
+        text += `Focus: ${translate(session.focus)}\n`;
+      }
+      text += `\n`;
+      
+      // Handle both old and new structure
+      if (session.bloques_estructurados) {
+        // NEW STRUCTURE: A, B, C, D blocks
+        const blockOrder = ['A', 'B', 'C', 'D'];
+        blockOrder.forEach(blockKey => {
+          const block = session.bloques_estructurados[blockKey];
+          if (!block) return;
+          
+          text += `┌─────────────────────────────────────────────────────────────┐\n`;
+          text += `│  ${block.nombre || `Bloque ${blockKey}`}${' '.repeat(Math.max(0, 58 - (block.nombre || `Bloque ${blockKey}`).length))}│\n`;
+          text += `└─────────────────────────────────────────────────────────────┘\n`;
+          
+          const exercises = block.ejercicios || block.exercises || [];
+          if (exercises.length > 0) {
+            exercises.forEach(ex => {
+              const order = ex.order || '';
+              const name = ex.name || ex.nombre || 'Ejercicio';
+              const series = ex.series || '-';
+              const reps = ex.reps || ex.repeticiones || '-';
+              const rpe = ex.rpe || '-';
+              const notes = ex.notes || ex.notas || '';
+              
+              text += `\n${order}. ${name}\n`;
+              text += `   Series: ${series} | Reps: ${reps} | RPE: ${rpe}\n`;
+              if (notes) {
+                text += `   📝 ${notes}\n`;
+              }
+            });
+          }
+          text += `\n`;
+        });
+      } else if (session.blocks) {
+        // OLD STRUCTURE: blocks array
+        session.blocks.forEach(block => {
+          text += `┌─────────────────────────────────────────────────────────────┐\n`;
+          text += `│  Bloque ${block.id}${' '.repeat(Math.max(0, 51))}│\n`;
+          text += `└─────────────────────────────────────────────────────────────┘\n`;
+          
+          if (block.exercises && block.exercises.length > 0) {
+            block.exercises.forEach(ex => {
+              text += `\n${ex.order || ''}. ${ex.name || 'Ejercicio'}\n`;
+              text += `   Series: ${ex.series || '-'} | Reps: ${ex.reps || '-'} | RPE: ${ex.rpe || '-'}\n`;
+              if (ex.notes) {
+                text += `   📝 ${ex.notes}\n`;
+              }
+            });
+          }
+          text += `\n`;
+        });
+      }
+      
+      if (session.session_notes && session.session_notes.length > 0) {
+        text += `📌 Notas de la Sesión:\n`;
+        session.session_notes.forEach(note => {
+          text += `  • ${note}\n`;
+        });
+        text += `\n`;
+      }
+    });
+    
+    text += `\n${'═'.repeat(63)}\n`;
+    text += `  FIN DEL PLAN\n`;
+    text += `${'═'.repeat(63)}\n`;
+    
+    return text;
+  };
+
   const handleEdit = (planData) => {
     setEditedPlan(JSON.parse(JSON.stringify(planData))); // Deep clone
+    setEditMode('structured'); // Default to structured mode
+    setPlainTextContent(convertPlanToPlainText(planData)); // Pre-generate plain text
     setShowEditModal(true);
     // Initialize all sessions as collapsed
     const sessionsState = {};
