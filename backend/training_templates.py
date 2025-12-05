@@ -16,8 +16,70 @@ import os
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 import logging
+from motor.motor_asyncio import AsyncIOMotorClient
 
 logger = logging.getLogger(__name__)
+
+# MongoDB connection for exercise enrichment
+_mongo_client = None
+
+def get_mongo_client():
+    """Get or create MongoDB client"""
+    global _mongo_client
+    if _mongo_client is None:
+        mongo_url = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
+        _mongo_client = AsyncIOMotorClient(mongo_url)
+    return _mongo_client
+
+async def enrich_exercises_with_videos(exercises: List[Dict]) -> List[Dict]:
+    """
+    Enrich exercises with video URLs from database
+    
+    Args:
+        exercises: List of exercise dicts with 'nombre' field
+        
+    Returns:
+        Same list but with video_url filled from DB if available
+    """
+    if not exercises:
+        return exercises
+    
+    try:
+        client = get_mongo_client()
+        edn360_db = client['edn360_app']
+        exercises_collection = edn360_db.exercises
+        
+        enriched = []
+        for exercise in exercises:
+            nombre = exercise.get('nombre', '')
+            if nombre:
+                # Normalize name for lookup
+                exercise_id = nombre.lower().strip()
+                
+                # Look up in database
+                db_exercise = await exercises_collection.find_one(
+                    {'id': exercise_id},
+                    {'_id': 0, 'video_url': 1}
+                )
+                
+                # Make a copy and update video_url if found
+                enriched_exercise = exercise.copy()
+                if db_exercise and db_exercise.get('video_url'):
+                    enriched_exercise['video_url'] = db_exercise['video_url']
+                    logger.debug(f"✅ Video found for exercise: {nombre}")
+                else:
+                    logger.debug(f"⚠️ No video found for exercise: {nombre}")
+                
+                enriched.append(enriched_exercise)
+            else:
+                enriched.append(exercise)
+        
+        return enriched
+    
+    except Exception as e:
+        logger.error(f"❌ Error enriching exercises with videos: {e}")
+        # Return original list if error
+        return exercises
 
 # Cargar plantillas desde JSON
 TEMPLATES_FILE = os.path.join(os.path.dirname(__file__), '..', 'PLANTILLAS_BLOQUES_V3_FINAL.json')
