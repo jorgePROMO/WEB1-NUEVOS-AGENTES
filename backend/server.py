@@ -7872,7 +7872,7 @@ async def _integrate_template_blocks(
 ) -> dict:
     """
     Integra los bloques de plantillas (A, C, D) con el Bloque B generado por IA.
-    Enriquece los ejercicios de A, C, D con videos desde la base de datos.
+    Usa los nuevos templates paramétricos de Fase 6.
     
     Args:
         plan_data: Plan generado por IA (puede ser el plan directamente o estructura con E4)
@@ -7886,7 +7886,16 @@ async def _integrate_template_blocks(
     import sys
     import os
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from training_templates import seleccionar_plantillas, enrich_exercises_with_videos
+    
+    # Import new templates (Fase 6)
+    try:
+        from templates.block_a_warmup import generate_warmup_block
+        from templates.block_c_core import generate_core_block
+        from templates.block_d_cardio import generate_cardio_block
+        logger.info("✅ Nuevos templates A, C, D importados correctamente")
+    except ImportError as e:
+        logger.error(f"❌ Error importando templates: {e}")
+        return plan_data
     
     # Obtener el training_plan desde E4 (estructura vieja) o directamente (estructura nueva)
     if 'E4' in plan_data:
