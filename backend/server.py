@@ -11498,14 +11498,38 @@ async def delete_follow_up_submission(followup_id: str, request: Request):
     await require_admin(request)
     
     try:
+        # Obtener el cuestionario antes de eliminarlo para saber el user_id
+        followup_doc = await db.follow_up_submissions.find_one({"_id": followup_id})
+        
+        if not followup_doc:
+            raise HTTPException(status_code=404, detail="Seguimiento no encontrado")
+        
+        user_id = followup_doc.get("user_id")
+        
+        # Eliminar de follow_up_submissions
         result = await db.follow_up_submissions.delete_one({"_id": followup_id})
         
         if result.deleted_count > 0:
-            logger.info(f"✅ Seguimiento eliminado: {followup_id}")
+            logger.info(f"✅ Seguimiento eliminado de follow_up_submissions: {followup_id}")
+            
+            # También eliminar del client_drawer si existe
+            if user_id:
+                edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+                update_result = await edn360_db.client_drawers.update_one(
+                    {"user_id": user_id},
+                    {"$pull": {"services.shared_questionnaires": {"submission_id": followup_id}}}
+                )
+                if update_result.modified_count > 0:
+                    logger.info(f"✅ Seguimiento eliminado del client_drawer: {followup_id}")
+                else:
+                    logger.warning(f"⚠️ No se encontró el seguimiento en client_drawer o ya no existía")
+            
             return {"message": "Seguimiento eliminado exitosamente"}
         
         raise HTTPException(status_code=404, detail="Seguimiento no encontrado")
         
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error eliminando seguimiento: {e}")
         raise HTTPException(status_code=500, detail=f"Error eliminando seguimiento: {str(e)}")
