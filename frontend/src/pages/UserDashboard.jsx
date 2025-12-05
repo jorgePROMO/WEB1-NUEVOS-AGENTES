@@ -1483,55 +1483,55 @@ const UserDashboard = () => {
                                                 {/* Mobile: Card Layout */}
                                                 <div className="md:hidden space-y-3">
                                                   {session.bloques_estructurados.B.exercises.map((exercise, exIdx) => (
-                                            <div key={exIdx} className="bg-white rounded-lg border-2 border-gray-300 p-4 shadow-sm">
-                                              {/* Número de ejercicio */}
-                                              <div className="flex items-start gap-3 mb-3">
-                                                <div className="flex-shrink-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                                                  <span className="text-white font-bold text-lg">{exercise.order}</span>
-                                                </div>
-                                                <div className="flex-1">
-                                                  <h6 className="font-bold text-gray-900 text-base leading-tight">
-                                                    {exercise.name}
-                                                  </h6>
-                                                </div>
-                                              </div>
+                                                    <div key={exIdx} className="bg-white rounded-lg border-2 border-gray-300 p-4 shadow-sm">
+                                                      {/* Número de ejercicio */}
+                                                      <div className="flex items-start gap-3 mb-3">
+                                                        <div className="flex-shrink-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                                                          <span className="text-white font-bold text-lg">{exercise.order}</span>
+                                                        </div>
+                                                        <div className="flex-1">
+                                                          <h6 className="font-bold text-gray-900 text-base leading-tight">
+                                                            {exercise.name}
+                                                          </h6>
+                                                        </div>
+                                                      </div>
 
-                                              {/* Info del ejercicio */}
-                                              <div className="grid grid-cols-3 gap-3 mb-3">
-                                                <div className="bg-blue-50 rounded-lg p-3 text-center">
-                                                  <p className="text-xs text-gray-600 mb-1">Series</p>
-                                                  <p className="font-bold text-xl text-blue-600">{exercise.series}</p>
-                                                </div>
-                                                <div className="bg-green-50 rounded-lg p-3 text-center">
-                                                  <p className="text-xs text-gray-600 mb-1">Reps</p>
-                                                  <p className="font-bold text-xl text-green-600">{exercise.reps}</p>
-                                                </div>
-                                                <div className="bg-orange-50 rounded-lg p-3 text-center">
-                                                  <p className="text-xs text-gray-600 mb-1">RPE</p>
-                                                  <p className="font-bold text-xl text-orange-600">{exercise.rpe}</p>
-                                                </div>
-                                              </div>
+                                                      {/* Info del ejercicio */}
+                                                      <div className="grid grid-cols-3 gap-3 mb-3">
+                                                        <div className="bg-blue-50 rounded-lg p-3 text-center">
+                                                          <p className="text-xs text-gray-600 mb-1">Series</p>
+                                                          <p className="font-bold text-xl text-blue-600">{exercise.series}</p>
+                                                        </div>
+                                                        <div className="bg-green-50 rounded-lg p-3 text-center">
+                                                          <p className="text-xs text-gray-600 mb-1">Reps</p>
+                                                          <p className="font-bold text-xl text-green-600">{exercise.reps}</p>
+                                                        </div>
+                                                        <div className="bg-orange-50 rounded-lg p-3 text-center">
+                                                          <p className="text-xs text-gray-600 mb-1">RPE</p>
+                                                          <p className="font-bold text-xl text-orange-600">{exercise.rpe}</p>
+                                                        </div>
+                                                      </div>
 
-                                              {/* Notas */}
-                                              {exercise.notes && (
-                                                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-3">
-                                                  <p className="text-sm text-gray-700 italic">{exercise.notes}</p>
-                                                </div>
-                                              )}
+                                                      {/* Notas */}
+                                                      {exercise.notes && (
+                                                        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-3">
+                                                          <p className="text-sm text-gray-700 italic">{exercise.notes}</p>
+                                                        </div>
+                                                      )}
 
-                                              {/* Botón de video */}
-                                              {exercise.video_url && (
-                                                <Button
-                                                  onClick={() => handleOpenVideoModal(exercise.video_url)}
-                                                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3"
-                                                >
-                                                  <ExternalLink className="h-4 w-4 mr-2" />
-                                                  Ver Video del Ejercicio
-                                                </Button>
-                                              )}
-                                            </div>
-                                          ))}
-                                        </div>
+                                                      {/* Botón de video */}
+                                                      {exercise.video_url && (
+                                                        <Button
+                                                          onClick={() => handleOpenVideoModal(exercise.video_url)}
+                                                          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3"
+                                                        >
+                                                          <ExternalLink className="h-4 w-4 mr-2" />
+                                                          Ver Video del Ejercicio
+                                                        </Button>
+                                                      )}
+                                                    </div>
+                                                  ))}
+                                                </div>
                                               </CardContent>
                                             )}
                                           </Card>
