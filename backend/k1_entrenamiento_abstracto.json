@@ -1,0 +1,592 @@
+{
+  "metadata": {
+    "nombre": "K1_ENTRENAMIENTO_ABSTRACTO",
+    "version": "1.0.0",
+    "descripcion": "Base de conocimiento abstracta para que el agente E4 diseñe bloques de entrenamiento de fuerza (Bloque B) de forma coherente, segura y escalable.",
+    "idioma": "es",
+    "ambito": "prescripcion_entrenamiento_fuerza_y_condicionamiento",
+    "notas": [
+      "No incluye ejercicios concretos ni URLs.",
+      "Todos los conceptos están definidos de forma abstracta mediante categorías y reglas.",
+      "Los rangos cuantitativos (series, reps, etc.) se expresan como niveles relativos: muy_bajo, bajo, medio, alto, muy_alto.",
+      "La traducción de estos niveles abstractos a valores numéricos concretos se hace FUERA de este K1."
+    ]
+  },
+  "taxonomia": {
+    "niveles_usuario": [
+      "principiante",
+      "intermedio",
+      "avanzado"
+    ],
+    "objetivos_principales": [
+      "perdida_grasa",
+      "hipertrofia",
+      "fuerza",
+      "potencia_rendimiento",
+      "mantenimiento_salud"
+    ],
+    "patrones_movimiento": [
+      "empuje_horizontal",
+      "empuje_vertical",
+      "tiron_horizontal",
+      "tiron_vertical",
+      "dominante_rodilla",
+      "dominante_cadera",
+      "zancada",
+      "core_antirotacion",
+      "core_antiextension",
+      "core_antiflexion",
+      "core_rotacional"
+    ],
+    "tipos_ejercicio": [
+      "compuesto_alta_demanda",
+      "compuesto_media_demanda",
+      "aislamiento",
+      "correctivo_estabilidad",
+      "pliometrico",
+      "balistico",
+      "metabolico_circuito"
+    ],
+    "categorias_volumen": [
+      "muy_bajo",
+      "bajo",
+      "medio",
+      "alto",
+      "muy_alto"
+    ],
+    "categorias_intensidad_carga": [
+      "muy_ligera",
+      "ligera",
+      "moderada",
+      "alta",
+      "muy_alta"
+    ],
+    "categorias_proximidad_fallo": [
+      "muy_lejos_del_fallo",
+      "lejos_del_fallo",
+      "moderadamente_cerca_del_fallo",
+      "cerca_del_fallo",
+      "muy_cerca_o_en_fallo"
+    ],
+    "categorias_densidad": [
+      "densidad_baja",
+      "densidad_media",
+      "densidad_alta"
+    ],
+    "categorias_estres_global": [
+      "estres_bajo",
+      "estres_medio",
+      "estres_alto"
+    ],
+    "categorias_metodos": [
+      "basico",
+      "intensificacion_local",
+      "intensificacion_sistemica",
+      "potencia_pliometria",
+      "metabolico",
+      "avanzado_carga"
+    ],
+    "contextos_entrenamiento": [
+      "gym_completo",
+      "home_gym_basico",
+      "mínimo_equipo",
+      "exterior"
+    ]
+  },
+  "principios_fundamentales": {
+    "principios_generales": [
+      {
+        "id": "sobrecarga_progresiva",
+        "descripcion": "El entrenamiento debe aumentar gradualmente la demanda (volumen, intensidad o complejidad) para generar adaptaciones."
+      },
+      {
+        "id": "especificidad",
+        "descripcion": "Las características del entrenamiento deben asemejarse a la capacidad o rendimiento que se desea mejorar."
+      },
+      {
+        "id": "individualizacion",
+        "descripcion": "El plan debe adaptarse al nivel, historial, objetivos, contexto, preferencias y limitaciones del usuario."
+      },
+      {
+        "id": "variacion_controlada",
+        "descripcion": "La programación debe incluir variaciones estratégicas sin cambiar caóticamente el estímulo cada sesión."
+      },
+      {
+        "id": "fatiga_vs_adaptacion",
+        "descripcion": "La carga debe ser suficiente para generar adaptación pero no tan alta como para acumular fatiga crónica excesiva."
+      },
+      {
+        "id": "seguridad_prioritaria",
+        "descripcion": "Ante la duda, se prioriza seguridad y sostenibilidad a largo plazo por encima de la agresividad del estímulo."
+      }
+    ]
+  },
+  "modelo_usuario": {
+    "dimensiones": [
+      "nivel_experiencia",
+      "objetivo_principal",
+      "frecuencia_semanal_entrenamiento",
+      "tiempo_disponible_por_sesion",
+      "historial_lesiones",
+      "edad_categoria",
+      "nivel_estrés_vida",
+      "preferencias_movimiento",
+      "disponibilidad_material"
+    ],
+    "edad_categorias": [
+      "adulto_joven",
+      "adulto_medio",
+      "mayor_45",
+      "mayor_60"
+    ],
+    "estado_fatiga": [
+      "fatiga_baja",
+      "fatiga_media",
+      "fatiga_alta"
+    ],
+    "reglas_generales": [
+      {
+        "id": "principiante_simple",
+        "si": {
+          "nivel_experiencia": "principiante"
+        },
+        "entonces": {
+          "complejidad_ejercicios": "baja",
+          "metodos_avanzados_permitidos": false,
+          "priorizar": [
+            "ejercicios_estables",
+            "patrones_basicos",
+            "aprendizaje_tecnico"
+          ]
+        }
+      },
+      {
+        "id": "intermedio_equilibrio",
+        "si": {
+          "nivel_experiencia": "intermedio"
+        },
+        "entonces": {
+          "complejidad_ejercicios": "media",
+          "metodos_avanzados_permitidos": true,
+          "metodos_avanzados_intensidad": "uso_moderado",
+          "priorizar": [
+            "progresion_carga",
+            "volumen_medio_alto_controlado"
+          ]
+        }
+      },
+      {
+        "id": "avanzado_especifico",
+        "si": {
+          "nivel_experiencia": "avanzado"
+        },
+        "entonces": {
+          "complejidad_ejercicios": "alta",
+          "metodos_avanzados_permitidos": true,
+          "metodos_avanzados_intensidad": "uso_selectivo",
+          "priorizar": [
+            "especificidad_objetivo",
+            "progresion_estructurada",
+            "control_fatiga"
+          ]
+        }
+      },
+      {
+        "id": "mayor_60_ajuste_seguridad",
+        "si": {
+          "edad_categoria": "mayor_60"
+        },
+        "entonces": {
+          "volumen_global": "bajo_o_medio",
+          "intensidad_carga": "ligera_a_moderada",
+          "proximidad_fallo": "lejos_del_fallo",
+          "restriccion_metodos_avanzados": true
+        }
+      }
+    ]
+  },
+  "reglas_objetivo": {
+    "perdida_grasa": {
+      "descripcion": "Priorizar gasto energético total y mantenimiento de masa muscular.",
+      "tendencias": {
+        "volumen_por_sesion": "medio",
+        "intensidad_carga": "moderada",
+        "proximidad_fallo": "moderadamente_cerca_del_fallo",
+        "densidad": "media_a_alta"
+      },
+      "priorizar": [
+        "ejercicios_compuestos_media_demanda",
+        "superseries_o_circuitos_controlados",
+        "tiempo_bajo_tension_moderado_alto"
+      ],
+      "evitar": [
+        "cargas_extremadamente_altas_para_columna",
+        "metodos_extremos_de_intensificacion_en_principiantes"
+      ]
+    },
+    "hipertrofia": {
+      "descripcion": "Maximizar crecimiento muscular manteniendo control de fatiga.",
+      "tendencias": {
+        "volumen_por_sesion": "medio_a_alto",
+        "volumen_semanal_por_musculo": "medio_a_alto",
+        "intensidad_carga": "moderada_a_alta",
+        "proximidad_fallo": "moderadamente_cerca_del_fallo_o_cerca_del_fallo",
+        "densidad": "media"
+      },
+      "priorizar": [
+        "ejercicios_compuestos_media_o_alta_demanda",
+        "aislamientos_claves_para_musculos_rezagados",
+        "progresion_en_reps_o_carga",
+        "distribucion_equilibrada_de_series_por_musculo"
+      ],
+      "evitar": [
+        "usar_metodos_de_intensificacion_en_todos_los_ejercicios",
+        "volumen_extremo_sin_deloads_periodicos"
+      ]
+    },
+    "fuerza": {
+      "descripcion": "Aumentar la capacidad de mover cargas altas en patrones clave.",
+      "tendencias": {
+        "volumen_por_sesion": "medio",
+        "volumen_semanal_por_patron": "medio",
+        "intensidad_carga": "alta",
+        "proximidad_fallo": "moderadamente_cerca_del_fallo",
+        "densidad": "baja_o_media"
+      },
+      "priorizar": [
+        "ejercicios_compuestos_alta_demanda",
+        "series_de_bajo_a_medio_numero_de_reps",
+        "descansos_suficientes_entre_series",
+        "progresion_carga_estructurada"
+      ],
+      "evitar": [
+        "intensificacion_excesiva_en_accesorios",
+        "combinacion_de_mucho_volumen_con_intensidad_muy_alta"
+      ]
+    },
+    "potencia_rendimiento": {
+      "descripcion": "Mejorar velocidad, explosividad y capacidad de aplicar fuerza rápidamente.",
+      "tendencias": {
+        "volumen_por_sesion": "bajo_o_medio",
+        "intensidad_carga": "moderada_a_alta_en_ejercicios_pesados",
+        "proximidad_fallo": "lejos_del_fallo_en_movimientos_explosivos",
+        "densidad": "media"
+      },
+      "priorizar": [
+        "ejercicios_pliometricos_apropiados_al_nivel",
+        "ejercicios_compuestos_pesados_con_tecnica_solida",
+        "metodos_de_contraste_o_cluster_en_avanzados"
+      ],
+      "evitar": [
+        "fatiga_excesiva_antes_de_trabajo_explosivo",
+        "uso_de_pliometria_alta_en_personas_con_sobrepeso_o_dolor_articular"
+      ]
+    },
+    "mantenimiento_salud": {
+      "descripcion": "Mantener fuerza, masa muscular funcional y salud articular a largo plazo.",
+      "tendencias": {
+        "volumen_por_sesion": "bajo_a_medio",
+        "intensidad_carga": "ligera_a_moderada",
+        "proximidad_fallo": "lejos_del_fallo_o_moderadamente_cerca",
+        "densidad": "media"
+      },
+      "priorizar": [
+        "ejercicios_compuestos_estables",
+        "trabajo_de_core_y_estabilidad",
+        "movimientos_de_movilizacion_y_control_motor"
+      ],
+      "evitar": [
+        "metodos_de_intensificacion_agresivos",
+        "sesiones_excesivamente_largas"
+      ]
+    }
+  },
+  "reglas_diseno_sesion": {
+    "estructura_basica_sesion": [
+      "1_bloque_principal_fuerza_o_hipertrofia_por_patron_o_grupo_muscular",
+      "1_a_3_ejercicios_secundarios_para_reforzar_patrones_o_musculos_clave",
+      "0_a_2_ejercicios_aislamiento_para_musculos_especificos",
+      "opcional_core_dependiendo_de_diseno_global_del_programa"
+    ],
+    "prioridad_ejercicios": [
+      "primero_ejercicios_compuestos_alta_demanda",
+      "despues_compuestos_media_demanda",
+      "finalmente_aislamientos_y_correctivos"
+    ],
+    "distribucion_por_patron_recomendada": {
+      "empuje_tren_superior": {
+        "minimo_ejercicios": "1",
+        "maximo_ejercicios": "3"
+      },
+      "tiron_tren_superior": {
+        "minimo_ejercicios": "1",
+        "maximo_ejercicios": "3"
+      },
+      "piernas_tren_inferior": {
+        "minimo_ejercicios": "1",
+        "maximo_ejercicios": "3"
+      }
+    },
+    "reglas_tiempo_sesion": [
+      {
+        "id": "tiempo_disponible_corto",
+        "si": {
+          "tiempo_disponible_por_sesion": "muy_limitado"
+        },
+        "entonces": {
+          "ejercicios_totales_sesion": "bajo",
+          "priorizar": [
+            "ejercicios_compuestos",
+            "superseries_antagonistas_sencillas"
+          ],
+          "evitar": [
+            "gran_numero_de_aislamientos",
+            "metodos_avanzados_muy_fatigantes"
+          ]
+        }
+      }
+    ]
+  },
+  "reglas_volumen_intensidad": {
+    "mapa_volumen_por_nivel": [
+      {
+        "nivel_experiencia": "principiante",
+        "volumen_por_sesion": "bajo_o_medio",
+        "series_por_ejercicio": "bajas",
+        "series_totales_por_musculo_en_semana": "bajas",
+        "comentarios": "Enfocado en aprendizaje tecnico y adaptacion basal."
+      },
+      {
+        "nivel_experiencia": "intermedio",
+        "volumen_por_sesion": "medio",
+        "series_por_ejercicio": "medias",
+        "series_totales_por_musculo_en_semana": "medias",
+        "comentarios": "Buscando progreso sostenido con cierto margen para intensificacion."
+      },
+      {
+        "nivel_experiencia": "avanzado",
+        "volumen_por_sesion": "medio_a_alto",
+        "series_por_ejercicio": "medias_a_altas",
+        "series_totales_por_musculo_en_semana": "medias_a_altas",
+        "comentarios": "Se requiere mayor volumen y especificidad, monitorizando de cerca la fatiga."
+      }
+    ],
+    "mapa_intensidad_por_objetivo": [
+      {
+        "objetivo": "hipertrofia",
+        "intensidad_carga_preferente": "moderada_a_alta",
+        "proximidad_fallo_preferente": "moderadamente_cerca_del_fallo_o_cerca_del_fallo",
+        "comentarios": "Se busca tension mecanica suficiente con control tecnico."
+      },
+      {
+        "objetivo": "fuerza",
+        "intensidad_carga_preferente": "alta",
+        "proximidad_fallo_preferente": "moderadamente_cerca_del_fallo",
+        "comentarios": "Evitar fallo sistematico en ejercicios pesados para proteger tecnica."
+      },
+      {
+        "objetivo": "perdida_grasa",
+        "intensidad_carga_preferente": "moderada",
+        "proximidad_fallo_preferente": "moderadamente_cerca_del_fallo",
+        "comentarios": "Mantener masa muscular con buena tecnica y densidad razonable."
+      }
+    ],
+    "reglas_ajuste_fatiga": [
+      {
+        "id": "fatiga_alta_ajuste",
+        "si": {
+          "estado_fatiga": "fatiga_alta"
+        },
+        "entonces": {
+          "ajustar_volumen_por_sesion": "reducir_un_nivel",
+          "ajustar_intensidad_carga": "reducir_un_nivel",
+          "ajustar_proximidad_fallo": "alejarse_un_nivel_del_fallo"
+        }
+      },
+      {
+        "id": "fatiga_baja_ajuste",
+        "si": {
+          "estado_fatiga": "fatiga_baja"
+        },
+        "entonces": {
+          "ajustar_volumen_por_sesion": "mantener_o_aumentar_ligeramente",
+          "ajustar_intensidad_carga": "mantener",
+          "ajustar_proximidad_fallo": "mantener_dentro_de_rangos_recomendados_por_objetivo"
+        }
+      }
+    ]
+  },
+  "reglas_metodos_entrenamiento": {
+    "categorias_metodos": [
+      {
+        "categoria": "basico",
+        "descripcion": "Aplicable a todos los niveles; series tradicionales sin intensificacion añadida."
+      },
+      {
+        "categoria": "intensificacion_local",
+        "descripcion": "Aumenta el estres en un musculo concreto mediante manipulacion del descanso, reps o secuencia."
+      },
+      {
+        "categoria": "intensificacion_sistemica",
+        "descripcion": "Aumenta el estres global de la sesion mediante combinaciones de ejercicios o densidad alta."
+      },
+      {
+        "categoria": "potencia_pliometria",
+        "descripcion": "Prioriza velocidad y reactividad mas que fatiga metabolica."
+      },
+      {
+        "categoria": "metabolico",
+        "descripcion": "Prioriza demanda cardiovascular y metabolica manteniendo tecnica aceptable."
+      },
+      {
+        "categoria": "avanzado_carga",
+        "descripcion": "Manipula carga y orden de series de forma sofisticada para estimular fuerza/hipertrofia."
+      }
+    ],
+    "reglas_por_nivel": [
+      {
+        "nivel_experiencia": "principiante",
+        "permitir_categorias": [
+          "basico"
+        ],
+        "evitar_categorias": [
+          "intensificacion_local",
+          "intensificacion_sistemica",
+          "potencia_pliometria",
+          "metabolico",
+          "avanzado_carga"
+        ],
+        "comentarios": "La prioridad es aprender tecnica, tolerar carga basica y generar adherencia."
+      },
+      {
+        "nivel_experiencia": "intermedio",
+        "permitir_categorias": [
+          "basico",
+          "intensificacion_local",
+          "metabolico"
+        ],
+        "evitar_categorias": [
+          "intensificacion_sistemica_exagerada",
+          "potencia_pliometria_alta_complejidad",
+          "avanzado_carga_extremo"
+        ]
+      },
+      {
+        "nivel_experiencia": "avanzado",
+        "permitir_categorias": [
+          "basico",
+          "intensificacion_local",
+          "intensificacion_sistemica",
+          "potencia_pliometria",
+          "metabolico",
+          "avanzado_carga"
+        ],
+        "comentarios": "Uso moderado de metodos avanzados, priorizando control de fatiga semanal."
+      }
+    ],
+    "reglas_por_objetivo": [
+      {
+        "objetivo": "hipertrofia",
+        "priorizar_categorias": [
+          "basico",
+          "intensificacion_local",
+          "avanzado_carga"
+        ],
+        "usar_con_moderacion": [
+          "intensificacion_sistemica",
+          "metabolico"
+        ]
+      },
+      {
+        "objetivo": "fuerza",
+        "priorizar_categorias": [
+          "basico",
+          "avanzado_carga"
+        ],
+        "usar_con_mucha_cautela": [
+          "intensificacion_local",
+          "intensificacion_sistemica"
+        ],
+        "evitar_en_general": [
+          "metabolico_extremo_en_mismos_dias_de_carga_pesada"
+        ]
+      },
+      {
+        "objetivo": "perdida_grasa",
+        "priorizar_categorias": [
+          "basico",
+          "metabolico",
+          "intensificacion_local_moderada"
+        ],
+        "usar_con_cautela": [
+          "intensificacion_sistemica"
+        ]
+      },
+      {
+        "objetivo": "potencia_rendimiento",
+        "priorizar_categorias": [
+          "potencia_pliometria",
+          "basico",
+          "avanzado_carga_en_ejercicios_pesados"
+        ],
+        "evitar": [
+          "metodos_metabolicos_extremos_que_comprometan_velocidad"
+        ]
+      }
+    ]
+  },
+  "reglas_seguridad_y_restricciones": {
+    "principios": [
+      "si_existe_dolor_agudo_en_un_movimiento_o_articulacion_evitar_ejercicios_que_lo_reproduzcan",
+      "evitar_combinar_cargas_extremas_con_metodos_de_intensificacion_en_el_mismo_patrón",
+      "en_usuarios_mayores_o_con_lesiones_historicas_priorizar_ejercicios_estables_y_cargas_moderadas",
+      "el_riesgo_nunca_debe_superar_el_beneficio_en_contexto_de_salud_general"
+    ],
+    "recomendaciones_generales": [
+      {
+        "id": "columna_protegida",
+        "descripcion": "Evitar aplicar metodos de intensificacion_sistemica en ejercicios que carguen fuertemente la columna bajo fatiga elevada."
+      },
+      {
+        "id": "pliometria_controlada",
+        "descripcion": "Introducir pliometria solo cuando el control tecnico, el peso corporal y la salud articular lo permitan."
+      }
+    ]
+  },
+  "reglas_progresion": {
+    "principios": [
+      "no_aumentar_volumen_e_intensidad_a_la_vez_de_forma_agresiva",
+      "usar_microprogresiones_constantes_en_vez_de_cambios_brutales",
+      "programar_bloques_de_descarga_periodicos_cuando_la_fatiga_sea_alta_o_hayan_signos_de_estancamiento"
+    ],
+    "estrategias_progresion_abtractas": [
+      {
+        "id": "progresion_en_reps",
+        "descripcion": "Mantener la carga relativa y aumentar gradualmente el numero_de_reps_dentro_de_un_rango_definido_externamente."
+      },
+      {
+        "id": "progresion_en_carga",
+        "descripcion": "Mantener el rango_de_reps_y_añadir_pequenos_incrementos_de_carga_cuando_la_ejecucion_lo_permita."
+      },
+      {
+        "id": "progresion_en_series",
+        "descripcion": "Añadir series_extra_para_un_patron_o_musculo_cuando_la_recuperacion_y_el_rendimiento_se_mantienen_estables."
+      }
+    ],
+    "reglas_descarga": [
+      {
+        "id": "descarga_periodica",
+        "disparadores": [
+          "fatiga_alta_mantenida",
+          "descenso_rendimiento_en_varias_sesiones",
+          "sensacion_subjetiva_de_saturacion"
+        ],
+        "accion": {
+          "ajuste_volumen": "reducir_1_o_2_niveles",
+          "ajuste_intensidad": "reducir_1_nivel",
+          "duracion_aproximada": "bloque_corto_definido_fuera_del_k1"
+        }
+      }
+    ]
+  }
+}
