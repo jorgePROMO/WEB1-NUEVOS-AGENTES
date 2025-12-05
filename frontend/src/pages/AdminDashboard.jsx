@@ -792,9 +792,13 @@ const AdminDashboard = () => {
           if (status === 'draft' || status === 'sent') {
             // Plan generado exitosamente
             clearInterval(pollInterval);
-            setPlanRefreshKey(prev => prev + 1);
             setGeneratingEDN360Plan(false);
-            alert('✅ Plan de entrenamiento generado exitosamente!');
+            setPlanRefreshKey(prev => prev + 1);
+            
+            // Delay the alert to allow the modal to close first
+            setTimeout(() => {
+              alert('✅ Plan de entrenamiento generado exitosamente!');
+            }, 500);
           } else if (status === 'error') {
             // Error en la generación
             clearInterval(pollInterval);
