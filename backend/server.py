@@ -7786,7 +7786,7 @@ def _integrate_template_blocks(
     Integra los bloques de plantillas (A, C, D) con el Bloque B generado por IA.
     
     Args:
-        plan_data: Plan generado por IA (contiene training_plan con sessions)
+        plan_data: Plan generado por IA (puede ser el plan directamente o estructura con E4)
         user_data: Datos del usuario para selección de plantillas
         week_number: Número de semana para rotación de ABS
         session_number_start: Número inicial de sesión para rotación de cardio
@@ -7796,11 +7796,18 @@ def _integrate_template_blocks(
     """
     from backend.training_templates import seleccionar_plantillas
     
-    # Obtener el training_plan desde E4
-    training_plan = plan_data.get('E4', {}).get('training_plan', {})
+    # Obtener el training_plan desde E4 (estructura vieja) o directamente (estructura nueva)
+    if 'E4' in plan_data:
+        training_plan = plan_data.get('E4', {}).get('training_plan', {})
+    elif 'sessions' in plan_data:
+        # plan_data ya es el training_plan directamente
+        training_plan = plan_data
+    else:
+        logger.warning("⚠️ No se encontró training_plan en plan_data, devolviendo sin modificar")
+        return plan_data
     
     if not training_plan or 'sessions' not in training_plan:
-        logger.warning("⚠️ No se encontró training_plan en plan_data, devolviendo sin modificar")
+        logger.warning("⚠️ No se encontraron sessions en training_plan, devolviendo sin modificar")
         return plan_data
     
     sessions = training_plan['sessions']
