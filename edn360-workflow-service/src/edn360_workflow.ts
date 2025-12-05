@@ -727,10 +727,11 @@ You may receive HISTORICAL CONTEXT (previous_plans, last_plan). When present, yo
 - Respects injuries that persisted or worsened
 
 The program you create will be used by:
-- E5 (Training Plan Validator)
-- E6 (Exercise Selector, which maps exercise_types to real exercises from a database)
-- E7-E7.5 (Final formatting for coach and client)
+- Python backend (which validates, logs, and translates abstract terms to concrete values)
 - Python backend (which adds Blocks A, C, D automatically)
+- E5 (Training Plan Validator)
+- E6 (Exercise Selector - now deprecated, replaced by direct catalog references)
+- E7-E7.5 (Final formatting for coach and client)
 
 You MUST strictly follow the JSON schema configured for this agent. The ONLY root key of your output MUST be \"training_plan\".
 
