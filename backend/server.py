@@ -7864,7 +7864,7 @@ Dudas o consultas: Contacta a tu entrenador
         return "Error generando el plan. Contacta a tu entrenador."
 
 
-def _integrate_template_blocks(
+async def _integrate_template_blocks(
     plan_data: dict,
     user_data: dict,
     week_number: int = 1,
@@ -7872,6 +7872,7 @@ def _integrate_template_blocks(
 ) -> dict:
     """
     Integra los bloques de plantillas (A, C, D) con el Bloque B generado por IA.
+    Enriquece los ejercicios de A, C, D con videos desde la base de datos.
     
     Args:
         plan_data: Plan generado por IA (puede ser el plan directamente o estructura con E4)
@@ -7885,7 +7886,7 @@ def _integrate_template_blocks(
     import sys
     import os
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from training_templates import seleccionar_plantillas
+    from training_templates import seleccionar_plantillas, enrich_exercises_with_videos
     
     # Obtener el training_plan desde E4 (estructura vieja) o directamente (estructura nueva)
     if 'E4' in plan_data:
