@@ -1573,7 +1573,19 @@ async def _generate_plan_background(plan_id: str, user_id: str, workflow_input: 
             
             # Obtener datos del usuario para selección de plantillas
             db = client[os.getenv('MONGO_DB_NAME', 'trainsmart')]
+            # Try both string and ObjectId formats for user lookup
             user = await db.users.find_one({"_id": user_id})
+            if not user:
+                # Try with string format
+                user = await db.users.find_one({"_id": str(user_id)})
+            if not user:
+                # Try with numeric format
+                try:
+                    user = await db.users.find_one({"_id": int(user_id)})
+                except ValueError:
+                    pass
+            
+            logger.info(f"🔍 User lookup result: {'Found' if user else 'Not found'} | user_id: {user_id} | type: {type(user_id)}")
             
             if user:
                 # Obtener el cuestionario inicial para datos del usuario
