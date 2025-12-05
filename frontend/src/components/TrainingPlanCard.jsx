@@ -1176,6 +1176,8 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                   </Card>
                 ))}
               </div>
+                </>
+              )}
 
               {/* Action Buttons */}
               <div className="flex justify-end gap-2 pt-4 border-t">
