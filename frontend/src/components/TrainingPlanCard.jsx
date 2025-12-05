@@ -789,7 +789,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                             </div>
                                             <div className="col-span-5">
                                               <Input
-                                                value={exercise.name}
+                                                value={exercise.name || exercise.nombre || ''}
                                                 onChange={(e) => updateExerciseField(sessionIdx, blockKey, exerciseIdx, 'name', e.target.value)}
                                                 className="text-xs h-8"
                                                 placeholder="Nombre del ejercicio"
@@ -797,7 +797,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                             </div>
                                             <div className="col-span-2">
                                               <Input
-                                                value={exercise.series}
+                                                value={exercise.series || ''}
                                                 onChange={(e) => updateExerciseField(sessionIdx, blockKey, exerciseIdx, 'series', e.target.value)}
                                                 className="text-xs h-8"
                                                 placeholder="Series"
@@ -805,7 +805,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                             </div>
                                             <div className="col-span-2">
                                               <Input
-                                                value={exercise.reps}
+                                                value={exercise.reps || exercise.repeticiones || ''}
                                                 onChange={(e) => updateExerciseField(sessionIdx, blockKey, exerciseIdx, 'reps', e.target.value)}
                                                 className="text-xs h-8"
                                                 placeholder="Reps"
@@ -813,7 +813,7 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                             </div>
                                             <div className="col-span-2">
                                               <Input
-                                                value={exercise.rpe}
+                                                value={exercise.rpe || ''}
                                                 onChange={(e) => updateExerciseField(sessionIdx, blockKey, exerciseIdx, 'rpe', e.target.value)}
                                                 className="text-xs h-8"
                                                 placeholder="RPE"
@@ -822,16 +822,16 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                           </div>
                                           <div className="mt-2 space-y-1">
                                             <Textarea
-                                              value={exercise.notes || ''}
+                                              value={exercise.notes || exercise.notas || ''}
                                               onChange={(e) => updateExerciseField(sessionIdx, blockKey, exerciseIdx, 'notes', e.target.value)}
                                               className="text-xs"
                                               placeholder="Notas del ejercicio"
                                               rows={1}
                                             />
                                             {/* Botón Ver Video */}
-                                            {exercise.video_url && (
+                                            {(exercise.video_url || exercise.url_video) && (
                                               <Button
-                                                onClick={() => window.open(exercise.video_url, '_blank')}
+                                                onClick={() => window.open(exercise.video_url || exercise.url_video, '_blank')}
                                                 size="sm"
                                                 variant="outline"
                                                 className="w-full text-xs border-blue-300 text-blue-700 hover:bg-blue-50"
