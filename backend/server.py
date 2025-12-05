@@ -2218,8 +2218,16 @@ async def toggle_training_plan_status(plan_id: str, request: Request):
     try:
         edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
         
-        # Buscar el plan
+        # Buscar el plan por questionnaire_submission_id o _id
         plan_doc = await edn360_db.training_plans_v2.find_one({"questionnaire_submission_id": plan_id})
+        
+        if not plan_doc:
+            # Intentar buscar por _id si no se encuentra por questionnaire_submission_id
+            from bson import ObjectId
+            try:
+                plan_doc = await edn360_db.training_plans_v2.find_one({"_id": ObjectId(plan_id)})
+            except:
+                pass
         
         if not plan_doc:
             raise HTTPException(status_code=404, detail="Plan no encontrado")
@@ -2228,9 +2236,9 @@ async def toggle_training_plan_status(plan_id: str, request: Request):
         current_status = plan_doc.get("status", "draft")
         new_status = "draft" if current_status == "sent" else "sent"
         
-        # Actualizar
+        # Actualizar usando el _id del documento encontrado
         result = await edn360_db.training_plans_v2.update_one(
-            {"questionnaire_submission_id": plan_id},
+            {"_id": plan_doc["_id"]},
             {"$set": {"status": new_status}}
         )
         
