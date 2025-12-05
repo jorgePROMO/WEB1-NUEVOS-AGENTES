@@ -2150,6 +2150,7 @@ async def update_training_plan(user_id: str, request: Request):
     try:
         body = await request.json()
         updated_plan = body.get("plan")
+        plain_text_override = body.get("plain_text_override")  # NEW: Plain text content
         
         if not updated_plan:
             raise HTTPException(
@@ -2183,6 +2184,11 @@ async def update_training_plan(user_id: str, request: Request):
             "last_edited_at": datetime.now(timezone.utc).isoformat(),
             "last_edited_by": admin["_id"]
         }
+        
+        # NEW: Save plain text override if provided
+        if plain_text_override:
+            update_doc["plain_text_content"] = plain_text_override
+            logger.info(f"📝 Guardando plain_text_content ({len(plain_text_override)} caracteres)")
         
         # Si es la primera edición, guardar el plan original
         if "original_plan" not in existing_plan:
