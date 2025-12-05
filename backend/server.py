@@ -2264,8 +2264,16 @@ async def delete_training_plan_by_id(plan_id: str, request: Request):
     try:
         edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
         
-        # Buscar el plan por questionnaire_submission_id
+        # Buscar el plan por questionnaire_submission_id o _id
         plan_doc = await edn360_db.training_plans_v2.find_one({"questionnaire_submission_id": plan_id})
+        
+        if not plan_doc:
+            # Intentar buscar por _id si no se encuentra por questionnaire_submission_id
+            from bson import ObjectId
+            try:
+                plan_doc = await edn360_db.training_plans_v2.find_one({"_id": ObjectId(plan_id)})
+            except:
+                pass
         
         if not plan_doc:
             raise HTTPException(
@@ -2276,8 +2284,8 @@ async def delete_training_plan_by_id(plan_id: str, request: Request):
                 }
             )
         
-        # Eliminar el plan
-        result = await edn360_db.training_plans_v2.delete_one({"questionnaire_submission_id": plan_id})
+        # Eliminar el plan usando el _id del documento encontrado
+        result = await edn360_db.training_plans_v2.delete_one({"_id": plan_doc["_id"]})
         
         if result.deleted_count == 0:
             raise HTTPException(
