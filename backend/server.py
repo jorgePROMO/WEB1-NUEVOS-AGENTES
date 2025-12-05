@@ -2669,7 +2669,9 @@ def _generate_training_plan_email_html(plan_doc: dict, user: dict) -> str:
                         <ul style="margin-left: 20px; color: #64748b; font-size: 14px;">
                     """
                     for opcion in block.get('opciones', []):
-                        sessions_html += f'<li>{opcion}</li>'
+                        # Handle both string and object formats
+                        opcion_text = opcion if isinstance(opcion, str) else opcion.get('nombre', opcion.get('opcion', str(opcion)))
+                        sessions_html += f'<li>{opcion_text}</li>'
                     sessions_html += """
                         </ul>
                     </div>
