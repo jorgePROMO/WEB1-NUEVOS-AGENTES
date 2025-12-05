@@ -4,7 +4,7 @@
 - **User ID**: 1764168881795908
 - **Test Date**: 2025-12-03T18:52:00Z
 - **Total Scenarios**: 3 (Planned)
-- **Backend URL**: https://workout-structure-1.preview.emergentagent.com/api
+- **Backend URL**: https://trainsmart-17.preview.emergentagent.com/api
 - **Local Backend URL**: http://localhost:8001/api
 - **Microservice URL**: http://localhost:4000
 
@@ -38,7 +38,7 @@
 - **User ID**: 1764168881795908
 - **Test Date**: 2025-12-03T18:52:04.291787
 - **Total Scenarios**: 3
-- **Backend URL**: https://workout-structure-1.preview.emergentagent.com/api
+- **Backend URL**: https://trainsmart-17.preview.emergentagent.com/api
 
 ## Test Results Overview
 

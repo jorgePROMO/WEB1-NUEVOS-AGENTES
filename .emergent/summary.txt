@@ -1,93 +1,110 @@
 <analysis>**original_problem_statement:**
-The user, Jorge, wants to evolve his EDN360 training plan generation system. The initial goal was a technical audit and fixing various UI/UX bugs. This has evolved into a major architectural overhaul.
+The user, Jorge, wants to evolve his EDN360 training plan generation system. The initial goal was a technical audit and fixing UI/UX bugs. This has evolved into a major architectural overhaul and fixing critical regressions.
 
 **PRODUCT REQUIREMENTS:**
 
 1.  **AI Logic & Plan Structure (New Architecture):**
-    *   The plan generation process must be split into a hybrid AI + Template model.
-    *   The AI (in the Node.js microservice) is responsible **only** for generating **Block B (Main Strength Workout)**.
-    *   The Python backend is responsible for programmatically selecting and adding **Block A (Warmup)**, **Block C (Core/Abs)**, and **Block D (Cardio)** from a predefined set of templates.
-    *   The selection of templates must follow a strict hierarchical rule set: **Priority 1 (Safety)** > **Priority 2 (Specificity)** > **Priority 3 (Optimization)**.
-    *   The final plan object stored in the database and sent to the frontend must have a  key containing the four separate blocks (A, B, C, D).
-    *   The AI should vary exercises in Block B to avoid repetition from previous plans.
+    *   The plan generation process must be a hybrid AI + Template model.
+    *   The AI (Node.js microservice) generates **Block B (Main Strength Workout)** as a single, continuous list of exercises, without muscle group subdivisions.
+    *   The Python backend programmatically selects and adds **Block A (Warmup)**, **Block C (Core/Abs)**, and **Block D (Cardio)** from templates.
+    *   The final plan must have a  key with the four separate blocks (A, B, C, D).
 
 2.  **UI/UX Enhancements:**
-    *   The  must be updated to render the new 4-block plan structure.
-        *   Blocks A, C, and D should be collapsed by default.
-        *   Block B (the main workout) should be expanded by default.
-        *   Each block should be visually distinct, potentially with an icon (🔥, 💪, 🧱, 🏃).
-    *   The UI must be backward-compatible, rendering plans in the old format if they don't have the  field.
-    *   The UI must be mobile-responsive.
+    *   The  must render the new 4-block plan structure with Block B expanded by default and others collapsed. This is implemented but needs verification.
+    *   The UI must be backward-compatible with old plan formats.
+    *   The  plan generation must be non-blocking. The user should be able to close the generation modal and see a small notification/queue in the corner. The system should handle queuing multiple plan generations automatically.
 
-3.  **Admin Features:**
-    *   Admins must be able to delete plans.
-    *   Admins must be able to activate/deactivate plans to control their visibility to the user.
-    *   The plan generation process in the  should not block the UI. A loading overlay with a manual close button is required.
+3.  **Bug Fixes & Regressions:**
+    *   **PDF Generation:** The generated PDF must reflect the new 4-block structure. Currently, it's regressed to the old format.
+    *   **Plan Generation Blocking:** The admin UI freezes during plan generation. This is a critical issue.
+    *   **Admin plan management:** The ability to delete and activate/deactivate plans was broken and has been fixed.
+    *   **Data Consistency:** Deleted questionnaires were still appearing in dropdowns due to a caching issue in . This has been fixed.
 
 **User's preferred language**: Spanish
 
 **what currently exists?**
-The application is a React/FastAPI/Node.js stack. A major architectural change has been completed on the backend.
-- **Backend**: The plan generation logic now follows the new 4-block hybrid model.
-    - A new file, , contains the logic for selecting warmup, core, and cardio templates based on hierarchical rules.
-    - The template definitions and rules are stored in a structured JSON file: .
-    - The main  has been updated to orchestrate this new flow: it calls the AI for Block B, then calls  to get Blocks A, C, and D, and combines them into a final plan structure.
-- **AI Microservice**: The prompt for the AI agent in  has been modified to ensure it **only** generates the main strength workout (Block B).
-- **Frontend**: The frontend is functional but **does not yet support the new 4-block plan structure**. It can only render plans in the old, monolithic format. Numerous bugs related to user login, plan display, PDF download, and video links have been fixed.
+The application is a React/FastAPI/Node.js stack.
+- **Backend**: Logic for the 4-block hybrid model is present in  and , but it is failing to apply correctly during plan generation, resulting in an incorrect plan structure. Endpoints for deleting and toggling plans were fixed to use the correct MongoDB . Timeouts for calls to the Node.js microservice were increased. Logging was just added to  to debug the template integration.
+- **AI Microservice**: Timeouts for AI agent steps in  were increased from 3 minutes to 10 minutes, and the TypeScript code was recompiled to apply the changes.
+- **Frontend**:  has been updated to render the 4-block structure and the flattened exercise list for Block B, but has not been visually verified with a correctly generated plan.  was modified to use a non-blocking notification for plan generation, but the user is still experiencing a hanging UI, likely due to a combination of browser caching serving old component code and the backend process still being synchronous.
 
 **Last working item**:
--   **Last item agent was working**: The agent was about to begin **Phase 3: Frontend Implementation**. This involves updating the  component to correctly render the new 4-block training plan structure () received from the backend.
--   **Status**: NOT STARTED
--   **Agent Testing Done**: N/A
--   **Which testing method agent to use?** Frontend testing agent. After implementation, a test should be run to verify the new 4-block layout renders correctly, the accordion functionality works, and it remains backward-compatible with old plan formats.
+-   **Last item agent was working**: The agent was trying to solve two critical, simultaneous problems reported by the user:
+    1.  The  UI hangs when generating a plan, showing an old, non-closable modal.
+    2.  The resulting plan (and its PDF) is still using the old structure (e.g., Bloque A - Pecho) instead of the new 4-block structure (Calentamiento, Fuerza, etc.).
+    The agent identified that the UI hanging is likely due to browser cache and that the incorrect structure is a backend logic failure. The agent added logging to the backend () and restarted all services to try and debug the plan structure issue and force the frontend to update.
+-   **Status**: IN PROGRESS
+-   **Agent Testing Done**: N
+-   **Which testing method agent to use?** both. The Frontend testing agent is needed to confirm the non-blocking UI and new 4-block display in both Admin and User dashboards. The backend needs to be tested via curl or a test script to confirm a newly generated plan has the correct .
 -   **User Testing Done**: N
 
 **All Pending/In progress Issue list**:
-There are no outstanding bugs. The current focus is on new feature development.
+-   **Issue 1: Generated Plan/PDF Does Not Have 4-Block Structure (P0, CRITICAL)**
+-   **Issue 2: Admin UI Hangs During Plan Generation (P0, CRITICAL)**
+-   **Issue 3: Implement a non-blocking job queue with notifications (P1)**
+
+**Issues Detail:**
+-   **Issue 1: Generated Plan/PDF Does Not Have 4-Block Structure**
+    -   **Attempted fixes**: The agent modified  to flatten the AI's output into a single list of exercises for Block B and added logging to the  function to trace its execution. The user's last generated plan still showed the old structure, indicating the fix was not effective or not executed.
+    -   **Next debug checklist**:
+        1.  Trigger a new plan generation for the user .
+        2.  Check the backend logs () for the INTEGRATION LOG messages added in  to see if  is being called and if it's processing the sessions correctly.
+        3.  Inspect the plan document created in the  collection in MongoDB to verify its structure.
+        4.  If the structure is still wrong, debug the logic within  in .
+    -   **Why fix this issue and what will be achieved with the fix?**: This is the core feature of the current development cycle. Fixing it will align the application's output with the user's primary requirement.
+    -   **Status**: IN PROGRESS
+    -   **Is recurring issue?** Y
+    -   **Should Test frontend/backend/both after fix?**: Both.
+    -   **Blocked on other issue**: None.
+
+-   **Issue 2: Admin UI Hangs During Plan Generation**
+    -   **Attempted fixes**: The agent increased timeouts in the Node.js microservice and the Python backend. It also modified  to use a non-blocking toast notification instead of a modal. However, the user's screenshots show the old, blocking modal, indicating a severe browser caching problem. The agent restarted the frontend service, but this doesn't clear the user's browser cache.
+    -   **Next debug checklist**:
+        1.  The highest priority is to implement a true non-blocking backend process (see Issue 3).
+        2.  As a temporary measure, explicitly instruct the user to perform a hard refresh (Ctrl+Shift+R or Cmd+Shift+R) to bypass their local browser cache.
+        3.  Review  to ensure no legacy code could still trigger the old modal.
+    -   **Why fix this issue and what will be achieved with the fix?**: The app is unusable for the admin while a plan is generating. Fixing this is critical for workflow.
+    -   **Status**: IN PROGRESS
+    -   **Is recurring issue?** Y
+    -   **Should Test frontend/backend/both after fix?**: Frontend.
+    -   **Blocked on other issue**: Blocked by the lack of a true asynchronous backend process.
+
+-   **Issue 3: Implement a non-blocking job queue with notifications**
+    -   **Attempted fixes**: None. This is the planned solution for Issue 2.
+    -   **Next debug checklist**:
+        1.  Modify the plan generation endpoints () in  to use FastAPI's .
+        2.  The endpoint should immediately return a  and run the intensive AI call in the background.
+        3.  Create a new endpoint  for the frontend to poll for status.
+        4.  Implement the UI for a notification queue in the corner of the , as requested by the user.
+    -   **Why fix this issue and what will be achieved with the fix?**: This will definitively solve the UI blocking problem and allow the admin to queue multiple jobs, fulfilling a key user requirement.
+    -   **Status**: NOT STARTED
+    -   **Is recurring issue?** N/A
+    -   **Should Test frontend/backend/both after fix?**: Both.
+    -   **Blocked on other issue**: None.
 
 **In progress Task List**:
--   **Task 1: Implement 4-Block UI in User Dashboard (P0)**
-    -   **Where to resume**: Open .
-    -   **What will be achieved with this?**: The user will be able to see their training plans formatted into the new, clearly separated 4-block structure (Warmup, Strength, Core, Cardio), which is the main goal of the current development phase.
-    -   **Implementation Details**:
-        1.  Check if  exists. If not, render the old view for backward compatibility.
-        2.  If it exists, create four distinct, collapsible sections (accordions) for blocks A, B, C, and D.
-        3.  Use icons (🔥, 💪, 🧱, 🏃) to label each block.
-        4.  Ensure Block B is expanded by default, while A, C, and D are collapsed.
-        5.  Ensure the layout is responsive and looks good on mobile.
-    -   **Status**: NOT STARTED
-    -   **Should Test frontend/backend/both after fix?**: Frontend.
-    -   **Blocked on something**: None.
+None. The current work is categorized as issue resolution.
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks**:
-    -   (P1) **Update Admin Dashboard UI**: Modify  to also display the 4-block plan structure, allowing the admin to see what the user sees.
+    -   (P1) **Implement FastAPI BackgroundTasks**: Convert synchronous plan generation endpoints to be asynchronous to fix UI blocking (Part of Issue 3).
+    -   (P1) **Implement Job Queue UI**: Create the frontend components for the non-blocking progress modal and job queue notification system.
+    -   (P2) **Update Admin Dashboard UI**: Modify  to display the 4-block plan structure, allowing the admin to see what the user sees.
 -   **Future Tasks**:
-    -   (P1) **Add Progress Indicators**: Implement features for users to track their progress.
-    -   (P2) **Enable Manual Edits**: Allow the admin to manually edit the generated plans.
-    -   (P3) **Automatic Progressions**: Implement logic for the AI to create progressive overload in subsequent plans (V4).
-    -   (P4) **Refactor **: This is a large, monolithic file that should be broken down into smaller components to improve maintainability.
+    -   (P2) **Add Progress Indicators**: Implement features for users to track their progress.
+    -   (P3) **Enable Manual Edits**: Allow the admin to manually edit the generated plans.
+    -   (P4) **Automatic Progressions**: Implement logic for the AI to create progressive overload in subsequent plans (V4).
+    -   (P5) **Refactor **: This is a large, monolithic file that should be broken down into smaller components.
 
 **Completed work in this session**
--   **Backend Architecture Overhaul**:
-    -   Re-architected plan generation into a hybrid AI+Template model. The AI now only generates the main workout (Block B).
-    -   Created a rule-based template engine in  to add Warmup (A), Core (C), and Cardio (D) blocks.
-    -   Created a structured JSON database for all templates: .
-    -   Modified the AI agent prompts in the Node.js microservice () to align with the new architecture.
-    -   Validated the new backend logic with Python test scripts.
--   **Critical Bug Fixes**:
-    -   Resolved multiple  crashes in  and .
-    -   Fixed user login failures by correcting password hashing and verification logic.
-    -   Fixed PDF generation by installing the  dependency.
-    -   Fixed broken Google Drive video links by implementing a URL conversion function.
-    -   Corrected backend database queries (ObjectId serialization, incorrect query fields).
-    -   Fixed an issue where only one of several training plans was being displayed.
--   **Feature Implementation & UX Improvements**:
-    -   Implemented Activate/Deactivate Plan functionality (backend and frontend).
-    -   Fixed the Delete Plan functionality.
-    -   Added a Close button to the non-blocking Generating Plan overlay in the admin panel.
-    -   Improved the mobile responsiveness of the  plan view.
-    -   Corrected and expanded Spanish translations for AI-generated content and applied them retroactively to an existing plan.
+-   **PDF Download Fixed**: Resolved an  by installing the  package and restarting the backend.
+-   **Admin Plan Management Fixed**: Corrected the  and  plan functions in  to use the plan's MongoDB  instead of a missing , making them functional again.
+-   **Data Consistency Fix**: Updated questionnaire deletion endpoints in  to also remove the entry from the cached  document, resolving an issue where deleted items still appeared in UI dropdowns. The user's stale cache entry was manually cleaned.
+-   **Plan Structure Logic Updated**:
+    -   Backend (): Modified  to flatten the AI's workout (Block B) into a single continuous list of exercises.
+    -   Frontend (): Updated the component to render the flattened exercise list for Block B.
+-   **Generation Timeout Increased**: Increased timeouts in the Node.js microservice () and the Python backend () to prevent failures during long AI runs. Recompiled TypeScript code to apply changes.
+-   **Frontend Syntax/Rendering Fixes**: Corrected multiple JSX syntax, indentation, and closing tag errors in  that arose during development.
 
 **Earlier issues found/mentioned but not fixed**
 -   **Issue 1:  is fragile and complex.**
@@ -100,42 +117,45 @@ There are no outstanding bugs. The current focus is on new feature development.
 
 
 **Key Technical Concepts**
--   **Hybrid AI/Template Architecture**: The core of the new system. The AI's role is narrowed to creative/complex tasks (Block B), while repetitive/structured parts (Blocks A,C,D) are handled by a deterministic template engine.
--   **Rule-based Logic Engine**: The  module acts as a simple rule engine, applying hierarchical logic (Safety > Specificity > Optimization) to select appropriate templates.
--   **Asynchronous Background Tasks (FastAPI)**: Used for non-blocking AI plan generation.
--   **Frontend State Management (React Hooks)**: , , and  were used extensively to fix UI bugs and manage component state.
+-   **Hybrid AI/Template Architecture**: Combining AI generation (Block B) with a deterministic template engine (Blocks A, C, D).
+-   **Rule-based Logic Engine**: The  module applies hierarchical rules to select templates.
+-   **Client-side Caching Issues**: A major blocker, where the user's browser serves stale frontend code, preventing UI fixes from being visible.
+-   **Synchronous vs. Asynchronous Tasks**: The core of the UI hanging issue is a long-running synchronous API call. The planned solution is .
 
 **key DB schema**
--   ****: The schema for a plan document now includes a  object, which contains the distinct A, B, C, and D blocks. Legacy plans will not have this field.
+-   ****: Contains the full plan document. The goal is for new plans to have a  object. Endpoint logic was fixed to use the MongoDB  for operations.
+-   ****: Contains cached user data, including . The delete logic was fixed to correctly update this cache.
 
 **All files of reference**
--   : **The primary file to be modified next.**
--   : The new template selection engine.
--   : The database of all block templates.
--   : The main orchestrator for the new plan generation flow.
--   : Contains the modified AI prompt for generating Block B.
+-   : Primary file for backend logic, including the broken plan generation and fixed admin endpoints.
+-   : Source of the UI hanging issue.
+-   : Where the new 4-block structure should be displayed.
+-   : AI microservice where timeouts were adjusted.
+-   : Contains the logic for programmatic block selection.
 
 **Critical Info for New Agent**
--   Your next task is to implement the **Phase 3 Frontend update**. You must modify  to render the new 4-block plan structure.
--   The implementation **must be backward-compatible**. Check for the existence of the  field to differentiate between new and old plan formats.
--   For new plans, render four collapsible sections. **Block B (Fuerza) must be expanded by default**, while A, C, and D are collapsed.
--   All the necessary data is already being provided by the backend. No backend changes should be needed for this task.
+-   You are facing two critical, intertwined issues: **1) The plan generation hangs the admin UI**, and **2) The generated plan has an incorrect structure.**
+-   The UI hanging is almost certainly a **browser caching issue** on the user's end, combined with a **synchronous backend process**. Your changes to the frontend are not being seen. You MUST prioritize moving to a true asynchronous backend with  (Issue #3) to solve this permanently. You may also need to instruct the user to perform a hard refresh (Ctrl+Shift+R).
+-   The incorrect plan structure is a backend bug. You just added logging to  in . Your immediate next step should be to **trigger a new plan generation, then examine the backend logs** to see what the new logging reveals about the function's execution.
+-   The user has approved a roadmap. Follow it, prioritizing the critical fixes for plan structure and the non-blocking UI first.
 
 **Last 10 User Messages and any pending user messages**
--   **User (Msg 356):** Confirmed everything works and proposed the major new feature: a 4-block structure (Warmup, Main, Abs, Cardio) with AI handling intensity and variety. **Status: Completed**.
--   **Agent (Msg 357):** Analyzed the request and proposed a more robust hybrid AI+Template approach. **Status: Completed**.
--   **User (Msg 358):** Agreed to the hybrid approach and provided detailed requirements for the templates. **Status: Completed**.
--   **User (Msg 363):** Provided very specific technical feedback: requested a structured JSON format for templates and a clear hierarchical rule set. **Status: Completed**.
--   **Agent (Msg 371-380):** Created and refined the structured JSON templates () based on user feedback. **Status: Completed**.
--   **User (Msg 381):** Approved the final JSON and gave the green light for backend implementation. **Status: Completed**.
--   **Agent (Msg 382-387):** Implemented the backend logic in a new  module and created test scripts. **Status: Completed**.
--   **User (Msg 388):** Instructed the agent to proceed with Phase 2 (integration). **Status: Completed**.
--   **User (Msg 405, 451):** Provided detailed, structured instructions for integrating the new backend logic (Phase 2) and then updating the frontend (Phase 3). **Status: Phase 2 Completed, Phase 3 Pending**.
--   **User (Msg 432):** Requested testing of the new backend implementation. **Status: Completed**.
+-   **User (Msg 258):** Reported multiple issues: 1) User login is blocked during plan generation. 2) Requested a non-blocking UI with a download-manager-style queue. 3) The generated PDF has the wrong block structure (e.g., Pecho and Triceps instead of 4 blocks). **Status: In Progress**.
+-   **Agent (Msg 263):** Presented a detailed 4-phase roadmap to fix all reported issues, which the user approved. **Status: Acknowledged**.
+-   **User (Msg 264):** Approved the roadmap with clarifications: the job queue should be automatic, and Block B should be one continuous list of exercises. Instructed the agent to start with Phase 1. **Status: Acknowledged**.
+-   **Agent (Msg 265-302):** Began Phase 1. Updated backend and frontend to flatten Block B exercises. Summarized completion. **Status: Incomplete, as it didn't solve the root problem**.
+-   **User (Msg 303):** Reported the screen is still hanging on a modal. **Status: In Progress**.
+-   **Agent (Msg 304-345):** Investigated and found the Node.js service was timing out and the frontend was likely showing a cached version. Restarted services and suggested implementing the permanent async fix. **Status: In Progress**.
+-   **User (Msg 346):** Demanded a permanent solution to the generation problem. **Status: Acknowledged**.
+-   **Agent (Msg 347-396):** Implemented the permanent fix by increasing timeouts in Node.js and the backend. **Status: Incomplete, as it did not work**.
+-   **User (Msg 397):** Reported the screen is still hanging and the modal is unclosable. **Status: In Progress**.
+-   **User (Msg 422):** Reported the screen is STILL hanging and the generated plan STILL has the old block structure. **Status: In Progress**.
 
 **Project Health Check:**
--   **Broken**: Nothing is critically broken. The user can log in and view plans.
--   **Mocked**: No mocked components. The backend architecture is now live. The primary disconnect is that the frontend cannot yet render the new plan data structure.
+-   **Broken**:
+    -   Plan generation from the Admin Dashboard is critically broken. It blocks the UI and produces a plan with an incorrect structure.
+    -   PDF generation reflects the incorrect plan structure.
+-   **Mocked**: None.
 
 **3rd Party Integrations**
 -   OpenAI Assistants API — uses User API Key for the AI agent workflow (Block B generation).
@@ -143,11 +163,14 @@ There are no outstanding bugs. The current focus is on new feature development.
 -   wkhtmltopdf - A command-line tool used by the  library in the backend to generate PDFs.
 
 **Testing status**
--   **Testing agent used after significant changes**: YES (used to validate bug fixes earlier in the session).
+-   **Testing agent used after significant changes**: YES (but not for the most recent, failing changes).
 -   **Troubleshoot agent used after agent stuck in loop**: NO.
--   **Test files created**:  (to validate the new backend architecture).
--   **Known regressions**: None.
+-   **Test files created**:  (from a previous session, might be outdated).
+-   **Known regressions**: Plan structure and PDF content are regressed to the old format. The plan generation UI is non-functional.
 
 **Credentials to test flow:**
 -   **User:** 
--   **Password:** </analysis>
+-   **Password:** 
+
+**What agent forgot to execute**
+The agent correctly identified that the Node.js TypeScript code needed to be recompiled after increasing timeouts but only did so after a subsequent failure. The most significant oversight has been underestimating the user's browser caching issue. Despite changing the frontend code to be non-blocking, the agent did not instruct the user to perform a hard refresh, leading to a loop of the user reporting the same UI bug.</analysis>

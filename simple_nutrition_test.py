@@ -7,7 +7,7 @@ Tests the specific scenario mentioned in the review request
 import requests
 import json
 
-BACKEND_URL = "https://workout-structure-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://trainsmart-17.preview.emergentagent.com/api"
 
 def test_nutrition_plan_with_previous_reference():
     print("🎯 TESTING: Nutrition Plan Generation with Previous Plan Reference")
