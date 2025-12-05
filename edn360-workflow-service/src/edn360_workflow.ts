@@ -2167,7 +2167,7 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
           ]
         }
       ],
-      180000  // 3 minutes timeout (E7.5 has Exercise Database Vector Store)
+      600000  // 10 minutes timeout (E7.5 has Exercise Database Vector Store - increased for reliability)
     );
     conversationHistory.push(...e75TrainingPlanEnricherResultTemp.newItems.map((item: any) => item.rawItem));
 
