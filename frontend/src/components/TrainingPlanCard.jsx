@@ -805,7 +805,13 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                             </div>
                                             <div className="col-span-2">
                                               <Input
-                                                value={exercise.reps || exercise.repeticiones || ''}
+                                                value={
+                                                  exercise.reps || 
+                                                  exercise.repeticiones || 
+                                                  (exercise.duracion_segundos ? `${exercise.duracion_segundos}s` : '') ||
+                                                  (exercise.duracion_minutos ? `${exercise.duracion_minutos}min` : '') ||
+                                                  ''
+                                                }
                                                 onChange={(e) => updateExerciseField(sessionIdx, blockKey, exerciseIdx, 'reps', e.target.value)}
                                                 className="text-xs h-8"
                                                 placeholder="Reps"
@@ -822,7 +828,12 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
                                           </div>
                                           <div className="mt-2 space-y-1">
                                             <Textarea
-                                              value={exercise.notes || exercise.notas || ''}
+                                              value={
+                                                exercise.notes || 
+                                                exercise.notas || 
+                                                exercise.instrucciones || 
+                                                ''
+                                              }
                                               onChange={(e) => updateExerciseField(sessionIdx, blockKey, exerciseIdx, 'notes', e.target.value)}
                                               className="text-xs"
                                               placeholder="Notas del ejercicio"
