@@ -8079,7 +8079,10 @@ async def admin_generate_training_plan(
         logger.info("🔧 ========== INICIANDO INTEGRACIÓN DE PLANTILLAS ==========")
         logger.info(f"🔧 Plan original tiene {len(result['plan_data'].get('sessions', []))} sesiones")
         
-        from backend.training_templates import seleccionar_plantillas
+        import sys
+        import os
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from training_templates import seleccionar_plantillas
         
         # Extraer datos del usuario para selección de plantillas
         user_data_for_templates = {
