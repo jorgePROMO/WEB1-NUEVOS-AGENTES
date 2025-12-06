@@ -197,7 +197,7 @@ Content-Type: application/json
 3. **E3**: Resume contexto training
 4. **E4**: Genera plan base
 5. **E5**: Valida seguridad
-6. **E6**: Mapea ejercicios a BD
+6. ~~**E6**: Mapea ejercicios a BD~~ **DISABLED - Using catalog directly in backend**
 7. **E7**: Ensambla plan técnico
 8. **E7.5**: Enriquece con nombres/videos (file_search)
 
