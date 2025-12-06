@@ -1283,10 +1283,11 @@ Each block in blocks[] MUST have:
 Each exercise object MUST have:
 
 - order  (integer, 1-based index inside the block)
-- db_id  (string, from E6.mappings[].db_match.id)
+- exercise_types  (array with single exercise_id from block.exercise_types[i])
 - series (number or string, from the block.series)
 - reps   (string, from the block.reps)
 - rpe    (number or string, from the block.rpe)
+- notes  (string, optional, short technical cue)
 
 ==================================================
 CRITICAL MINIMIZATION RULES
