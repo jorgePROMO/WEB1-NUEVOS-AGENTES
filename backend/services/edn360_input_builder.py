@@ -274,6 +274,17 @@ async def _build_user_profile(user_id: str) -> Optional[EDN360UserProfile]:
             logger.warning(f"⚠️  Usuario {user_id} no encontrado en BD Web")
             return None
         
+        # Handle both string and dict subscription formats (backward compatibility)
+        subscription_data = user_doc.get("subscription", {})
+        if isinstance(subscription_data, str):
+            # Legacy format: subscription is a string (e.g., "premium")
+            subscription_plan = subscription_data
+            subscription_status = user_doc.get("subscription_status", "active")
+        else:
+            # Modern format: subscription is a dict
+            subscription_plan = subscription_data.get("plan")
+            subscription_status = subscription_data.get("payment_status")
+        
         # Mapear a EDN360UserProfile
         user_profile = EDN360UserProfile(
             user_id=user_doc["_id"],
@@ -281,8 +292,8 @@ async def _build_user_profile(user_id: str) -> Optional[EDN360UserProfile]:
             email=user_doc.get("email"),
             phone=user_doc.get("phone"),
             created_at=user_doc.get("created_at"),
-            subscription_plan=user_doc.get("subscription", {}).get("plan"),
-            subscription_status=user_doc.get("subscription", {}).get("payment_status")
+            subscription_plan=subscription_plan,
+            subscription_status=subscription_status
         )
         
         return user_profile
