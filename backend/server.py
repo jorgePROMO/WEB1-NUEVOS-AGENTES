@@ -8992,14 +8992,25 @@ async def send_training_email(user_id: str, plan_id: str = None, request: Reques
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
+    # Try EDN360 v2 first (training_plans_v2), then fallback to legacy (training_plans)
+    edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+    
     # Si no se especifica plan_id, obtener el más reciente
     if not plan_id:
-        plan = await db.training_plans.find_one(
+        plan = await edn360_db.training_plans_v2.find_one(
             {"user_id": user_id},
-            sort=[("generated_at", -1)]
+            sort=[("created_at", -1)],
+            {"_id": 0}
         )
+        if not plan:
+            plan = await db.training_plans.find_one(
+                {"user_id": user_id},
+                sort=[("generated_at", -1)]
+            )
     else:
-        plan = await db.training_plans.find_one({"_id": plan_id, "user_id": user_id})
+        plan = await edn360_db.training_plans_v2.find_one({"_id": plan_id, "user_id": user_id}, {"_id": 0})
+        if not plan:
+            plan = await db.training_plans.find_one({"_id": plan_id, "user_id": user_id})
     
     if not plan:
         raise HTTPException(status_code=404, detail="Usuario no tiene plan de entrenamiento")
@@ -9008,10 +9019,14 @@ async def send_training_email(user_id: str, plan_id: str = None, request: Reques
         from email_utils import send_email
         import markdown
         
-        # FIX: Usar plan_text (texto profesional) en lugar de plan_final (JSON)
-        plan_content = plan.get("plan_text", "")
+        # Get plan content with proper fallback chain
+        plan_content = plan.get("plain_text_content", "") or plan.get("plan_text", "")
         
-        # Fallback a plan_final si no existe plan_text (planes antiguos)
+        # If no plain text, generate from structured data (EDN360 v2)
+        if not plan_content and plan.get("plan"):
+            plan_content = _generate_plain_text_from_structured_plan(plan.get("plan"))
+        
+        # Fallback to plan_final for legacy plans
         if not plan_content:
             plan_content = plan.get("plan_final", "")
             if isinstance(plan_content, dict):
