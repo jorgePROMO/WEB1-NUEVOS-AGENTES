@@ -8043,9 +8043,16 @@ async def _integrate_template_blocks(
             formatted = ' '.join(word.capitalize() for word in formatted.split())
             return formatted
         
-        def map_generic_to_catalog_code(generic_code: str) -> str:
-            """Mapea códigos genéricos de E4 a códigos específicos del catálogo"""
-            mapping = {
+        def map_generic_to_catalog_code(generic_code: str, catalog_all_codes: list) -> str:
+            """
+            Mapea códigos genéricos de E4 a códigos específicos del catálogo.
+            
+            Estrategia:
+            1. Mapeo manual explícito (prioridad alta)
+            2. Fuzzy matching si no hay match exacto (fallback temporal)
+            """
+            # MAPEO MANUAL EXPLÍCITO (prioridad)
+            manual_mapping = {
                 # Press variants
                 'press_mancuernas': 'press_suelo_mancuernas',
                 'press_polea': 'press_pecho_cable',
@@ -8074,9 +8081,30 @@ async def _integrate_template_blocks(
                 
                 # Elevaciones
                 'elevaciones_laterales_maquina': 'elevaciones_laterales_maquina_convergente',
+                
+                # Core
+                'core_antiextension': 'plancha_frontal',
+                'core_antirotacion': 'plancha_lateral',
             }
             
-            return mapping.get(generic_code, generic_code)
+            # 1. Intento con mapeo manual
+            if generic_code in manual_mapping:
+                return manual_mapping[generic_code]
+            
+            # 2. Fuzzy matching (fallback temporal)
+            from difflib import get_close_matches
+            
+            # Buscar match cercano en catálogo (threshold 0.6 = 60% similitud)
+            close_matches = get_close_matches(generic_code, catalog_all_codes, n=1, cutoff=0.6)
+            
+            if close_matches:
+                matched_code = close_matches[0]
+                logger.info(f"  🔍 Fuzzy match: {generic_code} → {matched_code}")
+                return matched_code
+            
+            # 3. Si no hay match, devolver el código original (será enriquecido con fallback)
+            logger.warning(f"  ⚠️ Sin match para: {generic_code}")
+            return generic_code
         
         all_exercises = []
         exercise_counter = 1
