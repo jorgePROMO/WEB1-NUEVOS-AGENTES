@@ -8004,8 +8004,10 @@ async def _integrate_template_blocks(
             block_d_data = {'id': 'D', 'block_name': 'Cardio', 'recommendations': []}
         
         # ============================================
-        # BLOQUE B: FUERZA (DEL E4)
+        # BLOQUE B: FUERZA (DEL E4) - ENRIQUECIDO
         # ============================================
+        from exercise_catalog_loader import get_exercise_by_code, get_variants_by_code
+        
         all_exercises = []
         exercise_counter = 1
         
@@ -8013,6 +8015,37 @@ async def _integrate_template_blocks(
             for exercise in block.get('exercises', []):
                 exercise_copy = exercise.copy()
                 exercise_copy['order'] = exercise_counter
+                
+                # ENRIQUECER con catálogo EDN360
+                exercise_types = exercise_copy.get('exercise_types', [])
+                if exercise_types and len(exercise_types) > 0:
+                    exercise_code = exercise_types[0]
+                    
+                    # Buscar en catálogo
+                    catalog_exercise = get_exercise_by_code(exercise_code)
+                    if catalog_exercise:
+                        exercise_copy['exercise_code'] = exercise_code
+                        exercise_copy['name'] = catalog_exercise.get('name_es', exercise_code)
+                        
+                        # Buscar variante con video
+                        variants = get_variants_by_code(exercise_code)
+                        if variants and len(variants) > 0:
+                            first_variant = variants[0]
+                            exercise_copy['video_url'] = first_variant.get('video_url', '')
+                            exercise_copy['primary_group'] = first_variant.get('primary_muscle_es', '')
+                            exercise_copy['secondary_group'] = first_variant.get('secondary_muscle_es', '')
+                        else:
+                            exercise_copy['video_url'] = ''
+                            exercise_copy['primary_group'] = catalog_exercise.get('primary_muscle_es', '')
+                            exercise_copy['secondary_group'] = ''
+                        
+                        logger.info(f"  ✅ Enriquecido: {exercise_code} → {exercise_copy['name']}")
+                    else:
+                        # Fallback: usar exercise_code como nombre
+                        exercise_copy['exercise_code'] = exercise_code
+                        exercise_copy['name'] = exercise_code.replace('_', ' ').title()
+                        logger.warning(f"  ⚠️ Ejercicio no encontrado en catálogo: {exercise_code}")
+                
                 all_exercises.append(exercise_copy)
                 exercise_counter += 1
         
