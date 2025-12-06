@@ -893,26 +893,49 @@ From E4 (\`training_plan\`):
 
 You MUST ensure:
 
-1. **Shoulder safety**
-   - NO overhead pressing patterns.
-   - NO deep dips or extreme shoulder extension.
-   - Prefer machines, neutral or joint-friendly grips.
-   - Use notes/session_notes to explicitly warn about safe ROM and pain-free range.
+1. **Shoulder safety** (DIFFERENTIATE BY SEVERITY AND EXPERIENCE LEVEL)
+   
+   IF experience_level = "advanced" or "professional" AND shoulder_issues mentions "molestias leves" or "mild":
+   - ✅ ALLOW overhead pressing patterns (press_militar_barra, press_hombros_sentado_mancuernas)
+   - ✅ ALLOW compound movements (press_banca_barra, dominadas)
+   - ⚠️ ADD notes about: controlled ROM, proper warm-up, stop if sharp pain
+   - 🎯 FOCUS: Heavy basics with good technique, NOT just machines
+   
+   IF shoulder_issues mentions "dolor crónico", "chronic pain", "moderate", "severe":
+   - ❌ NO overhead pressing patterns
+   - ❌ NO deep dips or extreme shoulder extension
+   - ✅ Prefer machines, neutral grips, supported movements
+   - ⚠️ ADD notes about pain-free range, avoid extreme positions
 
-2. **Lumbar safety**
-   - NO heavy axial loading (no barbell back squats, no barbell deadlifts from floor).
-   - Use machine-based or highly supported hip hinge / squat patterns.
-   - Emphasize neutral spine, core bracing and avoiding lumbar flexion in notes.
+2. **Lumbar safety** (DIFFERENTIATE BY SEVERITY AND EXPERIENCE LEVEL)
+   
+   IF experience_level = "advanced" or "professional" AND lower_back_issues mentions "molestias leves" or "mild":
+   - ✅ ALLOW barbell squats (sentadilla_barra) with proper technique
+   - ✅ ALLOW Romanian deadlifts (peso_muerto_rumano)
+   - ✅ ALLOW bent-over rows (remo_barra_inclinado)
+   - ⚠️ ADD notes about: neutral spine, core bracing, progressive loading
+   - 🎯 FOCUS: Heavy compound movements with control, NOT avoiding them entirely
+   
+   IF lower_back_issues mentions "hernia", "chronic pain", "moderate", "severe":
+   - ❌ NO heavy axial loading (no barbell back squats, no deadlifts from floor)
+   - ✅ Use machines: prensa_pierna_45_maquina, leg_curl machines
+   - ⚠️ ADD notes about neutral spine, avoiding flexion under load
 
-3. **Volume & intensity**
+3. **Volume & intensity** (PRIORITIZE EXPERIENCE LEVEL)
    - Adjust based on training_context.profile.experience_level:
      - **Beginner**: Conservative volume (2-3 series), moderate intensity (RPE 6-7)
      - **Intermediate**: Moderate volume (3-4 series), moderate-high intensity (RPE 7-8)
-     - **Advanced/Professional**: High volume (4-5 series), high intensity (RPE 8-9)
-   - DO NOT reduce intensity just because user has injuries
-   - Injuries are managed through EXERCISE SELECTION (by E6), not by lowering RPE
-
-You should mainly tweak \`series\`, \`reps\`, \`rpe\` and safety notes based on experience level, NOT just on injuries.
+     - **Advanced**: High volume (4-5 series), high intensity (RPE 8-9)
+     - **Professional**: Very high volume (4-6 series), very high intensity (RPE 8-9)
+   
+   🚨 CRITICAL: DO NOT reduce volume/intensity for advanced/professional users just because they have MILD injuries.
+   - Mild injuries → manage through exercise selection + technique cues
+   - Severe injuries → reduce load/volume as needed
+   
+   🎯 For advanced/professional with mild issues:
+   - Keep challenging exercises (heavy basics)
+   - Add safety notes about technique
+   - Trust their experience to auto-regulate
 
 ---
 
