@@ -8123,8 +8123,8 @@ async def _integrate_template_blocks(
                 if exercise_types and len(exercise_types) > 0:
                     exercise_code = exercise_types[0]
                     
-                    # Mapear código genérico a código del catálogo
-                    catalog_code = map_generic_to_catalog_code(exercise_code)
+                    # Mapear código genérico a código del catálogo (con fuzzy matching)
+                    catalog_code = map_generic_to_catalog_code(exercise_code, all_catalog_codes)
                     exercise_copy['exercise_code'] = catalog_code
                     
                     # Buscar en catálogo enriquecido
