@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://workout-forge-6.preview.emergentagent.com
+**URL Actual:** https://exerule-system.preview.emergentagent.com
 
 ---
 

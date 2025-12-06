@@ -12,7 +12,7 @@ import time
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://workout-forge-6.preview.emergentagent.com/api"
+BACKEND_URL = "https://exerule-system.preview.emergentagent.com/api"
 
 class EDN360E2ETester:
     def __init__(self):
