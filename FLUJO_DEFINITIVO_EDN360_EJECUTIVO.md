@@ -57,7 +57,7 @@
 ┌────────────────────────────────────────────┐
 │   CAPA 3: AGENTES EDN360 (OpenAI)         │
 │                                            │
-│  E1 → E2 → E3 → E4 → E5 → E6 → E7 → E7.5 │
+│  E1 → E2 → E3 → E4 → E5 → ~~E6~~ → E7 → E7.5 │  **E6 DISABLED**
 │                                            │
 │  • Usa BD ejercicios (file_search)        │
 │  • Devuelve plan enriched                 │
