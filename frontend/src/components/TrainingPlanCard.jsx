@@ -208,30 +208,48 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
           text += `│  ${block.nombre || `Bloque ${blockKey}`}${' '.repeat(Math.max(0, 58 - (block.nombre || `Bloque ${blockKey}`).length))}│\n`;
           text += `└─────────────────────────────────────────────────────────────┘\n`;
           
-          const exercises = block.ejercicios || block.exercises || [];
-          if (exercises.length > 0) {
-            exercises.forEach(ex => {
-              const order = ex.order || '';
-              // Get name with fallback to exercise_types
-              let name = ex.name || ex.nombre;
-              if (!name && ex.exercise_types && ex.exercise_types.length > 0) {
-                // Use exercise_types as fallback, format it nicely
-                name = ex.exercise_types[0].replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-              }
-              if (!name) {
-                name = 'Ejercicio';
-              }
-              const series = ex.series || '-';
-              const reps = ex.reps || ex.repeticiones || '-';
-              const rpe = ex.rpe || '-';
-              const notes = ex.notes || ex.notas || '';
-              
-              text += `\n${order}. ${name}\n`;
-              text += `   Series: ${series} | Reps: ${reps} | RPE: ${rpe}\n`;
-              if (notes) {
-                text += `   📝 ${notes}\n`;
-              }
-            });
+          // Block D: Handle recommendations (Cardio)
+          if (blockKey === 'D') {
+            const recommendations = block.recomendaciones || block.recommendations || block.opciones || [];
+            if (recommendations.length > 0) {
+              recommendations.forEach((rec, index) => {
+                text += `\n${index + 1}. ${rec.type || 'Cardio'}\n`;
+                if (rec.frequency) text += `   Frecuencia: ${rec.frequency}\n`;
+                if (rec.duration) text += `   Duración: ${rec.duration}\n`;
+                if (rec.intensity) text += `   Intensidad: ${rec.intensity}\n`;
+                if (rec.modalities && rec.modalities.length > 0) {
+                  text += `   Modalidades: ${rec.modalities.join(', ')}\n`;
+                }
+                if (rec.notes) text += `   📝 ${rec.notes}\n`;
+              });
+            }
+          } else {
+            // Blocks A, B, C: Handle exercises
+            const exercises = block.ejercicios || block.exercises || [];
+            if (exercises.length > 0) {
+              exercises.forEach(ex => {
+                const order = ex.order || '';
+                // Get name with fallback to exercise_types
+                let name = ex.name || ex.nombre;
+                if (!name && ex.exercise_types && ex.exercise_types.length > 0) {
+                  // Use exercise_types as fallback, format it nicely
+                  name = ex.exercise_types[0].replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                }
+                if (!name) {
+                  name = 'Ejercicio';
+                }
+                const series = ex.series || '-';
+                const reps = ex.reps || ex.repeticiones || '-';
+                const rpe = ex.rpe || '-';
+                const notes = ex.notes || ex.notas || '';
+                
+                text += `\n${order}. ${name}\n`;
+                text += `   Series: ${series} | Reps: ${reps} | RPE: ${rpe}\n`;
+                if (notes) {
+                  text += `   📝 ${notes}\n`;
+                }
+              });
+            }
           }
           text += `\n`;
         });
