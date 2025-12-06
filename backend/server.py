@@ -2665,29 +2665,46 @@ def _generate_training_plan_email_html(plan_doc: dict, user: dict) -> str:
                 block_name = block.get('nombre', f'Bloque {block_key}')
                 exercises = block.get('ejercicios', block.get('exercises', []))
                 
-                # Skip cardio block (D) - just show the options
-                if block_key == 'D' and 'opciones' in block:
-                    sessions_html += f"""
-                    <div style="margin-bottom: 15px;">
-                        <h4 style="color: #475569; font-size: 15px; margin-bottom: 10px;">
-                            {block_name}
-                        </h4>
-                        <p style="color: #64748b; font-size: 14px; margin: 10px 0;">
-                            <strong>Duración:</strong> {block.get('duracion_minutos', 10)} minutos
-                        </p>
-                        <p style="color: #64748b; font-size: 14px; margin: 10px 0;">
-                            <strong>Opciones disponibles:</strong>
-                        </p>
-                        <ul style="margin-left: 20px; color: #64748b; font-size: 14px;">
-                    """
-                    for opcion in block.get('opciones', []):
-                        # Handle both string and object formats
-                        opcion_text = opcion if isinstance(opcion, str) else opcion.get('nombre', opcion.get('opcion', str(opcion)))
-                        sessions_html += f'<li>{opcion_text}</li>'
-                    sessions_html += """
-                        </ul>
-                    </div>
-                    """
+                # Block D: Cardio recommendations (support both new and old structure)
+                if block_key == 'D':
+                    # Try new structure first (recomendaciones/recommendations), then fallback to old (opciones)
+                    recommendations = block.get('recomendaciones', block.get('recommendations', block.get('opciones', [])))
+                    
+                    if recommendations:
+                        sessions_html += f"""
+                        <div style="margin-bottom: 15px;">
+                            <h4 style="color: #475569; font-size: 15px; margin-bottom: 10px;">
+                                {block_name}
+                            </h4>
+                        """
+                        
+                        for idx, rec in enumerate(recommendations, 1):
+                            # Handle new structure (dict with type, frequency, etc.)
+                            if isinstance(rec, dict) and ('type' in rec or 'frequency' in rec):
+                                sessions_html += f"""
+                                <div style="background-color: white; padding: 15px; border-radius: 6px; margin-bottom: 10px; border-left: 4px solid #3b82f6;">
+                                    <p style="color: #1e40af; font-weight: bold; margin: 0 0 10px 0;">{rec.get('type', 'Cardio')}</p>
+                                """
+                                if rec.get('frequency'):
+                                    sessions_html += f'<p style="margin: 5px 0; color: #64748b; font-size: 14px;"><strong>Frecuencia:</strong> {rec["frequency"]}</p>'
+                                if rec.get('duration'):
+                                    sessions_html += f'<p style="margin: 5px 0; color: #64748b; font-size: 14px;"><strong>Duración:</strong> {rec["duration"]}</p>'
+                                if rec.get('intensity'):
+                                    sessions_html += f'<p style="margin: 5px 0; color: #64748b; font-size: 14px;"><strong>Intensidad:</strong> {rec["intensity"]}</p>'
+                                if rec.get('modalities'):
+                                    modalities_str = ', '.join(rec['modalities']) if isinstance(rec['modalities'], list) else str(rec['modalities'])
+                                    sessions_html += f'<p style="margin: 5px 0; color: #64748b; font-size: 14px;"><strong>Modalidades:</strong> {modalities_str}</p>'
+                                if rec.get('notes'):
+                                    sessions_html += f'<p style="margin: 10px 0 0 0; color: #475569; font-size: 13px; font-style: italic;">📝 {rec["notes"]}</p>'
+                                if rec.get('timing'):
+                                    sessions_html += f'<p style="margin: 5px 0; color: #64748b; font-size: 13px;">⏱️ {rec["timing"]}</p>'
+                                sessions_html += '</div>'
+                            # Handle old structure (string or simple dict)
+                            else:
+                                rec_text = rec if isinstance(rec, str) else rec.get('nombre', rec.get('opcion', str(rec)))
+                                sessions_html += f'<p style="color: #64748b; font-size: 14px; margin: 5px 0;">• {rec_text}</p>'
+                        
+                        sessions_html += "</div>"
                     continue
                 
                 # For warmup and core blocks
