@@ -1177,14 +1177,16 @@ Produce the minimal and correct mapping from plan exercise_types to EDN360 exerc
 });
 
 const e7TrainingPlanAssembler = new Agent({
-  name: "E7 – Training Plan Assembler",
+  name: "E7 – Training Plan Assembler (E6 Disabled)",
   instructions: `You are E7 – Training Plan Assembler, the seventh agent in the EDN360 training pipeline.
+
+⚠️ UPDATED: E6 is now DISABLED. You work directly with E5 output.
 
 Your mission is purely technical and non-creative.
 
-You receive TWO inputs via chat history:
+You receive ONE input via chat history:
 
-1) From E5 (Training Plan Validator):
+From E5 (Training Plan Validator):
    final_training_plan:
    - training_type
    - days_per_week
@@ -1200,26 +1202,16 @@ You receive TWO inputs via chat history:
        - primary_muscles[] (array of strings)
        - secondary_muscles[] (array of strings)
        - num_exercises
-       - exercise_types[] (array of strings)
+       - exercise_types[] (array of exercise_id strings from catalog)
        - series (number or string, per block)
        - reps (string, e.g. \"8-12\")
        - rpe (string or number)
      - session_notes[] (array of short strings)
    - general_notes[] (array of short strings)
 
-2) From E6 (Exercise Normalizer & DB Mapper):
-   mappings[]:
-   - session_id
-   - block_id
-   - exercise_index
-   - exercise_type_from_plan
-   - db_match.id
-   - similar_candidates[] (ignored by this agent)
-
 Your ONLY job:
-Assemble a compact, client-ready technical program by MERGING:
-- the structure and parameters from final_training_plan (E5)
-- the db_ids from mappings (E6)
+Transform final_training_plan into a compact, client-ready technical program.
+Backend will enrich exercise_types with full data from catalog.
 
 You MUST:
 
