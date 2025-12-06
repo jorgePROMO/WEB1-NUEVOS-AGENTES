@@ -1843,33 +1843,14 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
       output_text: JSON.stringify(e5TrainingPlanValidatorResultTemp.finalOutput),
       output_parsed: e5TrainingPlanValidatorResultTemp.finalOutput
     };
-    const e6ExerciseNormalizerDbMapperResultTemp = await runAgentWithLogging(
-      runner,
-      e6ExerciseNormalizerDbMapper,
-      "E6 – Exercise Normalizer & DB Mapper",
-      [
-        ...conversationHistory,
-        {
-          id: undefined,
-          role: "assistant",
-          content: [
-            { type: "output_text", text: `Final_training_plan_from_E5:
-          {{ E5.final_training_plan }}
-          ` }
-          ]
-        }
-      ],
-      600000  // 10 minutes timeout (E6 has Exercise Database Vector Store - increased for reliability)
-    );
-    conversationHistory.push(...e6ExerciseNormalizerDbMapperResultTemp.newItems.map((item: any) => item.rawItem));
-
-    if (!e6ExerciseNormalizerDbMapperResultTemp.finalOutput) {
-        throw new Error("Agent result is undefined");
-    }
-
+    
+    // E6 DISABLED - Backend will enrich exercises directly from catalog
+    // const e6ExerciseNormalizerDbMapperResultTemp = await runAgentWithLogging(...);
+    
+    // Create mock E6 result to maintain workflow compatibility
     const e6ExerciseNormalizerDbMapperResult = {
-      output_text: JSON.stringify(e6ExerciseNormalizerDbMapperResultTemp.finalOutput),
-      output_parsed: e6ExerciseNormalizerDbMapperResultTemp.finalOutput
+      output_text: JSON.stringify({mappings: []}),
+      output_parsed: {mappings: []}  // Empty mappings - backend will handle enrichment
     };
     const e7TrainingPlanAssemblerResultTemp = await runAgentWithLogging(
       runner,
