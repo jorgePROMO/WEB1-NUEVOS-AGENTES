@@ -570,7 +570,7 @@ edn360_input = {
 
 ---
 
-#### **E6: Exercise Normalizer & DB Mapper**
+#### ~~**E6: Exercise Normalizer & DB Mapper**~~ **DISABLED - Using catalog directly in backend**
 
 **Input**: Training Plan validado
 
