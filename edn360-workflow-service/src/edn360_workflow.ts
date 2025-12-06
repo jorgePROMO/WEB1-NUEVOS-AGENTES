@@ -1909,13 +1909,30 @@ export const runWorkflow = async (workflow: WorkflowInput) => {
       output_parsed: e5TrainingPlanValidatorResultTemp.finalOutput
     };
     
-    // E6 DISABLED - Backend will enrich exercises directly from catalog
-    // const e6ExerciseNormalizerDbMapperResultTemp = await runAgentWithLogging(...);
+    // E6 ENABLED AS FAILSAFE - Validates and corrects exercise codes if needed
+    console.log("🔍 E6: Validating exercise codes against canonical catalog...");
+    const e6ExerciseNormalizerDbMapperResultTemp = await runAgentWithLogging(
+      runner,
+      e6ExerciseNormalizerDbMapper,
+      "E6 – Exercise Normalizer & DB Mapper",
+      [
+        ...conversationHistory,
+        {
+          id: undefined,
+          role: "assistant",
+          content: [
+            { type: "output_text", text: `Final_training_plan_from_E5:
+            {{ E5.final_training_plan }}
+            ` }
+          ]
+        }
+      ],
+      120000  // 2 minutes timeout
+    );
     
-    // Create mock E6 result to maintain workflow compatibility
     const e6ExerciseNormalizerDbMapperResult = {
-      output_text: JSON.stringify({mappings: []}),
-      output_parsed: {mappings: []}  // Empty mappings - backend will handle enrichment
+      output_text: e6ExerciseNormalizerDbMapperResultTemp.output_text,
+      output_parsed: JSON.parse(e6ExerciseNormalizerDbMapperResultTemp.output_text)
     };
     const e7TrainingPlanAssemblerResultTemp = await runAgentWithLogging(
       runner,
