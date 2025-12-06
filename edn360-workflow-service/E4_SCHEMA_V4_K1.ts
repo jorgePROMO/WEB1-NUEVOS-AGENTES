@@ -46,7 +46,7 @@ const K1TipoEjercicio = z.enum([
   "metabolico_circuito"
 ]);
 
-// Exercise in Block B (K1-based)
+// Exercise in Block B (K1-based) - SIMPLIFIED
 const E4ExerciseK1 = z.object({
   order: z.number(),
   exercise_id: z.string(), // Reference to catalog
@@ -57,12 +57,8 @@ const E4ExerciseK1 = z.object({
   reps_abstracto: z.enum(["bajas", "medias", "altas"]),
   intensidad_abstracta: K1IntensidadAbstracta,
   proximidad_fallo_abstracta: K1ProximidadFalloAbstracta,
-  notas_tecnicas: z.string(),
-  k1_justification: z.object({
-    por_que_este_ejercicio: z.string(),
-    por_que_este_volumen: z.string(),
-    por_que_esta_intensidad: z.string()
-  })
+  notas_tecnicas: z.string()
+  // k1_justification removed to reduce output verbosity
 });
 
 // Block B (only block E4 generates)
