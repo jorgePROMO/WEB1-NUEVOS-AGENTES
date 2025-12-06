@@ -24,7 +24,7 @@
 | 3 | E3 | Training Summary | gpt-4.1 | 2048 | 0.2 |
 | 4 | E4 | Training Plan Generator | gpt-4.1 | 4096 | 0.3 |
 | 5 | E5 | Training Plan Validator | gpt-4.1 | 3072 | 0.2 |
-| 6 | E6 | Exercise Normalizer & DB Mapper | gpt-4.1 | 4096 | 0.1 |
+| ~~6~~ | ~~E6~~ | ~~Exercise Normalizer & DB Mapper~~ | ~~gpt-4.1~~ | ~~4096~~ | ~~0.1~~ | **DISABLED**
 | 7 | E7 | Training Plan Assembler | gpt-4.1 | 4096 | 0.2 |
 | 8 | E7.5 | Training Plan Enricher | gpt-4.1 | 4096 | 0.2 |
 
