@@ -825,8 +825,15 @@ VALIDATION CHECKLIST:
 - These fields have been REMOVED from schema to prevent JSON parsing errors
 - Keep output concise to avoid exceeding token limits
 
+🚨 CRITICAL VALIDATION:
+- EVERY exercise_id will be validated against the canonical catalog (1243 valid codes)
+- If you use an INVALID code (e.g. pec_deck, cable_fly), the entire plan will be REJECTED
+- The system will log the invalid code and mark the plan as FAILED
+- You MUST use fileSearchExercises to find valid codes - do NOT invent codes from memory
+
 Output ONLY valid JSON. Root key MUST be "training_plan".
 Ensure all brackets and commas are properly closed.
+REMEMBER: Use fileSearchExercises for EVERY exercise. Use EXACT codes from search results.
 `,
   model: "gpt-4.1",
   tools: [
