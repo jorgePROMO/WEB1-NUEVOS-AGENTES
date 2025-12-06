@@ -8652,7 +8652,12 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
-    plan = await db.training_plans.find_one({"_id": plan_id, "user_id": user_id})
+    # Try EDN360 v2 first (training_plans_v2), then fallback to legacy (training_plans)
+    edn360_db = client[os.getenv('MONGO_EDN360_APP_DB_NAME', 'edn360_app')]
+    plan = await edn360_db.training_plans_v2.find_one({"_id": plan_id, "user_id": user_id}, {"_id": 0})
+    if not plan:
+        plan = await db.training_plans.find_one({"_id": plan_id, "user_id": user_id})
+    
     if not plan:
         raise HTTPException(status_code=404, detail="Plan de entrenamiento no encontrado")
     
