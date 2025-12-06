@@ -1138,7 +1138,7 @@ Timeout: 300 segundos
 | E3 – Training Summary | 440-620 | Construye contexto, usa last_plan |
 | E4 – Training Plan Generator | 640-950 | Genera plan, aplica progresión |
 | E5 – Training Plan Validator | 970-1020 | Valida seguridad |
-| E6 – Exercise Normalizer | 1040-1230 | Mapea ejercicios a BD |
+| ~~E6 – Exercise Normalizer~~ | ~~1040-1230~~ | ~~Mapea ejercicios a BD~~ **DISABLED** |
 | E7 – Training Plan Assembler | 1250-1430 | Ensambla plan técnico |
 | E7.5 – Training Plan Enricher | 1450-1620 | Enriquece con nombres y videos |
 
