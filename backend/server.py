@@ -9011,8 +9011,7 @@ async def send_training_email(user_id: str, plan_id: str = None, request: Reques
     if not plan_id:
         plan = await edn360_db.training_plans_v2.find_one(
             {"user_id": user_id},
-            sort=[("created_at", -1)],
-            {"_id": 0}
+            sort=[("created_at", -1)]
         )
         if not plan:
             plan = await db.training_plans.find_one(
@@ -9020,7 +9019,7 @@ async def send_training_email(user_id: str, plan_id: str = None, request: Reques
                 sort=[("generated_at", -1)]
             )
     else:
-        plan = await edn360_db.training_plans_v2.find_one({"_id": plan_id, "user_id": user_id}, {"_id": 0})
+        plan = await edn360_db.training_plans_v2.find_one({"_id": plan_id, "user_id": user_id})
         if not plan:
             plan = await db.training_plans.find_one({"_id": plan_id, "user_id": user_id})
     
