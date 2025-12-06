@@ -8052,9 +8052,13 @@ async def _integrate_template_blocks(
             Mapea códigos genéricos de E4 a códigos específicos del catálogo.
             
             Estrategia:
-            1. Mapeo manual explícito (prioridad alta)
-            2. Fuzzy matching si no hay match exacto (fallback temporal)
+            1. Normalizar código (lowercase, sin tildes)
+            2. Mapeo manual explícito (prioridad alta)
+            3. Fuzzy matching si no hay match exacto (fallback temporal)
             """
+            # Normalizar código de entrada
+            normalized_code = generic_code.lower().strip()
+            
             # MAPEO MANUAL EXPLÍCITO (prioridad)
             manual_mapping = {
                 # Press variants
