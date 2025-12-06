@@ -266,7 +266,15 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
   const handleEdit = (planData) => {
     setEditedPlan(JSON.parse(JSON.stringify(planData))); // Deep clone
     setEditMode('structured'); // Default to structured mode
-    setPlainTextContent(convertPlanToPlainText(planData)); // Pre-generate plain text
+    
+    // Use saved plain_text_content if available, otherwise generate from plan
+    const savedPlainText = planData.plain_text_content;
+    if (savedPlainText) {
+      setPlainTextContent(savedPlainText);
+    } else {
+      setPlainTextContent(convertPlanToPlainText(planData));
+    }
+    
     setShowEditModal(true);
     // Initialize all sessions as collapsed
     const sessionsState = {};
