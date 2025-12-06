@@ -91,7 +91,7 @@
 │  │     - E3: Training Summary                             │    │
 │  │     - E4: Training Plan Generator                      │    │
 │  │     - E5: Training Plan Validator                      │    │
-│  │     - E6: Exercise Normalizer                          │    │
+│  │     // - E6: Exercise Normalizer                       │    │  // DISABLED - Using catalog directly in backend
 │  │     - E7: Training Plan Assembler                      │    │
 │  │     - E7.5: Training Plan Enricher                     │    │
 │  │  4. Retorna client_training_program_enriched           │    │
