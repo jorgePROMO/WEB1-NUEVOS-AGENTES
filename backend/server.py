@@ -8053,8 +8053,11 @@ async def _integrate_template_blocks(
             
             Estrategia:
             1. Normalizar código (lowercase, sin tildes)
-            2. Mapeo manual explícito (prioridad alta)
-            3. Fuzzy matching si no hay match exacto (fallback temporal)
+            2. Mapeo manual explícito para códigos legacy (prioridad alta)
+            3. Fuzzy matching como fallback para planes antiguos
+            
+            NOTA: E4 v2 CANÓNICO ya está 100% alineado con el catálogo backend.
+            Este mapeo se mantiene solo para retrocompatibilidad con planes antiguos.
             """
             # Normalizar código de entrada
             normalized_code = generic_code.lower().strip()
