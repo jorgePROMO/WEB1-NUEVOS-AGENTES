@@ -1323,7 +1323,7 @@ ABSOLUTE RULES
 - Top-level object MUST have exactly one key: \"client_training_program\".
 - The JSON MUST satisfy the response_schema with additionalProperties = false.
 - Do NOT change the logical structure of the plan (number of sessions/blocks/exercises).
-- Do NOT invent or modify db_ids; always use the mapping from E6.
+- Do NOT invent or modify exercise_types; use exactly what E5 provides in block.exercise_types.
 - Do NOT output markdown, comments, or explanations.
 - Do NOT translate or change field names (keys) under any circumstance.
 
