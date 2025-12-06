@@ -9101,11 +9101,17 @@ async def send_training_email(user_id: str, plan_id: str = None, request: Reques
             html_body=email_html
         )
         
-        # Marcar como enviado
-        await db.training_plans.update_one(
-            {"_id": plan["_id"]},
+        # Marcar como enviado (intentar ambas colecciones)
+        plan_id = plan.get("id", plan.get("_id"))
+        updated_v2 = await edn360_db.training_plans_v2.update_one(
+            {"id": plan_id, "user_id": user_id},
             {"$set": {"sent_email": True}}
         )
+        if updated_v2.matched_count == 0:
+            await db.training_plans.update_one(
+                {"_id": plan_id, "user_id": user_id},
+                {"$set": {"sent_email": True}}
+            )
         
         logger.info(f"✅ Plan de entrenamiento enviado por email a {user.get('email')}")
         
