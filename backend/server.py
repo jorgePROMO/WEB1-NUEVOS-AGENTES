@@ -8091,11 +8091,12 @@ async def _integrate_template_blocks(
                 if exercise_types and len(exercise_types) > 0:
                     exercise_code = exercise_types[0]
                     
-                    # Agregar exercise_code
-                    exercise_copy['exercise_code'] = exercise_code
+                    # Mapear código genérico a código del catálogo
+                    catalog_code = map_generic_to_catalog_code(exercise_code)
+                    exercise_copy['exercise_code'] = catalog_code
                     
                     # Buscar en catálogo enriquecido
-                    catalog_exercise = get_exercise_by_code(exercise_code)
+                    catalog_exercise = get_exercise_by_code(catalog_code)
                     if catalog_exercise:
                         # Usar name_es del catálogo (ahora disponible)
                         exercise_copy['name'] = catalog_exercise.get('name_es', format_exercise_name(exercise_code))
