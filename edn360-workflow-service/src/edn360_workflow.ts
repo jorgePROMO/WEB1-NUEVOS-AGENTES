@@ -52,14 +52,8 @@ const E4TrainingPlanGeneratorSchema = z.object({
         include: z.literal(false), // DEPRECATED - always false
         details: z.literal("")
       }),
-      session_notes: z.array(z.string()),
-      k1_decisions: z.object({
-        reglas_aplicadas: z.array(z.string()),
-        volumen_justificacion: z.string(),
-        intensidad_justificacion: z.string(),
-        metodos_usados: z.array(z.enum(["basico", "intensificacion_local", "intensificacion_sistemica", "potencia_pliometria", "metabolico", "avanzado_carga"])),
-        patrones_cubiertos: z.array(z.enum(["empuje_horizontal", "empuje_vertical", "tiron_horizontal", "tiron_vertical", "dominante_rodilla", "dominante_cadera", "zancada", "core_antirotacion", "core_antiextension", "core_antiflexion", "core_rotacional"]))
-      })
+      session_notes: z.array(z.string())
+      // k1_decisions REMOVED to reduce JSON output size and avoid parsing errors
     })),
     general_notes: z.array(z.string())
   })
