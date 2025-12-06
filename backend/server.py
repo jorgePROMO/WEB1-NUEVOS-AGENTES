@@ -8043,6 +8043,41 @@ async def _integrate_template_blocks(
             formatted = ' '.join(word.capitalize() for word in formatted.split())
             return formatted
         
+        def map_generic_to_catalog_code(generic_code: str) -> str:
+            """Mapea códigos genéricos de E4 a códigos específicos del catálogo"""
+            mapping = {
+                # Press variants
+                'press_mancuernas': 'press_suelo_mancuernas',
+                'press_polea': 'press_pecho_polea',
+                'fonds_triceps_suelo': 'fondos_triceps_suelo',
+                
+                # Aperturas
+                'aperturas_polea': 'aperturas_medias_poleas',
+                
+                # Jalones y remos
+                'jalon_supino_maquina': 'jalon_agarre_supino',
+                'remo_bajo_maquina': 'remo_bajo_agarre_neutro',
+                'jalon_banda': 'jalon_banda_elastica',
+                
+                # Dominadas
+                'dominadas': 'dominadas_barra_fija',
+                
+                # Curl
+                'curl_biceps': 'curl_biceps_barra',
+                
+                # Piernas
+                'sentadilla_barra': 'sentadilla_barra_high_bar',
+                'hip_thrust_smith': 'hip_thrust_maquina_smith',
+                'sentadilla_bulgara': 'sentadilla_bulgara_peso_corporal',
+                'peso_muerto_smith': 'peso_muerto_rumano_smith',
+                'gemelos': 'gemelos_de_pie_unipodal',
+                
+                # Elevaciones
+                'elevaciones_laterales_maquina': 'elevaciones_laterales_maquina_convergente',
+            }
+            
+            return mapping.get(generic_code, generic_code)
+        
         all_exercises = []
         exercise_counter = 1
         
