@@ -11776,6 +11776,7 @@ async def get_user_training_plans(user_id: str, request: Request):
         all_plans.append({
             "id": plan_id,
             "plan": plan_doc.get("plan", {}),
+            "plain_text_content": plan_doc.get("plain_text_content"),  # NEW: Include plain text
             "created_at": plan_doc.get("created_at"),
             "status": plan_doc.get("status", "draft"),
             "source_type": "edn360",
