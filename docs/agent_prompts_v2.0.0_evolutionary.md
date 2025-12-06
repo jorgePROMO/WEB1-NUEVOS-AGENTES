@@ -257,4 +257,4 @@ If NO HISTORICAL DATA is present (last_plan is null):
 
 ### v1.0.0 (2025-11-XX)
 - Versión inicial sin historial
-- Flujo básico: E1 → E2 → E3 → E4 → E5 → E6 → E7 → E7.5
+- Flujo básico: E1 → E2 → E3 → E4 → E5 → ~~E6~~ → E7 → E7.5  **E6 DISABLED**
