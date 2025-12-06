@@ -105,7 +105,7 @@ Password: admin123
 
 ## 📱 Demo
 
-**URL Actual:** https://fitness-modular.preview.emergentagent.com
+**URL Actual:** https://workout-forge-6.preview.emergentagent.com
 
 ---
 

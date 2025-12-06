@@ -225,7 +225,7 @@ Continuar desarrollo desde el estado actual, manteniendo
 colores corporativos y diseño existente.
 
 📱 APLICACIÓN ACTUAL:
-https://fitness-modular.preview.emergentagent.com
+https://workout-forge-6.preview.emergentagent.com
 
 Cualquier duda, toda la info está en la documentación.
 

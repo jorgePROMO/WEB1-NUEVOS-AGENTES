@@ -3,126 +3,138 @@ The user, Jorge, initiated a complete architectural overhaul of the EDN360 train
 
 **PRODUCT REQUIREMENTS (New Architecture):**
 
-1.  **System Reset:** Completely eliminate the old exercise database, templates (), and related logic. Old, generated plans must be preserved in a read-only legacy mode.
+1.  **System Reset:** Completely eliminate the old exercise database, templates (), and related logic.
 2.  **New Knowledge Sources:**
-    *   **K1 Knowledge Base:** A new abstract knowledge base () defining the principles, rules, and logic of training (e.g., volume, intensity, progression) in abstract terms (low, medium, high). This is the brain.
-    *   **Exercise Catalog:** A new, definitive set of user-provided JSON files (, , ) containing all official exercises, their properties (patterns, muscles, video URLs), and substitution logic. This is the dictionary.
+    *   **K1 Knowledge Base:** A new abstract knowledge base () defining the principles and rules of training.
+    *   **Exercise Catalog:** A new set of user-provided JSON files (, etc.) containing all official exercises and their properties. This is the single source of truth for exercises.
 3.  **E4 Agent (AI) Refactoring:**
-    *   The Node.js AI agent (E4) must be updated to use the K1 knowledge base and the new Exercise Catalog as its only sources of truth.
-    *   E4 is responsible **only** for generating **Block B (Main Strength Workout)**.
-    *   Its output must use abstract terms from K1 (e.g., ) and select exercises by their uid=0(root) gid=0(root) groups=0(root) from the catalog. It must not generate Blocks A, C, or D.
+    *   The Node.js AI agent (E4) must be updated to use the K1 knowledge base and the new Exercise Catalog.
+    *   E4 is responsible **only** for generating **Block B (Main Strength Workout)** using abstract terms and  from the catalog.
 4.  **Backend Logic:**
-    *   The Python backend is responsible for translating E4's abstract output into concrete numbers (e.g.,  -> ).
+    *   The Python backend is responsible for translating E4's abstract output into concrete numbers.
     *   It must programmatically build **Blocks A (Warmup), C (Core), and D (Cardio)** using new templates derived exclusively from the official exercise catalog.
-    *   It must implement a validator to check E4's output for compliance with K1 rules.
-    *   It must implement a logger to record the decisions made by E4 for debugging and auditing.
+    *   It must implement a validator to check E4's output.
 5.  **UI/UX Changes:**
-    *   **Admin Dashboard:** The training plan card must display the plan as **editable plain text** to allow for easy manual adjustments, copying, and saving.
-    *   **Client Dashboard:** Must be adapted to render the new 4-block structure while providing a fallback to correctly display old legacy plans.
+    *   **Admin Dashboard:** The training plan card must display the plan as **editable plain text**.
+    *   **Client Dashboard:** Must be adapted to render the new 4-block structure while providing a fallback for old legacy plans.
 
 **User's preferred language**: Spanish
 
 **what currently exists?**
-The project is in the middle of a major, user-directed architectural refactoring.
-- **Cleanup Done (Phase 1):** The old template file (), the old  MongoDB collection, and the associated Python module () have been backed up and deleted.
-- **K1 Implemented (Phase 2):** The new abstract knowledge base () is in place, and a Python module () can successfully load and process its rules.
-- **Backend Tooling Ready (Phases 4, 5):** A robust response validator () and a decision logger () have been created and tested in isolation.
-- **Debug Endpoint Live:** A comprehensive debug endpoint () exists in the Python backend, allowing simulation and verification of the K1 logic, validation, and logging.
-- **Official Catalog Received:** The user has provided the three final, definitive JSON files for the exercise catalog, variants, and substitution rules.
-- **Node.js Agent (E4) is Outdated:** The main AI workflow in  is still using the old prompt and logic. The new Zod schema has been added, but the full prompt integration is pending.
+The project is in the final stages of a major architectural refactoring. The core logic has been repeatedly debugged and adjusted.
+- **Backend Ready:** The Python backend has been fully updated. It includes a loader for the new exercise catalog (), programmatic templates for Blocks A, C, and D (), and updated endpoints to handle plan generation and plain-text editing.
+- **Frontend UI Adapted:** The Admin Dashboard () now features a plain-text editor for training plans.
+- **AI Workflow Refactored:** The Node.js agent workflow () has undergone significant changes. Legacy agents (E6, E7.5) that relied on an old database have been disabled. The Zod schemas and agent prompts have been updated to use  (matching the new catalog's ) instead of the legacy . The  limit for the AI agent has been increased to 8192 to prevent output truncation.
 
 **Last working item**:
--   **Last item agent was working**: The agent had just received the final, user-approved exercise catalog files. It was about to begin the final, comprehensive integration task: updating the Node.js (TypeScript) E4 agent with the new K1-based prompt and schema, making it consume the new exercise catalog, and connecting the entire end-to-end pipeline.
+-   **Last item agent was working**: The user has requested a definitive, end-to-end test of the newly refactored system. The agent was just about to execute this test, which involves cleaning the database, generating a new plan, and extracting the raw AI output and final database document for user validation.
 -   **Status**: NOT STARTED
 -   **Agent Testing Done**: N
--   **Which testing method agent to use?** both. A backend test is needed to verify the full pipeline (E4 -> Validator -> Logger -> Backend Translation). A frontend testing agent is needed to verify the new UI requirements (plain-text admin, client legacy fallback) once the backend is functional.
+-   **Which testing method agent to use?** backend testing agent. The agent must trigger the plan generation, query the database, and check logs to validate the entire backend pipeline and data integrity.
 -   **User Testing Done**: N
 
 **All Pending/In progress Issue list**:
-This project is a feature implementation, not bug fixing. The work is tracked in phases based on the user's approved plan.
+-   **Issue 1: Plan Generation Incoherence (P0, CRITICAL)**
+    -   **Description**: Although the system no longer crashes, the generated plans are logically flawed (e.g., wrong exercises for the session's focus, duplicate exercises). A major refactor was just completed to fix the suspected root cause (legacy agents using an old database), but this fix has not yet been verified.
+    -   **Attempted fixes**: The agent identified and bypassed legacy agents (E6, E7.5), updated Zod schemas to use , modified agent prompts, and increased the  limit. The current state reflects these changes, but they need to be tested.
+    -   **Next debug checklist**:
+        1.  Clean the  collection in MongoDB of any plans with .
+        2.  Trigger the plan generation process for the user .
+        3.  Inspect the logs for  to capture the raw JSON output from the AI agents.
+        4.  Query MongoDB to retrieve the final  document that was created.
+        5.  Verify that all exercises in the final plan use the  field, which should correspond to an  in .
+        6.  Analyze the plan's logical consistency (no duplicates, exercises match session focus).
+        7.  Provide the raw AI output and the final MongoDB JSON to the user for final validation.
+    -   **Why fix this issue and what will be achieved with the fix?**: This is the final blocker. Fixing this will validate the entire new architecture and produce coherent, usable training plans, completing the core user request.
+    -   **Status**: IN PROGRESS
+    -   **Is recurring issue?** Y
+    -   **Should Test frontend/backend/both after fix?**: Both
+    -   **Blocked on other issue**: None
 
 **In progress Task List**:
--   **Task 1: Final E4 & Catalog Integration (P0, CRITICAL)**
-    -   **Where to resume**:
-        1.  Process the three user-provided JSON files (, , ) and store them appropriately for the E4 agent to access (e.g., as searchable files).
-        2.  Fully replace the prompt and logic inside the  agent in  with the new V4 K1-based prompt.
-        3.  Ensure the agent is configured to use  to consult both the K1 knowledge base and the new exercise catalog.
-        4.  Compile the TypeScript code ().
-        5.  Integrate the full pipeline: Frontend trigger -> Python backend -> E4 Agent -> Python validator -> Python logger -> Final plan saved to DB.
-    -   **What will be achieved with this?**: This will complete the core AI and backend logic of the new architecture, making the system ready for UI adaptations.
+-   **Task 1: End-to-End Validation of New Architecture (P0, CRITICAL)**
+    -   **Where to resume**: The agent must start the test requested by the user in their last message. The first step is to clean the database of failed plans.
+    -   **What will be achieved with this?**: This will confirm if the major refactoring to remove legacy agents (E6, E7.5) and rely solely on the new catalog was successful. It's the final validation of the core logic.
     -   **Status**: IN PROGRESS
     -   **Should Test frontend/backend/both after fix?**: Both
-    -   **Blocked on something**: Nothing. All dependencies (K1, validator, logger, catalog) are now available.
+    -   **Blocked on something**: None
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks**:
-    -   (P0) **Phase 6: Rebuild Templates A, C, D:** Re-create the programmatic templates for Warmup, Core, and Cardio using ONLY exercises from the new, official .
-    -   (P1) **Phase 7: Adapt Admin Dashboard:** Rework the  plan view to display the generated plan as editable plain text and implement functionality to save the edits.
-    -   (P1) **Phase 8: Adapt Client Dashboard:** Update  to correctly render the new 4-block plan structure while implementing a legacy fallback view for plans generated with the old architecture.
-    -   (P2) **Phase 9: Unification & E2E Testing:** Perform a final end-to-end test of the entire, unified system to ensure all components work together seamlessly.
+    -   **(P1) Phase 8: Adapt Client Dashboard:** Update  to correctly render the new 4-block plan structure (A, B, C, D) and ensure the legacy fallback for old plans still works.
+-   **Future Tasks**:
+    -   **(P2) Phase 9: Final E2E Testing:** Once the core logic is stable and the UI is fully adapted, perform a comprehensive end-to-end test of the entire system using the testing agent.
 
 **Completed work in this session**
-- **Architectural Pivot:** Successfully managed a major, user-directed pivot to a new K1-based architecture.
-- **Phase 1 - Cleanup:** Old template files (), database collections (), and Python logic () were backed up and removed.
-- **Phase 2 - K1 Implementation:** Integrated the user's K1 abstract knowledge base () with a dedicated Python loader ().
-- **Phase 3 (Partial) - Debug Endpoint:** Created a powerful Python-based debug endpoint () to test the K1 logic, validator, and logger in isolation before the full E4 integration.
-- **Phase 4 - Validator:** Built a Python module () to validate the E4 agent's output against K1 rules.
-- **Phase 5 - Logger:** Built a Python module () to create detailed logs of the E4 agent's reasoning.
-- **Catalog Definition:** Collaborated with the user to define and finalize the JSON schema for the new exercise catalog.
+- **Phase 6 - Template Generation:** Created and integrated Python modules for generating Blocks A (Warmup), C (Core), and D (Cardio) using the new exercise catalog.
+- **Phase 7 - Admin Dashboard UI:** Successfully modified the  component to include a plain-text, editable view of the training plan, as requested.
+- **Backend Integration:** Rewrote the  function and updated API endpoints in  to support the new templates and plain-text editing.
+- **Debugging & Root Cause Analysis:** Diagnosed and fixed numerous plan generation failures, including AI prompt length issues, token limits, and frontend import errors. Crucially, identified that a legacy agent (E6) was the root cause of incoherent plans.
+- **Major AI Workflow Refactoring:** Performed a significant refactor of  to bypass the legacy E6 and E7.5 agents, updated Zod schemas to use , and modified prompts to align with the new, catalog-only data flow.
 
 **Code Architecture**
 
 
 **Key Technical Concepts**
--   **Hybrid Rule-Based/AI System**: A clear separation of concerns where an abstract Knowledge Base (K1) dictates rules, an AI agent (E4) makes selections based on those rules, and backend code translates abstract concepts to concrete values.
--   **Abstract-to-Concrete Translation**: The backend is responsible for converting terms like  into numerical values like .
--   **Single Source of Truth**: The entire system will rely on two definitive sources:  for logic and the user's  for exercise data.
--   **Legacy Fallback**: The frontend must be able to distinguish between old and new plan formats and render them accordingly.
--   **In-flight Architectural Refactoring**: The project is in a transient state, moving from a legacy architecture to a new one, with some new components built and some old ones waiting for replacement.
+-   **Agent Pipeline Refactoring**: Bypassing legacy agents (E6, E7.5) in a multi-agent workflow to remove dependency on an outdated database.
+-   **Token Limit Debugging**: Diagnosing and fixing issues where the AI model's JSON output was truncated by increasing  and simplifying the Zod schema.
+-   **Local Catalog as Single Source of Truth**: The architecture now exclusively relies on local JSON files for all exercise data, processed by  in the backend.
 
 **key DB schema**
--    (in ): **DELETED**. To be replaced by file-based access to the new user-provided catalog JSONs.
--   : Will now store plans generated with the new 4-block structure. Old plans with the previous structure remain for legacy viewing.
+-   **training_plans_v2**:
+    -   : An object containing the A, B, C, and D blocks of the plan.
+    -   : A string that must match an  from the new catalog. This replaces the old .
+    -   : A string field to store manual edits from the admin dashboard.
 
 **All files of reference**
--   **Files to Modify:**
-    -    (CRITICAL: Needs full E4 agent replacement)
-    -    (Needs integration of the new E4 flow, validator, logger, and new template logic)
-    -    (Needs UI rework for plain-text editing)
-    -    (Needs UI update for new structure + legacy fallback)
--   **New Core Logic Files:**
-    -   
-    -   
-    -   
--   **New Data Sources (Just Provided):**
-    -   
-    -   
-    -   
+-   **/app/edn360-workflow-service/src/edn360_workflow.ts**: The core of the AI agent pipeline. Contains the major refactoring logic that bypasses E6 and E7.5.
+-   **/app/backend/server.py**: The FastAPI server. Contains the logic for integrating Blocks A, C, D and handling plain-text edits.
+-   **/app/backend/exercise_catalog_loader.py**: The module responsible for loading the definitive exercise data from JSON files.
+-   **/app/frontend/src/components/TrainingPlanCard.jsx**: The React component that was modified to support plain-text editing.
 
 **Critical Info for New Agent**
--   **The project's source of truth is the user's major refactoring request (message #271) and subsequent clarifications.** All previous work and bug fixes are largely obsolete except as historical context.
--   **Follow the approved 10-phase plan.** You are about to start the main integration task, which combines several parts: integrating the final catalog files provided by the user and updating the large TypeScript file for the E4 agent.
--   **Do not use any of the old template logic.** The modules  and  are gone. All template logic for Blocks A, C, and D must be rebuilt from scratch using the new official catalog.
--   **The Python backend tooling (K1, validator, logger, debug endpoint) is ready and tested in isolation.** Your task is to connect the updated Node.js agent to this backend pipeline.
+-   **Your immediate task is to perform the end-to-end test requested by the user.** Start by cleaning the database of failed plans, then generate a new plan, and finally extract the raw AI output and the MongoDB document for validation.
+-   The root cause of incoherent plans was identified as legacy agents (E6, E7.5) using an old database. These have been bypassed in . Your test will confirm if this bypass was successful.
+-   **The single source of truth for exercises is the local JSON catalog.** The backend ( and ) is now solely responsible for enriching s with full details (name, video, etc.). There is no dependency on any vector store or old database for exercise data.
+-   The user must be responded to in **Spanish**.
+
+**documents created in this job**
+-   /app/INTEGRACION_K1_CATALOGO_COMPLETA.md
+-   /app/FASE_6_TEMPLATES_COMPLETA.md
+-   /app/FASE_7_ADMIN_DASHBOARD_COMPLETA.md
+-   /app/INTEGRACION_BACKEND_COMPLETA.md
+-   /app/FASE_6_EJEMPLOS_COMPLETOS.txt
 
 **Last 10 User Messages and any pending user messages**
--   **User (Msg 386):** Approves moving forward with the full E4 TypeScript integration without waiting for the catalog.
--   **Agent (Msg 398):** Summarizes progress and proposes waiting for the catalog to do the full integration at once.
--   **User (Msg 399):** Agrees to the agent's proposal and **provides the three final, definitive catalog JSON files**, giving the green light for the final integration. **Status: Complete, Action Required.**
+1.  **User (Msg 362):** Reports plan generation still fails. Asks agent to do a full E2E test: clean DB, generate a plan, and verify it's saved correctly. Suggests simplifying the AI's output schema if it's still too large.
+2.  **Agent (Msg 363-392):** Agrees but struggles with test tooling. Asks user to trigger the plan generation again.
+3.  **User (Msg 393):** Reports plan now generates but the *content* is incoherent (wrong exercises, duplicates). Asks agent to get the raw AI output and the final DB data to debug the logic.
+4.  **Agent (Msg 394-402):** Retrieves the data and finds the **root cause**: a legacy agent (E6) is using an old database.
+5.  **User (Msg 404):** Instructs agent to get rid of the old database logic for agents E6 and E7.5.
+6.  **Agent (Msg 405-411):** Proposes a better solution: completely bypass E6 and E7.5, and have the backend handle all exercise data enrichment from the new local catalog.
+7.  **User (Msg 435):** Approves the bypass plan. Confirms the new flow should be E4 -> Backend (using local catalog). Asks for a validation test after the changes are made.
+8.  **Agent (Msg 436-458):** Performs the major refactor, disabling E6/E7.5 and updating schemas and prompts.
+9.  **User (Msg 460):** Gives the final go-ahead for the validation test. Reiterates the exact steps: clean DB, generate a new plan, and provide the raw AI output and final DB document for review.
+10. **Agent (Msg 461):** Acknowledges the instructions and begins the process, starting with cleaning the database. **Status: This is the current pending action.**
 
 **Project Health Check:**
--   **Broken**: The main plan generation flow is intentionally broken as it's mid-refactor. The Node.js agent is out of sync with the new backend architecture.
--   **Mocked**: The Python debug endpoint () mocks the E4 response to allow for isolated testing of the backend logic (K1 rules, validation, logging).
+-   **Broken**: The core plan generation flow is logically broken. While it no longer crashes, it produces incoherent plans, making it unusable for the end-user.
+-   **Mocked**: N/A
 
 **3rd Party Integrations**
--   **OpenAI Assistants API**: Core of the E4 agent. Its prompt and schema are being completely overhauled.
+-   OpenAI Assistants API — uses Emergent LLM Key. This is the core of the E-agent pipeline in the .
 
 **Testing status**
--   **Testing agent used after significant changes**: NO (not since the major pivot).
--   **Troubleshoot agent used after agent stuck in loop**: NO.
--   **Test files created**: None for the new architecture.
--   **Known regressions**: N/A (The system is being rebuilt, so old functionality is intentionally disabled).
+-   **Testing agent used after significant changes**: NO
+-   **Troubleshoot agent used after agent stuck in loop**: YES, successfully diagnosed schema verbosity issues.
+-   **Test files created**:
+    -   /app/backend/test_k1_catalog_integration.py
+    -   /app/backend/test_complete_plans.py
+-   **Known regressions**: The logical coherence of the generated plans is the main regression, which is actively being fixed.
 
 **Credentials to test flow:**
 -   **User:** 
--   **Password:** </analysis>
+-   **Password:** 
+
+**What agent forgot to execute**
+The agent is currently on the correct path and about to execute the user's latest request. No tasks have been forgotten.</analysis>
