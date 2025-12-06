@@ -70,13 +70,15 @@ Estos códigos del ejemplo E4 v2 YA están correctos:
 
 ## 🔄 Status Actual
 
-- ✅ Backend tiene mapeo temporal de 9 códigos (parche)
-- ⏳ E4 v2 necesita re-alineación completa con lista canónica
-- 🎯 Objetivo: Eliminar mapeos temporales cuando E4 v2 esté al 100%
+- ✅ **E4 v2 CANÓNICO 100% ALINEADO** (Validado el 6 de diciembre 2024)
+- ✅ Mapeo temporal de 9 códigos **ELIMINADO** de server.py
+- ✅ Archivo `temp_e4_v2_mappings.json` **ELIMINADO**
+- ✅ Backend mantiene fuzzy matching solo para retrocompatibilidad con planes legacy
+- 🎉 Sistema limpio y escalable
 
 ---
 
 **Archivos Disponibles**:
-- `backend_canonical_codes.json` - Lista simple (para E4 v2)
+- `backend_canonical_codes.json` - Lista canónica completa (1243 códigos)
 - `backend_canonical_codes_detailed.json` - Con metadata (para referencia)
-- `temp_e4_v2_mappings.json` - Mapeo temporal de 9 códigos
+- ~~`temp_e4_v2_mappings.json`~~ - **ELIMINADO (ya no necesario)**
