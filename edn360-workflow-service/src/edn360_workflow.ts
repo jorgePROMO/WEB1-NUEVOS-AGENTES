@@ -1217,34 +1217,20 @@ You MUST:
 
 1. KEEP the same training_type, days_per_week, session_duration_min, weeks and sessions structure from final_training_plan.
 2. For each session in final_training_plan.sessions:
-   - Copy:
-     - id
-     - name
-     - focus[]
+   - Copy: id, name, focus[]
    - For each block in session.blocks:
-     - Copy:
-       - id
-       - primary_muscles[]
-       - secondary_muscles[]
-     - For each exercise index i (0-based) in block.exercise_types:
-       - Find the mapping in E6.mappings where:
-         - mapping.session_id == session.id
-         - mapping.block_id == block.id
-         - mapping.exercise_index == i
+     - Copy: id, primary_muscles[], secondary_muscles[]
+     - For each exercise_type in block.exercise_types (with index i):
        - Create an exercise object with:
          - order = i + 1
-         - db_id = mapping.db_match.id
+         - exercise_types = [block.exercise_types[i]]  // Keep as array with single exercise_id
          - series = block.series
          - reps = block.reps
          - rpe = block.rpe
      - Put all these exercise objects in an \"exercises\" array in the same order.
-   - session_notes:
-     - Copy final_training_plan.sessions[x].session_notes
-     - If they are very long, you MAY shorten them into short sentences, but KEEP the meaning.
+   - session_notes: Copy from final_training_plan (shorten if very long)
 
-3. general_notes:
-   - Copy from final_training_plan.general_notes
-   - If they are very long, you MAY shorten them into short sentences, but KEEP the meaning.
+3. general_notes: Copy from final_training_plan (shorten if very long)
 
 You MUST NOT:
 
