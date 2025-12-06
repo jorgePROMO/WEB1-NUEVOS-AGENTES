@@ -8059,12 +8059,15 @@ async def _integrate_template_blocks(
                     # Agregar exercise_code
                     exercise_copy['exercise_code'] = exercise_code
                     
-                    # Generar nombre formateado
-                    exercise_copy['name'] = format_exercise_name(exercise_code)
-                    
-                    # Buscar en catálogo para metadata adicional
+                    # Buscar en catálogo enriquecido
                     catalog_exercise = get_exercise_by_code(exercise_code)
                     if catalog_exercise:
+                        # Usar name_es del catálogo (ahora disponible)
+                        exercise_copy['name'] = catalog_exercise.get('name_es', format_exercise_name(exercise_code))
+                        
+                        # Video canónico del catálogo
+                        exercise_copy['video_url'] = catalog_exercise.get('video_url', '')
+                        
                         # Extraer músculos del catálogo
                         primary_muscles = catalog_exercise.get('primary_muscles_clean', [])
                         if primary_muscles:
@@ -8077,23 +8080,15 @@ async def _integrate_template_blocks(
                             exercise_copy['secondary_group'] = ', '.join(secondary_muscles)
                         else:
                             exercise_copy['secondary_group'] = ''
-                    
-                    # Buscar variantes para video
-                    variants = get_variants_by_code(exercise_code)
-                    if variants and len(variants) > 0:
-                        # Buscar variante con video
-                        for variant in variants:
-                            video_url = variant.get('video_url', '')
-                            if video_url and video_url != '...':
-                                exercise_copy['video_url'] = video_url
-                                break
-                        # Si no encontramos video, dejar vacío
-                        if 'video_url' not in exercise_copy:
-                            exercise_copy['video_url'] = ''
+                        
+                        logger.info(f"  ✅ Enriquecido: {exercise_code} → {exercise_copy['name']} (video: {'✓' if exercise_copy['video_url'] else '✗'})")
                     else:
+                        # Fallback si no está en catálogo
+                        exercise_copy['name'] = format_exercise_name(exercise_code)
                         exercise_copy['video_url'] = ''
-                    
-                    logger.info(f"  ✅ Enriquecido: {exercise_code} → {exercise_copy['name']}")
+                        exercise_copy['primary_group'] = ''
+                        exercise_copy['secondary_group'] = ''
+                        logger.warning(f"  ⚠️ Ejercicio no encontrado en catálogo: {exercise_code}")
                 
                 all_exercises.append(exercise_copy)
                 exercise_counter += 1
