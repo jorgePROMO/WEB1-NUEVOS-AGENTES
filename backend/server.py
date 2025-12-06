@@ -8665,10 +8665,14 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
         from weasyprint import HTML
         import io
         
-        # FIX: Usar plan_text en lugar de plan_final
-        plan_content = plan.get("plan_text", "")
+        # Get plan content with proper fallback chain
+        plan_content = plan.get("plain_text_content", "") or plan.get("plan_text", "")
         
-        # Fallback a plan_final si no existe plan_text
+        # If no plain text, generate from structured data (EDN360 v2)
+        if not plan_content and plan.get("plan"):
+            plan_content = _generate_plain_text_from_structured_plan(plan.get("plan"))
+        
+        # Fallback to plan_final for legacy plans
         if not plan_content:
             plan_content = plan.get("plan_final", "")
             if isinstance(plan_content, dict):
