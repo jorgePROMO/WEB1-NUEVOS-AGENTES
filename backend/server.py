@@ -9864,12 +9864,18 @@ Días desde el último plan: {follow_up.get('days_since_last_plan', 0)} días
         if follow_up.get('measurements'):
             measurements = follow_up['measurements']
             prompt += "\n**Mediciones actuales:**\n"
-            if measurements.get('peso'): prompt += f"- Peso: {measurements['peso']} kg\n"
-            if measurements.get('grasa_corporal'): prompt += f"- Grasa corporal: {measurements['grasa_corporal']}%\n"
-            if measurements.get('masa_muscular'): prompt += f"- Masa muscular: {measurements['masa_muscular']} kg\n"
-            if measurements.get('circunferencia_cintura'): prompt += f"- Cintura: {measurements['circunferencia_cintura']} cm\n"
-            if measurements.get('circunferencia_pecho'): prompt += f"- Pecho: {measurements['circunferencia_pecho']} cm\n"
-            if measurements.get('satisfecho_cambios'): prompt += f"- ¿Satisfecho con cambios?: {measurements['satisfecho_cambios']}\n"
+            if measurements.get('peso'):
+                prompt += f"- Peso: {measurements['peso']} kg\n"
+            if measurements.get('grasa_corporal'):
+                prompt += f"- Grasa corporal: {measurements['grasa_corporal']}%\n"
+            if measurements.get('masa_muscular'):
+                prompt += f"- Masa muscular: {measurements['masa_muscular']} kg\n"
+            if measurements.get('circunferencia_cintura'):
+                prompt += f"- Cintura: {measurements['circunferencia_cintura']} cm\n"
+            if measurements.get('circunferencia_pecho'):
+                prompt += f"- Pecho: {measurements['circunferencia_pecho']} cm\n"
+            if measurements.get('satisfecho_cambios'):
+                prompt += f"- ¿Satisfecho con cambios?: {measurements['satisfecho_cambios']}\n"
         
         # Adherencia
         adherence = follow_up.get('adherence', {})
