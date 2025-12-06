@@ -2100,6 +2100,7 @@ async def get_latest_training_plan(user_id: str, request: Request):
             "created_at": plan_doc.get("created_at"),
             "status": plan_doc.get("status", "draft"),
             "plan": plan_doc.get("plan"),
+            "plain_text_content": plan_doc.get("plain_text_content"),  # NEW: Return plain text
             "source": plan_doc.get("source"),
             "version": plan_doc.get("version")
         }
