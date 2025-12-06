@@ -8006,7 +8006,11 @@ async def _integrate_template_blocks(
         # ============================================
         # BLOQUE B: FUERZA (DEL E4) - ENRIQUECIDO
         # ============================================
-        from exercise_catalog_loader import get_exercise_by_code, get_variants_by_code
+        from exercise_catalog_loader import get_exercise_by_code, get_variants_by_code, load_exercise_catalog
+        
+        # Cargar todos los códigos del catálogo para fuzzy matching
+        full_catalog = load_exercise_catalog()
+        all_catalog_codes = [ex['exercise_code'] for ex in full_catalog]
         
         def format_exercise_name(exercise_code: str) -> str:
             """Formatea exercise_code a nombre legible en español"""
