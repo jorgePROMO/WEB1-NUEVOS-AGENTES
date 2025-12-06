@@ -769,12 +769,14 @@ OUTPUT STRUCTURE:
 }
 
 VALIDATION CHECKLIST:
-✓ All exercise_types are valid exercise_code from catalog
-✓ All terms are abstract (no concrete numbers in volumes/intensidad)
+✓ All exercise_id are valid codes from catalog
+✓ All terms are abstract (no concrete numbers)
 ✓ training_type, days_per_week, session_duration_min match context exactly
 ✓ weeks = 4 always
-✓ Only Block B included per session
-✓ health_flags respected for all exercises
+✓ Only Block B per session
+✓ health_flags respected
+
+NOTE: k1_justification and verbose k1_decisions have been removed from schema to reduce output size.
 
 Output ONLY valid JSON. Root key MUST be "training_plan".
 `,
