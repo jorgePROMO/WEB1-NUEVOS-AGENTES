@@ -1,0 +1,2051 @@
+{
+  "_id": "69348c1116a170ea3cbfb842",
+  "id": "0be1edd6-2f3f-42da-ae8f-185773cf8fe0",
+  "user_id": "1764168881795908",
+  "status": "sent",
+  "created_at": "2025-12-06T20:03:29.988273+00:00",
+  "plan": {
+    "title": "Rutina Weider 4 días (Hipertrofia avanzada, seguro lumbar/hombros)",
+    "summary": "Programa tipo Weider 4 días: énfasis en hipertrofia con selección segura para manguito rotador y lumbar. Adaptado a experiencia avanzada en gimnasio.",
+    "goal": "Ganar músculo priorizyo seguridad en hombros y zona lumbar.",
+    "training_type": "Rutina Weider",
+    "days_per_week": 4,
+    "session_duration_min": 45,
+    "weeks": 4,
+    "sessions": [
+      {
+        "id": "D1",
+        "name": "Pecho y Tríceps",
+        "focus": [
+          "Pecho",
+          "Tríceps"
+        ],
+        "blocks": [
+          {
+            "id": "A",
+            "primary_muscles": [
+              "Pecho"
+            ],
+            "secondary_muscles": [
+              "Tríceps"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "horizontal_press_machine"
+                ],
+                "series": 4,
+                "reps": "8-12",
+                "rpe": "8",
+                "notes": "Evita dolor en hombros, controla el rango."
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "pec_deck"
+                ],
+                "series": 4,
+                "reps": "8-12",
+                "rpe": "8",
+                "notes": "Controla scapulas y no fuerces Rango de Movimiento."
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "cable_fly"
+                ],
+                "series": 4,
+                "reps": "8-12",
+                "rpe": "8",
+                "notes": "Movimiento con tensión continua."
+              }
+            ]
+          }
+        ],
+        "session_notes": [
+          "Calienta hombros y escápulas.",
+          "Evita molestias en hombro."
+        ],
+        "bloques_estructurados": {
+          "A": {
+            "id": "A",
+            "nombre": "Bloque A - Calentamiento/Activación",
+            "tipo": "calentamiento",
+            "duracion_minutos": 8,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Rotaciones de cuello",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimientos controlados, sin forzar"
+              },
+              {
+                "orden": 2,
+                "nombre": "Círculos de hombros",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Rango de movimiento completo pero sin dolor"
+              },
+              {
+                "orden": 3,
+                "nombre": "Rotaciones de tronco",
+                "series": "1-2",
+                "reps": "30 segundos",
+                "instrucciones": "Movimiento fluido, core activado"
+              },
+              {
+                "orden": 4,
+                "nombre": "Dislocaciones de hombro con banda/palo",
+                "series": "1-2",
+                "reps": "10 repeticiones",
+                "instrucciones": "Agarre amplio, movimiento controlado"
+              },
+              {
+                "orden": 5,
+                "nombre": "Círculos de cadera",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimiento fluido, manos en cintura"
+              },
+              {
+                "orden": 6,
+                "nombre": "Balanceos de pierna (frontal/lateral)",
+                "series": "1-2",
+                "reps": "10 repeticiones cada pierna",
+                "instrucciones": "Amplitud progresiva"
+              },
+              {
+                "orden": 7,
+                "nombre": "bird_dog",
+                "series": "1-2",
+                "reps": "10 reps",
+                "instrucciones": "Activación de core, movimiento controlado"
+              },
+              {
+                "orden": 8,
+                "nombre": "Cardio ligero (caminadora, bici, remo)",
+                "series": "1-2",
+                "reps": "1 minutos",
+                "instrucciones": "Aumentar temperatura corporal, preparar sistema cardiovascular"
+              }
+            ]
+          },
+          "B": {
+            "id": "B",
+            "nombre": "Entrenamiento Principal (Fuerza)",
+            "tipo": "strength_training",
+            "primary_muscles": [
+              "Pecho"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "horizontal_press_machine"
+                ],
+                "series": 4,
+                "reps": "8-12",
+                "rpe": "8",
+                "notes": "Evita dolor en hombros, controla el rango.",
+                "exercise_code": "sentadilla_press_landmine",
+                "name": "sentadilla y press landmine",
+                "video_url": "https://drive.google.com/file/d/1Y3Kr4-RgkB1pjwzt5iLmfe-cgD4HZtvh/view?usp=drivesdk",
+                "primary_group": "cuadriceps",
+                "secondary_group": "deltoides, gluteos"
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "pec_deck"
+                ],
+                "series": 4,
+                "reps": "8-12",
+                "rpe": "8",
+                "notes": "Controla scapulas y no fuerces Rango de Movimiento.",
+                "exercise_code": "pec_deck",
+                "name": "Pec Deck",
+                "video_url": "",
+                "primary_group": "",
+                "secondary_group": ""
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "cable_fly"
+                ],
+                "series": 4,
+                "reps": "8-12",
+                "rpe": "8",
+                "notes": "Movimiento con tensión continua.",
+                "exercise_code": "cable_fly",
+                "name": "Cable Fly",
+                "video_url": "",
+                "primary_group": "",
+                "secondary_group": ""
+              }
+            ]
+          },
+          "C": {
+            "id": "C",
+            "nombre": "Bloque C - Core & Estabilidad",
+            "tipo": "core",
+            "duracion_minutos": 13.5,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Bird dog",
+                "series": 3,
+                "reps": "30-45 seg",
+                "instrucciones": "Control total, core activado. Sin compensaciones",
+                "video_url": "https://drive.google.com/file/d/1f3CNI4ykd5dBWoWWXK4zUYgY3jBgz24C/view?usp=drivesdk",
+                "exercise_code": "bird_dog"
+              },
+              {
+                "orden": 2,
+                "nombre": "plancha frontal",
+                "series": 3,
+                "reps": "20-30 seg",
+                "instrucciones": "Cuerpo alineado, glúteos apretados, no dejar caer cadera",
+                "video_url": "https://drive.google.com/file/d/15A6HqTArNIOU-lx_rvAZU-nLz7x1wlJ3/view?usp=drivesdk",
+                "exercise_code": "plancha_frontal"
+              },
+              {
+                "orden": 3,
+                "nombre": "toques de hombro",
+                "series": 3,
+                "reps": "30-45 seg",
+                "instrucciones": "Variación para trabajar core desde otro ángulo",
+                "video_url": "https://drive.google.com/file/d/10IWd-vc3Q4-PonRdAOuvfYs5mEdFLs9A/view?usp=drivesdk",
+                "exercise_code": "toques_de_hombro_peso_corporal"
+              }
+            ]
+          },
+          "D": {
+            "id": "D",
+            "nombre": "Bloque D - Cardio/Acondicionamiento",
+            "tipo": "cardio",
+            "recomendaciones": [
+              {
+                "type": "MISS (Salud cardiovascular general)",
+                "frequency": "3-4x/semana",
+                "duration": "20-30 minutos",
+                "intensity": "60-70% FCMax",
+                "modalities": [
+                  "Caminata (ritmo cómodo-moderado)",
+                  "Bicicleta",
+                  "Natación",
+                  "Clases grupales (Zumba, spinning, etc.)"
+                ],
+                "notes": "Objetivo: salud general y bienestar. Intensidad agradable y sostenible.",
+                "timing": "Flexible: antes, después o días separados"
+              }
+            ],
+            "general_notes": [
+              "Cardio diseñado para objetivo: mantenimiento",
+              "Volumen del Bloque B: bajo → Cardio ajustado para no interferir",
+              "Progresión: aumentar duración antes que intensidad",
+              "Monitorear: si recuperación del B se ve afectada, reducir cardio"
+            ]
+          }
+        }
+      },
+      {
+        "id": "D2",
+        "name": "Espalda y Bíceps",
+        "focus": [
+          "Espalda",
+          "Bíceps"
+        ],
+        "blocks": [
+          {
+            "id": "A",
+            "primary_muscles": [
+              "Espalda"
+            ],
+            "secondary_muscles": [
+              "Bíceps"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "lat_Tiróndown_machine"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Evita hiperlordosis lumbar."
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "seated_row_machine"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Espalda siempre neutra."
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "cable_face_Tirón"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Activa deltoide posterior, no balancees cuerpo."
+              },
+              {
+                "order": 4,
+                "exercise_types": [
+                  "Bíceps_curl_machine"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Curl estricto, sin impulso."
+              }
+            ]
+          }
+        ],
+        "session_notes": [
+          "Postura neutra lumbar.",
+          "No compensar con lumbar."
+        ],
+        "bloques_estructurados": {
+          "A": {
+            "id": "A",
+            "nombre": "Bloque A - Calentamiento/Activación",
+            "tipo": "calentamiento",
+            "duracion_minutos": 8,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Rotaciones de cuello",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimientos controlados, sin forzar"
+              },
+              {
+                "orden": 2,
+                "nombre": "Círculos de hombros",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Rango de movimiento completo pero sin dolor"
+              },
+              {
+                "orden": 3,
+                "nombre": "Rotaciones de tronco",
+                "series": "1-2",
+                "reps": "30 segundos",
+                "instrucciones": "Movimiento fluido, core activado"
+              },
+              {
+                "orden": 4,
+                "nombre": "Dislocaciones de hombro con banda/palo",
+                "series": "1-2",
+                "reps": "10 repeticiones",
+                "instrucciones": "Agarre amplio, movimiento controlado"
+              },
+              {
+                "orden": 5,
+                "nombre": "Círculos de cadera",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimiento fluido, manos en cintura"
+              },
+              {
+                "orden": 6,
+                "nombre": "Balanceos de pierna (frontal/lateral)",
+                "series": "1-2",
+                "reps": "10 repeticiones cada pierna",
+                "instrucciones": "Amplitud progresiva"
+              },
+              {
+                "orden": 7,
+                "nombre": "bird_dog",
+                "series": "1-2",
+                "reps": "10 reps",
+                "instrucciones": "Activación de core, movimiento controlado"
+              },
+              {
+                "orden": 8,
+                "nombre": "Cardio ligero (caminadora, bici, remo)",
+                "series": "1-2",
+                "reps": "1 minutos",
+                "instrucciones": "Aumentar temperatura corporal, preparar sistema cardiovascular"
+              }
+            ]
+          },
+          "B": {
+            "id": "B",
+            "nombre": "Entrenamiento Principal (Fuerza)",
+            "tipo": "strength_training",
+            "primary_muscles": [
+              "Espalda"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "lat_Tiróndown_machine"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Evita hiperlordosis lumbar.",
+                "exercise_code": "lat_tiróndown_machine",
+                "name": "Lat Tiróndown Machine",
+                "video_url": "",
+                "primary_group": "",
+                "secondary_group": ""
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "seated_row_machine"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Espalda siempre neutra.",
+                "exercise_code": "single_arm_row_machine",
+                "name": "remo sentado a una mano en máquina",
+                "video_url": "https://drive.google.com/file/d/1IkHpazcjptnYJpFvo70tf902WxrTLGPg/view?usp=drivesdk",
+                "primary_group": "dorsal",
+                "secondary_group": "biceps"
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "cable_face_Tirón"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Activa deltoide posterior, no balancees cuerpo.",
+                "exercise_code": "cable_face_tirón",
+                "name": "Cable Face Tirón",
+                "video_url": "",
+                "primary_group": "",
+                "secondary_group": ""
+              },
+              {
+                "order": 4,
+                "exercise_types": [
+                  "Bíceps_curl_machine"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Curl estricto, sin impulso.",
+                "exercise_code": "preacher_curl_machine",
+                "name": "Curl predicador en máquina",
+                "video_url": "https://drive.google.com/file/d/1Os4s8eskPAQtwJ0y-SyxFY32-hD2jThr/view?usp=drivesdk",
+                "primary_group": "biceps",
+                "secondary_group": "antebrazo"
+              }
+            ]
+          },
+          "C": {
+            "id": "C",
+            "nombre": "Bloque C - Core & Estabilidad",
+            "tipo": "core",
+            "duracion_minutos": 6,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Bird dog",
+                "series": 2,
+                "reps": "30-45 seg",
+                "instrucciones": "Control total, core activado. Sin compensaciones",
+                "video_url": "https://drive.google.com/file/d/1f3CNI4ykd5dBWoWWXK4zUYgY3jBgz24C/view?usp=drivesdk",
+                "exercise_code": "bird_dog"
+              },
+              {
+                "orden": 2,
+                "nombre": "plancha frontal",
+                "series": 2,
+                "reps": "20-30 seg",
+                "instrucciones": "Cuerpo alineado, glúteos apretados, no dejar caer cadera",
+                "video_url": "https://drive.google.com/file/d/15A6HqTArNIOU-lx_rvAZU-nLz7x1wlJ3/view?usp=drivesdk",
+                "exercise_code": "plancha_frontal"
+              }
+            ]
+          },
+          "D": {
+            "id": "D",
+            "nombre": "Bloque D - Cardio/Acondicionamiento",
+            "tipo": "cardio",
+            "recomendaciones": [
+              {
+                "type": "MISS (Salud cardiovascular general)",
+                "frequency": "3-4x/semana",
+                "duration": "20-30 minutos",
+                "intensity": "60-70% FCMax",
+                "modalities": [
+                  "Caminata (ritmo cómodo-moderado)",
+                  "Bicicleta",
+                  "Natación",
+                  "Clases grupales (Zumba, spinning, etc.)"
+                ],
+                "notes": "Objetivo: salud general y bienestar. Intensidad agradable y sostenible.",
+                "timing": "Flexible: antes, después o días separados"
+              }
+            ],
+            "general_notes": [
+              "Cardio diseñado para objetivo: mantenimiento",
+              "Volumen del Bloque B: medio → Cardio ajustado para no interferir",
+              "Progresión: aumentar duración antes que intensidad",
+              "Monitorear: si recuperación del B se ve afectada, reducir cardio"
+            ]
+          }
+        }
+      },
+      {
+        "id": "D3",
+        "name": "Piernas y Glúteos",
+        "focus": [
+          "Piernas",
+          "Glúteos"
+        ],
+        "blocks": [
+          {
+            "id": "A",
+            "primary_muscles": [
+              "quadriceps",
+              "Glúteos"
+            ],
+            "secondary_muscles": [
+              "Isquiotibiales"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "leg_press_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "No hiperextiendas espalda, pie firme."
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "leg_extension_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "Control de bajada, Core activo."
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "seated_leg_curl_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "Recorrido completo sin levantar la pelvis."
+              },
+              {
+                "order": 4,
+                "exercise_types": [
+                  "hip_thrust_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "No arquees lumbar en extensión."
+              }
+            ]
+          }
+        ],
+        "session_notes": [
+          "Evita dolor lumbar.",
+          "Core siempre activo."
+        ],
+        "bloques_estructurados": {
+          "A": {
+            "id": "A",
+            "nombre": "Bloque A - Calentamiento/Activación",
+            "tipo": "calentamiento",
+            "duracion_minutos": 8,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Rotaciones de cuello",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimientos controlados, sin forzar"
+              },
+              {
+                "orden": 2,
+                "nombre": "Círculos de hombros",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Rango de movimiento completo pero sin dolor"
+              },
+              {
+                "orden": 3,
+                "nombre": "Rotaciones de tronco",
+                "series": "1-2",
+                "reps": "30 segundos",
+                "instrucciones": "Movimiento fluido, core activado"
+              },
+              {
+                "orden": 4,
+                "nombre": "Dislocaciones de hombro con banda/palo",
+                "series": "1-2",
+                "reps": "10 repeticiones",
+                "instrucciones": "Agarre amplio, movimiento controlado"
+              },
+              {
+                "orden": 5,
+                "nombre": "Círculos de cadera",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimiento fluido, manos en cintura"
+              },
+              {
+                "orden": 6,
+                "nombre": "Balanceos de pierna (frontal/lateral)",
+                "series": "1-2",
+                "reps": "10 repeticiones cada pierna",
+                "instrucciones": "Amplitud progresiva"
+              },
+              {
+                "orden": 7,
+                "nombre": "bird_dog",
+                "series": "1-2",
+                "reps": "10 reps",
+                "instrucciones": "Activación de core, movimiento controlado"
+              },
+              {
+                "orden": 8,
+                "nombre": "Cardio ligero (caminadora, bici, remo)",
+                "series": "1-2",
+                "reps": "1 minutos",
+                "instrucciones": "Aumentar temperatura corporal, preparar sistema cardiovascular"
+              }
+            ]
+          },
+          "B": {
+            "id": "B",
+            "nombre": "Entrenamiento Principal (Fuerza)",
+            "tipo": "strength_training",
+            "primary_muscles": [
+              "Glúteos",
+              "quadriceps"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "leg_press_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "No hiperextiendas espalda, pie firme.",
+                "exercise_code": "dips_machine",
+                "name": "Fondos en máquina sentado",
+                "video_url": "https://drive.google.com/file/d/1O0gCogmO9wGMnz0QkWtYnYX-m8mrCsfH/view?usp=drivesdk",
+                "primary_group": "triceps",
+                "secondary_group": "deltoides"
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "leg_extension_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "Control de bajada, Core activo.",
+                "exercise_code": "extension_lumbar_cisne",
+                "name": "extensión lumbar cisne",
+                "video_url": "https://drive.google.com/file/d/1pVpQbNKKKtHYi2nh0f3OtUYGG9p4n_lF/view?usp=drivesdk",
+                "primary_group": "core_posterior",
+                "secondary_group": "gluteos"
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "seated_leg_curl_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "Recorrido completo sin levantar la pelvis.",
+                "exercise_code": "preacher_curl_machine",
+                "name": "Curl predicador en máquina",
+                "video_url": "https://drive.google.com/file/d/1Os4s8eskPAQtwJ0y-SyxFY32-hD2jThr/view?usp=drivesdk",
+                "primary_group": "biceps",
+                "secondary_group": "antebrazo"
+              },
+              {
+                "order": 4,
+                "exercise_types": [
+                  "hip_thrust_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "No arquees lumbar en extensión.",
+                "exercise_code": "dips_machine",
+                "name": "Fondos en máquina sentado",
+                "video_url": "https://drive.google.com/file/d/1O0gCogmO9wGMnz0QkWtYnYX-m8mrCsfH/view?usp=drivesdk",
+                "primary_group": "triceps",
+                "secondary_group": "deltoides"
+              }
+            ]
+          },
+          "C": {
+            "id": "C",
+            "nombre": "Bloque C - Core & Estabilidad",
+            "tipo": "core",
+            "duracion_minutos": 6,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Bird dog",
+                "series": 2,
+                "reps": "30-45 seg",
+                "instrucciones": "Control total, core activado. Sin compensaciones",
+                "video_url": "https://drive.google.com/file/d/1f3CNI4ykd5dBWoWWXK4zUYgY3jBgz24C/view?usp=drivesdk",
+                "exercise_code": "bird_dog"
+              },
+              {
+                "orden": 2,
+                "nombre": "plancha frontal",
+                "series": 2,
+                "reps": "20-30 seg",
+                "instrucciones": "Cuerpo alineado, glúteos apretados, no dejar caer cadera",
+                "video_url": "https://drive.google.com/file/d/15A6HqTArNIOU-lx_rvAZU-nLz7x1wlJ3/view?usp=drivesdk",
+                "exercise_code": "plancha_frontal"
+              }
+            ]
+          },
+          "D": {
+            "id": "D",
+            "nombre": "Bloque D - Cardio/Acondicionamiento",
+            "tipo": "cardio",
+            "recomendaciones": [
+              {
+                "type": "MISS (Salud cardiovascular general)",
+                "frequency": "3-4x/semana",
+                "duration": "20-30 minutos",
+                "intensity": "60-70% FCMax",
+                "modalities": [
+                  "Caminata (ritmo cómodo-moderado)",
+                  "Bicicleta",
+                  "Natación",
+                  "Clases grupales (Zumba, spinning, etc.)"
+                ],
+                "notes": "Objetivo: salud general y bienestar. Intensidad agradable y sostenible.",
+                "timing": "Flexible: antes, después o días separados"
+              }
+            ],
+            "general_notes": [
+              "Cardio diseñado para objetivo: mantenimiento",
+              "Volumen del Bloque B: medio → Cardio ajustado para no interferir",
+              "Progresión: aumentar duración antes que intensidad",
+              "Monitorear: si recuperación del B se ve afectada, reducir cardio"
+            ]
+          }
+        }
+      },
+      {
+        "id": "D4",
+        "name": "Hombros y Brazos",
+        "focus": [
+          "Hombros",
+          "Brazos"
+        ],
+        "blocks": [
+          {
+            "id": "A",
+            "primary_muscles": [
+              "deltoids"
+            ],
+            "secondary_muscles": [
+              "Tríceps",
+              "Bíceps"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "lateral_raise_machine"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Sin rebotes, sube hasta horizontal."
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "reverse_pec_deck"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Aisla deltoide posterior, no fuerces rango."
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "cable_Tríceps_extension"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Codera fija, no arquees espalda."
+              },
+              {
+                "order": 4,
+                "exercise_types": [
+                  "cable_Bíceps_curl"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Sin impulso, mantén bíceps activo."
+              }
+            ]
+          }
+        ],
+        "session_notes": [
+          "Evita dolor en hombro.",
+          "Prioriza control."
+        ],
+        "bloques_estructurados": {
+          "A": {
+            "id": "A",
+            "nombre": "Bloque A - Calentamiento/Activación",
+            "tipo": "calentamiento",
+            "duracion_minutos": 8,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Rotaciones de cuello",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimientos controlados, sin forzar"
+              },
+              {
+                "orden": 2,
+                "nombre": "Círculos de hombros",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Rango de movimiento completo pero sin dolor"
+              },
+              {
+                "orden": 3,
+                "nombre": "Rotaciones de tronco",
+                "series": "1-2",
+                "reps": "30 segundos",
+                "instrucciones": "Movimiento fluido, core activado"
+              },
+              {
+                "orden": 4,
+                "nombre": "Dislocaciones de hombro con banda/palo",
+                "series": "1-2",
+                "reps": "10 repeticiones",
+                "instrucciones": "Agarre amplio, movimiento controlado"
+              },
+              {
+                "orden": 5,
+                "nombre": "Círculos de cadera",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimiento fluido, manos en cintura"
+              },
+              {
+                "orden": 6,
+                "nombre": "Balanceos de pierna (frontal/lateral)",
+                "series": "1-2",
+                "reps": "10 repeticiones cada pierna",
+                "instrucciones": "Amplitud progresiva"
+              },
+              {
+                "orden": 7,
+                "nombre": "bird_dog",
+                "series": "1-2",
+                "reps": "10 reps",
+                "instrucciones": "Activación de core, movimiento controlado"
+              },
+              {
+                "orden": 8,
+                "nombre": "Cardio ligero (caminadora, bici, remo)",
+                "series": "1-2",
+                "reps": "1 minutos",
+                "instrucciones": "Aumentar temperatura corporal, preparar sistema cardiovascular"
+              }
+            ]
+          },
+          "B": {
+            "id": "B",
+            "nombre": "Entrenamiento Principal (Fuerza)",
+            "tipo": "strength_training",
+            "primary_muscles": [
+              "deltoids"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "lateral_raise_machine"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Sin rebotes, sube hasta horizontal.",
+                "exercise_code": "preacher_curl_machine",
+                "name": "Curl predicador en máquina",
+                "video_url": "https://drive.google.com/file/d/1Os4s8eskPAQtwJ0y-SyxFY32-hD2jThr/view?usp=drivesdk",
+                "primary_group": "biceps",
+                "secondary_group": "antebrazo"
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "reverse_pec_deck"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Aisla deltoide posterior, no fuerces rango.",
+                "exercise_code": "aperturas_peck_deck",
+                "name": "aperturas peck deck",
+                "video_url": "https://drive.google.com/file/d/150MeZWVrs4bWDyLdSULcpq74ZtbDCkpu/view?usp=drivesdk",
+                "primary_group": "pectorales",
+                "secondary_group": "deltoides"
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "cable_Tríceps_extension"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Codera fija, no arquees espalda.",
+                "exercise_code": "tricep_extension_bar",
+                "name": "Tríceps tumbado con barra",
+                "video_url": "https://drive.google.com/file/d/1DH5fGVJao-TgW4Q-Zi_1MVBM1jkPvav5/view?usp=drivesdk",
+                "primary_group": "triceps",
+                "secondary_group": "deltoides"
+              },
+              {
+                "order": 4,
+                "exercise_types": [
+                  "cable_Bíceps_curl"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Sin impulso, mantén bíceps activo.",
+                "exercise_code": "curl_biceps_mancuernas",
+                "name": "curl bíceps mancuernas",
+                "video_url": "https://drive.google.com/file/d/1G_-U6ywJIF9Nb84Rv8GvrQ7H5xr8Otxm/view?usp=drivesdk",
+                "primary_group": "biceps",
+                "secondary_group": ""
+              }
+            ]
+          },
+          "C": {
+            "id": "C",
+            "nombre": "Bloque C - Core & Estabilidad",
+            "tipo": "core",
+            "duracion_minutos": 6,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Bird dog",
+                "series": 2,
+                "reps": "30-45 seg",
+                "instrucciones": "Control total, core activado. Sin compensaciones",
+                "video_url": "https://drive.google.com/file/d/1f3CNI4ykd5dBWoWWXK4zUYgY3jBgz24C/view?usp=drivesdk",
+                "exercise_code": "bird_dog"
+              },
+              {
+                "orden": 2,
+                "nombre": "plancha frontal",
+                "series": 2,
+                "reps": "20-30 seg",
+                "instrucciones": "Cuerpo alineado, glúteos apretados, no dejar caer cadera",
+                "video_url": "https://drive.google.com/file/d/15A6HqTArNIOU-lx_rvAZU-nLz7x1wlJ3/view?usp=drivesdk",
+                "exercise_code": "plancha_frontal"
+              }
+            ]
+          },
+          "D": {
+            "id": "D",
+            "nombre": "Bloque D - Cardio/Acondicionamiento",
+            "tipo": "cardio",
+            "recomendaciones": [
+              {
+                "type": "MISS (Salud cardiovascular general)",
+                "frequency": "3-4x/semana",
+                "duration": "20-30 minutos",
+                "intensity": "60-70% FCMax",
+                "modalities": [
+                  "Caminata (ritmo cómodo-moderado)",
+                  "Bicicleta",
+                  "Natación",
+                  "Clases grupales (Zumba, spinning, etc.)"
+                ],
+                "notes": "Objetivo: salud general y bienestar. Intensidad agradable y sostenible.",
+                "timing": "Flexible: antes, después o días separados"
+              }
+            ],
+            "general_notes": [
+              "Cardio diseñado para objetivo: mantenimiento",
+              "Volumen del Bloque B: medio → Cardio ajustado para no interferir",
+              "Progresión: aumentar duración antes que intensidad",
+              "Monitorear: si recuperación del B se ve afectada, reducir cardio"
+            ]
+          }
+        }
+      }
+    ],
+    "general_notes": [
+      "Evita ejercicio doloroso.",
+      "Calienta hombro siempre.",
+      "Máxima técnica y control."
+    ]
+  },
+  "is_evolutionary": true,
+  "updated_at": "2025-12-06T20:04:54.447920+00:00",
+  "last_edited_at": "2025-12-06T20:09:17.551010+00:00",
+  "last_edited_by": "admin_jorge_001",
+  "original_plan": {
+    "title": "Rutina Weider 4 días (Hipertrofia avanzada, seguro lumbar/hombros)",
+    "summary": "Programa tipo Weider 4 días: énfasis en hipertrofia con selección segura para manguito rotador y lumbar. Adaptado a experiencia avanzada en gimnasio.",
+    "goal": "Ganar músculo priorizyo seguridad en hombros y zona lumbar.",
+    "training_type": "Rutina Weider",
+    "days_per_week": 4,
+    "session_duration_min": 45,
+    "weeks": 4,
+    "sessions": [
+      {
+        "id": "D1",
+        "name": "Pecho y Tríceps",
+        "focus": [
+          "Pecho",
+          "Tríceps"
+        ],
+        "blocks": [
+          {
+            "id": "A",
+            "primary_muscles": [
+              "Pecho"
+            ],
+            "secondary_muscles": [
+              "Tríceps"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "horizontal_press_machine"
+                ],
+                "series": 4,
+                "reps": "8-12",
+                "rpe": "8",
+                "notes": "Evita dolor en hombros, controla el rango."
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "pec_deck"
+                ],
+                "series": 4,
+                "reps": "8-12",
+                "rpe": "8",
+                "notes": "Controla scapulas y no fuerces Rango de Movimiento."
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "cable_fly"
+                ],
+                "series": 4,
+                "reps": "8-12",
+                "rpe": "8",
+                "notes": "Movimiento con tensión continua."
+              }
+            ]
+          }
+        ],
+        "session_notes": [
+          "Calienta hombros y escápulas.",
+          "Evita molestias en hombro."
+        ],
+        "bloques_estructurados": {
+          "A": {
+            "id": "A",
+            "nombre": "Bloque A - Calentamiento/Activación",
+            "tipo": "calentamiento",
+            "duracion_minutos": 8,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Rotaciones de cuello",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimientos controlados, sin forzar"
+              },
+              {
+                "orden": 2,
+                "nombre": "Círculos de hombros",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Rango de movimiento completo pero sin dolor"
+              },
+              {
+                "orden": 3,
+                "nombre": "Rotaciones de tronco",
+                "series": "1-2",
+                "reps": "30 segundos",
+                "instrucciones": "Movimiento fluido, core activado"
+              },
+              {
+                "orden": 4,
+                "nombre": "Dislocaciones de hombro con banda/palo",
+                "series": "1-2",
+                "reps": "10 repeticiones",
+                "instrucciones": "Agarre amplio, movimiento controlado"
+              },
+              {
+                "orden": 5,
+                "nombre": "Círculos de cadera",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimiento fluido, manos en cintura"
+              },
+              {
+                "orden": 6,
+                "nombre": "Balanceos de pierna (frontal/lateral)",
+                "series": "1-2",
+                "reps": "10 repeticiones cada pierna",
+                "instrucciones": "Amplitud progresiva"
+              },
+              {
+                "orden": 7,
+                "nombre": "bird_dog",
+                "series": "1-2",
+                "reps": "10 reps",
+                "instrucciones": "Activación de core, movimiento controlado"
+              },
+              {
+                "orden": 8,
+                "nombre": "Cardio ligero (caminadora, bici, remo)",
+                "series": "1-2",
+                "reps": "1 minutos",
+                "instrucciones": "Aumentar temperatura corporal, preparar sistema cardiovascular"
+              }
+            ]
+          },
+          "B": {
+            "id": "B",
+            "nombre": "Entrenamiento Principal (Fuerza)",
+            "tipo": "strength_training",
+            "primary_muscles": [
+              "Pecho"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "horizontal_press_machine"
+                ],
+                "series": 4,
+                "reps": "8-12",
+                "rpe": "8",
+                "notes": "Evita dolor en hombros, controla el rango.",
+                "exercise_code": "sentadilla_press_landmine",
+                "name": "sentadilla y press landmine",
+                "video_url": "https://drive.google.com/file/d/1Y3Kr4-RgkB1pjwzt5iLmfe-cgD4HZtvh/view?usp=drivesdk",
+                "primary_group": "cuadriceps",
+                "secondary_group": "deltoides, gluteos"
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "pec_deck"
+                ],
+                "series": 4,
+                "reps": "8-12",
+                "rpe": "8",
+                "notes": "Controla scapulas y no fuerces Rango de Movimiento.",
+                "exercise_code": "pec_deck",
+                "name": "Pec Deck",
+                "video_url": "",
+                "primary_group": "",
+                "secondary_group": ""
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "cable_fly"
+                ],
+                "series": 4,
+                "reps": "8-12",
+                "rpe": "8",
+                "notes": "Movimiento con tensión continua.",
+                "exercise_code": "cable_fly",
+                "name": "Cable Fly",
+                "video_url": "",
+                "primary_group": "",
+                "secondary_group": ""
+              }
+            ]
+          },
+          "C": {
+            "id": "C",
+            "nombre": "Bloque C - Core & Estabilidad",
+            "tipo": "core",
+            "duracion_minutos": 13.5,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Bird dog",
+                "series": 3,
+                "reps": "30-45 seg",
+                "instrucciones": "Control total, core activado. Sin compensaciones",
+                "video_url": "https://drive.google.com/file/d/1f3CNI4ykd5dBWoWWXK4zUYgY3jBgz24C/view?usp=drivesdk",
+                "exercise_code": "bird_dog"
+              },
+              {
+                "orden": 2,
+                "nombre": "plancha frontal",
+                "series": 3,
+                "reps": "20-30 seg",
+                "instrucciones": "Cuerpo alineado, glúteos apretados, no dejar caer cadera",
+                "video_url": "https://drive.google.com/file/d/15A6HqTArNIOU-lx_rvAZU-nLz7x1wlJ3/view?usp=drivesdk",
+                "exercise_code": "plancha_frontal"
+              },
+              {
+                "orden": 3,
+                "nombre": "toques de hombro",
+                "series": 3,
+                "reps": "30-45 seg",
+                "instrucciones": "Variación para trabajar core desde otro ángulo",
+                "video_url": "https://drive.google.com/file/d/10IWd-vc3Q4-PonRdAOuvfYs5mEdFLs9A/view?usp=drivesdk",
+                "exercise_code": "toques_de_hombro_peso_corporal"
+              }
+            ]
+          },
+          "D": {
+            "id": "D",
+            "nombre": "Bloque D - Cardio/Acondicionamiento",
+            "tipo": "cardio",
+            "recomendaciones": [
+              {
+                "type": "MISS (Salud cardiovascular general)",
+                "frequency": "3-4x/semana",
+                "duration": "20-30 minutos",
+                "intensity": "60-70% FCMax",
+                "modalities": [
+                  "Caminata (ritmo cómodo-moderado)",
+                  "Bicicleta",
+                  "Natación",
+                  "Clases grupales (Zumba, spinning, etc.)"
+                ],
+                "notes": "Objetivo: salud general y bienestar. Intensidad agradable y sostenible.",
+                "timing": "Flexible: antes, después o días separados"
+              }
+            ],
+            "general_notes": [
+              "Cardio diseñado para objetivo: mantenimiento",
+              "Volumen del Bloque B: bajo → Cardio ajustado para no interferir",
+              "Progresión: aumentar duración antes que intensidad",
+              "Monitorear: si recuperación del B se ve afectada, reducir cardio"
+            ]
+          }
+        }
+      },
+      {
+        "id": "D2",
+        "name": "Espalda y Bíceps",
+        "focus": [
+          "Espalda",
+          "Bíceps"
+        ],
+        "blocks": [
+          {
+            "id": "A",
+            "primary_muscles": [
+              "Espalda"
+            ],
+            "secondary_muscles": [
+              "Bíceps"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "lat_Tiróndown_machine"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Evita hiperlordosis lumbar."
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "seated_row_machine"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Espalda siempre neutra."
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "cable_face_Tirón"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Activa deltoide posterior, no balancees cuerpo."
+              },
+              {
+                "order": 4,
+                "exercise_types": [
+                  "Bíceps_curl_machine"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Curl estricto, sin impulso."
+              }
+            ]
+          }
+        ],
+        "session_notes": [
+          "Postura neutra lumbar.",
+          "No compensar con lumbar."
+        ],
+        "bloques_estructurados": {
+          "A": {
+            "id": "A",
+            "nombre": "Bloque A - Calentamiento/Activación",
+            "tipo": "calentamiento",
+            "duracion_minutos": 8,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Rotaciones de cuello",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimientos controlados, sin forzar"
+              },
+              {
+                "orden": 2,
+                "nombre": "Círculos de hombros",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Rango de movimiento completo pero sin dolor"
+              },
+              {
+                "orden": 3,
+                "nombre": "Rotaciones de tronco",
+                "series": "1-2",
+                "reps": "30 segundos",
+                "instrucciones": "Movimiento fluido, core activado"
+              },
+              {
+                "orden": 4,
+                "nombre": "Dislocaciones de hombro con banda/palo",
+                "series": "1-2",
+                "reps": "10 repeticiones",
+                "instrucciones": "Agarre amplio, movimiento controlado"
+              },
+              {
+                "orden": 5,
+                "nombre": "Círculos de cadera",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimiento fluido, manos en cintura"
+              },
+              {
+                "orden": 6,
+                "nombre": "Balanceos de pierna (frontal/lateral)",
+                "series": "1-2",
+                "reps": "10 repeticiones cada pierna",
+                "instrucciones": "Amplitud progresiva"
+              },
+              {
+                "orden": 7,
+                "nombre": "bird_dog",
+                "series": "1-2",
+                "reps": "10 reps",
+                "instrucciones": "Activación de core, movimiento controlado"
+              },
+              {
+                "orden": 8,
+                "nombre": "Cardio ligero (caminadora, bici, remo)",
+                "series": "1-2",
+                "reps": "1 minutos",
+                "instrucciones": "Aumentar temperatura corporal, preparar sistema cardiovascular"
+              }
+            ]
+          },
+          "B": {
+            "id": "B",
+            "nombre": "Entrenamiento Principal (Fuerza)",
+            "tipo": "strength_training",
+            "primary_muscles": [
+              "Espalda"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "lat_Tiróndown_machine"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Evita hiperlordosis lumbar.",
+                "exercise_code": "lat_tiróndown_machine",
+                "name": "Lat Tiróndown Machine",
+                "video_url": "",
+                "primary_group": "",
+                "secondary_group": ""
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "seated_row_machine"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Espalda siempre neutra.",
+                "exercise_code": "single_arm_row_machine",
+                "name": "remo sentado a una mano en máquina",
+                "video_url": "https://drive.google.com/file/d/1IkHpazcjptnYJpFvo70tf902WxrTLGPg/view?usp=drivesdk",
+                "primary_group": "dorsal",
+                "secondary_group": "biceps"
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "cable_face_Tirón"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Activa deltoide posterior, no balancees cuerpo.",
+                "exercise_code": "cable_face_tirón",
+                "name": "Cable Face Tirón",
+                "video_url": "",
+                "primary_group": "",
+                "secondary_group": ""
+              },
+              {
+                "order": 4,
+                "exercise_types": [
+                  "Bíceps_curl_machine"
+                ],
+                "series": 4,
+                "reps": "8-15",
+                "rpe": "8",
+                "notes": "Curl estricto, sin impulso.",
+                "exercise_code": "preacher_curl_machine",
+                "name": "Curl predicador en máquina",
+                "video_url": "https://drive.google.com/file/d/1Os4s8eskPAQtwJ0y-SyxFY32-hD2jThr/view?usp=drivesdk",
+                "primary_group": "biceps",
+                "secondary_group": "antebrazo"
+              }
+            ]
+          },
+          "C": {
+            "id": "C",
+            "nombre": "Bloque C - Core & Estabilidad",
+            "tipo": "core",
+            "duracion_minutos": 6.0,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Bird dog",
+                "series": 2,
+                "reps": "30-45 seg",
+                "instrucciones": "Control total, core activado. Sin compensaciones",
+                "video_url": "https://drive.google.com/file/d/1f3CNI4ykd5dBWoWWXK4zUYgY3jBgz24C/view?usp=drivesdk",
+                "exercise_code": "bird_dog"
+              },
+              {
+                "orden": 2,
+                "nombre": "plancha frontal",
+                "series": 2,
+                "reps": "20-30 seg",
+                "instrucciones": "Cuerpo alineado, glúteos apretados, no dejar caer cadera",
+                "video_url": "https://drive.google.com/file/d/15A6HqTArNIOU-lx_rvAZU-nLz7x1wlJ3/view?usp=drivesdk",
+                "exercise_code": "plancha_frontal"
+              }
+            ]
+          },
+          "D": {
+            "id": "D",
+            "nombre": "Bloque D - Cardio/Acondicionamiento",
+            "tipo": "cardio",
+            "recomendaciones": [
+              {
+                "type": "MISS (Salud cardiovascular general)",
+                "frequency": "3-4x/semana",
+                "duration": "20-30 minutos",
+                "intensity": "60-70% FCMax",
+                "modalities": [
+                  "Caminata (ritmo cómodo-moderado)",
+                  "Bicicleta",
+                  "Natación",
+                  "Clases grupales (Zumba, spinning, etc.)"
+                ],
+                "notes": "Objetivo: salud general y bienestar. Intensidad agradable y sostenible.",
+                "timing": "Flexible: antes, después o días separados"
+              }
+            ],
+            "general_notes": [
+              "Cardio diseñado para objetivo: mantenimiento",
+              "Volumen del Bloque B: medio → Cardio ajustado para no interferir",
+              "Progresión: aumentar duración antes que intensidad",
+              "Monitorear: si recuperación del B se ve afectada, reducir cardio"
+            ]
+          }
+        }
+      },
+      {
+        "id": "D3",
+        "name": "Piernas y Glúteos",
+        "focus": [
+          "Piernas",
+          "Glúteos"
+        ],
+        "blocks": [
+          {
+            "id": "A",
+            "primary_muscles": [
+              "quadriceps",
+              "Glúteos"
+            ],
+            "secondary_muscles": [
+              "Isquiotibiales"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "leg_press_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "No hiperextiendas espalda, pie firme."
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "leg_extension_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "Control de bajada, Core activo."
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "seated_leg_curl_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "Recorrido completo sin levantar la pelvis."
+              },
+              {
+                "order": 4,
+                "exercise_types": [
+                  "hip_thrust_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "No arquees lumbar en extensión."
+              }
+            ]
+          }
+        ],
+        "session_notes": [
+          "Evita dolor lumbar.",
+          "Core siempre activo."
+        ],
+        "bloques_estructurados": {
+          "A": {
+            "id": "A",
+            "nombre": "Bloque A - Calentamiento/Activación",
+            "tipo": "calentamiento",
+            "duracion_minutos": 8,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Rotaciones de cuello",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimientos controlados, sin forzar"
+              },
+              {
+                "orden": 2,
+                "nombre": "Círculos de hombros",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Rango de movimiento completo pero sin dolor"
+              },
+              {
+                "orden": 3,
+                "nombre": "Rotaciones de tronco",
+                "series": "1-2",
+                "reps": "30 segundos",
+                "instrucciones": "Movimiento fluido, core activado"
+              },
+              {
+                "orden": 4,
+                "nombre": "Dislocaciones de hombro con banda/palo",
+                "series": "1-2",
+                "reps": "10 repeticiones",
+                "instrucciones": "Agarre amplio, movimiento controlado"
+              },
+              {
+                "orden": 5,
+                "nombre": "Círculos de cadera",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimiento fluido, manos en cintura"
+              },
+              {
+                "orden": 6,
+                "nombre": "Balanceos de pierna (frontal/lateral)",
+                "series": "1-2",
+                "reps": "10 repeticiones cada pierna",
+                "instrucciones": "Amplitud progresiva"
+              },
+              {
+                "orden": 7,
+                "nombre": "bird_dog",
+                "series": "1-2",
+                "reps": "10 reps",
+                "instrucciones": "Activación de core, movimiento controlado"
+              },
+              {
+                "orden": 8,
+                "nombre": "Cardio ligero (caminadora, bici, remo)",
+                "series": "1-2",
+                "reps": "1 minutos",
+                "instrucciones": "Aumentar temperatura corporal, preparar sistema cardiovascular"
+              }
+            ]
+          },
+          "B": {
+            "id": "B",
+            "nombre": "Entrenamiento Principal (Fuerza)",
+            "tipo": "strength_training",
+            "primary_muscles": [
+              "Glúteos",
+              "quadriceps"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "leg_press_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "No hiperextiendas espalda, pie firme.",
+                "exercise_code": "dips_machine",
+                "name": "Fondos en máquina sentado",
+                "video_url": "https://drive.google.com/file/d/1O0gCogmO9wGMnz0QkWtYnYX-m8mrCsfH/view?usp=drivesdk",
+                "primary_group": "triceps",
+                "secondary_group": "deltoides"
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "leg_extension_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "Control de bajada, Core activo.",
+                "exercise_code": "extension_lumbar_cisne",
+                "name": "extensión lumbar cisne",
+                "video_url": "https://drive.google.com/file/d/1pVpQbNKKKtHYi2nh0f3OtUYGG9p4n_lF/view?usp=drivesdk",
+                "primary_group": "core_posterior",
+                "secondary_group": "gluteos"
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "seated_leg_curl_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "Recorrido completo sin levantar la pelvis.",
+                "exercise_code": "preacher_curl_machine",
+                "name": "Curl predicador en máquina",
+                "video_url": "https://drive.google.com/file/d/1Os4s8eskPAQtwJ0y-SyxFY32-hD2jThr/view?usp=drivesdk",
+                "primary_group": "biceps",
+                "secondary_group": "antebrazo"
+              },
+              {
+                "order": 4,
+                "exercise_types": [
+                  "hip_thrust_machine"
+                ],
+                "series": 5,
+                "reps": "10-15",
+                "rpe": "8-9",
+                "notes": "No arquees lumbar en extensión.",
+                "exercise_code": "dips_machine",
+                "name": "Fondos en máquina sentado",
+                "video_url": "https://drive.google.com/file/d/1O0gCogmO9wGMnz0QkWtYnYX-m8mrCsfH/view?usp=drivesdk",
+                "primary_group": "triceps",
+                "secondary_group": "deltoides"
+              }
+            ]
+          },
+          "C": {
+            "id": "C",
+            "nombre": "Bloque C - Core & Estabilidad",
+            "tipo": "core",
+            "duracion_minutos": 6.0,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Bird dog",
+                "series": 2,
+                "reps": "30-45 seg",
+                "instrucciones": "Control total, core activado. Sin compensaciones",
+                "video_url": "https://drive.google.com/file/d/1f3CNI4ykd5dBWoWWXK4zUYgY3jBgz24C/view?usp=drivesdk",
+                "exercise_code": "bird_dog"
+              },
+              {
+                "orden": 2,
+                "nombre": "plancha frontal",
+                "series": 2,
+                "reps": "20-30 seg",
+                "instrucciones": "Cuerpo alineado, glúteos apretados, no dejar caer cadera",
+                "video_url": "https://drive.google.com/file/d/15A6HqTArNIOU-lx_rvAZU-nLz7x1wlJ3/view?usp=drivesdk",
+                "exercise_code": "plancha_frontal"
+              }
+            ]
+          },
+          "D": {
+            "id": "D",
+            "nombre": "Bloque D - Cardio/Acondicionamiento",
+            "tipo": "cardio",
+            "recomendaciones": [
+              {
+                "type": "MISS (Salud cardiovascular general)",
+                "frequency": "3-4x/semana",
+                "duration": "20-30 minutos",
+                "intensity": "60-70% FCMax",
+                "modalities": [
+                  "Caminata (ritmo cómodo-moderado)",
+                  "Bicicleta",
+                  "Natación",
+                  "Clases grupales (Zumba, spinning, etc.)"
+                ],
+                "notes": "Objetivo: salud general y bienestar. Intensidad agradable y sostenible.",
+                "timing": "Flexible: antes, después o días separados"
+              }
+            ],
+            "general_notes": [
+              "Cardio diseñado para objetivo: mantenimiento",
+              "Volumen del Bloque B: medio → Cardio ajustado para no interferir",
+              "Progresión: aumentar duración antes que intensidad",
+              "Monitorear: si recuperación del B se ve afectada, reducir cardio"
+            ]
+          }
+        }
+      },
+      {
+        "id": "D4",
+        "name": "Hombros y Brazos",
+        "focus": [
+          "Hombros",
+          "Brazos"
+        ],
+        "blocks": [
+          {
+            "id": "A",
+            "primary_muscles": [
+              "deltoids"
+            ],
+            "secondary_muscles": [
+              "Tríceps",
+              "Bíceps"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "lateral_raise_machine"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Sin rebotes, sube hasta horizontal."
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "reverse_pec_deck"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Aisla deltoide posterior, no fuerces rango."
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "cable_Tríceps_extension"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Codera fija, no arquees espalda."
+              },
+              {
+                "order": 4,
+                "exercise_types": [
+                  "cable_Bíceps_curl"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Sin impulso, mantén bíceps activo."
+              }
+            ]
+          }
+        ],
+        "session_notes": [
+          "Evita dolor en hombro.",
+          "Prioriza control."
+        ],
+        "bloques_estructurados": {
+          "A": {
+            "id": "A",
+            "nombre": "Bloque A - Calentamiento/Activación",
+            "tipo": "calentamiento",
+            "duracion_minutos": 8,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Rotaciones de cuello",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimientos controlados, sin forzar"
+              },
+              {
+                "orden": 2,
+                "nombre": "Círculos de hombros",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Rango de movimiento completo pero sin dolor"
+              },
+              {
+                "orden": 3,
+                "nombre": "Rotaciones de tronco",
+                "series": "1-2",
+                "reps": "30 segundos",
+                "instrucciones": "Movimiento fluido, core activado"
+              },
+              {
+                "orden": 4,
+                "nombre": "Dislocaciones de hombro con banda/palo",
+                "series": "1-2",
+                "reps": "10 repeticiones",
+                "instrucciones": "Agarre amplio, movimiento controlado"
+              },
+              {
+                "orden": 5,
+                "nombre": "Círculos de cadera",
+                "series": "1-2",
+                "reps": "30 segundos cada dirección",
+                "instrucciones": "Movimiento fluido, manos en cintura"
+              },
+              {
+                "orden": 6,
+                "nombre": "Balanceos de pierna (frontal/lateral)",
+                "series": "1-2",
+                "reps": "10 repeticiones cada pierna",
+                "instrucciones": "Amplitud progresiva"
+              },
+              {
+                "orden": 7,
+                "nombre": "bird_dog",
+                "series": "1-2",
+                "reps": "10 reps",
+                "instrucciones": "Activación de core, movimiento controlado"
+              },
+              {
+                "orden": 8,
+                "nombre": "Cardio ligero (caminadora, bici, remo)",
+                "series": "1-2",
+                "reps": "1 minutos",
+                "instrucciones": "Aumentar temperatura corporal, preparar sistema cardiovascular"
+              }
+            ]
+          },
+          "B": {
+            "id": "B",
+            "nombre": "Entrenamiento Principal (Fuerza)",
+            "tipo": "strength_training",
+            "primary_muscles": [
+              "deltoids"
+            ],
+            "exercises": [
+              {
+                "order": 1,
+                "exercise_types": [
+                  "lateral_raise_machine"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Sin rebotes, sube hasta horizontal.",
+                "exercise_code": "preacher_curl_machine",
+                "name": "Curl predicador en máquina",
+                "video_url": "https://drive.google.com/file/d/1Os4s8eskPAQtwJ0y-SyxFY32-hD2jThr/view?usp=drivesdk",
+                "primary_group": "biceps",
+                "secondary_group": "antebrazo"
+              },
+              {
+                "order": 2,
+                "exercise_types": [
+                  "reverse_pec_deck"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Aisla deltoide posterior, no fuerces rango.",
+                "exercise_code": "aperturas_peck_deck",
+                "name": "aperturas peck deck",
+                "video_url": "https://drive.google.com/file/d/150MeZWVrs4bWDyLdSULcpq74ZtbDCkpu/view?usp=drivesdk",
+                "primary_group": "pectorales",
+                "secondary_group": "deltoides"
+              },
+              {
+                "order": 3,
+                "exercise_types": [
+                  "cable_Tríceps_extension"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Codera fija, no arquees espalda.",
+                "exercise_code": "tricep_extension_bar",
+                "name": "Tríceps tumbado con barra",
+                "video_url": "https://drive.google.com/file/d/1DH5fGVJao-TgW4Q-Zi_1MVBM1jkPvav5/view?usp=drivesdk",
+                "primary_group": "triceps",
+                "secondary_group": "deltoides"
+              },
+              {
+                "order": 4,
+                "exercise_types": [
+                  "cable_Bíceps_curl"
+                ],
+                "series": 4,
+                "reps": "10-15",
+                "rpe": "8",
+                "notes": "Sin impulso, mantén bíceps activo.",
+                "exercise_code": "curl_biceps_mancuernas",
+                "name": "curl bíceps mancuernas",
+                "video_url": "https://drive.google.com/file/d/1G_-U6ywJIF9Nb84Rv8GvrQ7H5xr8Otxm/view?usp=drivesdk",
+                "primary_group": "biceps",
+                "secondary_group": ""
+              }
+            ]
+          },
+          "C": {
+            "id": "C",
+            "nombre": "Bloque C - Core & Estabilidad",
+            "tipo": "core",
+            "duracion_minutos": 6.0,
+            "ejercicios": [
+              {
+                "orden": 1,
+                "nombre": "Bird dog",
+                "series": 2,
+                "reps": "30-45 seg",
+                "instrucciones": "Control total, core activado. Sin compensaciones",
+                "video_url": "https://drive.google.com/file/d/1f3CNI4ykd5dBWoWWXK4zUYgY3jBgz24C/view?usp=drivesdk",
+                "exercise_code": "bird_dog"
+              },
+              {
+                "orden": 2,
+                "nombre": "plancha frontal",
+                "series": 2,
+                "reps": "20-30 seg",
+                "instrucciones": "Cuerpo alineado, glúteos apretados, no dejar caer cadera",
+                "video_url": "https://drive.google.com/file/d/15A6HqTArNIOU-lx_rvAZU-nLz7x1wlJ3/view?usp=drivesdk",
+                "exercise_code": "plancha_frontal"
+              }
+            ]
+          },
+          "D": {
+            "id": "D",
+            "nombre": "Bloque D - Cardio/Acondicionamiento",
+            "tipo": "cardio",
+            "recomendaciones": [
+              {
+                "type": "MISS (Salud cardiovascular general)",
+                "frequency": "3-4x/semana",
+                "duration": "20-30 minutos",
+                "intensity": "60-70% FCMax",
+                "modalities": [
+                  "Caminata (ritmo cómodo-moderado)",
+                  "Bicicleta",
+                  "Natación",
+                  "Clases grupales (Zumba, spinning, etc.)"
+                ],
+                "notes": "Objetivo: salud general y bienestar. Intensidad agradable y sostenible.",
+                "timing": "Flexible: antes, después o días separados"
+              }
+            ],
+            "general_notes": [
+              "Cardio diseñado para objetivo: mantenimiento",
+              "Volumen del Bloque B: medio → Cardio ajustado para no interferir",
+              "Progresión: aumentar duración antes que intensidad",
+              "Monitorear: si recuperación del B se ve afectada, reducir cardio"
+            ]
+          }
+        }
+      }
+    ],
+    "general_notes": [
+      "Evita ejercicio doloroso.",
+      "Calienta hombro siempre.",
+      "Máxima técnica y control."
+    ]
+  },
+  "plain_text_content": "═══════════════════════════════════════════════════════════════\n  Rutina Weider 4 días (Hipertrofia avanzada, seguro lumbar/hombros)\n═══════════════════════════════════════════════════════════════\n\n📋 INFORMACIÓN GENERAL\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nTipo de Rutina: Rutina Weider\nDías por Semana: 4\nDuración Sesión: 45 minutos\nDuración Programa: 4 semanas\nObjetivo: Ganar músculo priorizyo seguridad en hombros y zona lumbar.\n\n📝 RESUMEN\nPrograma tipo Weider 4 días: énfasis en hipertrofia con selección segura para manguito rotador y lumbar. Adaptado a experiencia avanzada en gimnasio.\n\n⚠️ NOTAS GENERALES IMPORTANTES\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n  • Evita ejercicio doloroso.\n  • Calienta hombro siempre.\n  • Máxima técnica y control.\n\n\n═══════════════════════════════════════════════════════════════\n  D1 - Pecho y Tríceps\n═══════════════════════════════════════════════════════════════\nFocus: Pecho, Tríceps\n\n┌─────────────────────────────────────────────────────────────┐\n│  Bloque A - Calentamiento/Activación                       │\n└─────────────────────────────────────────────────────────────┘\n\n. Rotaciones de cuello\n   Series: 1-2 | Reps: 30 segundos cada dirección | RPE: -\n\n. Círculos de hombros\n   Series: 1-2 | Reps: 30 segundos cada dirección | RPE: -\n\n. Rotaciones de tronco\n   Series: 1-2 | Reps: 30 segundos | RPE: -\n\n. Dislocaciones de hombro con banda/palo\n   Series: 1-2 | Reps: 10 repeticiones | RPE: -\n\n. Círculos de cadera\n   Series: 1-2 | Reps: 30 segundos cada dirección | RPE: -\n\n. Balanceos de pierna (frontal/lateral)\n   Series: 1-2 | Reps: 10 repeticiones cada pierna | RPE: -\n\n. bird_dog\n   Series: 1-2 | Reps: 10 reps | RPE: -\n\n. Cardio ligero (caminadora, bici, remo)\n   Series: 1-2 | Reps: 1 minutos | RPE: -\n\n┌─────────────────────────────────────────────────────────────┐\n│  Entrenamiento Principal (Fuerza)                          │\n└─────────────────────────────────────────────────────────────┘\n\n1. sentadilla y press landmine\n   Series: 4 | Reps: 8-12 | RPE: 8\n   📝 Evita dolor en hombros, controla el rango.\n\n2. Pec Deck\n   Series: 4 | Reps: 8-12 | RPE: 8\n   📝 Controla scapulas y no fuerces Rango de Movimiento.\n\n3. Cable Fly\n   Series: 4 | Reps: 8-12 | RPE: 8\n   📝 Movimiento con tensión continua.\n\n┌─────────────────────────────────────────────────────────────┐\n│  Bloque C - Core & Estabilidad                             │\n└─────────────────────────────────────────────────────────────┘\n\n. Bird dog\n   Series: 3 | Reps: 30-45 seg | RPE: -\n\n. plancha frontal\n   Series: 3 | Reps: 20-30 seg | RPE: -\n\n. toques de hombro\n   Series: 3 | Reps: 30-45 seg | RPE: -\n\n┌─────────────────────────────────────────────────────────────┐\n│  Bloque D - Cardio/Acondicionamiento                       │\n└─────────────────────────────────────────────────────────────┘\n\n1. MISS (Salud cardiovascular general)\n   Frecuencia: 3-4x/semana\n   Duración: 20-30 minutos\n   Intensidad: 60-70% FCMax\n   Modalidades: Caminata (ritmo cómodo-moderado), Bicicleta, Natación, Clases grupales (Zumba, spinning, etc.)\n   📝 Objetivo: salud general y bienestar. Intensidad agradable y sostenible.\n\n📌 Notas de la Sesión:\n  • Calienta hombros y escápulas.\n  • Evita molestias en hombro.\n\n\n═══════════════════════════════════════════════════════════════\n  D2 - Espalda y Bíceps\n═══════════════════════════════════════════════════════════════\nFocus: Espalda, Bíceps\n\n┌─────────────────────────────────────────────────────────────┐\n│  Bloque A - Calentamiento/Activación                       │\n└─────────────────────────────────────────────────────────────┘\n\n. Rotaciones de cuello\n   Series: 1-2 | Reps: 30 segundos cada dirección | RPE: -\n\n. Círculos de hombros\n   Series: 1-2 | Reps: 30 segundos cada dirección | RPE: -\n\n. Rotaciones de tronco\n   Series: 1-2 | Reps: 30 segundos | RPE: -\n\n. Dislocaciones de hombro con banda/palo\n   Series: 1-2 | Reps: 10 repeticiones | RPE: -\n\n. Círculos de cadera\n   Series: 1-2 | Reps: 30 segundos cada dirección | RPE: -\n\n. Balanceos de pierna (frontal/lateral)\n   Series: 1-2 | Reps: 10 repeticiones cada pierna | RPE: -\n\n. bird_dog\n   Series: 1-2 | Reps: 10 reps | RPE: -\n\n. Cardio ligero (caminadora, bici, remo)\n   Series: 1-2 | Reps: 1 minutos | RPE: -\n\n┌─────────────────────────────────────────────────────────────┐\n│  Entrenamiento Principal (Fuerza)                          │\n└─────────────────────────────────────────────────────────────┘\n\n1. Lat Tiróndown Machine\n   Series: 4 | Reps: 8-15 | RPE: 8\n   📝 Evita hiperlordosis lumbar.\n\n2. remo sentado a una mano en máquina\n   Series: 4 | Reps: 8-15 | RPE: 8\n   📝 Espalda siempre neutra.\n\n3. Cable Face Tirón\n   Series: 4 | Reps: 8-15 | RPE: 8\n   📝 Activa deltoide posterior, no balancees cuerpo.\n\n4. Curl predicador en máquina\n   Series: 4 | Reps: 8-15 | RPE: 8\n   📝 Curl estricto, sin impulso.\n\n┌─────────────────────────────────────────────────────────────┐\n│  Bloque C - Core & Estabilidad                             │\n└─────────────────────────────────────────────────────────────┘\n\n. Bird dog\n   Series: 2 | Reps: 30-45 seg | RPE: -\n\n. plancha frontal\n   Series: 2 | Reps: 20-30 seg | RPE: -\n\n┌─────────────────────────────────────────────────────────────┐\n│  Bloque D - Cardio/Acondicionamiento                       │\n└─────────────────────────────────────────────────────────────┘\n\n1. MISS (Salud cardiovascular general)\n   Frecuencia: 3-4x/semana\n   Duración: 20-30 minutos\n   Intensidad: 60-70% FCMax\n   Modalidades: Caminata (ritmo cómodo-moderado), Bicicleta, Natación, Clases grupales (Zumba, spinning, etc.)\n   📝 Objetivo: salud general y bienestar. Intensidad agradable y sostenible.\n\n📌 Notas de la Sesión:\n  • Postura neutra lumbar.\n  • No compensar con lumbar.\n\n\n═══════════════════════════════════════════════════════════════\n  D3 - Piernas y Glúteos\n═══════════════════════════════════════════════════════════════\nFocus: Piernas, Glúteos\n\n┌─────────────────────────────────────────────────────────────┐\n│  Bloque A - Calentamiento/Activación                       │\n└─────────────────────────────────────────────────────────────┘\n\n. Rotaciones de cuello\n   Series: 1-2 | Reps: 30 segundos cada dirección | RPE: -\n\n. Círculos de hombros\n   Series: 1-2 | Reps: 30 segundos cada dirección | RPE: -\n\n. Rotaciones de tronco\n   Series: 1-2 | Reps: 30 segundos | RPE: -\n\n. Dislocaciones de hombro con banda/palo\n   Series: 1-2 | Reps: 10 repeticiones | RPE: -\n\n. Círculos de cadera\n   Series: 1-2 | Reps: 30 segundos cada dirección | RPE: -\n\n. Balanceos de pierna (frontal/lateral)\n   Series: 1-2 | Reps: 10 repeticiones cada pierna | RPE: -\n\n. bird_dog\n   Series: 1-2 | Reps: 10 reps | RPE: -\n\n. Cardio ligero (caminadora, bici, remo)\n   Series: 1-2 | Reps: 1 minutos | RPE: -\n\n┌─────────────────────────────────────────────────────────────┐\n│  Entrenamiento Principal (Fuerza)                          │\n└─────────────────────────────────────────────────────────────┘\n\n1. Fondos en máquina sentado\n   Series: 5 | Reps: 10-15 | RPE: 8-9\n   📝 No hiperextiendas espalda, pie firme.\n\n2. extensión lumbar cisne\n   Series: 5 | Reps: 10-15 | RPE: 8-9\n   📝 Control de bajada, Core activo.\n\n3. Curl predicador en máquina\n   Series: 5 | Reps: 10-15 | RPE: 8-9\n   📝 Recorrido completo sin levantar la pelvis.\n\n4. Fondos en máquina sentado\n   Series: 5 | Reps: 10-15 | RPE: 8-9\n   📝 No arquees lumbar en extensión.\n\n┌─────────────────────────────────────────────────────────────┐\n│  Bloque C - Core & Estabilidad                             │\n└─────────────────────────────────────────────────────────────┘\n\n. Bird dog\n   Series: 2 | Reps: 30-45 seg | RPE: -\n\n. plancha frontal\n   Series: 2 | Reps: 20-30 seg | RPE: -\n\n┌─────────────────────────────────────────────────────────────┐\n│  Bloque D - Cardio/Acondicionamiento                       │\n└─────────────────────────────────────────────────────────────┘\n\n1. MISS (Salud cardiovascular general)\n   Frecuencia: 3-4x/semana\n   Duración: 20-30 minutos\n   Intensidad: 60-70% FCMax\n   Modalidades: Caminata (ritmo cómodo-moderado), Bicicleta, Natación, Clases grupales (Zumba, spinning, etc.)\n   📝 Objetivo: salud general y bienestar. Intensidad agradable y sostenible.\n\n📌 Notas de la Sesión:\n  • Evita dolor lumbar.\n  • Core siempre activo.\n\n\n═══════════════════════════════════════════════════════════════\n  D4 - Hombros y Brazos\n═══════════════════════════════════════════════════════════════\nFocus: Hombros, Brazos\n\n┌─────────────────────────────────────────────────────────────┐\n│  Bloque A - Calentamiento/Activación                       │\n└─────────────────────────────────────────────────────────────┘\n\n. Rotaciones de cuello\n   Series: 1-2 | Reps: 30 segundos cada dirección | RPE: -\n\n. Círculos de hombros\n   Series: 1-2 | Reps: 30 segundos cada dirección | RPE: -\n\n. Rotaciones de tronco\n   Series: 1-2 | Reps: 30 segundos | RPE: -\n\n. Dislocaciones de hombro con banda/palo\n   Series: 1-2 | Reps: 10 repeticiones | RPE: -\n\n. Círculos de cadera\n   Series: 1-2 | Reps: 30 segundos cada dirección | RPE: -\n\n. Balanceos de pierna (frontal/lateral)\n   Series: 1-2 | Reps: 10 repeticiones cada pierna | RPE: -\n\n. bird_dog\n   Series: 1-2 | Reps: 10 reps | RPE: -\n\n. Cardio ligero (caminadora, bici, remo)\n   Series: 1-2 | Reps: 1 minutos | RPE: -\n\n┌─────────────────────────────────────────────────────────────┐\n│  Entrenamiento Principal (Fuerza)                          │\n└─────────────────────────────────────────────────────────────┘\n\n1. Curl predicador en máquina\n   Series: 4 | Reps: 10-15 | RPE: 8\n   📝 Sin rebotes, sube hasta horizontal.\n\n2. aperturas peck deck\n   Series: 4 | Reps: 10-15 | RPE: 8\n   📝 Aisla deltoide posterior, no fuerces rango.\n\n3. Tríceps tumbado con barra\n   Series: 4 | Reps: 10-15 | RPE: 8\n   📝 Codera fija, no arquees espalda.\n\n4. curl bíceps mancuernas\n   Series: 4 | Reps: 10-15 | RPE: 8\n   📝 Sin impulso, mantén bíceps activo.\n\n┌─────────────────────────────────────────────────────────────┐\n│  Bloque C - Core & Estabilidad                             │\n└─────────────────────────────────────────────────────────────┘\n\n. Bird dog\n   Series: 2 | Reps: 30-45 seg | RPE: -\n\n. plancha frontal\n   Series: 2 | Reps: 20-30 seg | RPE: -\n\n┌─────────────────────────────────────────────────────────────┐\n│  Bloque D - Cardio/Acondicionamiento                       │\n└─────────────────────────────────────────────────────────────┘\n\n1. MISS (Salud cardiovascular general)\n   Frecuencia: 3-4x/semana\n   Duración: 20-30 minutos\n   Intensidad: 60-70% FCMax\n   Modalidades: Caminata (ritmo cómodo-moderado), Bicicleta, Natación, Clases grupales (Zumba, spinning, etc.)\n   📝 Objetivo: salud general y bienestar. Intensidad agradable y sostenible.\n\n📌 Notas de la Sesión:\n  • Evita dolor en hombro.\n  • Prioriza control.\n\n\n═══════════════════════════════════════════════════════════════\n  FIN DEL PLAN\n═══════════════════════════════════════════════════════════════\n",
+  "sent_at": "2025-12-06T20:09:38.817287+00:00"
+}
