@@ -787,7 +787,7 @@ Output ONLY valid JSON. Root key MUST be "training_plan".
   modelSettings: {
     temperature: 1,
     topP: 1,
-    maxTokens: 4096,  // Increased to allow 4 full sessions
+    maxTokens: 8192,  // Increased to 8192 to accommodate verbose K1 schema with justifications
     store: true
   }
 });
