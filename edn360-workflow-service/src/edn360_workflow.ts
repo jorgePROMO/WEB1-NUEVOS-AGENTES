@@ -51,9 +51,9 @@ const E4TrainingPlanGeneratorSchema = z.object({
           exercise_id: z.string()
             .refine(
               (code) => VALID_EXERCISE_CODES.includes(code),
-              (code) => ({
-                message: `❌ INVALID exercise_code: "${code}". MUST be from canonical catalog (${VALID_EXERCISE_CODES.length} valid codes). Use fileSearchExercises tool ALWAYS. Common invalid codes: pec_deck, cable_fly, horizontal_press_machine. See catalog for valid alternatives.`
-              })
+              {
+                message: `❌ INVALID exercise_code. MUST be from canonical catalog (${VALID_EXERCISE_CODES.length} valid codes). Use fileSearchExercises tool ALWAYS. Common invalid codes: pec_deck, cable_fly, horizontal_press_machine. See catalog for valid alternatives.`
+              }
             ), // ⚠️ HARD CONSTRAINT: exercise_id MUST exist in catalog
           patron: z.enum(["empuje_horizontal", "empuje_vertical", "tiron_horizontal", "tiron_vertical", "dominante_rodilla", "dominante_cadera", "zancada", "core_antirotacion", "core_antiextension", "core_antiflexion", "core_rotacional"]),
           tipo: z.enum(["compuesto_alta_demanda", "compuesto_media_demanda", "aislamiento", "correctivo_estabilidad", "pliometrico", "balistico", "metabolico_circuito"]),
