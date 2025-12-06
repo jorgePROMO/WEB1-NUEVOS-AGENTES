@@ -8954,9 +8954,10 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
             filename=pdf_filename
         )
         
-        # Actualizar plan con referencia al PDF
-        await db.training_plans.update_one(
-            {"_id": plan_id},
+        # Actualizar plan con referencia al PDF (intentar ambas colecciones)
+        plan_db_id = plan.get("id", plan.get("_id", plan_id))
+        updated_v2 = await edn360_db.training_plans_v2.update_one(
+            {"id": plan_db_id, "user_id": user_id},
             {
                 "$set": {
                     "pdf_id": pdf_id,
@@ -8965,6 +8966,17 @@ async def generate_training_pdf(user_id: str, plan_id: str, request: Request = N
                 }
             }
         )
+        if updated_v2.matched_count == 0:
+            await db.training_plans.update_one(
+                {"_id": plan_db_id, "user_id": user_id},
+                {
+                    "$set": {
+                        "pdf_id": pdf_id,
+                        "pdf_filename": pdf_filename,
+                        "pdf_generated": True
+                    }
+                }
+            )
         
         logger.info(f"✅ PDF de entrenamiento generado para usuario {user_id} - {pdf_id}")
         
