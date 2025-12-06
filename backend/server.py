@@ -8048,8 +8048,8 @@ async def _integrate_template_blocks(
             mapping = {
                 # Press variants
                 'press_mancuernas': 'press_suelo_mancuernas',
-                'press_polea': 'press_pecho_polea',
-                'fonds_triceps_suelo': 'fondos_triceps_suelo',
+                'press_polea': 'press_pecho_cable',
+                'fonds_triceps_suelo': 'fondos_triceps_suelo_pies_elevados',
                 
                 # Aperturas
                 'aperturas_polea': 'aperturas_medias_poleas',
