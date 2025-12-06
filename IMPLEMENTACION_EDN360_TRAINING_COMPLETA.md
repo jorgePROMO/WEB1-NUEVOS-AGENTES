@@ -184,7 +184,7 @@ EDN360_TRAINING_WORKFLOW_ID="TU_WORKFLOW_ID_AQUI" # ⚠️ PENDIENTE
 ### Pasos para Jorge:
 
 1. **Crear el Assistant E1-E7.5 en OpenAI** ✅ (Jorge)
-   - Configurar agentes E1, E2, E3, E4, E5, E6, E7, E7.5
+   - Configurar agentes E1, E2, E3, E4, E5, ~~E6~~, E7, E7.5  **E6 DISABLED**
    - Configurar acceso a BD de ejercicios
    - Definir el prompt/comportamiento del workflow
 
