@@ -8008,6 +8008,41 @@ async def _integrate_template_blocks(
         # ============================================
         from exercise_catalog_loader import get_exercise_by_code, get_variants_by_code
         
+        def format_exercise_name(exercise_code: str) -> str:
+            """Formatea exercise_code a nombre legible en español"""
+            # Mapeo manual de códigos comunes
+            name_mapping = {
+                'press_mancuernas': 'Press con mancuernas',
+                'press_banca_barra': 'Press banca con barra',
+                'press_inclinado_mancuernas': 'Press inclinado con mancuernas',
+                'aperturas_polea': 'Aperturas con polea',
+                'press_polea': 'Press con polea',
+                'fonds_triceps_suelo': 'Fondos de tríceps en suelo',
+                'jalon_supino_maquina': 'Jalón supino en máquina',
+                'remo_bajo_maquina': 'Remo bajo en máquina',
+                'dominadas': 'Dominadas',
+                'jalon_banda': 'Jalón con banda',
+                'curl_biceps': 'Curl de bíceps',
+                'sentadilla_barra': 'Sentadilla con barra',
+                'hip_thrust_smith': 'Hip thrust en Smith',
+                'sentadilla_bulgara': 'Sentadilla búlgara',
+                'peso_muerto_smith': 'Peso muerto en Smith',
+                'gemelos': 'Gemelos',
+                'elevaciones_laterales_maquina': 'Elevaciones laterales en máquina',
+                'core_antiextension': 'Core antiextensión',
+                'core_antirotacion': 'Core antirrotación',
+            }
+            
+            # Si está en el mapeo, usarlo
+            if exercise_code in name_mapping:
+                return name_mapping[exercise_code]
+            
+            # Si no, formatear automáticamente
+            formatted = exercise_code.replace('_', ' ')
+            # Capitalizar cada palabra
+            formatted = ' '.join(word.capitalize() for word in formatted.split())
+            return formatted
+        
         all_exercises = []
         exercise_counter = 1
         
@@ -8021,30 +8056,44 @@ async def _integrate_template_blocks(
                 if exercise_types and len(exercise_types) > 0:
                     exercise_code = exercise_types[0]
                     
-                    # Buscar en catálogo
+                    # Agregar exercise_code
+                    exercise_copy['exercise_code'] = exercise_code
+                    
+                    # Generar nombre formateado
+                    exercise_copy['name'] = format_exercise_name(exercise_code)
+                    
+                    # Buscar en catálogo para metadata adicional
                     catalog_exercise = get_exercise_by_code(exercise_code)
                     if catalog_exercise:
-                        exercise_copy['exercise_code'] = exercise_code
-                        exercise_copy['name'] = catalog_exercise.get('name_es', exercise_code)
-                        
-                        # Buscar variante con video
-                        variants = get_variants_by_code(exercise_code)
-                        if variants and len(variants) > 0:
-                            first_variant = variants[0]
-                            exercise_copy['video_url'] = first_variant.get('video_url', '')
-                            exercise_copy['primary_group'] = first_variant.get('primary_muscle_es', '')
-                            exercise_copy['secondary_group'] = first_variant.get('secondary_muscle_es', '')
+                        # Extraer músculos del catálogo
+                        primary_muscles = catalog_exercise.get('primary_muscles_clean', [])
+                        if primary_muscles:
+                            exercise_copy['primary_group'] = ', '.join(primary_muscles)
                         else:
-                            exercise_copy['video_url'] = ''
-                            exercise_copy['primary_group'] = catalog_exercise.get('primary_muscle_es', '')
-                            exercise_copy['secondary_group'] = ''
+                            exercise_copy['primary_group'] = ''
                         
-                        logger.info(f"  ✅ Enriquecido: {exercise_code} → {exercise_copy['name']}")
+                        secondary_muscles = catalog_exercise.get('secondary_muscles_clean', [])
+                        if secondary_muscles:
+                            exercise_copy['secondary_group'] = ', '.join(secondary_muscles)
+                        else:
+                            exercise_copy['secondary_group'] = ''
+                    
+                    # Buscar variantes para video
+                    variants = get_variants_by_code(exercise_code)
+                    if variants and len(variants) > 0:
+                        # Buscar variante con video
+                        for variant in variants:
+                            video_url = variant.get('video_url', '')
+                            if video_url and video_url != '...':
+                                exercise_copy['video_url'] = video_url
+                                break
+                        # Si no encontramos video, dejar vacío
+                        if 'video_url' not in exercise_copy:
+                            exercise_copy['video_url'] = ''
                     else:
-                        # Fallback: usar exercise_code como nombre
-                        exercise_copy['exercise_code'] = exercise_code
-                        exercise_copy['name'] = exercise_code.replace('_', ' ').title()
-                        logger.warning(f"  ⚠️ Ejercicio no encontrado en catálogo: {exercise_code}")
+                        exercise_copy['video_url'] = ''
+                    
+                    logger.info(f"  ✅ Enriquecido: {exercise_code} → {exercise_copy['name']}")
                 
                 all_exercises.append(exercise_copy)
                 exercise_counter += 1
