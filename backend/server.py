@@ -8093,6 +8093,18 @@ async def _integrate_template_blocks(
                 # Core
                 'core_antiextension': 'plancha_frontal',
                 'core_antirotacion': 'plancha_lateral',
+                
+                # === MAPEO TEMPORAL E4 V2 (realineación pendiente) ===
+                # Estos códigos serán eliminados cuando E4 v2 esté 100% alineado
+                'press_hombros_mancuernas_ligero': 'press_hombros_sentado_mancuernas',
+                'press_polea_media': 'press_pecho_poleas_pie',
+                'elevaciones_laterales_maquina_sentado': 'elevaciones_laterales_maquina',
+                'sentadilla_peso_corporal': 'sentadilla_basica_peso_corporal',
+                'puente_gluteo_suelo': 'puente_gluteo_una_pierna',
+                'curl_femorales_tumbado_maquina': 'curl_femoral_tumbado_maquina',
+                'extension_cuadriceps_maquina': 'extension_pierna_maquina',
+                'abduccion_cadera_maquina': 'abduccion_lateral_cadera_maquina',
+                'elevacion_gemelos_prensa': 'elevacion_gemelos_sentado_maquina',
             }
             
             # 1. Intento con mapeo manual
