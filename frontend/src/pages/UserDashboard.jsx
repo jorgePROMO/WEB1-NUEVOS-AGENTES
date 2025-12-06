@@ -1611,7 +1611,7 @@ const UserDashboard = () => {
                                                         Bloque D - Cardio
                                                       </h5>
                                                       <p className="text-xs text-gray-600">
-                                                        {session.bloques_estructurados.D.duracion_minutos} min · {session.bloques_estructurados.D.nombre}
+                                                        {session.bloques_estructurados.D.nombre}
                                                       </p>
                                                     </div>
                                                   </div>
@@ -1623,31 +1623,87 @@ const UserDashboard = () => {
                                               {isBlockExpanded(idx, 'D') && (
                                                 <CardContent className="pt-0">
                                                   <div className="bg-white rounded-lg p-4 border border-green-200">
-                                                    <div className="mb-3">
-                                                      <h6 className="font-semibold text-gray-900 text-sm mb-2">Opción Recomendada:</h6>
-                                                      <p className="text-sm text-gray-700">
-                                                        {session.bloques_estructurados.D.opcion_seleccionada?.nombre || session.bloques_estructurados.D.opciones[0]?.nombre}
-                                                      </p>
-                                                      <p className="text-xs text-gray-600 mt-1">
-                                                        Duración: {session.bloques_estructurados.D.opcion_seleccionada?.duracion_minutos || session.bloques_estructurados.D.opciones[0]?.duracion_minutos} min
-                                                      </p>
-                                                      {(session.bloques_estructurados.D.opcion_seleccionada?.instrucciones || session.bloques_estructurados.D.opciones[0]?.instrucciones) && (
-                                                        <p className="text-xs text-gray-500 mt-2 italic">
-                                                          {session.bloques_estructurados.D.opcion_seleccionada?.instrucciones || session.bloques_estructurados.D.opciones[0]?.instrucciones}
-                                                        </p>
-                                                      )}
-                                                    </div>
+                                                    {/* New structure: recomendaciones array */}
+                                                    {session.bloques_estructurados.D.recomendaciones && session.bloques_estructurados.D.recomendaciones.length > 0 && (
+                                                      <div className="space-y-4">
+                                                        {session.bloques_estructurados.D.recomendaciones.map((rec, recIdx) => (
+                                                          <div key={recIdx} className="pb-4 border-b border-green-100 last:border-0">
+                                                            <h6 className="font-semibold text-gray-900 text-sm mb-2">{rec.type}</h6>
+                                                            <div className="grid grid-cols-2 gap-2 text-xs mb-2">
+                                                              <div>
+                                                                <span className="text-gray-600">Frecuencia:</span>
+                                                                <span className="ml-1 font-medium">{rec.frequency}</span>
+                                                              </div>
+                                                              <div>
+                                                                <span className="text-gray-600">Duración:</span>
+                                                                <span className="ml-1 font-medium">{rec.duration}</span>
+                                                              </div>
+                                                              <div>
+                                                                <span className="text-gray-600">Intensidad:</span>
+                                                                <span className="ml-1 font-medium">{rec.intensity}</span>
+                                                              </div>
+                                                              <div>
+                                                                <span className="text-gray-600">Timing:</span>
+                                                                <span className="ml-1 font-medium">{rec.timing}</span>
+                                                              </div>
+                                                            </div>
+                                                            {rec.modalities && rec.modalities.length > 0 && (
+                                                              <div className="mb-2">
+                                                                <p className="text-xs text-gray-600 mb-1">Modalidades:</p>
+                                                                <ul className="text-xs text-gray-700 space-y-1">
+                                                                  {rec.modalities.map((mod, modIdx) => (
+                                                                    <li key={modIdx}>• {mod}</li>
+                                                                  ))}
+                                                                </ul>
+                                                              </div>
+                                                            )}
+                                                            {rec.notes && (
+                                                              <p className="text-xs text-gray-500 italic mt-2">📝 {rec.notes}</p>
+                                                            )}
+                                                          </div>
+                                                        ))}
+                                                      </div>
+                                                    )}
                                                     
-                                                    {session.bloques_estructurados.D.opciones.length > 1 && (
+                                                    {/* General notes */}
+                                                    {session.bloques_estructurados.D.general_notes && session.bloques_estructurados.D.general_notes.length > 0 && (
                                                       <div className="mt-3 pt-3 border-t border-green-200">
-                                                        <h6 className="font-semibold text-gray-700 text-xs mb-2">Otras opciones disponibles:</h6>
+                                                        <h6 className="font-semibold text-gray-700 text-xs mb-2">Notas generales:</h6>
                                                         <ul className="space-y-1">
-                                                          {session.bloques_estructurados.D.opciones.slice(1).map((opcion, oIdx) => (
-                                                            <li key={oIdx} className="text-xs text-gray-600">
-                                                              • {opcion.nombre} ({opcion.duracion_minutos} min)
-                                                            </li>
+                                                          {session.bloques_estructurados.D.general_notes.map((note, nIdx) => (
+                                                            <li key={nIdx} className="text-xs text-gray-600">• {note}</li>
                                                           ))}
                                                         </ul>
+                                                      </div>
+                                                    )}
+                                                    
+                                                    {/* Legacy structure: opciones array (backward compatibility) */}
+                                                    {session.bloques_estructurados.D.opciones && session.bloques_estructurados.D.opciones.length > 0 && (
+                                                      <div className="mb-3">
+                                                        <h6 className="font-semibold text-gray-900 text-sm mb-2">Opción Recomendada:</h6>
+                                                        <p className="text-sm text-gray-700">
+                                                          {session.bloques_estructurados.D.opcion_seleccionada?.nombre || session.bloques_estructurados.D.opciones[0]?.nombre}
+                                                        </p>
+                                                        <p className="text-xs text-gray-600 mt-1">
+                                                          Duración: {session.bloques_estructurados.D.opcion_seleccionada?.duracion_minutos || session.bloques_estructurados.D.opciones[0]?.duracion_minutos} min
+                                                        </p>
+                                                        {(session.bloques_estructurados.D.opcion_seleccionada?.instrucciones || session.bloques_estructurados.D.opciones[0]?.instrucciones) && (
+                                                          <p className="text-xs text-gray-500 mt-2 italic">
+                                                            {session.bloques_estructurados.D.opcion_seleccionada?.instrucciones || session.bloques_estructurados.D.opciones[0]?.instrucciones}
+                                                          </p>
+                                                        )}
+                                                        {session.bloques_estructurados.D.opciones.length > 1 && (
+                                                          <div className="mt-3 pt-3 border-t border-green-200">
+                                                            <h6 className="font-semibold text-gray-700 text-xs mb-2">Otras opciones disponibles:</h6>
+                                                            <ul className="space-y-1">
+                                                              {session.bloques_estructurados.D.opciones.slice(1).map((opcion, oIdx) => (
+                                                                <li key={oIdx} className="text-xs text-gray-600">
+                                                                  • {opcion.nombre} ({opcion.duracion_minutos} min)
+                                                                </li>
+                                                              ))}
+                                                            </ul>
+                                                          </div>
+                                                        )}
                                                       </div>
                                                     )}
                                                   </div>
