@@ -8096,14 +8096,14 @@ async def _integrate_template_blocks(
             }
             
             # 1. Intento con mapeo manual
-            if generic_code in manual_mapping:
-                return manual_mapping[generic_code]
+            if normalized_code in manual_mapping:
+                return manual_mapping[normalized_code]
             
             # 2. Fuzzy matching (fallback temporal)
             from difflib import get_close_matches
             
             # Buscar match cercano en catálogo (threshold 0.6 = 60% similitud)
-            close_matches = get_close_matches(generic_code, catalog_all_codes, n=1, cutoff=0.6)
+            close_matches = get_close_matches(normalized_code, catalog_all_codes, n=1, cutoff=0.6)
             
             if close_matches:
                 matched_code = close_matches[0]
