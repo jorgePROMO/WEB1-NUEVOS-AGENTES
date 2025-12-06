@@ -91,7 +91,7 @@ const E4SessionK1 = z.object({
     details: z.literal("") 
   }),
   session_notes: z.array(z.string()),
-  k1_decisions: K1Decisions
+  k1_decisions: K1Decisions.optional() // Made optional to reduce verbosity
 });
 
 // Main E4 Output Schema (K1-based)
