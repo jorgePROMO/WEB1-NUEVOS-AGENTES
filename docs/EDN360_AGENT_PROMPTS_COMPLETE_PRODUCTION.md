@@ -14,7 +14,7 @@
 3. [E3 - Training Summary](#e3---training-summary)
 4. [E4 - Training Plan Generator](#e4---training-plan-generator)
 5. [E5 - Training Plan Validator](#e5---training-plan-validator)
-6. [E6 - Exercise Normalizer & DB Mapper](#e6---exercise-normalizer--db-mapper)
+6. ~~[E6 - Exercise Normalizer & DB Mapper](#e6---exercise-normalizer--db-mapper)~~ **DISABLED**
 7. [E7 - Training Plan Assembler](#e7---training-plan-assembler)
 8. [E7.5 - Training Plan Enricher](#e75---training-plan-enricher)
 9. [Verificación de Lógica Evolutiva](#verificación-de-lógica-evolutiva)
