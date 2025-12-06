@@ -73,13 +73,11 @@ const E4BlockB = z.object({
   metodo_entrenamiento: K1MetodoEntrenamiento
 });
 
-// K1 Decisions (for logging/audit)
+// K1 Decisions (for logging/audit) - SIMPLIFIED
 const K1Decisions = z.object({
-  reglas_aplicadas: z.array(z.string()),
-  volumen_justificacion: z.string(),
-  intensidad_justificacion: z.string(),
   metodos_usados: z.array(K1MetodoEntrenamiento),
   patrones_cubiertos: z.array(K1Patron)
+  // Removed verbose justification strings
 });
 
 // Session
