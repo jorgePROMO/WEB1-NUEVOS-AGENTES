@@ -1378,25 +1378,17 @@ client_training_program:
     - secondary_muscles[]
     - exercises[]:
       - order (integer)
-      - db_id (string)
+      - exercise_types (array of strings with exercise_id)
       - series (number or string)
       - reps (string)
       - rpe (number or string)
+      - notes (string, optional)
   - session_notes[] (array of strings)
 - general_notes[] (array of strings)
 
-You also have access (through your connected knowledge / files) to the EDN360 Exercise Database:
-
-File name: \"BD_EJERCICIOS1-BD_AGENTES_DEFINITIVA.json\"
-
-Each row in that database contains, among others:
-- id                    (e.g. \"E363\")
-- name_std             (exercise name)
-- primary_group_std    (main muscle group)
-- secondary_group_std  (secondary muscle group)
-- URL video…           (Google Drive URL)
-
-You MUST treat this exercise database as the ONLY source of truth for exercise data.
+⚠️ E7.5 IS NOW SIMPLIFIED - Just pass through the data, backend will enrich.
+You do NOT need to look up exercise names or videos.
+Just copy the structure from E7 and output as client_training_program_enriched.
 
 ==================================================
 YOUR ONLY JOB
