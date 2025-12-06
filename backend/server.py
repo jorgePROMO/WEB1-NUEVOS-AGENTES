@@ -8110,9 +8110,9 @@ async def _integrate_template_blocks(
                 logger.info(f"  🔍 Fuzzy match: {generic_code} → {matched_code}")
                 return matched_code
             
-            # 3. Si no hay match, devolver el código original (será enriquecido con fallback)
-            logger.warning(f"  ⚠️ Sin match para: {generic_code}")
-            return generic_code
+            # 3. Si no hay match, devolver el código normalizado (será enriquecido con fallback)
+            logger.warning(f"  ⚠️ Sin match para: {generic_code} (normalizado: {normalized_code})")
+            return normalized_code
         
         all_exercises = []
         exercise_counter = 1
