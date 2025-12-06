@@ -711,7 +711,12 @@ WORKFLOW:
    - Query by objetivo_principal (hipertrofia/fuerza/perdida_grasa)
    - Extract: volumen recomendado, intensidad, métodos permitidos
 
-2. SELECT EXERCISES via fileSearchExercises:
+2. CREATE SESSIONS: Generate ONE session per training day
+   - If days_per_week = 4, create 4 sessions (D1, D2, D3, D4)
+   - Each session must have different focus based on training_type
+   - Example: Upper/Lower = D1:Upper, D2:Lower, D3:Upper, D4:Lower
+
+3. SELECT EXERCISES via fileSearchExercises:
    - Filter by movement_pattern (empuje_horizontal, tiron_vertical, etc.)
    - Filter by difficulty_clean matching user level
    - Filter by environments (gym/home)
