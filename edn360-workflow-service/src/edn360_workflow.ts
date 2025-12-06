@@ -727,12 +727,44 @@ WORKFLOW:
    - Each session must have different focus based on training_type
    - Example: Upper/Lower = D1:Upper, D2:Lower, D3:Upper, D4:Lower
 
-3. SELECT EXERCISES via fileSearchExercises:
-   - Filter by movement_pattern (empuje_horizontal, tiron_vertical, etc.)
-   - Filter by difficulty_clean matching user level
-   - Filter by environments (gym/home)
-   - Check health_flags for injuries (shoulder_unstable, low_back_sensitive)
-   - Use exercise_code from catalog (e.g. "press_banca_barra")
+3. SELECT EXERCISES via fileSearchExercises (MANDATORY FOR EACH EXERCISE):
+   ⚠️ HARD CONSTRAINT: You MUST use fileSearchExercises tool for EVERY exercise selection.
+   ⚠️ exercise_id MUST be EXACTLY as it appears in the catalog - NO MODIFICATIONS, NO INVENTIONS.
+   
+   WORKFLOW FOR EACH EXERCISE:
+   a) Call fileSearchExercises with filters:
+      - movement_pattern: empuje_horizontal, tiron_vertical, dominante_rodilla, etc.
+      - difficulty_clean: beginner/intermediate/advanced/professional
+      - environments: gym/home
+      - health_flags: shoulder_unstable, low_back_sensitive, knee_unstable
+   
+   b) From search results, pick ONE valid exercise_code
+   
+   c) Use that EXACT exercise_code in your output (do NOT modify it)
+   
+   VALID exercise_code EXAMPLES (from catalog):
+   - PECHO: press_banca_barra, press_inclinado_mancuernas, press_horizontal_maquina_palanca, aperturas_medias_poleas
+   - ESPALDA: dominadas_agarre_prono, remo_barra_inclinado, jalon_al_pecho_barra_ancha, remo_mancuerna_inclinado
+   - PIERNAS: sentadilla_barra, peso_muerto_rumano, prensa_pierna_45_maquina, zancada_con_mancuernas
+   - HOMBROS: press_militar_barra, elevaciones_laterales_mancuernas, remo_vertical_barra
+   - BRAZOS: curl_biceps_barra, pushdown_cuerda_polea_alta, curl_biceps_mancuernas
+   
+   ❌ INVALID codes (do NOT use these - they don't exist in catalog):
+   - pec_deck → USE: aperturas_medias_poleas
+   - cable_fly → USE: aperturas_medias_poleas or aperturas_poleas_tumbado
+   - horizontal_press_machine → USE: press_horizontal_maquina_palanca
+   - lat_pulldown → USE: jalon_al_pecho_barra_ancha
+   - leg_press → USE: prensa_pierna_45_maquina
+   
+   🎯 SPECIAL RULES FOR ADVANCED/PROFESSIONAL USERS:
+   - experience_level = "advanced" or "professional" → DEFAULT to HEAVY BASICS:
+     * Barbell exercises: press_banca_barra, sentadilla_barra, peso_muerto_rumano
+     * Compound movements: dominadas_agarre_prono, remo_barra_inclinado
+     * NO weird/circus exercises (landmine, bosu, suspension, etc.)
+   
+   - If user says "no ejercicios raros" or similar → ONLY use standard gym equipment:
+     * Barbells, dumbbells, machines, cables
+     * NO: landmine, kettlebell, suspension, balance ball, bosu
 
 3. EXPRESS IN ABSTRACT TERMS (REQUIRED):
    - volumen_abstracto: muy_bajo, bajo, medio, alto, muy_alto
