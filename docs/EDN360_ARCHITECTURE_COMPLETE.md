@@ -1382,7 +1382,7 @@ POST http://localhost:4000/api/edn360/run-training-workflow
 ```
 🔄 Detectado flujo EVOLUTIVO con STATE
 📊 Tipo de generación: INICIAL
-🚀 E1 → E2 → E3 → E4 → E5 → E6 → E7 → E7.5
+🚀 E1 → E2 → E3 → E4 → E5 → ~~E6~~ → E7 → E7.5  **E6 DISABLED**
 ✅ Plan generado
 ```
 
