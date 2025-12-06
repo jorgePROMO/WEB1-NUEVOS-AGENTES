@@ -212,7 +212,15 @@ const TrainingPlanCard = ({ userId, token, onPlanUpdated }) => {
           if (exercises.length > 0) {
             exercises.forEach(ex => {
               const order = ex.order || '';
-              const name = ex.name || ex.nombre || 'Ejercicio';
+              // Get name with fallback to exercise_types
+              let name = ex.name || ex.nombre;
+              if (!name && ex.exercise_types && ex.exercise_types.length > 0) {
+                // Use exercise_types as fallback, format it nicely
+                name = ex.exercise_types[0].replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+              }
+              if (!name) {
+                name = 'Ejercicio';
+              }
               const series = ex.series || '-';
               const reps = ex.reps || ex.repeticiones || '-';
               const rpe = ex.rpe || '-';
