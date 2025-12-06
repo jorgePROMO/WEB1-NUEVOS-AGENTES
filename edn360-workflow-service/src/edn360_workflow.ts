@@ -41,12 +41,8 @@ const E4TrainingPlanGeneratorSchema = z.object({
           reps_abstracto: z.enum(["bajas", "medias", "altas"]),
           intensidad_abstracta: z.enum(["muy_ligera", "ligera", "moderada", "alta", "muy_alta"]),
           proximidad_fallo_abstracta: z.enum(["muy_lejos_del_fallo", "lejos_del_fallo", "moderadamente_cerca_del_fallo", "cerca_del_fallo", "muy_cerca_o_en_fallo"]),
-          notas_tecnicas: z.string(),
-          k1_justification: z.object({
-            por_que_este_ejercicio: z.string(),
-            por_que_este_volumen: z.string(),
-            por_que_esta_intensidad: z.string()
-          })
+          notas_tecnicas: z.string()
+          // k1_justification REMOVED to reduce JSON output size and avoid parsing errors
         })),
         volumen_total_bloque: z.enum(["muy_bajo", "bajo", "medio", "alto", "muy_alto"]),
         densidad: z.enum(["densidad_baja", "densidad_media", "densidad_alta"]),
