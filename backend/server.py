@@ -8098,11 +8098,12 @@ async def _integrate_template_blocks(
                 'core_antirotacion': 'plancha_lateral',
             }
             
-            # 1. Intento con mapeo manual
+            # 1. Intento con mapeo manual (solo para códigos legacy)
             if normalized_code in manual_mapping:
                 return manual_mapping[normalized_code]
             
-            # 2. Fuzzy matching (fallback temporal)
+            # 2. Fuzzy matching (fallback para planes antiguos)
+            # E4 v2 CANÓNICO ya genera códigos perfectos, esto solo aplica a planes legacy
             from difflib import get_close_matches
             
             # Buscar match cercano en catálogo (threshold 0.6 = 60% similitud)
@@ -8110,7 +8111,7 @@ async def _integrate_template_blocks(
             
             if close_matches:
                 matched_code = close_matches[0]
-                logger.info(f"  🔍 Fuzzy match: {generic_code} → {matched_code}")
+                logger.info(f"  🔍 Fuzzy match (legacy): {generic_code} → {matched_code}")
                 return matched_code
             
             # 3. Si no hay match, devolver el código normalizado (será enriquecido con fallback)
