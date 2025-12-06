@@ -8035,8 +8035,10 @@ async def _integrate_template_blocks(
     nivel = user_data.get('nivel', 'intermedio')
     objetivo = user_data.get('objetivo', 'hipertrofia')
     injuries = []
-    if user_data.get('lesion_hombro'): injuries.append('shoulder')
-    if user_data.get('lesion_lumbar'): injuries.append('low_back')
+    if user_data.get('lesion_hombro'):
+        injuries.append('shoulder')
+    if user_data.get('lesion_lumbar'):
+        injuries.append('low_back')
     
     training_type = training_plan.get('training_type', 'upper_lower')
     session_duration = training_plan.get('session_duration_min', 60)
