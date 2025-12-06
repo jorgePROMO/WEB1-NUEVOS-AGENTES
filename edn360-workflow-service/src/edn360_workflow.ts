@@ -1575,6 +1575,31 @@ async function runAgentWithLogging(
     console.error(`Error type: ${error.constructor.name}`);
     console.error(`Error message: ${error.message}`);
     
+    // CRITICAL: Intentar capturar el output crudo del modelo
+    try {
+      if (error.state && error.state.messages) {
+        console.error(`\n🔍 CAPTURANDO OUTPUT CRUDO DEL MODELO:`);
+        const messages = error.state.messages;
+        const lastMessage = messages[messages.length - 1];
+        if (lastMessage && lastMessage.content) {
+          const rawContent = typeof lastMessage.content === 'string' 
+            ? lastMessage.content 
+            : JSON.stringify(lastMessage.content);
+          console.error(`📝 RAW MODEL OUTPUT (primeros 2000 chars):`);
+          console.error(rawContent.substring(0, 2000));
+          console.error(`\n... (longitud total: ${rawContent.length} caracteres)`);
+          
+          // Guardar en archivo para inspección completa
+          const fs = require('fs');
+          const path = '/tmp/e4_raw_output_error.txt';
+          fs.writeFileSync(path, rawContent);
+          console.error(`\n💾 Output completo guardado en: ${path}`);
+        }
+      }
+    } catch (captureError) {
+      console.error(`⚠️ No se pudo capturar el output crudo: ${captureError}`);
+    }
+    
     // Intentar extraer información del error
     if (error.message && error.message.includes('JSON')) {
       console.error(`\n🔍 Es un error de JSON parsing`);
