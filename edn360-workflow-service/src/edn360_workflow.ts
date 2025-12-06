@@ -766,9 +766,14 @@ VALIDATION CHECKLIST:
 ✓ Only Block B per session
 ✓ health_flags respected
 
-NOTE: k1_justification and verbose k1_decisions have been removed from schema to reduce output size.
+⚠️ CRITICAL JSON FORMAT:
+- Do NOT include k1_justification in exercises
+- Do NOT include k1_decisions at session level
+- These fields have been REMOVED from schema to prevent JSON parsing errors
+- Keep output concise to avoid exceeding token limits
 
 Output ONLY valid JSON. Root key MUST be "training_plan".
+Ensure all brackets and commas are properly closed.
 `,
   model: "gpt-4.1",
   tools: [
