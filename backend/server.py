@@ -2969,16 +2969,15 @@ async def download_training_plan_pdf(user_id: str, request: Request):
         # Generar HTML del plan (igual que el email)
         html_content = _generate_training_plan_email_html(plan_doc, user)
         
-        # Convertir HTML a PDF usando pdfkit
-        import pdfkit
-        
-        pdf = pdfkit.from_string(html_content, False)
+        # Convertir HTML a PDF usando weasyprint (más confiable que pdfkit)
+        from weasyprint import HTML
+        pdf_bytes = HTML(string=html_content).write_pdf()
         
         logger.info(f"✅ Usuario descargó PDF del plan | user_id: {user_id}")
         
         from fastapi.responses import Response
         return Response(
-            content=pdf,
+            content=pdf_bytes,
             media_type="application/pdf",
             headers={
                 "Content-Disposition": f"attachment; filename=Plan_Entrenamiento_{user.get('name', 'Cliente')}_{datetime.now(timezone.utc).strftime('%Y%m%d')}.pdf"
