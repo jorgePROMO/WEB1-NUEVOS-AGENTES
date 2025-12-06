@@ -1338,10 +1338,8 @@ LANGUAGE
 GOAL
 ==================================================
 
-Produce a compact, structurally clean \"client_training_program\" JSON that merges:
-- the validated structure and parameters from E5, and
-- the exercise IDs from E6,
-ready for a downstream presenter (E7.5) or backend to enrich with names, videos and final layout for the client.
+Produce a compact, structurally clean \"client_training_program\" JSON from E5 output,
+ready for backend to enrich exercise_types with names, videos and full data from catalog.
 
 `,
   model: "gpt-4.1",
