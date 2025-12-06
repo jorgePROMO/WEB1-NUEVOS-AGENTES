@@ -1,5 +1,7 @@
 import { fileSearchTool, Agent, AgentInputItem, Runner, withTrace } from "@openai/agents";
 import { z } from "zod";
+import * as fs from "fs";
+import * as path from "path";
 
 // Tool definitions
 // BD de Ejercicios v2.0 Definitiva (1,477 ejercicios corregidos)
@@ -11,6 +13,19 @@ const fileSearchExercises = fileSearchTool([
 const fileSearchTrainingKB = fileSearchTool([
   "vs_693049eb1144819197bf732246b1c1f6"
 ])
+
+// ⚠️ CRITICAL: Load valid exercise codes from canonical catalog
+// This ensures E4 can ONLY use exercises that exist in the catalog
+let VALID_EXERCISE_CODES: string[] = [];
+try {
+  const catalogPath = path.join(__dirname, "../exercise_catalog_edn360.json");
+  const catalogData = JSON.parse(fs.readFileSync(catalogPath, "utf-8"));
+  VALID_EXERCISE_CODES = catalogData.map((ex: any) => ex.exercise_code);
+  console.log(`✅ Loaded ${VALID_EXERCISE_CODES.length} valid exercise codes from catalog`);
+} catch (error) {
+  console.error(`❌ CRITICAL: Failed to load exercise catalog:`, error);
+  throw new Error("Cannot start without valid exercise catalog");
+}
 const E1AnalizadorDePerfilSchema = z.object({ profile: z.object({ name: z.string(), email: z.string(), age: z.number(), gender: z.enum(["male", "female", "other"]), height_cm: z.number(), weight_kg: z.number(), experience_level: z.enum(["beginner", "intermediate", "advanced"]), training_days_per_week: z.number(), session_duration_min: z.number(), goal_primary: z.enum(["muscle_gain", "fat_loss", "recomposition", "performance"]), goal_secondary: z.string(), injuries_or_limitations: z.array(z.string()), equipment_available: z.array(z.string()), preferences: z.object({ enjoys: z.array(z.string()), dislikes: z.array(z.string()) }) }) });
 const E2ParseQuestionnaireSchema = z.object({ questionnaire_normalized: z.object({ full_name: z.string(), email: z.string(), birth_date: z.string(), gender: z.enum(["male", "female", "other"]), profession: z.string(), phone: z.string(), weight_kg: z.number(), height_cm: z.number(), bodyfat_percent: z.number(), chronic_conditions: z.array(z.string()), medications: z.array(z.string()), injuries_limitations: z.array(z.string()), workload_stress: z.enum(["low", "medium", "high"]), daily_activity: z.enum(["low", "medium", "high"]), training_experience_level: z.enum(["beginner", "intermediate", "advanced"]), training_days_per_week: z.number(), session_duration_min: z.number(), equipment_available: z.array(z.string()), food_intolerances_allergies: z.array(z.string()), foods_disliked: z.array(z.string()), preferred_foods: z.array(z.string()), goal_primary: z.enum(["muscle_gain", "fat_loss", "recomposition", "performance"]), sleep_hours: z.number(), meals_per_day: z.number(), diet_history: z.array(z.string()), supplements: z.array(z.string()), motivation_reason: z.string() }) });
 const E3TrainingSummarySchema = z.object({ training_context: z.object({ profile: z.object({ full_name: z.string(), age: z.number(), gender: z.enum(["male", "female", "other"]), experience_level: z.enum(["beginner", "intermediate", "advanced"]), height_cm: z.number(), weight_kg: z.number() }), goals: z.object({ primary: z.enum(["muscle_gain", "fat_loss", "recomposition", "performance"]), secondary: z.string() }), constraints: z.object({ shoulder_issues: z.string(), lower_back_issues: z.string(), other: z.array(z.string()) }), equipment: z.object({ gym_access: z.boolean(), home_equipment: z.array(z.string()) }), availability: z.object({ training_days_per_week: z.number(), session_duration_min: z.number() }), training_type: z.enum(["full_body", "upper_lower", "push_pull_legs", "bro_split", "other"]), training_type_reason: z.string() }) });
