@@ -7739,6 +7739,119 @@ def _format_edn360_nutrition_for_display(edn360_data: dict) -> dict:
         logger.error(f"Error formateando plan nutricional E.D.N.360: {e}")
         return edn360_data
 
+def _generate_plain_text_from_structured_plan(plan_data: dict) -> str:
+    """
+    Genera texto plano desde la estructura de plan EDN360 v2 con bloques_estructurados.
+    Soporta la nueva estructura con Bloque D (recomendaciones) y retrocompatibilidad.
+    """
+    try:
+        text = ''
+        
+        # Header
+        text += '═' * 63 + '\n'
+        text += f'  {plan_data.get("title", "PLAN DE ENTRENAMIENTO")}\n'
+        text += '═' * 63 + '\n\n'
+        
+        # General Info
+        text += '📋 INFORMACIÓN GENERAL\n'
+        text += '━' * 63 + '\n'
+        text += f'Tipo de Rutina: {plan_data.get("training_type", "N/A")}\n'
+        text += f'Días por Semana: {plan_data.get("days_per_week", "N/A")}\n'
+        text += f'Duración Sesión: {plan_data.get("session_duration_min", "N/A")} minutos\n'
+        text += f'Duración Programa: {plan_data.get("weeks", "N/A")} semanas\n'
+        text += f'Objetivo: {plan_data.get("goal", "N/A")}\n\n'
+        
+        if plan_data.get("summary"):
+            text += '📝 RESUMEN\n'
+            text += f'{plan_data.get("summary")}\n\n'
+        
+        if plan_data.get("general_notes"):
+            text += '⚠️ NOTAS GENERALES IMPORTANTES\n'
+            text += '━' * 63 + '\n'
+            for note in plan_data.get("general_notes", []):
+                text += f'  • {note}\n'
+            text += '\n'
+        
+        # Sessions
+        for session in plan_data.get("sessions", []):
+            text += '\n' + '═' * 63 + '\n'
+            text += f'  {session.get("id", "Sesión")} - {session.get("name", "")}\n'
+            text += '═' * 63 + '\n'
+            
+            if session.get("focus"):
+                text += f'Focus: {", ".join(session.get("focus", []))}\n'
+            text += '\n'
+            
+            # Handle structured blocks
+            if session.get("bloques_estructurados"):
+                block_order = ['A', 'B', 'C', 'D']
+                for block_key in block_order:
+                    block = session.get("bloques_estructurados", {}).get(block_key)
+                    if not block:
+                        continue
+                    
+                    text += '┌' + '─' * 61 + '┐\n'
+                    block_name = block.get("nombre", f"Bloque {block_key}")
+                    text += f'│  {block_name}' + ' ' * max(0, 58 - len(block_name)) + '│\n'
+                    text += '└' + '─' * 61 + '┘\n'
+                    
+                    # Block D: Cardio recommendations
+                    if block_key == 'D':
+                        recommendations = block.get("recomendaciones", block.get("recommendations", block.get("opciones", [])))
+                        for idx, rec in enumerate(recommendations, 1):
+                            text += f'\n{idx}. {rec.get("type", "Cardio")}\n'
+                            if rec.get("frequency"):
+                                text += f'   Frecuencia: {rec.get("frequency")}\n'
+                            if rec.get("duration"):
+                                text += f'   Duración: {rec.get("duration")}\n'
+                            if rec.get("intensity"):
+                                text += f'   Intensidad: {rec.get("intensity")}\n'
+                            if rec.get("modalities"):
+                                text += f'   Modalidades: {", ".join(rec.get("modalities", []))}\n'
+                            if rec.get("notes"):
+                                text += f'   📝 {rec.get("notes")}\n'
+                    else:
+                        # Blocks A, B, C: Exercises
+                        exercises = block.get("ejercicios", block.get("exercises", []))
+                        for ex in exercises:
+                            order = ex.get("order", "")
+                            name = ex.get("name", ex.get("nombre", "Ejercicio"))
+                            
+                            # Fallback to exercise_types if no name
+                            if not name or name == "Ejercicio":
+                                ex_types = ex.get("exercise_types", [])
+                                if ex_types:
+                                    name = ex_types[0].replace('_', ' ').title()
+                            
+                            series = ex.get("series", "-")
+                            reps = ex.get("reps", ex.get("repeticiones", "-"))
+                            rpe = ex.get("rpe", "-")
+                            notes = ex.get("notes", ex.get("notas", ""))
+                            
+                            text += f'\n{order}. {name}\n'
+                            text += f'   Series: {series} | Reps: {reps} | RPE: {rpe}\n'
+                            if notes:
+                                text += f'   📝 {notes}\n'
+                    
+                    text += '\n'
+            
+            # Session notes
+            if session.get("session_notes"):
+                text += '📌 Notas de la Sesión:\n'
+                for note in session.get("session_notes", []):
+                    text += f'  • {note}\n'
+                text += '\n'
+        
+        text += '\n' + '═' * 63 + '\n'
+        text += '  FIN DEL PLAN\n'
+        text += '═' * 63 + '\n'
+        
+        return text
+        
+    except Exception as e:
+        logger.error(f"Error generando texto plano desde plan estructurado: {e}")
+        return f"Error generando el plan de entrenamiento.\n\nContacta a tu entrenador para obtener el plan completo."
+
 def _format_edn360_plan_as_text(edn360_data: dict, user_name: str = "Cliente", numero_mes: int = None) -> str:
     """
     Convierte el plan E.D.N.360 en texto profesional y legible para enviar al cliente
