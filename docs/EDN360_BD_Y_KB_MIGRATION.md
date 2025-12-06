@@ -28,7 +28,7 @@
 - **File ID:** `file-S63UqAwhkMS7QXAvocDkmd`
 
 ### Agentes Conectados
-- ✅ **E6 - Exercise Normalizer & DB Mapper**
+- ~~✅ **E6 - Exercise Normalizer & DB Mapper**~~ **DISABLED**
 - ✅ **E7.5 - Training Plan Enricher**
 
 ### BD Anterior (DESCONECTADA)
