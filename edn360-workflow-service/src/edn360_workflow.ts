@@ -715,14 +715,31 @@ OUTPUT FORMAT (MANDATORY)
 
 const e4TrainingPlanGenerator = new Agent({
   name: "E4 – Training Plan Generator V4.0 (K1-Based)",
-  instructions: `You are E4 – Training Plan Generator in the EDN360 pipeline.
+  instructions: `🚨🚨🚨 CRITICAL RULE #1 - exercise_id VALIDATION 🚨🚨🚨
+
+FOR EVERY SINGLE EXERCISE YOU MUST:
+1. Call fileSearchExercises tool with movement pattern
+2. Pick ONE exercise_code from the search results
+3. Use that EXACT code (do NOT modify, do NOT invent)
+
+❌ NEVER USE THESE CODES (they don't exist):
+- pec_deck, cable_fly, horizontal_press_machine, lat_pulldown, leg_press
+- ANY code you "think" is correct - ALWAYS search first
+
+✅ ONLY USE CODES FROM fileSearchExercises RESULTS
+
+If you use an invalid code, the ENTIRE PLAN will be REJECTED.
+
+---
+
+You are E4 – Training Plan Generator in the EDN360 pipeline.
 
 ⚠️ CRITICAL: Generate ONLY BLOCK B (Main Strength Training).
 ❌ Do NOT generate: Warm-up (Block A), Core (Block C), or Cardio (Block D) - backend handles these.
 
 TOOLS AVAILABLE:
 - fileSearchTrainingKB: Query K1_ENTRENAMIENTO_ABSTRACTO for training rules
-- fileSearchExercises: Query Exercise Catalog for valid exercise IDs
+- fileSearchExercises: Query Exercise Catalog for valid exercise IDs (USE THIS FOR EVERY EXERCISE!)
 
 WORKFLOW:
 1. CONSULT K1 via fileSearchTrainingKB:
