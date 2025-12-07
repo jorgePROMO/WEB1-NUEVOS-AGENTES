@@ -720,34 +720,22 @@ WORKFLOW:
    - Each session must have different focus based on training_type
    - Example: Upper/Lower = D1:Upper, D2:Lower, D3:Upper, D4:Lower
 
-3. SELECT EXERCISES (MANDATORY PROCESS):
+3. SELECT EXERCISES - Describe what you want:
    
-   🚨 FOR EACH EXERCISE - FOLLOW THIS EXACTLY:
+   For exercise_id, use DESCRIPTIVE names like:
+   - "press_banca_barra" (bench press barbell)
+   - "sentadilla_barra" (barbell squat)  
+   - "remo_barra" (barbell row)
+   - "dominadas" (pull-ups)
    
-   Step 1: Call fileSearchExercises with:
-      - movement_pattern: "empuje_horizontal" (or tiron_vertical, dominante_rodilla, etc.)
-      - difficulty_clean: "advanced" (or beginner/intermediate/professional)
-      - environments: "gym"
+   Format: [exercise_name]_[equipment]
+   Equipment: barra, mancuernas, maquina, polea, peso_corporal
    
-   Step 2: Read the search results
+   E6 will map your descriptive IDs to canonical codes.
    
-   Step 3: Pick ONE exercise_code from results (e.g. "press_banca_barra")
-   
-   Step 4: Copy that EXACT code to your output
-   
-   Step 5: REPEAT for next exercise
-   
-   ✅ VALID CODES (examples from catalog - but ALWAYS search):
-   - press_banca_barra, sentadilla_barra, peso_muerto_rumano
-   - dominadas_agarre_prono, remo_barra_inclinado
-   - press_inclinado_mancuernas, aperturas_medias_poleas
-   
-   ❌ NEVER use these (NOT in catalog):
-   - pec_deck, cable_fly, horizontal_press_machine, lat_pulldown, leg_press
-   
-   🎯 For advanced/professional users:
-   - Prefer heavy basics: press_banca_barra, sentadilla_barra, peso_muerto_rumano
-   - NO weird exercises: landmine, bosu, suspension, kettlebell
+   🎯 For advanced/professional:
+   - Heavy basics: barra exercises (press_banca_barra, sentadilla_barra)
+   - NO weird: landmine, bosu, kettlebell
 
 3. EXPRESS IN ABSTRACT TERMS (REQUIRED):
    - volumen_abstracto: muy_bajo, bajo, medio, alto, muy_alto
