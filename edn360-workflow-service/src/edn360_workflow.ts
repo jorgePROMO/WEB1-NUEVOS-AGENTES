@@ -1081,26 +1081,22 @@ MAPPING STRATEGY:
 3. Pick the BEST canonical code from the catalog
 
 ==================================================
-MATCHING RULES
+MAPPING EXAMPLES
 ==================================================
 
-For each \`exercise_type_from_plan\` (string from \`exercise_types[]\`):
+E4 says → E6 maps to canonical:
+- "press_banca_barra" → "press_banca_barra" (exact match)
+- "pec_deck" → "aperturas_medias_poleas" (fuzzy match)
+- "cable_fly" → "aperturas_poleas_tumbado" (fuzzy match)
+- "horizontal_press_machine" → "press_horizontal_maquina_palanca" (fuzzy match)
+- "sentadilla" → "sentadilla_barra" (add equipment)
+- "dominadas" → "dominadas_agarre_prono" (add grip detail)
 
-1. Try to match it primarily against:
-   - \`exercise_type_v2\` in the database (best effort semantic match).
-2. Optionally, you may also consider:
-   - \`name_std\`
-   - \`primary_group_std\`, \`secondary_group_std\`
-   - \`movement_pattern\`
-   - \`load_type\`
-   - \`body_region\`
-   - and the context implied by the exercise_type string.
-
-You MUST always:
-
-- Prefer exercises where \`usable_for_plans\` is \"sí\" or \"yes\".
-- Choose the safest and most biomechanically consistent option.
-- Avoid clearly incorrect patterns (e.g., lower-body machine for an upper-body cable exercise_type).
+RULES:
+- Always output a VALID exercise_code from the 1243 catalog
+- Log any fuzzy matches for visibility
+- Prefer barbell/dumbbell for advanced users
+- If unsure, pick the most common variation
 
 IF THERE IS A CLEAR MATCH:
 - Use that exercise's \`id\` as \`db_match.id\`.
