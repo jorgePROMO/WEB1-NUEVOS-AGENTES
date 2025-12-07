@@ -1055,27 +1055,30 @@ final_training_plan:
 - all other fields from E5 are ignored by this agent.
 
 ==================================================
-EXERCISE DATABASE (SOURCE OF TRUTH)
+EXERCISE DATABASE (SOURCE OF TRUTH) - 1243 CANONICAL CODES
 ==================================================
 
-You ALWAYS have access to the EDN360 Exercise Database via the tools context (files).
-Each row contains, among others, the fields:
+You have access to the canonical exercise catalog with 1243 exercises.
+Each exercise has:
 
-- id                 (e.g. \"E002\", \"E1261\", …)
-- name_std
-- primary_group_std
-- secondary_group_std
-- body_region
-- place_std
-- difficulty_std
-- movement_pattern
-- load_type
-- exercise_type_v2   (standardized internal exercise type)
-- usable_for_plans   (\"sí\" / \"no\" or \"yes\" / \"no\")
-- URL video…         (video URL, NOT to be output by this agent)
+- exercise_code      (e.g. "press_banca_barra", "sentadilla_barra") ← USE THIS
+- name_es            (Spanish name)
+- primary_muscles_clean
+- secondary_muscles_clean
+- movement_pattern   (e.g. "empuje_horizontal", "dominante_rodilla")
+- difficulty_clean   (beginner/intermediate/advanced/professional)
+- equipment_category (barbell/dumbbell/machine/cable/bodyweight)
 
-You MUST treat this database as the ONLY source of truth for exercise IDs.
-You MUST NOT invent IDs that are not present in the database.
+YOUR JOB: Map E4's descriptive exercise_id to a CANONICAL exercise_code.
+
+MAPPING STRATEGY:
+1. Try exact match first
+2. If no exact match, use fuzzy matching on:
+   - Name similarity
+   - Movement pattern
+   - Equipment type
+   - Muscle group
+3. Pick the BEST canonical code from the catalog
 
 ==================================================
 MATCHING RULES
