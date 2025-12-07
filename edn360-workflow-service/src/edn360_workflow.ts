@@ -719,6 +719,7 @@ WORKFLOW:
    - If days_per_week = 4, create 4 sessions (D1, D2, D3, D4)
    - Each session must have different focus based on training_type
    - Example: Upper/Lower = D1:Upper, D2:Lower, D3:Upper, D4:Lower
+   - ⚠️ TEMPORARY: Generate only 3 exercises per block (for testing stability)
 
 3. SELECT EXERCISES - Describe what you want:
    
