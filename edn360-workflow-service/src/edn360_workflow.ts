@@ -48,21 +48,7 @@ const E4TrainingPlanGeneratorSchema = z.object({
         secondary_muscles: z.array(z.string()),
         exercises: z.array(z.object({
           order: z.number(),
-          exercise_id: z.string()
-            .refine(
-              (code) => {
-                const isValid = VALID_EXERCISE_CODES.includes(code);
-                if (!isValid) {
-                  console.error(`\n🚨 INVALID EXERCISE CODE DETECTED: "${code}"`);
-                  console.error(`   This code does NOT exist in the canonical catalog.`);
-                  console.error(`   E4 must use fileSearchExercises and pick EXACT codes from results.\n`);
-                }
-                return isValid;
-              },
-              {
-                message: `❌ INVALID exercise_code. MUST be from canonical catalog (${VALID_EXERCISE_CODES.length} valid codes). Use fileSearchExercises tool ALWAYS.`
-              }
-            ), // ⚠️ HARD CONSTRAINT: exercise_id MUST exist in catalog
+          exercise_id: z.string(), // E4 generates descriptive IDs, E6 will map to canonical codes
           patron: z.enum(["empuje_horizontal", "empuje_vertical", "tiron_horizontal", "tiron_vertical", "dominante_rodilla", "dominante_cadera", "zancada", "core_antirotacion", "core_antiextension", "core_antiflexion", "core_rotacional"]),
           tipo: z.enum(["compuesto_alta_demanda", "compuesto_media_demanda", "aislamiento", "correctivo_estabilidad", "pliometrico", "balistico", "metabolico_circuito"]),
           volumen_abstracto: z.enum(["muy_bajo", "bajo", "medio", "alto", "muy_alto"]),
