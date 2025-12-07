@@ -1698,6 +1698,22 @@ async function runAgentWithLogging(
       }
     }
     
+    // Try to extract invalid exercise_code from schema validation error
+    if (error.message && error.message.includes('exercise_id')) {
+      console.error(`\n🔍 Es un error de validación de exercise_code`);
+      
+      // The error message is truncated but might contain partial info
+      // Let's try to extract what we can
+      const pathMatch = error.message.match(/at "([^"]+)"/);
+      if (pathMatch) {
+        console.error(`🔍 Error path: ${pathMatch[1]}`);
+      }
+      
+      console.error(`\n⚠️  The model generated an invalid exercise_code.`);
+      console.error(`   This means E4 is NOT using fileSearchExercises correctly.`);
+      console.error(`   E4 is inventing codes instead of picking from the catalog.`);
+    }
+    
     // Loguear el stack trace
     if (error.stack) {
       console.error(`\n📚 Stack trace:`);
